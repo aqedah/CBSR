@@ -19,6 +19,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="통독 노트">
 <link rel="manifest" href="manifest.webmanifest">
+<script>window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__bip=e;});</script>
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}html{-webkit-text-size-adjust:100%}</style>
@@ -3078,7 +3079,7 @@ function renderRecord(){
 
 /* 사용법 */
 /* 홈 화면에 추가 (독립 웹앱에서만) */
-let INSTALL_EVT=null;
+let INSTALL_EVT=window.__bip||null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();INSTALL_EVT=e;if(view.tab==="read"||view.tab==="guide")render();});
 window.addEventListener("appinstalled",()=>{INSTALL_EVT=null;try{localStorage.setItem("cbsr-install-hide","1");}catch(e){} render();});
 function isStandalone(){try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){return false;}}
