@@ -3977,7 +3977,8 @@ function openWeekPicker(){
   document.getElementById("chGo").onclick=go2; fi.onkeydown=e=>{ if(e.key==="Enter") go2(); };
   const root=document.getElementById("sheetRoot");
   root.querySelectorAll("[data-pickw]").forEach(b=>b.onclick=()=>{ root.innerHTML=""; view.revW=null; gotoW(+b.dataset.pickw,null); });
-  const sel=root.querySelector(".wkrow.sel"); if(sel) sel.scrollIntoView({block:"center"});
+  /* 목록 안에서만 움직여 위쪽 '장으로 찾기' 칸이 가려지지 않게 */
+  const sel=root.querySelector(".wkrow.sel"), wl=document.getElementById("wkList"); if(sel&&wl){ wl.scrollTop=sel.offsetTop-wl.offsetTop-(wl.clientHeight-sel.offsetHeight)/2; } root.querySelectorAll(".sheet,.sheet-body,[class*=sheet]").forEach(x=>x.scrollTop=0);
 }
 document.getElementById("wkTitle").onclick=openWeekPicker;
 const fixD=()=>{ if(!isRev(view.d)&&view.d>=nd(view.w)) view.d=nd(view.w)-1; };
