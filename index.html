@@ -1107,6 +1107,14 @@ button.bk{font-family:inherit;cursor:pointer}
 .revchip.on small{color:var(--accent-ink);opacity:.85}
 .g.pl{border-bottom:1.5px dotted var(--gold)}
 .chip.pl{border-color:var(--gold);color:var(--gold)}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:sticky;top:-18px;background:var(--card);padding-top:2px;z-index:1}
+.sheet-head h3{margin:0;flex:1;min-width:0}
+.sheet-x{flex:none}
+.sheet .row{justify-content:flex-end}
+.prof-top .prof-name{flex:1;min-width:0}
+.prof-name .acctform{flex-wrap:nowrap}
+.prof-name .acctform input{flex:1 1 auto;width:100%;min-width:0}
+.prof-name .acctform .btn{flex:none}
 </style>
 
 <div class="wrap">
@@ -2778,12 +2786,13 @@ function showPlace(n){
 /* 팝업 */
 function sheet(title,body){
   const root=document.getElementById("sheetRoot");
-  root.innerHTML=`<div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h3>${esc(title)}</h3>${body}<div class="row"><button class="btn small" id="sheetClose">닫기</button></div></div></div>`;
+  root.innerHTML=`<div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-head"><h3>${esc(title)}</h3><button class="iconbtn sheet-x" id="sheetX" aria-label="닫기">✕</button></div>${body}<div class="row sheet-foot"><button class="btn small" id="sheetClose">닫기</button></div></div></div>`;
   const close=()=>{root.innerHTML="";};
   document.getElementById("sheetClose").onclick=close;
   document.getElementById("sheetBg").onclick=e=>{if(e.target.id==="sheetBg")close();};
   root.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.jump.split("-").map(Number); close(); go(w,d);});
-  document.getElementById("sheetClose").focus();
+  document.getElementById("sheetX").onclick=close;
+  const sh=root.querySelector(".sheet"); sh.scrollTop=0; try{ document.getElementById("sheetX").focus({preventScroll:true}); }catch(e){}
 }
 function showGloss(t){const it=GI.by.get(t); if(it) sheet(NAME_SET.has(it.t)?it.t+" · 이름의 뜻":it.t,`<p>${esc(it.d)}</p>`);}
 const refList=(refs,b0)=>refs.map(([b,c,v])=>(b!==b0?PLAN.abbr[b-1]+" ":"")+`${c}:${v}`).join(", ");
