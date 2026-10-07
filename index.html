@@ -1066,6 +1066,18 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 .readcnt{margin:0;font-size:13.5px;color:var(--ok);background:var(--ok-soft);border-radius:8px;padding:7px 11px}
 .readcnt:empty{display:none}
 .readcnt b{font-variant-numeric:tabular-nums}
+.wkbtn{border:0;background:none;text-align:left;font:inherit;color:inherit;padding:2px 4px;border-radius:8px;cursor:pointer;display:grid}
+.wkbtn:hover{background:var(--accent-soft)}
+.wkbtn small{display:block}
+.wkbtn .caret{font-style:normal;color:var(--accent);margin-left:5px;font-size:12px}
+.wklist{display:grid;gap:6px;max-height:60vh;overflow:auto;margin:0 -4px;padding:0 4px}
+.wkrow{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:8px;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;min-height:48px}
+.wkrow .n{font-weight:700;color:var(--accent);font-size:14px}
+.wkrow .t{font-size:14.5px;min-width:0;display:grid;gap:1px}
+.wkrow .t small{display:block;color:var(--muted);font-size:12px}
+.wkrow .c{font-size:12.5px;color:var(--ok);font-weight:600;font-variant-numeric:tabular-nums}
+.wkrow .c.full::before{content:"✓ "}
+.wkrow.sel{border-color:var(--accent);background:var(--accent-soft)}
 </style>
 
 <div class="wrap">
@@ -1076,7 +1088,7 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
     <div id="noticeBox"></div>
     <div class="weeknav">
       <button class="iconbtn" id="prevW" aria-label="이전 주">‹</button>
-      <div class="wk" id="wkTitle"></div>
+      <button class="wk wkbtn" id="wkTitle" aria-haspopup="dialog" aria-label="주차 고르기"></button>
       <button class="iconbtn" id="todayBtn">오늘</button>
       <button class="iconbtn" id="nextW" aria-label="다음 주">›</button>
     </div>
@@ -2824,7 +2836,7 @@ function renderHead(){
   else if(!isToday&&view.tab==="read") nb.innerHTML=`<div class="notice">오늘이 아닌 날을 보고 있습니다. '오늘'을 누르면 돌아갑니다.</div>`;
   else nb.innerHTML="";
   const W=WEEKS[view.w-1];
-  document.getElementById("wkTitle").innerHTML=`${view.w}주차 · ${esc(W.t)}<small>${fmt(dateOf(view.w,0),{month:"numeric",day:"numeric"})} – ${fmt(dateOf(view.w,MODE==="rj"?6:nd(view.w)-1),{month:"numeric",day:"numeric"})}</small>`;
+  document.getElementById("wkTitle").innerHTML=`<span class="wkt">${view.w}주차 · ${esc(W.t)}<i class="caret" aria-hidden="true">▾</i></span><small>${fmt(dateOf(view.w,0),{month:"numeric",day:"numeric"})} – ${fmt(dateOf(view.w,MODE==="rj"?6:nd(view.w)-1),{month:"numeric",day:"numeric"})}</small>`;
   const st=document.getElementById("strip"); st.innerHTML="";
   for(let d=0;d<7;d++){
     const b=document.createElement("button"), dt2=dateOf(view.w,d);
@@ -3593,6 +3605,21 @@ function bind(){
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
 function applySize(){document.documentElement.style.setProperty("--bible-size",(mem.size||17)+"px");}
+function openWeekPicker(){
+  let h=`<div class="wklist" id="wkList">`;
+  for(let w=1;w<=NW;w++){
+    const n=nd(w); let dn=0; for(let d=0;d<n;d++) if(mem.done[keyOf(w,d)]) dn++;
+    const a=dateOf(w,0), z=dateOf(w,MODE==="rj"?6:n-1);
+    h+=`<button class="wkrow${w===view.w?" sel":""}" data-pickw="${w}"><span class="n">${w}주차</span><span class="t">${esc(WEEKS[w-1].t)}<small>${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}${w===here.w&&here.state==="in"?" · 이번 주":""}</small></span><span class="c${dn>=n?" full":""}">${dn?`${dn}/${n}`:""}</span></button>`;
+  }
+  h+=`</div>`;
+  sheet("주차 고르기",h);
+  const root=document.getElementById("sheetRoot");
+  root.querySelectorAll("[data-pickw]").forEach(b=>b.onclick=()=>{ const w=+b.dataset.pickw; root.innerHTML="";
+    view.w=w; view.d=(w===here.w&&here.state==="in")?here.d:0; fixD(); view.quiz=null; view.wquiz=null; view.open=false; render(); window.scrollTo({top:0}); });
+  const sel=root.querySelector(".wkrow.sel"); if(sel) sel.scrollIntoView({block:"center"});
+}
+document.getElementById("wkTitle").onclick=openWeekPicker;
 const fixD=()=>{ if(!isRev(view.d)&&view.d>=nd(view.w)) view.d=nd(view.w)-1; };
 document.getElementById("prevW").onclick=()=>{if(view.w>1){view.w--;fixD();view.quiz=null;view.wquiz=null;view.open=false;render();}};
 document.getElementById("nextW").onclick=()=>{if(view.w<NW){view.w++;fixD();view.quiz=null;view.wquiz=null;view.open=false;render();}};
