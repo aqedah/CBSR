@@ -3718,10 +3718,12 @@ if(window.SYNC&&SYNC.loggedIn()) SYNC.pull().then(remote=>{ if(remote){ mem=merg
 if(window.SYNC) SYNC.onChange(()=>{ if(view.tab==="record"){ const a=document.activeElement; if(!(a&&a.tagName==="INPUT")) render(); } });
 })();
 
+</script>
+<script>
 (function(){const b=document.createElement("button");b.className="totop";b.type="button";b.setAttribute("aria-label","맨 위로");b.title="맨 위로";
 b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
 b.onclick=()=>window.scrollTo({top:0,behavior:"smooth"});document.body.appendChild(b);
-const upd=()=>b.classList.toggle("show",window.scrollY>window.innerHeight*0.8);window.addEventListener("scroll",upd,{passive:true});upd();})();
+const upd=()=>b.classList.toggle("show",window.scrollY>Math.min(400,window.innerHeight*0.5));window.addEventListener("scroll",upd,{passive:true});upd();})();
 </script>
 
 </body>
