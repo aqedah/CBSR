@@ -3266,7 +3266,7 @@ function renderQT(){
   h+=`<section class="sec"><span class="label">5 · 한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
   // 6 기도
   const pray=makePrayer(key,vi,q.pv,p.label,kv,traits);
-  h+=`<section class="sec"><span class="label">6 · 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details>
+  h+=`<section class="sec"><span class="label">6 · 오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details>
    ${q.done?"":`<div class="row"><button class="btn" id="qtDone">QT 완료</button><span class="lead" id="qtSaved"></span></div>`}</section>`;
   if(q.done) h+=`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`;
   // 더 깊이
@@ -3827,7 +3827,7 @@ function renderGuide(){
   +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>하루 10분, 빠르게 읽고 확인하기</h2>
   <ol><li>아래 <b>오늘 통독</b>: 본문을 펼쳐 읽고, 요약·단어 설명·지도로 이해를 돕고, 퀴즈로 확인합니다. 퀴즈를 끝까지 풀거나 '오늘 통독 완료'를 누르면 진행률이 올라갑니다.</li>
   <li><b>형광펜</b>: 본문에서 절을 누르면(여러 절도 됩니다) 아래에 색이 나옵니다. 칠한 절은 '나의 기록'에 모입니다.</li>
-  <li>아래 <b>QT</b>: 이야기로 읽기, 하나님의 성품, 묵상, 기도 순서로 말씀을 깊이 붙잡습니다. 칸마다 적은 내용은 이 기기에 저장됩니다.</li>
+  <li>아래 <b>QT</b>: 이야기로 읽기, 하나님의 성품, 묵상, 오늘의 기도 순서로 말씀을 깊이 붙잡습니다. 칸마다 적은 내용은 이 기기에 저장됩니다.</li>
   <li>아래 <b>나의 기록</b>: 진행률, 연속 기록, 배지, 책별로 읽은 곳, 형광펜, QT 노트를 봅니다.</li>
   <li><b>지도</b>는 두 손가락으로 벌리거나 +/− 버튼으로 확대·축소합니다. 이동이 있으면 점선과 화살표로 경로를 보여 줍니다.</li>
   ${rj?`<li>한 주의 마지막 날(${DAYN[dateOf(1,6).getDay()]})에는 한 주 점수를 보고 주간 도전 문제를 풉니다.</li>`:`<li>날짜 칸 아래 <b>이번 주 돌아보기</b>를 누르면 한 주 점수와 주간 도전 문제가 나옵니다. 다시 누르면 접힙니다.</li>`}</ol></section>
