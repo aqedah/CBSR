@@ -2641,6 +2641,8 @@ const nd=w=>PLAN.plan[w-1]?PLAN.plan[w-1].length:0;
 const dayNo=(w,d)=>(w-1)*7+d+1;
 const dayName=(w,d)=>MODE==="y365"?`${dayNo(w,d)}일째`:`${w}주차 ${d+1}일째`;
 const syncKey=k=>MODE==="y365"?"y-"+k:k;
+/* 함께 읽기 숫자: 한 사람이 한 본문을 처음 완료할 때 한 번만 셉니다(완료 취소 후 다시 눌러도 다시 세지 않음) */
+function countDone(k){ mem.counted ||= {}; if(mem.counted[k]) return; mem.counted[k]=1; save(); if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),syncKey(todayStr())); }
 const dateOf=(w,d)=>{const s=parseD(mem.start);s.setDate(s.getDate()+(w-1)*7+d);return s;};
 function posOfToday(){
   const diff=dayDiff(parseD(mem.start),today0());
@@ -3213,9 +3215,9 @@ function churchCounts(){
   if(!(window.SYNC&&SYNC.available)) return;
   const el=document.getElementById("churchDay"), el2=document.getElementById("churchBox"); if(!el&&!el2) return;
   const key=keyOf(view.w,view.d);
-  SYNC.counts(syncKey(key),todayStr()).then(c=>{ if(!c) return;
-    if(el&&document.body.contains(el)) el.innerHTML=c.day>0?`<b>${c.day}명</b>이 이 본문을 읽었습니다${c.date?` · 오늘 통독을 마친 사람 <b>${c.date}명</b>`:""}`:`아직 이 본문을 마친 사람이 없습니다. 첫 번째가 되어 보세요.`;
-    if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 통독을 마친 사람</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div>${SYNC.loginEnabled?`<div class="stat"><b>${c.readers}</b><span>이름을 등록한 사람</span></div>`:""}</div>`;
+  SYNC.counts(syncKey(key),syncKey(todayStr())).then(c=>{ if(!c) return;
+    if(el&&document.body.contains(el)) el.innerHTML=c.day>0?`우리 교회 <b>${c.day}명</b>이 이 본문을 읽었습니다`:`아직 이 본문을 마친 사람이 없습니다. 첫 번째가 되어 보세요.`;
+    if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 들어온 통독 완료(모든 본문)</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div>${SYNC.loginEnabled?`<div class="stat"><b>${c.readers}</b><span>이름을 등록한 사람</span></div>`:""}</div>`;
   });
 }
 function renderAccount(){
@@ -3308,7 +3310,7 @@ function nextQ(mode){
     const rec=store[qz.key]||{tries:0};
     rec.tries=(rec.tries||0)+1; rec.last={s,t}; if(!rec.first) rec.first={s,t,at:new Date().toISOString().slice(0,10)};
     if(!rec.best||s/t>rec.best.s/rec.best.t) rec.best={s,t};
-    store[qz.key]=rec; if(mode==="day"&&!mem.done[qz.key]){mem.done[qz.key]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(qz.key),todayStr());} save();
+    store[qz.key]=rec; if(mode==="day"&&!mem.done[qz.key]){mem.done[qz.key]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(qz.key);} save();
   }
 }
 
@@ -3581,7 +3583,7 @@ function bind(){
   const ot=document.getElementById("openText"); if(ot) ot.onclick=()=>{view.open=true;render();document.getElementById("bible")?.scrollIntoView({block:"start"});};
 
   m.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{view.open=false;render();document.getElementById("textSec")?.scrollIntoView({block:"start"});});
-  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),todayStr());} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
+  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k);} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
   const toQT=()=>{view.tab="qt";render();window.scrollTo({top:0});};
   const tqt=document.getElementById("toQT"); if(tqt) tqt.onclick=toQT;
   m.querySelectorAll("[data-toqt]").forEach(b=>b.onclick=toQT);
