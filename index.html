@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>이야기 통독 노트</title>
 <meta name="description" content="리딩지저스 45주 일정에 맞춘 성경통독 · 요약 · 퀴즈 · 지도 · QT">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="이야기 통독 노트">
+<meta property="og:title" content="이야기 통독 노트">
+<meta property="og:description" content="리딩지저스 45주 성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
+<meta property="og:url" content="https://aqedah.github.io/CBSR/">
+<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#2C5C52">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -938,8 +947,8 @@ footer .maker{font-size:15px;color:var(--ink);font-weight:600}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="config.js?v=668ae0b6"></script>
-<script src="sync.js?v=f5e5312e"></script>
+<script src="config.js?v=bf7c7e96"></script>
+<script src="sync.js?v=6358835a"></script>
 <script src="bible.js?v=37de8195"></script>
 <script>
 /* ───────── 이름·지명·용어 찾기와 자동 퀴즈 엔진 ───────── */
@@ -2675,7 +2684,7 @@ function renderRead(){
   const n=chDone(), after=n+(done?0:p.ch.length);
   h+=`<section class="sec" id="doneSec">`;
   if(done){
-    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.${n>=TOTAL_CH?" 성경 일독을 마치셨습니다!":` 남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?`<span class="church" id="churchDay"></span>`:""}${window.SYNC&&SYNC.available&&!SYNC.loggedIn()?`<span class="lead">기록을 잃지 않으려면 ‘나의 기록’에서 이름을 등록하세요.</span>`:""}<div class="row" style="justify-content:center"><button class="btn small" id="toQT">QT로 이어 가기</button><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
+    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.${n>=TOTAL_CH?" 성경 일독을 마치셨습니다!":` 남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?`<span class="church" id="churchDay"></span>`:""}${window.SYNC&&SYNC.available&&SYNC.loginEnabled&&!SYNC.loggedIn()?`<span class="lead">기록을 잃지 않으려면 ‘나의 기록’에서 이름을 등록하세요.</span>`:""}<div class="row" style="justify-content:center"><button class="btn small" id="toQT">QT로 이어 가기</button><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
   } else {
     h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">완료하면 진행률이 ${pct1(n,TOTAL_CH)}%에서 ${pct1(after,TOTAL_CH)}%로 올라갑니다. 퀴즈를 끝까지 풀면 자동으로 완료됩니다.</p>`;
   }
@@ -2924,7 +2933,7 @@ function churchCounts(){
   const key=keyOf(view.w,view.d);
   SYNC.counts(key,todayStr()).then(c=>{ if(!c) return;
     if(el&&document.body.contains(el)) el.textContent=c.day>0?`이 본문을 우리 교회 ${c.day}명이 함께 읽었습니다.`:"";
-    if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 통독을 마친 사람</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div><div class="stat"><b>${c.readers}</b><span>이름을 등록한 사람</span></div></div>`;
+    if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 통독을 마친 사람</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div>${SYNC.loginEnabled?`<div class="stat"><b>${c.readers}</b><span>이름을 등록한 사람</span></div>`:""}</div>`;
   });
 }
 function renderAccount(){
@@ -2934,6 +2943,7 @@ function renderAccount(){
     return `<section class="sec"><span class="label">기록 이어 보기</span><div class="acct"><p><b>${esc(SYNC.name())}</b>님의 기록이 저장되고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰이나 컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 이어집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 나가기</button></div></div></section>
     <section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
   }
+  if(!SYNC.loginEnabled) return `<section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
   return `<section class="sec"><span class="label">기록 이어 보기</span><div class="acct"><p>이름과 숫자 4자리를 정하면, 휴대폰을 바꾸거나 컴퓨터에서 열어도 진행률·퀴즈·QT 기록이 그대로 이어집니다. 회원 가입은 필요 없습니다.</p>
    <div class="acctform"><input id="acctName" type="text" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name"><input id="acctPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리"><button class="btn small" id="acctIn">시작하기</button></div>
    <p class="lead">같은 이름을 쓰는 분이 있을 수 있으니, 숫자는 생일처럼 남이 짐작하기 쉬운 것은 피해 주세요. 이름과 숫자를 잊으면 기록을 다시 찾을 수 없습니다.</p><p class="lead" id="acctMsg" role="status"></p></div></section>

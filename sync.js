@@ -5,7 +5,8 @@
   const cfg=window.CBSR_FIREBASE_CONFIG;
   const LOGIN="cbsr-login-v1";
   const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
-  let fs=null,ready=null,login=ls.get(LOGIN,null),pushT=null,lastSaved=null,listeners=[];
+  const LOGIN_ON=window.CBSR_LOGIN!==false;
+  let fs=null,ready=null,login=LOGIN_ON?ls.get(LOGIN,null):null,pushT=null,lastSaved=null,listeners=[];
   const inc=n=>firebase.firestore.FieldValue.increment(n);
   function init(){ if(ready) return ready;
     ready=(async()=>{
@@ -23,6 +24,7 @@
   const notify=()=>listeners.forEach(f=>{try{f();}catch(e){}});
   window.SYNC={
     available:!!(cfg&&cfg.apiKey),
+    loginEnabled:LOGIN_ON,
     loggedIn:()=>!!login,
     name:()=>login?login.name:"",
     lastSaved:()=>lastSaved,
