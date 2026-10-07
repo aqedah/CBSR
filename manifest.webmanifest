@@ -1,7 +1,7 @@
 {
   "name": "이야기 통독 노트",
   "short_name": "통독 노트",
-  "description": "리딩지저스 45주 성경통독 · 요약 · 퀴즈 · QT",
+  "description": "성경통독 · 요약 · 퀴즈 · QT",
   "lang": "ko",
   "start_url": "./",
   "scope": "./",
