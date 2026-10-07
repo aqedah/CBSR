@@ -986,10 +986,10 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .prof-name{display:grid;gap:2px;min-width:0}
 .prof-name b{font-family:var(--f-text);font-size:21px;display:flex;align-items:center;gap:6px}
 .prof-name .edit{border:0;background:none;color:var(--muted);font-size:12.5px;padding:2px 4px;text-decoration:underline}
-.ring{display:flex;gap:16px;align-items:center}
+.ring{display:flex;gap:14px;align-items:center}
 .ring svg{flex:none}
 .ring .rt{display:grid;gap:2px}
-.ring .rt b{font-family:var(--f-text);font-size:26px;font-variant-numeric:tabular-nums}
+.ring .rt b{font-family:var(--f-text);font-size:24px;line-height:1.2;font-variant-numeric:tabular-nums}
 .pstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .pstat{background:var(--paper);border-radius:12px;padding:10px 8px;text-align:center;display:grid;gap:0}
 .pstat b{font-family:var(--f-text);font-size:22px;font-variant-numeric:tabular-nums}
@@ -3572,7 +3572,7 @@ function readStreak(){ let p=[here.w,here.d]; if(isRev(p[1])) p=[p[0],5]; if(her
 function bookProgress(){ const tot={},got={}; PLAN.plan.flat().forEach(p=>p.ch.forEach(([b])=>{tot[b]=(tot[b]||0)+1;}));
   for(const k in mem.done){ const [w,d]=k.split("-").map(Number); const p=PLAN.plan[w-1]&&PLAN.plan[w-1][d]; if(p) p.ch.forEach(([b])=>{got[b]=(got[b]||0)+1;}); }
   return {tot,got}; }
-function ringSVG(p){ const r=34,c=2*Math.PI*r; return `<svg width="84" height="84" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="${r}" fill="none" stroke="var(--line)" stroke-width="9"/>${p>0?"":"<!--"}<circle cx="42" cy="42" r="${r}" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(c*p/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 42 42)"/>${p>0?"":"-->"}</svg>`; }
+function ringSVG(p){ /* 프로필 원(62px)과 같은 크기 */ const W=62,cx=31,r=27,sw=7,c=2*Math.PI*r; return `<svg width="${W}" height="${W}" viewBox="0 0 ${W} ${W}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--line)" stroke-width="${sw}"/>${p>0?`<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--accent)" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(c*p/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${cx} ${cx})"/>`:""}</svg>`; }
 function renderRecord(){
   let qd=0,s=0,t=0,perfect=0; for(const k in mem.q){const f=mem.q[k].first; if(f){qd++;s+=f.s;t+=f.t; if(mem.q[k].best&&mem.q[k].best.s===mem.q[k].best.t) perfect++;}}
   const doneN=Object.keys(mem.done).length, qtN=Object.values(mem.qt).filter(x=>x.done).length, hlN=Object.keys(HL).length;
