@@ -1010,6 +1010,11 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 details.more{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
 details.more summary{cursor:pointer;font-weight:600}
 details.more .tbl{border:0;padding:0}
+.day .dc{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;line-height:1.3}
+.day.sel .dc{color:var(--accent-ink);opacity:.9}
+.day .dchk{position:absolute;top:3px;right:5px;font-style:normal;font-size:11px;font-weight:700;color:var(--ok)}
+.day.sel .dchk{color:var(--accent-ink)}
+@media (max-width:420px){.day .dc{font-size:10px;letter-spacing:-.04em}.day .dc.long{font-size:9px;letter-spacing:-.06em}}
 </style>
 
 <div class="wrap">
@@ -2599,6 +2604,12 @@ const here=posOfToday();
 let view={w:here.w,d:here.d,tab:"read",open:false,quiz:null,wquiz:null};
 const keyOf=(w,d)=>w+"-"+d;
 const dayPlan=(w,d)=>PLAN.plan[w-1][d];
+const ONE_CH=new Set(["옵","몬","요이","요삼","유"]);
+function stripRef(p){ const bs=[]; for(const [b,c] of p.ch){ let g=bs[bs.length-1]; if(!g||g.b!==b){ g={b,a:PLAN.abbr[b-1],cs:[]}; bs.push(g);} g.cs.push(c); }
+  const rng=g=>ONE_CH.has(g.a)?"":(g.cs.length>1?g.cs[0]+"–"+g.cs[g.cs.length-1]:String(g.cs[0]));
+  const book=bs.length>1?bs[0].a+"–"+bs[bs.length-1].a:bs[0].a;
+  const ch=bs.map(rng).filter(Boolean).join("·");
+  return [book,ch]; }
 const shortRef=p=>p.spec.replace(/ 1-몬 1/,"-몬").replace(/요이 1-요삼 1/,"요이-요삼").replace(/^유 1$/,"유");
 const pct=(a,b)=>b?Math.round(a/b*100):0;
 
@@ -2759,7 +2770,7 @@ function renderHead(){
     const sc=!isRev(d)?dayScore(view.w,d):mem.wq[view.w]?.first;
     const dn=!isRev(d)&&mem.done[keyOf(view.w,d)];
     b.className="day"+(d===view.d?" sel":"")+(view.w===here.w&&d===here.d&&here.state==="in"?" today":"")+(sc||dn?" done":"");
-    b.innerHTML=`<span class="dn">${DAYN[dt2.getDay()]}</span><span class="dd">${dt2.getDate()}</span><span class="ds">${sc?sc.s+"/"+sc.t:dn?"✓":(!isRev(d)?esc(shortRef(dayPlan(view.w,d))).replace(/ .*/,""):"복습")}</span>`;
+    b.innerHTML=`<span class="dn">${DAYN[dt2.getDay()]}</span><span class="dd">${dt2.getDate()}</span>${!isRev(d)?(()=>{const [bk,ch]=stripRef(dayPlan(view.w,d)); return `<span class="ds">${esc(bk)}</span><span class="dc${ch.length>=7?" long":""}">${esc(ch)||"&nbsp;"}</span>`;})():`<span class="ds">복습</span><span class="dc">${sc?sc.s+"/"+sc.t:"&nbsp;"}</span>`}${dn||(!isRev(d)&&sc)?`<i class="dchk" aria-hidden="true">✓</i>`:""}`;
     b.setAttribute("aria-label",fmt(dt2,{month:"long",day:"numeric"})+" "+(!isRev(d)?dayPlan(view.w,d).label:"주일 돌아보기"));
     b.onclick=()=>{view.d=d;view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});};
     st.appendChild(b);
