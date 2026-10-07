@@ -1120,12 +1120,13 @@ button.bk{font-family:inherit;cursor:pointer}
 .wkrow.now .t{font-weight:700}
 .chfind{display:flex;gap:8px}
 .chfind input{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
-.news{display:flex;align-items:center;gap:8px;background:var(--gold-soft);border-radius:999px;padding:4px 6px 4px 4px;margin:6px 0 2px;overflow:hidden}
+.news{display:flex;align-items:center;gap:8px;background:var(--gold-soft);border-radius:999px;padding:4px 6px 4px 4px;margin:6px 0 2px;overflow:hidden;max-width:100%;min-width:0}
 .news-tag{flex:none;border:0;background:var(--gold);color:#fff;font:inherit;font-size:11.5px;font-weight:700;border-radius:999px;padding:4px 9px;cursor:pointer}
-.news-track{flex:1;min-width:0;overflow:hidden;white-space:nowrap;font-size:13px;color:var(--ink);cursor:pointer;mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%)}
-.news-track span{display:inline-block;padding-left:100%;animation:newsrun 20s linear infinite}
-@keyframes newsrun{from{transform:translateX(0)}to{transform:translateX(-100%)}}
-@media (prefers-reduced-motion: reduce){.news-track span{animation:none;padding-left:0}}
+.news-track{flex:1 1 0;min-width:0;width:0;height:20px;position:relative;overflow:hidden;font-size:13px;line-height:20px;color:var(--ink);cursor:pointer}
+.news-track .ni{position:absolute;left:0;right:0;top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transform:translateY(100%);opacity:0;transition:transform .45s ease,opacity .45s ease}
+.news-track .ni.on{transform:translateY(0);opacity:1}
+.news-track .ni.out{transform:translateY(-100%);opacity:0}
+@media (prefers-reduced-motion: reduce){.news-track .ni{transition:none}}
 .news-x{flex:none;border:0;background:none;color:var(--muted);font-size:13px;padding:2px 6px;cursor:pointer}
 .newslist{margin:0 0 6px;padding-left:20px;display:grid;gap:4px;font-size:15px;line-height:1.55}
 </style>
@@ -2724,6 +2725,8 @@ const KEY=MODE==="y365"?"rjnote:y365":"rjnote:v2";
 let mem={start:DEFAULT_START,q:{},wq:{},done:{},qt:{},size:17};
 try{const s=localStorage.getItem(KEY);if(s)mem=Object.assign(mem,JSON.parse(s));}catch(e){}
 mem.done ||= {}; mem.qt ||= {};
+/* 예전 '주일~금 읽기' 설정을 쓰던 분은 월요일 시작으로 되돌립니다 */
+if(MODE==="rj"){ const d0=new Date(DEFAULT_START+"T00:00:00"); d0.setDate(d0.getDate()-1); const p2=n=>String(n).padStart(2,"0"); if(mem.start===d0.getFullYear()+"-"+p2(d0.getMonth()+1)+"-"+p2(d0.getDate())) mem.start=DEFAULT_START; }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} if(window.SYNC&&SYNC.loggedIn()) SYNC.push(mem);}
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -2740,8 +2743,9 @@ const syncKey=k=>MODE==="y365"?"y-"+k:k;
 /* 함께 읽기 숫자: 한 사람이 한 본문을 처음 완료할 때 한 번만 셉니다(완료 취소 후 다시 눌러도 다시 세지 않음) */
 function countDone(k){ mem.counted ||= {}; if(mem.counted[k]) return; mem.counted[k]=1; save(); if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),syncKey(todayStr())); }
 const dateOf=(w,d)=>{const s=parseD(mem.start);s.setDate(s.getDate()+(w-1)*7+d);return s;};
-/* 화면의 한 주는 늘 주일~토요일. 통독표 날짜(w,d)는 그대로 두고 보여 주는 묶음만 달력 주로 맞춥니다. */
-const S0=()=>{const s=parseD(mem.start); s.setDate(s.getDate()-s.getDay()); return s;};
+/* 화면의 한 주: 리딩지저스 월~주일, 365 주일~토요일. 통독표 날짜(w,d)는 그대로 두고 보여 주는 묶음만 달력 주로 맞춥니다. */
+/* 리딩지저스는 월요일~주일, 365는 주일~토요일 */
+const S0=()=>{const s=parseD(mem.start); s.setDate(s.getDate()-(MODE==="rj"?(s.getDay()+6)%7:s.getDay())); return s;};
 function NDW(){ const last=parseD(mem.start); last.setDate(last.getDate()+TOTAL_DAYS-1); return Math.floor(dayDiff(S0(),last)/7)+1; }
 function cellOf(W,i){ const dt=S0(); dt.setDate(dt.getDate()+(W-1)*7+i); const n=dayDiff(parseD(mem.start),dt);
   if(n<0) return {dt,pre:true}; if(n>=TOTAL_DAYS) return {dt,after:true}; return {dt,w:Math.floor(n/7)+1,d:n%7}; }
@@ -2884,7 +2888,7 @@ function syncHlBar(){
   [...HSEL].forEach(id=>{ if(!document.getElementById("v-"+id)) HSEL.delete(id); });
   if(!HSEL.size||view.tab!=="read"){ bar.hidden=true; bar.innerHTML=""; return; }
   const anyMk=[...HSEL].some(id=>HL[id]);
-  bar.innerHTML=`<span class="cnt">${HSEL.size}절</span>${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기">✕</button>`:""}<button class="cl" data-mk="close">취소</button>`;
+  bar.innerHTML=`<span class="cnt">${HSEL.size}절 선택</span>${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기">✕</button>`:""}<button class="cl" data-mk="close">취소</button>`;
   bar.hidden=false;
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
     if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x") delete HL[id]; else HL[id]=[k,t]; const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]?" mk-"+HL[id][0]:""); } } saveHL(); }
@@ -3764,11 +3768,15 @@ function renderNews(){
   let seen=""; try{ seen=localStorage.getItem(NEWS_KEY)||""; }catch(e){}
   const fresh=NEWS.filter(n=>n[0]>seen);
   if(!fresh.length){ el.innerHTML=""; return; }
-  const txt=fresh.map(n=>n[1]).join("   ·   ");
-  el.innerHTML=`<div class="news"><button class="news-tag" id="newsOpen">새 소식</button><div class="news-track" id="newsTrack"><span>${esc(txt)}</span></div><button class="news-x" id="newsX" aria-label="새 소식 닫기">✕</button></div>`;
-  const sp=el.querySelector(".news-track span"); const dur=Math.max(12,txt.length*0.22); sp.style.animationDuration=dur+"s";
+  el.innerHTML=`<div class="news"><button class="news-tag" id="newsOpen">새 소식</button><div class="news-track" id="newsTrack" aria-live="off">${fresh.map((n,i)=>`<span class="ni${i?"":" on"}">${esc(n[1])}</span>`).join("")}</div><button class="news-x" id="newsX" aria-label="새 소식 닫기">✕</button></div>`;
+  clearInterval(window._newsT);
+  if(fresh.length>1){ let i=0; const L=el.querySelectorAll(".news-track .ni");
+    window._newsT=setInterval(()=>{ if(!document.body.contains(L[0])) return clearInterval(window._newsT);
+      const cur=L[i]; i=(i+1)%L.length; const nx=L[i];
+      nx.style.transition="none"; nx.classList.remove("out","on"); void nx.offsetWidth; nx.style.transition="";
+      cur.classList.remove("on"); cur.classList.add("out"); nx.classList.add("on"); },3500); }
   el.querySelector("#newsTrack").onclick=showNews; document.getElementById("newsOpen").onclick=showNews;
-  document.getElementById("newsX").onclick=()=>{ try{ localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} el.innerHTML=""; };
+  document.getElementById("newsX").onclick=()=>{ try{ localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} clearInterval(window._newsT); el.innerHTML=""; };
 }
 function showNews(){
   const byDay={}; NEWS.forEach(([d,t])=>{ (byDay[d] ||= []).push(t); });
@@ -3825,9 +3833,6 @@ function renderGuide(){
   <section class="sec"><span class="label">설정</span><h2>통독 시작일</h2>
   <p class="lead">${rj?"1주차 1일째가 시작된 날입니다. 그날부터 엿새는 1–6일째, 일곱째 날은 한 주 돌아보기로 계산합니다.":"1일째를 읽기 시작한 날입니다. 그날부터 하루에 하나씩 365일째까지 이어집니다."} 지금 설정: ${fmt(parseD(mem.start),{year:"numeric",month:"long",day:"numeric",weekday:"short"})}</p>
   <div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>
-  ${rj?(()=>{const wd=parseD(mem.start).getDay(); return `<span class="label" style="margin-top:10px">한 주의 짜임</span><div class="plans" role="radiogroup">
-   <button class="plan" role="radio" aria-checked="${wd===1}" data-wk="1"><i class="dot"></i><b>월요일~토요일 읽기 · 주일 돌아보기</b><span class="lead">교회 통독 일정과 같습니다.</span></button>
-   <button class="plan" role="radio" aria-checked="${wd===0}" data-wk="0"><i class="dot"></i><b>주일~금요일 읽기 · 토요일 돌아보기</b><span class="lead">모든 날짜가 하루씩 앞당겨집니다. 예: 월요일에 읽던 본문을 주일에 읽습니다.</span></button></div>`;})():""}
   <span class="label" style="margin-top:10px">이미 읽어 오신 분</span><p class="lead">중간부터 쓰기 시작했다면, 오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞출 수 있습니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div>
   <span class="label" style="margin-top:10px">기록 지우기</span><p class="lead">기록은 이 기기의 브라우저에만 저장됩니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div></section>
   <section class="sec"><span class="label">시험판 안내</span><p class="lead">이 어플은 중앙성서교회 교인에게 성경 통독과 QT의 유익함을 위해 제공됩니다. 현재 시험판으로 제공됩니다. 미비한 점이 있다면 피드백을 남겨주세요. 정식판에서 반영하겠습니다.</p>
