@@ -1099,11 +1099,17 @@ button.bk{font-family:inherit;cursor:pointer}
 .testa-h{display:flex;justify-content:space-between;align-items:baseline;font-size:13px}
 .testa-h b{color:var(--accent);font-size:14px}
 .testa-h span{color:var(--muted)}
+.day.pre .ds{color:var(--gold);font-weight:700}
+.revchip{display:flex;align-items:center;gap:8px;width:100%;margin-top:8px;font:inherit;text-align:left;background:var(--card);border:1px dashed var(--accent);border-radius:10px;padding:9px 12px;color:var(--accent);cursor:pointer}
+.revchip span{font-weight:700;font-size:14px}
+.revchip small{flex:1;color:var(--muted);font-size:12.5px}
+.revchip.on{background:var(--accent);color:var(--accent-ink);border-style:solid}
+.revchip.on small{color:var(--accent-ink);opacity:.85}
 </style>
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><span>이야기 통독 노트 · <span id="planName"></span></span><button class="menubtn" id="menuBtn" aria-label="사용법과 설정 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
+    <div class="brand"><span>이야기 통독 노트(시험판) · <span id="planName"></span></span><button class="menubtn" id="menuBtn" aria-label="사용법과 설정 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
     <div class="date" id="dateLine"></div>
     <div class="where" id="whereLine"></div>
     <div id="noticeBox"></div>
@@ -1114,6 +1120,7 @@ button.bk{font-family:inherit;cursor:pointer}
       <button class="iconbtn" id="nextW" aria-label="다음 주">›</button>
     </div>
     <div class="strip" id="strip"></div>
+    <div id="revRow"></div>
   </header>
   <main id="main"></main>
   <footer>
@@ -2666,6 +2673,21 @@ const syncKey=k=>MODE==="y365"?"y-"+k:k;
 /* 함께 읽기 숫자: 한 사람이 한 본문을 처음 완료할 때 한 번만 셉니다(완료 취소 후 다시 눌러도 다시 세지 않음) */
 function countDone(k){ mem.counted ||= {}; if(mem.counted[k]) return; mem.counted[k]=1; save(); if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),syncKey(todayStr())); }
 const dateOf=(w,d)=>{const s=parseD(mem.start);s.setDate(s.getDate()+(w-1)*7+d);return s;};
+/* 화면의 한 주는 늘 주일~토요일. 통독표 날짜(w,d)는 그대로 두고 보여 주는 묶음만 달력 주로 맞춥니다. */
+const S0=()=>{const s=parseD(mem.start); s.setDate(s.getDate()-s.getDay()); return s;};
+function NDW(){ const last=parseD(mem.start); last.setDate(last.getDate()+TOTAL_DAYS-1); return Math.floor(dayDiff(S0(),last)/7)+1; }
+function cellOf(W,i){ const dt=S0(); dt.setDate(dt.getDate()+(W-1)*7+i); const n=dayDiff(parseD(mem.start),dt);
+  if(n<0) return {dt,pre:true}; if(n>=TOTAL_DAYS) return {dt,after:true}; return {dt,w:Math.floor(n/7)+1,d:n%7}; }
+const weekOfDay=(w,d)=>Math.floor(dayDiff(S0(),dateOf(w,d))/7)+1;
+function dispW(){ if(view.pre) return 1; if(view.revW) return view.revW; return weekOfDay(view.w,view.d); }
+const hasPre=()=>MODE==="rj"&&cellOf(1,0).pre&&dayDiff(parseD(mem.start),cellOf(1,0).dt)===-1;
+function weekDays(W){ const L=[]; for(let i=0;i<7;i++){ const c=cellOf(W,i); if(c.w&&!isRev(c.d)) L.push([c.w,c.d]); } return L; }
+function dispTitle(W){
+  if(MODE==="rj") return W<=NW?`${W}주차 · ${WEEKS[W-1].t}`:`${NW}주차 돌아보기`;
+  const L=weekDays(W); if(!L.length) return `${W}주차`;
+  const a=dayPlan(...L[0]).ch[0], z=dayPlan(...L[L.length-1]).ch.slice(-1)[0];
+  return `${W}주차 · `+(a[0]===z[0]?`${PLAN.abbr[a[0]-1]} ${a[1]}–${z[1]}`:`${PLAN.abbr[a[0]-1]} ${a[1]} – ${PLAN.abbr[z[0]-1]} ${z[1]}`);
+}
 function posOfToday(){
   const diff=dayDiff(parseD(mem.start),today0());
   if(diff<0) return {w:1,d:0,state:"before",diff};
@@ -2851,30 +2873,47 @@ function initMap(A){
 /* 머리 */
 function dayScore(w,d){return mem.q[keyOf(w,d)]?.first;}
 function renderHead(){
-  const dt=dateOf(view.w,view.d);
+  const W=dispW(), NDWv=NDW();
+  const dt=view.pre?cellOf(1,0).dt:view.revW?(()=>{let c; for(let i=6;i>=0;i--){ c=cellOf(W,i); if(c.w) break; } return c.dt;})():dateOf(view.w,view.d);
   document.getElementById("dateLine").textContent=fmt(dt,{month:"long",day:"numeric",weekday:"long"});
-  document.getElementById("whereLine").innerHTML=isRev(view.d)?`<b>${view.w}주차</b> · 주일 · 한 주 돌아보기`:MODE==="y365"?`<b>${dayNo(view.w,view.d)}일째</b> · ${esc(dayPlan(view.w,view.d).label)}`:`<b>${view.w}주차</b> · ${view.d+1}일째 · ${esc(dayPlan(view.w,view.d).label)}`;
-  const nb=document.getElementById("noticeBox"), isToday=view.w===here.w&&view.d===here.d;
+  document.getElementById("whereLine").innerHTML=view.pre?`<b>시작 주일</b> · 45주 여정 미리 보기`:view.revW?`<b>${W}주차</b> · 한 주 돌아보기`:isRev(view.d)?`<b>${view.w}주차</b> · 주일 · 한 주 돌아보기`:MODE==="y365"?`<b>${dayNo(view.w,view.d)}일째</b> · ${esc(dayPlan(view.w,view.d).label)}`:`<b>${view.w}주차</b> · ${view.d+1}일째 · ${esc(dayPlan(view.w,view.d).label)}`;
+  const nb=document.getElementById("noticeBox"), isToday=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d;
   if(here.state==="before"&&isToday) nb.innerHTML=`<div class="notice">통독 시작일까지 ${-here.diff}일 남았습니다. 1주차를 미리 볼 수 있습니다.</div>`;
   else if(here.state==="after"&&isToday) nb.innerHTML=`<div class="notice">${esc(PI.name)} 일정이 끝났습니다. '나의 기록'에서 한 해를 돌아보세요.</div>`;
-  else if(!isToday&&view.tab==="read") nb.innerHTML=`<div class="notice">오늘이 아닌 날을 보고 있습니다. '오늘'을 누르면 돌아갑니다.</div>`;
+  else if(!isToday&&!view.pre&&!view.revW&&view.tab==="read") nb.innerHTML=`<div class="notice">오늘이 아닌 날을 보고 있습니다. '오늘'을 누르면 돌아갑니다.</div>`;
   else nb.innerHTML="";
-  const W=WEEKS[view.w-1];
-  document.getElementById("wkTitle").innerHTML=`<span class="wkt">${view.w}주차 · ${esc(W.t)}<i class="caret" aria-hidden="true">▾</i></span><small>${fmt(dateOf(view.w,0),{month:"numeric",day:"numeric"})} – ${fmt(dateOf(view.w,MODE==="rj"?6:nd(view.w)-1),{month:"numeric",day:"numeric"})}</small>`;
+  const a=cellOf(W,0).dt, z=cellOf(W,6).dt;
+  document.getElementById("wkTitle").innerHTML=`<span class="wkt">${esc(dispTitle(W))}<i class="caret" aria-hidden="true">▾</i></span><small>${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}</small>`;
   const st=document.getElementById("strip"); st.innerHTML="";
-  for(let d=0;d<7;d++){
-    const b=document.createElement("button"), dt2=dateOf(view.w,d);
-    if(!isRev(d)&&d>=nd(view.w)){ b.className="day"; b.disabled=true; b.style.visibility="hidden"; st.appendChild(b); continue; }
-    const sc=!isRev(d)?dayScore(view.w,d):mem.wq[view.w]?.first;
-    const dn=!isRev(d)&&mem.done[keyOf(view.w,d)];
-    b.className="day"+(d===view.d?" sel":"")+(view.w===here.w&&d===here.d&&here.state==="in"?" today":"")+(sc||dn?" done":"");
-    b.innerHTML=`<span class="dn">${DAYN[dt2.getDay()]}</span><span class="dd">${dt2.getDate()}</span>${!isRev(d)?(()=>{const [bk,ch]=stripRef(dayPlan(view.w,d)); return `<span class="ds">${esc(bk)}</span><span class="dc${ch.length>=7?" long":""}">${esc(ch)||"&nbsp;"}</span>`;})():`<span class="ds">복습</span><span class="dc">${sc?sc.s+"/"+sc.t:"&nbsp;"}</span>`}${dn||(!isRev(d)&&sc)?`<i class="dchk" aria-hidden="true">✓</i>`:""}`;
-    b.setAttribute("aria-label",fmt(dt2,{month:"long",day:"numeric"})+" "+(!isRev(d)?dayPlan(view.w,d).label:"주일 돌아보기"));
-    b.onclick=()=>{view.d=d;view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});};
+  const todayDt=today0();
+  for(let i=0;i<7;i++){
+    const c=cellOf(W,i), b=document.createElement("button"), dt2=c.dt;
+    const isTodayCell=dayDiff(dt2,todayDt)===0;
+    if(c.after||(c.pre&&!(hasPre()&&W===1&&i===0))){ b.className="day"; b.disabled=true; b.style.visibility="hidden"; st.appendChild(b); continue; }
+    if(c.pre){
+      b.className="day pre"+(view.pre?" sel":"")+(isTodayCell?" today":"");
+      b.innerHTML=`<span class="dn">${DAYN[dt2.getDay()]}</span><span class="dd">${dt2.getDate()}</span><span class="ds">시작</span><span class="dc">미리 보기</span>`;
+      b.setAttribute("aria-label",fmt(dt2,{month:"long",day:"numeric"})+" 시작 주일 미리 보기");
+      b.onclick=()=>{view.pre=true;view.revW=null;view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});};
+      st.appendChild(b); continue;
+    }
+    const w=c.w,d=c.d, rev=isRev(d);
+    const sc=!rev?dayScore(w,d):mem.wq[w]?.first;
+    const dn=!rev&&mem.done[keyOf(w,d)];
+    const sel=!view.pre&&!view.revW&&view.w===w&&view.d===d;
+    b.className="day"+(sel?" sel":"")+(w===here.w&&d===here.d&&here.state==="in"?" today":"")+(sc||dn?" done":"");
+    b.innerHTML=`<span class="dn">${DAYN[dt2.getDay()]}</span><span class="dd">${dt2.getDate()}</span>${!rev?(()=>{const [bk,ch]=stripRef(dayPlan(w,d)); return `<span class="ds">${esc(bk)}</span><span class="dc${ch.length>=7?" long":""}">${esc(ch)||"&nbsp;"}</span>`;})():`<span class="ds">복습</span><span class="dc">${sc?sc.s+"/"+sc.t:`${w}주차`}</span>`}${dn||(!rev&&sc)?`<i class="dchk" aria-hidden="true">✓</i>`:""}`;
+    b.setAttribute("aria-label",fmt(dt2,{month:"long",day:"numeric"})+" "+(!rev?dayPlan(w,d).label:`${w}주차 돌아보기`));
+    b.onclick=()=>{view.pre=false;view.revW=null;view.w=w;view.d=d;view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});};
     st.appendChild(b);
   }
-  document.getElementById("prevW").disabled=view.w===1;
-  document.getElementById("nextW").disabled=view.w===NW;
+  const rr=document.getElementById("revRow");
+  if(rr){ if(MODE==="y365"&&weekDays(W).length){ const T=weekTotalsList(weekDays(W)); const wf=mem.wq["c"+W]?.first;
+      rr.innerHTML=`<button class="revchip${view.revW===W?" on":""}" id="revBtn"><span>이번 주 돌아보기</span><small>${T.n?`퀴즈 ${T.s}/${T.t}`:""}${wf?` · 도전 ${wf.s}/${wf.t}`:""}</small><b aria-hidden="true">›</b></button>`;
+      document.getElementById("revBtn").onclick=()=>{view.revW=W;view.pre=false;view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});}; }
+    else rr.innerHTML=""; }
+  document.getElementById("prevW").disabled=W<=1;
+  document.getElementById("nextW").disabled=W>=NDWv;
   document.getElementById("planName").textContent=PI.name; document.getElementById("planSrc").textContent=PI.src;
   document.querySelectorAll(".bnav .tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
 }
@@ -2895,6 +2934,8 @@ function progressMini(){
 }
 /* 오늘 통독 */
 function renderRead(){
+  if(view.pre) return renderPreview();
+  if(view.revW) return renderReview365(view.revW);
   const {w,d}=view; if(isRev(d)) return renderReview();
   const p=dayPlan(w,d), key=keyOf(w,d), b0=p.ch[0][0];
   if(!BIBLE) return `<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
@@ -2937,6 +2978,7 @@ function renderRead(){
     h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">완료하면 진행률이 ${pct1(n,TOTAL_CH)}%에서 ${pct1(after,TOTAL_CH)}%로 올라갑니다. 퀴즈를 끝까지 풀면 자동으로 완료됩니다.</p>`;
   }
   h+=`</section>`;
+  if(MODE==="y365"&&(dateOf(w,d).getDay()===6||dayNo(w,d)===READ_DAYS)) h+=`<section class="sec"><div class="qcard"><span class="k">한 주를 마무리하는 날</span><p>이번 주 읽은 본문을 돌아보고 주간 도전 문제를 풀어 보세요.</p><div class="row"><button class="btn small" id="toRev">이번 주 돌아보기 ›</button></div></div></section>`;
   h+=`<section class="sec"><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
   view.justDone=false;
   return h;
@@ -3077,6 +3119,8 @@ function showLook(i){
 function renderQT(){
   const {w,d}=view;
   if(!BIBLE) return `<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
+  if(view.pre) return renderPreview();
+  if(view.revW) return renderQTWeek(weekDays(view.revW),dispTitle(view.revW));
   if(isRev(d)) return renderQTWeek();
   const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], A=dayA(w,d), q=qtOf(key);
   const traits=godTraits(A);
@@ -3118,12 +3162,13 @@ function renderQT(){
   view.qtJust=false;
   return h;
 }
-function renderQTWeek(){
-  const w=view.w; let h=`<section class="sec"><span class="label">QT · 한 주 돌아보기</span><h2>${w}주차 ${esc(WEEKS[w-1].t)}</h2><p class="lead">이번 주에 적은 묵상과 기도를 다시 읽어 보세요.</p></section>`;
+function renderQTWeek(list,title){
+  const w=view.w; const L=list||[0,1,2,3,4,5].map(d=>[w,d]);
+  let h=`<section class="sec"><span class="label">QT · 한 주 돌아보기</span><h2>${esc(title||`${w}주차 ${WEEKS[w-1].t}`)}</h2><p class="lead">이번 주에 적은 묵상과 기도를 다시 읽어 보세요.</p></section>`;
   let any=false;
-  for(let d=0;d<6;d++){ const q=mem.qt[keyOf(w,d)]; const p=dayPlan(w,d);
+  for(const [ww,d] of L){ const q=mem.qt[keyOf(ww,d)]; const p=dayPlan(ww,d);
     const st=qtStoryText(q);
-    if(q&&(st||q.med||q.pray)){ any=true; h+=`<div class="qcard"><span class="k">${d+1}일째 · ${esc(p.label)}${q.done?" · 완료":""}</span>${st?`<p>${esc(st)}</p>`:""}${q.med?`<p><b>묵상</b> ${esc(q.med)}</p>`:""}${q.pray?`<p><b>기도</b> ${esc(q.pray)}</p>`:""}</div>`; } }
+    if(q&&(st||q.med||q.pray)){ any=true; h+=`<div class="qcard"><span class="k">${esc(dayName(ww,d).replace(/^\d+주차 /,""))} · ${esc(p.label)}${q.done?" · 완료":""}</span>${st?`<p>${esc(st)}</p>`:""}${q.med?`<p><b>묵상</b> ${esc(q.med)}</p>`:""}${q.pray?`<p><b>기도</b> ${esc(q.pray)}</p>`:""}</div>`; } }
   if(!any) h+=`<p class="lead">아직 적은 내용이 없습니다. 날짜를 눌러 그날의 QT로 가 보세요.</p>`;
   return h;
 }
@@ -3314,8 +3359,9 @@ function startQuiz(mode){
     view.quiz={key:keyOf(w,d),qs,i:0,first:[],state:{wrong:[],solved:false}};
   } else {
     const qs=[]; const base=(Date.now()^Math.floor(Math.random()*1e9))>>>0;
-    for(let dd=0;dd<nd(w);dd++){ const A=dayA(w,dd); const one=makeQuiz(A,CTX,base+dd*7919,{nOX:dd%2?0:1,nMC:dd%2?1:0}); if(one[0]) qs.push(one[0]); }
-    view.wquiz={key:String(w),qs,i:0,first:[],state:{wrong:[],solved:false}};
+    const L=view.revW?weekDays(view.revW):[...Array(nd(w)).keys()].map(dd=>[w,dd]);
+    L.forEach(([ww,dd],k)=>{ const A=dayA(ww,dd); const one=makeQuiz(A,CTX,base+k*7919,{nOX:k%2?0:1,nMC:k%2?1:0}); if(one[0]) qs.push(one[0]); });
+    view.wquiz={key:view.revW?"c"+view.revW:String(w),qs,i:0,first:[],state:{wrong:[],solved:false}};
   }
 }
 function answer(mode,i){
@@ -3337,8 +3383,45 @@ function nextQ(mode){
 }
 
 /* 주일 돌아보기 */
+function weekTotalsList(L){ let s=0,t=0,n=0; for(const [w,d] of L){const f=dayScore(w,d); if(f){s+=f.s;t+=f.t;n++;}} return {s,t,n}; }
 function weekTotals(w){
   let s=0,t=0,n=0; for(let d=0;d<nd(w);d++){const f=dayScore(w,d); if(f){s+=f.s;t+=f.t;n++;}} return {s,t,n};
+}
+
+/* 리딩지저스 시작 주일: 45주 여정 미리 보기 */
+function renderPreview(){
+  const W=WEEKS[0];
+  let h=`<section class="sec"><span class="label">시작 주일</span><h2>45주 이야기 통독을 시작합니다</h2><p class="lead">월요일부터 토요일까지 날마다 정해진 본문을 읽고, 주일에는 지난 한 주를 돌아봅니다. 오늘은 첫 주를 미리 살펴보는 날입니다.</p></section>`;
+  h+=`<section class="sec"><span class="label">1주차 미리 보기 · ${esc(W.t)}</span>${W.story?`<details class="where" open><summary><span class="k">이번 주 이야기</span></summary><p>${esc(W.story)}</p>${W.christ?`<p class="c">${esc(W.christ)}</p>`:""}</details>`:""}<div class="tbl">`;
+  for(let d=0;d<6;d++){ const p=dayPlan(1,d), dt=dateOf(1,d); h+=`<button class="trow" data-jump="1-${d}"><span class="d">${DAYN[dt.getDay()]}</span><span class="r">${esc(p.label)}${GUIDE[keyOf(1,d)]?`<div class="lead" style="font-size:13px">${esc(GUIDE[keyOf(1,d)].today)}</div>`:""}</span><span class="s none">›</span></button>`; }
+  h+=`</div></section><section class="sec"><button class="btn" data-jump="1-0" style="width:100%;padding:14px">첫날 본문 보기 · ${esc(dayPlan(1,0).label)}</button></section>`;
+  return h;
+}
+/* 365: 달력 한 주(주일~토요일) 돌아보기 */
+function renderReview365(W){
+  const L=weekDays(W), T=weekTotalsList(L);
+  const a=cellOf(W,0).dt, z=cellOf(W,6).dt;
+  let h=`<section class="sec"><span class="label">한 주 돌아보기 · ${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}</span><h2>${esc(dispTitle(W))}</h2></section>`;
+  h+=`<section class="sec"><span class="label">이번 주 퀴즈 성적</span><div class="tbl">`;
+  for(const [w,d] of L){ const f=dayScore(w,d), p=dayPlan(w,d), dt=dateOf(w,d), dn=mem.done[keyOf(w,d)];
+    h+=`<button class="trow" data-jump="${w}-${d}"><span class="d">${DAYN[dt.getDay()]}</span><span class="r">${esc(p.label)}${f?`<div class="meter"><i style="width:${pct(f.s,f.t)}%"></i></div>`:""}</span><span class="s ${f?"":"none"}">${f?`${f.s}/${f.t}`:dn?"✓":"아직"}</span></button>`; }
+  const [g,msg]=T.t?grade(T.s,T.t):["아직 시작 전","이번 주 날마다 퀴즈를 풀면 여기에 점수가 모입니다."];
+  h+=`<div class="total"><span>${T.n}일 참여${T.t?` · 정답률 ${pct(T.s,T.t)}%`:""}</span><span class="big">${T.s} / ${T.t}</span></div></div>
+   <div class="score"><span class="badge">${g}</span><p class="lead">${msg}${T.n&&T.n<L.length?` 아직 ${L.length-T.n}일이 남아 있어요. 놓친 날도 지금 풀 수 있습니다.`:""}</p></div></section>`;
+  if(BIBLE) h+=`<section class="sec"><span class="label">주간 도전 문제</span>${renderQuiz("c"+W,null,"week")}</section>`;
+  h+=`<section class="sec"><span class="label">이번 주 이야기 다시 보기</span><div class="sumlist">`;
+  for(const [w,d] of L) h+=`<details><summary>${DAYN[dateOf(w,d).getDay()]} · ${esc(dayPlan(w,d).label)}</summary><p>${esc((SUMMARY[w-1]||[])[d]||"")}</p></details>`;
+  h+=`</div></section>`+nextPreview(W);
+  return h;
+}
+/* 다음 주 미리 보기 (두 통독표 공통) */
+function nextPreview(W,label){
+  const N=NDW(); if(W>=N) return "";
+  const L=weekDays(W+1); if(!L.length) return "";
+  const [w,d]=L[0]; let story="";
+  if(MODE==="rj"&&WEEKS[w-1]&&WEEKS[w-1].story) story=WEEKS[w-1].story.split(/(?<=[다요]\.)\s+/)[0];
+  else if(GUIDE[keyOf(w,d)]) story=GUIDE[keyOf(w,d)].today;
+  return `<section class="sec"><span class="label">${esc(label||"다음 주 미리 보기")}</span><div class="qcard"><span class="k">${esc(dispTitle(W+1))}</span>${story?`<p>${esc(story)}</p>`:""}<div class="row"><button class="btn ghost small" data-jump="${w}-${d}">첫날 본문 · ${esc(dayPlan(w,d).label)}</button></div></div></section>`;
 }
 function renderReview(){
   const w=view.w, W=WEEKS[w-1]; const T=weekTotals(w);
@@ -3355,7 +3438,7 @@ function renderReview(){
   h+=renderArcs(w);
   h+=`<section class="sec"><span class="label">이번 주 이야기 다시 보기</span><details class="flow" open><summary>이번 주 전체 흐름</summary><p>${esc(W.story)}</p><p style="color:var(--muted);font-size:14.5px">${esc(W.christ)}</p></details><div class="sumlist">`;
   for(let d=0;d<6;d++) h+=`<details><summary>${d+1}일째 · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`;
-  return h+`</div></section>`;
+  return h+`</div></section>`+nextPreview(weekOfDay(w,6)-1,"이번 주 미리 보기 · 내일부터");
 }
 
 /* 나의 기록 (프로필) */
@@ -3402,8 +3485,10 @@ function renderRecord(){
   h+=renderAccount();
   // 주차별 점수
   let rows="";
-  for(let w=NW;w>=1;w--){ const T=weekTotals(w); if(!T.n&&w!==here.w) continue;
-    rows+=`<button class="trow" data-jump="${w}-${MODE==="rj"?6:0}"><span class="d">${w}주차</span><span class="r">${esc(WEEKS[w-1].t)}${T.t?`<div class="meter"><i style="width:${pct(T.s,T.t)}%"></i></div>`:""}</span><span class="s ${T.t?"":"none"}">${T.t?`${T.s}/${T.t}`:"아직"}</span></button>`; }
+  const hereW=weekOfDay(here.w,here.d);
+  for(let W=NDW();W>=1;W--){ const L=weekDays(W); if(!L.length) continue; const T=weekTotalsList(L); if(!T.n&&W!==hereW) continue;
+    const jt=MODE==="rj"&&W<=NW?`${W}-6`:`${L[0][0]}-${L[0][1]}`;
+    rows+=`<button class="trow" data-jump="${jt}"><span class="d">${W}주차</span><span class="r">${esc(dispTitle(W).replace(/^\d+주차 · /,""))}${T.t?`<div class="meter"><i style="width:${pct(T.s,T.t)}%"></i></div>`:""}</span><span class="s ${T.t?"":"none"}">${T.t?`${T.s}/${T.t}`:"아직"}</span></button>`; }
   h+=`<details class="more"><summary>주차별 퀴즈 점수</summary><div class="tbl">${rows}</div><p class="lead">주차를 누르면 그 주로 갑니다.</p></details>`;
   return h;
 }
@@ -3501,7 +3586,7 @@ function resumeCard(){
 let lastT=0;
 function trackPos(){
   const now=Date.now(); if(now-lastT<700) return; lastT=now;
-  if(isRev(view.d)) return;
+  if(isRev(view.d)||view.pre||view.revW) return;
   const L={w:view.w,d:view.d,tab:view.tab,at:now};
   if(view.tab==="read"&&view.open){ const vs=document.querySelectorAll("#bible .v"); for(const el of vs){ if(el.getBoundingClientRect().top>=70){ L.v=el.dataset.v; break; } } }
   if(view.tab==="record"||view.tab==="admin") return;
@@ -3643,7 +3728,7 @@ function render(){
   bind(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); }
   if(view.tab==="read"&&!isRev(view.d)&&BIBLE&&view.mapOpen) initMap(dayA(view.w,view.d)); else destroyMap();
 }
-function go(w,d){view.w=w;view.d=d;view.tab="read";view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});}
+function go(w,d){view.pre=false;view.revW=null;view.w=w;view.d=d;view.tab="read";view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});}
 function keepScroll(fn){const el=document.getElementById("quizSec")||document.querySelector(".quiz"); const top=el?el.getBoundingClientRect().top:null; fn(); render(); const el2=document.getElementById("quizSec")||document.querySelector(".quiz"); if(el2&&top!==null) window.scrollBy(0,el2.getBoundingClientRect().top-top);}
 function seeVerse(b,c,v){
   view.open=true; render();
@@ -3671,6 +3756,7 @@ function bind(){
   const toQT=()=>{view.tab="qt";render();window.scrollTo({top:0});};
   const tqt=document.getElementById("toQT"); if(tqt) tqt.onclick=toQT;
   m.querySelectorAll("[data-toqt]").forEach(b=>b.onclick=toQT);
+  const trv=document.getElementById("toRev"); if(trv) trv.onclick=()=>{ view.revW=dispW(); view.quiz=null; view.wquiz=null; render(); window.scrollTo({top:0}); };
   const mo=document.getElementById("mapOpen"); if(mo) mo.onclick=()=>{ view.mapOpen=true; const y=window.scrollY; render(); window.scrollTo({top:y}); };
   const mc=document.getElementById("mapClose"); if(mc) mc.onclick=()=>{ view.mapOpen=false; const y=window.scrollY; render(); window.scrollTo({top:y}); };
   const rg=document.getElementById("resumeGo"); if(rg) rg.onclick=()=>{ const r=RESUME; resumeShow=false; view.w=r.w; view.d=r.d; view.quiz=null; view.wquiz=null;
@@ -3691,28 +3777,41 @@ function bind(){
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
 function applySize(){document.documentElement.style.setProperty("--bible-size",(mem.size||17)+"px");}
+function gotoW(W,col){
+  const N=NDW(); W=Math.max(1,Math.min(N,W));
+  const valid=i=>{ const c=cellOf(W,i); return c.w||(c.pre&&hasPre()&&W===1&&i===0); };
+  const td=today0(); let pick=-1;
+  for(let i=0;i<7;i++) if(dayDiff(cellOf(W,i).dt,td)===0&&valid(i)) pick=i;
+  if(pick<0&&col!=null&&valid(col)) pick=col;
+  if(pick<0){ for(let i=0;i<7;i++){ const c=cellOf(W,i); if(c.w&&!isRev(c.d)){ pick=i; break; } } }
+  if(pick<0){ for(let i=0;i<7;i++) if(valid(i)){ pick=i; break; } }
+  const c=cellOf(W,pick); const keepRev=!!view.revW&&MODE==="y365";
+  view.pre=!!c.pre; view.revW=keepRev?W:null; if(c.w){ view.w=c.w; view.d=c.d; }
+  view.quiz=null; view.wquiz=null; view.open=false; render(); window.scrollTo({top:0});
+}
+function curCol(){ return view.pre?0:view.revW?6:dateOf(view.w,view.d).getDay(); }
 function openWeekPicker(){
-  let h=`<div class="wklist" id="wkList">`;
-  for(let w=1;w<=NW;w++){
-    const n=nd(w); let dn=0; for(let d=0;d<n;d++) if(mem.done[keyOf(w,d)]) dn++;
-    const a=dateOf(w,0), z=dateOf(w,MODE==="rj"?6:n-1);
-    h+=`<button class="wkrow${w===view.w?" sel":""}" data-pickw="${w}"><span class="n">${w}주차</span><span class="t">${esc(WEEKS[w-1].t)}<small>${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}${w===here.w&&here.state==="in"?" · 이번 주":""}</small></span><span class="c${dn>=n?" full":""}">${dn?`${dn}/${n}`:""}</span></button>`;
+  const N=NDW(), cur=dispW(), td=today0(); let h=`<div class="wklist" id="wkList">`;
+  for(let W=1;W<=N;W++){
+    const L=weekDays(W); let dn=0; L.forEach(([w,d])=>{ if(mem.done[keyOf(w,d)]) dn++; });
+    const a=cellOf(W,0).dt, z=cellOf(W,6).dt, now=dayDiff(a,td)>=0&&dayDiff(td,z)>=0;
+    h+=`<button class="wkrow${W===cur?" sel":""}" data-pickw="${W}"><span class="n">${W}주차</span><span class="t">${esc(dispTitle(W).replace(/^\d+주차 · /,""))}<small>${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}${now?" · 이번 주":""}</small></span><span class="c${L.length&&dn>=L.length?" full":""}">${dn?`${dn}/${L.length}`:""}</span></button>`;
   }
   h+=`</div>`;
   sheet("주차 고르기",h);
   const root=document.getElementById("sheetRoot");
-  root.querySelectorAll("[data-pickw]").forEach(b=>b.onclick=()=>{ const w=+b.dataset.pickw; root.innerHTML="";
-    view.w=w; view.d=(w===here.w&&here.state==="in")?here.d:0; fixD(); view.quiz=null; view.wquiz=null; view.open=false; render(); window.scrollTo({top:0}); });
+  root.querySelectorAll("[data-pickw]").forEach(b=>b.onclick=()=>{ root.innerHTML=""; view.revW=null; gotoW(+b.dataset.pickw,null); });
   const sel=root.querySelector(".wkrow.sel"); if(sel) sel.scrollIntoView({block:"center"});
 }
 document.getElementById("wkTitle").onclick=openWeekPicker;
 const fixD=()=>{ if(!isRev(view.d)&&view.d>=nd(view.w)) view.d=nd(view.w)-1; };
-document.getElementById("prevW").onclick=()=>{if(view.w>1){view.w--;fixD();view.quiz=null;view.wquiz=null;view.open=false;render();}};
-document.getElementById("nextW").onclick=()=>{if(view.w<NW){view.w++;fixD();view.quiz=null;view.wquiz=null;view.open=false;render();}};
+document.getElementById("prevW").onclick=()=>gotoW(dispW()-1,curCol());
+document.getElementById("nextW").onclick=()=>gotoW(dispW()+1,curCol());
 document.getElementById("menuBtn").onclick=openMenu;
 document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,here.d); if(t!=="read"){view.tab=t;render();}};
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>{const same=view.tab===t.dataset.tab; view.tab=t.dataset.tab; HSEL.clear(); render(); window.scrollTo({top:0,behavior:same?"smooth":"auto"});});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
+try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
 applySize(); render(); loadBible();
 if(window.SYNC&&SYNC.loggedIn()) SYNC.pull().then(remote=>{ if(remote){ mem=mergeMem(mem,remote); try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} Object.assign(here,posOfToday()); render(); } }).catch(()=>{});
 if(window.SYNC) SYNC.onChange(()=>{ if(view.tab==="record"){ const a=document.activeElement; if(!(a&&a.tagName==="INPUT")) render(); } });
