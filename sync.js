@@ -14,7 +14,8 @@
       firebase.initializeApp(cfg); const auth=firebase.auth(); fs=firebase.firestore();
       if(cfg.emulator){ auth.useEmulator("http://127.0.0.1:9099"); fs.useEmulator("127.0.0.1",8080); }
       try{ await fs.enablePersistence({synchronizeTabs:true}); }catch(e){}
-      await new Promise((res,rej)=>{ const off=auth.onAuthStateChanged(u=>{ if(u){off();res();} }); auth.signInAnonymously().catch(rej); });
+      try{ await auth.getRedirectResult(); }catch(e){ console.warn("redirect",e); }
+      await new Promise((res,rej)=>{ let first=true; const off=auth.onAuthStateChanged(u=>{ if(u){off();res();} else if(first){ first=false; auth.signInAnonymously().catch(rej); } }); });
     })(); return ready; }
   async function keyOf(name,pin){
     const s=`cbsr|${name.replace(/\s+/g,"")}|${pin}`;
@@ -47,7 +48,19 @@
     async pull(){ if(!login) return null; await init(); const s=await fs.doc(`readers/${login.key}`).get(); if(!s.exists) return null; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return null; } },
     push(mem){ if(!login) return; clearTimeout(pushT);
       pushT=setTimeout(async()=>{ try{ await init(); await fs.doc(`readers/${login.key}`).set({name:login.name,data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); notify(); }catch(e){ console.warn("sync",e); } },1500); },
-    /* 피드백 보내기 (읽기는 콘솔에서만) */
+    /* 관리자: 구글 계정으로 로그인 → admins/{uid} 문서가 있으면 관리자 */
+    admin:{
+      async state(){ await init(); const u=firebase.auth().currentUser; if(!u||u.isAnonymous) return {in:false};
+        let ok=false; try{ ok=(await fs.doc(`admins/${u.uid}`).get()).exists; }catch(e){}
+        return {in:true,ok,uid:u.uid,email:u.email||""}; },
+      async login(){ await init(); const pv=new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({prompt:"select_account"});
+        try{ await firebase.auth().signInWithPopup(pv); }
+        catch(e){ if(/popup|cancelled-popup|operation-not-supported/.test(e.code||"")) return firebase.auth().signInWithRedirect(pv); throw e; } },
+      async logout(){ await init(); await firebase.auth().signOut(); await firebase.auth().signInAnonymously(); },
+      async list(){ await init(); const q=await fs.collection("feedback").orderBy("at","desc").limit(300).get(); return q.docs.map(d=>({id:d.id,...d.data()})); },
+      async remove(id){ await init(); await fs.doc(`feedback/${id}`).delete(); }
+    },
+    /* 피드백 보내기 */
     async feedback(o){ try{ await init();
       const t=String(o.text||"").slice(0,3000); if(!t) return false;
       const w=fs.collection("feedback").add({text:t,name:String(o.name||"").slice(0,20),plan:String(o.plan||"").slice(0,10),day:String(o.day||"").slice(0,60),ua:String(o.ua||"").slice(0,200),at:Date.now()});

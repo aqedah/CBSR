@@ -1056,6 +1056,13 @@ details.mine{font-size:14px}
 details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:6px 0}
 .fbbox{display:grid;gap:8px}
 .fbbox input{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+.adminlink{text-align:center;margin-top:18px}
+.linkbtn{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px;justify-self:start}
+.uid{font-family:ui-monospace,monospace;font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;word-break:break-all;margin:0}
+.admhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.fbitem{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:6px;margin-top:10px}
+.fbitem p{margin:0;white-space:pre-wrap;line-height:1.6}
+.fbitem small{color:var(--muted)}
 </style>
 
 <div class="wrap">
@@ -1095,7 +1102,7 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="config.js?v=bf7c7e96"></script>
-<script src="sync.js?v=a23ea1b1"></script>
+<script src="sync.js?v=56578b4b"></script>
 <script src="bible.js?v=37de8195"></script>
 <script>
 /* ───────── 이름·지명·용어 찾기와 자동 퀴즈 엔진 ───────── */
@@ -3395,11 +3402,47 @@ function trackPos(){
   if(isRev(view.d)) return;
   const L={w:view.w,d:view.d,tab:view.tab,at:now};
   if(view.tab==="read"&&view.open){ const vs=document.querySelectorAll("#bible .v"); for(const el of vs){ if(el.getBoundingClientRect().top>=70){ L.v=el.dataset.v; break; } } }
-  if(view.tab==="record") return;
+  if(view.tab==="record"||view.tab==="admin") return;
   if(view.tab==="read"&&!L.v){ const o=mem.last; if(o&&o.w===L.w&&o.d===L.d&&o.v) L.v=o.v; }
   mem.last=L; try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){}
 }
 window.addEventListener("scroll",trackPos,{passive:true});
+
+/* 관리자 */
+function renderAdmin(){ setTimeout(loadAdmin,0);
+  return `<section class="sec"><button class="linkbtn" id="adminBack">‹ 돌아가기</button><span class="label">관리자</span><h2>피드백 모아 보기</h2><div id="adminBox"><p class="lead">확인하는 중…</p></div></section>`; }
+const fmtAt=t=>{ const d=new Date(t); return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}. ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
+async function loadAdmin(){
+  const box=document.getElementById("adminBox"); if(!box) return;
+  const back=document.getElementById("adminBack"); if(back) back.onclick=()=>{ view.tab="read"; render(); window.scrollTo({top:0}); };
+  if(!(window.SYNC&&SYNC.available)){ box.innerHTML=`<p class="lead">이 화면은 인터넷 주소로 연 앱에서만 쓸 수 있습니다.</p>`; return; }
+  let st; try{ st=await SYNC.admin.state(); }catch(e){ box.innerHTML=`<p class="lead">연결하지 못했습니다. 인터넷 연결을 확인해 주세요.</p>`; return; }
+  if(!document.body.contains(box)) return;
+  if(!st.in){
+    box.innerHTML=`<div class="acct"><p>관리자는 구글 계정으로 로그인합니다. 등록된 관리자 계정만 피드백을 볼 수 있습니다.</p><div class="row"><button class="btn" id="admIn">구글 계정으로 로그인</button></div><p class="lead" id="admMsg" role="status"></p></div>`;
+    document.getElementById("admIn").onclick=async()=>{ const m=document.getElementById("admMsg"); m.textContent="로그인 창을 여는 중…"; try{ sessionStorage.setItem("cbsr-admin","1"); }catch(e){}
+      try{ await SYNC.admin.login(); try{ sessionStorage.removeItem("cbsr-admin"); }catch(e){} loadAdmin(); }catch(e){ m.textContent="로그인하지 못했습니다: "+(e.code||e.message||e); } };
+    return;
+  }
+  const out=`<button class="btn ghost small" id="admOut">로그아웃</button>`;
+  if(!st.ok){
+    box.innerHTML=`<div class="acct"><p><b>${esc(st.email)}</b> 계정은 아직 관리자로 등록되지 않았습니다.</p><p class="lead">처음 한 번만 하면 됩니다. Firebase 콘솔 → Firestore Database → 데이터에서 <b>admins</b> 모음을 만들고, 아래 번호를 <b>문서 ID</b>로 넣어 문서를 추가하세요(필드는 아무거나 하나, 예: name = 관리자). 그다음 이 화면을 다시 여세요.</p><p class="uid" id="admUid">${esc(st.uid)}</p><div class="row"><button class="btn small" id="admCopy">번호 복사</button><button class="btn ghost small" id="admRe">다시 확인</button>${out}</div></div>`;
+    document.getElementById("admCopy").onclick=async()=>{ try{ await navigator.clipboard.writeText(st.uid); document.getElementById("admCopy").textContent="복사됨"; }catch(e){ const r=document.createRange(); r.selectNodeContents(document.getElementById("admUid")); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); } };
+    document.getElementById("admRe").onclick=loadAdmin;
+    document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); };
+    return;
+  }
+  let list; try{ list=await SYNC.admin.list(); }catch(e){ box.innerHTML=`<p class="lead">피드백을 불러오지 못했습니다: ${esc(e.code||e.message||String(e))}</p><div class="row">${out}</div>`; document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); }; return; }
+  if(!document.body.contains(box)) return;
+  const PN={rj:"리딩지저스",y365:"365"};
+  box.innerHTML=`<div class="admhead"><span class="lead">${esc(st.email)} · 피드백 ${list.length}건</span><span class="row"><button class="btn small" id="admRe">새로고침</button>${out}</span></div>`+
+   (list.length?list.map(f=>`<div class="fbitem" id="fb-${esc(f.id)}"><p>${esc(f.text)}</p><small>${esc(f.name||"이름 없음")} · ${esc(PN[f.plan]||f.plan||"")}${f.day?" · "+esc(f.day):""} · ${f.at?fmtAt(f.at):""}</small><div class="row"><button class="btn ghost small" data-fbdel="${esc(f.id)}">지우기</button></div></div>`).join(""):`<p class="lead">아직 들어온 피드백이 없습니다.</p>`);
+  document.getElementById("admRe").onclick=loadAdmin;
+  document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); };
+  box.querySelectorAll("[data-fbdel]").forEach(b=>b.onclick=async()=>{
+    if(b.dataset.sure!=="1"){ b.dataset.sure="1"; b.textContent="정말 지우기"; return; }
+    b.disabled=true; try{ await SYNC.admin.remove(b.dataset.fbdel); document.getElementById("fb-"+b.dataset.fbdel)?.remove(); }catch(e){ b.disabled=false; b.textContent="지우지 못함"; } });
+}
 /* 사용법 */
 /* 홈 화면에 추가 (독립 웹앱에서만) */
 let INSTALL_EVT=window.__bip||null;
@@ -3452,7 +3495,8 @@ function renderGuide(){
   <span class="label" style="margin-top:10px">기록 지우기</span><p class="lead">기록은 이 기기의 브라우저에만 저장됩니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div></section>
   <section class="sec"><span class="label">시험판 안내</span><p class="lead">이 어플은 중앙성서교회 교인에게 성경 통독과 QT의 유익함을 위해 제공됩니다. 현재 시험판으로 제공됩니다. 미비한 점이 있다면 피드백을 남겨주세요. 정식판에서 반영하겠습니다.</p>
   ${window.SYNC&&SYNC.available?`<button class="btn" id="fbOpen"${view.fbOpen?" hidden":""}>피드백 남기기</button>
-  <div class="fbbox" id="fbBox"${view.fbOpen?"":" hidden"}><textarea id="fbText" rows="5" maxlength="3000" placeholder="불편한 점, 틀린 내용, 있었으면 하는 기능을 자유롭게 적어 주세요. 어느 날짜·화면인지 적어 주시면 더 좋습니다."></textarea><input id="fbName" type="text" maxlength="20" placeholder="이름 (적지 않아도 됩니다)"><div class="row"><button class="btn" id="fbSend">보내기</button><button class="btn ghost small" id="fbCancel">닫기</button></div><p class="lead" id="fbMsg" role="status"></p></div>`:""}</section>`;
+  <div class="fbbox" id="fbBox"${view.fbOpen?"":" hidden"}><textarea id="fbText" rows="5" maxlength="3000" placeholder="불편한 점, 틀린 내용, 있었으면 하는 기능을 자유롭게 적어 주세요. 어느 날짜·화면인지 적어 주시면 더 좋습니다."></textarea><input id="fbName" type="text" maxlength="20" placeholder="이름 (적지 않아도 됩니다)"><div class="row"><button class="btn" id="fbSend">보내기</button><button class="btn ghost small" id="fbCancel">닫기</button></div><p class="lead" id="fbMsg" role="status"></p></div>`:""}</section>
+  ${window.SYNC&&SYNC.available?`<div class="adminlink"><button class="linkbtn" id="adminGo">관리자</button></div>`:""}`;
 }
 function closeMenu(){ const r=document.getElementById("drawerRoot"); if(r&&r.innerHTML){ r.innerHTML=""; document.body.style.overflow=""; } }
 function openMenu(){
@@ -3461,6 +3505,7 @@ function openMenu(){
   document.body.style.overflow="hidden";
   document.getElementById("drawerX").onclick=closeMenu;
   document.getElementById("drawerBg").onclick=e=>{if(e.target.id==="drawerBg")closeMenu();};
+  const ag=document.getElementById("adminGo"); if(ag) ag.onclick=()=>{ closeMenu(); view.tab="admin"; render(); window.scrollTo({top:0}); };
   const fo=document.getElementById("fbOpen"), fb=document.getElementById("fbBox");
   if(fo) fo.onclick=()=>{ fo.hidden=true; fb.hidden=false; document.getElementById("fbText").focus(); };
   const fc=document.getElementById("fbCancel"); if(fc) fc.onclick=()=>{ fb.hidden=true; fo.hidden=false; };
@@ -3489,7 +3534,7 @@ function render(){
   renderHead();
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
-  try{ m.innerHTML=view.tab==="read"?renderRead():view.tab==="qt"?renderQT():renderRecord(); }
+  try{ m.innerHTML=view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="admin"?renderAdmin():renderRecord(); }
   catch(e){ console.error(e); m.innerHTML=`<section class="sec"><h2>화면을 그리다 문제가 생겼습니다</h2><p class="lead">다른 탭으로 갔다가 다시 와 보세요. 계속되면 이 문구를 제작자에게 알려 주세요: ${esc(String(e&&e.message||e))}</p></section>`; }
   bind(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); }
   if(view.tab==="read"&&!isRev(view.d)&&BIBLE&&view.mapOpen) initMap(dayA(view.w,view.d)); else destroyMap();
@@ -3549,6 +3594,7 @@ document.getElementById("menuBtn").onclick=openMenu;
 document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,here.d); if(t!=="read"){view.tab=t;render();}};
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>{const same=view.tab===t.dataset.tab; view.tab=t.dataset.tab; HSEL.clear(); render(); window.scrollTo({top:0,behavior:same?"smooth":"auto"});});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
+try{ if(sessionStorage.getItem("cbsr-admin")){ sessionStorage.removeItem("cbsr-admin"); view.tab="admin"; } }catch(e){}
 applySize(); render(); loadBible();
 if(window.SYNC&&SYNC.loggedIn()) SYNC.pull().then(remote=>{ if(remote){ mem=mergeMem(mem,remote); try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} Object.assign(here,posOfToday()); render(); } }).catch(()=>{});
 if(window.SYNC) SYNC.onChange(()=>{ if(view.tab==="record"){ const a=document.activeElement; if(!(a&&a.tagName==="INPUT")) render(); } });
