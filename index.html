@@ -3012,6 +3012,7 @@ function qtVerses(A,traits,key){
   A.verses.filter(v=>DIVINE.test(v.t)&&v.t.length>=25&&v.t.length<=110).slice(0,40).forEach(v=>list.push(v));
   return [...new Set(list)];
 }
+const qtStoryText=q=>q?[q.gap,q.l0,q.l1,q.l2,q.story].filter(Boolean).join(" / "):"";
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
 function eyeFor(w,d,L){
   const k=keyOf(w,d), e=EYE[k];
@@ -3471,7 +3472,8 @@ function render(){
   renderHead();
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
-  m.innerHTML=view.tab==="read"?renderRead():view.tab==="qt"?renderQT():renderRecord();
+  try{ m.innerHTML=view.tab==="read"?renderRead():view.tab==="qt"?renderQT():renderRecord(); }
+  catch(e){ console.error(e); m.innerHTML=`<section class="sec"><h2>화면을 그리다 문제가 생겼습니다</h2><p class="lead">다른 탭으로 갔다가 다시 와 보세요. 계속되면 이 문구를 제작자에게 알려 주세요: ${esc(String(e&&e.message||e))}</p></section>`; }
   bind(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); }
   if(view.tab==="read"&&!isRev(view.d)&&BIBLE&&view.mapOpen) initMap(dayA(view.w,view.d)); else destroyMap();
 }
