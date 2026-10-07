@@ -1078,6 +1078,18 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 .wkrow .c{font-size:12.5px;color:var(--ok);font-weight:600;font-variant-numeric:tabular-nums}
 .wkrow .c.full::before{content:"✓ "}
 .wkrow.sel{border-color:var(--accent);background:var(--accent-soft)}
+.avwrap{position:relative;flex:none}
+.avatar{overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avcam{position:absolute;right:-4px;bottom:-4px;width:28px;height:28px;border-radius:50%;border:2px solid var(--card);background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.ped-bg{align-items:center}
+.ped{background:var(--card);color:var(--ink);width:min(92vw,420px);border-radius:16px;padding:16px;display:grid;gap:10px}
+.ped h3{margin:0}
+.ped-stage{position:relative;width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#222;touch-action:none}
+.ped-stage canvas{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+.ped-mask{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 999px rgba(0,0,0,.55);pointer-events:none;outline:2px solid rgba(255,255,255,.8)}
+.ped-zoom{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--muted)}
+.ped-zoom input{flex:1}
 </style>
 
 <div class="wrap">
@@ -3339,6 +3351,9 @@ function renderReview(){
 /* 나의 기록 (프로필) */
 const PROFKEY="cbsr-profile";
 let PROF={}; try{PROF=JSON.parse(localStorage.getItem(PROFKEY)||"{}")||{};}catch(e){}
+function saveProf(){ try{localStorage.setItem(PROFKEY,JSON.stringify(PROF)); return true;}catch(e){ return false; } }
+/* 처음 함께한 날: 이 기기에서 처음 연 날(예전 사용자는 가장 이른 통독 완료 날짜) */
+if(!PROF.since){ const ds=Object.values(mem.done||{}).filter(v=>/^\d{4}-\d{2}-\d{2}$/.test(v)).sort(); PROF.since=ds[0]&&ds[0]<todayStr()?ds[0]:todayStr(); saveProf(); }
 function readStreak(){ let p=[here.w,here.d]; if(isRev(p[1])) p=[p[0],5]; if(here.state==="before") return 0;
   const ok=(w,d)=>!!mem.done[keyOf(w,d)]; if(!ok(p[0],p[1])) p=prevDay(p[0],p[1]); return p?streakOf(ok,p[0],p[1]):0; }
 function bookProgress(){ const tot={},got={}; PLAN.plan.flat().forEach(p=>p.ch.forEach(([b])=>{tot[b]=(tot[b]||0)+1;}));
@@ -3351,8 +3366,8 @@ function renderRecord(){
   const rs=readStreak(), qs=(()=>{ let p=[here.w,isRev(here.d)?5:here.d]; const ok=(w,d)=>(mem.qt[keyOf(w,d)]||{}).done; if(!ok(p[0],p[1])) p=prevDay(p[0],p[1]); return p?streakOf(ok,p[0],p[1]):0; })();
   const n=chDone(), pc=+pct1(n,TOTAL_CH), sch=chScheduled();
   const nick=PROF.nick||"";
-  const since=here.state==="before"?`시작까지 ${-here.diff}일`:`함께한 지 ${Math.min(here.diff+1,TOTAL_DAYS)}일째`;
-  let h=`<section class="sec"><div class="prof"><div class="prof-top"><div class="avatar" aria-hidden="true">${nick?esc([...nick][0]):`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>`}</div>
+  const since=`함께한 지 ${Math.max(1,Math.round((parseD(todayStr())-parseD(PROF.since||todayStr()))/864e5)+1)}일째`;
+  let h=`<section class="sec"><div class="prof"><div class="prof-top"><div class="avwrap"><div class="avatar" aria-hidden="true">${PROF.photo?`<img src="${PROF.photo}" alt="">`:nick?esc([...nick][0]):`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>`}</div><button class="avcam" id="avCam" aria-label="프로필 사진 바꾸기"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button><input type="file" id="avFile" accept="image/*" hidden></div>
     <div class="prof-name" id="profName">${view.editNick?`<div class="acctform"><input id="nickIn" maxlength="12" value="${esc(nick)}" placeholder="불릴 이름"><button class="btn small" id="nickSave">저장</button></div>`:`<b>${nick?esc(nick):"이름을 정해 주세요"} <button class="edit" id="nickEdit">${nick?"바꾸기":"정하기"}</button></b>`}<span class="lead">${esc(PI.name)} · ${since}</span></div></div>
     <div class="ring">${ringSVG(pc)}<div class="rt"><span class="lead">성경 전체 진행률</span><b>${pct1(n,TOTAL_CH)}%</b><span class="lead">${TOTAL_CH.toLocaleString()}장 중 ${n.toLocaleString()}장 · 일정상 오늘까지 ${pct1(sch,TOTAL_CH)}%</span></div></div>
     <div class="pstats"><div class="pstat"><b>${doneN}</b><span>통독한 날 / ${READ_DAYS}</span></div><div class="pstat"><b>${rs}일</b><span>연속 통독</span></div><div class="pstat"><b>${t?pct(s,t)+"%":"–"}</b><span>퀴즈 정답률</span></div><div class="pstat"><b>${qtN}</b><span>QT 한 날</span></div><div class="pstat"><b>${qs}일</b><span>연속 QT</span></div><div class="pstat"><b>${hlN}</b><span>형광펜 절</span></div></div></div></section>`;
@@ -3382,8 +3397,56 @@ function renderRecord(){
   h+=`<details class="more"><summary>주차별 퀴즈 점수</summary><div class="tbl">${rows}</div><p class="lead">주차를 누르면 그 주로 갑니다.</p></details>`;
   return h;
 }
+
+/* 프로필 사진: 고르기 → 확대·축소·옮겨서 동그랗게 자르기 */
+function photoMenu(){
+  sheet("프로필 사진",`<div class="row"><button class="btn" id="phNew">새 사진 고르기</button><button class="btn ghost" id="phDel">사진 지우기</button></div>`);
+  document.getElementById("phNew").onclick=()=>{ document.getElementById("sheetRoot").innerHTML=""; document.getElementById("avFile").click(); };
+  document.getElementById("phDel").onclick=()=>{ delete PROF.photo; saveProf(); document.getElementById("sheetRoot").innerHTML=""; render(); };
+}
+function openPhotoEditor(file){
+  const url=URL.createObjectURL(file), img=new Image();
+  img.onerror=()=>{ URL.revokeObjectURL(url); sheet("사진을 열 수 없습니다","<p>이 파일은 사진으로 읽을 수 없습니다. 다른 사진을 골라 주세요.</p>"); };
+  img.onload=()=>{
+    const root=document.getElementById("sheetRoot");
+    root.innerHTML=`<div class="sheet-bg ped-bg"><div class="ped" role="dialog" aria-modal="true" aria-label="프로필 사진 편집"><h3>사진 자르기</h3><p class="lead">끌어서 옮기고, 두 손가락이나 아래 막대로 크기를 맞추세요.</p>
+      <div class="ped-stage" id="pedStage"><canvas id="pedCv" width="600" height="600"></canvas><div class="ped-mask" aria-hidden="true"></div></div>
+      <div class="ped-zoom"><span aria-hidden="true">−</span><input type="range" id="pedZoom" min="1" max="4" step="0.01" value="1" aria-label="확대·축소"><span aria-hidden="true">+</span></div>
+      <div class="row"><button class="btn" id="pedSave">저장</button><button class="btn ghost" id="pedCancel">취소</button></div></div></div>`;
+    document.body.style.overflow="hidden";
+    const cv=document.getElementById("pedCv"), ctx=cv.getContext("2d"), S=cv.width, iw=img.naturalWidth, ih=img.naturalHeight;
+    const base=Math.max(S/iw,S/ih); let z=1, ox=0, oy=0;
+    const clamp=()=>{ const w=iw*base*z, h=ih*base*z, mx=Math.max(0,(w-S)/2), my=Math.max(0,(h-S)/2); ox=Math.min(mx,Math.max(-mx,ox)); oy=Math.min(my,Math.max(-my,oy)); };
+    const paint=(c,size)=>{ const k=size/S, w=iw*base*z*k, h=ih*base*z*k; c.fillStyle="#fff"; c.fillRect(0,0,size,size); c.drawImage(img,size/2-w/2+ox*k,size/2-h/2+oy*k,w,h); };
+    const draw=()=>{ clamp(); paint(ctx,S); };
+    const zr=document.getElementById("pedZoom");
+    const setZ=(nz)=>{ z=Math.min(4,Math.max(1,nz)); zr.value=z; draw(); };
+    zr.oninput=()=>setZ(+zr.value);
+    const ratio=()=>S/cv.getBoundingClientRect().width;
+    const pts=new Map(); let last=null, pinch=null;
+    cv.onpointerdown=e=>{ cv.setPointerCapture(e.pointerId); pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pts.size===2){ const [a,b]=[...pts.values()]; pinch={d:Math.hypot(a.x-b.x,a.y-b.y),z}; } else last={x:e.clientX,y:e.clientY}; };
+    cv.onpointermove=e=>{ if(!pts.has(e.pointerId)) return; pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pts.size===2&&pinch){ const [a,b]=[...pts.values()]; setZ(pinch.z*Math.hypot(a.x-b.x,a.y-b.y)/pinch.d); return; }
+      if(last){ const r=ratio(); ox+=(e.clientX-last.x)*r; oy+=(e.clientY-last.y)*r; last={x:e.clientX,y:e.clientY}; draw(); } };
+    const up=e=>{ pts.delete(e.pointerId); if(pts.size<2) pinch=null; if(pts.size===1){ const p=[...pts.values()][0]; last={x:p.x,y:p.y}; } else last=null; };
+    cv.onpointerup=up; cv.onpointercancel=up;
+    cv.onwheel=e=>{ e.preventDefault(); setZ(z*(e.deltaY<0?1.08:1/1.08)); };
+    const close=()=>{ root.innerHTML=""; document.body.style.overflow=""; URL.revokeObjectURL(url); };
+    document.getElementById("pedCancel").onclick=close;
+    document.getElementById("pedSave").onclick=()=>{ const o=document.createElement("canvas"); o.width=o.height=320; paint(o.getContext("2d"),320);
+      const prev=PROF.photo; PROF.photo=o.toDataURL("image/jpeg",0.85);
+      if(!saveProf()){ PROF.photo=prev; close(); sheet("저장하지 못했습니다","<p>이 기기의 저장 공간이 부족합니다.</p>"); return; }
+      close(); render(); };
+    draw();
+  };
+  img.src=url;
+}
 function bindProfile(m){
   if(view.tab!=="record") return;
+  const ac=document.getElementById("avCam"), af=document.getElementById("avFile");
+  if(ac) ac.onclick=()=>{ if(PROF.photo) photoMenu(); else af.click(); };
+  if(af) af.onchange=()=>{ const f=af.files&&af.files[0]; af.value=""; if(f) openPhotoEditor(f); };
   const ne=document.getElementById("nickEdit"); if(ne) ne.onclick=()=>{view.editNick=true;render();document.getElementById("nickIn")?.focus();};
   const ns=document.getElementById("nickSave"); if(ns){ const sv=()=>{PROF.nick=document.getElementById("nickIn").value.trim(); try{localStorage.setItem(PROFKEY,JSON.stringify(PROF));}catch(e){} view.editNick=false; render();}; ns.onclick=sv; document.getElementById("nickIn").onkeydown=e=>{if(e.key==="Enter")sv();}; }
   const ha=document.getElementById("hlAll"); if(ha) ha.onclick=()=>{view.hlAll=true;const y=scrollY;render();scrollTo({top:y});};
