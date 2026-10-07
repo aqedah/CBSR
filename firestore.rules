@@ -27,6 +27,14 @@ service cloud.firestore {
       allow update: if signedIn() && request.resource.data.keys().hasOnly(['done']) && request.resource.data.done == resource.data.done + 1;
       allow delete: if false;
     }
+    // 피드백: 쓰기만 됩니다. 읽기는 Firebase 콘솔에서만.
+    match /feedback/{id} {
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['text', 'name', 'plan', 'day', 'ua', 'at'])
+        && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 3000
+        && request.resource.data.name is string && request.resource.data.name.size() <= 20;
+      allow read, update, delete: if false;
+    }
     match /stats/church {
       allow read: if signedIn();
       allow create: if signedIn() && request.resource.data.keys().hasOnly(['readers']) && request.resource.data.readers == 1;

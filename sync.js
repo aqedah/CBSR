@@ -47,6 +47,11 @@
     async pull(){ if(!login) return null; await init(); const s=await fs.doc(`readers/${login.key}`).get(); if(!s.exists) return null; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return null; } },
     push(mem){ if(!login) return; clearTimeout(pushT);
       pushT=setTimeout(async()=>{ try{ await init(); await fs.doc(`readers/${login.key}`).set({name:login.name,data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); notify(); }catch(e){ console.warn("sync",e); } },1500); },
+    /* 피드백 보내기 (읽기는 콘솔에서만) */
+    async feedback(o){ try{ await init();
+      const t=String(o.text||"").slice(0,3000); if(!t) return false;
+      const w=fs.collection("feedback").add({text:t,name:String(o.name||"").slice(0,20),plan:String(o.plan||"").slice(0,10),day:String(o.day||"").slice(0,60),ua:String(o.ua||"").slice(0,200),at:Date.now()});
+      await Promise.race([w,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),12000))]); return true; }catch(e){ console.warn("feedback",e); return false; } },
     /* 함께 읽기: 통독을 처음 마친 날에만 한 번 더합니다 */
     async markDone(dayKey,dateStr){ try{ await init();
       await Promise.all([fs.doc(`days/${dayKey}`).set({done:inc(1)},{merge:true}),fs.doc(`dates/${dateStr}`).set({done:inc(1)},{merge:true})]); }catch(e){ console.warn("count",e); } },
