@@ -1,9 +1,9 @@
-/* Firebase 웹 앱 설정 (공개돼도 괜찮은 값입니다). 비어 있으면 기록 이어 보기·함께 읽기 없이 이 기기에만 저장됩니다. */
+/* Firebase 설정값 (웹 앱용 공개 설정 — 보안은 firestore.rules가 지킵니다) */
 window.CBSR_FIREBASE_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyAdq9kfpqC0yaEEGZ7_o4Ox44R-1mxszOg",
+  authDomain: "cbsr-21238.firebaseapp.com",
+  projectId: "cbsr-21238",
+  storageBucket: "cbsr-21238.firebasestorage.app",
+  messagingSenderId: "693544806035",
+  appId: "1:693544806035:web:aabdc21325be4d79288f66"
 };
