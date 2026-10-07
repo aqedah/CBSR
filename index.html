@@ -1063,6 +1063,9 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 .fbitem{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:6px;margin-top:10px}
 .fbitem p{margin:0;white-space:pre-wrap;line-height:1.6}
 .fbitem small{color:var(--muted)}
+.readcnt{margin:0;font-size:13.5px;color:var(--ok);background:var(--ok-soft);border-radius:8px;padding:7px 11px}
+.readcnt:empty{display:none}
+.readcnt b{font-variant-numeric:tabular-nums}
 </style>
 
 <div class="wrap">
@@ -1101,8 +1104,8 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="config.js?v=bf7c7e96"></script>
-<script src="sync.js?v=56578b4b"></script>
+<script src="config.js?v=dccbeb83"></script>
+<script src="sync.js?v=51c54edf"></script>
 <script src="bible.js?v=37de8195"></script>
 <script>
 /* ───────── 이름·지명·용어 찾기와 자동 퀴즈 엔진 ───────── */
@@ -2864,6 +2867,7 @@ function renderRead(){
   let h=installCard("read")+resumeCard()+progressMini()+whereCard(p,w);
   // 1 본문
   h+=`<section class="sec" id="textSec"><span class="label">1 · 오늘 본문</span><h2>${esc(p.label)}</h2>${guideCard(key)}
+   ${window.SYNC&&SYNC.available?`<p class="readcnt" id="churchDay" aria-live="polite"></p>`:""}
    <div class="steps"><span class="step on">약 ${mins}분</span><span class="step ${view.open?"on":""}">본문</span><span class="step ${sc?"on":""}">퀴즈${sc?` ${sc.s}/${sc.t}`:""}</span><span class="step ${done?"on":""}">통독 완료</span></div>`;
   if(!view.open){
     h+=`<button class="openbtn" id="openText">본문 펼치기 · ${p.ch.length}${b0===19?"편":"장"}</button><p class="lead">오디오 성경이나 종이 성경으로 읽으셨다면 펼치지 않아도 됩니다.</p>`;
@@ -2892,7 +2896,7 @@ function renderRead(){
   const n=chDone(), after=n+(done?0:p.ch.length);
   h+=`<section class="sec" id="doneSec">`;
   if(done){
-    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.${n>=TOTAL_CH?" 성경 일독을 마치셨습니다!":` 남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?`<span class="church" id="churchDay"></span>`:""}${window.SYNC&&SYNC.available&&SYNC.loginEnabled&&!SYNC.loggedIn()?`<span class="lead">기록을 잃지 않으려면 ‘나의 기록’에서 이름을 등록하세요.</span>`:""}<div class="row" style="justify-content:center"><button class="btn small" id="toQT">QT로 이어 가기</button><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
+    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.${n>=TOTAL_CH?" 성경 일독을 마치셨습니다!":` 남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available&&SYNC.loginEnabled&&!SYNC.loggedIn()?`<span class="lead">기록을 잃지 않으려면 ‘나의 기록’에서 이름을 등록하세요.</span>`:""}<div class="row" style="justify-content:center"><button class="btn small" id="toQT">QT로 이어 가기</button><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
   } else {
     h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">완료하면 진행률이 ${pct1(n,TOTAL_CH)}%에서 ${pct1(after,TOTAL_CH)}%로 올라갑니다. 퀴즈를 끝까지 풀면 자동으로 완료됩니다.</p>`;
   }
@@ -3198,7 +3202,7 @@ function churchCounts(){
   const el=document.getElementById("churchDay"), el2=document.getElementById("churchBox"); if(!el&&!el2) return;
   const key=keyOf(view.w,view.d);
   SYNC.counts(syncKey(key),todayStr()).then(c=>{ if(!c) return;
-    if(el&&document.body.contains(el)) el.textContent=c.day>0?`이 본문을 우리 교회 ${c.day}명이 함께 읽었습니다.`:"";
+    if(el&&document.body.contains(el)) el.innerHTML=c.day>0?`<b>${c.day}명</b>이 이 본문을 읽었습니다${c.date?` · 오늘 통독을 마친 사람 <b>${c.date}명</b>`:""}`:`아직 이 본문을 마친 사람이 없습니다. 첫 번째가 되어 보세요.`;
     if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 통독을 마친 사람</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div>${SYNC.loginEnabled?`<div class="stat"><b>${c.readers}</b><span>이름을 등록한 사람</span></div>`:""}</div>`;
   });
 }
@@ -3419,14 +3423,16 @@ async function loadAdmin(){
   let st; try{ st=await SYNC.admin.state(); }catch(e){ box.innerHTML=`<p class="lead">연결하지 못했습니다. 인터넷 연결을 확인해 주세요.</p>`; return; }
   if(!document.body.contains(box)) return;
   if(!st.in){
-    box.innerHTML=`<div class="acct"><p>관리자는 구글 계정으로 로그인합니다. 등록된 관리자 계정만 피드백을 볼 수 있습니다.</p><div class="row"><button class="btn" id="admIn">구글 계정으로 로그인</button></div><p class="lead" id="admMsg" role="status"></p></div>`;
-    document.getElementById("admIn").onclick=async()=>{ const m=document.getElementById("admMsg"); m.textContent="로그인 창을 여는 중…"; try{ sessionStorage.setItem("cbsr-admin","1"); }catch(e){}
-      try{ await SYNC.admin.login(); try{ sessionStorage.removeItem("cbsr-admin"); }catch(e){} loadAdmin(); }catch(e){ m.textContent="로그인하지 못했습니다: "+(e.code||e.message||e); } };
+    box.innerHTML=`<div class="acct"><p>관리자 비밀번호를 넣으면 들어온 피드백을 볼 수 있습니다.</p><div class="acctform"><input id="admPw" type="password" autocomplete="current-password" placeholder="관리자 비밀번호"><button class="btn small" id="admIn">들어가기</button></div><p class="lead" id="admMsg" role="status"></p></div>`;
+    const go=async()=>{ const m=document.getElementById("admMsg"), pw=document.getElementById("admPw").value; if(!pw){ m.textContent="비밀번호를 넣어 주세요."; return; } m.textContent="확인하는 중…";
+      try{ await SYNC.admin.login(pw); loadAdmin(); }
+      catch(e){ const c=e.code||""; m.textContent=/wrong-password|invalid-credential|invalid-login|user-not-found|invalid-email/.test(c)?"비밀번호가 맞지 않습니다.":/too-many-requests/.test(c)?"여러 번 틀려서 잠시 막혔습니다. 조금 뒤에 다시 해 보세요.":/operation-not-allowed/.test(c)?"Firebase에서 이메일/비밀번호 로그인이 아직 켜져 있지 않습니다.":"들어가지 못했습니다: "+(c||e.message||e); } };
+    document.getElementById("admIn").onclick=go; document.getElementById("admPw").onkeydown=e=>{ if(e.key==="Enter") go(); };
     return;
   }
   const out=`<button class="btn ghost small" id="admOut">로그아웃</button>`;
   if(!st.ok){
-    box.innerHTML=`<div class="acct"><p><b>${esc(st.email)}</b> 계정은 아직 관리자로 등록되지 않았습니다.</p><p class="lead">처음 한 번만 하면 됩니다. Firebase 콘솔 → Firestore Database → 데이터에서 <b>admins</b> 모음을 만들고, 아래 번호를 <b>문서 ID</b>로 넣어 문서를 추가하세요(필드는 아무거나 하나, 예: name = 관리자). 그다음 이 화면을 다시 여세요.</p><p class="uid" id="admUid">${esc(st.uid)}</p><div class="row"><button class="btn small" id="admCopy">번호 복사</button><button class="btn ghost small" id="admRe">다시 확인</button>${out}</div></div>`;
+    box.innerHTML=`<div class="acct"><p>비밀번호는 맞았지만 이 계정이 아직 관리자 명단에 없습니다.</p><p class="lead">처음 한 번만 하면 됩니다. Firebase 콘솔 → Firestore Database → 데이터에서 <b>admins</b> 모음을 만들고, 아래 번호를 <b>문서 ID</b>로 넣어 문서를 추가하세요(필드는 아무거나 하나, 예: name = 관리자). 그다음 이 화면을 다시 여세요.</p><p class="uid" id="admUid">${esc(st.uid)}</p><div class="row"><button class="btn small" id="admCopy">번호 복사</button><button class="btn ghost small" id="admRe">다시 확인</button>${out}</div></div>`;
     document.getElementById("admCopy").onclick=async()=>{ try{ await navigator.clipboard.writeText(st.uid); document.getElementById("admCopy").textContent="복사됨"; }catch(e){ const r=document.createRange(); r.selectNodeContents(document.getElementById("admUid")); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); } };
     document.getElementById("admRe").onclick=loadAdmin;
     document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); };
@@ -3435,7 +3441,7 @@ async function loadAdmin(){
   let list; try{ list=await SYNC.admin.list(); }catch(e){ box.innerHTML=`<p class="lead">피드백을 불러오지 못했습니다: ${esc(e.code||e.message||String(e))}</p><div class="row">${out}</div>`; document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); }; return; }
   if(!document.body.contains(box)) return;
   const PN={rj:"리딩지저스",y365:"365"};
-  box.innerHTML=`<div class="admhead"><span class="lead">${esc(st.email)} · 피드백 ${list.length}건</span><span class="row"><button class="btn small" id="admRe">새로고침</button>${out}</span></div>`+
+  box.innerHTML=`<div class="admhead"><span class="lead">피드백 ${list.length}건</span><span class="row"><button class="btn small" id="admRe">새로고침</button>${out}</span></div>`+
    (list.length?list.map(f=>`<div class="fbitem" id="fb-${esc(f.id)}"><p>${esc(f.text)}</p><small>${esc(f.name||"이름 없음")} · ${esc(PN[f.plan]||f.plan||"")}${f.day?" · "+esc(f.day):""} · ${f.at?fmtAt(f.at):""}</small><div class="row"><button class="btn ghost small" data-fbdel="${esc(f.id)}">지우기</button></div></div>`).join(""):`<p class="lead">아직 들어온 피드백이 없습니다.</p>`);
   document.getElementById("admRe").onclick=loadAdmin;
   document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); };
@@ -3563,7 +3569,7 @@ function bind(){
   const ot=document.getElementById("openText"); if(ot) ot.onclick=()=>{view.open=true;render();document.getElementById("bible")?.scrollIntoView({block:"start"});};
 
   m.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{view.open=false;render();document.getElementById("textSec")?.scrollIntoView({block:"start"});});
-  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),todayStr());} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was) confetti();};
+  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),todayStr());} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
   const toQT=()=>{view.tab="qt";render();window.scrollTo({top:0});};
   const tqt=document.getElementById("toQT"); if(tqt) tqt.onclick=toQT;
   m.querySelectorAll("[data-toqt]").forEach(b=>b.onclick=toQT);
@@ -3594,7 +3600,6 @@ document.getElementById("menuBtn").onclick=openMenu;
 document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,here.d); if(t!=="read"){view.tab=t;render();}};
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>{const same=view.tab===t.dataset.tab; view.tab=t.dataset.tab; HSEL.clear(); render(); window.scrollTo({top:0,behavior:same?"smooth":"auto"});});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
-try{ if(sessionStorage.getItem("cbsr-admin")){ sessionStorage.removeItem("cbsr-admin"); view.tab="admin"; } }catch(e){}
 applySize(); render(); loadBible();
 if(window.SYNC&&SYNC.loggedIn()) SYNC.pull().then(remote=>{ if(remote){ mem=mergeMem(mem,remote); try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} Object.assign(here,posOfToday()); render(); } }).catch(()=>{});
 if(window.SYNC) SYNC.onChange(()=>{ if(view.tab==="record"){ const a=document.activeElement; if(!(a&&a.tagName==="INPUT")) render(); } });

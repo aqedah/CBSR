@@ -53,9 +53,13 @@
       async state(){ await init(); const u=firebase.auth().currentUser; if(!u||u.isAnonymous) return {in:false};
         let ok=false; try{ ok=(await fs.doc(`admins/${u.uid}`).get()).exists; }catch(e){}
         return {in:true,ok,uid:u.uid,email:u.email||""}; },
-      async login(){ await init(); const pv=new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({prompt:"select_account"});
+      /* 지금은 관리자 비밀번호(이메일/비밀번호 계정의 비밀번호만 입력) */
+      async login(pw){ await init(); const em=window.CBSR_ADMIN_EMAIL; if(!em) throw new Error("관리자 계정이 설정되지 않았습니다.");
+        await firebase.auth().signInWithEmailAndPassword(em,String(pw||"")); },
+      /* 나중에 구글 로그인으로 바꿀 때 쓰는 함수 */
+      async loginGoogle(){ await init(); const pv=new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({prompt:"select_account"});
         try{ await firebase.auth().signInWithPopup(pv); }
-        catch(e){ if(/popup|cancelled-popup|operation-not-supported/.test(e.code||"")) return firebase.auth().signInWithRedirect(pv); throw e; } },
+        catch(e){ if(/popup|operation-not-supported/.test(e.code||"")) return firebase.auth().signInWithRedirect(pv); throw e; } },
       async logout(){ await init(); await firebase.auth().signOut(); await firebase.auth().signInAnonymously(); },
       async list(){ await init(); const q=await fs.collection("feedback").orderBy("at","desc").limit(300).get(); return q.docs.map(d=>({id:d.id,...d.data()})); },
       async remove(id){ await init(); await fs.doc(`feedback/${id}`).delete(); }
