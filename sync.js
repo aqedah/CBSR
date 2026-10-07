@@ -51,8 +51,8 @@
     /* 관리자: 구글 계정으로 로그인 → admins/{uid} 문서가 있으면 관리자 */
     admin:{
       async state(){ await init(); const u=firebase.auth().currentUser; if(!u||u.isAnonymous) return {in:false};
-        let ok=false; try{ ok=(await fs.doc(`admins/${u.uid}`).get()).exists; }catch(e){}
-        return {in:true,ok,uid:u.uid,email:u.email||""}; },
+        let ok=false, err=""; try{ ok=(await fs.doc(`admins/${u.uid}`).get({source:"server"})).exists; }catch(e){ err=e.code||String(e); }
+        return {in:true,ok,err,uid:u.uid,email:u.email||""}; },
       /* 지금은 관리자 비밀번호(이메일/비밀번호 계정의 비밀번호만 입력) */
       async login(pw){ await init(); const em=window.CBSR_ADMIN_EMAIL; if(!em) throw new Error("관리자 계정이 설정되지 않았습니다.");
         await firebase.auth().signInWithEmailAndPassword(em,String(pw||"")); },

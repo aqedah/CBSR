@@ -1117,7 +1117,7 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="config.js?v=dccbeb83"></script>
-<script src="sync.js?v=51c54edf"></script>
+<script src="sync.js?v=f8355d5a"></script>
 <script src="bible.js?v=37de8195"></script>
 <script>
 /* ───────── 이름·지명·용어 찾기와 자동 퀴즈 엔진 ───────── */
@@ -3444,7 +3444,7 @@ async function loadAdmin(){
   }
   const out=`<button class="btn ghost small" id="admOut">로그아웃</button>`;
   if(!st.ok){
-    box.innerHTML=`<div class="acct"><p>비밀번호는 맞았지만 이 계정이 아직 관리자 명단에 없습니다.</p><p class="lead">처음 한 번만 하면 됩니다. Firebase 콘솔 → Firestore Database → 데이터에서 <b>admins</b> 모음을 만들고, 아래 번호를 <b>문서 ID</b>로 넣어 문서를 추가하세요(필드는 아무거나 하나, 예: name = 관리자). 그다음 이 화면을 다시 여세요.</p><p class="uid" id="admUid">${esc(st.uid)}</p><div class="row"><button class="btn small" id="admCopy">번호 복사</button><button class="btn ghost small" id="admRe">다시 확인</button>${out}</div></div>`;
+    box.innerHTML=`<div class="acct">${/permission/.test(st.err||"")?`<p><b>Firestore 규칙이 아직 새 규칙으로 바뀌지 않았습니다.</b></p><p class="lead">Firebase 콘솔 → Firestore Database → 규칙 탭에 새 규칙을 붙여 넣고 '게시'를 눌러 주세요. 게시 후 1분쯤 뒤에 '다시 확인'을 누르세요.</p>`:st.err?`<p>관리자 명단을 확인하지 못했습니다(${esc(st.err)}). 인터넷 연결을 확인하고 '다시 확인'을 눌러 주세요.</p>`:`<p>비밀번호는 맞았지만 이 계정이 아직 관리자 명단에 없습니다.</p>`}<p class="lead">처음 한 번만 하면 됩니다. Firebase 콘솔 → Firestore Database → 데이터에서 <b>admins</b> 모음을 만들고, 아래 번호를 <b>문서 ID</b>로 넣어 문서를 추가하세요(필드는 아무거나 하나, 예: name = 관리자). 그다음 이 화면을 다시 여세요.</p><p class="uid" id="admUid">${esc(st.uid)}</p><div class="row"><button class="btn small" id="admCopy">번호 복사</button><button class="btn ghost small" id="admRe">다시 확인</button>${out}</div></div>`;
     document.getElementById("admCopy").onclick=async()=>{ try{ await navigator.clipboard.writeText(st.uid); document.getElementById("admCopy").textContent="복사됨"; }catch(e){ const r=document.createRange(); r.selectNodeContents(document.getElementById("admUid")); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); } };
     document.getElementById("admRe").onclick=loadAdmin;
     document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); };
