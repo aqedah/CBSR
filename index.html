@@ -6364,7 +6364,7 @@ function bind(){
 
   m.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{view.open=false;render();document.getElementById("textSec")?.scrollIntoView({block:"start"});});
   const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k);} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
-  const toQT=()=>{view.tab="qt";render();window.scrollTo({top:0});};
+  const toQT=()=>switchTab("qt");
   const tqt=document.getElementById("toQT"); if(tqt) tqt.onclick=toQT;
   m.querySelectorAll("[data-toqt]").forEach(b=>b.onclick=toQT);
   const trv=document.getElementById("toRev"); if(trv) trv.onclick=()=>{ view.revW=dispW(); view.quiz=null; view.wquiz=null; render(); window.scrollTo({top:0}); };
@@ -6437,7 +6437,13 @@ document.getElementById("prevW").onclick=()=>gotoW(dispW()-1,curCol());
 document.getElementById("nextW").onclick=()=>gotoW(dispW()+1,curCol());
 document.getElementById("menuBtn").onclick=openMenu;
 document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,here.d); if(t!=="read"){view.tab=t;render();}};
-document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>{const same=view.tab===t.dataset.tab; view.tab=t.dataset.tab; HSEL.clear(); render(); window.scrollTo({top:0,behavior:same?"smooth":"auto"});});
+/* 탭마다 보던 자리 기억: 통독 ↔ QT를 오가도 읽던 곳으로 돌아옴 */
+const TAB_Y={};
+const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view.d);
+function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth"}); return; }
+  TAB_Y[tabPosKey(view.tab)]=window.scrollY; view.tab=t; HSEL.clear(); render();
+  const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
+document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
 applySize(); render(); loadBible(); renderNews();
