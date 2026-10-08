@@ -1151,6 +1151,8 @@ button.bk{font-family:inherit;cursor:pointer}
 .krow .chips{margin:0}
 .kh{font-size:12.5px;white-space:nowrap;display:flex;align-items:center;min-height:41px}
 .kh.pe{color:var(--accent)} .kh.pl{color:var(--gold)} .kh.w{color:var(--muted)}
+.linkrow{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;margin-top:4px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:11px 14px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:left}
+.linkrow>b{color:var(--accent)}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -1208,8 +1210,8 @@ button.bk{font-family:inherit;cursor:pointer}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="config.js?v=dccbeb83"></script>
-<script src="sync.js?v=f8355d5a"></script>
+<script src="config.js?v=0700cf6d"></script>
+<script src="sync.js?v=e60787fb"></script>
 <script src="bible.js?v=37de8195"></script>
 <script>
 /* ───────── 이름·지명·용어 찾기와 자동 퀴즈 엔진 ───────── */
@@ -5067,7 +5069,7 @@ try{const s=localStorage.getItem(KEY);if(s)mem=Object.assign(mem,JSON.parse(s));
 mem.done ||= {}; mem.qt ||= {};
 /* 예전 '주일~금 읽기' 설정을 쓰던 분은 월요일 시작으로 되돌립니다 */
 if(MODE==="rj"){ const d0=new Date(DEFAULT_START+"T00:00:00"); d0.setDate(d0.getDate()-1); const p2=n=>String(n).padStart(2,"0"); if(mem.start===d0.getFullYear()+"-"+p2(d0.getMonth()+1)+"-"+p2(d0.getDate())) mem.start=DEFAULT_START; }
-function save(){try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} if(window.SYNC&&SYNC.loggedIn()) SYNC.push(mem);}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} if(typeof syncSoon==="function") syncSoon();}
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* 날짜 */
@@ -5220,7 +5222,7 @@ const refList=(refs,b0)=>refs.map(([b,c,v])=>(b!==b0?PLAN.abbr[b-1]+" ":"")+`${c
 const HLKEY="cbsr-hl";
 let HL={}; try{HL=JSON.parse(localStorage.getItem(HLKEY)||"{}")||{};}catch(e){}
 const HSEL=new Set();
-const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL));}catch(e){}};
+const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL));}catch(e){} if(typeof syncSoon==="function") syncSoon();};
 const HLC={y:"노랑",g:"초록",p:"분홍",b:"파랑"};
 function toggleSel(id){ if(HSEL.has(id)) HSEL.delete(id); else HSEL.add(id); const el=document.getElementById("v-"+id); if(el) el.classList.toggle("sel",HSEL.has(id)); syncHlBar(); }
 function syncHlBar(){
@@ -5782,6 +5784,8 @@ function mergeMem(a,b){
   o.qt=o.qt||{}; for(const k in (b.qt||{})){ const x=o.qt[k]||{}, y=b.qt[k]; const r={...y,...x};
     for(const t of ["story","med","pray","gap","l0","l1","l2"]) r[t]=((x[t]||"").length>=(y[t]||"").length?x[t]:y[t])||"";
     r.done=!!(x.done||y.done); o.qt[k]=r; }
+  for(const f of ["counted","seen","bk"]) o[f]=Object.assign({},b[f]||{},a[f]||{});
+  if(b.onb) o.onb=1;
   return o;
 }
 function churchCounts(){
@@ -5795,13 +5799,15 @@ function churchCounts(){
 }
 function renderAccount(){
   if(!(window.SYNC&&SYNC.available)) return "";
+  return `<div id="acctSec"></div>`+renderAccount0(); }
+function renderAccount0(){
   if(SYNC.loggedIn()){
     const t=SYNC.lastSaved();
     return `<section class="sec"><span class="label">기록 이어 보기</span><div class="acct"><p><b>${esc(SYNC.name())}</b>님의 기록이 저장되고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰이나 컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 이어집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 나가기</button></div></div></section>
     <section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
   }
   if(!SYNC.loginEnabled) return `<section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
-  return `<section class="sec"><span class="label">기록 이어 보기</span><div class="acct"><p>이름과 숫자 4자리를 정하면, 휴대폰을 바꾸거나 컴퓨터에서 열어도 진행률·퀴즈·QT 기록이 그대로 이어집니다. 회원 가입은 필요 없습니다.</p>
+  return `<section class="sec"><span class="label">기록 이어 보기</span><div class="acct"><p>휴대폰·태블릿·컴퓨터에서 <b>같은 이름과 숫자 4자리</b>를 넣으면 기록이 하나로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다. 회원 가입은 필요 없습니다.</p>
    <div class="acctform"><input id="acctName" type="text" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name"><input id="acctPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리"><button class="btn small" id="acctIn">시작하기</button></div>
    <p class="lead">같은 이름을 쓰는 분이 있을 수 있으니, 숫자는 생일처럼 남이 짐작하기 쉬운 것은 피해 주세요. 이름과 숫자를 잊으면 기록을 다시 찾을 수 없습니다.</p><p class="lead" id="acctMsg" role="status"></p></div></section>
    <section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
@@ -5811,10 +5817,11 @@ function bindAccount(m){
   if(bi) bi.onclick=async()=>{ const msg=document.getElementById("acctMsg"); msg.textContent="확인하는 중…";
     try{ const remote=await SYNC.login(document.getElementById("acctName").value,document.getElementById("acctPin").value);
       const had=remote&&Object.keys(remote).length;
-      mem=mergeMem(mem,remote||{}); save(); Object.assign(here,posOfToday());
+      applyBundle(mergeBundle(localBundle(),remote)); syncSoon(0); Object.assign(here,posOfToday());
       view.acctMsg=had?"저장된 기록을 불러와 이 기기의 기록과 합쳤습니다.":"새로 등록했습니다. 이제부터 기록이 저장됩니다."; render();
     }catch(e){ msg.textContent=e.message&&/[가-힣]/.test(e.message)?e.message:"연결하지 못했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요."; } };
   const bo=document.getElementById("acctOut"); if(bo) bo.onclick=()=>{ SYNC.logout(); render(); };
+  const ta=document.getElementById("toAcct"); if(ta) ta.onclick=()=>document.getElementById("acctSec")?.scrollIntoView({block:"start",behavior:"smooth"});
   churchCounts();
 }
 
@@ -5950,7 +5957,7 @@ function renderReview(){
 /* 나의 기록 (프로필) */
 const PROFKEY="cbsr-profile";
 let PROF={}; try{PROF=JSON.parse(localStorage.getItem(PROFKEY)||"{}")||{};}catch(e){}
-function saveProf(){ try{localStorage.setItem(PROFKEY,JSON.stringify(PROF)); return true;}catch(e){ return false; } }
+function saveProf(){ try{localStorage.setItem(PROFKEY,JSON.stringify(PROF)); if(typeof syncSoon==="function") syncSoon(); return true;}catch(e){ return false; } }
 /* 처음 함께한 날: 이 기기에서 처음 연 날(예전 사용자는 가장 이른 통독 완료 날짜) */
 if(!PROF.since){ const ds=Object.values(mem.done||{}).filter(v=>/^\d{4}-\d{2}-\d{2}$/.test(v)).sort(); PROF.since=ds[0]&&ds[0]<todayStr()?ds[0]:todayStr(); saveProf(); }
 function readStreak(){ let p=[here.w,here.d]; if(isRev(p[1])) p=[p[0],5]; if(here.state==="before") return 0;
@@ -5969,7 +5976,7 @@ function renderRecord(){
   let h=`<section class="sec"><div class="prof"><div class="prof-top"><div class="avwrap"><div class="avatar" aria-hidden="true">${PROF.photo?`<img src="${PROF.photo}" alt="">`:nick?esc([...nick][0]):`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>`}</div><button class="avcam" id="avCam" aria-label="프로필 사진 바꾸기"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button><input type="file" id="avFile" accept="image/*" hidden></div>
     <div class="prof-name" id="profName">${view.editNick?`<div class="acctform"><input id="nickIn" maxlength="12" value="${esc(nick)}" placeholder="불릴 이름"><button class="btn small" id="nickSave">저장</button></div>`:`<b>${nick?esc(nick):"이름을 정해 주세요"} <button class="edit" id="nickEdit">${nick?"바꾸기":"정하기"}</button></b>`}<span class="lead">${esc(PI.name)} · ${since}</span></div></div>
     <div class="ring">${ringSVG(pc)}<div class="rt"><span class="lead">성경 전체 진행률</span><b>${pct1(n,TOTAL_CH)}%</b><span class="lead">${TOTAL_CH.toLocaleString()}장 중 ${n.toLocaleString()}장 · 일정상 오늘까지 ${pct1(sch,TOTAL_CH)}%</span></div></div>
-    <div class="pstats"><div class="pstat"><b>${doneN}</b><span>통독한 날 / ${READ_DAYS}</span></div><div class="pstat"><b>${rs}일</b><span>연속 통독</span></div><div class="pstat"><b>${t?pct(s,t)+"%":"–"}</b><span>퀴즈 정답률</span></div><div class="pstat"><b>${qtN}</b><span>QT 한 날</span></div><div class="pstat"><b>${qs}일</b><span>연속 QT</span></div><div class="pstat"><b>${hlN}</b><span>형광펜 절</span></div></div></div></section>`;
+    <div class="pstats"><div class="pstat"><b>${doneN}</b><span>통독한 날 / ${READ_DAYS}</span></div><div class="pstat"><b>${rs}일</b><span>연속 통독</span></div><div class="pstat"><b>${t?pct(s,t)+"%":"–"}</b><span>퀴즈 정답률</span></div><div class="pstat"><b>${qtN}</b><span>QT 한 날</span></div><div class="pstat"><b>${qs}일</b><span>연속 QT</span></div><div class="pstat"><b>${hlN}</b><span>형광펜 절</span></div></div>${window.SYNC&&SYNC.available&&SYNC.loginEnabled?`<button class="linkrow" id="toAcct">${SYNC.loggedIn()?`<span>🔗 <b>${esc(SYNC.name())}</b> 이름으로 여러 기기 기록이 이어지고 있어요</span>`:`<span>휴대폰·태블릿·PC 기록 하나로 잇기</span>`}<b aria-hidden="true">›</b></button>`:""}</div></section>`;
   // 배지
   const B=[["📖","첫 통독",doneN>=1],["7","7일 연속 통독",rs>=7],["30","통독 30일",doneN>=30],["100","통독 100일",doneN>=100],
     ["✎","첫 QT",qtN>=1],["7","QT 7일 연속",qs>=7],["★","퀴즈 만점",perfect>=1],["✓","만점 10번",perfect>=10],
@@ -6060,7 +6067,7 @@ function bindProfile(m){
   if(ac) ac.onclick=()=>{ if(PROF.photo) photoMenu(); else af.click(); };
   if(af) af.onchange=()=>{ const f=af.files&&af.files[0]; af.value=""; if(f) openPhotoEditor(f); };
   const ne=document.getElementById("nickEdit"); if(ne) ne.onclick=()=>{view.editNick=true;render();document.getElementById("nickIn")?.focus();};
-  const ns=document.getElementById("nickSave"); if(ns){ const sv=()=>{PROF.nick=document.getElementById("nickIn").value.trim(); try{localStorage.setItem(PROFKEY,JSON.stringify(PROF));}catch(e){} view.editNick=false; render();}; ns.onclick=sv; document.getElementById("nickIn").onkeydown=e=>{if(e.key==="Enter")sv();}; }
+  const ns=document.getElementById("nickSave"); if(ns){ const sv=()=>{PROF.nick=document.getElementById("nickIn").value.trim(); saveProf(); view.editNick=false; render();}; ns.onclick=sv; document.getElementById("nickIn").onkeydown=e=>{if(e.key==="Enter")sv();}; }
   const ha=document.getElementById("hlAll"); if(ha) ha.onclick=()=>{view.hlAll=true;const y=scrollY;render();scrollTo({top:y});};
   m.querySelectorAll("[data-qtjump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.qtjump.split("-").map(Number); view.w=w;view.d=d;view.tab="qt";render();scrollTo({top:0});});
 }
@@ -6141,6 +6148,7 @@ async function loadAdmin(){
 
 /* 새 소식(큰 변경만) */
 const NEWS=[
+ ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록에서 이름+숫자 4자리를 넣으세요"],
  ["2026-10-08","처음 읽는 분을 위해: 오늘의 흐름 · 오늘 알아둘 인물·곳·말 · 책 처음 읽기 안내가 생겼어요"],
  ["2026-10-08","퀴즈에 '본문 다시 찾기' 문제가 들어가고, 요약·지도 같은 도움은 '이해가 필요할 때'로 모였어요"],
  ["2026-10-08","성경 번역을 고를 수 있어요: 개역개정 · 새번역 · 새한글성경 (☰ 메뉴)"],
@@ -6385,7 +6393,32 @@ document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>{const same=vie
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
 applySize(); render(); loadBible(); renderNews();
-if(window.SYNC&&SYNC.loggedIn()) SYNC.pull().then(remote=>{ if(remote){ mem=mergeMem(mem,remote); try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} Object.assign(here,posOfToday()); render(); } }).catch(()=>{});
+/* ===== 여러 기기 기록 잇기: 이름+숫자 4자리 열쇠 하나에 두 통독표·형광펜·프로필을 함께 저장 ===== */
+const LKEYS={rj:"rjnote:v2",y365:"rjnote:y365"};
+function localBundle(){ const g=k=>{ try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; } };
+  return {v:2,rj:MODE==="rj"?mem:g(LKEYS.rj),y365:MODE==="y365"?mem:g(LKEYS.y365),hl:HL,prof:PROF}; }
+function mergeBundle(L,R){ if(!R||!Object.keys(R).length) return L; if(!R.v) R={v:2,rj:R};
+  const o={v:2};
+  for(const k of ["rj","y365"]) o[k]=L[k]&&R[k]?mergeMem(L[k],R[k]):(L[k]||R[k]||null);
+  o.hl=Object.assign({},R.hl||{},L.hl||{});
+  const a=L.prof||{}, b=R.prof||{}; o.prof=Object.assign({},b,a); if(!a.photo&&b.photo) o.prof.photo=b.photo; if(!a.nick&&b.nick) o.prof.nick=b.nick;
+  if(a.since&&b.since) o.prof.since=a.since<b.since?a.since:b.since;
+  return o; }
+function applyBundle(B){ const before=JSON.stringify([mem,HL,PROF]);
+  for(const k of ["rj","y365"]) if(B[k]){ try{ localStorage.setItem(LKEYS[k],JSON.stringify(B[k])); }catch(e){} }
+  if(B[MODE]) mem=Object.assign(mem,B[MODE]);
+  HL=B.hl||HL; PROF=B.prof||PROF;
+  try{ localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem(PROFKEY,JSON.stringify(PROF)); }catch(e){}
+  return before!==JSON.stringify([mem,HL,PROF]); }
+let syncT=null, syncBusy=false;
+function syncSoon(ms){ if(!(window.SYNC&&SYNC.loggedIn())) return; clearTimeout(syncT); syncT=setTimeout(syncNow,ms==null?2500:ms); }
+async function syncNow(){ if(!(window.SYNC&&SYNC.loggedIn())||syncBusy) return; syncBusy=true;
+  try{ const remote=await SYNC.pull(); const B=mergeBundle(localBundle(),remote||{}); const changed=applyBundle(B);
+    SYNC.push(B,0);
+    if(changed){ Object.assign(here,posOfToday()); const a=document.activeElement; if(!(a&&/INPUT|TEXTAREA/.test(a.tagName))&&!document.getElementById("sheetRoot").innerHTML) render(); }
+  }catch(e){ console.warn("sync",e); } finally{ syncBusy=false; } }
+if(window.SYNC&&SYNC.loggedIn()) syncSoon(0);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") syncSoon(300); });
 if(window.SYNC) SYNC.onChange(()=>{ if(view.tab==="record"){ const a=document.activeElement; if(!(a&&a.tagName==="INPUT")) render(); } });
 })();
 

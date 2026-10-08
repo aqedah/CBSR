@@ -46,8 +46,8 @@
     },
     logout(){ login=null; ls.del(LOGIN); notify(); },
     async pull(){ if(!login) return null; await init(); const s=await fs.doc(`readers/${login.key}`).get(); if(!s.exists) return null; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return null; } },
-    push(mem){ if(!login) return; clearTimeout(pushT);
-      pushT=setTimeout(async()=>{ try{ await init(); await fs.doc(`readers/${login.key}`).set({name:login.name,data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); notify(); }catch(e){ console.warn("sync",e); } },1500); },
+    push(mem,wait){ if(!login) return; clearTimeout(pushT);
+      pushT=setTimeout(async()=>{ try{ await init(); await fs.doc(`readers/${login.key}`).set({name:login.name,data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); notify(); }catch(e){ console.warn("sync",e); } },wait==null?1500:wait); },
     /* 관리자: 구글 계정으로 로그인 → admins/{uid} 문서가 있으면 관리자 */
     admin:{
       async state(){ await init(); const u=firebase.auth().currentUser; if(!u||u.isAnonymous) return {in:false};
