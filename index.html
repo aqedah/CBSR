@@ -1151,6 +1151,8 @@ button.bk{font-family:inherit;cursor:pointer}
 .krow .chips{margin:0}
 .kh{font-size:12.5px;white-space:nowrap;display:flex;align-items:center;min-height:41px}
 .kh.pe{color:var(--accent)} .kh.pl{color:var(--gold)} .kh.w{color:var(--muted)}
+.syncbtn{justify-self:start;margin-top:6px;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--bg);color:var(--accent);font:inherit;font-size:12.5px;font-weight:600;border-radius:999px;padding:6px 11px;cursor:pointer;white-space:nowrap}
+.syncbtn.on{background:var(--accent-soft);border-color:transparent}
 .linkrow{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;margin-top:4px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:11px 14px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:left}
 .linkrow>b{color:var(--accent)}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
@@ -5799,29 +5801,27 @@ function churchCounts(){
 }
 function renderAccount(){
   if(!(window.SYNC&&SYNC.available)) return "";
-  return `<div id="acctSec"></div>`+renderAccount0(); }
-function renderAccount0(){
-  if(SYNC.loggedIn()){
-    const t=SYNC.lastSaved();
-    return `<section class="sec"><span class="label">기록 이어 보기</span><div class="acct"><p><b>${esc(SYNC.name())}</b>님의 기록이 저장되고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰이나 컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 이어집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 나가기</button></div></div></section>
-    <section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
-  }
-  if(!SYNC.loginEnabled) return `<section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
-  return `<section class="sec"><span class="label">기록 이어 보기</span><div class="acct"><p>휴대폰·태블릿·컴퓨터에서 <b>같은 이름과 숫자 4자리</b>를 넣으면 기록이 하나로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다. 회원 가입은 필요 없습니다.</p>
+  return `<section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`; }
+function acctHTML(){
+  if(SYNC.loggedIn()){ const t=SYNC.lastSaved();
+    return `<div class="acct"><p><b>${esc(SYNC.name())}</b> 이름으로 기록이 이어지고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰·태블릿·컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 그대로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 연동 끊기</button></div></div>`; }
+  return `<div class="acct"><p>휴대폰·태블릿·컴퓨터에서 <b>같은 이름과 숫자 4자리</b>를 넣으면 기록이 하나로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다. 회원 가입은 필요 없습니다.</p>
    <div class="acctform"><input id="acctName" type="text" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name"><input id="acctPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리"><button class="btn small" id="acctIn">시작하기</button></div>
-   <p class="lead">같은 이름을 쓰는 분이 있을 수 있으니, 숫자는 생일처럼 남이 짐작하기 쉬운 것은 피해 주세요. 이름과 숫자를 잊으면 기록을 다시 찾을 수 없습니다.</p><p class="lead" id="acctMsg" role="status"></p></div></section>
-   <section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`;
-}
-function bindAccount(m){
+   <p class="lead">같은 이름을 쓰는 분이 있을 수 있으니, 숫자는 생일처럼 남이 짐작하기 쉬운 것은 피해 주세요. 이름과 숫자를 잊으면 기록을 다시 찾을 수 없습니다.</p><p class="lead" id="acctMsg" role="status"></p></div>`; }
+function openAcct(){ sheet("다른 기기와 연동",acctHTML()); bindAcctSheet(); }
+function bindAcctSheet(){
   const bi=document.getElementById("acctIn");
   if(bi) bi.onclick=async()=>{ const msg=document.getElementById("acctMsg"); msg.textContent="확인하는 중…";
     try{ const remote=await SYNC.login(document.getElementById("acctName").value,document.getElementById("acctPin").value);
       const had=remote&&Object.keys(remote).length;
       applyBundle(mergeBundle(localBundle(),remote)); syncSoon(0); Object.assign(here,posOfToday());
-      view.acctMsg=had?"저장된 기록을 불러와 이 기기의 기록과 합쳤습니다.":"새로 등록했습니다. 이제부터 기록이 저장됩니다."; render();
+      view.acctMsg=had?"저장된 기록을 불러와 이 기기의 기록과 합쳤습니다.":"새로 등록했습니다. 이제부터 기록이 저장됩니다."; render(); openAcct();
     }catch(e){ msg.textContent=e.message&&/[가-힣]/.test(e.message)?e.message:"연결하지 못했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요."; } };
-  const bo=document.getElementById("acctOut"); if(bo) bo.onclick=()=>{ SYNC.logout(); render(); };
-  const ta=document.getElementById("toAcct"); if(ta) ta.onclick=()=>document.getElementById("acctSec")?.scrollIntoView({block:"start",behavior:"smooth"});
+  const pin=document.getElementById("acctPin"); if(pin) pin.onkeydown=e=>{ if(e.key==="Enter") bi.click(); };
+  const bo=document.getElementById("acctOut"); if(bo) bo.onclick=()=>{ SYNC.logout(); view.acctMsg=""; render(); openAcct(); };
+}
+function bindAccount(m){
+  const oa=document.getElementById("openAcct"); if(oa) oa.onclick=openAcct;
   churchCounts();
 }
 
@@ -5974,9 +5974,9 @@ function renderRecord(){
   const nick=PROF.nick||"";
   const since=`함께한 지 ${Math.max(1,Math.round((parseD(todayStr())-parseD(PROF.since||todayStr()))/864e5)+1)}일째`;
   let h=`<section class="sec"><div class="prof"><div class="prof-top"><div class="avwrap"><div class="avatar" aria-hidden="true">${PROF.photo?`<img src="${PROF.photo}" alt="">`:nick?esc([...nick][0]):`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>`}</div><button class="avcam" id="avCam" aria-label="프로필 사진 바꾸기"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button><input type="file" id="avFile" accept="image/*" hidden></div>
-    <div class="prof-name" id="profName">${view.editNick?`<div class="acctform"><input id="nickIn" maxlength="12" value="${esc(nick)}" placeholder="불릴 이름"><button class="btn small" id="nickSave">저장</button></div>`:`<b>${nick?esc(nick):"이름을 정해 주세요"} <button class="edit" id="nickEdit">${nick?"바꾸기":"정하기"}</button></b>`}<span class="lead">${esc(PI.name)} · ${since}</span></div></div>
+    <div class="prof-name" id="profName">${view.editNick?`<div class="acctform"><input id="nickIn" maxlength="12" value="${esc(nick)}" placeholder="불릴 이름"><button class="btn small" id="nickSave">저장</button></div>`:`<b>${nick?esc(nick):"이름을 정해 주세요"} <button class="edit" id="nickEdit">${nick?"바꾸기":"정하기"}</button></b>`}<span class="lead">${esc(PI.name)} · ${since}</span>${window.SYNC&&SYNC.available&&SYNC.loginEnabled&&!view.editNick?`<button class="syncbtn${SYNC.loggedIn()?" on":""}" id="openAcct"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>${SYNC.loggedIn()?"연동 중":"다른 기기와 연동"}</button>`:""}</div></div>
     <div class="ring">${ringSVG(pc)}<div class="rt"><span class="lead">성경 전체 진행률</span><b>${pct1(n,TOTAL_CH)}%</b><span class="lead">${TOTAL_CH.toLocaleString()}장 중 ${n.toLocaleString()}장 · 일정상 오늘까지 ${pct1(sch,TOTAL_CH)}%</span></div></div>
-    <div class="pstats"><div class="pstat"><b>${doneN}</b><span>통독한 날 / ${READ_DAYS}</span></div><div class="pstat"><b>${rs}일</b><span>연속 통독</span></div><div class="pstat"><b>${t?pct(s,t)+"%":"–"}</b><span>퀴즈 정답률</span></div><div class="pstat"><b>${qtN}</b><span>QT 한 날</span></div><div class="pstat"><b>${qs}일</b><span>연속 QT</span></div><div class="pstat"><b>${hlN}</b><span>형광펜 절</span></div></div>${window.SYNC&&SYNC.available&&SYNC.loginEnabled?`<button class="linkrow" id="toAcct">${SYNC.loggedIn()?`<span>🔗 <b>${esc(SYNC.name())}</b> 이름으로 여러 기기 기록이 이어지고 있어요</span>`:`<span>휴대폰·태블릿·PC 기록 하나로 잇기</span>`}<b aria-hidden="true">›</b></button>`:""}</div></section>`;
+    <div class="pstats"><div class="pstat"><b>${doneN}</b><span>통독한 날 / ${READ_DAYS}</span></div><div class="pstat"><b>${rs}일</b><span>연속 통독</span></div><div class="pstat"><b>${t?pct(s,t)+"%":"–"}</b><span>퀴즈 정답률</span></div><div class="pstat"><b>${qtN}</b><span>QT 한 날</span></div><div class="pstat"><b>${qs}일</b><span>연속 QT</span></div><div class="pstat"><b>${hlN}</b><span>형광펜 절</span></div></div></div></section>`;
   // 배지
   const B=[["📖","첫 통독",doneN>=1],["7","7일 연속 통독",rs>=7],["30","통독 30일",doneN>=30],["100","통독 100일",doneN>=100],
     ["✎","첫 QT",qtN>=1],["7","QT 7일 연속",qs>=7],["★","퀴즈 만점",perfect>=1],["✓","만점 10번",perfect>=10],
@@ -6148,7 +6148,7 @@ async function loadAdmin(){
 
 /* 새 소식(큰 변경만) */
 const NEWS=[
- ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록에서 이름+숫자 4자리를 넣으세요"],
+ ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록 → 다른 기기와 연동"],
  ["2026-10-08","처음 읽는 분을 위해: 오늘의 흐름 · 오늘 알아둘 인물·곳·말 · 책 처음 읽기 안내가 생겼어요"],
  ["2026-10-08","퀴즈에 '본문 다시 찾기' 문제가 들어가고, 요약·지도 같은 도움은 '이해가 필요할 때'로 모였어요"],
  ["2026-10-08","성경 번역을 고를 수 있어요: 개역개정 · 새번역 · 새한글성경 (☰ 메뉴)"],
