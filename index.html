@@ -1116,6 +1116,7 @@ button.bk{font-family:inherit;cursor:pointer}
 .prof-name .acctform input{flex:1 1 auto;width:100%;min-width:0}
 .prof-name .acctform .btn{flex:none}
 .wkrow.now{border-color:var(--gold)}
+.wkrow .tp{display:block;font-size:12.5px;color:var(--ink);opacity:.8;font-weight:400;line-height:1.45;margin-top:3px}
 .wkrow .nowb{color:var(--gold);font-weight:800}
 .wkrow.now .t{font-weight:700}
 .chfind{display:flex;gap:8px}
@@ -1146,8 +1147,9 @@ button.bk{font-family:inherit;cursor:pointer}
 .bookfirst p{margin:6px 0;line-height:1.6}
 .know{display:grid;gap:8px;margin-top:6px}
 .know.more{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-.krow{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:start}
-.kh{font-size:12.5px;padding-top:7px}
+.krow{display:grid;grid-template-columns:3em 1fr;gap:8px;align-items:start}
+.krow .chips{margin:0}
+.kh{font-size:12.5px;white-space:nowrap;display:flex;align-items:center;min-height:41px}
 .kh.pe{color:var(--accent)} .kh.pl{color:var(--gold)} .kh.w{color:var(--muted)}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
@@ -6344,7 +6346,8 @@ function gotoW(W,col){
 }
 function curCol(){ return view.pre?0:view.revW?6:dateOf(view.w,view.d).getDay(); }
 function findChapter(q){
-  q=String(q||"").replace(/\s+/g," ").trim(); const m=q.match(/^(.+?)\s*(\d+)\s*(?:장|편)?(?:\s*[:：]\s*\d+.*)?$/); if(!m) return null;
+  q=String(q||"").replace(/\s+/g," ").trim(); const m=q.match(/^(.+?)\s*(\d+)\s*(?:장|편)?(?:\s*[:：]\s*\d+.*)?$/);
+  if(!m){ if(q.length<2) return null; const qq=q.replace(/\s/g,""); for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++){ const t=dayPlan(w,d).topic; if(t&&t.replace(/\s/g,"").includes(qq)) return {label:t,day:[w,d]}; } return null; }
   const nm=m[1].replace(/\s/g,""), c=+m[2];
   let b=PLAN.full.findIndex(x=>x===nm)+1; if(!b) b=PLAN.abbr.findIndex(x=>x===nm)+1; if(!b) b=PLAN.full.findIndex(x=>x.startsWith(nm))+1;
   if(!b||c<1) return null;
@@ -6357,13 +6360,13 @@ function openWeekPicker(){
   for(let W=1;W<=N;W++){
     const L=weekDays(W); let dn=0; L.forEach(([w,d])=>{ if(mem.done[keyOf(w,d)]) dn++; });
     const a=cellOf(W,0).dt, z=cellOf(W,6).dt, now=dayDiff(a,td)>=0&&dayDiff(td,z)>=0;
-    h+=`<button class="wkrow${W===cur?" sel":""}${now?" now":""}" data-pickw="${W}"><span class="n">${W}주차</span><span class="t">${esc(dispTitle(W).replace(/^\d+주차 · /,""))}<small>${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}${now?` · <b class="nowb">이번 주</b>`:""}</small></span><span class="c${L.length&&dn>=L.length?" full":""}">${dn?`${dn}/${L.length}`:""}</span></button>`;
+    h+=`<button class="wkrow${W===cur?" sel":""}${now?" now":""}" data-pickw="${W}"><span class="n">${W}주차</span><span class="t">${esc(dispTitle(W).replace(/^\d+주차 · /,""))}<small>${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}${now?` · <b class="nowb">이번 주</b>`:""}</small>${MODE==="y365"?(()=>{ const T=L.map(([w2,d2])=>dayPlan(w2,d2).topic).filter(Boolean); return T.length?`<span class="tp">${T.map(esc).join(" · ")}</span>`:""; })():""}</span><span class="c${L.length&&dn>=L.length?" full":""}">${dn?`${dn}/${L.length}`:""}</span></button>`;
   }
   h+=`</div>`;
-  h=`<div class="chfind"><input id="chFind" type="search" placeholder="장으로 찾기 (예: 창 12, 요한복음 3, 시 23)" enterkeyhint="search" autocomplete="off"><button class="btn small" id="chGo">찾기</button></div><p class="lead" id="chMsg" role="status"></p>`+h;
+  h=`<div class="chfind"><input id="chFind" type="search" placeholder="${MODE==="y365"?"장이나 제목으로 찾기 (예: 창 12, 바벨탑)":"장으로 찾기 (예: 창 12, 요한복음 3, 시 23)"}" enterkeyhint="search" autocomplete="off"><button class="btn small" id="chGo">찾기</button></div><p class="lead" id="chMsg" role="status"></p>`+h;
   sheet("주차 고르기",h);
   const fi=document.getElementById("chFind"), go2=()=>{ const r=findChapter(fi.value); const msg=document.getElementById("chMsg");
-    if(!r){ msg.textContent="찾지 못했습니다. 책 이름과 장 번호를 함께 적어 주세요(예: 마 5, 출애굽기 14)."; return; }
+    if(!r){ msg.textContent=MODE==="y365"?"찾지 못했습니다. 책 이름과 장 번호(예: 마 5)나 제목의 한 낱말(예: 바벨탑)을 적어 주세요.":"찾지 못했습니다. 책 이름과 장 번호를 함께 적어 주세요(예: 마 5, 출애굽기 14)."; return; }
     if(!r.day){ msg.textContent=`${r.label}은(는) 이 통독표에 없습니다.`; return; }
     document.getElementById("sheetRoot").innerHTML=""; go(r.day[0],r.day[1]); };
   document.getElementById("chGo").onclick=go2; fi.onkeydown=e=>{ if(e.key==="Enter") go2(); };
