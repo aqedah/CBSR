@@ -829,7 +829,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 
 /* bible */
-.openbtn{width:100%;border:1px solid var(--accent);background:var(--card);color:var(--accent);border-radius:12px;padding:14px;font-weight:600;font-size:16px}
+.openbtn{width:100%;border:0;background:var(--accent);color:var(--accent-ink,#fff);border-radius:14px;padding:17px;font-weight:700;font-size:17px;box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 30%,transparent);cursor:pointer}
 .bible{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px 16px}
 .bible-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .bible-tools .grp{display:flex;gap:6px}
@@ -1121,6 +1121,22 @@ button.bk{font-family:inherit;cursor:pointer}
 .wkrow.now .t{font-weight:700}
 .chfind{display:flex;gap:8px}
 .chfind input{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+.meta{margin:2px 0 10px;color:var(--muted);font-size:14px}
+.meta .okc{color:var(--ok)}
+.help30{margin:10px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.help30>summary{list-style:none;cursor:pointer;padding:11px 14px;font-weight:600;color:var(--accent);display:flex;justify-content:space-between}
+.help30>summary::-webkit-details-marker{display:none}
+.help30[open]>summary span{transform:rotate(90deg)}
+.help30 dl{margin:0;padding:0 14px 4px}
+.help30 dt{font-size:12.5px;color:var(--gold);font-weight:700;margin-top:8px}
+.help30 dd{margin:2px 0 0;line-height:1.6}
+.help30 .find{font-weight:600;color:var(--accent)}
+.help30 .calm{margin:8px 14px 12px}
+.hbook{margin:8px 14px 12px;padding:10px 12px;background:var(--gold-soft);border-radius:10px}
+.hbook p{margin:6px 0;line-height:1.6}
+.chsub{display:block;font-size:14px;font-weight:500;color:var(--muted);margin-top:2px;font-family:var(--f-ui,inherit)}
+.moreent>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0}
+.moreent>summary small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:2px}
 .easy{font-size:13.5px;color:var(--muted);margin:6px 0 0}
 .helpzone{border:1px dashed var(--line);border-radius:16px;padding:6px 12px 2px;margin:14px 0;background:color-mix(in srgb,var(--card) 55%,transparent)}
 .helpzone .sec{margin-top:10px}
@@ -5435,17 +5451,41 @@ function knowSection(p,A,b0){
   let h=`<section class="sec"><span class="label">오늘 알아둘 것</span>`;
   if(!K.pe.length&&!K.pl.length&&!K.w.length&&!gl.length) return h+`<p class="lead">오늘 본문에는 따로 알아 둘 이름이나 어려운 말이 많지 않습니다.</p></section>`;
   h+=`<p class="lead">이것만 먼저 알면 됩니다. 눌러 보면 설명이 나옵니다.</p><div class="know">`+row("pe","인물",K.pe.map(n=>chip("pe",n,trName(n))))+row("pl","곳",K.pl.map(n=>chip("pl",n,trName(n))))+row("w","말",K.w.map(n=>chip("w",n,trName(n))))+`</div>`;
-  const more=[ope.length?`인물 ${ope.length}명`:"",opl.length?`지명 ${opl.length}곳`:"",ow.length?`말 ${ow.length}개`:""].filter(Boolean);
-  if(more.length){
-    if(!view.entAll) h+=`<button class="morebtn" id="entAll">다른 ${more.join(" · ")} 더 보기</button>`;
-    else h+=`<div class="know more">`+row("pe","인물",ope.map(x=>chip("pe",x.n,x.s||x.n)))+row("pl","곳",opl.map(x=>chip("pl",x.n,x.s||x.n)))+row("w","말",ow.map(x=>chip("w",x.it.t,x.it.t)))+`</div><button class="morebtn" id="entAll">접기</button>`;
-  }
   return h+`</section>`; }
 function qsumT(s,t){ return (s?`처음에 ${s}문제를 바로 찾았습니다.`:"처음엔 바로 찾지 못해도 괜찮습니다.")+(t-s>0?` 나머지 ${t-s}문제는 본문으로 돌아가 다시 찾았습니다.`:" 모두 한 번에 찾았습니다!"); }
 function flowQz(w,d){ const L=[]; for(const [b,c] of dayPlan(w,d).ch){ const f=FLOW[b+"-"+c]; if(f&&f.qz) L.push({t:"mc",kind:"본문 다시 찾기",...f.qz}); }
   for(let i=L.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [L[i],L[j]]=[L[j],L[i]]; } return L.slice(0,2); }
 function onbCard(){ if(mem.onb) return "";
   return `<section class="sec onb"><h2>성경을 처음 읽어도 괜찮습니다</h2><p>오늘 할 일은 세 가지입니다.</p><ol><li>30초 길잡이를 읽습니다.</li><li>오늘 본문을 읽습니다.</li><li>퀴즈로 다시 확인합니다.</li></ol><p class="lead">QT는 시간이 있을 때 해도 됩니다. 요약·지도·인물 설명은 필요할 때만 보세요.</p><button class="btn" id="onbGo">오늘 본문 시작하기</button></section>`; }
+
+function prepHelp(p,w,key){
+  const g=GUIDE[key]; let W=null;
+  if(MODE==="rj") W=WEEKS[w-1]; else { const [b,c]=p.ch[0]; const i=RJ_PLAN.findIndex(wk=>wk.some(dd=>dd.ch.some(x=>x[0]===b&&x[1]===c))); if(i>=0) W=RJ_WEEKS[i]; }
+  const where=W&&W.story?W.story.split(/(?<=[다요]\.)\s+/)[0]:"";
+  const rows=[];
+  if(where) rows.push(["지금 어디쯤?",esc(where)]);
+  if(g&&g.prev) rows.push(["지난 이야기",esc(g.prev)]);
+  if(g&&g.find) rows.push(["읽으면서 찾기",`<span class="find">${esc(g.find)}</span>`]);
+  let extra="";
+  mem.bk ||= {};
+  for(const b of [...new Set(p.ch.filter(x=>x[1]===1).map(x=>x[0]))]){ const I=BOOKINFO[b]; if(!I) continue; const nm=PLAN.full[b-1];
+    extra+=`<div class="hbook"><b>${esc(nm)}${hasB(nm)?"은":"는"} 어떤 책인가요?</b><p>${esc(I.what)}</p><p><b>이 책을 읽을 때</b> ${esc(I.look)}</p><button class="btn ghost small" data-book="${b}">더 알아보기</button></div>`; }
+  if(!extra){ const b=p.ch[0][0], I=BOOKINFO[b]; if(I&&I.look) rows.push([`${esc(PLAN.full[b-1])}에서 계속 볼 것`,esc(I.look)]); }
+  const seen=[]; for(const [b,c] of p.ch){ const gg=genreOf(b,c); if(gg&&!seen.includes(gg)) seen.push(gg); }
+  const calm=seen.slice(0,2).map(gg=>`<p class="calm">${GENRE_MSG[gg][1]}</p>`).join("");
+  if(!rows.length&&!extra&&!calm) return "";
+  return `<details class="help30"${view.helpOpen?" open":""}><summary>읽기 전 30초 도움 <span aria-hidden="true">›</span></summary><dl>${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>${extra}${calm}</details>`; }
+function moreSection(p,A,b0,w,d){
+  const K=keyEnts(p), E=entsIn(A), gl=glossInDay(A,b0).filter(x=>!NAME_SET.has(x.it.t));
+  if(!K.pe.length) K.pe=E.pe.slice(0,3).map(x=>x.n); if(!K.pl.length) K.pl=E.pl.slice(0,3).map(x=>x.n);
+  const ope=E.pe.filter(x=>!K.pe.includes(x.n)), opl=E.pl.filter(x=>!K.pl.includes(x.n)), ow=gl.filter(x=>!K.w.includes(x.it.t));
+  const kwH=renderKeyWords(A,w,d);
+  if(!ope.length&&!opl.length&&!ow.length&&!kwH) return "";
+  const row=(cls,lab,items)=>items.length?`<div class="krow"><b class="kh ${cls}">${lab}</b><div class="chips">${items.join("")}</div></div>`:"";
+  const cnt=[ope.length?`인물 ${ope.length}명`:"",opl.length?`지명 ${opl.length}곳`:"",ow.length?`말 ${ow.length}개`:"",kwH?"읽는 단서":""].filter(Boolean).join(" · ");
+  return `<section class="sec"><details class="moreent"${view.entAll?" open":""} id="moreBox"><summary>본문을 더 자세히 살펴보기 <small>${cnt}</small></summary>
+   <div class="know more">${row("pe","인물",ope.map(x=>`<button class="chip nm" data-pe="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("pl","곳",opl.map(x=>`<button class="chip pl" data-pl="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("w","말",ow.map(x=>`<button class="chip term" data-g="${esc(x.it.t)}">${esc(x.it.t)}</button>`))}</div>
+   ${kwH?`<span class="label" style="margin-top:12px">본문을 읽는 단서</span>${kwH}`:""}</details></section>`; }
 /* 오늘 통독 */
 function renderRead(){
   if(view.pre) return renderPreview();
@@ -5455,43 +5495,42 @@ function renderRead(){
   if(!BIBLE) return `<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
   const A=dayA(w,d), sc=dayScore(w,d), done=!!mem.done[key];
   const mins=Math.max(5,Math.round(A.text.length/450));
-  let h=onbCard()+installCard("read")+resumeCard()+progressMini()+whereCard(p,w)+bookCards(p);
-  // 1 본문
-  h+=`<section class="sec" id="textSec"><span class="label">1 · 오늘 본문</span><h2>${esc(p.label)}</h2>${bookLook(p)}${guideCard(key)}${genreNote(p)}${flowCard(p)}
-   ${window.SYNC&&SYNC.available?`<p class="readcnt" id="churchDay" aria-live="polite"></p>`:""}
-   <div class="steps"><span class="step on">본문 약 ${mins}분</span><span class="step ${view.open||(mem.seen&&mem.seen[key])||done?"on":""}">본문</span><span class="step ${sc?"on":""}">퀴즈${sc?` ${sc.s}/${sc.t}`:""}</span><span class="step ${done?"on":""}">통독 완료</span></div><p class="easy">통독만 해도 오늘 목표는 완료입니다. 퀴즈는 약 3–5분, QT는 원할 때 이어 가세요.</p>`;
+  let h=onbCard()+installCard("read")+resumeCard();
+  // 오늘 본문: 제목 → 분량·시간 → 본문 펼치기 → (접힌) 읽기 전 30초 도움
+  h+=`<section class="sec" id="textSec"><span class="label">오늘 본문</span><h2>${esc(p.label)}</h2><p class="meta">${p.ch.length}${b0===19?"편":"장"} · 약 ${mins}분${done?` · <b class="okc">통독 완료</b>`:""}</p>`;
+  const helpBox=prepHelp(p,w,key);
   if(!view.open){
-    h+=`<button class="openbtn" id="openText">본문 펼치기 · ${p.ch.length}${b0===19?"편":"장"}</button><p class="lead">오디오 성경이나 종이 성경으로 읽으셨다면 펼치지 않아도 됩니다.</p>`;
+    h+=`<button class="openbtn" id="openText">본문 펼치기</button>${helpBox}<p class="lead">본문만 읽고 '오늘 통독 완료'를 눌러도 됩니다. 퀴즈와 QT는 선택입니다. 오디오 성경이나 종이 성경으로 읽으셨다면 펼치지 않아도 됩니다.</p>`;
   } else {
-    h+=`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜을 칠할 수 있습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
+    h+=helpBox+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜을 칠할 수 있습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
     for(const [b,c] of p.ch){
       const s2=new Set();
-      h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}</h3><div class="vtext">`+BIBLE[b-1][c-1].map((t,i)=>{const id=`${b}-${c}-${i+1}`, mk=HL[id]; return `<span class="v${mk?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}" id="v-${id}" data-v="${id}"><sup>${i+1}</sup>${markGloss(t,b,s2)}</span> `;}).join("")+`</div></div>`;
+      h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}${FLOW[b+"-"+c]?`<small class="chsub">${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`:""}</h3><div class="vtext">`+BIBLE[b-1][c-1].map((t,i)=>{const id=`${b}-${c}-${i+1}`, mk=HL[id]; return `<span class="v${mk?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}" id="v-${id}" data-v="${id}"><sup>${i+1}</sup>${markGloss(t,b,s2)}</span> `;}).join("")+`</div></div>`;
     }
     h+=`<div class="row" style="margin-top:14px"><button class="btn ghost" data-close="1">본문 접기</button></div></div>`;
   }
   h+=`</section>`;
   // 이해가 필요할 때 (참고 자료)
   const sumT=(SUMMARY[w-1]||[])[d]||"";
-  h+=`<div class="helpzone"><div class="helphead"><b>이해가 필요할 때</b><span>필요한 것만 골라 보세요. 건너뛰어도 괜찮습니다.</span></div>`;
+  h+=`<div class="helpzone"><div class="helphead"><b>읽은 뒤에 · 이해가 필요할 때</b><span>필요한 것만 골라 보세요. 건너뛰어도 괜찮습니다.</span></div>`;
   h+=`<section class="sec"><span class="label">본문 요약</span>${p.topic?`<p class="topic">${esc(p.topic)}</p>`:""}${sumT?`<p class="summary">${markGloss(sumT,b0,new Set())}</p>`:`<p class="lead">이 날의 요약은 준비 중입니다.</p>`}</section>`;
   h+=knowSection(p,A,b0);
+  h+=moreSection(p,A,b0,w,d);
   h+=renderMapBox(A);
-  const kwH=renderKeyWords(A,w,d); if(kwH) h+=`<section class="sec"><span class="label">본문을 읽는 단서</span>${kwH}</section>`;
   h+=`</div>`;
   // 5 퀴즈
-  h+=`<section class="sec" id="quizSec"><span class="label">2 · 퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
+  h+=`<section class="sec" id="quizSec"><span class="label">선택 · 퀴즈</span><p class="lead">퀴즈는 선택입니다. 오늘 읽은 내용을 한 번 더 확인하고 싶다면 풀어 보세요.</p>${renderQuiz(key,null,"day")}</section>`;
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
-  h+=`<section class="sec" id="doneSec"><span class="label">3 · 통독 완료</span>`;
+  h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
   if(done){
-    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.${n>=TOTAL_CH?" 성경 일독을 마치셨습니다!":` 남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available&&SYNC.loginEnabled&&!SYNC.loggedIn()?`<span class="lead">기록을 잃지 않으려면 ‘나의 기록’에서 이름을 등록하세요.</span>`:""}<div class="row" style="justify-content:center"><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
+    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.${n>=TOTAL_CH?" 성경 일독을 마치셨습니다!":` 남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?`<p class="readcnt" id="churchDay" aria-live="polite"></p>`:""}<div class="row" style="justify-content:center"><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
   } else {
-    h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">완료하면 진행률이 ${pct1(n,TOTAL_CH)}%에서 ${pct1(after,TOTAL_CH)}%로 올라갑니다. 퀴즈를 끝까지 풀면 자동으로 완료됩니다.</p>`;
+    h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">본문을 읽었다면 눌러 주세요. 진행률이 ${pct1(n,TOTAL_CH)}%에서 ${pct1(after,TOTAL_CH)}%로 올라갑니다.</p>`;
   }
   h+=`</section>`;
   if(MODE==="y365"&&(dateOf(w,d).getDay()===6||dayNo(w,d)===READ_DAYS)) h+=`<section class="sec"><div class="qcard"><span class="k">한 주를 마무리하는 날</span><p>이번 주 읽은 본문을 돌아보고 주간 도전 문제를 풀어 보세요.</p><div class="row"><button class="btn small" id="toRev">이번 주 돌아보기 ›</button></div></div></section>`;
-  h+=`<section class="sec"><span class="label">더 하고 싶은 날 · 선택</span><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
+  h+=`<section class="sec"><span class="label">선택 · QT</span><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
   view.justDone=false;
   return h;
 }
@@ -5796,7 +5835,7 @@ function churchCounts(){
   const el=document.getElementById("churchDay"), el2=document.getElementById("churchBox"); if(!el&&!el2) return;
   const key=keyOf(view.w,view.d);
   SYNC.counts(syncKey(key),syncKey(todayStr())).then(c=>{ if(!c) return;
-    if(el&&document.body.contains(el)) el.innerHTML=c.day>0?`우리 교회 <b>${c.day}명</b>이 이 본문을 읽었습니다`:`아직 이 본문을 마친 사람이 없습니다. 첫 번째가 되어 보세요.`;
+    if(el&&document.body.contains(el)) el.innerHTML=c.day>1?`우리 교회 <b>${c.day}명</b>이 이 본문을 함께 읽었습니다`:`오늘 이 본문을 마친 첫 번째 분입니다`;
     if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 들어온 통독 완료(모든 본문)</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div>${SYNC.loginEnabled?`<div class="stat"><b>${c.readers}</b><span>이름을 등록한 사람</span></div>`:""}</div>`;
   });
 }
@@ -6150,7 +6189,8 @@ async function loadAdmin(){
 /* 새 소식(큰 변경만) */
 const NEWS=[
  ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록 → 다른 기기와 연동"],
- ["2026-10-08","처음 읽는 분을 위해: 오늘의 흐름 · 오늘 알아둘 인물·곳·말 · 책 처음 읽기 안내가 생겼어요"],
+ ["2026-10-08","통독 화면을 본문 중심으로: 본문 펼치기가 맨 위, 읽기 전 도움은 접어 두었어요"],
+ ["2026-10-08","처음 읽는 분을 위해: 오늘 알아둘 인물·곳·말, 책 처음 읽기 안내, 장마다 소제목이 생겼어요"],
  ["2026-10-08","퀴즈에 '본문 다시 찾기' 문제가 들어가고, 요약·지도 같은 도움은 '이해가 필요할 때'로 모였어요"],
  ["2026-10-08","성경 번역을 고를 수 있어요: 개역개정 · 새번역 · 새한글성경 (☰ 메뉴)"],
  ["2026-10-08","지도에 이동 경로가 크게 늘었어요: 성경 본문 기준 229개, 두 통독표 공통"],
@@ -6295,6 +6335,9 @@ function bind(){
   m.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.jump.split("-").map(Number);go(w,d);});
   m.querySelectorAll("[data-pl]").forEach(el=>{el.onclick=()=>showPlace(el.dataset.pl); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showPlace(el.dataset.pl);}};});
   m.querySelectorAll("[data-pe]").forEach(el=>{el.onclick=()=>showPerson(el.dataset.pe); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showPerson(el.dataset.pe);}};});
+  const hb=m.querySelector(".help30"); if(hb) hb.ontoggle=()=>{view.helpOpen=hb.open;};
+  const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
+  m.querySelectorAll(".hbook [data-book]").forEach(x=>x.onclick=()=>showBook(+x.dataset.book));
   const ea=document.getElementById("entAll"); if(ea) ea.onclick=()=>{ view.entAll=!view.entAll; const y=scrollY; render(); scrollTo({top:y}); };
   const og=document.getElementById("onbGo"); if(og) og.onclick=()=>{ mem.onb=1; save(); render(); document.getElementById("textSec")?.scrollIntoView({block:"start"}); };
   m.querySelectorAll("[data-bkx]").forEach(x=>x.onclick=()=>{ mem.bk ||= {}; mem.bk[x.dataset.bkx]=1; save(); const y=scrollY; render(); scrollTo({top:y}); });
