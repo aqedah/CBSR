@@ -5840,7 +5840,7 @@ function churchCounts(){
   const key=keyOf(view.w,view.d);
   SYNC.counts(syncKey(key),syncKey(todayStr())).then(c=>{ if(!c) return;
     if(el&&document.body.contains(el)) el.innerHTML=c.day>1?`우리 교회 <b>${c.day}명</b>이 이 본문을 함께 읽었습니다`:`오늘 이 본문을 마친 첫 번째 분입니다`;
-    if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 들어온 통독 완료(모든 본문)</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div>${SYNC.loginEnabled?`<div class="stat"><b>${c.readers}</b><span>이름을 등록한 사람</span></div>`:""}</div>`;
+    if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 들어온 통독 완료(모든 본문)</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div></div>`;
   });
 }
 function renderAccount(){
