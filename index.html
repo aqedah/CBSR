@@ -5636,7 +5636,7 @@ function renderQT(){
   const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], A=dayA(w,d), q=qtOf(key);
   const traits=godTraits(A);
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
-  let h=`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2><p class="lead">누르며 살펴보고, 마지막에 한 줄만 적으면 됩니다. 더 깊이 하고 싶으면 맨 아래를 펼치세요.</p></section>`;
+  let h=`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2><p class="lead">누르며 살펴보고 한 줄만 적으면 됩니다. 더 머물고 싶은 날은 한 줄 묵상 아래를 펼쳐 보세요. 마지막에 기도하고 QT 완료를 누릅니다.</p></section>`;
   // 1 오늘의 읽는 눈
   h+=`<section class="sec"><span class="label">1 · 오늘의 읽는 눈</span><div class="eye"><p>${esc(eye.q)}</p>${eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div></section>`;
   // 2 하나님은 어떤 분
@@ -5655,21 +5655,21 @@ function renderQT(){
   h+=`</section>`;
   // 5 한 줄 묵상
   h+=`<section class="sec"><span class="label">5 · 한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
-  // 6 기도
-  const pray=makePrayer(key,vi,q.pv,p.label,kv,traits);
-  h+=`<section class="sec"><span class="label">6 · 오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details>
-   ${q.done?"":`<div class="row"><button class="btn" id="qtDone">QT 완료</button><span class="lead" id="qtSaved"></span></div>`}</section>`;
-  if(q.done) h+=`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`;
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
-  let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 묵상하기<small>무대·인물·줄거리 같은 질문과 '말하지 않은 것'을 천천히 생각하고 적어 봅니다.</small></summary>`;
+  let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 묵상하기<small>무대·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary><p class="lead">떠오른 생각이 있으면 짧게 적어 보세요. 빈칸으로 두어도 괜찮습니다.</p>`;
   if(gap) dp+=`<div class="qcard gapq"><span class="k">말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
   L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; const c=clueFor(l.k,A,w,d); dp+=`<div class="qcard"><span class="k">${esc(l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
   if(traits.length>2) dp+=`<span class="label" style="margin-top:6px">본문에서 찾은 하나님의 성품 더 보기</span>`+traits.slice(2).map(t=>{const v=t.verse; return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span></div>`;}).join("");
   dp+=`</details>`;
-  h+=`<section class="sec">${dp}</section>`;
+  h+=`<section class="sec deepsec"><span class="label">선택 · 조금 더 머물러 볼까요?</span>${dp}</section>`;
+  // 6 기도
+  const pray=makePrayer(key,vi,q.pv,p.label,kv,traits);
+  h+=`<section class="sec"><span class="label">6 · 오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
+  // QT 완료: 맨 마지막에만
+  h+=q.done?`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`:`<section class="sec"><div class="row"><button class="btn" id="qtDone" style="width:100%;padding:15px">QT 완료</button></div><p class="lead" id="qtSaved" style="text-align:center"></p></section>`;
   view.qtJust=false;
   return h;
 }
