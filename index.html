@@ -15,6 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#2C5C52">
+<script>try{var t=localStorage.getItem("cbsr-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="통독 노트">
@@ -1176,6 +1177,9 @@ button.bk{font-family:inherit;cursor:pointer}
 .syncbtn.on{background:var(--accent-soft);border-color:transparent}
 .linkrow{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;margin-top:4px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:11px 14px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:left}
 .linkrow>b{color:var(--accent)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:4px;margin-top:6px}
+.seg button{border:0;background:none;font:inherit;font-size:14px;color:var(--muted);padding:9px 4px;border-radius:9px;cursor:pointer}
+.seg button[aria-checked="true"]{background:var(--card);color:var(--accent);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -5138,6 +5142,12 @@ const GI=buildGlossIndex(GLOSSARY);
 const PLACE=new Map(GAZ.places.map(p=>[p[0],p]));
 let BIBLE=null,bibleErr=null;
 /* 성경 번역: 개역개정(기본) · 새번역 · 새한글성경 */
+const THEME=()=>{ try{ const t=localStorage.getItem("cbsr-theme"); return t==="light"||t==="dark"?t:"auto"; }catch(e){ return "auto"; } };
+function setTheme(t){ try{ if(t==="auto") localStorage.removeItem("cbsr-theme"); else localStorage.setItem("cbsr-theme",t); }catch(e){}
+  if(t==="auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme",t);
+  const dark=t==="dark"||(t==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content",dark?"#111714":"#2C5C52"); }
+setTheme(THEME());
 const TR_INFO={krv:{name:"개역개정",src:"개역개정4판"},snb:{name:"새번역",src:"새번역"},shg:{name:"새한글성경",src:"새한글성경"}};
 const TR=(()=>{ try{ const t=sessionStorage.getItem("cbsr-tr"); return TR_INFO[t]?t:"krv"; }catch(e){ return "krv"; } })();
 function loadTrScript(t){ return new Promise((res,rej)=>{ if(window.BIBLE_TR&&BIBLE_TR[t]) return res(BIBLE_TR[t]); const sc=document.createElement("script"); sc.src=`bible_${t}.js?v=${window.TR_VER||1}`; sc.onload=()=>window.BIBLE_TR&&BIBLE_TR[t]?res(BIBLE_TR[t]):rej(new Error("tr")); sc.onerror=()=>rej(new Error("tr")); document.head.appendChild(sc); }); }
@@ -6192,6 +6202,7 @@ async function loadAdmin(){
 
 /* 새 소식(큰 변경만) */
 const NEWS=[
+ ["2026-10-08","야간 모드가 생겼어요 (☰ 메뉴 → 화면 밝기)"],
  ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록 → 다른 기기와 연동"],
  ["2026-10-08","통독 화면을 본문 중심으로: 본문 펼치기가 맨 위, 읽기 전 도움은 접어 두었어요"],
  ["2026-10-08","처음 읽는 분을 위해: 오늘 알아둘 인물·곳·말, 책 처음 읽기 안내, 장마다 소제목이 생겼어요"],
@@ -6263,6 +6274,7 @@ function renderGuide(){
    <button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다. 성경 이야기의 흐름을 따라 읽습니다.</span></button>
    <button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다. 창세기부터 요한계시록까지 차례대로 읽습니다.</span></button></div>
    <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p>
+   <span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
    <span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
    <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p></section>`
   +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>쓰는 방법</h2>
@@ -6302,6 +6314,7 @@ function openMenu(){
     if(ok){ document.getElementById("fbText").value=""; msg.textContent="고맙습니다! 피드백이 전달되었습니다."; }
     else msg.textContent="보내지 못했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요. 적은 글은 그대로 남아 있습니다.";
   };
+  r.querySelectorAll("[data-theme-set]").forEach(b=>b.onclick=()=>{ setTheme(b.dataset.themeSet); r.querySelectorAll("[data-theme-set]").forEach(x=>x.setAttribute("aria-checked",x===b)); });
   r.querySelectorAll("[data-tr]").forEach(b=>b.onclick=()=>{ if(b.dataset.tr===TR) return; try{sessionStorage.setItem("cbsr-tr",b.dataset.tr);}catch(e){} location.reload(); });
   r.querySelectorAll("[data-plan]").forEach(b=>b.onclick=()=>{ if(b.dataset.plan===MODE) return; try{sessionStorage.setItem("cbsr-mode",b.dataset.plan);}catch(e){} location.reload(); });
   bindInstall();
