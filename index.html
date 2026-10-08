@@ -883,6 +883,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .trow .s{font-variant-numeric:tabular-nums;font-weight:600;font-size:14.5px}
 .trow .s.none{color:var(--muted);font-weight:400;font-size:13px}
 .meter{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:4px}
+.meter{height:7px}
 .meter i{display:block;height:100%;background:var(--ok)}
 .total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding:12px 0 6px;border-top:2px solid var(--ink);margin-top:4px}
 .total .big{font-family:var(--f-text);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums}
@@ -1002,7 +1003,8 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .bdg.on i{background:var(--gold-soft);border:2px solid var(--gold);color:var(--gold)}
 .books{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:4px}
 .bk{position:relative;border-radius:6px;background:var(--paper);border:1px solid var(--line);font-size:11.5px;text-align:center;padding:5px 0;overflow:hidden;color:var(--muted)}
-.bk i{position:absolute;left:0;bottom:0;top:0;background:var(--ok-soft)}
+.bk i{position:absolute;left:0;bottom:0;top:0;background:color-mix(in srgb,var(--ok) 50%,var(--card))}
+.bk:has(i:not([style*="width:0"])) span{color:var(--ink);font-weight:600}
 .bk span{position:relative}
 .bk.full{background:var(--ok);border-color:var(--ok);color:var(--ok-soft);font-weight:700}
 .hllist{display:grid;gap:8px}
