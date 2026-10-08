@@ -1126,8 +1126,9 @@ button.bk{font-family:inherit;cursor:pointer}
 .wkrow.now .t{font-weight:700}
 .chfind{display:flex;gap:8px}
 .chfind input{flex:1;min-width:0;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
-.meta{margin:2px 0 10px;color:var(--muted);font-size:14px}
-.meta .okc{color:var(--ok)}
+.meta{margin:4px 0 12px;display:flex;flex-wrap:wrap;gap:6px}
+.meta .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--muted);line-height:1.4}
+.meta .pill.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,var(--line));font-weight:700}
 .help30{margin:10px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
 .help30>summary{list-style:none;cursor:pointer;padding:11px 14px;font-weight:600;color:var(--accent);display:flex;justify-content:space-between}
 .help30>summary::-webkit-details-marker{display:none}
@@ -5513,7 +5514,7 @@ function renderRead(){
   const mins=Math.max(5,Math.round(A.text.length/450));
   let h=onbCard()+installCard("read")+resumeCard();
   // 오늘 본문: 제목 → 분량·시간 → 본문 펼치기 → (접힌) 읽기 전 30초 도움
-  h+=`<section class="sec" id="textSec"><span class="label">오늘 본문</span><h2>${esc(p.label)}</h2><p class="meta">${p.ch.length}${b0===19?"편":"장"} · 약 ${mins}분${done?` · <b class="okc">통독 완료</b>`:""}</p>`;
+  h+=`<section class="sec" id="textSec"><span class="label">오늘 본문</span><h2>${esc(p.label)}</h2><p class="meta"><span class="pill">${p.ch.length}${b0===19?"편":"장"}</span><span class="pill">약 ${mins}분 분량</span>${done?`<span class="pill ok">✓ 통독 완료</span>`:""}</p>`;
   const helpBox=prepHelp(p,w,key);
   if(!view.open){
     h+=`<button class="openbtn" id="openText">본문 펼치기</button>${helpBox}`;
