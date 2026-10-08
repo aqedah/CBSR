@@ -5417,10 +5417,10 @@ const CK_L={"인용":"신약의 직접 인용","약속":"약속과 성취","주�
 const MC_L={A:"본문이 직접 설명합니다",B:"보통 이렇게 풀이합니다",C:"정확한 뜻은 분명하지 않습니다"};
 function christKey(w,d){ const det=DETAIL[w+"-"+(d+1)]; if(MODE==="rj") return det&&det.christ?"rjd:"+w+"-"+d:"rjw:"+w; return "y:"+w+"-"+d; }
 const GENEAL=new Set(["1-5","1-10","1-11","1-25","1-36","1-46","4-1","4-26","13-1","13-2","13-3","13-4","13-5","13-6","13-7","13-8","13-9","15-2","15-8","16-7","16-11","16-12","40-1","42-3"]);
-const GENRE_MSG={gen:["족보","이름을 모두 외우지 않아도 됩니다. 어느 집안이 이어지고, 어디에서 이야기가 좁혀지는지만 살펴보세요."],
- law:["율법","규정을 하나씩 외우려고 하지 않아도 됩니다. 무엇을 거룩한 것과 그렇지 않은 것으로 구별하는지 보세요."],
+const GENRE_MSG={gen:["족보","어느 집안이 이어지고, 어디에서 이야기가 좁혀지는지 살펴보세요."],
+ law:["율법","무엇을 거룩한 것과 그렇지 않은 것으로 구별하는지 보세요."],
  ps:["시편","사건의 순서를 찾기보다 시인의 마음이 어디에서 어디로 움직이는지 따라가 보세요."],
- wis:["지혜서","한 번에 다 이해하려 하지 않아도 됩니다. 마음에 걸리는 한 문장을 붙잡아 보세요."],
+ wis:["지혜서","마음에 걸리는 한 문장을 붙잡아 보세요."],
  pro:["예언서","미래 사건을 맞히려고 하기 전에, 먼저 예언자가 누구에게 왜 말하는지 보세요."],
  ep:["편지","한 구절씩 떼어 읽기보다 앞 문장과 뒤 문장이 어떻게 이어지는지 보세요."],
  apo:["묵시","상징 하나하나에 곧바로 현실 사건을 대입하기보다 장면 전체가 무엇을 보여 주는지 보세요."]};
@@ -5450,12 +5450,12 @@ function knowSection(p,A,b0){
   const row=(cls,lab,items)=>items.length?`<div class="krow"><b class="kh ${cls}">${lab}</b><div class="chips">${items.join("")}</div></div>`:"";
   let h=`<section class="sec"><span class="label">오늘 알아둘 것</span>`;
   if(!K.pe.length&&!K.pl.length&&!K.w.length&&!gl.length) return h+`<p class="lead">오늘 본문에는 따로 알아 둘 이름이나 어려운 말이 많지 않습니다.</p></section>`;
-  h+=`<p class="lead">이것만 먼저 알면 됩니다. 눌러 보면 설명이 나옵니다.</p><div class="know">`+row("pe","인물",K.pe.map(n=>chip("pe",n,trName(n))))+row("pl","곳",K.pl.map(n=>chip("pl",n,trName(n))))+row("w","말",K.w.map(n=>chip("w",n,trName(n))))+`</div>`;
+  h+=`<div class="know">`+row("pe","인물",K.pe.map(n=>chip("pe",n,trName(n))))+row("pl","곳",K.pl.map(n=>chip("pl",n,trName(n))))+row("w","말",K.w.map(n=>chip("w",n,trName(n))))+`</div>`;
   return h+`</section>`; }
-function qsumT(s,t){ return (s?`처음에 ${s}문제를 바로 찾았습니다.`:"처음엔 바로 찾지 못해도 괜찮습니다.")+(t-s>0?` 나머지 ${t-s}문제는 본문으로 돌아가 다시 찾았습니다.`:" 모두 한 번에 찾았습니다!"); }
+function qsumT(s,t){ return (s===t?`${t}문제를 모두 한 번에 찾았습니다.`:s?`처음에 ${s}문제를 바로 찾았고, ${t-s}문제는 본문을 다시 보고 찾았습니다.`:`${t}문제 모두 본문을 다시 보고 찾았습니다.`); }
 function flowQz(w,d){ const L=[]; for(const [b,c] of dayPlan(w,d).ch){ const f=FLOW[b+"-"+c]; if(f&&f.qz) L.push({t:"mc",kind:"본문 다시 찾기",...f.qz}); }
   for(let i=L.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [L[i],L[j]]=[L[j],L[i]]; } return L.slice(0,2); }
-function onbCard(){ if(mem.onb) return "";
+function onbCard(){ return ""; if(mem.onb) return "";
   return `<section class="sec onb"><h2>성경을 처음 읽어도 괜찮습니다</h2><p>오늘 할 일은 세 가지입니다.</p><ol><li>30초 길잡이를 읽습니다.</li><li>오늘 본문을 읽습니다.</li><li>퀴즈로 다시 확인합니다.</li></ol><p class="lead">QT는 시간이 있을 때 해도 됩니다. 요약·지도·인물 설명은 필요할 때만 보세요.</p><button class="btn" id="onbGo">오늘 본문 시작하기</button></section>`; }
 
 function prepHelp(p,w,key){
@@ -5500,7 +5500,7 @@ function renderRead(){
   h+=`<section class="sec" id="textSec"><span class="label">오늘 본문</span><h2>${esc(p.label)}</h2><p class="meta">${p.ch.length}${b0===19?"편":"장"} · 약 ${mins}분${done?` · <b class="okc">통독 완료</b>`:""}</p>`;
   const helpBox=prepHelp(p,w,key);
   if(!view.open){
-    h+=`<button class="openbtn" id="openText">본문 펼치기</button>${helpBox}<p class="lead">본문만 읽고 '오늘 통독 완료'를 눌러도 됩니다. 퀴즈와 QT는 선택입니다. 오디오 성경이나 종이 성경으로 읽으셨다면 펼치지 않아도 됩니다.</p>`;
+    h+=`<button class="openbtn" id="openText">본문 펼치기</button>${helpBox}`;
   } else {
     h+=helpBox+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜을 칠할 수 있습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
     for(const [b,c] of p.ch){
@@ -5512,25 +5512,25 @@ function renderRead(){
   h+=`</section>`;
   // 이해가 필요할 때 (참고 자료)
   const sumT=(SUMMARY[w-1]||[])[d]||"";
-  h+=`<div class="helpzone"><div class="helphead"><b>읽은 뒤에 · 이해가 필요할 때</b><span>필요한 것만 골라 보세요. 건너뛰어도 괜찮습니다.</span></div>`;
+  h+=`<div class="helpzone">`;
   h+=`<section class="sec"><span class="label">본문 요약</span>${p.topic?`<p class="topic">${esc(p.topic)}</p>`:""}${sumT?`<p class="summary">${markGloss(sumT,b0,new Set())}</p>`:`<p class="lead">이 날의 요약은 준비 중입니다.</p>`}</section>`;
   h+=knowSection(p,A,b0);
   h+=moreSection(p,A,b0,w,d);
   h+=renderMapBox(A);
   h+=`</div>`;
   // 5 퀴즈
-  h+=`<section class="sec" id="quizSec"><span class="label">선택 · 퀴즈</span><p class="lead">퀴즈는 선택입니다. 오늘 읽은 내용을 한 번 더 확인하고 싶다면 풀어 보세요.</p>${renderQuiz(key,null,"day")}</section>`;
+  h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
   if(done){
     h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.${n>=TOTAL_CH?" 성경 일독을 마치셨습니다!":` 남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?`<p class="readcnt" id="churchDay" aria-live="polite"></p>`:""}<div class="row" style="justify-content:center"><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
   } else {
-    h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">본문을 읽었다면 눌러 주세요. 진행률이 ${pct1(n,TOTAL_CH)}%에서 ${pct1(after,TOTAL_CH)}%로 올라갑니다.</p>`;
+    h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">진행률 ${pct1(n,TOTAL_CH)}% → ${pct1(after,TOTAL_CH)}%</p>`;
   }
   h+=`</section>`;
   if(MODE==="y365"&&(dateOf(w,d).getDay()===6||dayNo(w,d)===READ_DAYS)) h+=`<section class="sec"><div class="qcard"><span class="k">한 주를 마무리하는 날</span><p>이번 주 읽은 본문을 돌아보고 주간 도전 문제를 풀어 보세요.</p><div class="row"><button class="btn small" id="toRev">이번 주 돌아보기 ›</button></div></div></section>`;
-  h+=`<section class="sec"><span class="label">선택 · QT</span><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
+  h+=`<section class="sec"><span class="label">QT</span><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
   view.justDone=false;
   return h;
 }
@@ -5601,7 +5601,7 @@ function showINC(i){
 }
 /* QT */
 /* QT 완료 보상 */
-const QT_CHEER=["말씀 앞에 머문 이 시간이 오늘 하루를 붙들어 줄 거예요.","작은 시간이지만, 하나님 앞에 드린 진짜 시간이었습니다.","오늘 붙잡은 한 구절을 하루 동안 한 번 더 떠올려 보세요.","꾸준함이 믿음을 자라게 합니다. 오늘도 한 걸음 걸었습니다.","적은 기도가 짧아도 괜찮습니다. 하나님은 마음을 보십니다.","오늘 말씀이 마음에 심겼습니다. 천천히 열매를 기다려요.","바쁜 하루 속에서 말씀을 먼저 찾았습니다. 잘하셨어요.","내일도 이 자리에서 만나요. 이야기는 계속됩니다.","읽고, 생각하고, 기도했습니다. 오늘의 QT가 완성되었습니다.","오늘 만난 하나님을 한 사람에게 이야기해 보면 어떨까요?"];
+const QT_CHEER=["말씀 앞에 머문 이 시간이 오늘 하루를 붙들어 줄 거예요.","작은 시간이지만, 하나님 앞에 드린 진짜 시간이었습니다.","오늘 붙잡은 한 구절을 하루 동안 한 번 더 떠올려 보세요.","꾸준함이 믿음을 자라게 합니다. 오늘도 한 걸음 걸었습니다.","오늘 말씀이 마음에 심겼습니다. 천천히 열매를 기다려요.","바쁜 하루 속에서 말씀을 먼저 찾았습니다. 잘하셨어요.","내일도 이 자리에서 만나요. 이야기는 계속됩니다.","읽고, 생각하고, 기도했습니다. 오늘의 QT가 완성되었습니다.","오늘 만난 하나님을 한 사람에게 이야기해 보면 어떨까요?"];
 const QT_GOALS=[[1,"첫 QT를 마쳤습니다"],[3,"QT 3일 달성"],[7,"QT 7일 달성"],[14,"QT 14일 달성"],[30,"QT 30일 달성"],[50,"QT 50일 달성"],[100,"QT 100일 달성"],[150,"QT 150일 달성"],[200,"QT 200일 달성"],[300,"QT 300일 달성"]].filter(g=>g[0]<READ_DAYS).concat([[READ_DAYS,PI.short+" QT 완주"]]);
 function prevDay(w,d){ d--; if(d<0){ w--; if(w<1) return null; d=nd(w)-1; } return [w,d]; }
 function streakOf(ok,w,d){ let n=0, p=[w,d]; while(p&&ok(p[0],p[1])){ n++; p=prevDay(p[0],p[1]); } return n; }
@@ -5675,7 +5675,7 @@ function renderQT(){
   const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], A=dayA(w,d), q=qtOf(key);
   const traits=godTraits(A);
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
-  let h=`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2><p class="lead">누르며 살펴보고 한 줄만 적으면 됩니다. 더 머물고 싶은 날은 한 줄 묵상 아래를 펼쳐 보세요. 마지막에 기도하고 QT 완료를 누릅니다.</p></section>`;
+  let h=`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2></section>`;
   // 1 오늘의 읽는 눈
   h+=`<section class="sec"><span class="label">1 · 오늘의 읽는 눈</span><div class="eye"><p>${esc(eye.q)}</p>${eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div></section>`;
   // 2 하나님은 어떤 분
@@ -5697,13 +5697,13 @@ function renderQT(){
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
-  let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 묵상하기<small>무대·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary><p class="lead">떠오른 생각이 있으면 짧게 적어 보세요. 빈칸으로 두어도 괜찮습니다.</p>`;
+  let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 묵상하기<small>무대·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary>`;
   if(gap) dp+=`<div class="qcard gapq"><span class="k">말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
   L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; const c=clueFor(l.k,A,w,d); dp+=`<div class="qcard"><span class="k">${esc(l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
   if(traits.length>2) dp+=`<span class="label" style="margin-top:6px">본문에서 찾은 하나님의 성품 더 보기</span>`+traits.slice(2).map(t=>{const v=t.verse; return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span></div>`;}).join("");
   dp+=`</details>`;
-  h+=`<section class="sec deepsec"><span class="label">선택 · 조금 더 머물러 볼까요?</span>${dp}</section>`;
+  h+=`<section class="sec deepsec">${dp}</section>`;
   // 6 기도
   const pray=makePrayer(key,vi,q.pv,p.label,kv,traits);
   h+=`<section class="sec"><span class="label">6 · 오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
@@ -5871,7 +5871,7 @@ function grade(s,t){
   if(p===100) return ["완벽해요","한 문제도 놓치지 않았어요. 오늘 말씀을 꼼꼼히 읽으셨네요."];
   if(p>=80) return ["꼼꼼한 독자","거의 다 맞히셨어요. 헷갈렸던 부분만 다시 보면 오래 기억에 남습니다."];
   if(p>=60) return ["성실한 독자","잘하셨어요. 요약을 한 번 더 읽고 새 문제로 다시 풀어 보세요."];
-  return ["다시 펴 볼 기회","괜찮아요. 틀린 문제는 기억을 붙잡는 갈고리가 됩니다. 요약을 읽고 다시 도전해 보세요."];
+  return ["다시 펴 볼 기회","요약을 읽고 새 문제로 다시 풀어 보세요."];
 }
 function renderQuiz(key,maker,mode){
   const store=mode==="day"?mem.q:mem.wq;
@@ -6259,10 +6259,10 @@ function renderGuide(){
    <button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다. 성경 이야기의 흐름을 따라 읽습니다.</span></button>
    <button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다. 창세기부터 요한계시록까지 차례대로 읽습니다.</span></button></div>
    <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p>
-   <span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div><p class="lead">처음 성경을 읽는다면 쉬운 번역으로 먼저 읽고, 교회에서 쓰는 번역과 함께 비교해도 좋습니다.</p>
+   <span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
    <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p></section>`
-  +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>통독만 해도 충분합니다</h2><p class="lead">오늘 할 일은 본문 읽기 하나입니다. 시간이 있다면 퀴즈와 QT까지 이어 가세요. 모든 기능을 매일 쓰지 않아도 됩니다.</p>
-  <ol><li>아래 <b>오늘 통독</b>: 30초 길잡이와 오늘의 흐름을 보고 본문을 읽은 뒤 퀴즈로 확인합니다. 요약·오늘 알아둘 것·지도·읽는 단서는 '이해가 필요할 때' 칸에 모여 있으니 필요할 때만 보세요. 퀴즈를 끝까지 풀거나 '오늘 통독 완료'를 누르면 진행률이 올라갑니다.</li>
+  +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>쓰는 방법</h2>
+  <ol><li>아래 <b>오늘 통독</b>: '본문 펼치기'로 본문을 읽습니다. 읽기 전 30초 도움, 요약·오늘 알아둘 것·지도·읽는 단서, 퀴즈가 함께 있습니다. 퀴즈를 끝까지 풀거나 '오늘 통독 완료'를 누르면 진행률이 올라갑니다.</li>
   <li><b>형광펜</b>: 본문에서 절을 누르면(여러 절도 됩니다) 아래에 색이 나옵니다. 칠한 절은 '나의 기록'에 모입니다.</li>
   <li>아래 <b>QT</b>: 이야기로 읽기, 하나님의 성품, 묵상, 오늘의 기도 순서로 말씀을 깊이 붙잡습니다. 칸마다 적은 내용은 이 기기에 저장됩니다.</li>
   <li>아래 <b>나의 기록</b>: 진행률, 연속 기록, 배지, 책별로 읽은 곳, 형광펜, QT 노트를 봅니다.</li>
