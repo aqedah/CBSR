@@ -6038,7 +6038,7 @@ function renderRecord(){
     ["✎","첫 QT",qtN>=1],["7","QT 7일 연속",qs>=7],["★","퀴즈 만점",perfect>=1],["✓","만점 10번",perfect>=10],
     ["◐","성경 25%",pc>=25],["◑","성경 50%",pc>=50],["●","성경 100%",pc>=100],["🖍","형광펜 10절",hlN>=10]];
   const got=B.filter(b=>b[2]).length;
-  h+=`<section class="sec"><span class="label">모은 배지 ${got}/${B.length}</span><div class="badges">${B.map(b=>`<div class="bdg${b[2]?" on":""}"><i>${b[0]}</i>${esc(b[1])}</div>`).join("")}</div></section>`;
+  h+=`<section class="sec"><span class="label">모은 배지 ${got}/${B.length}</span><div class="badges">${(()=>{ const S=[...B.filter(b=>b[2]),...B.filter(b=>!b[2])]; return (view.bdgAll?S:S.slice(0,4)).map(b=>`<div class="bdg${b[2]?" on":""}"><i>${b[0]}</i>${esc(b[1])}</div>`).join(""); })()}</div>${B.length>4?`<button class="morebtn" id="bdgAll">${view.bdgAll?"접기 ▴":`배지 ${B.length-4}개 더 보기 ▾`}</button>`:""}</section>`;
   // 책별
   const {tot,got:gb}=bookProgress();
   h+=`<section class="sec"><span class="label">책별로 읽은 곳</span>${[["구약",0,39],["신약",39,66]].map(([nm,a0,a1])=>{let G0=0,T0=0; for(let i=a0;i<a1;i++){T0+=tot[i+1]||0;G0+=gb[i+1]||0;} return `<div class="testa"><div class="testa-h"><b>${nm}</b><span>${a1-a0}권 · ${T0?Math.round(G0/T0*100):0}%</span></div><div class="books">${PLAN.abbr.slice(a0,a1).map((a,k)=>{const i=a0+k;const T=tot[i+1]||0,G=gb[i+1]||0,p=T?G/T*100:0; return `<button class="bk${T&&G>=T?" full":""}" data-book="${i+1}" aria-label="${esc(PLAN.full[i])} 소개 · ${G}/${T}장 읽음"><i style="width:${p}%"></i><span>${esc(a)}</span></button>`;}).join("")}</div></div>`;}).join("")}<p class="lead">다 읽은 책은 진한 색으로 바뀝니다. 책을 누르면 어떤 책인지 소개가 나옵니다.</p></section>`;
@@ -6357,6 +6357,7 @@ function bind(){
   const hb=m.querySelector(".help30"); if(hb) hb.ontoggle=()=>{view.helpOpen=hb.open;};
   const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
   m.querySelectorAll(".hbook [data-book]").forEach(x=>x.onclick=()=>showBook(+x.dataset.book));
+  const ba=document.getElementById("bdgAll"); if(ba) ba.onclick=()=>{ view.bdgAll=!view.bdgAll; const y=scrollY; render(); scrollTo({top:y}); };
   const ea=document.getElementById("entAll"); if(ea) ea.onclick=()=>{ view.entAll=!view.entAll; const y=scrollY; render(); scrollTo({top:y}); };
   const og=document.getElementById("onbGo"); if(og) og.onclick=()=>{ mem.onb=1; save(); render(); document.getElementById("textSec")?.scrollIntoView({block:"start"}); };
   m.querySelectorAll("[data-bkx]").forEach(x=>x.onclick=()=>{ mem.bk ||= {}; mem.bk[x.dataset.bkx]=1; save(); const y=scrollY; render(); scrollTo({top:y}); });
