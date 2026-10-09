@@ -64,6 +64,11 @@
       async list(){ await init(); const q=await fs.collection("feedback").orderBy("at","desc").limit(300).get(); return q.docs.map(d=>({id:d.id,...d.data()})); },
       async remove(id){ await init(); await fs.doc(`feedback/${id}`).delete(); }
     },
+    /* 개발자 모드: 화면 글자 바꾸기표 (모두에게 적용, 쓰기는 관리자만) */
+    texts:{
+      async get(){ await init(); const d=await fs.doc("config/texts").get(); return d.exists?(d.data().map||{}):{}; },
+      async set(map){ await init(); await fs.doc("config/texts").set({map,at:Date.now()}); }
+    },
     /* 피드백 보내기 */
     async feedback(o){ try{ await init();
       const t=String(o.text||"").slice(0,3000); if(!t) return false;

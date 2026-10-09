@@ -43,6 +43,11 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
       allow update: if false;
     }
+    // 개발자 모드 글자 바꾸기표: 누구나 읽고, 관리자만 고칩니다.
+    match /config/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
     match /stats/church {
       allow read: if signedIn();
       allow create: if signedIn() && request.resource.data.keys().hasOnly(['readers']) && request.resource.data.readers == 1;

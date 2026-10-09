@@ -1191,6 +1191,16 @@ button.bk{font-family:inherit;cursor:pointer}
 .one-scroll .leaflet-container,.one-scroll.leaflet-container{touch-action:pan-y}
 .map-tip{position:absolute;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.38);color:#fff;font-size:15px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
 .map-tip.on{opacity:1}
+.devmode :is(h1,h2,h3,p,span,b,button,label,small,dt,dd,li,a):hover{outline:1px dashed var(--gold);outline-offset:1px}
+.devbar{position:fixed;left:50%;transform:translateX(-50%);top:8px;z-index:9900;background:var(--gold);color:#fff;border-radius:999px;padding:6px 6px 6px 14px;display:flex;gap:10px;align-items:center;font-size:13.5px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.devbar button{border:0;background:#fff;color:var(--gold);font:inherit;border-radius:999px;padding:5px 12px;cursor:pointer}
+.devedit{position:fixed;inset:0;z-index:9950;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.devbox{background:var(--card);color:var(--ink);border-radius:14px;padding:16px;width:min(440px,100%);display:grid;gap:6px}
+.devbox textarea{width:100%;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--paper);color:var(--ink)}
+.devorig{margin:0;padding:6px 10px;background:var(--paper);border-radius:8px;font-size:14px}
+.devlist{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.devlist li{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13.5px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.devcard{margin-bottom:14px}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -1249,7 +1259,7 @@ button.bk{font-family:inherit;cursor:pointer}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="config.js?v=0700cf6d"></script>
-<script src="sync.js?v=e60787fb"></script>
+<script src="sync.js?v=3db58655"></script>
 <script src="bible.js?v=37de8195"></script>
 <script>
 /* ───────── 이름·지명·용어 찾기와 자동 퀴즈 엔진 ───────── */
@@ -5519,6 +5529,40 @@ function moreSection(p,A,b0,w,d){
   return `<section class="sec"><details class="moreent"${view.entAll?" open":""} id="moreBox"><summary>본문을 더 자세히 살펴보기 <small>${cnt}</small></summary>
    <div class="know more">${row("pe","인물",ope.map(x=>`<button class="chip nm" data-pe="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("pl","곳",opl.map(x=>`<button class="chip pl" data-pl="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("w","말",ow.map(x=>`<button class="chip term" data-g="${esc(x.it.t)}">${esc(x.it.t)}</button>`))}</div>
    ${kwH?`<span class="label" style="margin-top:12px">본문을 읽는 단서</span>${kwH}`:""}</details></section>`; }
+
+/* ===== 개발자 모드: 화면 글자를 눌러서 바꾸기 (관리자만, 바꾼 글자는 모든 사용자에게 적용) ===== */
+let TEXTMAP={}; try{ TEXTMAP=JSON.parse(localStorage.getItem("cbsr-texts")||"{}")||{}; }catch(e){}
+const TXT_ORIG=new WeakMap();
+function applyTexts(root){ if(!Object.keys(TEXTMAP).length) return; const W=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){ const p=n.parentElement; if(!p||p.closest("script,style,textarea,#bible,.devui")) return NodeFilter.FILTER_REJECT; return NodeFilter.FILTER_ACCEPT; }});
+  let n; while((n=W.nextNode())){ const raw=n.nodeValue, t=raw.trim(); if(!t) continue; const o=TXT_ORIG.get(n); const key=o&&TEXTMAP[o]!=null&&raw.trim()===TEXTMAP[o]?null:t;
+    if(key&&TEXTMAP[key]!=null&&TEXTMAP[key]!==t){ TXT_ORIG.set(n,key); n.nodeValue=raw.replace(t,TEXTMAP[key]); } } }
+let txtQ=false; new MutationObserver(()=>{ if(txtQ) return; txtQ=true; queueMicrotask(()=>{ txtQ=false; applyTexts(); }); }).observe(document.body,{childList:true,subtree:true});
+applyTexts();
+if(window.SYNC&&SYNC.available&&SYNC.texts) SYNC.texts.get().then(m=>{ const ch=JSON.stringify(m)!==JSON.stringify(TEXTMAP); TEXTMAP=m||{}; try{ localStorage.setItem("cbsr-texts",JSON.stringify(TEXTMAP)); }catch(e){} if(ch){ render(); applyTexts(); } }).catch(()=>{});
+let DEV=false;
+function devPanel(){ const b=document.getElementById("devBox"); if(!b) return; const n=Object.keys(TEXTMAP).length;
+  b.innerHTML=`<div class="acct devcard"><p><b>개발자 모드</b> · 화면의 글자를 눌러서 바로 바꿉니다. 바꾼 글자는 모든 사용자 화면에 적용됩니다.</p><div class="row"><button class="btn small" id="devOn">${DEV?"개발자 모드 끄기":"개발자 모드 켜기"}</button></div>${n?`<span class="label" style="margin-top:10px">바꾼 글자 ${n}개</span><ul class="devlist">${Object.entries(TEXTMAP).map(([a,z])=>`<li><span><s>${esc(a)}</s> → <b>${esc(z)}</b></span><button class="btn ghost small" data-devdel="${esc(a)}">되돌리기</button></li>`).join("")}</ul>`:""}</div>`;
+  document.getElementById("devOn").onclick=()=>{ setDev(!DEV); if(DEV){ view.tab="read"; render(); window.scrollTo({top:0}); } else devPanel(); };
+  b.querySelectorAll("[data-devdel]").forEach(x=>x.onclick=async()=>{ const k=x.dataset.devdel; delete TEXTMAP[k]; await saveTexts(); location.reload(); }); }
+async function saveTexts(){ try{ localStorage.setItem("cbsr-texts",JSON.stringify(TEXTMAP)); }catch(e){} try{ await SYNC.texts.set(TEXTMAP); return true; }catch(e){ alertDev(/permission/.test(e.code||"")?"저장 권한이 없습니다. Firestore 규칙을 새로 게시했는지, 관리자로 들어와 있는지 확인해 주세요.":"저장하지 못했습니다: "+(e.code||e.message)); return false; } }
+function alertDev(t){ const d=document.getElementById("devMsg"); if(d) d.textContent=t; }
+function setDev(on){ DEV=on; document.body.classList.toggle("devmode",on); let bar=document.getElementById("devBar");
+  if(on&&!bar){ bar=document.createElement("div"); bar.id="devBar"; bar.className="devui devbar"; bar.innerHTML=`<span>개발자 모드 · 바꿀 글자를 누르세요</span><button id="devOff">끝내기</button>`; document.body.appendChild(bar); document.getElementById("devOff").onclick=()=>setDev(false); }
+  if(!on&&bar) bar.remove(); }
+function textNodeAt(x,y){ let n=null; if(document.caretRangeFromPoint){ const r=document.caretRangeFromPoint(x,y); n=r&&r.startContainer; } else if(document.caretPositionFromPoint){ const r=document.caretPositionFromPoint(x,y); n=r&&r.offsetNode; }
+  if(n&&n.nodeType===3&&n.nodeValue.trim()) return n; return null; }
+document.addEventListener("click",e=>{ if(!DEV) return; if(e.target.closest(".devui")) return;
+  const n=textNodeAt(e.clientX,e.clientY); if(!n) return; e.preventDefault(); e.stopPropagation(); openDevEdit(n); },true);
+function openDevEdit(n){ const cur=n.nodeValue.trim(), orig=TXT_ORIG.get(n)||cur;
+  const ov=document.createElement("div"); ov.className="devui devedit";
+  ov.innerHTML=`<div class="devbox"><b>글자 바꾸기</b><p class="lead">원래 글자</p><p class="devorig">${esc(orig)}</p><textarea id="devIn" rows="3">${esc(cur)}</textarea><p class="lead">숫자나 날짜가 들어간 글자는 그 글자가 똑같이 나올 때만 바뀝니다.</p><p class="lead" id="devMsg" role="status"></p><div class="row"><button class="btn small" id="devSave">저장</button>${TEXTMAP[orig]!=null?`<button class="btn ghost small" id="devReset">원래대로</button>`:""}<button class="btn ghost small" id="devCancel">취소</button></div></div>`;
+  document.body.appendChild(ov); const inp=ov.querySelector("#devIn"); inp.focus(); inp.select();
+  ov.querySelector("#devCancel").onclick=()=>ov.remove();
+  ov.querySelector("#devSave").onclick=async()=>{ const v=inp.value.trim(); if(!v){ alertDev("빈 글자로는 바꿀 수 없습니다."); return; }
+    if(v===orig) delete TEXTMAP[orig]; else TEXTMAP[orig]=v; alertDev("저장하는 중…");
+    if(await saveTexts()){ TXT_ORIG.set(n,orig); n.nodeValue=n.nodeValue.replace(cur,v); ov.remove(); applyTexts(); } };
+  const rs=ov.querySelector("#devReset"); if(rs) rs.onclick=async()=>{ delete TEXTMAP[orig]; if(await saveTexts()){ n.nodeValue=n.nodeValue.replace(cur,orig); ov.remove(); } };
+}
 /* 오늘 통독 */
 function renderRead(){
   if(view.pre) return renderPreview();
@@ -6197,7 +6241,7 @@ window.addEventListener("scroll",trackPos,{passive:true});
 
 /* 관리자 */
 function renderAdmin(){ setTimeout(loadAdmin,0);
-  return `<section class="sec"><button class="linkbtn" id="adminBack">‹ 돌아가기</button><span class="label">관리자</span><h2>피드백 모아 보기</h2><div id="adminBox"><p class="lead">확인하는 중…</p></div></section>`; }
+  return `<section class="sec"><button class="linkbtn" id="adminBack">‹ 돌아가기</button><span class="label">관리자</span><div id="devBox"></div><h2>피드백 모아 보기</h2><div id="adminBox"><p class="lead">확인하는 중…</p></div></section>`; }
 const fmtAt=t=>{ const d=new Date(t); return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}. ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
 async function loadAdmin(){
   const box=document.getElementById("adminBox"); if(!box) return;
@@ -6223,6 +6267,7 @@ async function loadAdmin(){
   }
   let list; try{ list=await SYNC.admin.list(); }catch(e){ box.innerHTML=`<p class="lead">피드백을 불러오지 못했습니다: ${esc(e.code||e.message||String(e))}</p><div class="row">${out}</div>`; document.getElementById("admOut").onclick=async()=>{ await SYNC.admin.logout(); loadAdmin(); }; return; }
   if(!document.body.contains(box)) return;
+  devPanel();
   const PN={rj:"리딩지저스",y365:"365"};
   box.innerHTML=`<div class="admhead"><span class="lead">피드백 ${list.length}건</span><span class="row"><button class="btn small" id="admRe">새로고침</button>${out}</span></div>`+
    (list.length?list.map(f=>`<div class="fbitem" id="fb-${esc(f.id)}"><p>${esc(f.text)}</p><small>${esc(f.name||"이름 없음")} · ${esc(PN[f.plan]||f.plan||"")}${f.day?" · "+esc(f.day):""} · ${f.at?fmtAt(f.at):""}</small><div class="row"><button class="btn ghost small" data-fbdel="${esc(f.id)}">지우기</button></div></div>`).join(""):`<p class="lead">아직 들어온 피드백이 없습니다.</p>`);
