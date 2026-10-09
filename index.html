@@ -1183,6 +1183,10 @@ button.bk{font-family:inherit;cursor:pointer}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:4px;margin-top:6px}
 .seg button{border:0;background:none;font:inherit;font-size:14px;color:var(--muted);padding:9px 4px;border-radius:9px;cursor:pointer}
 .seg button[aria-checked="true"]{background:var(--card);color:var(--accent);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.qrep{display:block;margin:10px 0 0 auto;border:0;background:none;color:var(--muted);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:4px 0}
+.qrlist{margin:6px 0 10px;padding-left:22px;line-height:1.7}
+.qrlist li.ans{color:var(--ok)}
+.qrlist li.ans b{font-size:12.5px}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -5918,7 +5922,21 @@ function renderQuiz(key,maker,mode){
     const hint=(q.h&&q.h[last])||q.hint||"본문을 다시 떠올려 보세요.";
     h+=`<div class="feedback hint"><span><b>다시 생각해 보세요.</b> ${esc(hint)}</span><div class="row"><button class="btn ghost small" data-see="${q.vs.b}-${q.vs.c}-0">본문 ${q.vs.b===19?q.vs.c+"편":q.vs.c+"장"} 다시 보기</button></div></div>`;
   }
+  if(window.SYNC&&SYNC.available) h+=`<button class="qrep" data-qrep="${mode}">문제 오류 제보</button>`;
   return h+`</div>`;
+}
+function reportQuiz(mode){
+  const qz=mode==="day"?view.quiz:view.wquiz; if(!qz) return; const q=qz.qs[Math.min(qz.i,qz.qs.length-1)]; if(!q) return;
+  const ref=q.vs?`${PLAN.abbr[q.vs.b-1]} ${q.vs.c}:${q.vs.v}`:"";
+  sheet("문제 오류 제보",`<p class="qtext" style="font-size:16px">${esc(q.q)}</p>${q.quote?`<p class="quote">${esc(q.quote)}</p>`:""}<ol class="qrlist">${q.o.map((o,i)=>`<li${i===q.a?' class="ans"':""}>${esc(o)}${i===q.a?" <b>← 앱의 정답</b>":""}</li>`).join("")}</ol>${ref?`<p class="lead">근거 본문 ${esc(ref)}</p>`:""}
+   <textarea id="qrText" rows="4" maxlength="1500" placeholder="무엇이 틀렸는지 적어 주세요. 예: 정답이 2번이 아니라 3번입니다(막 4:41)."></textarea>
+   <div class="row" style="justify-content:flex-end"><button class="btn" id="qrSend">보내기</button></div><p class="lead" id="qrMsg" role="status"></p>`);
+  document.getElementById("qrSend").onclick=async()=>{ const t=document.getElementById("qrText").value.trim(), msg=document.getElementById("qrMsg"); if(!t){ msg.textContent="무엇이 틀렸는지 적어 주세요."; return; }
+    msg.textContent="보내는 중…";
+    const body=`[퀴즈 오류 제보] ${dayPlan(view.w,isRev(view.d)?0:view.d).label} · ${TR_INFO[TR].name}\n문제: ${q.q}${q.quote?"\n인용: "+q.quote:""}\n보기: ${q.o.map((o,i)=>(i+1)+") "+o).join(" / ")}\n앱의 정답: ${q.a+1}) ${q.o[q.a]}${ref?"\n근거: "+ref:""}\n\n의견: ${t}`;
+    const ok=await SYNC.feedback({text:body.slice(0,3000),name:(PROF&&PROF.nick)||"",plan:MODE,day:dayPlan(view.w,isRev(view.d)?0:view.d).label,ua:navigator.userAgent.slice(0,200)});
+    if(ok){ msg.textContent="보냈습니다. 확인해서 고치겠습니다."; document.getElementById("qrSend").disabled=true; }
+    else msg.textContent="보내지 못했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요."; };
 }
 function startQuiz(mode){
   const {w,d}=view;
@@ -6357,6 +6375,7 @@ function bind(){
   const hb=m.querySelector(".help30"); if(hb) hb.ontoggle=()=>{view.helpOpen=hb.open;};
   const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
   m.querySelectorAll(".hbook [data-book]").forEach(x=>x.onclick=()=>showBook(+x.dataset.book));
+  m.querySelectorAll("[data-qrep]").forEach(x=>x.onclick=()=>reportQuiz(x.dataset.qrep));
   const ba=document.getElementById("bdgAll"); if(ba) ba.onclick=()=>{ view.bdgAll=!view.bdgAll; const y=scrollY; render(); scrollTo({top:y}); };
   const ea=document.getElementById("entAll"); if(ea) ea.onclick=()=>{ view.entAll=!view.entAll; const y=scrollY; render(); scrollTo({top:y}); };
   const og=document.getElementById("onbGo"); if(og) og.onclick=()=>{ mem.onb=1; save(); render(); document.getElementById("textSec")?.scrollIntoView({block:"start"}); };
