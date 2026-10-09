@@ -1187,6 +1187,10 @@ button.bk{font-family:inherit;cursor:pointer}
 .qrlist{margin:6px 0 10px;padding-left:22px;line-height:1.7}
 .qrlist li.ans{color:var(--ok)}
 .qrlist li.ans b{font-size:12.5px}
+.one-scroll{touch-action:pan-y}
+.one-scroll .leaflet-container,.one-scroll.leaflet-container{touch-action:pan-y}
+.map-tip{position:absolute;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.38);color:#fff;font-size:15px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
+.map-tip.on{opacity:1}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -5311,6 +5315,15 @@ function initMap(A){
   if(!fid) fid=order.map(id=>[id,must.filter(p=>inF(id,p)).length]).sort((a,b)=>b[1]-a[1])[0][0];
   const F=TERRAIN[fid], FB=L.latLngBounds(F.bounds);
   const map=L.map(el,{zoomSnap:0.5,zoomDelta:0.5,scrollWheelZoom:false,maxBounds:FB.pad(0.08),maxBoundsViscosity:0.9});
+  /* 터치 화면: 한 손가락은 페이지 스크롤, 두 손가락으로만 지도 이동·확대 */
+  const TOUCH=("ontouchstart" in window)||navigator.maxTouchPoints>0;
+  if(TOUCH){ map.dragging.disable(); if(map.tap) map.tap.disable(); el.classList.add("one-scroll");
+    let tip=null, tipT=null;
+    const showTip=()=>{ if(!tip){ tip=document.createElement("div"); tip.className="map-tip"; tip.textContent="지도는 두 손가락으로 움직이세요"; el.appendChild(tip); } tip.classList.add("on"); clearTimeout(tipT); tipT=setTimeout(()=>tip&&tip.classList.remove("on"),1200); };
+    el.addEventListener("touchstart",e=>{ if(e.touches.length>=2){ map.dragging.enable(); tip&&tip.classList.remove("on"); } },{passive:true});
+    el.addEventListener("touchmove",e=>{ if(e.touches.length===1&&!map.dragging.enabled()) showTip(); },{passive:true});
+    el.addEventListener("touchend",e=>{ if(e.touches.length===0) map.dragging.disable(); },{passive:true});
+  }
   LMAP=map;
   map.attributionControl.setPrefix(false);
   const terr=L.layerGroup([L.imageOverlay(F.url,F.bounds,{attribution:"지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"})]);
