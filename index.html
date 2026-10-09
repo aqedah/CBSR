@@ -5715,11 +5715,17 @@ function lensesFor(w,d){
   const g=GENRE_OF(dayPlan(w,d).ch[0][0]); const L=LENSES[g], st=((w-1)*6+d)%L.length;
   return [0,1,2].map(i=>L[(st+i)%L.length]);
 }
-function clueFor(k,A,w,d){
+function clueFor(k,A,w,d,q){
+  /* 질문이 가리키는 장(예: 16:7 → 16장)을 찾아 그 장의 정보로 단서를 줍니다 */
+  const p=dayPlan(w,d); const b0=p.ch[0][0];
+  const cs=[...String(q||"").matchAll(/(\d+):\d+/g)].map(m=>+m[1]).filter(c=>p.ch.some(x=>x[0]===b0&&x[1]===c));
+  const chs=cs.length?[...new Set(cs)].map(c=>[b0,c]):p.ch;
+  const F=chs.map(([b,c])=>[b,c,FLOW[b+"-"+c]]).filter(x=>x[2]);
+  const lab=(b,c)=>`${PLAN.abbr[b-1]} ${c}${b===19?"편":"장"}`;
   const top=(m,n)=>[...m.values()].sort((a,b)=>b.n-a.n).slice(0,n).map(x=>x.name).join(", ");
-  if(/무대/.test(k)&&A.places.size) return "오늘 나오는 곳: "+top(A.places,6);
-  if(/인물|내 자리/.test(k)&&A.people.size) return "오늘 나오는 사람: "+top(A.people,6);
-  if(/줄거리|편지 뒤|시간/.test(k)&&(SUMMARY[w-1]||[])[d]) return "요약 다시 보기: "+SUMMARY[w-1][d].split(/(?<=다\.)\s/)[0];
+  if(/무대/.test(k)){ const L=[...new Set(F.flatMap(x=>x[2].pl||[]))]; if(cs.length&&L.length) return "이 장면에 나오는 곳: "+L.map(trName).join(", "); if(A.places.size) return "오늘 나오는 곳: "+top(A.places,6); }
+  if(/인물|내 자리/.test(k)){ const L=[...new Set(F.flatMap(x=>x[2].pe||[]))]; if(cs.length&&L.length) return "이 장면에 나오는 사람: "+L.map(trName).join(", "); if(A.people.size) return "오늘 나오는 사람: "+top(A.people,6); }
+  if(/줄거리|편지 뒤|시간/.test(k)&&F.length) return (cs.length?"이 장면: ":"오늘의 흐름: ")+F.map(([b,c,f])=>`${lab(b,c)} ${f.t.replace(/[.。]$/,"")}`).join(" → ");
   return "";
 }
 function qtVerses(A,traits,key){
@@ -5776,7 +5782,7 @@ function renderQT(){
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
   let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 묵상하기<small>무대·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary>`;
   if(gap) dp+=`<div class="qcard gapq"><span class="k">말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
-  L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; const c=clueFor(l.k,A,w,d); dp+=`<div class="qcard"><span class="k">${esc(l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
+  L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; const c=clueFor(l.k,A,w,d,l.q); dp+=`<div class="qcard"><span class="k">${esc(l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
   if(traits.length>2) dp+=`<span class="label" style="margin-top:6px">본문에서 찾은 하나님의 성품 더 보기</span>`+traits.slice(2).map(t=>{const v=t.verse; return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span></div>`;}).join("");
   dp+=`</details>`;
