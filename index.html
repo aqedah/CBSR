@@ -1201,6 +1201,23 @@ button.bk{font-family:inherit;cursor:pointer}
 .devlist{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
 .devlist li{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13.5px;border-bottom:1px solid var(--line);padding-bottom:6px}
 .devcard{margin-bottom:14px}
+.topbtns{display:flex;align-items:center;gap:6px;flex:none}
+.brand{flex-wrap:nowrap}
+.brand>span:first-child{flex:1;min-width:0;word-break:keep-all;line-height:1.5}
+#planName{white-space:nowrap}
+.tourbtn{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:inherit;font-size:12.5px;font-weight:700;letter-spacing:0;border-radius:999px;padding:4px 11px;cursor:pointer}
+.tour{position:fixed;inset:0;z-index:9800}
+.tour-hole{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.55);transition:all .25s ease;pointer-events:none;outline:2px solid var(--gold)}
+.tour-tip{position:fixed;background:var(--card);color:var(--ink);border-radius:14px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);display:grid;gap:6px;transition:top .25s ease,left .25s ease}
+.tour-tip b{font-size:16px}
+.tour-tip p{margin:0;line-height:1.6;font-size:14.5px}
+.tour-n{font-size:12px;color:var(--muted)}
+.tour-row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.tour-row span{display:flex;gap:6px}
+.tour-row button{border:0;font:inherit;font-size:14px;border-radius:10px;padding:8px 14px;cursor:pointer}
+.tour-skip{background:none;color:var(--muted)}
+.tour-prev{background:var(--paper);color:var(--ink)}
+.tour-next{background:var(--accent);color:var(--accent-ink);font-weight:700}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -1222,7 +1239,7 @@ button.bk{font-family:inherit;cursor:pointer}
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><span>이야기 통독 노트(시험판) · <span id="planName"></span></span><button class="menubtn" id="menuBtn" aria-label="사용법과 설정 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
+    <div class="brand"><span>이야기 통독 노트(시험판) · <span id="planName"></span></span><span class="topbtns"><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="사용법과 설정 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
     <div id="newsBar"></div>
     <div class="date" id="dateLine"></div>
     <div class="where" id="whereLine"></div>
@@ -6286,6 +6303,7 @@ async function loadAdmin(){
 
 /* 새 소식(큰 변경만) */
 const NEWS=[
+ ["2026-10-11","처음 오신 분은 위쪽 '둘러보기'를 눌러 보세요 (☰ 메뉴에서 다시 볼 수 있어요)"],
  ["2026-10-08","야간 모드가 생겼어요 (☰ 메뉴 → 화면 밝기)"],
  ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록 → 다른 기기와 연동"],
  ["2026-10-08","통독 화면을 본문 중심으로: 본문 펼치기가 맨 위, 읽기 전 도움은 접어 두었어요"],
@@ -6358,6 +6376,7 @@ function renderGuide(){
    <button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다. 성경 이야기의 흐름을 따라 읽습니다.</span></button>
    <button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다. 창세기부터 요한계시록까지 차례대로 읽습니다.</span></button></div>
    <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p>
+   <button class="btn ghost small" id="tourAgain" style="margin-top:8px">둘러보기 다시 보기</button>
    <span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
    <span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
    <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p></section>`
@@ -6398,6 +6417,7 @@ function openMenu(){
     if(ok){ document.getElementById("fbText").value=""; msg.textContent="고맙습니다! 피드백이 전달되었습니다."; }
     else msg.textContent="보내지 못했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요. 적은 글은 그대로 남아 있습니다.";
   };
+  const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); startTour(); };
   r.querySelectorAll("[data-theme-set]").forEach(b=>b.onclick=()=>{ setTheme(b.dataset.themeSet); r.querySelectorAll("[data-theme-set]").forEach(x=>x.setAttribute("aria-checked",x===b)); });
   r.querySelectorAll("[data-tr]").forEach(b=>b.onclick=()=>{ if(b.dataset.tr===TR) return; try{localStorage.setItem("cbsr-tr",b.dataset.tr);}catch(e){} location.reload(); });
   r.querySelectorAll("[data-plan]").forEach(b=>b.onclick=()=>{ if(b.dataset.plan===MODE) return; try{localStorage.setItem("cbsr-mode",b.dataset.plan);}catch(e){} location.reload(); });
@@ -6535,6 +6555,44 @@ const fixD=()=>{ if(!isRev(view.d)&&view.d>=nd(view.w)) view.d=nd(view.w)-1; };
 document.getElementById("prevW").onclick=()=>gotoW(dispW()-1,curCol());
 document.getElementById("nextW").onclick=()=>gotoW(dispW()+1,curCol());
 document.getElementById("menuBtn").onclick=openMenu;
+/* ===== 둘러보기(처음 온 사람용 안내) ===== */
+const TOUR_KEY="cbsr-tour-done";
+const tourDone=()=>{ try{ return !!localStorage.getItem(TOUR_KEY); }catch(e){ return true; } };
+function tourBtnShow(){ const b=document.getElementById("tourBtn"); if(b) b.hidden=tourDone(); }
+const TOUR=[
+ {sel:"#strip",t:"날짜",d:"날짜 칸을 누르면 그날 본문으로 갑니다. 위의 주차 제목을 누르면 다른 주를 고르거나 장으로 찾을 수 있습니다."},
+ {sel:"#openText, #bible",t:"오늘 본문",d:"여기서 오늘 본문을 펼쳐 읽습니다. 절을 누르면 형광펜을 칠할 수 있고, 점선 밑줄 친 말을 누르면 풀이가 나옵니다."},
+ {sel:".help30",t:"읽기 전 30초 도움",d:"펼치면 지금 성경 이야기의 어디쯤인지, 지난 이야기, 읽으면서 찾을 것이 나옵니다."},
+ {sel:".helpzone",t:"읽은 뒤에",d:"본문 요약, 오늘 알아둘 인물·곳·말, 지도가 모여 있습니다."},
+ {sel:"#quizSec",t:"퀴즈",d:"읽은 내용을 퀴즈로 확인합니다. 틀리면 힌트가 나오고 본문으로 돌아가 다시 찾습니다."},
+ {sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 '오늘 통독 완료'를 누릅니다. 진행률이 올라갑니다."},
+ {sel:'.bnav [data-tab="qt"]',t:"QT",d:"읽은 말씀으로 묵상하고 한 줄을 적고 기도합니다."},
+ {sel:'.bnav [data-tab="record"]',t:"나의 기록",d:"진행률, 배지, 형광펜, QT 노트를 봅니다. 여기서 휴대폰·PC 기록을 하나로 연동할 수 있습니다."},
+ {sel:"#menuBtn",t:"사용법·설정",d:"통독표(리딩지저스·365), 성경 번역, 야간 모드, 시작일을 바꿉니다. 둘러보기도 여기서 다시 볼 수 있습니다."}];
+let tourI=0;
+function startTour(){ if(view.tab!=="read"||view.pre||view.revW||isRev(view.d)){ view.tab="read"; view.pre=false; view.revW=null; if(isRev(view.d)) view.d=5; render(); }
+  document.getElementById("sheetRoot").innerHTML=""; tourI=0; tourStep(); }
+function tourEnd(){ document.getElementById("tourOv")?.remove(); try{ localStorage.setItem(TOUR_KEY,"1"); }catch(e){} tourBtnShow(); window.removeEventListener("resize",tourPlace); }
+function tourEl(){ const st=TOUR[tourI]; for(const q of st.sel.split(",")){ const e=document.querySelector(q.trim()); if(e&&e.getClientRects().length) return e; } return null; }
+function tourStep(){ while(tourI<TOUR.length&&!tourEl()) tourI++; if(tourI>=TOUR.length) return tourEnd();
+  let ov=document.getElementById("tourOv");
+  if(!ov){ ov=document.createElement("div"); ov.id="tourOv"; ov.className="devui tour"; ov.innerHTML=`<div class="tour-hole"></div><div class="tour-tip" role="dialog" aria-live="polite"></div>`; document.body.appendChild(ov); ov.addEventListener("click",e=>{ if(e.target===ov) e.stopPropagation(); }); window.addEventListener("resize",tourPlace); }
+  const el=tourEl(), fixed=getComputedStyle(el).position==="fixed"||el.closest(".bnav,header.top")&&el.closest(".bnav");
+  if(!el.closest(".bnav")) el.scrollIntoView({block:"center"});
+  const st=TOUR[tourI], tip=ov.querySelector(".tour-tip");
+  tip.innerHTML=`<span class="tour-n">${tourI+1} / ${TOUR.length}</span><b>${st.t}</b><p>${st.d}</p><div class="tour-row"><button class="tour-skip">건너뛰기</button><span>${tourI?`<button class="tour-prev">이전</button>`:""}<button class="tour-next">${tourI===TOUR.length-1?"끝내기":"다음"}</button></span></div>`;
+  tip.querySelector(".tour-skip").onclick=tourEnd;
+  tip.querySelector(".tour-next").onclick=()=>{ tourI++; tourStep(); };
+  const pv=tip.querySelector(".tour-prev"); if(pv) pv.onclick=()=>{ tourI--; while(tourI>0&&!tourEl()) tourI--; tourStep(); };
+  setTimeout(tourPlace,60); }
+function tourPlace(){ const ov=document.getElementById("tourOv"); if(!ov) return; const el=tourEl(); if(!el) return;
+  const r=el.getBoundingClientRect(), pad=6, hole=ov.querySelector(".tour-hole"), tip=ov.querySelector(".tour-tip");
+  const top=Math.max(4,r.top-pad), h=Math.min(r.height+pad*2,innerHeight*0.55);
+  Object.assign(hole.style,{left:(r.left-pad)+"px",top:top+"px",width:(r.width+pad*2)+"px",height:h+"px"});
+  const tw=Math.min(340,innerWidth-24); tip.style.width=tw+"px"; tip.style.left=Math.max(12,Math.min(innerWidth-tw-12,r.left+r.width/2-tw/2))+"px";
+  const below=top+h+10, th=tip.offsetHeight;
+  if(below+th<innerHeight-8) { tip.style.top=below+"px"; } else { tip.style.top=Math.max(8,top-th-10)+"px"; } }
+document.getElementById("tourBtn").onclick=startTour; tourBtnShow();
 document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,here.d); if(t!=="read"){view.tab=t;render();}};
 /* 탭마다 보던 자리 기억: 통독 ↔ QT를 오가도 읽던 곳으로 돌아옴 */
 const TAB_Y={};
