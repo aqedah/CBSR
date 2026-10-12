@@ -1218,6 +1218,17 @@ button.bk{font-family:inherit;cursor:pointer}
 .tour-skip{background:none;color:var(--muted)}
 .tour-prev{background:var(--paper);color:var(--ink)}
 .tour-next{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.trait-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:2px}
+.amen{flex:none;border:1px solid var(--accent);background:var(--card);color:var(--accent);font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:6px 16px;cursor:pointer;transition:background .15s,color .15s}
+.amen.on{background:var(--accent);color:var(--accent-ink)}
+.amen.pop{animation:amenpop .35s ease}
+@keyframes amenpop{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+.amlist{display:grid;gap:8px;margin-top:4px}
+.amrow{display:grid;grid-template-columns:minmax(0,9em) 1fr 2.2em;align-items:center;gap:8px;font-size:14px}
+.amrow .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.amrow .bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.amrow .bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.amrow b{text-align:right;color:var(--accent);font-variant-numeric:tabular-nums}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -5781,7 +5792,7 @@ function renderQT(){
   // 2 하나님은 어떤 분
   h+=`<section class="sec"><span class="label">2 · 하나님은 어떤 분인가</span>`;
   if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
-  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach(t=>{const v=t.verse; h+=`<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span></div>`;});
+  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); h+=`<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;});
   else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=`</section>`;
   // 3 그리스도께로
@@ -5801,7 +5812,7 @@ function renderQT(){
   if(gap) dp+=`<div class="qcard gapq"><span class="k">말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
   L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; const c=clueFor(l.k,A,w,d,l.q); dp+=`<div class="qcard"><span class="k">${esc(l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
-  if(traits.length>2) dp+=`<span class="label" style="margin-top:6px">본문에서 찾은 하나님의 성품 더 보기</span>`+traits.slice(2).map(t=>{const v=t.verse; return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span></div>`;}).join("");
+  if(traits.length>2) dp+=`<span class="label" style="margin-top:6px">본문에서 찾은 하나님의 성품 더 보기</span>`+traits.slice(2).map(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;}).join("");
   dp+=`</details>`;
   h+=`<section class="sec deepsec">${dp}</section>`;
   // 6 기도
@@ -5829,6 +5840,9 @@ function bindQT(m){
   m.querySelectorAll("[data-qt]").forEach(t=>t.oninput=()=>{q[t.dataset.qt]=t.value; clearTimeout(qtT); qtT=setTimeout(()=>{save(); const s=document.getElementById("qtSaved"); if(s) s.textContent="저장됨";},400);});
   const nv=document.getElementById("qtNextV"); if(nv) nv.onclick=()=>{q.vi=(q.vi||0)+1; const A=dayA(view.w,view.d); const n=qtVerses(A,godTraits(A),view.w+"-"+(view.d+1)).length; if(q.vi>=n) q.vi=0; save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
   const np=document.getElementById("qtNextP"); if(np) np.onclick=()=>{q.pv=(q.pv||0)+1; save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
+  m.querySelectorAll("[data-amen]").forEach(b=>b.onclick=()=>{ const k=keyOf(view.w,view.d); const q=(mem.qt[k] ||= {}); q.amen ||= {}; const n=b.dataset.amen;
+    if(q.amen[n]) delete q.amen[n]; else q.amen[n]=new Date().toISOString().slice(0,10); save();
+    const on=!!q.amen[n]; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); b.textContent=on?"아멘 ✓":"아멘"; if(on){ b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); } });
   const db=document.getElementById("deepBox"); if(db) db.ontoggle=()=>{view.deepOpen=db.open;};
   const dn=document.getElementById("qtDone"); if(dn) dn.onclick=()=>{q.done=!q.done; if(q.done){q.doneAt=todayStr(); view.qtJust=true;} save(); const y=window.scrollY; render(); window.scrollTo({top:y});
     if(q.done){ document.getElementById("qtDoneSec")?.scrollIntoView({block:"center",behavior:"smooth"}); confetti(); } };
@@ -6136,6 +6150,9 @@ function renderRecord(){
     ["✎","첫 QT",qtN>=1],["7","QT 7일 연속",qs>=7],["★","퀴즈 만점",perfect>=1],["✓","만점 10번",perfect>=10],
     ["◐","성경 25%",pc>=25],["◑","성경 50%",pc>=50],["●","성경 100%",pc>=100],["🖍","형광펜 10절",hlN>=10]];
   const got=B.filter(b=>b[2]).length;
+  { const AM={}; let tot=0; for(const k in mem.qt){ for(const n in (mem.qt[k].amen||{})){ AM[n]=(AM[n]||0)+1; tot++; } }
+    const L=Object.entries(AM).sort((a,b)=>b[1]-a[1]); const mx=L.length?L[0][1]:1; const show=view.amAll?L:L.slice(0,5);
+    h+=`<section class="sec"><span class="label">아멘한 하나님의 성품${tot?` · ${tot}번`:""}</span>${L.length?`<div class="amlist">${show.map(([n,c])=>`<div class="amrow"><span class="n">${esc(n)}</span><span class="bar"><i style="width:${Math.max(8,c/mx*100)}%"></i></span><b>${c}</b></div>`).join("")}</div>${L.length>5?`<button class="morebtn" id="amAll">${view.amAll?"접기 ▴":`${L.length-5}개 더 보기 ▾`}</button>`:""}`:`<p class="lead">QT의 '하나님은 어떤 분인가'에서 아멘을 누르면 여기에 모입니다.</p>`}</section>`; }
   h+=`<section class="sec"><span class="label">모은 배지 ${got}/${B.length}</span><div class="badges">${(()=>{ const S=[...B.filter(b=>b[2]),...B.filter(b=>!b[2])]; return (view.bdgAll?S:S.slice(0,4)).map(b=>`<div class="bdg${b[2]?" on":""}"><i>${b[0]}</i>${esc(b[1])}</div>`).join(""); })()}</div>${B.length>4?`<button class="morebtn" id="bdgAll">${view.bdgAll?"접기 ▴":`배지 ${B.length-4}개 더 보기 ▾`}</button>`:""}</section>`;
   // 책별
   const {tot,got:gb}=bookProgress();
@@ -6303,6 +6320,7 @@ async function loadAdmin(){
 
 /* 새 소식(큰 변경만) */
 const NEWS=[
+ ["2026-10-12","QT '하나님은 어떤 분인가'에 아멘 단추가 생겼어요. 나의 기록에서 모아 봅니다"],
  ["2026-10-11","처음 오신 분은 위쪽 '둘러보기'를 눌러 보세요 (☰ 메뉴에서 다시 볼 수 있어요)"],
  ["2026-10-08","야간 모드가 생겼어요 (☰ 메뉴 → 화면 밝기)"],
  ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록 → 다른 기기와 연동"],
@@ -6460,6 +6478,7 @@ function bind(){
   const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
   m.querySelectorAll(".hbook [data-book]").forEach(x=>x.onclick=()=>showBook(+x.dataset.book));
   m.querySelectorAll("[data-qrep]").forEach(x=>x.onclick=()=>reportQuiz(x.dataset.qrep));
+  const aa=document.getElementById("amAll"); if(aa) aa.onclick=()=>{ view.amAll=!view.amAll; const y=scrollY; render(); scrollTo({top:y}); };
   const ba=document.getElementById("bdgAll"); if(ba) ba.onclick=()=>{ view.bdgAll=!view.bdgAll; const y=scrollY; render(); scrollTo({top:y}); };
   const ea=document.getElementById("entAll"); if(ea) ea.onclick=()=>{ view.entAll=!view.entAll; const y=scrollY; render(); scrollTo({top:y}); };
   const og=document.getElementById("onbGo"); if(og) og.onclick=()=>{ mem.onb=1; save(); render(); document.getElementById("textSec")?.scrollIntoView({block:"start"}); };
