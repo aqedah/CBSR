@@ -836,7 +836,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .bible-tools .grp{display:flex;gap:6px}
 .chap{margin-top:14px;scroll-margin-top:12px}
 .chap h3{font-size:18px;color:var(--accent);margin-bottom:6px}
-.vtext{font-family:var(--f-text);font-size:var(--bible-size);line-height:1.95}
+.vtext{font-family:var(--f-ui);font-size:var(--bible-size);line-height:1.95}
 .v sup{font-family:var(--f-ui);font-size:.62em;color:var(--muted);margin-right:3px;font-variant-numeric:tabular-nums}
 .v.hl{background:var(--gold-soft);border-radius:4px;box-shadow:0 0 0 3px var(--gold-soft)}
 .loading{color:var(--muted);padding:20px 0}
@@ -1230,7 +1230,7 @@ button.bk{font-family:inherit;cursor:pointer}
 .amrow .bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
 .amrow b{text-align:right;color:var(--accent);font-variant-numeric:tabular-nums}
 .vtext .para{margin:0 0 .7em;text-indent:0}
-.vtext .sp{font-family:var(--f-ui);font-size:.95em;letter-spacing:-.005em}
+.vtext .sp{font-family:var(--f-text);font-size:1.04em}
 .rdopts{display:grid;gap:6px;margin-top:6px}
 .rdopt{display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer}
 .rdopt input{width:18px;height:18px;accent-color:var(--accent)}
@@ -1274,6 +1274,7 @@ button.bk{font-family:inherit;cursor:pointer}
     <span class="maker">제작: 이삭 목사(중앙성서교회)</span>
     <a href="https://www.centralbible.net/" target="_blank" rel="noopener">www.centralbible.net</a>
     <span>성경 본문: <span id="trSrc">개역개정4판</span> · 통독 일정: <span id="planSrc"></span></span>
+    <span>문단·대화 구분 참고: ETCBC, Biblia Hebraica Stuttgartensia Amstelodamensis (BHSA, CC BY-NC 4.0)</span>
     <span>지도는 위치를 가늠하기 위한 개략도입니다. 퀴즈 기록은 이 기기의 브라우저에만 저장됩니다.</span>
   </footer>
 </div>
@@ -6428,7 +6429,7 @@ function renderGuide(){
    <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p></section>`
   +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>쓰는 방법</h2>
   <ol><li>아래 <b>오늘 통독</b>: '본문 펼치기'로 본문을 읽습니다. 읽기 전 30초 도움, 요약·오늘 알아둘 것·지도·읽는 단서, 퀴즈가 함께 있습니다. 퀴즈를 끝까지 풀거나 '오늘 통독 완료'를 누르면 진행률이 올라갑니다.</li>
-  <li><b>본문 보기</b>: 장면이 바뀌는 곳에서 문단이 나뉘고, 사람이 말하는 부분(대화)은 다른 글씨체로 보입니다. ☰ 메뉴의 '본문 보기'에서 끄고 켤 수 있습니다.</li>
+  <li><b>본문 보기</b>: 장면이 바뀌는 곳에서 문단이 나뉘고, 서술은 고딕체, 사람이 말하는 부분(대화)은 명조체로 보입니다. ☰ 메뉴의 '본문 보기'에서 끄고 켤 수 있습니다.</li>
   <li><b>형광펜</b>: 본문에서 절을 누르면(여러 절도 됩니다) 아래에 색이 나옵니다. 칠한 절은 '나의 기록'에 모입니다.</li>
   <li>아래 <b>QT</b>: 이야기로 읽기, 하나님의 성품, 묵상, 오늘의 기도 순서로 말씀을 깊이 붙잡습니다. 칸마다 적은 내용은 이 기기에 저장됩니다.</li>
   <li>아래 <b>나의 기록</b>: 진행률, 연속 기록, 배지, 책별로 읽은 곳, 형광펜, QT 노트를 봅니다.</li>
