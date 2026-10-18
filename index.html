@@ -1234,6 +1234,10 @@ button.bk{font-family:inherit;cursor:pointer}
 .rdopts{display:grid;gap:6px;margin-top:6px}
 .rdopt{display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer}
 .rdopt input{width:18px;height:18px;accent-color:var(--accent)}
+.bmb{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:13px;border-radius:999px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.bmb.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.v .bmk{display:inline-block;width:10px;height:15px;margin-right:3px;vertical-align:-2px;background:var(--bad);clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
+.bmjump{display:block;width:100%;margin:8px 0;border:1px dashed var(--bad);background:none;color:var(--bad);font:inherit;font-size:14px;font-weight:600;border-radius:10px;padding:9px;cursor:pointer}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -5326,9 +5330,11 @@ function syncHlBar(){
   [...HSEL].forEach(id=>{ if(!document.getElementById("v-"+id)) HSEL.delete(id); });
   if(!HSEL.size||view.tab!=="read"){ bar.hidden=true; bar.innerHTML=""; return; }
   const anyMk=[...HSEL].some(id=>HL[id]);
-  bar.innerHTML=`<span class="cnt">${HSEL.size}절 선택</span>${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기">✕</button>`:""}<button class="cl" data-mk="close">취소</button>`;
+  const one=HSEL.size===1?[...HSEL][0]:null, isBm=one&&mem.bm&&mem.bm.v===one;
+  bar.innerHTML=`<span class="cnt">${HSEL.size}절 선택</span>${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기">✕</button>`:""}<button class="cl" data-mk="close">취소</button>`;
   bar.hidden=false;
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
+    if(k==="bm"){ const id=[...HSEL][0]; if(mem.bm&&mem.bm.v===id) delete mem.bm; else mem.bm={v:id,w:view.w,d:view.d,at:Date.now()}; save(); HSEL.clear(); const y=scrollY; render(); scrollTo({top:y}); syncHlBar(); return; }
     if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x") delete HL[id]; else HL[id]=[k,t]; const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]?" mk-"+HL[id][0]:""); } } saveHL(); }
     else for(const id of HSEL){ document.getElementById("v-"+id)?.classList.remove("sel"); }
     HSEL.clear(); syncHlBar(); });
@@ -5367,7 +5373,8 @@ function initMap(A){
   let fid=order.find(id=>must.every(p=>inF(id,p))&&(rpts.length?pts.filter(p=>inF(id,p)).length>=Math.min(pts.length,1):true));
   if(!fid) fid=order.map(id=>[id,must.filter(p=>inF(id,p)).length]).sort((a,b)=>b[1]-a[1])[0][0];
   const F=TERRAIN[fid], FB=L.latLngBounds(F.bounds);
-  const map=L.map(el,{zoomSnap:0.5,zoomDelta:0.5,scrollWheelZoom:false,maxBounds:FB.pad(0.08),maxBoundsViscosity:0.9});
+  const WB=L.latLngBounds(TERRAIN.neareast.bounds).extend(L.latLngBounds(TERRAIN.med.bounds));
+  const map=L.map(el,{zoomSnap:0.5,zoomDelta:0.5,scrollWheelZoom:false,maxBounds:WB.pad(0.05),maxBoundsViscosity:0.9});
   /* 터치 화면: 한 손가락은 페이지 스크롤, 두 손가락으로만 지도 이동·확대 */
   const TOUCH=("ontouchstart" in window)||navigator.maxTouchPoints>0;
   if(TOUCH){ map.dragging.disable(); if(map.tap) map.tap.disable(); el.classList.add("one-scroll");
@@ -5379,12 +5386,14 @@ function initMap(A){
   }
   LMAP=map;
   map.attributionControl.setPrefix(false);
-  const terr=L.layerGroup([L.imageOverlay(F.url,F.bounds,{attribution:"지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"})]);
+  /* 축소하면 더 넓은 지역이 보이도록 넓은 지형을 밑에 깔기 */
+  const under=["neareast","med"].filter(id=>id!==fid).map(id=>L.imageOverlay(TERRAIN[id].url,TERRAIN[id].bounds));
+  const terr=L.layerGroup([...under,L.imageOverlay(F.url,F.bounds,{attribution:"지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"})]);
   if(fid==="israel") terr.addLayer(L.imageOverlay(TERRAIN.israelhi.url,TERRAIN.israelhi.bounds));
   const water=L.layerGroup([...WATER.lakes.map(l=>L.polygon(l,{color:"#5f8fae",weight:1,fillColor:"#A8C6D6",fillOpacity:1,interactive:false})),...WATER.rivers.map(r=>L.polyline(r,{color:"#5f8fae",weight:2,interactive:false}))]);
   terr.addTo(map); water.addTo(map);
-  // 최소 확대 = 전체 판
-  map.fitBounds(FB,{animate:false}); map.setMinZoom(map.getZoom());
+  // 처음엔 오늘 지역에 맞추고, 3단계까지 더 넓게 축소 가능
+  map.fitBounds(FB,{animate:false}); { const z0=map.getZoom(), zw=map.getBoundsZoom(WB); map.setMinZoom(Math.max(zw,z0-3)); }
   const use=pts.filter(p=>inF(fid,p));
   const labels=[];
   const arrows=[];
@@ -5616,7 +5625,8 @@ function verseHTML(t,b,c,v,s2,useSp){
 function chapHTML(b,c,s2){ const o=RD_OPT(), P=o.para?new Set(PARA[b+"-"+c]||[]):new Set(); let h=o.para?`<p class="para">`:"";
   BIBLE[b-1][c-1].forEach((t,i)=>{ const v=i+1, id=`${b}-${c}-${v}`, mk=HL[id];
     if(P.has(v)) h+=`</p><p class="para">`;
-    h+=`<span class="v${mk?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}" id="v-${id}" data-v="${id}"><sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
+    const bm=mem.bm&&mem.bm.v===id;
+    h+=`<span class="v${mk?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}${bm?" bm":""}" id="v-${id}" data-v="${id}">${bm?`<i class="bmk" aria-label="책갈피"></i>`:""}<sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
   return h+(o.para?`</p>`:""); }
 /* 오늘 통독 */
 function renderRead(){
@@ -5634,7 +5644,8 @@ function renderRead(){
   if(!view.open){
     h+=`<button class="openbtn" id="openText">본문 펼치기</button>${helpBox}`;
   } else {
-    h+=helpBox+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜을 칠할 수 있습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
+    const bmHere=mem.bm&&mem.bm.w===w&&mem.bm.d===d&&document?true:false;
+    h+=helpBox+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜을 칠할 수 있습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
     for(const [b,c] of p.ch){
       const s2=new Set();
       h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}${FLOW[b+"-"+c]?`<small class="chsub">${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`:""}</h3><div class="vtext">`+chapHTML(b,c,s2)+`</div></div>`;
@@ -6284,7 +6295,10 @@ function guideCard(k){ const g=GUIDE[k]; if(!g) return "";
   return `<div class="guide30"><span class="k">읽기 전 30초 길잡이</span><dl><dt>지난 이야기</dt><dd>${esc(g.prev)}</dd><dt>오늘 이야기</dt><dd>${esc(g.today)}</dd><dt>읽으면서 찾기</dt><dd class="find">${esc(g.find)}</dd></dl></div>`; }
 const RESUME=(()=>{ const r=mem.last; if(!r||!r.w) return null; if(Date.now()-(r.at||0)>1000*60*60*24*10) return null; return r; })();
 let resumeShow=!!RESUME;
-function resumeCard(){
+const bmLabel=v=>{ const [b,c,n]=v.split("-").map(Number); return `${PLAN.abbr[b-1]} ${c}:${n}`; };
+function bmCard(){ const B=mem.bm; if(!B||!PLAN.plan[B.w-1]||!PLAN.plan[B.w-1][B.d]) return ""; if(B.w===view.w&&B.d===view.d) return "";
+  return `<div class="resume"><span class="t"><small>책갈피</small>${esc(bmLabel(B.v))} · ${esc(dayPlan(B.w,B.d).label)}</span><button class="btn small" id="bmGo">이어 읽기</button></div>`; }
+function resumeCard(){ const bc=bmCard(); if(bc) return bc;
   if(!resumeShow||!RESUME) return "";
   const r=RESUME; if(!PLAN.plan[r.w-1]||!PLAN.plan[r.w-1][r.d]) return "";
   let t="";
@@ -6347,6 +6361,7 @@ async function loadAdmin(){
 
 /* 새 소식(큰 변경만) */
 const NEWS=[
+ ["2026-10-18","책갈피: 본문에서 절을 누르고 '책갈피'를 누르면 다음에 그 자리부터 이어 읽어요"],
  ["2026-10-17","본문이 장면마다 문단으로 나뉘어요 (☰ 메뉴 → 본문 보기에서 끌 수 있어요)"],
  ["2026-10-12","QT '하나님은 어떤 분인가'에 아멘 단추가 생겼어요. 나의 기록에서 모아 봅니다"],
  ["2026-10-11","처음 오신 분은 위쪽 '둘러보기'를 눌러 보세요 (☰ 메뉴에서 다시 볼 수 있어요)"],
@@ -6430,6 +6445,7 @@ function renderGuide(){
   +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>쓰는 방법</h2>
   <ol><li>아래 <b>오늘 통독</b>: '본문 펼치기'로 본문을 읽습니다. 읽기 전 30초 도움, 요약·오늘 알아둘 것·지도·읽는 단서, 퀴즈가 함께 있습니다. 퀴즈를 끝까지 풀거나 '오늘 통독 완료'를 누르면 진행률이 올라갑니다.</li>
   <li><b>본문 보기</b>: 장면이 바뀌는 곳에서 문단이 나뉩니다. ☰ 메뉴의 '본문 보기'에서 끄고 켤 수 있습니다.</li>
+  <li><b>책갈피</b>: 절 하나를 누르고 아래 '책갈피'를 누르면 표시됩니다. 다음에 본문을 펼치면 그 자리로 가고, 다른 날을 보고 있으면 위에 '이어 읽기'가 나옵니다.</li>
   <li><b>형광펜</b>: 본문에서 절을 누르면(여러 절도 됩니다) 아래에 색이 나옵니다. 칠한 절은 '나의 기록'에 모입니다.</li>
   <li>아래 <b>QT</b>: 이야기로 읽기, 하나님의 성품, 묵상, 오늘의 기도 순서로 말씀을 깊이 붙잡습니다. 칸마다 적은 내용은 이 기기에 저장됩니다.</li>
   <li>아래 <b>나의 기록</b>: 진행률, 연속 기록, 배지, 책별로 읽은 곳, 형광펜, QT 노트를 봅니다.</li>
@@ -6529,7 +6545,9 @@ function bind(){
   m.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>keepScroll(()=>nextQ(b.dataset.next)));
   m.querySelectorAll("[data-see]").forEach(b=>b.onclick=()=>{const [bb,c,v]=b.dataset.see.split("-").map(Number); if(isRev(view.d)){const dd=PLAN.plan[view.w-1].findIndex(p=>p.ch.some(([x,y])=>x===bb&&y===c)); go(view.w,Math.max(0,dd));} seeVerse(bb,c,v);});
   m.querySelectorAll("[data-goweek]").forEach(b=>b.onclick=()=>go(view.w,6));
-  const ot=document.getElementById("openText"); if(ot) ot.onclick=()=>{view.open=true; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save();render();document.getElementById("bible")?.scrollIntoView({block:"start"});};
+  const ot=document.getElementById("openText"); if(ot) ot.onclick=()=>{view.open=true; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save();render(); const bm=mem.bm&&mem.bm.w===view.w&&mem.bm.d===view.d&&document.getElementById("v-"+mem.bm.v); if(bm){ bm.scrollIntoView({block:"center"}); bm.classList.add("hl"); setTimeout(()=>bm.classList.remove("hl"),2200); } else document.getElementById("bible")?.scrollIntoView({block:"start"});};
+  const bj=document.getElementById("bmJump"); if(bj) bj.onclick=()=>{ const el=document.getElementById("v-"+mem.bm.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2200);} };
+  const bg=document.getElementById("bmGo"); if(bg) bg.onclick=()=>{ const B=mem.bm; view.pre=false; view.revW=null; view.w=B.w; view.d=B.d; view.tab="read"; view.open=true; render(); const el=document.getElementById("v-"+B.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2200);} };
 
   m.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{view.open=false;render();document.getElementById("textSec")?.scrollIntoView({block:"start"});});
   const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=new Date().toISOString().slice(0,10); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k);} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
