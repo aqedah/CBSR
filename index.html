@@ -5874,15 +5874,16 @@ function renderQTWeek(list,title){
 let qtT;
 function bindQT(m){
   if(view.tab!=="qt"||isRev(view.d)) return;
-  const key=keyOf(view.w,view.d), q=qtOf(key);
-  m.querySelectorAll("[data-qt]").forEach(t=>t.oninput=()=>{q[t.dataset.qt]=t.value; clearTimeout(qtT); qtT=setTimeout(()=>{save(); const s=document.getElementById("qtSaved"); if(s) s.textContent="저장됨";},400);});
-  const nv=document.getElementById("qtNextV"); if(nv) nv.onclick=()=>{q.vi=(q.vi||0)+1; const A=dayA(view.w,view.d); const n=qtVerses(A,godTraits(A),view.w+"-"+(view.d+1)).length; if(q.vi>=n) q.vi=0; save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
-  const np=document.getElementById("qtNextP"); if(np) np.onclick=()=>{q.pv=(q.pv||0)+1; save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
+  /* 기기 연동으로 기록이 새로 합쳐져도 늘 지금 기록을 고치도록, 누를 때마다 다시 찾습니다 */
+  const key=keyOf(view.w,view.d), cur=()=>qtOf(key);
+  m.querySelectorAll("[data-qt]").forEach(t=>t.oninput=()=>{const q=cur(); q[t.dataset.qt]=t.value; clearTimeout(qtT); qtT=setTimeout(()=>{save(); const s=document.getElementById("qtSaved"); if(s) s.textContent="저장됨";},400);});
+  const nv=document.getElementById("qtNextV"); if(nv) nv.onclick=()=>{const q=cur(); q.vi=(q.vi||0)+1; const A=dayA(view.w,view.d); const n=qtVerses(A,godTraits(A),view.w+"-"+(view.d+1)).length; if(q.vi>=n) q.vi=0; save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
+  const np=document.getElementById("qtNextP"); if(np) np.onclick=()=>{const q=cur(); q.pv=(q.pv||0)+1; save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
   m.querySelectorAll("[data-amen]").forEach(b=>b.onclick=()=>{ const k=keyOf(view.w,view.d); const q=(mem.qt[k] ||= {}); q.amen ||= {}; const n=b.dataset.amen;
     if(q.amen[n]) delete q.amen[n]; else q.amen[n]=new Date().toISOString().slice(0,10); save();
     const on=!!q.amen[n]; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); b.textContent=on?"아멘 ✓":"아멘"; if(on){ b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); } });
   const db=document.getElementById("deepBox"); if(db) db.ontoggle=()=>{view.deepOpen=db.open;};
-  const dn=document.getElementById("qtDone"); if(dn) dn.onclick=()=>{q.done=!q.done; if(q.done){q.doneAt=todayStr(); view.qtJust=true;} save(); const y=window.scrollY; render(); window.scrollTo({top:y});
+  const dn=document.getElementById("qtDone"); if(dn) dn.onclick=()=>{const q=cur(); q.done=!q.done; if(q.done){q.doneAt=todayStr(); view.qtJust=true;} save(); const y=window.scrollY; render(); window.scrollTo({top:y});
     if(q.done){ document.getElementById("qtDoneSec")?.scrollIntoView({block:"center",behavior:"smooth"}); confetti(); } };
   const tr=document.getElementById("qtToRec"); if(tr) tr.onclick=()=>{view.tab="record";render();window.scrollTo({top:0});};
 }
