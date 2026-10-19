@@ -1287,6 +1287,10 @@ button.bk{font-family:inherit;cursor:pointer}
 .ttsbar .tb{flex:none;min-width:38px;height:38px;padding:0 6px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
 .ttsbar .tb.main{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .ttsbar .tw{flex:1;min-width:0;font-weight:600;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.voices{display:grid;gap:8px}
+.voice{display:flex;gap:8px;align-items:center}
+.voice .plan{flex:1;min-width:0}
+.voice .btn{flex:none}
 .ttsbar .tw small{display:block;font-weight:400;color:var(--muted);font-size:12px}
 body.tts-on .totop{display:none}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
@@ -5724,7 +5728,8 @@ const ICON_SHARE=`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" st
 const TTS={on:false,paused:false,q:[],i:0,key:"",curId:null,rate:(()=>{ try{ return +localStorage.getItem("cbsr-tts-rate")||1; }catch(e){ return 1; } })()};
 const ttsOK=()=>{ try{ return "speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined"; }catch(e){ return false; } };
 let ttsTok=0;
-function ttsVoice(){ const V=speechSynthesis.getVoices().filter(v=>/^ko/i.test(v.lang)); return V.find(v=>/Google/i.test(v.name))||V.find(v=>/Yuna|Heami|SunHi|InJoon|Sora/i.test(v.name))||V[0]||null; }
+const ttsVoices=()=>{ try{ return speechSynthesis.getVoices().filter(v=>/^ko/i.test(v.lang)); }catch(e){ return []; } };
+function ttsVoice(){ const V=ttsVoices(); let want=""; try{ want=localStorage.getItem("cbsr-tts-voice")||""; }catch(e){} const mine=want&&V.find(v=>v.voiceURI===want||v.name===want); if(mine) return mine; return V.find(v=>/Google/i.test(v.name))||V.find(v=>/Yuna|Heami|SunHi|InJoon|Sora/i.test(v.name))||V[0]||null; }
 const ttsClean=t=>String(t).replace(/[\[\]{}<>]/g,"").replace(/\s+/g," ").trim();
 function ttsStart(fromId){ if(!ttsOK()||!BIBLE) return; ttsTok++; try{ speechSynthesis.cancel(); }catch(e){}
   const {w,d}=view, p=dayPlan(w,d); TTS.q=[];
@@ -5742,6 +5747,21 @@ function ttsSkip(dir){ if(!TTS.on) return; let i=TTS.i+dir; while(i>0&&i<TTS.q.l
 document.addEventListener("visibilitychange",()=>{ if(!TTS.on) return;
   if(document.hidden){ if(!TTS.paused) ttsPause(); }
   else ttsBar(); });
+/* 목소리 고르기: 이 기기에 깔린 한국어 음성 */
+/* 목소리 설명: 이름에서 만든 회사·성별을 알아봅니다 */
+function voiceInfo(v,i){ const n=v.name||"", L=n.toLowerCase(); let maker="", sex="", name=n;
+  if(/samsung|삼성/.test(L)) maker="삼성 음성"; else if(/google|구글/.test(L)||/^ko-kr-x-|network|local$/.test(L)) maker="구글 음성"; else if(/microsoft/.test(L)) maker="마이크로소프트 음성"; else if(/yuna|sora|minsu|jian|suhyun|siri|유나|소라|민수/.test(L)) maker="애플 음성"; else if(/naver|clova/.test(L)) maker="네이버 음성";
+  if(/female|여성|여자|yuna|sora|heami|sunhi|suhyun|유나|소라/.test(L)) sex="여성"; else if(/(^|[^e])male|남성|남자|minsu|injoon|민수/.test(L)) sex="남성";
+  if(/^ko-kr-x-/.test(L)) name=`${maker||"음성"} ${i+1}`; else name=n.replace(/^Microsoft\s+|^Google\s+/,"").replace(/\s*-\s*Korean.*$/i,"").replace(/\(.*?\)/g,"").trim()||n; if(/^(한국의|한국어|korean)$/i.test(name)) name=maker?maker.replace(" 음성"," 한국어"):n;
+  const tags=[maker||"기기 음성",sex,v.localService?"인터넷 없이 됨":"인터넷 연결 필요",v.default?"기기 기본":""].filter(Boolean);
+  return {name,desc:tags.join(" · ")}; }
+function voiceListHTML(){ if(!ttsOK()) return `<p class="lead">이 브라우저는 소리 내어 읽기를 지원하지 않습니다.</p>`;
+  const V=ttsVoices(); if(!V.length) return `<p class="lead">이 기기에서 한국어 음성을 찾지 못했습니다. 휴대폰 설정 → 텍스트 음성 변환(TTS)에서 한국어 음성을 내려받으면 여기에 나옵니다.</p>`;
+  const cur=ttsVoice(); return `<div class="voices" role="radiogroup">${V.map((v,i)=>`<div class="voice"><button class="plan" role="radio" aria-checked="${cur&&cur.voiceURI===v.voiceURI}" data-voice="${i}"><i class="dot"></i><b>${esc(voiceInfo(v,i).name)}</b><span class="lead">${esc(voiceInfo(v,i).desc)}</span></button><button class="btn ghost small" data-vtry="${i}">들어 보기</button></div>`).join("")}</div>`; }
+function bindVoices(root){ const box=root.querySelector("#voiceList"); if(!box) return; const fill=()=>{ box.innerHTML=voiceListHTML(); const V=ttsVoices();
+    box.querySelectorAll("[data-voice]").forEach(b=>b.onclick=()=>{ const v=V[+b.dataset.voice]; if(!v) return; try{ localStorage.setItem("cbsr-tts-voice",v.voiceURI||v.name); }catch(e){} box.querySelectorAll("[data-voice]").forEach(x=>x.setAttribute("aria-checked",x===b)); if(TTS.on&&!TTS.paused){ ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} ttsSpeak(); } });
+    box.querySelectorAll("[data-vtry]").forEach(b=>b.onclick=()=>{ const v=V[+b.dataset.vtry]; if(!v) return; if(TTS.on&&!TTS.paused) ttsPause(); try{ speechSynthesis.cancel(); }catch(e){} const u=new SpeechSynthesisUtterance("태초에 하나님이 천지를 창조하시니라. 땅이 혼돈하고 공허하며 흑암이 깊음 위에 있고"); u.lang="ko-KR"; u.voice=v; u.rate=TTS.rate; speechSynthesis.speak(u); }); };
+  fill(); try{ if(!ttsVoices().length) speechSynthesis.onvoiceschanged=()=>{ if(box.isConnected) fill(); }; }catch(e){} }
 function ttsPause(){ TTS.paused=true; ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} ttsBar(); }
 function ttsResume(){ TTS.paused=false; ttsSpeak(); }
 function ttsStop(){ TTS.on=false; TTS.paused=false; ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} TTS.curId=null; ttsMark(false); ttsBar(); const b=document.getElementById("ttsBtn"); if(b) b.innerHTML=ICON_SPK+" 본문 듣기"; }
@@ -6587,6 +6607,7 @@ async function loadAdmin(){
 /* 새 소식(큰 변경만) */
 const NEWS=[
  ["2026-10-18","책갈피: 본문에서 절을 누르고 '책갈피'를 누르면 다음에 그 자리부터 이어 읽어요"],
+ ["2026-10-19","본문 듣기 목소리를 고를 수 있어요 (☰ 메뉴 → 본문 듣기 목소리)"],
  ["2026-10-19","본문 듣기: 오늘 본문을 소리로 들을 수 있어요 (본문 제목 아래 단추)"],
  ["2026-10-19","본문 보내기: 오늘 본문과 질문을 카톡으로 보낼 수 있어요"],
  ["2026-10-19","간단 보기: 본문과 완료 단추만 먼저 보여요 (☰ 메뉴 → 본문 보기)"],
@@ -6668,6 +6689,7 @@ function renderGuide(){
    <button class="btn ghost small" id="tourAgain" style="margin-top:8px">둘러보기 다시 보기</button>
    <span class="label" style="margin-top:12px">본문 보기</span><div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}<label class="rdopt"><input type="checkbox" id="simpleOpt" ${SIMPLE()?"checked":""}> 간단 보기 <small class="lead">본문과 완료 단추를 먼저 보이고, 도움 자료와 퀴즈는 접어 둡니다</small></label></div>
    <span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
+   <span class="label" style="margin-top:12px">본문 듣기 목소리</span><div id="voiceList"></div>
    <span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
    <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p></section>`
   +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>쓰는 방법</h2>
@@ -6712,6 +6734,7 @@ function openMenu(){
   const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); startTour(); };
   r.querySelectorAll("[data-rdopt]").forEach(x=>x.onchange=()=>{ setReadOpt(x.dataset.rdopt,x.checked); render(); });
   const so=document.getElementById("simpleOpt"); if(so) so.onchange=()=>{ try{ localStorage.setItem("cbsr-simple",so.checked?"1":"0"); }catch(e){} view.moreOpen=false; render(); };
+  bindVoices(r);
   r.querySelectorAll("[data-theme-set]").forEach(b=>b.onclick=()=>{ setTheme(b.dataset.themeSet); r.querySelectorAll("[data-theme-set]").forEach(x=>x.setAttribute("aria-checked",x===b)); });
   r.querySelectorAll("[data-tr]").forEach(b=>b.onclick=()=>{ if(b.dataset.tr===TR) return; try{localStorage.setItem("cbsr-tr",b.dataset.tr);}catch(e){} location.reload(); });
   r.querySelectorAll("[data-plan]").forEach(b=>b.onclick=()=>{ if(b.dataset.plan===MODE) return; try{localStorage.setItem("cbsr-mode",b.dataset.plan);}catch(e){} location.reload(); });
