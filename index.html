@@ -122,6 +122,7 @@ button.chip:hover{border-color:var(--accent)}
 .qcard .k{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.06em}
 .qcard p{margin:0}
 .clue{font-size:13.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
+.stage{display:flex;align-items:center;gap:8px;margin:6px 0 2px}.stage b{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:13px;flex:none}.stage span{font-weight:700;font-size:17px}.stage small{color:var(--muted);font-size:13px}
 .trait{background:var(--accent-soft);border-radius:12px;padding:12px 14px;display:grid;gap:4px}
 .trait b{color:var(--accent)}
 .trait q{font-family:var(--f-text);quotes:none}
@@ -6083,38 +6084,38 @@ function renderQT(){
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
   let h=`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2></section>`;
   // 1 오늘의 읽는 눈
-  h+=`<section class="sec"><span class="label">1 · 오늘의 읽는 눈</span><div class="eye"><p>${esc(eye.q)}</p>${R?`<p class="scope">이 질문의 본문 · ${esc(sceneLabel(R))}</p>`:""}${eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div></section>`;
-  // 2 하나님은 어떤 분
-  h+=`<section class="sec"><span class="label">2 · 하나님은 어떤 분인가</span>`;
-  if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
-  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); h+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;});
-  else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
-  h+=`</section>`;
-  // 3 그리스도께로
-  h+=`<section class="sec"><span class="label">3 · 성경 전체에서 보기 · 그리스도께로</span>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div></section>`;
-  // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
-  const vs=qtCands(A,traits,R,w+"-"+(d+1));
-  const kv=qtKV(q,A,vs,w+"-"+(d+1));
-  const opts=kv&&!vs.includes(kv)?[kv,...vs]:vs; view.kvShown=vId(kv);
-  h+=`<section class="sec"><span class="label">4 · 오늘 붙잡을 한 구절</span>`;
-  if(opts.length) h+=`<div class="vpick" role="radiogroup" aria-label="붙잡을 구절">${opts.map(v=>{const on=v===kv; return `<button class="vopt${on?" on":""}" role="radio" aria-checked="${on}" data-kv="${vId(v)}"><small>${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</small><span>${esc(v.t)}</span></button>`;}).join("")}</div>`;
-  h+=`<div class="row"><button class="btn ghost small" id="qtPickV">본문에서 직접 고르기</button></div>`;
-  h+=`</section>`;
-  // 5 한 줄 묵상
-  h+=`<section class="sec"><span class="label">5 · 한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
+  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><span class="label">오늘의 읽는 눈</span><div class="eye"><p>${esc(eye.q)}</p>${R?`<p class="scope">이 질문의 본문 · ${esc(sceneLabel(R))}</p>`:""}${eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div></section>`;
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
-  let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 묵상하기<small>무대·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary>`;
+  let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 관찰하기<small>장면·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary>`;
   if(gap) dp+=`<div class="qcard gapq"><span class="k">말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
   L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; const c=clueFor(l.k,A,w,d,l.q); dp+=`<div class="qcard"><span class="k">${esc(l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
   if(traits.length>2) dp+=`<span class="label" style="margin-top:6px">본문에서 찾은 하나님의 성품 더 보기</span>`+traits.slice(2).map(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;}).join("");
   dp+=`</details>`;
   h+=`<section class="sec deepsec">${dp}</section>`;
+  // 2 하나님은 어떤 분
+  h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span><small>이 본문에서 하나님은 어떤 분인가</small></div>`;
+  if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
+  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); h+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;});
+  else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
+  h+=`</section>`;
+  // 3 그리스도께로
+  h+=`<section class="sec"><div class="stage"><b>3</b><span>그리스도에게로</span><small>성경 전체에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div></section>`;
+  // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
+  const vs=qtCands(A,traits,R,w+"-"+(d+1));
+  const kv=qtKV(q,A,vs,w+"-"+(d+1));
+  const opts=kv&&!vs.includes(kv)?[kv,...vs]:vs; view.kvShown=vId(kv);
+  h+=`<section class="sec"><div class="stage"><b>4</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>`;
+  if(opts.length) h+=`<div class="vpick" role="radiogroup" aria-label="붙잡을 구절">${opts.map(v=>{const on=v===kv; return `<button class="vopt${on?" on":""}" role="radio" aria-checked="${on}" data-kv="${vId(v)}"><small>${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</small><span>${esc(v.t)}</span></button>`;}).join("")}</div>`;
+  h+=`<div class="row"><button class="btn ghost small" id="qtPickV">본문에서 직접 고르기</button></div>`;
+  h+=`</section>`;
+  // 5 한 줄 묵상
+  h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
   // 6 기도
   const pray=makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
-  h+=`<section class="sec"><span class="label">6 · 오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
+  h+=`<section class="sec"><span class="label">오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
   // QT 완료: 맨 마지막에만
   h+=q.done?`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`:`<section class="sec"><div class="row"><button class="btn" id="qtDone" style="width:100%;padding:15px">QT 완료</button></div><p class="lead" id="qtSaved" style="text-align:center"></p></section>`;
   view.qtJust=false;
