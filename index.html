@@ -25,8 +25,13 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}html{-webkit-text-size-adjust:100%}</style>
+<style>#appBoot{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#F3F5F1;color:#1B2420;transition:opacity .3s ease;font-family:"Gowun Batang","Nanum Myeongjo","AppleMyungjo",serif;text-align:center}#appBoot.out{opacity:0;pointer-events:none}#appBoot .k{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:12.5px;letter-spacing:.14em;color:#5B6862}#appBoot .t{font-weight:700;font-size:30px;margin-top:10px;color:#2C5C52}#appBoot .s{font-size:15px;color:#5B6862;margin-top:8px}#appBoot .bar{width:160px;height:2px;background:#D9E0DA;margin:24px auto 0;overflow:hidden;border-radius:2px}#appBoot .bar i{display:block;height:100%;width:40%;background:#2C5C52;animation:bootBar 1s ease-in-out infinite}@keyframes bootBar{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #appBoot{background:#111714;color:#E4EAE6}:root:not([data-theme="light"]) #appBoot .t{color:#8FC4B5}:root:not([data-theme="light"]) #appBoot .k,:root:not([data-theme="light"]) #appBoot .s{color:#97A49D}:root:not([data-theme="light"]) #appBoot .bar{background:#2A3430}:root:not([data-theme="light"]) #appBoot .bar i{background:#8FC4B5}}
+:root[data-theme="dark"] #appBoot{background:#111714;color:#E4EAE6}:root[data-theme="dark"] #appBoot .t{color:#8FC4B5}:root[data-theme="dark"] #appBoot .k,:root[data-theme="dark"] #appBoot .s{color:#97A49D}:root[data-theme="dark"] #appBoot .bar{background:#2A3430}:root[data-theme="dark"] #appBoot .bar i{background:#8FC4B5}
+@media (prefers-reduced-motion: reduce){#appBoot .bar i{animation:none;width:100%}}</style>
 </head>
 <body>
+<div id="appBoot" role="status"><div><div class="k">이야기 통독 노트</div><div class="t">오늘 통독</div><div class="s">이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8028,6 +8033,8 @@ document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dat
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
 studyTabSync(); applySize(); render(); loadBible(); renderNews();
+(function(){ const el=document.getElementById("appBoot"); if(!el) return; const quick=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches; let done=false; const close=()=>{ if(done) return; done=true; el.classList.add("out"); setTimeout(()=>el.remove(),320); };
+  el.onclick=close; setTimeout(close,quick?300:Math.max(700,1200-performance.now())); })();
 /* ===== 여러 기기 기록 잇기: 이름+숫자 4자리 열쇠 하나에 두 통독표·형광펜·프로필을 함께 저장 ===== */
 const LKEYS={rj:"rjnote:v2",y365:"rjnote:y365"};
 function localBundle(){ const g=k=>{ try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; } };
