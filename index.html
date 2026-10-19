@@ -1162,6 +1162,19 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
  background-color:#FBF8F1;background-image:linear-gradient(rgba(31,58,107,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,107,.05) 1px,transparent 1px);background-size:18px 18px}
 :root[data-theme="dark"] body.tab-study{--paper:#161B26;--card:#1D2432;--ink:#E6E2D8;--muted:#9AA1AD;--line:#323B4C;--accent:#9DB6E6;--accent-ink:#121722;--accent-soft:#25304A;--bg:#1D2432;background-color:#161B26;background-image:linear-gradient(rgba(157,182,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(157,182,230,.06) 1px,transparent 1px)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.tab-study{--paper:#161B26;--card:#1D2432;--ink:#E6E2D8;--muted:#9AA1AD;--line:#323B4C;--accent:#9DB6E6;--accent-ink:#121722;--accent-soft:#25304A;--bg:#1D2432;background-color:#161B26;background-image:linear-gradient(rgba(157,182,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(157,182,230,.06) 1px,transparent 1px)}}
+#sIntro{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FBF8F1;background-image:linear-gradient(rgba(31,58,107,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,107,.06) 1px,transparent 1px);background-size:22px 22px;color:#1E2230;animation:siIn .25s ease;transition:opacity .3s ease}
+#sIntro.out{opacity:0}
+#sIntro .si-in{text-align:center;padding:0 24px}
+#sIntro .si-heb{font-family:"Noto Serif Hebrew","SBL Hebrew",serif;font-size:46px;color:#1F3A6B;line-height:1.3;animation:siUp .6s ease both}
+#sIntro .si-t{font-family:"Noto Serif KR","Gowun Batang",serif;font-weight:700;font-size:26px;margin-top:10px;letter-spacing:.02em;animation:siUp .6s .12s ease both}
+#sIntro .si-s{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:#8A6D2A;letter-spacing:.12em;margin-top:6px;animation:siUp .6s .2s ease both}
+#sIntro .si-bar{width:180px;height:2px;background:#D9D2C2;margin:26px auto 0;overflow:hidden;border-radius:2px}
+#sIntro .si-bar i{display:block;height:100%;width:40%;background:#1F3A6B;animation:siBar 1.1s ease-in-out infinite}
+#sIntro .si-m{font-size:12.5px;color:#666B77;margin-top:10px}
+@keyframes siIn{from{opacity:0}to{opacity:1}}@keyframes siUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@keyframes siBar{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+:root[data-theme="dark"] #sIntro{background-color:#161B26;background-image:linear-gradient(rgba(157,182,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(157,182,230,.06) 1px,transparent 1px);color:#E6E2D8}
+:root[data-theme="dark"] #sIntro .si-heb,:root[data-theme="dark"] #sIntro .si-bar i{color:#9DB6E6;background-color:transparent}:root[data-theme="dark"] #sIntro .si-bar i{background:#9DB6E6}:root[data-theme="dark"] #sIntro .si-bar{background:#323B4C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #sIntro{background-color:#161B26;background-image:linear-gradient(rgba(157,182,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(157,182,230,.06) 1px,transparent 1px);color:#E6E2D8}:root:not([data-theme="light"]) #sIntro .si-heb{color:#9DB6E6}:root:not([data-theme="light"]) #sIntro .si-bar i{background:#9DB6E6}:root:not([data-theme="light"]) #sIntro .si-bar{background:#323B4C}}
 .tab-study #dateLine,.tab-study #newsBar{display:none!important}
 .tab-study .top{background:transparent}
 .tab-study main{animation:sIn .35s ease}@keyframes sIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -7399,6 +7412,22 @@ function openWordSheet(wi){ const vi=SD.vOf[wi]; sheet(sRef(vi)+" · 낱말",`<d
   root.querySelectorAll("[data-sfind]").forEach(b=>b.onclick=()=>{ close(); S.wide=true; S.mode="word"; S.lex=+b.dataset.sfind; S.dom=""; S.vs=""; S.vt=""; S.q=""; S.more=1; render(); scrollTo({top:0}); });
   root.querySelectorAll("[data-sva]").forEach(b=>b.onclick=()=>{ close(); S.vi=+b.dataset.sva; S.vMode="verse"; S.sel=wi; render(); scrollTo({top:0}); }); }
 
+/* 성경연구로 들어갈 때 잠깐 보이는 전환 화면 (최소 1.2초, 자료를 받는 동안은 더) */
+function studyIntro(){
+  const old=document.getElementById("sIntro"); if(old) old.remove();
+  const quick=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const el=document.createElement("div"); el.id="sIntro"; el.setAttribute("role","status");
+  el.innerHTML=`<div class="si-in"><div class="si-heb" lang="he" dir="rtl">בְּרֵאשִׁית</div><div class="si-t">성경연구</div><div class="si-s">BIBLIA HEBRAICA · BHSA</div><div class="si-bar"><i></i></div><div class="si-m">원문을 펼치는 중</div></div>`;
+  document.body.appendChild(el);
+  const min=quick?350:1200, t0=Date.now();
+  let done=false; const close=()=>{ if(done) return; done=true; el.classList.add("out"); setTimeout(()=>el.remove(),320); };
+  const p=studyLoad()||Promise.resolve();
+  const capped=Promise.race([p,new Promise(r=>setTimeout(r,6000))]);
+  capped.then(()=>{ const m=el.querySelector(".si-m"); if(m) m.textContent=SD?"준비됐습니다":"자료를 받는 중입니다";
+    setTimeout(close,Math.max(0,min-(Date.now()-t0))); }).catch(()=>setTimeout(close,min));
+  el.onclick=()=>{ if(Date.now()-t0>400) close(); };
+}
+
 /* ===== 성경연구 · 검색식 (Text-Fabric 검색식의 핵심 부분을 앱 안에서 실행) ===== */
 const QT_ORDER=["book","chapter","verse","sentence","clause","phrase","word"];
 const QT_K={book:"책",chapter:"장",verse:"절",sentence:"문장",clause:"절(클로즈)",phrase:"구",word:"낱말"};
@@ -7849,7 +7878,7 @@ document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,her
 const TAB_Y={};
 const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view.d);
 function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth"}); return; }
-  TAB_Y[tabPosKey(view.tab)]=window.scrollY; view.tab=t; HSEL.clear(); render();
+  TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); view.tab=t; HSEL.clear(); render();
   const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
