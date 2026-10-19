@@ -5728,7 +5728,7 @@ const ICON_SHARE=`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" st
 const TTS={on:false,paused:false,q:[],i:0,key:"",curId:null,rate:(()=>{ try{ return +localStorage.getItem("cbsr-tts-rate")||1; }catch(e){ return 1; } })()};
 const ttsOK=()=>{ try{ return "speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined"; }catch(e){ return false; } };
 let ttsTok=0;
-const ttsVoices=()=>{ try{ return speechSynthesis.getVoices().filter(v=>/^ko/i.test(v.lang)); }catch(e){ return []; } };
+const ttsVoices=()=>{ try{ const seen=new Set(); return speechSynthesis.getVoices().filter(v=>/^ko([-_]|$)/i.test(v.lang||"")).filter(v=>{ const k=(v.voiceURI||"")+"|"+v.name; if(seen.has(k)) return false; seen.add(k); return true; }); }catch(e){ return []; } };
 function ttsVoice(){ const V=ttsVoices(); let want=""; try{ want=localStorage.getItem("cbsr-tts-voice")||""; }catch(e){} const mine=want&&V.find(v=>v.voiceURI===want||v.name===want); if(mine) return mine; return V.find(v=>/Google/i.test(v.name))||V.find(v=>/Yuna|Heami|SunHi|InJoon|Sora/i.test(v.name))||V[0]||null; }
 const ttsClean=t=>String(t).replace(/[\[\]{}<>]/g,"").replace(/\s+/g," ").trim();
 function ttsStart(fromId){ if(!ttsOK()||!BIBLE) return; ttsTok++; try{ speechSynthesis.cancel(); }catch(e){}
@@ -5753,11 +5753,13 @@ function voiceInfo(v,i){ const n=v.name||"", L=n.toLowerCase(); let maker="", se
   if(/samsung|삼성/.test(L)) maker="삼성 음성"; else if(/google|구글/.test(L)||/^ko-kr-x-|network|local$/.test(L)) maker="구글 음성"; else if(/microsoft/.test(L)) maker="마이크로소프트 음성"; else if(/yuna|sora|minsu|jian|suhyun|siri|유나|소라|민수/.test(L)) maker="애플 음성"; else if(/naver|clova/.test(L)) maker="네이버 음성";
   if(/female|여성|여자|yuna|sora|heami|sunhi|suhyun|유나|소라/.test(L)) sex="여성"; else if(/(^|[^e])male|남성|남자|minsu|injoon|민수/.test(L)) sex="남성";
   if(/^ko-kr-x-/.test(L)) name=`${maker||"음성"} ${i+1}`; else name=n.replace(/^Microsoft\s+|^Google\s+/,"").replace(/\s*-\s*Korean.*$/i,"").replace(/\(.*?\)/g,"").trim()||n; if(/^(한국의|한국어|korean)$/i.test(name)) name=maker?maker.replace(" 음성"," 한국어"):n;
-  const tags=[maker||"기기 음성",sex,v.localService?"인터넷 없이 됨":"인터넷 연결 필요",v.default?"기기 기본":""].filter(Boolean);
+  if(!maker&&/한국어|korean/i.test(n)) name="이 휴대폰의 한국어 음성";
+  const tags=[maker||"휴대폰에 들어 있는 음성",sex,v.localService?"인터넷 없이 됨":"인터넷 연결 필요",v.default?"기기 기본":""].filter(Boolean);
   return {name,desc:tags.join(" · ")}; }
 function voiceListHTML(){ if(!ttsOK()) return `<p class="lead">이 브라우저는 소리 내어 읽기를 지원하지 않습니다.</p>`;
   const V=ttsVoices(); if(!V.length) return `<p class="lead">이 기기에서 한국어 음성을 찾지 못했습니다. 휴대폰 설정 → 텍스트 음성 변환(TTS)에서 한국어 음성을 내려받으면 여기에 나옵니다.</p>`;
-  const cur=ttsVoice(); return `<div class="voices" role="radiogroup">${V.map((v,i)=>`<div class="voice"><button class="plan" role="radio" aria-checked="${cur&&cur.voiceURI===v.voiceURI}" data-voice="${i}"><i class="dot"></i><b>${esc(voiceInfo(v,i).name)}</b><span class="lead">${esc(voiceInfo(v,i).desc)}</span></button><button class="btn ghost small" data-vtry="${i}">들어 보기</button></div>`).join("")}</div>`; }
+  const cur=ttsVoice(); const one=V.length===1?`<p class="lead" style="margin:6px 0 0">이 휴대폰에는 한국어 목소리가 하나만 있습니다. 휴대폰 설정 → '텍스트 음성 변환(TTS)'에서 기본 엔진을 삼성 또는 구글로 바꾸거나 한국어 음성을 내려받으면 다른 목소리가 여기에 나옵니다.</p>`:"";
+  return `<div class="voices" role="radiogroup">${V.map((v,i)=>`<div class="voice"><button class="plan" role="radio" aria-checked="${cur&&cur.voiceURI===v.voiceURI}" data-voice="${i}"><i class="dot"></i><b>${esc(voiceInfo(v,i).name)}</b><span class="lead">${esc(voiceInfo(v,i).desc)}</span></button><button class="btn ghost small" data-vtry="${i}">들어 보기</button></div>`).join("")}</div>${one}`; }
 function bindVoices(root){ const box=root.querySelector("#voiceList"); if(!box) return; const fill=()=>{ box.innerHTML=voiceListHTML(); const V=ttsVoices();
     box.querySelectorAll("[data-voice]").forEach(b=>b.onclick=()=>{ const v=V[+b.dataset.voice]; if(!v) return; try{ localStorage.setItem("cbsr-tts-voice",v.voiceURI||v.name); }catch(e){} box.querySelectorAll("[data-voice]").forEach(x=>x.setAttribute("aria-checked",x===b)); if(TTS.on&&!TTS.paused){ ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} ttsSpeak(); } });
     box.querySelectorAll("[data-vtry]").forEach(b=>b.onclick=()=>{ const v=V[+b.dataset.vtry]; if(!v) return; if(TTS.on&&!TTS.paused) ttsPause(); try{ speechSynthesis.cancel(); }catch(e){} const u=new SpeechSynthesisUtterance("태초에 하나님이 천지를 창조하시니라. 땅이 혼돈하고 공허하며 흑암이 깊음 위에 있고"); u.lang="ko-KR"; u.voice=v; u.rate=TTS.rate; speechSynthesis.speak(u); }); };
@@ -5798,9 +5800,9 @@ function renderRead(){
   h+=`<section class="sec" id="textSec"><span class="label">오늘 본문</span><h2>${esc(p.label)}</h2><p class="meta"><span class="pill">${p.ch.length}${b0===19?"편":"장"}</span><span class="pill">약 ${mins}분 분량</span>${done?`<span class="pill ok">✓ 통독 완료</span>`:""}</p><div class="rowtools">${ttsOK()?`<button class="minibtn" id="ttsBtn">${ICON_SPK} ${TTS.on&&TTS.key===key?"듣기 멈춤":"본문 듣기"}</button>`:""}<button class="minibtn" id="shareDay">${ICON_SHARE} 본문 보내기</button></div>`;
   if(EYE[key]&&EYE[key].q) h+=`<p class="eyeq"><b>읽으며 살펴보기</b>${esc(EYE[key].q)}</p>`;
   const simple=SIMPLE()&&!view.tourFull;
-  const helpBox=simple?"":prepHelp(p,w,key);
+  const helpBox=prepHelp(p,w,key);
   if(!view.open){
-    h+=`<button class="openbtn" id="openText">본문 펼치기</button>${helpBox}`;
+    h+=`${helpBox}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else {
     const bmHere=mem.bm&&mem.bm.w===w&&mem.bm.d===d&&document?true:false;
     h+=helpBox+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜·책갈피·그 절부터 듣기를 고를 수 있습니다. 듣는 중에는 절을 누르면 그 절부터 다시 읽습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
@@ -5813,7 +5815,7 @@ function renderRead(){
   h+=`</section>`;
   // 이해가 필요할 때 (참고 자료)
   const sumT=(SUMMARY[w-1]||[])[d]||"";
-  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>읽기 전 도움 · 요약 · 인물과 지도 · 퀴즈</summary>`; if(view.moreOpen) h+=prepHelp(p,w,key); }
+  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 보기 · 요약, 인물과 지도, 퀴즈</summary>`; }
   if(!simple||view.moreOpen){
   h+=`<div class="helpzone">`;
   h+=`<section class="sec"><span class="label">본문 요약</span>${p.topic?`<p class="topic">${esc(p.topic)}</p>`:""}${sumT?`<p class="summary">${markGloss(sumT,b0,new Set())}</p>`:`<p class="lead">이 날의 요약은 준비 중입니다.</p>`}</section>`;
@@ -6610,7 +6612,7 @@ const NEWS=[
  ["2026-10-19","본문 듣기 목소리를 고를 수 있어요 (☰ 메뉴 → 본문 듣기 목소리)"],
  ["2026-10-19","본문 듣기: 오늘 본문을 소리로 들을 수 있어요 (본문 제목 아래 단추)"],
  ["2026-10-19","본문 보내기: 오늘 본문과 질문을 카톡으로 보낼 수 있어요"],
- ["2026-10-19","간단 보기: 본문과 완료 단추만 먼저 보여요 (☰ 메뉴 → 본문 보기)"],
+ ["2026-10-19","통독 화면을 '간단히 보기'로 바꿀 수 있어요: 본문과 완료 단추만 보이고 나머지는 접혀요 (☰ 메뉴 → 통독 화면)"],
  ["2026-10-17","본문이 장면마다 문단으로 나뉘어요 (☰ 메뉴 → 본문 보기에서 끌 수 있어요)"],
  ["2026-10-12","QT '하나님은 어떤 분인가'에 아멘 단추가 생겼어요. 나의 기록에서 모아 봅니다"],
  ["2026-10-11","처음 오신 분은 위쪽 '둘러보기'를 눌러 보세요 (☰ 메뉴에서 다시 볼 수 있어요)"],
@@ -6687,7 +6689,10 @@ function renderGuide(){
    <button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다. 창세기부터 요한계시록까지 차례대로 읽습니다.</span></button></div>
    <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p>
    <button class="btn ghost small" id="tourAgain" style="margin-top:8px">둘러보기 다시 보기</button>
-   <span class="label" style="margin-top:12px">본문 보기</span><div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}<label class="rdopt"><input type="checkbox" id="simpleOpt" ${SIMPLE()?"checked":""}> 간단 보기 <small class="lead">본문과 완료 단추를 먼저 보이고, 도움 자료와 퀴즈는 접어 둡니다</small></label></div>
+   <span class="label" style="margin-top:12px">본문 보기</span><div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div>
+   <span class="label" style="margin-top:12px">통독 화면</span><div class="plans" role="radiogroup">
+     <button class="plan" role="radio" aria-checked="${!SIMPLE()}" data-simple="0"><i class="dot"></i><b>모두 펼쳐 보기</b><span class="lead">본문 아래에 요약, 인물·곳·말, 지도, 퀴즈가 차례로 나옵니다.</span></button>
+     <button class="plan" role="radio" aria-checked="${SIMPLE()}" data-simple="1"><i class="dot"></i><b>간단히 보기</b><span class="lead">본문과 '오늘 통독 완료' 단추만 보입니다. 요약·인물·지도·퀴즈는 '더 보기' 상자 하나에 접혀 있다가 누르면 펼쳐집니다. 처음 읽는 분께 알맞습니다.</span></button></div>
    <span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
    <span class="label" style="margin-top:12px">본문 듣기 목소리</span><div id="voiceList"></div>
    <span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
@@ -6733,7 +6738,7 @@ function openMenu(){
   };
   const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); startTour(); };
   r.querySelectorAll("[data-rdopt]").forEach(x=>x.onchange=()=>{ setReadOpt(x.dataset.rdopt,x.checked); render(); });
-  const so=document.getElementById("simpleOpt"); if(so) so.onchange=()=>{ try{ localStorage.setItem("cbsr-simple",so.checked?"1":"0"); }catch(e){} view.moreOpen=false; render(); };
+  r.querySelectorAll("[data-simple]").forEach(b=>b.onclick=()=>{ try{ localStorage.setItem("cbsr-simple",b.dataset.simple); }catch(e){} r.querySelectorAll("[data-simple]").forEach(x=>x.setAttribute("aria-checked",x===b)); view.moreOpen=false; render(); });
   bindVoices(r);
   r.querySelectorAll("[data-theme-set]").forEach(b=>b.onclick=()=>{ setTheme(b.dataset.themeSet); r.querySelectorAll("[data-theme-set]").forEach(x=>x.setAttribute("aria-checked",x===b)); });
   r.querySelectorAll("[data-tr]").forEach(b=>b.onclick=()=>{ if(b.dataset.tr===TR) return; try{localStorage.setItem("cbsr-tr",b.dataset.tr);}catch(e){} location.reload(); });
