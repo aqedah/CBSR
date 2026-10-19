@@ -972,11 +972,15 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .v.mk-b{background:linear-gradient(transparent 30%,rgba(110,180,255,.45) 30%)}
 :root[data-theme="dark"] .v.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.3) 30%)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .v.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.3) 30%)}:root:not([data-theme="light"]) .v.mk-g{background:linear-gradient(transparent 30%,rgba(110,214,140,.28) 30%)}:root:not([data-theme="light"]) .v.mk-p{background:linear-gradient(transparent 30%,rgba(255,140,180,.28) 30%)}:root:not([data-theme="light"]) .v.mk-b{background:linear-gradient(transparent 30%,rgba(110,180,255,.28) 30%)}}
-.hlbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:9600;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18);border-radius:16px;padding:10px 12px;display:flex;gap:10px;align-items:center;width:max-content;max-width:calc(100vw - 24px)}
+.hlbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:9600;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18);border-radius:16px;padding:10px 10px;display:flex;gap:8px;align-items:center;width:max-content;max-width:calc(100vw - 16px)}
 .hlbar[hidden]{display:none}
 .hlbar .cnt{font-size:12.5px;color:var(--muted);white-space:nowrap}
-.sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px var(--line)}
+.sw{flex:none;width:32px;height:32px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px var(--line)}
 .sw.y{background:#FFD640}.sw.g{background:#6ED68C}.sw.p{background:#FF8CB4}.sw.b{background:#6EB4FF}
+.sw.ttsb{background:var(--card);color:var(--accent);display:flex;align-items:center;justify-content:center;padding:0}
+.sw.ttsb svg{width:17px;height:17px}
+@media (max-width:380px){.hlbar{gap:5px;padding:8px}.hlbar .sw{width:29px;height:29px}.hlbar .bmb{padding-left:9px;padding-right:9px}}
+body.tts-on .hlbar{bottom:calc(132px + env(safe-area-inset-bottom,0px))}
 .sw.x{background:var(--paper);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
 .hlbar .cl{border:0;background:none;color:var(--muted);font-size:13px;padding:6px}
 /* QT 항목별 칸 */
@@ -5394,14 +5398,17 @@ let HL={}; try{HL=JSON.parse(localStorage.getItem(HLKEY)||"{}")||{};}catch(e){}
 const HSEL=new Set();
 const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL));}catch(e){} if(typeof syncSoon==="function") syncSoon();};
 const HLC={y:"노랑",g:"초록",p:"분홍",b:"파랑"};
-function toggleSel(id){ if(HSEL.has(id)) HSEL.delete(id); else HSEL.add(id); const el=document.getElementById("v-"+id); if(el) el.classList.toggle("sel",HSEL.has(id)); syncHlBar(); }
+function toggleSel(id){
+  /* 듣는 중에 절을 누르면 그 절부터 다시 읽습니다 */
+  if(TTS.on&&TTS.key===keyOf(view.w,view.d)&&!HSEL.size){ const i=TTS.q.findIndex(x=>x.id===id); if(i>=0){ TTS.i=i; TTS.curId=id; TTS.paused=false; ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} ttsSpeak(); return; } }
+  if(HSEL.has(id)) HSEL.delete(id); else HSEL.add(id); const el=document.getElementById("v-"+id); if(el) el.classList.toggle("sel",HSEL.has(id)); syncHlBar(); }
 function syncHlBar(){
   const bar=document.getElementById("hlbar"); if(!bar) return;
   [...HSEL].forEach(id=>{ if(!document.getElementById("v-"+id)) HSEL.delete(id); });
   if(!HSEL.size||view.tab!=="read"){ bar.hidden=true; bar.innerHTML=""; return; }
   const anyMk=[...HSEL].some(id=>HL[id]);
   const one=HSEL.size===1?[...HSEL][0]:null, isBm=one&&mem.bm&&mem.bm.v===one;
-  bar.innerHTML=`<span class="cnt">${HSEL.size}절 선택</span>${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${one&&ttsOK()?`<button class="bmb" data-mk="tts" aria-label="이 절부터 듣기">▶ 여기부터</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기">✕</button>`:""}<button class="cl" data-mk="close">취소</button>`;
+  bar.innerHTML=`<span class="cnt">${HSEL.size}절 선택</span>${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${one&&ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d))?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">${ICON_SPK}</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기">✕</button>`:""}<button class="cl" data-mk="close">취소</button>`;
   bar.hidden=false;
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
     if(k==="tts"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); HSEL.clear(); syncHlBar(); ttsStart(id); const tb=document.getElementById("ttsBtn"); if(tb) tb.innerHTML=ICON_SPK+" 듣기 멈춤"; return; }
@@ -5770,7 +5777,7 @@ function renderRead(){
     h+=`<button class="openbtn" id="openText">본문 펼치기</button>${helpBox}`;
   } else {
     const bmHere=mem.bm&&mem.bm.w===w&&mem.bm.d===d&&document?true:false;
-    h+=helpBox+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜·책갈피·여기부터 듣기를 고를 수 있습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
+    h+=helpBox+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜·책갈피·그 절부터 듣기를 고를 수 있습니다. 듣는 중에는 절을 누르면 그 절부터 다시 읽습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
     for(const [b,c] of p.ch){
       const s2=new Set();
       h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}${FLOW[b+"-"+c]?`<small class="chsub">${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`:""}</h3><div class="vtext">`+chapHTML(b,c,s2)+`</div></div>`;
