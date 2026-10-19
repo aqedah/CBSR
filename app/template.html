@@ -1,0 +1,464 @@
+<title>이야기 통독 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* Layout: 한 줄짜리 묵상 노트. 위에서 아래로 '지난 이야기 → 본문 → 이야기 렌즈 → 하나님 → 삶 → 제목 붙이기' 순서로 흐른다 */
+:root{
+  --paper:#F3F5F1; --card:#FFFFFF; --ink:#1B2420; --muted:#5B6862; --line:#D9E0DA;
+  --accent:#2C5C52; --accent-ink:#FFFFFF; --accent-soft:#E2ECE7;
+  --gold:#9A6417; --gold-soft:#F5E9D2; --ok:#2F7A4F; --bad:#A4412F;
+  --f-text:"Gowun Batang","Nanum Myeongjo","AppleMyungjo","Batang",serif;
+  --f-ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --bible-size:17px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111714; --card:#18201C; --ink:#E4EAE6; --muted:#97A49D; --line:#2A3430;
+  --accent:#8FC4B5; --accent-ink:#0E1513; --accent-soft:#1C2A26;
+  --gold:#E2B562; --gold-soft:#2C2416; --ok:#7FCB9C; --bad:#E58C78; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111714; --card:#18201C; --ink:#E4EAE6; --muted:#97A49D; --line:#2A3430;
+  --accent:#8FC4B5; --accent-ink:#0E1513; --accent-soft:#1C2A26;
+  --gold:#E2B562; --gold-soft:#2C2416; --ok:#7FCB9C; --bad:#E58C78; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0 32px}
+.wrap{max-width:720px;margin:0 auto}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--f-text);text-wrap:balance;margin:0}
+
+/* header */
+.top{padding-block:28px 12px;display:grid;gap:4px}
+.brand{font-size:12px;letter-spacing:.12em;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.date{font-family:var(--f-text);font-size:28px;font-weight:700;line-height:1.3}
+.where{color:var(--muted);font-size:15px}
+.where b{color:var(--accent);font-weight:600}
+.notice{background:var(--gold-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:14px;margin-top:8px}
+
+/* week strip */
+.weeknav{display:flex;align-items:center;gap:8px;margin-top:14px}
+.weeknav .wk{flex:1;min-width:0;font-weight:600;font-size:15px}
+.weeknav .wk small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:8px;min-width:40px;height:40px;padding:0 10px}
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px}
+.day{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 2px 7px;text-align:center;display:grid;gap:1px;position:relative}
+.day .dn{font-size:12px;color:var(--muted)}
+.day .dd{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.day .dr{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:2px}
+.day.today{border-color:var(--accent)}
+.day.sel{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.day.sel .dn,.day.sel .dr{color:var(--accent-ink);opacity:.85}
+.day.done::after{content:"";position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.day.sel.done::after{background:var(--accent-ink)}
+
+.tabs{display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--line)}
+.tab{background:none;border:0;padding:10px 12px;border-bottom:2px solid transparent;color:var(--muted);font-weight:500}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+
+main{display:grid;gap:22px;padding-top:20px}
+.sec{display:grid;gap:10px}
+.label{font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600}
+.sec h2{font-size:22px}
+.lead{color:var(--muted);font-size:14px}
+
+.recap{border-left:3px solid var(--gold);padding:4px 0 4px 14px;font-family:var(--f-text);font-size:16px}
+.recap .label{color:var(--gold)}
+
+details.map{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+details.map summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:8px}
+details.map summary::-webkit-details-marker{display:none}
+details.map summary::after{content:"펼치기";font-weight:400;color:var(--muted);font-size:13px}
+details.map[open] summary::after{content:"접기"}
+.map p{margin:10px 0 0;font-family:var(--f-text);font-size:16px}
+.map .christ{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:15px}
+.map .christ b{font-family:var(--f-ui);font-size:12px;letter-spacing:.08em;color:var(--accent);display:block}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--card)}
+.chip.genre{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:600}
+.scene{background:var(--gold-soft);border-radius:10px;padding:10px 14px;font-size:14px}
+.scene b{color:var(--gold)}
+
+/* bible */
+.bible{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 18px 8px}
+.bible-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.bible-tools .grp{display:flex;gap:6px}
+.chap{margin-top:14px}
+.chap h3{font-size:18px;color:var(--accent);margin-bottom:6px}
+.vtext{font-family:var(--f-text);font-size:var(--bible-size);line-height:1.95}
+.v{cursor:pointer;border-radius:4px;transition:background .15s}
+.v:hover{background:var(--accent-soft)}
+.v sup{font-family:var(--f-ui);font-size:.62em;color:var(--muted);margin-right:3px;font-variant-numeric:tabular-nums}
+.v.pick{background:var(--gold-soft);box-shadow:0 0 0 2px var(--gold-soft)}
+.bible.folded .chaps{max-height:260px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent)}
+.loading{color:var(--muted);padding:20px 0}
+
+/* questions */
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.q .k{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.06em}
+.q p{margin:0;font-size:15.5px}
+textarea,input[type=text],input[type=date]{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+textarea{min-height:68px;resize:vertical;font-size:15px}
+.god{background:var(--accent-soft);border:0}
+.christline{font-family:var(--f-text);font-size:15.5px;border-top:1px dashed var(--line);padding-top:8px}
+.keyv{font-family:var(--f-text);background:var(--gold-soft);border-radius:8px;padding:10px 12px;font-size:16px}
+.keyv small{display:block;font-family:var(--f-ui);font-size:12px;color:var(--gold);font-weight:600}
+.empty{color:var(--muted);font-size:14px}
+.link{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px dashed var(--gold);border-radius:12px;padding:12px 14px;font-size:14px}
+.link span{min-width:0;flex:1 1 240px}
+
+.finish{background:var(--card);border:2px solid var(--accent);border-radius:14px;padding:16px;display:grid;gap:10px}
+.finish h2{font-size:20px}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:11px 16px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.small{padding:6px 12px;font-size:13px;border-radius:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.saved{font-size:12px;color:var(--muted)}
+
+/* map tab */
+.prog{display:grid;gap:6px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.wkblock{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.wkblock h3{font-size:16px;display:flex;justify-content:space-between;gap:8px}
+.wkblock h3 small{font-family:var(--f-ui);font-weight:400;color:var(--muted);font-size:12px}
+.mrow{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:baseline;background:none;border:0;text-align:left;padding:4px 0;width:100%}
+.mrow .r{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mrow .t{font-family:var(--f-text);font-size:15px;min-width:0}
+.mrow .t.none{color:var(--muted);font-family:var(--f-ui);font-size:13px}
+.mrow.done .r::before{content:"● ";color:var(--ok)}
+
+/* review */
+.recall{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.recall .hide{color:var(--muted);font-size:14px}
+.quiz{display:grid;gap:14px}
+.qz{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.opts{display:grid;gap:6px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:8px 12px}
+.opt.right{border-color:var(--ok);color:var(--ok);font-weight:600}
+.opt.wrong{border-color:var(--bad);color:var(--bad)}
+.ex{font-size:14px;color:var(--muted)}
+
+/* guide */
+.guide p{margin:0}
+.lens-list{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.lens-list li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.lens-list b{color:var(--accent)}
+.confirm{background:var(--gold-soft);border-radius:10px;padding:12px;display:grid;gap:8px}
+
+footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted);display:grid;gap:4px}
+footer .maker{font-size:15px;color:var(--ink);font-weight:600}
+@media (max-width:420px){.date{font-size:24px}.day .dr{display:none}.bible{padding:14px 14px 6px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span>이야기 통독 노트</span><span>리딩지저스 45주 · 시험판</span></div>
+    <div class="date" id="dateLine"></div>
+    <div class="where" id="whereLine"></div>
+    <div id="noticeBox"></div>
+    <div class="weeknav">
+      <button class="iconbtn" id="prevW" aria-label="이전 주">‹</button>
+      <div class="wk" id="wkTitle"></div>
+      <button class="iconbtn" id="todayBtn">오늘</button>
+      <button class="iconbtn" id="nextW" aria-label="다음 주">›</button>
+    </div>
+    <div class="strip" id="strip"></div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="read" aria-selected="true">오늘 읽기</button>
+      <button class="tab" role="tab" data-tab="map" aria-selected="false">나의 이야기 지도</button>
+      <button class="tab" role="tab" data-tab="guide" aria-selected="false">사용법·설정</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer>
+    <span class="maker">제작: 이삭 목사(중앙성서교회)</span>
+    <a href="https://www.centralbible.net/" target="_blank" rel="noopener">www.centralbible.net</a>
+    <span>성경 본문: 개역개정4판 · 통독 일정: 리딩지저스 45주 성경통독표(웨스트민스터코리아)</span>
+    <span>내가 쓴 묵상은 이 기기의 브라우저에만 저장됩니다.</span>
+  </footer>
+</div>
+
+<script>
+/*CONTENT*/
+const PLAN = /*PLAN*/;
+const BIBLE_B64 = "/*BIBLE*/";
+</script>
+<script>
+(function(){
+const DAYN=["일","월","화","수","목","금","토"];
+const DEFAULT_START="2026-01-05";
+const KEY="rjnote:v1";
+let mem={start:DEFAULT_START,e:{},rv:{},size:17};
+try{const s=localStorage.getItem(KEY);if(s)mem=Object.assign(mem,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} const s=document.getElementById("savedMark"); if(s){s.textContent="저장됨 · "+new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});}}
+let saveT; function saveSoon(){clearTimeout(saveT);saveT=setTimeout(save,400);}
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ── 날짜 ── */
+function parseD(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
+function today0(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate());}
+function dayDiff(a,b){return Math.round((b-a)/86400000);}
+function dateOf(w,d){const s=parseD(mem.start);s.setDate(s.getDate()+(w-1)*7+d);return s;}
+function posOfToday(){
+  const diff=dayDiff(parseD(mem.start),today0());
+  if(diff<0) return {w:1,d:0,state:"before",diff};
+  if(diff>=45*7) return {w:45,d:6,state:"after",diff};
+  return {w:Math.floor(diff/7)+1,d:diff%7,state:"in",diff};
+}
+const fmt=(dt,o)=>dt.toLocaleDateString("ko-KR",o);
+
+/* ── 성경 ── */
+let BIBLE=null, bibleErr=null;
+async function loadBible(){
+  try{
+    if(!("DecompressionStream" in window)) throw new Error("old");
+    const bin=Uint8Array.from(atob(BIBLE_B64),c=>c.charCodeAt(0));
+    const ds=new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip"));
+    BIBLE=JSON.parse(await new Response(ds).text());
+  }catch(e){bibleErr="이 브라우저에서는 본문을 열 수 없습니다. 최신 크롬이나 사파리에서 열어 주세요.";}
+  if(view.tab==="read") render();
+}
+
+/* ── 상태 ── */
+const here=posOfToday();
+let view={w:here.w,d:here.d,tab:"read"};
+const keyOf=(w,d)=>w+"-"+d;
+const ent=(w,d)=>(mem.e[keyOf(w,d)] ||= {});
+const dayPlan=(w,d)=>PLAN.plan[w-1][d];
+const shortRef=p=>p.spec.replace(/ 1-몬 1/," – 몬").replace(/요이 1-요삼 1/,"요이–요삼").replace(/^유 1$/,"유다서");
+const firstBook=p=>p.ch[0][0];
+
+function lensesFor(w,d){
+  const det=DETAIL[keyOf(w,d+1)];
+  if(det) return det.lenses;
+  const g=GENRE_OF(firstBook(dayPlan(w,d)));
+  const L=LENSES[g], start=((w-1)*6+d)%L.length;
+  return [0,1,2].map(i=>L[(start+i)%L.length]);
+}
+function prevOf(w,d){ if(d>0) return {w,d:d-1}; if(w>1) return {w:w-1,d:5}; return null; }
+
+/* ── 머리 ── */
+function renderHead(){
+  const dt=dateOf(view.w,view.d);
+  document.getElementById("dateLine").textContent=fmt(dt,{month:"long",day:"numeric",weekday:"long"});
+  const wl=view.d===6?"주일 · 한 주 돌아보기":(view.d+1)+"일째";
+  document.getElementById("whereLine").innerHTML=`<b>${view.w}주차</b> · ${wl}${view.d<6?" · "+esc(dayPlan(view.w,view.d).label):""}`;
+  const nb=document.getElementById("noticeBox");
+  const isToday=view.w===here.w&&view.d===here.d;
+  if(here.state==="before"&&isToday) nb.innerHTML=`<div class="notice">통독 시작일(${fmt(parseD(mem.start),{month:"long",day:"numeric"})})까지 ${-here.diff}일 남았습니다. 1주차 1일째를 미리 볼 수 있습니다.</div>`;
+  else if(here.state==="after"&&isToday) nb.innerHTML=`<div class="notice">45주 통독 일정이 끝났습니다. '나의 이야기 지도'에서 한 해를 돌아보세요.</div>`;
+  else if(!isToday) nb.innerHTML=`<div class="notice">지금 보고 있는 날은 오늘이 아닙니다. '오늘' 버튼을 누르면 오늘 읽을 본문으로 돌아갑니다.</div>`;
+  else nb.innerHTML="";
+  const W=WEEKS[view.w-1];
+  document.getElementById("wkTitle").innerHTML=`${view.w}주차 · ${esc(W.t)}<small>${esc(W.u)} · ${fmt(dateOf(view.w,0),{month:"numeric",day:"numeric"})} – ${fmt(dateOf(view.w,6),{month:"numeric",day:"numeric"})}</small>`;
+  const st=document.getElementById("strip"); st.innerHTML="";
+  for(let d=0;d<7;d++){
+    const b=document.createElement("button"), dt2=dateOf(view.w,d);
+    b.className="day"+(d===view.d?" sel":"")+(view.w===here.w&&d===here.d&&here.state==="in"?" today":"")+((d<6?ent(view.w,d).done:mem.rv[view.w]?.done)?" done":"");
+    b.innerHTML=`<span class="dn">${DAYN[dt2.getDay()]}</span><span class="dd">${dt2.getDate()}</span><span class="dr">${d<6?esc(shortRef(dayPlan(view.w,d))):"복습"}</span>`;
+    b.setAttribute("aria-label",fmt(dt2,{month:"long",day:"numeric"})+" "+(d<6?dayPlan(view.w,d).label:"주일 복습"));
+    b.onclick=()=>{view.d=d;view.tab="read";render();};
+    st.appendChild(b);
+  }
+  document.getElementById("prevW").disabled=view.w===1;
+  document.getElementById("nextW").disabled=view.w===45;
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
+}
+
+/* ── 오늘 읽기 ── */
+function renderRead(){
+  const {w,d}=view; if(d===6) return renderReview();
+  const p=dayPlan(w,d), det=DETAIL[keyOf(w,d+1)], e=ent(w,d), W=WEEKS[w-1];
+  const g=GENRE_OF(firstBook(p));
+  let h="";
+  // 지난 이야기
+  const pv=prevOf(w,d);
+  if(pv){
+    const pdet=DETAIL[keyOf(pv.w,pv.d+1)], pe=mem.e[keyOf(pv.w,pv.d)]||{};
+    const pp=dayPlan(pv.w,pv.d);
+    if(pdet||pe.title){
+      h+=`<section class="recap sec"><span class="label">지난 이야기 · ${esc(pp.label)}</span>`;
+      if(pe.title) h+=`<div>내가 붙인 제목: <b>“${esc(pe.title)}”</b></div>`;
+      if(pdet) h+=`<div>${esc(pdet.recap)}</div>`;
+      h+=`</section>`;
+    }
+  }
+  // 이번 주 지도
+  h+=`<details class="map" ${d===0||!pv?"open":""}><summary>이번 주 이야기 지도 · ${esc(W.t)}</summary><p>${esc(W.story)}</p><p class="christ"><b>그리스도께로</b>${esc(W.christ)}</p></details>`;
+  // 본문
+  const mins=Math.round(p.ch.reduce((a,[b,c])=>a+(BIBLE?BIBLE[b-1][c-1].length:25),0)*0.75/ 10)*1;
+  h+=`<section class="sec"><span class="label">1 · 본문 읽기</span><h2>${esc(p.label)}</h2>
+  <div class="chips"><span class="chip genre">${GENRE_NAME[g]}</span>${BIBLE?`<span class="chip">약 ${Math.max(5,Math.round(p.ch.reduce((a,[b,c])=>a+BIBLE[b-1][c-1].join("").length,0)/450))}분</span>`:""}</div>
+  <p class="lead">${esc(GENRE_NOTE[g])}</p>`;
+  if(det){
+    h+=`<div class="scene"><b>눈여겨볼 장면</b> · ${esc(det.scene)}</div>`;
+    h+=`<div class="chips" aria-label="등장인물">${det.chars.map(c=>`<span class="chip">${esc(c)}</span>`).join("")}</div>`;
+  }
+  h+=`<div class="bible ${mem.fold?"folded":""}" id="bible"><div class="bible-tools"><span>마음에 닿는 절을 누르면 '오늘 붙잡은 말씀'이 됩니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" id="fold">${mem.fold?"펼치기":"접기"}</button></span></div><div class="chaps">`;
+  if(BIBLE){
+    for(const [b,c] of p.ch){
+      const vs=BIBLE[b-1][c-1];
+      h+=`<div class="chap"><h3>${esc(PLAN.full[b-1])} ${c}장</h3><div class="vtext">`+vs.map((t,i)=>{
+        const ref=`${PLAN.abbr[b-1]} ${c}:${i+1}`, pk=e.verse&&e.verse.ref===ref;
+        return `<span class="v${pk?" pick":""}" data-ref="${ref}" data-i="${i}" data-b="${b}" data-c="${c}"><sup>${i+1}</sup>${esc(t)}</span> `;
+      }).join("")+`</div></div>`;
+    }
+  } else h+=`<div class="loading">${bibleErr||"본문을 불러오는 중입니다…"}</div>`;
+  h+=`</div></div></section>`;
+  // 이야기 렌즈
+  const L=lensesFor(w,d); e.lens ||= [];
+  h+=`<section class="sec"><span class="label">2 · 이야기로 읽기</span><h2>본문을 이야기로 다시 보기</h2>`;
+  L.forEach((l,i)=>{h+=`<div class="q"><span class="k">${esc(l.k)}</span><p>${esc(l.q)}</p><textarea id="f-lens-${i}" data-f="lens" data-i="${i}" placeholder="떠오르는 대로 짧게 적어 보세요">${esc(e.lens[i]||"")}</textarea></div>`;});
+  if(det&&det.link){const lp=dayPlan(det.link.w,det.link.d-1);h+=`<div class="link"><span><b>기억 잇기</b> · ${esc(det.link.text)}</span><button class="btn ghost small" data-jump="${det.link.w}-${det.link.d-1}">${det.link.w}주차 ${esc(shortRef(lp))} 보기</button></div>`;}
+  h+=`</section>`;
+  // 하나님
+  h+=`<section class="sec"><span class="label">3 · 하나님을 발견하기</span><h2>이 이야기 속의 하나님</h2>
+  <div class="q god"><p>${esc(det?det.god:GOD_Q)}</p><p class="christline">${esc(det?det.christ:CHRIST_Q)}</p><textarea id="f-god" data-f="god" placeholder="하나님은 오늘 본문에서 …">${esc(e.god||"")}</textarea></div></section>`;
+  // 묵상과 삶
+  h+=`<section class="sec"><span class="label">4 · 묵상과 삶</span><h2>오늘 붙잡을 말씀과 한 걸음</h2>`;
+  h+= e.verse?`<div class="keyv"><small>오늘 붙잡은 말씀 · ${esc(e.verse.ref)}</small>${esc(e.verse.text)}</div>`:`<p class="empty">위 본문에서 마음에 닿는 절을 눌러 보세요. 여기에 옮겨집니다.</p>`;
+  h+=`<div class="q"><p>${esc(det?det.apply:APPLY_Q)}</p><textarea id="f-apply" data-f="apply" placeholder="오늘 할 한 가지">${esc(e.apply||"")}</textarea></div>
+  <div class="q"><p>한 문장으로 기도를 적어 보세요.</p><textarea id="f-pray" data-f="pray" placeholder="주님, …">${esc(e.pray||"")}</textarea></div></section>`;
+  // 제목
+  h+=`<section class="finish"><span class="label">5 · 오늘의 제목 붙이기</span><h2>오늘 읽은 이야기에 제목을 붙여 주세요</h2>
+  <p class="lead">스스로 붙인 제목은 오래 기억에 남습니다. 내일 '지난 이야기'와 '나의 이야기 지도'에 다시 나타납니다.</p>
+  <input type="text" id="f-title" data-f="title" maxlength="40" placeholder="예: 네가 어디 있느냐" value="${esc(e.title||"")}">
+  <div class="row"><button class="btn" id="doneBtn">${e.done?"읽기 마침 ✓":"읽기 마침"}</button><span class="saved" id="savedMark"></span></div></section>`;
+  return h;
+}
+
+/* ── 주일 복습 ── */
+function renderReview(){
+  const w=view.w, W=WEEKS[w-1], r=(mem.rv[w] ||= {});
+  let h=`<section class="sec"><span class="label">주일 · 한 주 돌아보기</span><h2>${w}주차 ${esc(W.t)}</h2><p class="lead">본문을 다시 펴지 말고 먼저 기억으로 떠올려 보세요. 떠올리려 애쓰는 순간에 기억이 단단해집니다.</p></section>`;
+  h+=`<section class="sec"><span class="label">1 · 내가 붙인 제목 떠올리기</span>`;
+  for(let d=0;d<6;d++){
+    const p=dayPlan(w,d), e=mem.e[keyOf(w,d)]||{};
+    h+=`<div class="recall"><div><b>${d+1}일째</b> · ${esc(p.label)}</div>`;
+    h+= e.title?`<div class="hide" id="rc-${d}">이 날 어떤 제목을 붙였는지 떠올려 보세요.</div><div class="row"><button class="btn ghost small" data-reveal="${d}">확인하기</button></div>`:`<div class="hide">아직 제목이 없습니다. <button class="btn ghost small" data-jump="${w}-${d}">그날로 가기</button></div>`;
+    h+=`</div>`;
+  }
+  h+=`</section>`;
+  const Q=QUIZ[w];
+  if(Q){
+    h+=`<section class="sec"><span class="label">2 · 이번 주 퀴즈</span><div class="quiz">`;
+    Q.forEach((q,i)=>{
+      const ans=r["q"+i];
+      h+=`<div class="qz"><p><b>${i+1}.</b> ${esc(q.q)}</p><div class="opts">`+q.o.map((o,j)=>{
+        let c="opt"; if(ans!==undefined){ if(j===q.a)c+=" right"; else if(j===ans)c+=" wrong"; }
+        return `<button class="${c}" data-q="${i}" data-o="${j}" ${ans!==undefined?"disabled":""}>${esc(o)}</button>`;}).join("")+`</div>${ans!==undefined?`<div class="ex">${ans===q.a?"맞았습니다. ":"정답은 ‘"+esc(q.o[q.a])+"’입니다. "}${esc(q.ex)}</div>`:""}</div>`;
+    });
+    h+=`</div></section>`;
+  }
+  h+=`<section class="sec"><span class="label">${Q?3:2} · 한 주를 한 문장으로</span>
+  <div class="q"><p>이번 주 이야기 전체를 한 문장으로 줄이면? 그 이야기 속에서 하나님은 어떤 분이셨나요?</p><textarea id="r-sum" data-r="sum">${esc(r.sum||"")}</textarea></div>
+  <div class="q"><p>이번 주에 가장 오래 마음에 남은 장면 하나와 그 이유를 적어 보세요.</p><textarea id="r-scene" data-r="scene">${esc(r.scene||"")}</textarea></div>
+  <div class="row"><button class="btn" id="rvDone">${r.done?"복습 마침 ✓":"복습 마침"}</button><span class="saved" id="savedMark"></span></div></section>`;
+  return h;
+}
+
+/* ── 이야기 지도 ── */
+function renderMap(){
+  let done=0; for(const k in mem.e) if(mem.e[k].done) done++;
+  let h=`<section class="sec prog"><span class="label">나의 이야기 지도</span><h2>한 해의 성경 이야기를 내 제목으로</h2>
+  <p class="lead">날마다 붙인 제목이 여기에 쌓입니다. 제목만 훑어봐도 성경 전체의 흐름이 떠오르도록 만들어 보세요.</p>
+  <div class="bar" aria-hidden="true"><i style="width:${(done/270*100).toFixed(1)}%"></i></div><div class="saved">${done} / 270일 읽음</div></section>`;
+  for(let w=1;w<=45;w++){
+    const hasAny=[0,1,2,3,4,5].some(d=>mem.e[keyOf(w,d)]?.title||mem.e[keyOf(w,d)]?.done);
+    if(!hasAny && !(w===here.w||w===view.w)) continue;
+    h+=`<div class="wkblock"><h3>${w}주차 · ${esc(WEEKS[w-1].t)}<small>${fmt(dateOf(w,0),{month:"numeric",day:"numeric"})}~</small></h3>`;
+    for(let d=0;d<6;d++){
+      const e=mem.e[keyOf(w,d)]||{};
+      h+=`<button class="mrow${e.done?" done":""}" data-jump="${w}-${d}"><span class="r">${esc(shortRef(dayPlan(w,d)))}</span><span class="t${e.title?"":" none"}">${e.title?esc(e.title):"제목 없음"}</span></button>`;
+    }
+    h+=`</div>`;
+  }
+  h+=`<p class="empty">읽기를 시작하면 다른 주차도 여기에 나타납니다.</p>`;
+  return h;
+}
+
+/* ── 사용법 ── */
+function renderGuide(){
+  return `<section class="sec guide"><span class="label">사용법</span><h2>하루 15분, 이야기로 읽는 성경</h2>
+  <p>리딩지저스 45주 일정을 따라 월요일부터 토요일까지 하루 분량을 읽고, 주일에는 한 주를 돌아봅니다. 열면 오늘 날짜에 맞는 본문이 바로 나옵니다.</p>
+  <ol class="lens-list">
+    <li><b>지난 이야기</b> · 어제 읽은 내용과 내가 붙인 제목을 먼저 떠올립니다.</li>
+    <li><b>본문 읽기</b> · 개역개정 본문을 읽고, 마음에 닿는 절을 눌러 둡니다.</li>
+    <li><b>이야기로 읽기</b> · 무대, 인물, 줄거리, 글쓴이의 손길, 내 자리. 다섯 가지 눈 가운데 그날 본문에 맞는 질문에 답합니다.</li>
+    <li><b>하나님을 발견하기</b> · 이 이야기 속에서 하나님이 어떤 분인지, 이야기가 그리스도께로 어떻게 이어지는지 생각합니다.</li>
+    <li><b>묵상과 삶</b> · 붙잡은 말씀, 오늘 할 한 가지, 한 문장 기도.</li>
+    <li><b>제목 붙이기</b> · 오늘 읽은 이야기에 내 말로 제목을 붙입니다. 이 제목들이 모여 '나의 이야기 지도'가 됩니다.</li>
+  </ol></section>
+  <section class="sec guide"><span class="label">이야기로 읽는다는 것</span><h2>다섯 가지 눈</h2>
+  <p>내러티브비평은 성경을 잘 짜인 이야기로 읽는 방법입니다. 글쓴이가 어떤 장면을 고르고, 어떤 말을 되풀이하고, 무엇을 말하지 않았는지를 따라가면 본문이 하려는 말이 더 또렷하게 들립니다.</p>
+  <ul class="lens-list">
+    <li><b>무대</b> · 언제, 어디서. 장소와 시간은 이야기의 뜻을 실어 나릅니다.</li>
+    <li><b>인물</b> · 누가 무엇을 원하는가. 그리고 하나님은 어떻게 등장하시는가.</li>
+    <li><b>줄거리</b> · 무엇이 문제였고, 어디서 방향이 바뀌고, 어떻게 끝나는가.</li>
+    <li><b>글쓴이의 손길</b> · 되풀이되는 말, 길게 쓴 곳과 짧게 넘긴 곳, 침묵.</li>
+    <li><b>내 자리</b> · 나는 이 이야기 속 누구와 닮았는가.</li>
+  </ul>
+  <p class="lead">시, 율법, 예언, 편지, 묵시처럼 이야기가 아닌 본문은 그 글의 모양에 맞게 질문을 바꿉니다. 편지라면 '편지 뒤의 이야기'를, 시라면 '기도하는 사람의 마음이 움직이는 길'을 따라갑니다.</p></section>
+  <section class="sec"><span class="label">설정</span><h2>우리 교회 통독 시작일</h2>
+  <p class="lead">1주차 1일째가 시작되는 날을 고르세요. 그날부터 엿새는 1–6일째, 일곱째 날은 주일 복습으로 계산합니다. 지금 설정: ${fmt(parseD(mem.start),{year:"numeric",month:"long",day:"numeric",weekday:"short"})}</p>
+  <div class="row"><input type="date" id="startIn" value="${mem.start}" style="max-width:220px"><button class="btn small" id="startSave">적용</button></div>
+  <span class="label" style="margin-top:12px">기록 지우기</span>
+  <p class="lead">내가 쓴 답, 제목, 복습 기록은 이 기기의 브라우저에만 저장됩니다. 다른 기기에서는 보이지 않습니다.</p>
+  <div id="resetBox"><button class="btn ghost small" id="resetAsk">모든 기록 지우기</button></div></section>
+  <section class="sec"><span class="label">시험판 안내</span><p class="lead">이 시험판에서는 1주차(창세기 1–24장)와 40주차(고린도후서 7장–빌립보서)에 날마다 맞춘 질문과 퀴즈가 들어 있습니다. 다른 날은 본문의 종류(이야기, 시, 예언, 편지 등)에 맞춘 기본 질문이 나옵니다.</p></section>`;
+}
+
+/* ── 그리기 ── */
+function render(){
+  renderHead();
+  const m=document.getElementById("main");
+  m.innerHTML = view.tab==="read"?renderRead():view.tab==="map"?renderMap():renderGuide();
+  bind();
+}
+function go(w,d){view.w=w;view.d=d;view.tab="read";render();window.scrollTo({top:0});}
+function bind(){
+  const m=document.getElementById("main");
+  m.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.jump.split("-").map(Number);go(w,d);});
+  if(view.tab==="read"&&view.d<6){
+    const e=ent(view.w,view.d);
+    m.querySelectorAll("[data-f]").forEach(t=>t.oninput=()=>{const f=t.dataset.f; if(f==="lens"){e.lens[+t.dataset.i]=t.value;} else e[f]=t.value; saveSoon(); if(f==="title") renderHeadSoft();});
+    m.querySelectorAll(".v").forEach(v=>v.onclick=()=>{
+      const ref=v.dataset.ref;
+      if(e.verse&&e.verse.ref===ref){delete e.verse;} else e.verse={ref,text:BIBLE[v.dataset.b-1][v.dataset.c-1][v.dataset.i]};
+      save(); const y=window.scrollY; render(); window.scrollTo({top:y});
+    });
+    const fp=document.getElementById("fp"),fm=document.getElementById("fm"),fo=document.getElementById("fold");
+    fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();};
+    fm.onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};
+    fo.onclick=()=>{mem.fold=!mem.fold;save();document.getElementById("bible").classList.toggle("folded",mem.fold);fo.textContent=mem.fold?"펼치기":"접기";};
+    document.getElementById("doneBtn").onclick=()=>{e.done=!e.done;save();const y=window.scrollY;render();window.scrollTo({top:y});};
+  }
+  if(view.tab==="read"&&view.d===6){
+    const r=mem.rv[view.w];
+    m.querySelectorAll("[data-r]").forEach(t=>t.oninput=()=>{r[t.dataset.r]=t.value;saveSoon();});
+    m.querySelectorAll("[data-reveal]").forEach(b=>b.onclick=()=>{const d=+b.dataset.reveal;const el=document.getElementById("rc-"+d);el.innerHTML=`<b style="font-family:var(--f-text);color:var(--ink);font-size:16px">“${esc(mem.e[keyOf(view.w,d)].title)}”</b>`;b.remove();});
+    m.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{r["q"+b.dataset.q]=+b.dataset.o;save();const y=window.scrollY;render();window.scrollTo({top:y});});
+    document.getElementById("rvDone").onclick=()=>{r.done=!r.done;save();const y=window.scrollY;render();window.scrollTo({top:y});};
+  }
+  if(view.tab==="guide"){
+    document.getElementById("startSave").onclick=()=>{const v=document.getElementById("startIn").value; if(!v) return; mem.start=v; save(); const p=posOfToday(); Object.assign(here,p); view.w=p.w; view.d=p.d; render();};
+    document.getElementById("resetAsk").onclick=()=>{
+      document.getElementById("resetBox").innerHTML=`<div class="confirm"><span>정말 모든 답과 제목을 지울까요? 되돌릴 수 없습니다.</span><div class="row"><button class="btn small" id="resetYes">지우기</button><button class="btn ghost small" id="resetNo">취소</button></div></div>`;
+      document.getElementById("resetYes").onclick=()=>{mem.e={};mem.rv={};save();render();};
+      document.getElementById("resetNo").onclick=()=>render();
+    };
+  }
+}
+function renderHeadSoft(){/* 제목 입력 중에는 화면을 다시 그리지 않음 */}
+function applySize(){document.documentElement.style.setProperty("--bible-size",(mem.size||17)+"px");}
+
+document.getElementById("prevW").onclick=()=>{if(view.w>1){view.w--;render();}};
+document.getElementById("nextW").onclick=()=>{if(view.w<45){view.w++;render();}};
+document.getElementById("todayBtn").onclick=()=>go(here.w,here.d);
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{view.tab=t.dataset.tab;render();});
+applySize(); render(); loadBible();
+})();
+</script>

@@ -1,0 +1,586 @@
+<title>이야기 통독 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: 휴대폰 한 손 통독. 요약 → 어려운 말 → 지도 → 본문(접힘) → 한 문제씩 넘기는 퀴즈 순서로 짧게 흐른다 */
+:root{
+  --paper:#F3F5F1; --card:#FFFFFF; --ink:#1B2420; --muted:#5B6862; --line:#D9E0DA;
+  --accent:#2C5C52; --accent-ink:#FFFFFF; --accent-soft:#E2ECE7;
+  --gold:#9A6417; --gold-soft:#F5E9D2; --ok:#2F7A4F; --ok-soft:#E1F1E7; --bad:#A4412F; --bad-soft:#F7E4DF;
+  --sea:#DCE8EE; --land:#F7F4EC; --coast:#B9C6C0; --water:#6E9DB5;
+  --f-text:"Gowun Batang","Nanum Myeongjo","AppleMyungjo","Batang",serif;
+  --f-ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --bible-size:17px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111714; --card:#18201C; --ink:#E4EAE6; --muted:#97A49D; --line:#2A3430;
+  --accent:#8FC4B5; --accent-ink:#0E1513; --accent-soft:#1C2A26;
+  --gold:#E2B562; --gold-soft:#2C2416; --ok:#7FCB9C; --ok-soft:#18291F; --bad:#E58C78; --bad-soft:#2E1C18;
+  --sea:#14222A; --land:#1F2723; --coast:#3A4842; --water:#5E8FA8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111714; --card:#18201C; --ink:#E4EAE6; --muted:#97A49D; --line:#2A3430;
+  --accent:#8FC4B5; --accent-ink:#0E1513; --accent-soft:#1C2A26;
+  --gold:#E2B562; --gold-soft:#2C2416; --ok:#7FCB9C; --ok-soft:#18291F; --bad:#E58C78; --bad-soft:#2E1C18;
+  --sea:#14222A; --land:#1F2723; --coast:#3A4842; --water:#5E8FA8; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0 40px}
+.wrap{max-width:720px;margin:0 auto}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible,.g:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--f-text);text-wrap:balance;margin:0}
+
+.top{padding-block:24px 8px;display:grid;gap:4px}
+.brand{font-size:12px;letter-spacing:.12em;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.date{font-family:var(--f-text);font-size:27px;font-weight:700;line-height:1.3}
+.where{color:var(--muted);font-size:15px}
+.where b{color:var(--accent);font-weight:600}
+.notice{background:var(--gold-soft);border-radius:8px;padding:9px 12px;font-size:14px;margin-top:6px}
+.weeknav{display:flex;align-items:center;gap:8px;margin-top:12px}
+.weeknav .wk{flex:1;min-width:0;font-weight:600;font-size:15px}
+.weeknav .wk small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:8px;min-width:40px;height:40px;padding:0 10px}
+.iconbtn:disabled{opacity:.4}
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px}
+.day{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:7px 2px 6px;text-align:center;display:grid;gap:0;position:relative}
+.day .dn{font-size:12px;color:var(--muted)}
+.day .dd{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.day .ds{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-height:16px}
+.day.today{border-color:var(--accent)}
+.day.sel{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.day.sel .dn,.day.sel .ds{color:var(--accent-ink);opacity:.9}
+.day.done .ds{color:var(--ok);font-weight:600}
+.day.sel.done .ds{color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;margin-top:16px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:none;border:0;padding:10px 12px;border-bottom:2px solid transparent;color:var(--muted);font-weight:500;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+
+main{display:grid;gap:22px;padding-top:18px}
+.sec{display:grid;gap:10px}
+.label{font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600}
+.sec h2{font-size:22px}
+.lead{color:var(--muted);font-size:14px;margin:0}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.step{font-size:12px;border-radius:999px;padding:2px 10px;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+.step.on{background:var(--ok-soft);border-color:transparent;color:var(--ok);font-weight:600}
+.summary{font-family:var(--f-text);font-size:17px;line-height:1.85;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13.5px;border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:var(--card)}
+button.chip:hover{border-color:var(--accent)}
+.chip.term{border-style:dashed;border-color:var(--gold);color:var(--ink)}
+.chip small{color:var(--muted);margin-left:4px;font-variant-numeric:tabular-nums}
+.g{border-bottom:1.5px dotted var(--gold);cursor:pointer}
+.g:hover{background:var(--gold-soft)}
+
+/* map */
+.mapbox{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.mapbox svg{display:block;width:100%;height:auto;max-height:70vh;background:var(--sea)}
+.mapbox .cap{display:flex;justify-content:space-between;gap:8px;padding:8px 12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.m-land{fill:var(--land);stroke:var(--coast);stroke-width:1}
+.m-lake{fill:var(--sea);stroke:var(--water);stroke-width:1}
+.m-river{fill:none;stroke:var(--water);stroke-linecap:round;stroke-linejoin:round}
+.m-dot{fill:var(--bad);stroke:var(--land)}
+.m-dot.mt{fill:var(--gold)}
+.m-lbl{fill:var(--ink);font-family:var(--f-ui);font-weight:600;paint-order:stroke;stroke:var(--land);stroke-linejoin:round}
+.m-reg{fill:var(--muted);font-family:var(--f-ui);font-style:italic;letter-spacing:.08em;paint-order:stroke;stroke:var(--land)}
+.m-wat{fill:var(--water);font-family:var(--f-ui);font-style:italic;paint-order:stroke;stroke:var(--sea)}
+.m-hit{cursor:pointer}
+
+/* bible */
+.openbtn{width:100%;border:1px solid var(--accent);background:var(--card);color:var(--accent);border-radius:12px;padding:14px;font-weight:600;font-size:16px}
+.bible{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px 16px}
+.bible-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.bible-tools .grp{display:flex;gap:6px}
+.chap{margin-top:14px;scroll-margin-top:12px}
+.chap h3{font-size:18px;color:var(--accent);margin-bottom:6px}
+.vtext{font-family:var(--f-text);font-size:var(--bible-size);line-height:1.95}
+.v sup{font-family:var(--f-ui);font-size:.62em;color:var(--muted);margin-right:3px;font-variant-numeric:tabular-nums}
+.v.hl{background:var(--gold-soft);border-radius:4px;box-shadow:0 0 0 3px var(--gold-soft)}
+.loading{color:var(--muted);padding:20px 0}
+
+/* quiz */
+.quiz{background:var(--card);border:2px solid var(--accent);border-radius:14px;padding:16px;display:grid;gap:12px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dots{display:flex;gap:5px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dots i.cur{background:var(--accent)}
+.dots i.ok{background:var(--ok)}
+.dots i.no{background:var(--bad)}
+.kind{font-size:12px;font-weight:600;color:var(--gold);letter-spacing:.06em}
+.qtext{font-size:16.5px;font-weight:600;margin:0}
+.quote{font-family:var(--f-text);font-size:16.5px;line-height:1.85;background:var(--paper);border-radius:10px;padding:12px 14px;margin:0;white-space:pre-line}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:12px 14px;font-size:16px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft);color:var(--ok);font-weight:600}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft);color:var(--bad);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.ox{grid-template-columns:1fr 1fr}
+.ox .opt{text-align:center;font-family:var(--f-text);font-size:30px;font-weight:700;padding:10px}
+.feedback{border-radius:10px;padding:12px 14px;font-size:15px;display:grid;gap:8px}
+.feedback.hint{background:var(--gold-soft)}
+.feedback.hint b{color:var(--gold)}
+.feedback.good{background:var(--ok-soft)}
+.feedback.good b{color:var(--ok)}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:12px 18px;font-weight:600;font-size:15px}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.small{padding:7px 12px;font-size:13.5px;border-radius:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.score{display:grid;gap:6px;text-align:center;padding:8px 0}
+.score .big{font-family:var(--f-text);font-size:44px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.score .big small{font-size:20px;color:var(--muted)}
+.badge{justify-self:center;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:4px 14px}
+
+/* review & record */
+.tbl{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 14px}
+.trow{display:grid;grid-template-columns:4.5em 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;width:100%}
+.trow:first-child{border-top:0}
+.trow .d{font-size:13px;color:var(--muted)}
+.trow .r{font-size:14.5px;min-width:0}
+.trow .s{font-variant-numeric:tabular-nums;font-weight:600;font-size:14.5px}
+.trow .s.none{color:var(--muted);font-weight:400;font-size:13px}
+.meter{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;background:var(--ok)}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding:12px 0 6px;border-top:2px solid var(--ink);margin-top:4px}
+.total .big{font-family:var(--f-text);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:2px}
+.stat b{font-family:var(--f-text);font-size:24px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+details.flow{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+details.flow summary{cursor:pointer;font-weight:600}
+details.flow p{margin:8px 0 0;font-family:var(--f-text);font-size:15.5px}
+.sumlist{display:grid;gap:8px}
+.sumlist details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.sumlist summary{cursor:pointer;font-weight:500}
+.sumlist p{font-family:var(--f-text);margin:8px 0 0}
+.guide ol,.guide ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.confirm{background:var(--gold-soft);border-radius:10px;padding:12px;display:grid;gap:8px}
+input[type=date]{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+
+/* popup sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet{background:var(--card);color:var(--ink);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom,0px));display:grid;gap:10px;max-height:75vh;overflow:auto}
+.sheet h3{font-size:21px}
+.sheet p{margin:0;font-size:16px;line-height:1.7}
+.sheet .src{font-size:13px;color:var(--muted)}
+
+footer{margin-top:44px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted);display:grid;gap:4px}
+footer .maker{font-size:15px;color:var(--ink);font-weight:600}
+@media (max-width:420px){.date{font-size:23px}.summary{padding:14px}.bible{padding:12px 14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span>이야기 통독 노트</span><span>리딩지저스 45주 · 시험판</span></div>
+    <div class="date" id="dateLine"></div>
+    <div class="where" id="whereLine"></div>
+    <div id="noticeBox"></div>
+    <div class="weeknav">
+      <button class="iconbtn" id="prevW" aria-label="이전 주">‹</button>
+      <div class="wk" id="wkTitle"></div>
+      <button class="iconbtn" id="todayBtn">오늘</button>
+      <button class="iconbtn" id="nextW" aria-label="다음 주">›</button>
+    </div>
+    <div class="strip" id="strip"></div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="read" aria-selected="true">오늘 통독</button>
+      <button class="tab" role="tab" data-tab="record" aria-selected="false">나의 기록</button>
+      <button class="tab" role="tab" data-tab="guide" aria-selected="false">사용법·설정</button>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer>
+    <span class="maker">제작: 이삭 목사(중앙성서교회)</span>
+    <a href="https://www.centralbible.net/" target="_blank" rel="noopener">www.centralbible.net</a>
+    <span>성경 본문: 개역개정4판 · 통독 일정: 리딩지저스 45주 성경통독표(웨스트민스터코리아)</span>
+    <span>지도는 위치를 가늠하기 위한 개략도입니다. 퀴즈 기록은 이 기기의 브라우저에만 저장됩니다.</span>
+  </footer>
+</div>
+<div id="sheetRoot"></div>
+
+<script>
+/*DATA*/
+</script>
+<script>
+(function(){
+const DAYN=["일","월","화","수","목","금","토"];
+const DEFAULT_START="2026-02-23";
+const KEY="rjnote:v2";
+let mem={start:DEFAULT_START,q:{},wq:{},size:17};
+try{const s=localStorage.getItem(KEY);if(s)mem=Object.assign(mem,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){}}
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* 날짜 */
+const parseD=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
+const today0=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate());};
+const dayDiff=(a,b)=>Math.round((b-a)/86400000);
+const dateOf=(w,d)=>{const s=parseD(mem.start);s.setDate(s.getDate()+(w-1)*7+d);return s;};
+function posOfToday(){
+  const diff=dayDiff(parseD(mem.start),today0());
+  if(diff<0) return {w:1,d:0,state:"before",diff};
+  if(diff>=45*7) return {w:45,d:6,state:"after",diff};
+  return {w:Math.floor(diff/7)+1,d:diff%7,state:"in",diff};
+}
+const fmt=(dt,o)=>dt.toLocaleDateString("ko-KR",o);
+
+/* 데이터 준비 */
+const EI=buildEntityIndex(GAZ.places,GAZ.people);
+const GI=buildGlossIndex(GLOSSARY);
+const PLACE=new Map(GAZ.places.map(p=>[p[0],p]));
+let BIBLE=null,bibleErr=null;
+async function loadBible(){
+  try{
+    if(!("DecompressionStream" in window)) throw new Error("old");
+    const bin=Uint8Array.from(atob(BIBLE_B64),c=>c.charCodeAt(0));
+    const ds=new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip"));
+    BIBLE=JSON.parse(await new Response(ds).text());
+  }catch(e){bibleErr="이 브라우저에서는 본문을 열 수 없습니다. 최신 크롬이나 사파리에서 열어 주세요.";}
+  render();
+}
+const dayCache={}, bookCache={};
+function dayA(w,d){const k=w+"-"+d; return dayCache[k] ||= analyzeDay(PLAN.plan[w-1][d].ch,BIBLE,EI);}
+function bookA(b){return bookCache[b] ||= analyzeDay(BIBLE[b-1].map((_,i)=>[b,i+1]),BIBLE,EI);}
+const CTX={abbr:PLAN.abbr,
+  bookPeople:b=>[...bookA(b).people.values()].sort((x,y)=>y.n-x.n).slice(0,30).map(x=>x.name),
+  bookPlaces:b=>[...bookA(b).places.values()].sort((x,y)=>y.n-x.n).slice(0,30).map(x=>x.name)};
+
+/* 상태 */
+const here=posOfToday();
+let view={w:here.w,d:here.d,tab:"read",open:false,quiz:null,wquiz:null};
+const keyOf=(w,d)=>w+"-"+d;
+const dayPlan=(w,d)=>PLAN.plan[w-1][d];
+const shortRef=p=>p.spec.replace(/ 1-몬 1/,"-몬").replace(/요이 1-요삼 1/,"요이-요삼").replace(/^유 1$/,"유");
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+
+/* 어려운 말 표시 */
+function markGloss(text,b,seen){
+  let out="",last=0; GI.re.lastIndex=0; let m;
+  while((m=GI.re.exec(text))){
+    const it=GI.by.get(m[1]); if(!it||!inScope(it,b)||seen.has(it.t)) continue;
+    seen.add(it.t);
+    out+=esc(text.slice(last,m.index))+`<span class="g" tabindex="0" role="button" data-g="${esc(it.t)}">${esc(m[1])}</span>`;
+    last=m.index+m[1].length;
+  }
+  return out+esc(text.slice(last));
+}
+function glossInDay(A,b){
+  const found=[]; const seen=new Set(); GI.re.lastIndex=0;
+  for(const v of A.verses){ GI.re.lastIndex=0; let m; while((m=GI.re.exec(v.t))){ const it=GI.by.get(m[1]); if(it&&inScope(it,v.b)&&!seen.has(it.t)){seen.add(it.t);found.push({it,ref:[v.b,v.c,v.v]});} } }
+  return found;
+}
+
+/* 팝업 */
+function sheet(title,body){
+  const root=document.getElementById("sheetRoot");
+  root.innerHTML=`<div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h3>${esc(title)}</h3>${body}<div class="row"><button class="btn small" id="sheetClose">닫기</button></div></div></div>`;
+  const close=()=>{root.innerHTML="";};
+  document.getElementById("sheetClose").onclick=close;
+  document.getElementById("sheetBg").onclick=e=>{if(e.target.id==="sheetBg")close();};
+  document.getElementById("sheetClose").focus();
+}
+function showGloss(t){const it=GI.by.get(t); if(it) sheet(it.t,`<p>${esc(it.d)}</p>`);}
+const refList=(refs,b0)=>refs.map(([b,c,v])=>(b!==b0?PLAN.abbr[b-1]+" ":"")+`${c}:${v}`).join(", ");
+
+/* 지도 */
+function renderMap(A){
+  const pts=[...A.places.values()].map(p=>({...p,g:PLACE.get(p.name)})).filter(p=>p.g);
+  if(!pts.length) return "";
+  const inF=(f,p)=>p.g[2]>=f.lon[0]&&p.g[2]<=f.lon[1]&&p.g[1]>=f.lat[0]&&p.g[1]<=f.lat[1];
+  const order=["israel","asia","med","neareast"];
+  let fid=order.find(id=>pts.every(p=>inF(MAPS[id],p)));
+  if(!fid) fid=order.map(id=>[id,pts.filter(p=>inF(MAPS[id],p)).length]).sort((a,b)=>b[1]-a[1])[0][0];
+  const F=MAPS[fid];
+  const P=(lat,lon)=>[(lon-F.lon[0])*F.kx*F.sx,(F.lat[1]-lat)*F.sx];
+  const use=pts.filter(p=>inF(F,p)).sort((a,b)=>b.n-a.n);
+  const xy=use.map(p=>P(p.g[1],p.g[2]));
+  let x0=Math.min(...xy.map(p=>p[0])),x1=Math.max(...xy.map(p=>p[0])),y0=Math.min(...xy.map(p=>p[1])),y1=Math.max(...xy.map(p=>p[1]));
+  const minW=fid==="israel"?560:420, pad=fid==="israel"?70:60;
+  x0-=pad;x1+=pad;y0-=pad;y1+=pad;
+  let w=Math.max(minW,x1-x0), h=y1-y0;
+  {const cx=(x0+x1)/2; x0=cx-w/2;}
+  if(h<w*0.75){const cy=(y0+y1)/2;h=w*0.75;y0=cy-h/2;}
+  if(h>w*1.35){const cx=x0+w/2;w=h/1.35;x0=cx-w/2;}
+  if(w>F.W){w=F.W;} if(h>F.H){h=F.H;}
+  x0=Math.max(0,Math.min(x0,F.W-w)); y0=Math.max(0,Math.min(y0,F.H-h));
+  const fs=Math.max(w*0.032,16), rr=fs*0.32;
+  let svg=`<svg viewBox="${x0.toFixed(0)} ${y0.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" role="img" aria-label="오늘 본문에 나오는 곳 지도"><path class="m-land" d="${F.land}" style="stroke-width:${(w/700).toFixed(2)}"/><path class="m-lake" d="${F.lakes}" style="stroke-width:${(w/900).toFixed(2)}"/><path class="m-river" d="${F.rivers}" style="stroke-width:${(w/320).toFixed(2)}"/>`;
+  const boxes=[];
+  const inside=b=>b[0]>=x0+2&&b[2]<=x0+w-2&&b[1]>=y0+2&&b[3]<=y0+h-2;
+  const hit=(b)=>!inside(b)||boxes.some(o=>!(b[2]<o[0]||b[0]>o[2]||b[3]<o[1]||b[1]>o[3]));
+  use.forEach((p,i)=>{ if(p.g[3]!=="r"&&p.g[3]!=="w"){const [x,y]=xy[i]; boxes.push([x-rr*1.4,y-rr*1.4,x+rr*1.4,y+rr*1.4]);} });
+  const lw=(n,f)=>n.length*f*1.0;
+  let regs="";
+  use.forEach((p,i)=>{
+    const [x,y]=xy[i]; const kind=p.g[3]; const nm=esc(p.name);
+    if(kind==="r") return;
+    const tw=lw(p.name,fs);
+    const cands=[[x+rr*2,y+fs*0.35,"start"],[x-rr*2,y+fs*0.35,"end"],[x,y-rr*2.2,"middle"],[x,y+fs*1.2,"middle"]];
+    let lab=null;
+    for(const [lx,ly,an] of cands){
+      const bx=an==="start"?lx:an==="end"?lx-tw:lx-tw/2;
+      const b=[bx,ly-fs*0.85,bx+tw,ly+fs*0.2];
+      if(!hit(b)){boxes.push(b);lab=[lx,ly,an];break;}
+    }
+    const cls=kind==="w"?"m-wat":"m-lbl";
+    const dot=kind==="w"?"":`<circle class="m-dot${kind==="m"?" mt":""}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rr.toFixed(1)}" style="stroke-width:${(rr*0.45).toFixed(1)}"/>`;
+    svg+=`<g class="m-hit" data-place="${nm}">${dot}<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(rr*3).toFixed(1)}" fill="transparent"/>${lab?`<text class="${cls}" x="${lab[0].toFixed(1)}" y="${lab[1].toFixed(1)}" text-anchor="${lab[2]}" font-size="${fs.toFixed(1)}" style="stroke-width:${(fs*0.22).toFixed(1)}">${nm}</text>`:""}</g>`;
+  });
+  const CTXL={israel:[["지중해",32.0,34.45],["염해",31.3,35.47],["요단 강",32.35,35.62],["갈릴리 바다",32.82,35.6]],asia:[["에게 해",38.6,25.2]],med:[["지중해",34.2,20.5]],neareast:[["지중해",33.6,27.5],["홍해",24.5,36.2],["유브라데 강",34.6,40.6],["힛데겔 강",35.0,43.7],["나일 강",27.0,31.0]]}[fid]||[];
+  for(const [n,la,lo] of CTXL){ const [x,y]=P(la,lo); const f2=fs*0.82, tw=n.length*f2*1.05, b=[x-tw/2,y-f2*0.8,x+tw/2,y+f2*0.3];
+    if(use.some(p=>p.name===n.replace(/ 강$/,""))) continue;
+    if(!hit(b)){boxes.push(b); svg+=`<text class="m-wat" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" font-size="${f2.toFixed(1)}" style="stroke-width:${(fs*0.2).toFixed(1)};opacity:.85">${n}</text>`;} }
+  use.forEach((p,i)=>{
+    if(p.g[3]!=="r") return; const [x,y]=xy[i]; const nm=esc(p.name); const f2=fs*0.9;
+    const tw=lw(p.name,f2)*1.08, b=[x-tw/2,y-f2*0.8,x+tw/2,y+f2*0.3];
+    if(!hit(b)){boxes.push(b);svg+=`<text class="m-reg m-hit" data-place="${nm}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" font-size="${f2.toFixed(1)}" style="stroke-width:${(fs*0.22).toFixed(1)}">${nm}</text>`;}
+  });
+  svg+="</svg>";
+  const hidden=pts.length-use.length;
+  return `<section class="sec"><span class="label">오늘의 지도</span><div class="mapbox">${svg}<div class="cap"><span>${esc(F.name)} · 오늘 본문에 나오는 곳 ${use.length}곳${hidden?` (지도 밖 ${hidden}곳)`:""}</span><span>점이나 이름을 누르면 나오는 절을 볼 수 있습니다</span></div></div></section>`;
+}
+
+/* 머리 */
+function dayScore(w,d){return mem.q[keyOf(w,d)]?.first;}
+function renderHead(){
+  const dt=dateOf(view.w,view.d);
+  document.getElementById("dateLine").textContent=fmt(dt,{month:"long",day:"numeric",weekday:"long"});
+  document.getElementById("whereLine").innerHTML=`<b>${view.w}주차</b> · ${view.d===6?"주일 · 한 주 돌아보기":(view.d+1)+"일째 · "+esc(dayPlan(view.w,view.d).label)}`;
+  const nb=document.getElementById("noticeBox"), isToday=view.w===here.w&&view.d===here.d;
+  if(here.state==="before"&&isToday) nb.innerHTML=`<div class="notice">통독 시작일까지 ${-here.diff}일 남았습니다. 1주차를 미리 볼 수 있습니다.</div>`;
+  else if(here.state==="after"&&isToday) nb.innerHTML=`<div class="notice">45주 통독 일정이 끝났습니다. '나의 기록'에서 한 해를 돌아보세요.</div>`;
+  else if(!isToday&&view.tab==="read") nb.innerHTML=`<div class="notice">오늘이 아닌 날을 보고 있습니다. '오늘'을 누르면 돌아갑니다.</div>`;
+  else nb.innerHTML="";
+  const W=WEEKS[view.w-1];
+  document.getElementById("wkTitle").innerHTML=`${view.w}주차 · ${esc(W.t)}<small>${fmt(dateOf(view.w,0),{month:"numeric",day:"numeric"})} – ${fmt(dateOf(view.w,6),{month:"numeric",day:"numeric"})}</small>`;
+  const st=document.getElementById("strip"); st.innerHTML="";
+  for(let d=0;d<7;d++){
+    const b=document.createElement("button"), dt2=dateOf(view.w,d);
+    const sc=d<6?dayScore(view.w,d):mem.wq[view.w]?.first;
+    b.className="day"+(d===view.d?" sel":"")+(view.w===here.w&&d===here.d&&here.state==="in"?" today":"")+(sc?" done":"");
+    b.innerHTML=`<span class="dn">${DAYN[dt2.getDay()]}</span><span class="dd">${dt2.getDate()}</span><span class="ds">${sc?sc.s+"/"+sc.t:(d<6?esc(shortRef(dayPlan(view.w,d))).replace(/ .*/,""):"복습")}</span>`;
+    b.setAttribute("aria-label",fmt(dt2,{month:"long",day:"numeric"})+" "+(d<6?dayPlan(view.w,d).label:"주일 돌아보기"));
+    b.onclick=()=>{view.d=d;view.tab="read";view.open=false;view.quiz=null;render();};
+    st.appendChild(b);
+  }
+  document.getElementById("prevW").disabled=view.w===1;
+  document.getElementById("nextW").disabled=view.w===45;
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
+}
+
+/* 오늘 통독 */
+function renderRead(){
+  const {w,d}=view; if(d===6) return renderReview();
+  const p=dayPlan(w,d), key=keyOf(w,d), b0=p.ch[0][0];
+  if(!BIBLE) return `<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
+  const A=dayA(w,d), sc=dayScore(w,d);
+  const mins=Math.max(5,Math.round(A.text.length/450));
+  let h=`<section class="sec"><span class="label">오늘의 본문</span><h2>${esc(p.label)}</h2>
+   <div class="steps"><span class="step on">약 ${mins}분</span><span class="step on">① 요약</span><span class="step ${view.open?"on":""}">② 본문</span><span class="step ${sc?"on":""}">③ 퀴즈${sc?` ${sc.s}/${sc.t}`:""}</span></div></section>`;
+  // 요약
+  const seen=new Set();
+  h+=`<section class="sec"><span class="label">한눈에 보는 오늘 이야기</span><p class="summary">${markGloss(SUMMARY[w-1][d],b0,seen)}</p>`;
+  const ppl=[...A.people.values()].sort((a,b)=>b.n-a.n).slice(0,7);
+  if(ppl.length) h+=`<div class="chips" aria-label="오늘의 인물">${ppl.map(x=>`<button class="chip" data-person="${esc(x.name)}">${esc(x.name)}<small>${x.n}</small></button>`).join("")}</div>`;
+  h+=`</section>`;
+  // 어려운 말
+  const gl=glossInDay(A,b0);
+  if(gl.length) h+=`<section class="sec"><span class="label">어려운 말, 알고 계신가요?</span><p class="lead">오늘 본문에 이런 말이 나옵니다. 모르는 말은 눌러 보세요.</p><div class="chips">${gl.slice(0,14).map(x=>`<button class="chip term" data-g="${esc(x.it.t)}">${esc(x.it.t)}</button>`).join("")}</div></section>`;
+  // 지도
+  h+=renderMap(A);
+  // 본문
+  if(!view.open){
+    h+=`<section class="sec"><button class="openbtn" id="openText">본문 읽기 · ${p.ch.length}장 펼치기</button><p class="lead">오디오 성경이나 종이 성경으로 읽으셨다면 바로 아래 퀴즈로 넘어가셔도 됩니다.</p></section>`;
+  } else {
+    h+=`<section class="sec"><div class="bible" id="bible"><div class="bible-tools"><span>밑줄 친 말을 누르면 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" id="closeText">접기</button></span></div>`;
+    for(const [b,c] of p.ch){
+      const s2=new Set();
+      h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}</h3><div class="vtext">`+BIBLE[b-1][c-1].map((t,i)=>`<span class="v" id="v-${b}-${c}-${i+1}"><sup>${i+1}</sup>${markGloss(t,b,s2)}</span> `).join("")+`</div></div>`;
+    }
+    h+=`<div class="row" style="margin-top:14px"><button class="btn" id="toQuiz">다 읽었어요 · 퀴즈 풀기</button></div></div></section>`;
+  }
+  // 퀴즈
+  h+=`<section class="sec" id="quizSec"><span class="label">본문 확인 퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
+  // 주간 흐름
+  h+=`<details class="flow"><summary>이번 주 전체 흐름 · ${esc(WEEKS[w-1].t)}</summary><p>${esc(WEEKS[w-1].story)}</p><p style="color:var(--muted);font-size:14.5px">${esc(WEEKS[w-1].christ)}</p></details>`;
+  return h;
+}
+
+/* 퀴즈 카드 (하루/주간 공용) */
+function grade(s,t){
+  const p=pct(s,t);
+  if(p===100) return ["완벽해요","한 문제도 놓치지 않았어요. 오늘 말씀을 꼼꼼히 읽으셨네요."];
+  if(p>=80) return ["꼼꼼한 독자","거의 다 맞히셨어요. 헷갈렸던 부분만 다시 보면 오래 기억에 남습니다."];
+  if(p>=60) return ["성실한 독자","잘하셨어요. 요약을 한 번 더 읽고 새 문제로 다시 풀어 보세요."];
+  return ["다시 펴 볼 기회","괜찮아요. 틀린 문제는 기억을 붙잡는 갈고리가 됩니다. 요약을 읽고 다시 도전해 보세요."];
+}
+function renderQuiz(key,maker,mode){
+  const store=mode==="day"?mem.q:mem.wq;
+  const qz=mode==="day"?view.quiz:view.wquiz;
+  const rec=store[key];
+  if(!qz||qz.key!==key){
+    if(rec?.first){
+      const [g,msg]=grade(rec.last.s,rec.last.t);
+      return `<div class="quiz"><div class="score"><span class="badge">${g}</span><div class="big">${rec.last.s}<small> / ${rec.last.t}</small></div><p class="lead">${msg}</p><p class="lead">처음 푼 기록 ${rec.first.s}/${rec.first.t}${rec.tries>1?` · ${rec.tries}번 도전`:""}</p></div><div class="row" style="justify-content:center"><button class="btn" data-qstart="${mode}">새 문제로 다시 풀기</button></div></div>`;
+    }
+    return `<div class="quiz"><p class="qtext">${mode==="day"?"본문을 잘 읽었는지 확인해 볼까요?":"이번 주 엿새 동안 읽은 말씀에서 골고루 나옵니다."}</p><p class="lead">O/X 문제와 4지선다 문제가 섞여 나옵니다. 풀 때마다 새 문제가 만들어집니다. 틀리면 정답 대신 생각할 거리를 드립니다.</p><div class="row"><button class="btn" data-qstart="${mode}">퀴즈 시작</button></div></div>`;
+  }
+  const q=qz.qs[qz.i];
+  if(qz.i>=qz.qs.length){
+    const s=qz.first.filter(Boolean).length, t=qz.qs.length; const [g,msg]=grade(s,t);
+    return `<div class="quiz"><div class="score"><span class="badge">${g}</span><div class="big">${s}<small> / ${t}</small></div><p class="lead">${msg}</p></div><div class="row" style="justify-content:center"><button class="btn" data-qstart="${mode}">새 문제로 다시 풀기</button>${mode==="day"?`<button class="btn ghost" data-goweek="1">이번 주 기록 보기</button>`:""}</div></div>`;
+  }
+  const dots=qz.qs.map((_,i)=>`<i class="${i<qz.i?(qz.first[i]?"ok":"no"):i===qz.i?"cur":""}"></i>`).join("");
+  const st=qz.state;
+  let h=`<div class="quiz"><div class="qhead"><span class="kind">${esc(q.kind)} · ${qz.i+1}/${qz.qs.length}</span><span class="dots">${dots}</span></div><p class="qtext">${esc(q.q)}</p>${q.quote?`<p class="quote">${esc(q.quote)}</p>`:""}<div class="opts ${q.t==="ox"?"ox":""}">`;
+  h+=q.o.map((o,i)=>{let c="opt"; if(st.wrong.includes(i))c+=" wrong"; if(st.solved&&i===q.a)c+=" right";
+    return `<button class="${c}" data-ans="${i}" data-mode="${mode}" ${st.solved||st.wrong.includes(i)?"disabled":""}>${esc(o)}</button>`;}).join("")+`</div>`;
+  if(st.solved){
+    const vs=q.vs; const ref=`${PLAN.abbr[vs.b-1]} ${vs.c}:${vs.v}`;
+    h+=`<div class="feedback good"><span><b>${st.wrong.length?"찾았습니다!":"정답입니다!"}</b> 본문 ${esc(ref)}</span><div class="row"><button class="btn ghost small" data-see="${vs.b}-${vs.c}-${vs.v}">본문에서 보기</button><button class="btn small" data-next="${mode}">${qz.i+1<qz.qs.length?"다음 문제":"결과 보기"}</button></div></div>`;
+  } else if(st.wrong.length){
+    const last=st.wrong[st.wrong.length-1];
+    const hint=(q.h&&q.h[last])||q.hint||"본문을 다시 떠올려 보세요.";
+    h+=`<div class="feedback hint"><span><b>다시 생각해 보세요.</b> ${esc(hint)}</span><div class="row"><button class="btn ghost small" data-see="${q.vs.b}-${q.vs.c}-0">본문 ${q.vs.b===19?q.vs.c+"편":q.vs.c+"장"} 다시 보기</button></div></div>`;
+  }
+  return h+`</div>`;
+}
+function startQuiz(mode){
+  const {w,d}=view;
+  if(mode==="day"){
+    const A=dayA(w,d);
+    const qs=makeQuiz(A,CTX,(Date.now()^Math.floor(Math.random()*1e9))>>>0,{curated:(CURATED[w+"-"+(d+1)]||[]).map(cq=>({...cq,vs:{b:cq.ref[0],c:cq.ref[1],v:cq.ref[2]}}))});
+    view.quiz={key:keyOf(w,d),qs,i:0,first:[],state:{wrong:[],solved:false}};
+  } else {
+    const qs=[]; const base=(Date.now()^Math.floor(Math.random()*1e9))>>>0;
+    for(let dd=0;dd<6;dd++){ const A=dayA(w,dd); const one=makeQuiz(A,CTX,base+dd*7919,{nOX:dd%2?0:1,nMC:dd%2?1:0}); if(one[0]) qs.push(one[0]); }
+    view.wquiz={key:String(w),qs,i:0,first:[],state:{wrong:[],solved:false}};
+  }
+}
+function answer(mode,i){
+  const qz=mode==="day"?view.quiz:view.wquiz; const q=qz.qs[qz.i];
+  if(qz.state.solved) return;
+  if(i===q.a){ qz.state.solved=true; if(qz.first[qz.i]===undefined) qz.first[qz.i]=true; }
+  else { qz.state.wrong.push(i); if(qz.first[qz.i]===undefined) qz.first[qz.i]=false; }
+}
+function nextQ(mode){
+  const qz=mode==="day"?view.quiz:view.wquiz;
+  qz.i++; qz.state={wrong:[],solved:false};
+  if(qz.i>=qz.qs.length){
+    const store=mode==="day"?mem.q:mem.wq; const s=qz.first.filter(Boolean).length, t=qz.qs.length;
+    const rec=store[qz.key]||{tries:0};
+    rec.tries=(rec.tries||0)+1; rec.last={s,t}; if(!rec.first) rec.first={s,t,at:new Date().toISOString().slice(0,10)};
+    if(!rec.best||s/t>rec.best.s/rec.best.t) rec.best={s,t};
+    store[qz.key]=rec; save();
+  }
+}
+
+/* 주일 돌아보기 */
+function weekTotals(w){
+  let s=0,t=0,n=0; for(let d=0;d<6;d++){const f=dayScore(w,d); if(f){s+=f.s;t+=f.t;n++;}} return {s,t,n};
+}
+function renderReview(){
+  const w=view.w, W=WEEKS[w-1]; const T=weekTotals(w);
+  let h=`<section class="sec"><span class="label">주일 · 한 주 돌아보기</span><h2>${w}주차 ${esc(W.t)}</h2></section>`;
+  h+=`<section class="sec"><span class="label">이번 주 퀴즈 성적</span><div class="tbl">`;
+  for(let d=0;d<6;d++){
+    const f=dayScore(w,d), p=dayPlan(w,d);
+    h+=`<button class="trow" data-jump="${w}-${d}"><span class="d">${d+1}일째</span><span class="r">${esc(p.label)}${f?`<div class="meter"><i style="width:${pct(f.s,f.t)}%"></i></div>`:""}</span><span class="s ${f?"":"none"}">${f?`${f.s}/${f.t}`:"아직"}</span></button>`;
+  }
+  const [g,msg]=T.t?grade(T.s,T.t):["아직 시작 전","이번 주 날마다 퀴즈를 풀면 여기에 점수가 모입니다."];
+  h+=`<div class="total"><span>${T.n}일 참여 · ${T.t?`정답률 ${pct(T.s,T.t)}%`:""}</span><span class="big">${T.s} / ${T.t}</span></div></div>
+  <div class="score"><span class="badge">${g}</span><p class="lead">${T.t?`${T.t}문제 가운데 ${T.s}문제를 처음 시도에 맞히셨어요. `:""}${msg}${T.n&&T.n<6?` 아직 ${6-T.n}일이 남아 있어요. 놓친 날도 지금 풀 수 있습니다.`:""}</p></div></section>`;
+  if(BIBLE) h+=`<section class="sec"><span class="label">주간 도전 문제</span>${renderQuiz(String(w),null,"week")}</section>`;
+  h+=`<section class="sec"><span class="label">이번 주 이야기 다시 보기</span><details class="flow" open><summary>이번 주 전체 흐름</summary><p>${esc(W.story)}</p><p style="color:var(--muted);font-size:14.5px">${esc(W.christ)}</p></details><div class="sumlist">`;
+  for(let d=0;d<6;d++) h+=`<details><summary>${d+1}일째 · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`;
+  return h+`</div></section>`;
+}
+
+/* 나의 기록 */
+function renderRecord(){
+  let days=0,s=0,t=0; for(const k in mem.q){const f=mem.q[k].first; if(f){days++;s+=f.s;t+=f.t;}}
+  // 연속 기록: 오늘(또는 어제)부터 거꾸로
+  let streak=0; {let w=here.w,d=here.d; if(d===6)d=5; if(!dayScore(w,d)){ if(d>0)d--; else if(w>1){w--;d=5;} }
+    while(w>=1&&dayScore(w,d)){streak++; if(d>0)d--; else {w--;d=5;}}}
+  let h=`<section class="sec"><span class="label">나의 기록</span><h2>45주 통독 여정</h2><div class="stats"><div class="stat"><b>${days}</b><span>퀴즈 푼 날 / 270</span></div><div class="stat"><b>${t?pct(s,t)+"%":"–"}</b><span>처음 시도 정답률</span></div><div class="stat"><b>${streak}</b><span>연속으로 푼 날</span></div></div></section>`;
+  h+=`<section class="sec"><span class="label">주차별 점수</span><div class="tbl">`;
+  let any=false;
+  for(let w=45;w>=1;w--){
+    const T=weekTotals(w); if(!T.n&&w!==here.w) continue; any=true;
+    h+=`<button class="trow" data-jump="${w}-6"><span class="d">${w}주차</span><span class="r">${esc(WEEKS[w-1].t)}${T.t?`<div class="meter"><i style="width:${pct(T.s,T.t)}%"></i></div>`:""}</span><span class="s ${T.t?"":"none"}">${T.t?`${T.s}/${T.t}`:"아직"}</span></button>`;
+  }
+  h+=`</div>${any?"":""}<p class="lead">주차를 누르면 그 주의 돌아보기 화면으로 갑니다.</p></section>`;
+  return h;
+}
+
+/* 사용법 */
+function renderGuide(){
+  return `<section class="sec guide"><span class="label">사용법</span><h2>하루 10분, 빠르게 읽고 확인하기</h2>
+  <ol><li><b>요약</b>으로 오늘 이야기의 흐름을 먼저 잡습니다. 오늘 많이 나오는 인물이 함께 표시됩니다.</li>
+  <li><b>어려운 말</b> 가운데 모르는 말을 눌러 쉬운 풀이를 봅니다. 본문 속 점선 밑줄도 누를 수 있습니다.</li>
+  <li><b>지도</b>에서 오늘 이야기가 펼쳐지는 곳을 확인합니다.</li>
+  <li><b>본문</b>을 펼쳐 읽습니다. 오디오 성경이나 종이 성경으로 읽어도 됩니다.</li>
+  <li><b>퀴즈</b>를 풉니다. 풀 때마다 본문에서 새 문제가 만들어집니다. 틀리면 정답 대신 어디를 다시 보면 좋을지 알려 드립니다.</li>
+  <li><b>주일</b>에는 한 주 점수를 보고 주간 도전 문제를 풉니다.</li></ol></section>
+  <section class="sec"><span class="label">설정</span><h2>통독 시작일</h2>
+  <p class="lead">1주차 1일째가 시작된 날입니다. 그날부터 엿새는 1–6일째, 일곱째 날은 주일 돌아보기로 계산합니다. 지금 설정: ${fmt(parseD(mem.start),{year:"numeric",month:"long",day:"numeric",weekday:"short"})}</p>
+  <div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>
+  <span class="label" style="margin-top:10px">기록 지우기</span>
+  <p class="lead">퀴즈 기록은 이 기기의 브라우저에만 저장됩니다.</p>
+  <div id="resetBox"><button class="btn ghost small" id="resetAsk">모든 기록 지우기</button></div></section>
+  <section class="sec"><span class="label">시험판 안내</span><p class="lead">33주차(마태복음 19장–마가복음 16장)에는 직접 만든 '생각해 보기' 문제가 함께 나옵니다. 다른 날은 본문에서 자동으로 문제를 만듭니다.</p></section>`;
+}
+
+/* 그리기 */
+function render(){
+  renderHead();
+  const m=document.getElementById("main");
+  m.innerHTML=view.tab==="read"?renderRead():view.tab==="record"?renderRecord():renderGuide();
+  bind();
+}
+function go(w,d){view.w=w;view.d=d;view.tab="read";view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});}
+function keepScroll(fn){const el=document.getElementById("quizSec")||document.querySelector(".quiz"); const top=el?el.getBoundingClientRect().top:null; fn(); render(); const el2=document.getElementById("quizSec")||document.querySelector(".quiz"); if(el2&&top!==null) window.scrollBy(0,el2.getBoundingClientRect().top-top);}
+function seeVerse(b,c,v){
+  view.open=true; render();
+  const el=v?document.getElementById(`v-${b}-${c}-${v}`):document.getElementById(`ch-${b}-${c}`);
+  if(el){ el.scrollIntoView({block:v?"center":"start"}); if(v){el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2600);} }
+}
+function bind(){
+  const m=document.getElementById("main");
+  m.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.jump.split("-").map(Number);go(w,d);});
+  m.querySelectorAll("[data-g]").forEach(el=>{el.onclick=()=>showGloss(el.dataset.g); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showGloss(el.dataset.g);}};});
+  m.querySelectorAll("[data-person]").forEach(b=>b.onclick=()=>{const A=dayA(view.w,view.d), p=A.people.get(b.dataset.person); const b0=A.verses[0].b;
+    sheet(p.name,`<p>오늘 본문에 ${p.n}번 나옵니다.</p><p class="src">나오는 곳: ${esc(refList(p.refs,b0))}${p.n>p.refs.length?" …":""}</p>`);});
+  m.querySelectorAll("[data-place]").forEach(g=>g.onclick=()=>{const A=dayA(view.w,view.d), p=A.places.get(g.dataset.place); const k=PLACE.get(p.name)[3]; const b0=A.verses[0].b;
+    const kn={c:"성읍",r:"지역",m:"산",w:"강·바다·호수"}[k];
+    sheet(p.name,`<p>${kn} · 오늘 본문에 ${p.n}번 나옵니다.</p><p class="src">나오는 곳: ${esc(refList(p.refs,b0))}${p.n>p.refs.length?" …":""}</p><p class="src">위치는 대략적인 것입니다.</p>`);});
+  m.querySelectorAll("[data-qstart]").forEach(b=>b.onclick=()=>keepScroll(()=>startQuiz(b.dataset.qstart)));
+  m.querySelectorAll("[data-ans]").forEach(b=>b.onclick=()=>keepScroll(()=>answer(b.dataset.mode,+b.dataset.ans)));
+  m.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>keepScroll(()=>nextQ(b.dataset.next)));
+  m.querySelectorAll("[data-see]").forEach(b=>b.onclick=()=>{const [bb,c,v]=b.dataset.see.split("-").map(Number); if(view.d===6){const dd=PLAN.plan[view.w-1].findIndex(p=>p.ch.some(([x,y])=>x===bb&&y===c)); go(view.w,Math.max(0,dd));} seeVerse(bb,c,v);});
+  m.querySelectorAll("[data-goweek]").forEach(b=>b.onclick=()=>go(view.w,6));
+  const ot=document.getElementById("openText"); if(ot) ot.onclick=()=>{view.open=true;render();document.getElementById("bible")?.scrollIntoView({block:"start"});};
+  const ct=document.getElementById("closeText"); if(ct) ct.onclick=()=>{view.open=false;render();};
+  const tq=document.getElementById("toQuiz"); if(tq) tq.onclick=()=>document.getElementById("quizSec").scrollIntoView({block:"start"});
+  const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
+  if(view.tab==="guide"){
+    document.getElementById("startSave").onclick=()=>{const v=document.getElementById("startIn").value; if(!v) return; mem.start=v; save(); Object.assign(here,posOfToday()); go(here.w,here.d);};
+    document.getElementById("resetAsk").onclick=()=>{
+      document.getElementById("resetBox").innerHTML=`<div class="confirm"><span>모든 퀴즈 기록을 지울까요? 되돌릴 수 없습니다.</span><div class="row"><button class="btn small" id="resetYes">지우기</button><button class="btn ghost small" id="resetNo">취소</button></div></div>`;
+      document.getElementById("resetYes").onclick=()=>{mem.q={};mem.wq={};save();render();};
+      document.getElementById("resetNo").onclick=()=>render();
+    };
+  }
+}
+function applySize(){document.documentElement.style.setProperty("--bible-size",(mem.size||17)+"px");}
+document.getElementById("prevW").onclick=()=>{if(view.w>1){view.w--;view.quiz=null;view.wquiz=null;view.open=false;render();}};
+document.getElementById("nextW").onclick=()=>{if(view.w<45){view.w++;view.quiz=null;view.wquiz=null;view.open=false;render();}};
+document.getElementById("todayBtn").onclick=()=>go(here.w,here.d);
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{view.tab=t.dataset.tab;render();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("sheetRoot").innerHTML="";});
+applySize(); render(); loadBible();
+})();
+</script>

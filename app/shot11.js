@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:400,height:850}});const errs=[];
+p.on('pageerror',e=>errs.push(e.message));p.on('console',m=>m.type()==='error'&&errs.push(m.text()));
+await p.route('**/leaflet.js',r=>r.fulfill({body:fs.readFileSync('npm/node_modules/leaflet/dist/leaflet.js','utf8'),contentType:'application/javascript'}));
+await p.route('**/firebasejs/**',r=>r.fulfill({body:'',contentType:'application/javascript'}));
+await p.goto('http://localhost:8765/');await p.waitForTimeout(3500);
+await p.screenshot({path:'site1.png'});
+console.log(await p.$eval('h2',e=>e.textContent), await p.evaluate(()=>!!window.SYNC&&SYNC.available), await p.$$eval('.leaflet-image-layer',e=>e.map(x=>x.src.slice(-20))));
+await p.click('[data-tab="record"]');await p.waitForTimeout(300);console.log('acct shown',!!(await p.$('.acct')));
+console.log(errs);await b.close();})();

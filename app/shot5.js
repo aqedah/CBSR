@@ -1,0 +1,12 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch();const html=fs.readFileSync('이야기통독노트.html','utf8');
+const p=await b.newPage({viewport:{width:400,height:900}});const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.route('**/leaflet.js',r=>r.fulfill({body:fs.readFileSync('npm/node_modules/leaflet/dist/leaflet.js','utf8'),contentType:'application/javascript'}));
+await p.setContent('<!doctype html><html><head><meta charset="utf-8"></head><body>'+html+'</body></html>');await p.waitForTimeout(3000);
+await p.click('[data-tab="qt"]');await p.click('.day:nth-child(4)');await p.waitForTimeout(300);
+const t1=await p.$eval('.tab[aria-selected="true"]',e=>e.textContent), h1=await p.$eval('main h2',e=>e.textContent);
+await p.click('#nextW');await p.click('#todayBtn');await p.waitForTimeout(300);
+const t2=await p.$eval('.tab[aria-selected="true"]',e=>e.textContent), h2=await p.$eval('main h2',e=>e.textContent);
+await p.click("[data-tab=\"record\"]");await p.click(".day:nth-child(5)");await p.waitForTimeout(500);
+const t3=await p.$eval('.tab[aria-selected="true"]',e=>e.textContent);
+console.log(t1,h1,'|',t2,h2,'|',t3,errs);await b.close();})();
