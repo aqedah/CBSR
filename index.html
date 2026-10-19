@@ -5762,7 +5762,7 @@ function voiceListHTML(){ if(!ttsOK()) return `<p class="lead">이 브라우저�
   return `<div class="voices" role="radiogroup">${V.map((v,i)=>`<div class="voice"><button class="plan" role="radio" aria-checked="${cur&&cur.voiceURI===v.voiceURI}" data-voice="${i}"><i class="dot"></i><b>${esc(voiceInfo(v,i).name)}</b><span class="lead">${esc(voiceInfo(v,i).desc)}</span></button><button class="btn ghost small" data-vtry="${i}">들어 보기</button></div>`).join("")}</div>${one}`; }
 function bindVoices(root){ const box=root.querySelector("#voiceList"); if(!box) return; const fill=()=>{ box.innerHTML=voiceListHTML(); const V=ttsVoices();
     box.querySelectorAll("[data-voice]").forEach(b=>b.onclick=()=>{ const v=V[+b.dataset.voice]; if(!v) return; try{ localStorage.setItem("cbsr-tts-voice",v.voiceURI||v.name); }catch(e){} box.querySelectorAll("[data-voice]").forEach(x=>x.setAttribute("aria-checked",x===b)); if(TTS.on&&!TTS.paused){ ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} ttsSpeak(); } });
-    box.querySelectorAll("[data-vtry]").forEach(b=>b.onclick=()=>{ const v=V[+b.dataset.vtry]; if(!v) return; if(TTS.on&&!TTS.paused) ttsPause(); try{ speechSynthesis.cancel(); }catch(e){} const u=new SpeechSynthesisUtterance("태초에 하나님이 천지를 창조하시니라. 땅이 혼돈하고 공허하며 흑암이 깊음 위에 있고"); u.lang="ko-KR"; u.voice=v; u.rate=TTS.rate; speechSynthesis.speak(u); }); };
+    box.querySelectorAll("[data-vtry]").forEach(b=>b.onclick=()=>{ const v=V[+b.dataset.vtry]; if(!v) return; if(TTS.on&&!TTS.paused) ttsPause(); try{ speechSynthesis.cancel(); }catch(e){} const u=new SpeechSynthesisUtterance(ttsClean((BIBLE&&BIBLE[0]&&BIBLE[0][0]&&BIBLE[0][0][0])||"태초에 하나님이 천지를 창조하시니라")); u.lang="ko-KR"; u.voice=v; u.rate=TTS.rate; speechSynthesis.speak(u); }); };
   fill(); try{ if(!ttsVoices().length) speechSynthesis.onvoiceschanged=()=>{ if(box.isConnected) fill(); }; }catch(e){} }
 function ttsPause(){ TTS.paused=true; ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} ttsBar(); }
 function ttsResume(){ TTS.paused=false; ttsSpeak(); }
@@ -6722,6 +6722,14 @@ function openMenu(){
   r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="사용법과 설정"><div class="drawer-head"><b>사용법 · 설정</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${renderGuide()}</aside></div>`;
   document.body.style.overflow="hidden";
   document.getElementById("drawerX").onclick=closeMenu;
+  /* 메뉴를 오른쪽으로 밀면 닫힙니다 */
+  { const dr=r.querySelector(".drawer"); let x0=0,y0=0,dx=0,mode=0,t0=0;
+    dr.addEventListener("touchstart",e=>{ const t=e.touches[0]; x0=t.clientX; y0=t.clientY; dx=0; mode=0; t0=Date.now(); dr.style.transition="none"; },{passive:true});
+    dr.addEventListener("touchmove",e=>{ const t=e.touches[0], ax=t.clientX-x0, ay=t.clientY-y0;
+      if(!mode){ if(Math.abs(ax)<10&&Math.abs(ay)<10) return; mode=Math.abs(ax)>Math.abs(ay)*1.2&&ax>0?1:2; }
+      if(mode!==1) return; dx=Math.max(0,ax); dr.style.transform=`translateX(${dx}px)`; e.preventDefault(); },{passive:false});
+    dr.addEventListener("touchend",()=>{ if(mode!==1) return; const fast=dx>40&&Date.now()-t0<250; dr.style.transition="transform .2s ease";
+      if(dx>dr.offsetWidth*0.3||fast){ dr.style.transform="translateX(100%)"; setTimeout(closeMenu,190); } else dr.style.transform=""; }); }
   document.getElementById("drawerBg").onclick=e=>{if(e.target.id==="drawerBg")closeMenu();};
   const ag=document.getElementById("adminGo"); if(ag) ag.onclick=()=>{ closeMenu(); view.tab="admin"; render(); window.scrollTo({top:0}); };
   const fo=document.getElementById("fbOpen"), fb=document.getElementById("fbBox");
