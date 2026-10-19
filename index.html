@@ -1131,6 +1131,10 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .sww{cursor:pointer;border-radius:3px}.sww:hover,.sww:active{background:var(--accent-soft)}
 .stv{cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 .sheetd{border:0;padding:0;margin:0}
+.tc.s::before{content:"";position:absolute;right:5px;top:50%;bottom:0;border-right:1.5px solid var(--muted);opacity:.85}.tc.s::after{content:"";position:absolute;right:5px;left:auto;width:12px;right:5px;top:50%;border-top:1.5px solid var(--muted);opacity:.85;transform:translateX(100%)}
+.stfold{display:block;width:100%;text-align:right;border:0;border-bottom:1px solid var(--line);background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(31,58,107,.05) 6px 12px);color:var(--accent);font:inherit;font-size:13px;padding:6px 10px}
+.stfb{display:block;margin-top:2px;border:0;background:none;color:var(--accent);font:inherit;font-size:10.5px;padding:0;text-decoration:underline}
+.stfoldall{margin:6px 0 8px}
 .tab-study .stl{padding:2px 4px 2px 8px;align-items:stretch}
 .tab-study .stl .heb{align-self:center;text-align:right;font-size:18px;line-height:1.55;padding:3px 4px 3px 0}
 .tab-study .stl .tree{margin:-2px 0}
@@ -7254,6 +7258,8 @@ function bindStudy(m){
   [["sDom","dom"],["sVs","vs"],["sVt","vt"]].forEach(([id,k])=>{ const el=document.getElementById(id); if(el) el.onchange=()=>{ S[k]=el.value; rr(); }; });
   m.querySelectorAll("[data-swi]").forEach(b=>b.onclick=()=>{ const wi=+b.dataset.swi; S.sel=S.sel===wi?-1:wi; const y=scrollY; render(); scrollTo({top:y}); });
   m.querySelectorAll("[data-sw]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); openWordSheet(+b.dataset.sw); });
+  m.querySelectorAll("[data-sfold]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const a=+b.dataset.sfold; S.fold ||= {}; S.fold[a]=b.dataset.open?false:true; const y=scrollY; render(); scrollTo({top:y}); });
+  m.querySelectorAll("[data-sfoldall]").forEach(b=>b.onclick=()=>{ S.foldAll=!!b.dataset.sfoldall; S.fold={}; const y=scrollY; render(); scrollTo({top:y}); });
   m.querySelectorAll("[data-svmode]").forEach(b=>b.onclick=()=>{ S.vMode=b.dataset.svmode; render(); });
   m.querySelectorAll("[data-sva]").forEach(b=>b.onclick=()=>{ S.vi=+b.dataset.sva; S.vMode="verse"; S.sel=-1; render(); scrollTo({top:0}); });
   const pv=document.getElementById("sPrev"), nx=document.getElementById("sNext"); const RVb=S.R?spanVerses([[S.R.b,S.R.c1,S.R.c2]]):[];
@@ -7299,22 +7305,34 @@ function structView(b,c){
   const vis=SD.ch.get(b+"-"+c)||[]; const atoms=[], seen=new Map();
   for(const vi of vis){ const [, , , , ,s,n]=SD.V[vi]; for(let j=s;j<s+n;j++){ const a=SD.wa[j]; if(!seen.has(a)){ seen.set(a,atoms.length); atoms.push({a,vi,w:[]}); } atoms[seen.get(a)].w.push(j); } }
   let h=`<p class="lead">${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}을 ETCBC가 나눈 '절 원자'(동사 하나를 중심으로 한 가장 작은 문장 단위) 한 줄씩 보여 줍니다. 들여쓰기는 ETCBC가 매긴 문장의 층(어느 문장에 기대어 있는가)이고, 색은 문장의 종류입니다. 낱말을 누르면 뜻과 문법이 나오고, 절 번호를 누르면 그 절을 자세히 봅니다.</p>
-   <div class="stlegend"><span class="k-main">이야기 줄기</span><span class="k-bg">배경·멈춤</span><span class="k-msyn">이야기 표지</span><span class="k-q">인물의 말</span></div><div class="stlines">`;
-  let lastVi=-1;
-  /* 선형 계층: 앞뒤 줄의 깊이(tab)로 ┤ ┘ │ 선을 그림 (오른쪽→왼쪽) */
-  const D=atoms.map(at=>SD.at[at.a]);
-  const hasNextSib=(i,d)=>{ for(let k=i+1;k<D.length;k++){ if(D[k]<d) return false; if(D[k]===d) return true; } return false; };
-  let carry=null; const open=[];
-  for(let ai=0;ai<atoms.length;ai++){ const at=atoms[ai]; const tab=D[ai], typ=SD.TY[SD.ay[at.a]], txt=SD.TXT[SD.ax[at.a]]||"";
+   <div class="stlegend"><span class="k-main">이야기 줄기</span><span class="k-bg">배경·멈춤</span><span class="k-msyn">이야기 표지</span><span class="k-q">인물의 말</span></div><div class="seg sseg stfoldall">${[["","말 모두 펼치기"],["1","말 모두 접기 (이야기 뼈대만)"]].map(([k2,n])=>`<button aria-checked="${(view.st.foldAll?"1":"")===k2}" data-sfoldall="${k2}">${n}</button>`).join("")}</div><div class="stlines">`;
+  let lastVi=-1; const S=view.st; S.fold ||= {};
+  /* 1) 줄마다 표지·종류 판정(전체 줄 기준) */
+  let carry=null;
+  const info=atoms.map((at,ai)=>{ const typ=SD.TY[SD.ay[at.a]], txt=SD.TXT[SD.ax[at.a]]||"";
     let mk=markerKind(at.w,atoms[ai+1]&&atoms[ai+1].w,typ);
     if(!mk&&carry&&(typ==="InfC"||lxk(at.w[0])==="KJ")) mk="↳ "+carry; carry=mk&&!mk.startsWith("↳")?mk:null;
-    const [k,lab]=atomKind(typ,txt,mk);
-    /* 열 c(1=맨 오른쪽)의 세로줄: 아래에 깊이 c인 줄이 다시 나오고, 그 사이에 c보다 얕은 줄이 없을 때 */
-    let cells=""; const dd=Math.min(tab,16);
-    for(let L=1;L<=dd;L++){ const cls=L===tab?(hasNextSib(ai,tab)?"b":"l"):(hasNextSib(ai,L)?"v":"e"); cells=`<i class="tc ${cls}"></i>`+cells; }
+    return {typ,txt,q:(txt.match(/Q/g)||[]).length,kl:atomKind(typ,txt,mk)}; });
+  /* 2) 말 묶음: 이 줄 다음에 이 줄보다 인용 층(Q)이 깊은 줄이 이어지면, 그 줄들이 이 줄이 이끄는 말 */
+  const blk=atoms.map((_,ai)=>{ let e=ai; while(e+1<atoms.length&&info[e+1].q>info[ai].q) e++; return e; });
+  const allFold=S.foldAll;
+  const visible=[]; for(let ai=0;ai<atoms.length;ai++){ visible.push(ai); const f=blk[ai]>ai&&(allFold?S.fold[atoms[ai].a]!==false:S.fold[atoms[ai].a]===true); if(f){ visible.push(-ai-1); ai=blk[ai]; } }
+  const rows=visible.filter(x=>x>=0);
+  /* 3) 보이는 줄 기준 계층선 */
+  const D=rows.map(ai=>SD.at[atoms[ai].a]);
+  const hasNextSib=(i,d)=>{ for(let k=i+1;k<D.length;k++){ if(D[k]<d) return false; if(D[k]===d) return true; } return false; };
+  let ri=-1;
+  for(const x of visible){
+    if(x<0){ const ai=-x-1, n=blk[ai]-ai; h+=`<button class="stfold" data-sfold="${atoms[ai].a}" data-open="1">⋯ 이 줄이 이끄는 말 ${n}줄 접힘 · 펼치기</button>`; continue; }
+    ri++; const ai=x, at=atoms[ai], tab=D[ri], {typ,kl:[k,lab]}=info[ai];
+    /* 열 c(1=맨 오른쪽): 아래에 깊이 c인 줄이 다시 나오고 그 사이에 c보다 얕은 줄이 없으면 세로줄. 바로 아래 줄이 더 깊으면 그 열에 시작선 */
+    const nd=ri+1<D.length?D[ri+1]:0, sc=nd>tab?Math.min(nd,16):0;
+    let cells=""; const dd=Math.max(Math.min(tab,16),sc);
+    for(let L=1;L<=dd;L++){ let cls; if(L<tab) cls=hasNextSib(ri,L)?"v":"e"; else if(L===tab) cls=hasNextSib(ri,tab)?"b":"l"; else cls=L===sc?"s":"e"; cells=`<i class="tc ${cls}"></i>`+cells; }
     const vnum=at.vi!==lastVi?`<b class="stv" data-sva="${at.vi}">${SD.V[at.vi][2]===0?"표제":SD.V[at.vi][2]}</b>`:""; lastVi=at.vi;
     const words=at.w.map(j=>{ const vj=SD.vOf[j], tx=sHeb(vj)[j-SD.V[vj][5]]; return `<span class="sww" data-sw="${j}">${esc(tx)}</span>`; }).join("");
-    h+=`<div class="stl k-${k}"><span class="heb">${words}</span><span class="tree">${cells}</span><span class="stmeta"><small>${esc(typ)}</small><i>${esc(lab)}</i></span><span class="stvn">${vnum}</span></div>`; }
+    const canFold=blk[ai]>ai, folded=visible.includes(-ai-1);
+    h+=`<div class="stl k-${k}"><span class="heb">${words}</span><span class="tree">${cells}</span><span class="stmeta"><small>${esc(typ)}</small><i>${esc(lab)}</i>${canFold&&!folded?`<button class="stfb" data-sfold="${at.a}" aria-label="말 접기">말 접기 ▴</button>`:""}</span><span class="stvn">${vnum}</span></div>`; }
   return h+`</div><p class="lead" style="margin-top:10px">이야기 줄기(와이크톨)가 사건을 앞으로 밀고 가고, 배경·멈춤 문장은 그 흐름을 잠시 멈추고 설명·이전 일·대조를 알립니다. 이야기 표지는 와예히(그리고 ~ 일이 있었다)·웨하야(앞으로 ~ 일이 있을 것이다)가 때(때 구, 베/케+부정사, 키)나 곳과 함께 새 장면을 여는 자리와, 홀로 선 '보라'·'이제'입니다. 와예히에 주어나 보어가 붙어 실제로 무엇이 생긴 경우(창 1:3 '빛이 있었고')는 이야기 줄기로 둡니다. 이 구분은 ETCBC(탈스트라)와 니카치의 히브리어 본문언어학에 따른 것으로, 문맥에 따라 달리 읽을 수 있는 참고 표시입니다.</p>`; }
 
 function wordDetail(wi){ const vi=SD.vOf[wi], s=SD.V[vi][5], j=wi-s, H=sHeb(vi), HN=sHan(vi), li=SD.wl[wi], x=SD.L[li];
