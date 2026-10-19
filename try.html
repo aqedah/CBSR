@@ -1086,7 +1086,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .tooldef2{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.6}.tooldef2 b,.eyeq .tooldef2 b{display:inline;color:var(--ink);margin-right:4px;font-size:inherit}
 .obsf{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 8px}.obsf button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 11px;font:inherit;font-size:13px}.obsf button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.obsdef{font-size:13px;margin:0 0 6px}.obsitem small .tool{font-style:normal;margin-left:3px;font-size:11px;padding:1px 6px}
 .trypick{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:8px}.trypick span{font-size:12px;font-weight:700}.trypick button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 10px;font:inherit;font-size:13px}.trypick button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.tline{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:8px 0 0;font-size:13px;color:var(--muted)}.tline .tool{margin:0}.tline small{flex-basis:100%;font-size:12px}
+.tline{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:14px 0 0;font-size:13px;color:var(--muted)}.tline .tool{margin:0}.tline small{flex-basis:100%;font-size:12px}
 .oneline.obs{margin-top:10px}
 .obsgrp{border-top:1px solid var(--line);padding:8px 0}.obshd{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.obshd small{color:var(--muted);font-size:12.5px}.obsitem{margin:6px 0 0 4px}.obsitem small{color:var(--muted);font-size:12px}.obsitem p{margin:2px 0 0;white-space:pre-wrap}
 .stage>span{white-space:nowrap}
@@ -1134,8 +1134,8 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .qmore{align-self:end;border:0;background:none;color:var(--accent);font:inherit;font-size:13px;padding:8px 2px}
 .qintro{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:8px 12px;margin:8px 0;font-size:14px;line-height:1.65}.qintro summary{font-weight:700;color:var(--accent)}.qintro p{margin:6px 0}
 .qsay{margin:12px 0 4px;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px dashed var(--line);font-size:14px;line-height:1.7}.qsay>b:first-child{display:block;font-size:12px;color:var(--muted)}
-.qadd{margin-top:4px}.qtxt{margin:10px 0}.qtxt pre,.qtext{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink)}
-.qtext{width:100%;box-sizing:border-box;white-space:pre}.qerr{color:#B0263F;font-weight:600}.qhelp{font-size:13px;line-height:1.6;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:8px 0}.qhelp p{margin:4px 0}.qhelp code,.lead code{font-family:ui-monospace,monospace;font-size:12.5px;background:var(--bg);padding:0 3px;border-radius:4px}
+.qadd{margin-top:4px}.qtxt{margin:10px 0}.qtxt pre,.qsrc{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink)}
+.qsrc{width:100%;box-sizing:border-box;white-space:pre}.qerr{color:#B0263F;font-weight:600}.qhelp{font-size:13px;line-height:1.6;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:8px 0}.qhelp p{margin:4px 0}.qhelp code,.lead code{font-family:ui-monospace,monospace;font-size:12.5px;background:var(--bg);padding:0 3px;border-radius:4px}
 .qlink{border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;font-weight:600;padding:2px 0 8px}
 .tools7{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 6px}.tools7 .tool{margin:0}
 .tools7 .tool.on{background:var(--accent);color:var(--accent-ink)}
@@ -7316,7 +7316,7 @@ function renderQuery(){ const S=view.st; S.qb ||= (()=>{ const r=qNew("clause");
   let h=`<section class="sec">${rangeBox()}<div class="seg sseg" style="margin-top:4px">${[["blocks","골라서 만들기"],["text","검색식 직접 쓰기"]].map(([k,n])=>`<button aria-checked="${S.qMode===k}" data-qmode="${k}">${n}</button>`).join("")}</div>`;
   if(S.qMode==="blocks"){ h+=`${qIntro()}${qBlockHTML(S.qb,"r","",0)}
      <details class="qtxt"><summary>만든 검색식 보기 (Text-Fabric)</summary><pre>${esc(text)}</pre><div class="row"><button class="btn ghost small" id="qCopy">알파알렙·SHEBANQ용으로 복사</button><button class="btn ghost small" id="qToText">직접 고치기</button></div></details>`; }
-  else h+=`<p class="lead">Text-Fabric 검색식을 씁니다. 두 칸씩 들여 써서 큰 단위 안에 작은 단위를 둡니다. 조건은 띄어쓰기 없이 <code>sp=verb</code>처럼 씁니다. 범위는 위에서 고른 것을 따릅니다.</p><textarea id="qText" class="qtext" rows="7" spellcheck="false" dir="ltr">${esc(S.qt||text)}</textarea><div class="row"><button class="btn ghost small" id="qToBlocks">상자로 옮기기</button><button class="btn ghost small" id="qHelp">쓸 수 있는 것</button></div>${S.qHelp?qHelpHTML():""}`;
+  else h+=`<p class="lead">Text-Fabric 검색식을 씁니다. 두 칸씩 들여 써서 큰 단위 안에 작은 단위를 둡니다. 조건은 띄어쓰기 없이 <code>sp=verb</code>처럼 씁니다. 범위는 위에서 고른 것을 따릅니다.</p><textarea id="qText" class="qsrc" rows="7" spellcheck="false" dir="ltr">${esc(S.qt||text)}</textarea><div class="row"><button class="btn ghost small" id="qToBlocks">상자로 옮기기</button><button class="btn ghost small" id="qHelp">쓸 수 있는 것</button></div>${S.qHelp?qHelpHTML():""}`;
   if(S.qMode==="blocks") h+=`<div class="qsay"><b>읽어 보면</b> ${qSayAll(S.qb)}</div>`;
   h+=`<div class="row"><button class="btn" id="qRun" style="width:100%">찾기</button></div></section>`;
   const R=S.qres; if(R){ h+=`<section class="sec">`; if(R.err) h+=`<p class="qerr">${esc(R.err)}</p>`; else { let wc=0; R.hits.forEach(s=>wc+=s.size);
