@@ -979,7 +979,11 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .sw.y{background:#FFD640}.sw.g{background:#6ED68C}.sw.p{background:#FF8CB4}.sw.b{background:#6EB4FF}
 .sw.ttsb{background:var(--card);color:var(--accent);display:flex;align-items:center;justify-content:center;padding:0}
 .sw.ttsb svg{width:17px;height:17px}
-@media (max-width:380px){.hlbar{gap:5px;padding:8px}.hlbar .sw{width:29px;height:29px}.hlbar .bmb{padding-left:9px;padding-right:9px}}
+.hlbar{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.hlbar::-webkit-scrollbar{display:none}
+.hlbar>*{flex:none}
+.hlbar .cl{white-space:nowrap}
+.sw.ttsb{font-size:13px;padding-left:2px}
 body.tts-on .hlbar{bottom:calc(132px + env(safe-area-inset-bottom,0px))}
 .sw.x{background:var(--paper);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
 .hlbar .cl{border:0;background:none;color:var(--muted);font-size:13px;padding:6px}
@@ -5408,7 +5412,7 @@ function syncHlBar(){
   if(!HSEL.size||view.tab!=="read"){ bar.hidden=true; bar.innerHTML=""; return; }
   const anyMk=[...HSEL].some(id=>HL[id]);
   const one=HSEL.size===1?[...HSEL][0]:null, isBm=one&&mem.bm&&mem.bm.v===one;
-  bar.innerHTML=`<span class="cnt">${HSEL.size}절 선택</span>${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${one&&ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d))?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">${ICON_SPK}</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기">✕</button>`:""}<button class="cl" data-mk="close">취소</button>`;
+  bar.innerHTML=`${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${one&&ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d))?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="bmb erase" data-mk="x" aria-label="형광펜 지우기">지우기</button>`:""}<button class="cl" data-mk="close">취소</button>`;
   bar.hidden=false;
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
     if(k==="tts"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); HSEL.clear(); syncHlBar(); ttsStart(id); const tb=document.getElementById("ttsBtn"); if(tb) tb.innerHTML=ICON_SPK+" 듣기 멈춤"; return; }
