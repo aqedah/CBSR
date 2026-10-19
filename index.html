@@ -1238,6 +1238,11 @@ button.bk{font-family:inherit;cursor:pointer}
 .bmb.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .v .bmk{display:inline-block;width:10px;height:15px;margin-right:3px;vertical-align:-2px;background:var(--bad);clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
 .bmjump{display:block;width:100%;margin:8px 0;border:1px dashed var(--bad);background:none;color:var(--bad);font:inherit;font-size:14px;font-weight:600;border-radius:10px;padding:9px;cursor:pointer}
+.qtstart{margin-top:14px}
+.qtstart-list{display:grid;gap:6px;margin-top:6px}
+.qtday{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;font:inherit;color:var(--ink);cursor:pointer}
+.qtday span{color:var(--muted);font-size:13px;min-width:2.5em}
+.qtday b{font-weight:600}
 .morebtn{margin-top:8px;border:0;background:none;color:var(--accent);font:inherit;font-size:13.5px;text-decoration:underline;padding:4px 0;cursor:pointer}
 .qsum{font-size:14.5px;line-height:1.6;margin:6px 0}
 .ckind{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:2px 9px;margin:4px 0 2px}
@@ -5749,15 +5754,20 @@ const QT_GOALS=[[1,"첫 QT를 마쳤습니다"],[3,"QT 3일 달성"],[7,"QT 7일
 function prevDay(w,d){ d--; if(d<0){ w--; if(w<1) return null; d=nd(w)-1; } return [w,d]; }
 function streakOf(ok,w,d){ let n=0, p=[w,d]; while(p&&ok(p[0],p[1])){ n++; p=prevDay(p[0],p[1]); } return n; }
 function qtStreak(w,d){ return streakOf((a,b)=>(mem.qt[keyOf(a,b)]||{}).done,w,d); }
+/* 실제 달력 날짜 기준: 하루에 여러 본문을 QT해도 하루로 셉니다 */
+function qtDateSet(){ const S=new Set(); let noDate=0; for(const q of Object.values(mem.qt)){ if(!q.done) continue; if(q.doneAt) S.add(q.doneAt); else noDate++; } return {S,noDate}; }
+function qtDayCount(){ const {S,noDate}=qtDateSet(); return S.size+noDate; }
+function qtCalStreak(){ const {S}=qtDateSet(); const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  const d=today0(); if(!S.has(iso(d))) d.setDate(d.getDate()-1); let n=0; while(S.has(iso(d))){ n++; d.setDate(d.getDate()-1); } return n; }
 function qtDoneCard(w,d,kv,q){
-  const key=keyOf(w,d), total=Object.values(mem.qt).filter(x=>x.done).length, streak=qtStreak(w,d);
+  const key=keyOf(w,d), total=Object.values(mem.qt).filter(x=>x.done).length, streak=qtCalStreak(), qdays=qtDayCount();
   let hs=0; for(const ch of key) hs=(hs*31+ch.charCodeAt(0))>>>0;
   const goal=QT_GOALS.find(g=>g[0]===total), next=QT_GOALS.find(g=>g[0]>total);
   const stamps=Array.from({length:nd(w)},(_,i)=>i).map(i=>{const on=(mem.qt[keyOf(w,i)]||{}).done; return `<span class="stamp${on?" on":""}${i===d?" me":""}" title="${i+1}일째">${on?"✓":i+1}</span>`;}).join("");
   return `<div class="qtdone${view.qtJust?" pop":""}" id="qtDoneCard"><div class="qtd-seal" aria-hidden="true">✓</div><div class="qtd-title">오늘 QT를 마쳤습니다</div>
   <p class="qtd-msg">${esc(QT_CHEER[hs%QT_CHEER.length])}</p>
   ${goal?`<span class="qtd-badge">★ ${esc(goal[1])}</span>`:""}
-  <div class="qtd-stats"><div><b>${streak}일</b><span>연속 QT</span></div><div><b>${total}일</b><span>지금까지 QT</span></div></div>
+  <div class="qtd-stats"><div><b>${streak}일</b><span>연속 QT</span></div><div><b>${qdays}일</b><span>QT 한 날${total>qdays?` · ${total}편`:""}</span></div></div>
   <div><div class="stamps">${stamps}</div><p class="lead" style="margin:6px 0 0">이번 주 QT 도장${next?` · 다음 목표 ${next[0]}일까지 ${next[0]-total}일`:""}</p></div>
   ${kv?`<div class="keyv"><small>오늘 마음에 새긴 말씀 · ${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small>${esc(kv.t)}</div>`:""}
   ${q.med?`<p class="mine"><b>내가 할 한 가지</b>${esc(q.med)}</p>`:""}
@@ -5868,7 +5878,9 @@ function renderQTWeek(list,title){
   for(const [ww,d] of L){ const q=mem.qt[keyOf(ww,d)]; const p=dayPlan(ww,d);
     const st=qtStoryText(q);
     if(q&&(st||q.med||q.pray)){ any=true; h+=`<div class="qcard"><span class="k">${esc(dayName(ww,d).replace(/^\d+주차 /,""))} · ${esc(p.label)}${q.done?" · 완료":""}</span>${st?`<p>${esc(st)}</p>`:""}${q.med?`<p><b>묵상</b> ${esc(q.med)}</p>`:""}${q.pray?`<p><b>기도</b> ${esc(q.pray)}</p>`:""}</div>`; } }
-  if(!any) h+=`<p class="lead">아직 적은 내용이 없습니다. 날짜를 눌러 그날의 QT로 가 보세요.</p>`;
+  if(!any) h+=`<p class="lead">아직 적은 내용이 없습니다.</p>`;
+  const todo=L.filter(([ww,d])=>!(mem.qt[keyOf(ww,d)]||{}).done);
+  if(todo.length) h+=`<div class="qtstart"><span class="label">이번 주 본문으로 QT 하기</span><div class="qtstart-list">${todo.map(([ww,d])=>`<button class="qtday" data-qtjump="${ww}-${d}"><span>${DAYN[dateOf(ww,d).getDay()]}</span><b>${esc(dayPlan(ww,d).label)}</b></button>`).join("")}</div></div>`;
   return h;
 }
 let qtT;
@@ -6158,7 +6170,7 @@ function renderReview(){
   h+=renderArcs(w);
   h+=`<section class="sec"><span class="label">이번 주 이야기 다시 보기</span><details class="flow" open><summary>이번 주 전체 흐름</summary><p>${esc(W.story)}</p><p style="color:var(--muted);font-size:14.5px">${esc(W.christ)}</p></details><div class="sumlist">`;
   for(let d=0;d<6;d++) h+=`<details><summary>${d+1}일째 · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`;
-  return h+`</div></section>`+nextPreview(weekOfDay(w,6)-1,"이번 주 미리 보기 · 내일부터");
+  return h+`</div></section>`+nextPreview(weekOfDay(w,6),"다음 주 미리 보기 · 내일부터");
 }
 
 /* 나의 기록 (프로필) */
@@ -6176,14 +6188,14 @@ function ringSVG(p){ /* 프로필 원(62px)과 같은 크기 */ const W=62,cx=31
 function renderRecord(){
   let qd=0,s=0,t=0,perfect=0; for(const k in mem.q){const f=mem.q[k].first; if(f){qd++;s+=f.s;t+=f.t; if(mem.q[k].best&&mem.q[k].best.s===mem.q[k].best.t) perfect++;}}
   const doneN=Object.keys(mem.done).length, qtN=Object.values(mem.qt).filter(x=>x.done).length, hlN=Object.keys(HL).length;
-  const rs=readStreak(), qs=(()=>{ let p=[here.w,isRev(here.d)?5:here.d]; const ok=(w,d)=>(mem.qt[keyOf(w,d)]||{}).done; if(!ok(p[0],p[1])) p=prevDay(p[0],p[1]); return p?streakOf(ok,p[0],p[1]):0; })();
+  const rs=readStreak(), qs=qtCalStreak(), qtDays=qtDayCount();
   const n=chDone(), pc=+pct1(n,TOTAL_CH), sch=chScheduled();
   const nick=PROF.nick||"";
   const since=`함께한 지 ${Math.max(1,Math.round((parseD(todayStr())-parseD(PROF.since||todayStr()))/864e5)+1)}일째`;
   let h=`<section class="sec"><div class="prof"><div class="prof-top"><div class="avwrap"><div class="avatar" aria-hidden="true">${PROF.photo?`<img src="${PROF.photo}" alt="">`:nick?esc([...nick][0]):`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>`}</div><button class="avcam" id="avCam" aria-label="프로필 사진 바꾸기"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button><input type="file" id="avFile" accept="image/*" hidden></div>
     <div class="prof-name" id="profName"><span class="lead">${esc(PI.name)} · ${since}</span>${view.editNick?`<div class="acctform"><input id="nickIn" maxlength="12" value="${esc(nick)}" placeholder="불릴 이름"><button class="btn small" id="nickSave">저장</button></div>`:`<b><span class="nk">${nick?esc(nick):"이름을 정해 주세요"}</span> <button class="edit" id="nickEdit">${nick?"바꾸기":"정하기"}</button>${window.SYNC&&SYNC.available&&SYNC.loginEnabled&&!view.editNick?`<button class="syncbtn${SYNC.loggedIn()?" on":""}" id="openAcct"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>${SYNC.loggedIn()?"연동 중":"기기 연동"}</button>`:""}</b>`}</div></div>
     <div class="ring">${ringSVG(pc)}<div class="rt"><span class="lead">성경 전체 진행률</span><b>${pct1(n,TOTAL_CH)}%</b><span class="lead">${TOTAL_CH.toLocaleString()}장 중 ${n.toLocaleString()}장 · 일정상 오늘까지 ${pct1(sch,TOTAL_CH)}%</span></div></div>
-    <div class="pstats"><div class="pstat"><b>${doneN}</b><span>통독한 날 / ${READ_DAYS}</span></div><div class="pstat"><b>${rs}일</b><span>연속 통독</span></div><div class="pstat"><b>${t?pct(s,t)+"%":"–"}</b><span>퀴즈 정답률</span></div><div class="pstat"><b>${qtN}</b><span>QT 한 날</span></div><div class="pstat"><b>${qs}일</b><span>연속 QT</span></div><div class="pstat"><b>${hlN}</b><span>형광펜 절</span></div></div></div></section>`;
+    <div class="pstats"><div class="pstat"><b>${doneN}</b><span>통독한 날 / ${READ_DAYS}</span></div><div class="pstat"><b>${rs}일</b><span>연속 통독</span></div><div class="pstat"><b>${t?pct(s,t)+"%":"–"}</b><span>퀴즈 정답률</span></div><div class="pstat"><b>${qtDays}</b><span>QT 한 날</span></div><div class="pstat"><b>${qs}일</b><span>연속 QT</span></div><div class="pstat"><b>${hlN}</b><span>형광펜 절</span></div></div></div></section>`;
   // 배지
   const B=[["📖","첫 통독",doneN>=1],["7","7일 연속 통독",rs>=7],["30","통독 30일",doneN>=30],["100","통독 100일",doneN>=100],
     ["✎","첫 QT",qtN>=1],["7","QT 7일 연속",qs>=7],["★","퀴즈 만점",perfect>=1],["✓","만점 10번",perfect>=10],
@@ -6526,6 +6538,7 @@ function bind(){
   const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
   m.querySelectorAll(".hbook [data-book]").forEach(x=>x.onclick=()=>showBook(+x.dataset.book));
   m.querySelectorAll("[data-qrep]").forEach(x=>x.onclick=()=>reportQuiz(x.dataset.qrep));
+  m.querySelectorAll(".qtday[data-qtjump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.qtjump.split("-").map(Number); view.pre=false; view.revW=null; view.w=w; view.d=d; view.tab="qt"; render(); scrollTo({top:0});});
   const aa=document.getElementById("amAll"); if(aa) aa.onclick=()=>{ view.amAll=!view.amAll; const y=scrollY; render(); scrollTo({top:y}); };
   const ba=document.getElementById("bdgAll"); if(ba) ba.onclick=()=>{ view.bdgAll=!view.bdgAll; const y=scrollY; render(); scrollTo({top:y}); };
   const ea=document.getElementById("entAll"); if(ea) ea.onclick=()=>{ view.entAll=!view.entAll; const y=scrollY; render(); scrollTo({top:y}); };
