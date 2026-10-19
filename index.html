@@ -5798,14 +5798,14 @@ function renderRead(){
   if(view.w===here.w&&view.d===here.d){ const M=missedDays(); if(M.length) h+=`<details class="missed"${view.missOpen?" open":""} id="missBox"><summary>지난 2주 가운데 읽지 않은 날 ${M.length}일</summary><div class="qtstart-list">${M.map(([a,b])=>dayBtn(a,b)).join("")}</div></details>`; }
   // 오늘 본문: 제목 → 분량·시간 → 본문 펼치기 → (접힌) 읽기 전 30초 도움
   h+=`<section class="sec" id="textSec"><span class="label">오늘 본문</span><h2>${esc(p.label)}</h2><p class="meta"><span class="pill">${p.ch.length}${b0===19?"편":"장"}</span><span class="pill">약 ${mins}분 분량</span>${done?`<span class="pill ok">✓ 통독 완료</span>`:""}</p><div class="rowtools">${ttsOK()?`<button class="minibtn" id="ttsBtn">${ICON_SPK} ${TTS.on&&TTS.key===key?"듣기 멈춤":"본문 듣기"}</button>`:""}<button class="minibtn" id="shareDay">${ICON_SHARE} 본문 보내기</button></div>`;
-  if(EYE[key]&&EYE[key].q) h+=`<p class="eyeq"><b>읽으며 살펴보기</b>${esc(EYE[key].q)}</p>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
+  const eyeQ=EYE[key]&&EYE[key].q?`<p class="eyeq"><b>읽으며 살펴보기</b>${esc(EYE[key].q)}</p>`:"";
   if(!view.open){
-    h+=`${helpBox}<button class="openbtn" id="openText">본문 펼치기</button>`;
+    h+=`${helpBox}${eyeQ}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else {
     const bmHere=mem.bm&&mem.bm.w===w&&mem.bm.d===d&&document?true:false;
-    h+=helpBox+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜·책갈피·그 절부터 듣기를 고를 수 있습니다. 듣는 중에는 절을 누르면 그 절부터 다시 읽습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
+    h+=helpBox+eyeQ+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜·책갈피·그 절부터 듣기를 고를 수 있습니다. 듣는 중에는 절을 누르면 그 절부터 다시 읽습니다. 점선 밑줄 친 말은 풀이가 나옵니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button><button class="iconbtn" data-close="1">접기</button></span></div>`;
     for(const [b,c] of p.ch){
       const s2=new Set();
       h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}${FLOW[b+"-"+c]?`<small class="chsub">${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`:""}</h3><div class="vtext">`+chapHTML(b,c,s2)+`</div></div>`;
