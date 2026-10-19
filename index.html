@@ -1151,7 +1151,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .stfb{display:block;margin-top:2px;border:0;background:none;color:var(--accent);font:inherit;font-size:10.5px;padding:0;text-decoration:underline}
 .stfoldall{margin:6px 0 8px}
 .tab-study .stl{padding:2px 4px 2px 8px;align-items:stretch}
-.tab-study .stl .heb{align-self:center;text-align:right;font-size:18px;line-height:1.55;padding:3px 4px 3px 0}
+.tab-study .stl .heb{align-self:center;text-align:right;font-size:calc(18px*var(--sfs,1));line-height:1.55;padding:3px 4px 3px 0}
 .tab-study .stl .tree{margin:-2px 0}
 .tab-study .tc{width:11px}.tab-study .tc.v::before,.tab-study .tc.b::before,.tab-study .tc.l::before{right:5px;border-right-width:1.5px;opacity:.85}.tab-study .tc.b::after,.tab-study .tc.l::after{right:5px;left:-3px}
 .tab-study .stmeta{align-self:center;text-align:left;border-left:1px solid var(--line);padding-left:6px;min-width:0}.tab-study .stmeta small{font-size:11px;color:var(--ink)}.tab-study .stmeta i{font-size:10px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1164,20 +1164,20 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.tab-study{--paper:#161B26;--card:#1D2432;--ink:#E6E2D8;--muted:#9AA1AD;--line:#323B4C;--accent:#9DB6E6;--accent-ink:#121722;--accent-soft:#25304A;--bg:#1D2432;background-color:#161B26;background-image:linear-gradient(rgba(157,182,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(157,182,230,.06) 1px,transparent 1px)}}
 .schrow{display:flex;align-items:center;gap:8px}.schrow .sch{flex:1;text-align:center;margin:0}.schrow .sch small{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:var(--muted);font-weight:500}
 .schrow .iconbtn[disabled]{opacity:.3}
-.seg.svm{display:grid;grid-template-columns:1fr 1fr;max-width:220px;margin:10px auto 12px}
+.svrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 12px}.seg.svm{display:grid;grid-template-columns:1fr 1fr;width:180px;margin:0}.sfz{display:flex;gap:4px}.sfz button{min-width:40px;height:36px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:4px;font-family:var(--f-text);font-weight:700}.sfz button.s{font-size:13px}.sfz button.l{font-size:18px}.sfz button[disabled]{opacity:.35}
 .snextch{margin-top:14px}
 .rdnote{font-size:12.5px;color:var(--muted);margin:0 0 8px;text-align:center}
 .rdv{border-top:1px solid var(--line)}
-.rdvs{padding:12px 4px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+.rdvs{padding:9px 4px;border-bottom:1px solid var(--line);cursor:pointer}
 .rdvs.on{background:var(--accent-soft)}
-.rdk{font-family:var(--f-text);font-size:var(--bible-size);line-height:1.75;margin:0 0 6px}
+.rdk{font-family:var(--f-text);font-size:calc(16px*var(--sfs,1));line-height:1.65;margin:0 0 4px}
 .rdk b,.rdh b{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:var(--muted);font-weight:500;margin:0 6px}
-.rdh{font-family:"Noto Serif Hebrew","SBL Hebrew",serif;font-size:21px;line-height:1.8;margin:0;text-align:right}
+.rdh{font-family:"Noto Serif Hebrew","SBL Hebrew",serif;font-size:calc(20px*var(--sfs,1));line-height:1.5;margin:0;text-align:right}
 .rstripw{border-bottom:2px solid var(--accent);background:var(--card);max-width:100%;min-width:0;overflow:hidden}
 .rdv,.rdvs{min-width:0;max-width:100%}
 .rstrip{width:100%;display:flex;gap:4px;overflow-x:auto;padding:8px 6px;background:var(--accent);scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .rsw{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:64px;padding:8px 10px;border:0;border-radius:10px;background:none;color:var(--accent-ink);scroll-snap-align:center;font:inherit}
-.rsw .heb{font-family:"Noto Serif Hebrew",serif;font-size:20px;line-height:1.4}
+.rsw .heb{font-family:"Noto Serif Hebrew",serif;font-size:calc(20px*var(--sfs,1));line-height:1.4}
 .rsw b{font-size:13.5px;font-weight:500;white-space:nowrap;max-width:9em;overflow:hidden;text-overflow:ellipsis}
 .rsw small{font-size:12.5px;opacity:.85}
 .rsw.on{background:rgba(0,0,0,.22)}
@@ -1190,7 +1190,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .rdh2 .heb{font-family:"Noto Serif Hebrew",serif;font-size:26px}
 .rdh2 .rdp{color:var(--accent);font-size:15px}.rdh2 .rdp i{font-style:normal;margin-left:2px}
 .rdh2 b{font-size:15px}
-.rdl{margin:8px 0 0}.rdl dt{font-size:12.5px;color:var(--muted);margin-top:10px}.rdl dd{margin:3px 0 0;line-height:1.65;font-size:15px}
+.rdl{margin:8px 0 0}.rdl dt{font-size:12.5px;color:var(--muted);margin-top:10px}.rdl dd{margin:3px 0 0;line-height:1.65;font-size:calc(15px*var(--sfs,1))}
 .rdl .heb{font-family:"Noto Serif Hebrew",serif;font-size:17px}
 .shl{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;font:inherit}
 .rbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
@@ -7315,7 +7315,7 @@ function renderStudy(){
   if(S.mode==="theory") return h+renderTheory();
   if(S.mode==="verse"){ const chs=[...SD.book[S.R.b].chs].filter(c=>c>=S.R.c1&&c<=S.R.c2).sort((x,y)=>x-y); const vc=chs.includes(S.vc)?S.vc:chs[0]; S.vc=vc; const k=chs.indexOf(vc), multi=chs.length>1, u=S.R.b===19?"편":"장", rd=rdMode();
     h+=`<section class="sec"><div class="schrow">${multi?`<button class="iconbtn" id="sVcP" aria-label="앞 장"${k<=0?" disabled":""}>‹</button>`:""}<h3 class="sch">${esc(PLAN.full[S.R.b-1])} ${vc}${u}${multi?` <small>${k+1} / ${chs.length}</small>`:""}</h3>${multi?`<button class="iconbtn" id="sVcN" aria-label="다음 장"${k>=chs.length-1?" disabled":""}>›</button>`:""}</div>
-      <div class="seg svm">${[["read","읽기"],["struct","구조"]].map(([x,n])=>`<button aria-checked="${rd===x}" data-svm="${x}">${n}</button>`).join("")}</div>
+      <div class="svrow"><div class="seg svm">${[["read","읽기"],["struct","구조"]].map(([x,n])=>`<button aria-checked="${rd===x}" data-svm="${x}">${n}</button>`).join("")}</div><div class="sfz"><button class="s" data-sfz="-1" aria-label="글씨 작게"${sFs()<=0.8?" disabled":""}>가−</button><button class="l" data-sfz="1" aria-label="글씨 크게"${sFs()>=1.5?" disabled":""}>가+</button></div></div>
       ${rd==="read"?readView(S.R.b,vc):structView(S.R.b,vc,true)}
       ${multi&&k<chs.length-1?`<button class="sbtn snextch" id="sVcN2">${chs[k+1]}${u} 이어서 보기 ›</button>`:""}</section>`; }
   else if(S.mode==="query") h+=renderQuery();
@@ -7374,6 +7374,7 @@ function bindStudy(m){
   const cp=document.getElementById("sCPrev"), cn=document.getElementById("sCNext"); if(cp) cp.onclick=()=>{ chStep(-1); render(); scrollTo({top:0}); }; if(cn) cn.onclick=()=>{ chStep(1); render(); scrollTo({top:0}); };
   const chsR=S.R?[...SD.book[S.R.b].chs].filter(c=>c>=S.R.c1&&c<=S.R.c2).sort((x,y)=>x-y):[]; const vcGo=d=>{ const k=chsR.indexOf(S.vc)+d; if(k<0||k>=chsR.length) return; S.vc=chsR[k]; S.rv=-1; render(); scrollTo({top:0}); };
   ["sVcP","sVcN","sVcN2"].forEach(id=>{ const el=document.getElementById(id); if(el) el.onclick=()=>vcGo(id==="sVcP"?-1:1); });
+  m.querySelectorAll("[data-sfz]").forEach(x=>x.onclick=()=>{ const v=Math.round(Math.min(1.5,Math.max(0.8,sFs()+(+x.dataset.sfz)*0.1))*10)/10; try{ localStorage.setItem("cbsr-study-fs",v); }catch(e){} applySfs(); const y=scrollY; render(); scrollTo({top:y}); });
   m.querySelectorAll("[data-svm]").forEach(b=>b.onclick=()=>{ S.rd=b.dataset.svm; try{ localStorage.setItem(RD_KEY,S.rd); }catch(e){} render(); });
   if(S.mode==="verse"&&rdMode()==="read") bindRead(m);
   const fa=document.getElementById("sFoldAll"); if(fa) fa.onclick=()=>{ S.foldAll=!S.foldAll; S.fold={}; render(); toast(S.foldAll?"인물의 말을 모두 접었습니다. 이야기 뼈대만 보입니다.":"인물의 말을 모두 펼쳤습니다."); };
@@ -7559,6 +7560,11 @@ function studyNotesSection(){ if(!STUDY_ON()) return ""; const L=studyNotes(); i
 function bindStudyNotes(){ document.querySelectorAll("[data-snj]").forEach(b=>b.onclick=()=>{ const [bb,c,v]=b.dataset.snj.split("-").map(Number); view.st.rd="read"; studyOpenVerse(bb,c,v); });
   document.querySelectorAll("[data-snd]").forEach(b=>b.onclick=()=>{ const t=+b.dataset.snd; saveStudyNotes(studyNotes().filter(n=>n.t!==t)); const y=scrollY; render(); scrollTo({top:y}); });
   const a=document.getElementById("snAll"); if(a) a.onclick=()=>{ view.snAll=!view.snAll; const y=scrollY; render(); scrollTo({top:y}); }; }
+
+/* 성경연구 글씨 크기 (0.8~1.5배, 이 기기에 저장) */
+function sFs(){ try{ const v=+localStorage.getItem("cbsr-study-fs"); return v>=0.8&&v<=1.5?v:1; }catch(e){ return 1; } }
+function applySfs(){ document.documentElement.style.setProperty("--sfs",sFs()); }
+applySfs();
 
 /* ===== 성경연구 · 검색식 (Text-Fabric 검색식의 핵심 부분을 앱 안에서 실행) ===== */
 const QT_ORDER=["book","chapter","verse","sentence","clause","phrase","word"];
