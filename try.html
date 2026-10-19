@@ -1084,6 +1084,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .tline{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:8px 0 0;font-size:13px;color:var(--muted)}.tline .tool{margin:0}.tline small{flex-basis:100%;font-size:12px}
 .oneline.obs{margin-top:10px}
 .obsgrp{border-top:1px solid var(--line);padding:8px 0}.obshd{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.obshd small{color:var(--muted);font-size:12.5px}.obsitem{margin:6px 0 0 4px}.obsitem small{color:var(--muted);font-size:12px}.obsitem p{margin:2px 0 0;white-space:pre-wrap}
+.stage>span{white-space:nowrap}
 .tools7{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 6px}.tools7 .tool{margin:0}
 .tools7 .tool.on{background:var(--accent);color:var(--accent-ink)}
 .tools7 .tool.off{background:none;border:1px solid var(--line);color:var(--muted);font-weight:500}
@@ -5652,7 +5653,7 @@ function progressMini(){
 
 /* ===== 초보자 안내 ===== */
 const trName=n=>(typeof TRMAP!=="undefined"&&TRMAP&&TRMAP.n[n])||n;
-const CK_L={"인용":"신약의 직접 인용","약속":"약속과 성취","주제":"반복되는 주제","모형":"모형과 성취","흐름":"성경 전체의 흐름","신약":"신약 본문"};
+const CK_L={"인용":"신약의 직접 인용","약속":"약속과 성취","주제":"반복되는 주제","모형":"모형과 성취","흐름":"성경 전체의 흐름","신약":"구약과 이어 읽기"};
 const MC_L={A:"본문이 직접 설명합니다",B:"보통 이렇게 풀이합니다",C:"정확한 뜻은 분명하지 않습니다"};
 function christKey(w,d){ const det=DETAIL[w+"-"+(d+1)]; if(MODE==="rj") return det&&det.christ?"rjd:"+w+"-"+d:"rjw:"+w; return "y:"+w+"-"+d; }
 const GENEAL=new Set(["1-5","1-10","1-11","1-25","1-36","1-46","4-1","4-26","13-1","13-2","13-3","13-4","13-5","13-6","13-7","13-8","13-9","15-2","15-8","16-7","16-11","16-12","40-1","42-3"]);
@@ -5859,7 +5860,7 @@ function renderRead(){
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
   const TXd=dayTools(w,d), tl=TXd?TXd.q:[];
-  const eyeQ=TRY&&EYE[key]&&EYE[key].q?`<div class="eyeq"><b>읽으며 살펴보기</b><p>${esc(EYE[key].q)}</p>${tl.length?tryTools(tl):""}</div>`:EYE[key]&&EYE[key].q?`<div class="eyeq"><b>읽으며 살펴보기</b>${tl.length?`<div class="tchips">${tl.map(t=>toolChip(t)).join("")}</div>`:""}<p>${esc(EYE[key].q)}</p>${tl.length?toolDefsHTML(tl,MODE+key):""}</div>`:"";
+  const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq"><b>읽으며 살펴보기</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:"";
   if(!view.open){
     h+=`${helpBox}${eyeQ}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else {
@@ -6035,10 +6036,10 @@ function qtVerses(A,traits,key){
   A.verses.filter(v=>DIVINE.test(v.t)&&v.t.length>=25&&v.t.length<=110).slice(0,40).forEach(v=>list.push(v));
   return [...new Set(list)];
 }
-const qtStoryText=q=>q?[q.gap,q.l0,q.l1,q.l2,q.story].filter(Boolean).join(" / "):"";
+const qtStoryText=q=>q?[q.obs,q.gap,q.l0,q.l1,q.l2,q.story].filter(Boolean).join(" / "):"";
 
 /* ── 일곱 관찰 도구: 이름표와 한 줄 풀이 ── */
-const TOOLS=TRY?{"장면":"언제, 어디서, 누가 있고, 장면은 어디서 바뀌는가","인물":"누가 무엇을 원하고 하는가, 하나님은 무엇을 하시는가","화자":"누구의 말인가, 앞뒤 이야기는 그 말을 믿을 만하게 보여 주는가","전환":"이야기는 어디서 꺾이고, 무엇이 달라지는가","반복":"무엇이 되풀이되고, 그때 무엇이 달라지는가","공백":"본문이 알려 주는 것과 말하지 않는 것은 무엇인가","아이러니":"독자는 알고 인물은 모르는 것은 무엇인가"}:{"장면":"언제, 어디서, 누가 모였는가","인물":"누가 무엇을 원하고, 하나님은 무엇을 하시는가","화자":"누가 하는 말인가, 그 말은 믿을 만한가","전환":"이야기는 어디서 꺾이는가","반복":"되풀이되는 말과 장면은 무엇인가","공백":"본문이 말하지 않은 것은 무엇인가","아이러니":"독자는 알고 인물은 모르는 것은 무엇인가"};
+const TOOLS={"장면":"언제, 어디서, 누가 있고, 장면은 어디서 바뀌는가","인물":"누가 무엇을 원하고 하는가, 하나님은 무엇을 하시는가","화자":"누구의 말인가, 앞뒤 이야기는 그 말을 믿을 만하게 보여 주는가","전환":"이야기는 어디서 꺾이고, 무엇이 달라지는가","반복":"무엇이 되풀이되고, 그때 무엇이 달라지는가","공백":"본문이 알려 주는 것과 말하지 않는 것은 무엇인가","아이러니":"독자는 알고 인물은 모르는 것은 무엇인가"};
 const TOOL_ORDER=Object.keys(TOOLS);
 const CLUE_TOOL={turn:"전환",pair:"반복",scene:"반복",irony:"아이러니",aside:"화자"};
 const LENS_TOOL={"무대":"장면","줄거리":"전환","글쓴이의 손길":"반복","인물":"인물","편지 뒤의 이야기":"장면","구분":"반복"};
@@ -6049,7 +6050,10 @@ function toolDefsHTML(list,key){ let seen={}; try{ seen=JSON.parse(localStorage.
   const show=list.filter(t=>{ const L=seen[t]||[]; if(L.includes(key)) return true; if(L.length>=3) return false; L.push(key); seen[t]=L; return true; });
   try{ localStorage.setItem("cbsr-tool-seen",JSON.stringify(seen)); }catch(e){}
   return show.length?`<p class="tooldef">${show.map(t=>`<b>${t}</b> ${esc(TOOLS[t])}`).join(" · ")}</p>`:""; }
-function tryTools(L){ return `<p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}<small>이름을 누르면 무엇을 살피는 도구인지 나옵니다.</small></p>`; }
+/* 질문 아래 '오늘의 읽기 도구'. 누르는 법 안내는 처음 세 날만 */
+function toolLine(L,key){ let seen=[]; try{ seen=JSON.parse(localStorage.getItem("cbsr-tool-hint")||"[]")||[]; }catch(e){}
+  let hint=seen.includes(key); if(!hint&&seen.length<3){ seen.push(key); hint=true; try{ localStorage.setItem("cbsr-tool-hint",JSON.stringify(seen)); }catch(e){} }
+  return `<p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}${hint?`<small>이름을 누르면 무엇을 살피는 도구인지 나옵니다.</small>`:""}</p>`; }
 function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(b.dataset.tool+": "+TOOLS[b.dataset.tool]); }); }
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
 function eyeFor(w,d,L){
@@ -6117,8 +6121,8 @@ function renderQT(){
   const ST=sceneTraits(w,d,A,godTraits(A)), traits=ST.list, R=ST.R;
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
   let h=`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2></section>`;
-  // 1 오늘의 읽는 눈
-  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div>${TRY?"":eye.tools&&eye.tools.length?`<div class="tools7">${TOOL_ORDER.map(t=>`<button class="tool${eye.tools.includes(t)?" on":" off"}" data-tool="${t}">${t}</button>`).join("")}</div>`:""}<span class="label">오늘의 읽는 눈</span><div class="eye"><p>${esc(eye.q)}</p>${R?`<p class="scope">이 질문의 본문 · ${esc(sceneLabel(R))}</p>`:""}${eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${TRY?`${eye.tools&&eye.tools.length?tryTools(eye.tools):""}<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`:""}</section>`;
+  // 1 본문 관찰
+  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${R?`<p class="scope">이 질문의 본문 · ${esc(sceneLabel(R))}</p>`:""}${eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div></section>`;
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
@@ -6136,7 +6140,7 @@ function renderQT(){
   else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=`</section>`;
   // 3 그리스도께로
-  h+=`<section class="sec"><div class="stage"><b>3</b><span>그리스도에게로</span><small>성경 전체에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div></section>`;
+  h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div></section>`;
   // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
   const vs=qtCands(A,traits,R,w+"-"+(d+1));
   const kv=qtKV(q,A,vs,w+"-"+(d+1));
@@ -6313,7 +6317,7 @@ function mergeMem(a,b){
   /* QT: 칸마다 나중에 고친 쪽을 따릅니다. 고친 시각이 없는 옛 기록은 긴 글·완료 쪽을 남깁니다 */
   o.qt=o.qt||{}; for(const k in (b.qt||{})){ const x=o.qt[k]||{}, y=b.qt[k]||{}; const r={...y,...x}; const fx=x.ft||{}, fy=y.ft||{}; r.ft=Object.assign({},fy,fx);
     const newer=f=>{ const tx=fx[f]||0, ty=fy[f]||0; if(!tx&&!ty) return null; if(tx!==ty) r.ft[f]=Math.max(tx,ty); return ty>tx?y:x; };
-    for(const t of ["story","med","pray","gap","l0","l1","l2"]){ const W=newer(t); r[t]=W?(W[t]||""):(((x[t]||"").length>=(y[t]||"").length?x[t]:y[t])||""); }
+    for(const t of ["story","obs","med","pray","gap","l0","l1","l2"]){ const W=newer(t); r[t]=W?(W[t]||""):(((x[t]||"").length>=(y[t]||"").length?x[t]:y[t])||""); }
     for(const t of ["kv","pv","amen"]){ const W=newer(t); if(W){ if(W[t]===undefined) delete r[t]; else r[t]=W[t]; } }
     { const W=newer("done"); r.done=W?!!W.done:!!(x.done||y.done); }
     /* 완료한 날짜는 가장 이른 날을 남깁니다(다시 불러와도 날이 늘지 않음) */
@@ -6519,8 +6523,8 @@ function bookProgress(){ const tot={},got={}; PLAN.plan.flat().forEach(p=>p.ch.f
   for(const k in mem.done){ const [w,d]=k.split("-").map(Number); const p=PLAN.plan[w-1]&&PLAN.plan[w-1][d]; if(p) p.ch.forEach(([b])=>{got[b]=(got[b]||0)+1;}); }
   return {tot,got}; }
 function ringSVG(p){ /* 프로필 원(62px)과 같은 크기 */ const W=62,cx=31,r=27,sw=7,c=2*Math.PI*r; return `<svg width="${W}" height="${W}" viewBox="0 0 ${W} ${W}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--line)" stroke-width="${sw}"/>${p>0?`<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--accent)" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(c*p/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${cx} ${cx})"/>`:""}</svg>`; }
-/* 시험 페이지: 관찰 기록 = 내가 직접 적은 관찰을 도구별로 모음 */
-function tryObsRecord(){
+/* 관찰 기록: 내가 직접 적은 관찰(본문 관찰 칸 + 더 깊이)을 읽기 도구별로 모음. 숫자·막대 없음 */
+function obsRecord(){
   const G={};
   for(const k in mem.qt){ const q=mem.qt[k]; if(!q) continue; const [w,d]=k.split("-").map(Number); if(!(PLAN.plan[w-1]&&PLAN.plan[w-1][d])) continue;
     const lab=esc(dayPlan(w,d).label), X=TOOLX[MODE+":"+k]||{q:[]};
@@ -6555,12 +6559,9 @@ function renderRecord(){
     ["✎","첫 QT",qtN>=1],["7","QT 7일 연속",qs>=7],["★","퀴즈 만점",perfect>=1],["✓","만점 10번",perfect>=10],
     ["◐","성경 25%",pc>=25],["◑","성경 50%",pc>=50],["●","성경 100%",pc>=100],["🖍","형광펜 10절",hlN>=10]];
   const got=B.filter(b=>b[2]).length;
-  /* 관찰 기록: 도구마다 그 도구로 QT를 마친 날(그날 질문의 도구 + 더 깊이에 글을 남긴 도구) */
-  if(TRY) h+=tryObsRecord()+tryFeedback(); else { const C={}; for(const k in mem.qt){ const q=mem.qt[k]; if(!q||!q.done) continue; const S=new Set(); const X=typeof TOOLX!=="undefined"&&TOOLX[MODE+":"+k]; if(X) (X.q||[]).forEach(t=>S.add(t));
-      if(q.gap) S.add("공백"); const [w,d]=k.split("-").map(Number); if(PLAN.plan[w-1]&&PLAN.plan[w-1][d]){ try{ lensesFor(w,d).forEach((l,i)=>{ if(q["l"+i]&&LENS_TOOL[l.k]) S.add(LENS_TOOL[l.k]); }); }catch(e){} }
-      S.forEach(t=>C[t]=(C[t]||0)+1); }
-    const mx=Math.max(1,...Object.values(C));
-    h+=`<section class="sec"><span class="label">관찰 기록</span><p class="lead" style="margin:0">도구마다 그 도구로 QT를 마친 날입니다.</p><div class="amlist">${TOOL_ORDER.map(t=>`<div class="amrow"><button class="n tool-n" data-tool="${t}">${t}</button><span class="bar"><i style="width:${C[t]?Math.max(6,C[t]/mx*100):0}%"></i></span><b>${C[t]||0}</b></div>`).join("")}</div></section>`; }
+  /* 관찰 기록 */
+  h+=obsRecord()+(TRY?tryFeedback():"");
+
   { const AM={}; let tot=0; for(const k in mem.qt){ for(const n in (mem.qt[k].amen||{})){ AM[n]=(AM[n]||0)+1; tot++; } }
     const L=Object.entries(AM).sort((a,b)=>b[1]-a[1]); const mx=L.length?L[0][1]:1; const show=view.amAll?L:L.slice(0,5);
     h+=`<section class="sec"><span class="label">아멘한 하나님의 성품${tot?` · ${tot}번`:""}</span>${L.length?`<div class="amlist">${show.map(([n,c])=>`<div class="amrow"><span class="n">${esc(n)}</span><span class="bar"><i style="width:${Math.max(8,c/mx*100)}%"></i></span><b>${c}</b></div>`).join("")}</div>${L.length>5?`<button class="morebtn" id="amAll">${view.amAll?"접기 ▴":`${L.length-5}개 더 보기 ▾`}</button>`:""}`:`<p class="lead">QT의 '하나님은 어떤 분인가'에서 아멘을 누르면 여기에 모입니다.</p>`}</section>`; }
@@ -6738,6 +6739,7 @@ async function loadAdmin(){
 
 /* 새 소식(큰 변경만) */
 const NEWS_ALL=[
+ ["2026-10-19","QT 본문 관찰에 '내가 본문에서 본 것'을 적는 칸이 생겼어요. 적은 관찰은 나의 기록 → 관찰 기록에 도구별로 모여요"],
  ["2026-10-18","책갈피: 본문에서 절을 누르고 '책갈피'를 누르면 다음에 그 자리부터 이어 읽어요"],
  ["2026-10-19","본문 듣기 목소리를 고를 수 있어요 (☰ 메뉴 → 본문 듣기 목소리)"],
  ["2026-10-19","본문 듣기: 오늘 본문을 소리로 들을 수 있어요 (본문 제목 옆 스피커 단추)"],
