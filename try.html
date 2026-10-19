@@ -1086,6 +1086,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .tooldef2{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.6}.tooldef2 b,.eyeq .tooldef2 b{display:inline;color:var(--ink);margin-right:4px;font-size:inherit}
 .obsf{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 8px}.obsf button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 11px;font:inherit;font-size:13px}.obsf button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.obsdef{font-size:13px;margin:0 0 6px}.obsitem small .tool{font-style:normal;margin-left:3px;font-size:11px;padding:1px 6px}
 .trypick{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:8px}.trypick span{font-size:12px;font-weight:700}.trypick button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 10px;font:inherit;font-size:13px}.trypick button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.toolbox{margin-top:14px;padding:9px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}.toolbox .tline{margin:0}.toolbox .tline>span{font-size:12px;font-weight:700;color:var(--muted);margin-right:2px}.toolbox .tooldef2{margin:6px 0 0}
 .tline{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:14px 0 0;font-size:13px;color:var(--muted)}.tline .tool{margin:0}.tline small{flex-basis:100%;font-size:12px}
 .oneline.obs{margin-top:10px}
 .obsgrp{border-top:1px solid var(--line);padding:8px 0}.obshd{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.obshd small{color:var(--muted);font-size:12.5px}.obsitem{margin:6px 0 0 4px}.obsitem small{color:var(--muted);font-size:12px}.obsitem p{margin:2px 0 0;white-space:pre-wrap}
@@ -6116,7 +6117,7 @@ function toolLine(L,key){ let seen={}; try{ seen=JSON.parse(localStorage.getItem
   /* 도구마다 처음 세 날(날짜 수)은 풀이를 함께 보여 줍니다 */
   const show=L.filter(tl=>{ const D=seen[tl]||[]; if(D.includes(key)) return D.indexOf(key)<3; if(D.length>=3) return false; D.push(key); seen[tl]=D; return true; });
   try{ localStorage.setItem("cbsr-tool-days",JSON.stringify(seen)); }catch(e){}
-  return `<p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tl}</b> ${esc(TOOLS[tl])}`).join("<br>")}</p>`:""}`; }
+  return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tl}</b> ${esc(TOOLS[tl])}`).join("<br>")}</p>`:""}</div>`; }
 function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(b.dataset.tool+": "+TOOLS[b.dataset.tool]); }); }
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
 function eyeFor(w,d,L){
