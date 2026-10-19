@@ -5400,7 +5400,9 @@ const refList=(refs,b0)=>refs.map(([b,c,v])=>(b!==b0?PLAN.abbr[b-1]+" ":"")+`${c
 const HLKEY="cbsr-hl";
 let HL={}; try{HL=JSON.parse(localStorage.getItem(HLKEY)||"{}")||{};}catch(e){}
 const HSEL=new Set();
-const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL));}catch(e){} if(typeof syncSoon==="function") syncSoon();};
+/* 지운 형광펜도 지운 시각을 남겨, 기기 연동 때 다른 기기의 옛 기록이 되살리지 않게 합니다 */
+let HLDEL={}; try{HLDEL=JSON.parse(localStorage.getItem("cbsr-hl-del")||"{}")||{};}catch(e){}
+const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem("cbsr-hl-del",JSON.stringify(HLDEL));}catch(e){} if(typeof syncSoon==="function") syncSoon();};
 const HLC={y:"노랑",g:"초록",p:"분홍",b:"파랑"};
 function toggleSel(id){
   /* 듣는 중에 절을 누르면 그 절부터 다시 읽습니다 */
@@ -5417,7 +5419,7 @@ function syncHlBar(){
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
     if(k==="tts"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); HSEL.clear(); syncHlBar(); ttsStart(id); const tb=document.getElementById("ttsBtn"); if(tb) tb.innerHTML=ICON_SPK+" 듣기 멈춤"; return; }
     if(k==="bm"){ const id=[...HSEL][0]; if(mem.bm&&mem.bm.v===id) delete mem.bm; else mem.bm={v:id,w:view.w,d:view.d,at:Date.now()}; save(); HSEL.clear(); const y=scrollY; render(); scrollTo({top:y}); syncHlBar(); return; }
-    if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x") delete HL[id]; else HL[id]=[k,t]; const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]?" mk-"+HL[id][0]:""); } } saveHL(); }
+    if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x"){ delete HL[id]; HLDEL[id]=t; } else { HL[id]=[k,t]; delete HLDEL[id]; } const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]?" mk-"+HL[id][0]:""); } } saveHL(); }
     else for(const id of HSEL){ document.getElementById("v-"+id)?.classList.remove("sel"); }
     HSEL.clear(); syncHlBar(); });
 }
@@ -6907,19 +6909,24 @@ applySize(); render(); loadBible(); renderNews();
 /* ===== 여러 기기 기록 잇기: 이름+숫자 4자리 열쇠 하나에 두 통독표·형광펜·프로필을 함께 저장 ===== */
 const LKEYS={rj:"rjnote:v2",y365:"rjnote:y365"};
 function localBundle(){ const g=k=>{ try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; } };
-  return {v:2,rj:MODE==="rj"?mem:g(LKEYS.rj),y365:MODE==="y365"?mem:g(LKEYS.y365),hl:HL,prof:PROF}; }
+  return {v:2,rj:MODE==="rj"?mem:g(LKEYS.rj),y365:MODE==="y365"?mem:g(LKEYS.y365),hl:HL,hld:HLDEL,prof:PROF}; }
 function mergeBundle(L,R){ if(!R||!Object.keys(R).length) return L; if(!R.v) R={v:2,rj:R};
   const o={v:2};
   for(const k of ["rj","y365"]) o[k]=L[k]&&R[k]?mergeMem(L[k],R[k]):(L[k]||R[k]||null);
-  o.hl=Object.assign({},R.hl||{},L.hl||{});
+  /* 형광펜: 절마다 칠한 시각과 지운 시각 가운데 나중 것을 따릅니다 */
+  { const a=L.hl||{}, b=R.hl||{}, da=L.hld||{}, db=R.hld||{}; o.hl={}; o.hld={};
+    for(const id of new Set([...Object.keys(a),...Object.keys(b),...Object.keys(da),...Object.keys(db)])){
+      const x=a[id], y=b[id], tx=x?(x[1]||0):-1, ty=y?(y[1]||0):-1, td=Math.max(da[id]||0,db[id]||0);
+      const best=tx>=ty?x:y, tb=Math.max(tx,ty);
+      if(td&&td>=tb) o.hld[id]=td; else if(best) o.hl[id]=best; } }
   const a=L.prof||{}, b=R.prof||{}; o.prof=Object.assign({},b,a); if(!a.photo&&b.photo) o.prof.photo=b.photo; if(!a.nick&&b.nick) o.prof.nick=b.nick;
   if(a.since&&b.since) o.prof.since=a.since<b.since?a.since:b.since;
   return o; }
 function applyBundle(B){ const before=JSON.stringify([mem,HL,PROF]);
   for(const k of ["rj","y365"]) if(B[k]){ try{ localStorage.setItem(LKEYS[k],JSON.stringify(B[k])); }catch(e){} }
   if(B[MODE]) mem=Object.assign(mem,B[MODE]);
-  HL=B.hl||HL; PROF=B.prof||PROF;
-  try{ localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem(PROFKEY,JSON.stringify(PROF)); }catch(e){}
+  HL=B.hl||HL; HLDEL=B.hld||HLDEL; PROF=B.prof||PROF;
+  try{ localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem("cbsr-hl-del",JSON.stringify(HLDEL)); localStorage.setItem(PROFKEY,JSON.stringify(PROF)); }catch(e){}
   return before!==JSON.stringify([mem,HL,PROF]); }
 let syncT=null, syncBusy=false;
 function syncSoon(ms){ if(!(window.SYNC&&SYNC.loggedIn())) return; clearTimeout(syncT); syncT=setTimeout(syncNow,ms==null?2500:ms); }
