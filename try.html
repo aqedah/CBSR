@@ -1121,7 +1121,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .sdetail{margin-top:12px;border:1px solid var(--accent);border-radius:14px;padding:12px;background:var(--card)}.sdh{display:flex;gap:12px;align-items:center}.sdh .heb{font-size:30px}.sdh span{display:grid}.sdh small{color:var(--muted)}
 .sdetail dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 10px;margin:10px 0;font-size:14px}.sdetail dt{color:var(--muted)}.sdetail dd{margin:0}.sdetail dd .heb{font-size:18px}
 .ssrc .lead{font-size:12px}
-.smode button{min-width:0;padding:9px 6px;font-size:13.5px}
+.seg.smode{grid-template-columns:repeat(4,1fr)}.seg.sseg{grid-template-columns:repeat(auto-fit,minmax(0,1fr));grid-auto-flow:column}.smode button{min-width:0!important;flex:1 1 0;padding:9px 4px;font-size:13.5px;white-space:nowrap}
 .qblk{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:8px 10px;margin:8px 0;background:var(--card)}.qblk .qblk{margin-left:6px}
 .qt-phrase{border-left-color:#C46A2B}.qt-word{border-left-color:#7A6BB0}.qt-sentence,.qt-verse,.qt-chapter,.qt-book{border-left-color:#9AA5A0}
 .qhd{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.qhd select{font:inherit;font-size:14px;font-weight:700;padding:6px 8px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink)}.qhd .qop{font-weight:500}
@@ -7032,7 +7032,7 @@ function morphFull(mi){ const [sp,vs,vt,ps,gn,nu,st,pp,pg,pn]=SD.M[mi]; const o=
   return o.join(" · "); }
 /* 범위: [[책, 장 시작, 장 끝]] 또는 null(구약 전체) */
 function stSpans(){ const S=view.st;
-  if(S.range==="all") return null;
+  if(S.range==="all"&&S.mode!=="tool") return null;
   if(S.range==="day"){ const sp=[]; try{ for(const [b,c] of dayPlan(view.w,view.d).ch) if(b<=39) sp.push([b,c,c]); }catch(e){} if(sp.length) return sp; }
   return [[S.rb,S.rc1||1,S.rc2||999]]; }
 function stRangeLabel(){ const S=view.st, sp=stSpans(); if(!sp) return "구약 전체";
@@ -7121,9 +7121,9 @@ function verseView(){ const S=view.st; let vi=Math.max(0,Math.min(SD.V.length-1,
   return h; }
 function rangeBox(){ const S=view.st; const dayOT=(()=>{ try{ return dayPlan(view.w,view.d).ch.some(([b])=>b<=39); }catch(e){ return false; } })();
   const chs=[...(SD.book[S.rb]||{chs:new Set([1])}).chs].sort((a,b)=>a-b);
-  return `<div class="srange"><div class="seg sseg">${[["day","오늘 본문"],["book","책"],["all","구약 전체"]].map(([k,n])=>`<button aria-checked="${S.range===k}" data-srange="${k}">${n}</button>`).join("")}</div>
+  return `<div class="srange"><div class="seg sseg">${[["day","오늘 본문"],["book","책"],["all","구약 전체"]].filter(([k])=>!(S.mode==="tool"&&k==="all")).map(([k,n])=>`<button aria-checked="${S.range===k}" data-srange="${k}">${n}</button>`).join("")}</div>
    ${S.range==="day"&&!dayOT?`<p class="lead">오늘 본문은 신약입니다. 원문 연구는 지금 구약만 됩니다. 책을 골라 주세요.</p>`:""}
-   ${S.range==="book"||(S.range==="day"&&!dayOT)?`<div class="svsel"><select id="sRb">${Array.from({length:39},(_,i)=>`<option value="${i+1}"${i+1===S.rb?" selected":""}>${esc(PLAN.full[i])}</option>`).join("")}</select><select id="sRc1">${chs.map(x=>`<option${x===(S.rc1||1)?" selected":""}>${x}</option>`).join("")}</select>–<select id="sRc2">${chs.map(x=>`<option${x===(S.rc2&&S.rc2<999?S.rc2:chs[chs.length-1])?" selected":""}>${x}</option>`).join("")}</select>장</div>`:""}
+   ${S.range==="book"||(S.range==="all"&&S.mode==="tool")||(S.range==="day"&&!dayOT)?`<div class="svsel"><select id="sRb">${Array.from({length:39},(_,i)=>`<option value="${i+1}"${i+1===S.rb?" selected":""}>${esc(PLAN.full[i])}</option>`).join("")}</select><select id="sRc1">${chs.map(x=>`<option${x===(S.rc1||1)?" selected":""}>${x}</option>`).join("")}</select>–<select id="sRc2">${chs.map(x=>`<option${x===(S.rc2&&S.rc2<999?S.rc2:chs[chs.length-1])?" selected":""}>${x}</option>`).join("")}</select>장</div>`:""}
    <p class="lead srl">범위: ${esc(stRangeLabel())}</p></div>`; }
 function renderStudy(){
   const S=view.st;
@@ -7152,7 +7152,7 @@ function bindStudy(m){
   const r=document.getElementById("sdRetry"); if(r) r.onclick=()=>{ studyLoad(); render(); };
   if(!SD) return;
   bindQuery(m); m.querySelectorAll("[data-sqopen]").forEach(b=>b.onclick=()=>qOpen(b.dataset.sqopen));
-  m.querySelectorAll("[data-smode]").forEach(b=>b.onclick=()=>{ S.mode=b.dataset.smode; rr(); });
+  m.querySelectorAll("[data-smode]").forEach(b=>b.onclick=()=>{ S.mode=b.dataset.smode; if(S.mode==="tool"&&S.range==="all") S.range="book"; rr(); });
   m.querySelectorAll("[data-srange]").forEach(b=>b.onclick=()=>{ S.range=b.dataset.srange; if(S.range==="book"){ try{ const ot=dayPlan(view.w,view.d).ch.find(([x])=>x<=39); if(ot&&!S.rbSet){ S.rb=ot[0]; S.rc1=1; S.rc2=0; } }catch(e){} } rr(); });
   const rb=document.getElementById("sRb"); if(rb) rb.onchange=()=>{ S.rb=+rb.value; S.rbSet=1; S.rc1=1; S.rc2=0; if(S.range==="day") S.range="book"; rr(); };
   const c1=document.getElementById("sRc1"), c2=document.getElementById("sRc2"); if(c1) c1.onchange=()=>{ S.rc1=+c1.value; if(S.rc2&&S.rc2<S.rc1) S.rc2=S.rc1; if(S.range==="day") S.range="book"; rr(); }; if(c2) c2.onchange=()=>{ S.rc2=+c2.value; if(S.rc2<S.rc1) S.rc1=S.rc2; if(S.range==="day") S.range="book"; rr(); };
