@@ -1162,6 +1162,14 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
  background-color:#FBF8F1;background-image:linear-gradient(rgba(31,58,107,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,107,.05) 1px,transparent 1px);background-size:18px 18px}
 :root[data-theme="dark"] body.tab-study{--paper:#161B26;--card:#1D2432;--ink:#E6E2D8;--muted:#9AA1AD;--line:#323B4C;--accent:#9DB6E6;--accent-ink:#121722;--accent-soft:#25304A;--bg:#1D2432;background-color:#161B26;background-image:linear-gradient(rgba(157,182,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(157,182,230,.06) 1px,transparent 1px)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.tab-study{--paper:#161B26;--card:#1D2432;--ink:#E6E2D8;--muted:#9AA1AD;--line:#323B4C;--accent:#9DB6E6;--accent-ink:#121722;--accent-soft:#25304A;--bg:#1D2432;background-color:#161B26;background-image:linear-gradient(rgba(157,182,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(157,182,230,.06) 1px,transparent 1px)}}
+#sOutro{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--o-paper);color:var(--o-ink);animation:siIn .25s ease;transition:opacity .3s ease}
+#sOutro.out{opacity:0}
+#sOutro .so-in{text-align:center;padding:0 24px}
+#sOutro .so-k{font-family:var(--f-ui);font-size:12.5px;letter-spacing:.14em;color:var(--o-muted);animation:siUp .5s ease both}
+#sOutro .so-t{font-family:var(--f-text);font-weight:700;font-size:30px;margin-top:10px;color:var(--o-accent);animation:siUp .5s .08s ease both}
+#sOutro .so-s{font-family:var(--f-text);font-size:15px;color:var(--o-muted);margin-top:8px;animation:siUp .5s .16s ease both}
+#sOutro .so-bar{width:160px;height:2px;background:var(--o-line);margin:24px auto 0;overflow:hidden;border-radius:2px}
+#sOutro .so-bar i{display:block;height:100%;width:40%;background:var(--o-accent);animation:siBar 1s ease-in-out infinite}
 #sIntro{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FBF8F1;background-image:linear-gradient(rgba(31,58,107,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,107,.06) 1px,transparent 1px);background-size:22px 22px;color:#1E2230;animation:siIn .25s ease;transition:opacity .3s ease}
 #sIntro.out{opacity:0}
 #sIntro .si-in{text-align:center;padding:0 24px}
@@ -7428,6 +7436,21 @@ function studyIntro(){
   el.onclick=()=>{ if(Date.now()-t0>400) close(); };
 }
 
+/* 성경연구에서 통독·QT·기록으로 나갈 때의 전환 화면 (통독 앱 색으로) */
+function studyOutro(t){
+  const old=document.getElementById("sOutro"); if(old) old.remove();
+  const quick=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cs=getComputedStyle(document.documentElement), g=k=>cs.getPropertyValue(k).trim();
+  const NAME={read:"오늘 통독",qt:"QT",record:"나의 기록",admin:"관리"}, SUB={read:"이야기를 따라 읽습니다",qt:"본문 앞에 머뭅니다",record:"걸어온 길을 돌아봅니다",admin:""};
+  const el=document.createElement("div"); el.id="sOutro"; el.setAttribute("role","status");
+  el.style.cssText=`--o-paper:${g("--paper")};--o-ink:${g("--ink")};--o-muted:${g("--muted")};--o-accent:${g("--accent")};--o-line:${g("--line")}`;
+  el.innerHTML=`<div class="so-in"><div class="so-k">이야기 통독 노트</div><div class="so-t">${NAME[t]||"통독"}</div><div class="so-s">${SUB[t]||""}</div><div class="so-bar"><i></i></div></div>`;
+  document.body.appendChild(el);
+  const t0=Date.now(); let done=false; const close=()=>{ if(done) return; done=true; el.classList.add("out"); setTimeout(()=>el.remove(),320); };
+  setTimeout(close,quick?300:1000);
+  el.onclick=()=>{ if(Date.now()-t0>300) close(); };
+}
+
 /* ===== 성경연구 · 검색식 (Text-Fabric 검색식의 핵심 부분을 앱 안에서 실행) ===== */
 const QT_ORDER=["book","chapter","verse","sentence","clause","phrase","word"];
 const QT_K={book:"책",chapter:"장",verse:"절",sentence:"문장",clause:"절(클로즈)",phrase:"구",word:"낱말"};
@@ -7878,7 +7901,7 @@ document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,her
 const TAB_Y={};
 const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view.d);
 function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth"}); return; }
-  TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); view.tab=t; HSEL.clear(); render();
+  TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); else if(view.tab==="study"&&t!=="study"&&typeof studyOutro==="function") studyOutro(t); view.tab=t; HSEL.clear(); render();
   const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
