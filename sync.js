@@ -65,6 +65,11 @@
       async remove(id){ await init(); await fs.doc(`feedback/${id}`).delete(); }
     },
     /* 개발자 모드: 화면 글자 바꾸기표 (모두에게 적용, 쓰기는 관리자만) */
+    /* 새 소식 가운데 관리자가 지운 것 */
+    news:{
+      async get(){ await init(); const d=await fs.doc("config/news").get(); return d.exists?(d.data().hidden||[]):[]; },
+      async set(hidden){ await init(); await fs.doc("config/news").set({hidden,at:Date.now()}); }
+    },
     texts:{
       async get(){ await init(); const d=await fs.doc("config/texts").get(); return d.exists?(d.data().map||{}):{}; },
       async set(map){ await init(); await fs.doc("config/texts").set({map,at:Date.now()}); }

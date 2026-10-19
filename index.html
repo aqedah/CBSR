@@ -1098,6 +1098,8 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .missed[open] summary span{display:inline-block;transform:rotate(90deg)}
 .menubtn{position:relative}
 .menubtn.has-news::after{content:"";position:absolute;top:2px;right:0;width:9px;height:9px;border-radius:50%;background:#C8762A;border:2px solid var(--paper)}
+.news-del{float:right;margin:2px 0 0 8px;border:1px solid var(--line);background:var(--card);color:var(--bad);border-radius:999px;font:inherit;font-size:12.5px;padding:2px 9px;cursor:pointer}
+.news-del.sure{background:var(--bad);color:#fff;border-color:var(--bad)}
 .news.inmenu{margin:14px 0 0;min-height:34px;padding-top:6px;padding-bottom:6px}
 .toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9900;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -1378,7 +1380,7 @@ body.tts-on .totop{display:none}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="config.js?v=0700cf6d"></script>
-<script src="sync.js?v=3db58655"></script>
+<script src="sync.js?v=c6d8612f"></script>
 <script src="bible.js?v=87606874"></script>
 <script>
 /* ───────── 이름·지명·용어 찾기와 자동 퀴즈 엔진 ───────── */
@@ -6636,7 +6638,7 @@ async function loadAdmin(){
 }
 
 /* 새 소식(큰 변경만) */
-const NEWS=[
+const NEWS_ALL=[
  ["2026-10-18","책갈피: 본문에서 절을 누르고 '책갈피'를 누르면 다음에 그 자리부터 이어 읽어요"],
  ["2026-10-19","본문 듣기 목소리를 고를 수 있어요 (☰ 메뉴 → 본문 듣기 목소리)"],
  ["2026-10-19","본문 듣기: 오늘 본문을 소리로 들을 수 있어요 (본문 제목 옆 스피커 단추)"],
@@ -6659,13 +6661,20 @@ const NEWS=[
  ["2026-10-07","본문에 형광펜을 칠할 수 있어요 (절을 누르세요)"]
 ];
 const NEWS_KEY="cbsr-news-seen";
+/* 날짜 순으로 정렬하고, 관리자가 지운 소식은 뺍니다 */
+const newsId=n=>n[0]+"|"+n[1];
+let NEWS_HID=[]; try{ NEWS_HID=JSON.parse(localStorage.getItem("cbsr-news-hidden")||"[]")||[]; }catch(e){}
+let NEWS=[];
+function buildNews(){ NEWS=NEWS_ALL.filter(n=>!NEWS_HID.includes(newsId(n))).sort((a,b)=>a[0]<b[0]?1:a[0]>b[0]?-1:0); }
+buildNews();
+let NEWS_ADMIN=false;
+if(window.SYNC&&SYNC.available&&SYNC.news) SYNC.news.get().then(h=>{ if(JSON.stringify(h)!==JSON.stringify(NEWS_HID)){ NEWS_HID=h; try{ localStorage.setItem("cbsr-news-hidden",JSON.stringify(h)); }catch(e){} buildNews(); renderNews(); } }).catch(()=>{});
 /* 새 소식: 메뉴 단추의 점으로 알리고, 메뉴 맨 위에 보여 줍니다 */
 function freshNews(){ let seen=""; try{ seen=localStorage.getItem(NEWS_KEY)||""; }catch(e){} return NEWS.filter(n=>n[0]>seen); }
 function renderNews(){ const el=document.getElementById("newsBar"); if(el) el.innerHTML=""; const mb=document.getElementById("menuBtn"); if(mb) mb.classList.toggle("has-news",freshNews().length>0); }
 /* 메뉴 안 전광판: 최근 소식을 한 줄씩 넘깁니다. 누르면 전체 소식. 관리자에게만 닫기(✕) */
-function newsBlock(){ let hid=""; try{ hid=localStorage.getItem("cbsr-news-hide")||""; }catch(e){} if(hid&&hid>=NEWS[0][0]) return "";
-  const R=NEWS.slice(0,8); if(!R.length) return "";
-  return `<div class="news inmenu" id="menuNews"><button class="news-tag" id="newsOpen">새 소식</button><div class="news-track" id="newsTrack">${R.map((n,i)=>`<span class="ni${i?"":" on"}">${esc(n[1])}</span>`).join("")}</div><button class="news-x" id="newsX" aria-label="새 소식 닫기" hidden>✕</button></div>`; }
+function newsBlock(){ const R=NEWS.slice(0,8); if(!R.length) return "";
+  return `<div class="news inmenu" id="menuNews"><button class="news-tag" id="newsOpen">새 소식</button><div class="news-track" id="newsTrack">${R.map((n,i)=>`<span class="ni${i?"":" on"}">${esc(n[1])}</span>`).join("")}</div></div>`; }
 function bindMenuNews(){ const el=document.getElementById("menuNews"); if(!el) return;
   clearInterval(window._newsT); const L=el.querySelectorAll(".news-track .ni");
   if(L.length>1){ let i=0; window._newsT=setInterval(()=>{ if(!document.body.contains(L[0])) return clearInterval(window._newsT);
@@ -6673,12 +6682,18 @@ function bindMenuNews(){ const el=document.getElementById("menuNews"); if(!el) r
     cur.classList.remove("on"); cur.classList.add("out"); nx.classList.add("on"); },3500); }
   const all=()=>{ closeMenu(); showNews(); };
   el.querySelector("#newsTrack").onclick=all; el.querySelector("#newsOpen").onclick=all;
-  const x=el.querySelector("#newsX"); x.onclick=()=>{ try{ localStorage.setItem("cbsr-news-hide",NEWS[0][0]); }catch(e){} clearInterval(window._newsT); el.remove(); };
-  if(window.SYNC&&SYNC.available&&SYNC.admin) SYNC.admin.state().then(st=>{ if(st&&st.ok&&x.isConnected) x.hidden=false; }).catch(()=>{}); }
+ }
 function showNews(){
-  const byDay={}; NEWS.forEach(([d,t])=>{ (byDay[d] ||= []).push(t); });
-  sheet("새 소식",Object.entries(byDay).map(([d,L])=>`<p class="src">${fmt(parseD(d),{month:"long",day:"numeric"})}</p><ul class="newslist">${L.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`).join("")+`<div class="row"><button class="btn ghost small" id="newsDone">다 봤어요 (전광판 닫기)</button></div>`);
-  document.getElementById("newsDone").onclick=()=>{ try{ localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} document.getElementById("sheetRoot").innerHTML=""; renderNews(); };
+  const byDay={}; NEWS.forEach(n=>{ (byDay[n[0]] ||= []).push(n); });
+  sheet("새 소식",Object.entries(byDay).map(([d,L])=>`<p class="src">${fmt(parseD(d),{month:"long",day:"numeric"})}</p><ul class="newslist">${L.map(n=>`<li data-nid="${esc(newsId(n))}"><span>${esc(n[1])}</span><button class="news-del" data-ndel="${esc(newsId(n))}" aria-label="이 소식 지우기" hidden>✕</button></li>`).join("")}</ul>`).join("")+`<div class="row"><button class="btn ghost small" id="newsDone">닫기</button></div>`);
+  try{ localStorage.setItem(NEWS_KEY,NEWS.length?NEWS[0][0]:""); }catch(e){} renderNews();
+  document.getElementById("newsDone").onclick=()=>{ document.getElementById("sheetRoot").innerHTML=""; };
+  const arm=()=>document.querySelectorAll("[data-ndel]").forEach(x=>{ x.hidden=false; x.onclick=async()=>{
+    if(!x.classList.contains("sure")){ x.classList.add("sure"); x.textContent="지우기"; setTimeout(()=>{ if(x.isConnected){ x.classList.remove("sure"); x.textContent="✕"; } },3000); return; }
+    const id=x.dataset.ndel, next=[...new Set([...NEWS_HID,id])]; x.disabled=true;
+    try{ await SYNC.news.set(next); NEWS_HID=next; try{ localStorage.setItem("cbsr-news-hidden",JSON.stringify(next)); }catch(e){} buildNews(); renderNews(); const li=x.closest("li"), ul=li.parentElement; li.remove(); if(!ul.children.length){ ul.previousElementSibling?.remove(); ul.remove(); } toast("소식을 지웠습니다. 모든 사용자에게서 사라집니다."); }
+    catch(e){ x.disabled=false; toast(/permission/.test(e.code||"")?"지울 권한이 없습니다. Firestore 규칙 게시와 관리자 로그인을 확인해 주세요.":"지우지 못했습니다."); } }; });
+  if(NEWS_ADMIN) arm(); else if(window.SYNC&&SYNC.available&&SYNC.admin) SYNC.admin.state().then(st=>{ if(st&&st.ok){ NEWS_ADMIN=true; arm(); } }).catch(()=>{});
 }
 /* 사용법 */
 /* 홈 화면에 추가 (독립 웹앱에서만) */
@@ -6750,7 +6765,7 @@ function closeMenu(){ const r=document.getElementById("drawerRoot"); if(r&&r.inn
 function openMenu(){
   const r=document.getElementById("drawerRoot");
   r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="사용법과 설정"><div class="drawer-head"><b>사용법 · 설정</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${newsBlock()}${renderGuide()}</aside></div>`;
-  bindMenuNews(); try{ localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} renderNews();
+  bindMenuNews(); try{ if(NEWS.length) localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} renderNews();
   document.body.style.overflow="hidden";
   document.getElementById("drawerX").onclick=closeMenu;
   /* 메뉴를 오른쪽으로 밀면 닫힙니다 */
