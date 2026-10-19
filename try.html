@@ -7536,7 +7536,12 @@ function bindReadDet(d){ const S=view.st;
   d.querySelectorAll("[data-sfindw]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); S.wide=true; S.mode="word"; S.lex=+b.dataset.sfindw; S.dom=""; S.vs=""; S.vt=""; S.q=""; S.more=1; render(); scrollTo({top:0}); });
   d.querySelectorAll("[data-rnote]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); openNoteSheet(+b.dataset.rnote); }); }
 function bindRead(m){ const S=view.st;
-  m.querySelectorAll("[data-rdv]").forEach(el=>el.onclick=()=>{ const vi=+el.dataset.rdv; S.rv=S.rv===vi?-1:vi; S.rw=null; const y=scrollY; render(); scrollTo({top:y}); const st=document.querySelector(".rstrip .rsw.on"); if(st) st.scrollIntoView({block:"nearest",inline:"center"}); if(S.rv>=0) strongLoad(); });
+  m.querySelectorAll("[data-rdv]").forEach(el=>el.onclick=()=>{ const vi=+el.dataset.rdv, top0=el.getBoundingClientRect().top; S.rv=S.rv===vi?-1:vi; S.rw=null; const y=scrollY; render(); scrollTo({top:y});
+    /* 누른 절이 화면에서 같은 자리에 머물게: 위쪽 띠가 닫히며 줄어든 만큼 되돌림 */
+    const ne=document.getElementById("stv-"+vi); if(ne){ scrollBy(0,ne.getBoundingClientRect().top-top0);
+      const hd=document.querySelector(".shead2"), hb=hd?hd.getBoundingClientRect().bottom:0, sw=document.querySelector(".rstripw");
+      if(S.rv===vi&&sw&&sw.getBoundingClientRect().top>innerHeight*0.62) scrollBy(0,ne.getBoundingClientRect().top-hb-8); }
+    const st=document.querySelector(".rstrip .rsw.on"); if(st){ const r=st.parentNode; r.scrollLeft=0; } if(S.rv>=0) strongLoad(); });
   m.querySelectorAll("[data-rsw]").forEach(b=>b.onclick=()=>{ S.rw=+b.dataset.rsw; b.parentNode.querySelectorAll(".rsw").forEach(x=>x.classList.toggle("on",x===b)); const d=document.getElementById("rDet"); d.innerHTML=readDetail(S.rw); bindReadDet(d); });
   const d=document.getElementById("rDet"); if(d) bindReadDet(d); }
 function openStrongSheet(n){ const go=()=>{ const e=STR&&STR[n]; const lis=(SD.L.map((x,i)=>[x,i]).filter(([x])=>x[3]===n).sort((a,b)=>b[0][7]-a[0][7])); const li=lis.length?lis[0][1]:-1;
