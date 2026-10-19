@@ -1129,7 +1129,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .tc.l::before{bottom:50%}
 .tc.b::after,.tc.l::after{content:"";position:absolute;right:6px;left:-4px;top:50%;border-top:1.5px solid var(--muted);opacity:.7}
 .sww{cursor:pointer;border-radius:3px}.sww:hover,.sww:active{background:var(--accent-soft)}
-.stv{cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.stv{font-weight:700;color:var(--accent)}
 .sheetd{border:0;padding:0;margin:0}
 .tc.s::before{content:"";position:absolute;right:5px;top:50%;bottom:0;border-right:1.5px solid var(--muted);opacity:.85}.tc.s::after{content:"";position:absolute;right:5px;left:auto;width:12px;right:5px;top:50%;border-top:1.5px solid var(--muted);opacity:.85;transform:translateX(100%)}
 .stfold{display:block;width:100%;text-align:right;border:0;border-bottom:1px solid var(--line);background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(31,58,107,.05) 6px 12px);color:var(--accent);font:inherit;font-size:13px;padding:6px 10px}
@@ -7304,7 +7304,7 @@ function atomKind(typ,txt,mk){ const q=(txt.match(/Q/g)||[]).length, last=txt.sl
 function structView(b,c){
   const vis=SD.ch.get(b+"-"+c)||[]; const atoms=[], seen=new Map();
   for(const vi of vis){ const [, , , , ,s,n]=SD.V[vi]; for(let j=s;j<s+n;j++){ const a=SD.wa[j]; if(!seen.has(a)){ seen.set(a,atoms.length); atoms.push({a,vi,w:[]}); } atoms[seen.get(a)].w.push(j); } }
-  let h=`<p class="lead">${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}을 ETCBC가 나눈 '절 원자'(동사 하나를 중심으로 한 가장 작은 문장 단위) 한 줄씩 보여 줍니다. 들여쓰기는 ETCBC가 매긴 문장의 층(어느 문장에 기대어 있는가)이고, 색은 문장의 종류입니다. 낱말을 누르면 뜻과 문법이 나오고, 절 번호를 누르면 그 절을 자세히 봅니다.</p>
+  let h=`<p class="lead">${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}을 ETCBC가 나눈 '절 원자'(동사 하나를 중심으로 한 가장 작은 문장 단위) 한 줄씩 보여 줍니다. 들여쓰기는 ETCBC가 매긴 문장의 층(어느 문장에 기대어 있는가)이고, 색은 문장의 종류입니다. 낱말을 누르면 뜻과 문법이 나옵니다. 오른쪽 끝 숫자는 절 번호입니다.</p>
    <div class="stlegend"><span class="k-main">이야기 줄기</span><span class="k-bg">배경·멈춤</span><span class="k-msyn">이야기 표지</span><span class="k-q">인물의 말</span></div><div class="seg sseg stfoldall">${[["","말 모두 펼치기"],["1","말 모두 접기 (이야기 뼈대만)"]].map(([k2,n])=>`<button aria-checked="${(view.st.foldAll?"1":"")===k2}" data-sfoldall="${k2}">${n}</button>`).join("")}</div><div class="stlines">`;
   let lastVi=-1; const S=view.st; S.fold ||= {};
   /* 1) 줄마다 표지·종류 판정(전체 줄 기준) */
@@ -7329,7 +7329,7 @@ function structView(b,c){
     const nd=ri+1<D.length?D[ri+1]:0, sc=nd>tab?Math.min(nd,16):0;
     let cells=""; const dd=Math.max(Math.min(tab,16),sc);
     for(let L=1;L<=dd;L++){ let cls; if(L<tab) cls=hasNextSib(ri,L)?"v":"e"; else if(L===tab) cls=hasNextSib(ri,tab)?"b":"l"; else cls=L===sc?"s":"e"; cells=`<i class="tc ${cls}"></i>`+cells; }
-    const vnum=at.vi!==lastVi?`<b class="stv" data-sva="${at.vi}">${SD.V[at.vi][2]===0?"표제":SD.V[at.vi][2]}</b>`:""; lastVi=at.vi;
+    const vnum=at.vi!==lastVi?`<b class="stv">${SD.V[at.vi][2]===0?"표제":SD.V[at.vi][2]}</b>`:""; lastVi=at.vi;
     const words=at.w.map(j=>{ const vj=SD.vOf[j], tx=sHeb(vj)[j-SD.V[vj][5]]; return `<span class="sww" data-sw="${j}">${esc(tx)}</span>`; }).join("");
     const canFold=blk[ai]>ai, folded=visible.includes(-ai-1);
     h+=`<div class="stl k-${k}"><span class="heb">${words}</span><span class="tree">${cells}</span><span class="stmeta"><small>${esc(typ)}</small><i>${esc(lab)}</i>${canFold&&!folded?`<button class="stfb" data-sfold="${at.a}" aria-label="말 접기">말 접기 ▴</button>`:""}</span><span class="stvn">${vnum}</span></div>`; }
@@ -7340,7 +7340,7 @@ function wordDetail(wi){ const vi=SD.vOf[wi], s=SD.V[vi][5], j=wi-s, H=sHeb(vi),
    <dl><dt>이 자리의 꼴</dt><dd><span class="heb">${esc(H[j].trim())}</span> ${esc(HN[j])} · ${esc(morphFull(SD.wm[wi]))}${SD.wg[wi]&4?" · 읽기 전통(케레)을 따름":""}</dd>
    <dt>문장 속 역할</dt><dd>${esc(FN_K[SD.FN[SD.wf[wi]]]||SD.FN[SD.wf[wi]]||"-")} · ${esc(DOM_K[SD.DO[SD.domW[wi]]]||"")}</dd>
    ${x[4]?`<dt>사전 풀이</dt><dd>${esc(x[4])}</dd>`:""}<dt>영어 뜻(BHSA)</dt><dd>${esc(x[5])}</dd><dt>구약에 나오는 횟수</dt><dd>${x[7].toLocaleString()}번${x[8]?" · 아람어":""}</dd></dl>
-   <div class="row"><button class="btn small" data-sfind="${li}">이 낱말이 나오는 곳</button><button class="btn ghost small" data-sva="${vi}">이 절 자세히</button></div>`; }
+   <div class="row"><button class="btn small" data-sfind="${li}">이 낱말이 나오는 곳</button></div>`; }
 function openWordSheet(wi){ const vi=SD.vOf[wi]; sheet(sRef(vi)+" · 낱말",`<div class="sdetail sheetd">${wordDetail(wi)}</div>`);
   const root=document.getElementById("sheetRoot"), close=()=>{ root.innerHTML=""; }, S=view.st;
   root.querySelectorAll("[data-sfind]").forEach(b=>b.onclick=()=>{ close(); S.wide=true; S.mode="word"; S.lex=+b.dataset.sfind; S.dom=""; S.vs=""; S.vt=""; S.q=""; S.more=1; render(); scrollTo({top:0}); });
