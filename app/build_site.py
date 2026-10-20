@@ -78,6 +78,8 @@ data+='const TOOLX='+(open('tools/toolx.json').read() if os.path.exists('tools/t
 data+='const RJDESC='+(open('rjdesc/rjdesc.json').read() if os.path.exists('rjdesc/rjdesc.json') else '{}')+';\n'
 data+='const CHRIST_K='+J({k:v['k'] for k,v in CK.items()})+';\n'
 FIXD={"35-1":{"god":"밤에 예수님을 찾아온 유대인의 지도자 니고데모와 우물가에서 예수님의 말씀을 듣게 된 사마리아 여자는 서로 다른 자리에서 예수님을 만납니다. 니고데모는 먼저 예수님을 찾아왔고(3:2), 사마리아 여자에게는 예수님이 먼저 말을 거셨습니다(4:7). 예수님은 니고데모에게 인자가 들려야 하며 믿는 자가 영생을 얻는다고 말씀하시고(3:14–15), 사마리아 여자에게는 자신이 메시아이심을 밝히십니다(4:25–26). 여자의 증언으로 많은 사람이 예수님을 믿고(4:39), 이어 예수님의 말씀을 직접 듣고 그분을 세상의 구주로 고백합니다(4:41–42). 서로 다른 사람들에게 자신을 드러내시고 생명의 말씀을 전하시는 예수님을 봅니다.","christ":"요한복음은 창세기처럼 '태초에'라는 말로 시작합니다(요 1:1; 창 1:1). 만물이 말씀으로 말미암아 지은 바 되었고(1:3), 그 말씀이 육신이 되어 우리 가운데 거하셨습니다(1:14). 니고데모에게 말씀하신 거듭남(3:3)과 사마리아 여자에게 약속하신 샘물(4:14)은 서로 다른 그림이지만, 둘 다 사람이 스스로 만들어 낼 수 없는 생명을 가리킵니다. 창조의 말씀이신 예수님이 사람들에게 생명을 주시는 분으로 나타나십니다."}}
+RJDAY=json.load(open('ux/christ_rjday.json'))
+data+='if(window.CBSR_MODE!=="y365"){const RD='+J(RJDAY)+';for(const k in RD){ if(!DAYC[k]) DAYC[k]=RD[k].t; if(!CHRIST_K["rjd:"+k]) CHRIST_K["rjd:"+k]=RD[k].k; }}\n'
 data+='if(window.CBSR_MODE!=="y365"){const FX='+J(FIXD)+';for(const k in FX) DETAIL[k]=Object.assign({},DETAIL[k]||{},FX[k]); CHRIST_K["rjd:35-0"]="흐름";}\n'
 
 data+='(()=>{ const FX='+J({k:v['fix'] for k,v in CK.items() if v.get('fix')})+', MN='+J(MN)+', GF='+J(GF)+';\n'

@@ -1298,7 +1298,7 @@ function progressMini(){
 const trName=n=>(typeof TRMAP!=="undefined"&&TRMAP&&TRMAP.n[n])||n;
 const CK_L={"인용":"신약의 직접 인용","약속":"약속과 성취","주제":"반복되는 주제","모형":"모형과 성취","흐름":"성경 전체의 흐름","신약":"구약과 이어 읽기"};
 const MC_L={A:"본문이 직접 설명합니다",B:"보통 이렇게 풀이합니다",C:"정확한 뜻은 분명하지 않습니다"};
-function christKey(w,d){ const det=DETAIL[w+"-"+(d+1)]; if(MODE==="rj") return det&&det.christ?"rjd:"+w+"-"+d:"rjw:"+w; return "y:"+w+"-"+d; }
+function christKey(w,d){ const det=DETAIL[w+"-"+(d+1)]; if(MODE==="rj") return (det&&det.christ)||DAYC[w+"-"+d]?"rjd:"+w+"-"+d:"rjw:"+w; return "y:"+w+"-"+d; }
 const GENEAL=new Set(["1-5","1-10","1-11","1-25","1-36","1-46","4-1","4-26","13-1","13-2","13-3","13-4","13-5","13-6","13-7","13-8","13-9","15-2","15-8","16-7","16-11","16-12","40-1","42-3"]);
 const GENRE_MSG={gen:["족보","어느 집안이 이어지고, 어디에서 이야기가 좁혀지는지 살펴보세요."],
  law:["율법","무엇을 거룩한 것과 그렇지 않은 것으로 구별하는지 보세요."],
