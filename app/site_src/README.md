@@ -31,6 +31,6 @@
 | `sw.js`, `manifest.webmanifest`, `icons/` | 앱처럼 설치하고 오프라인으로 쓰기 위한 파일 |
 | `firestore.rules` | Firestore 보안 규칙 |
 
-지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth · 성경 본문: 개역개정4판 · 통독 일정: 리딩지저스 45주 성경통독표(웨스트민스터코리아)
+지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth · 추가 지명 위치: OpenBible.info Bible Geocoding Data(CC BY 4.0, MILALWV 지도 작업에서 옮김) · 성경 본문: 개역개정4판 · 통독 일정: 리딩지저스 45주 성경통독표(웨스트민스터코리아)
 
 제작: 이삭 목사 (중앙성서교회) https://www.centralbible.net/

@@ -1038,6 +1038,8 @@ function stripRef(p){ const bs=[]; for(const [b,c] of p.ch){ let g=bs[bs.length-
 const shortRef=p=>p.spec.replace(/ 1-몬 1/,"-몬").replace(/요이 1-요삼 1/,"요이-요삼").replace(/^유 1$/,"유");
 const pct=(a,b)=>b?Math.round(a/b*100):0;
 
+/* 지명 위치 안내: 추정 위치는 확실성을 함께(학자들 사이에 위치 판단이 갈리는 곳) */
+function placeNote(g){ return g&&g[4]?`<b>추정 위치</b> — 확실성 ${Math.round((g[5]||0)/10)}%. 학자들 사이에 위치 판단이 갈리는 곳입니다(위치: OpenBible.info).`:"위치는 대략적인 것입니다."; }
 /* 어려운 말 표시 */
 function markGloss(text,b,seen){
   const hits=[]; let m;
@@ -1183,7 +1185,7 @@ function initMap(A){
   map.attributionControl.setPrefix(false);
   /* 축소하면 더 넓은 지역이 보이도록 넓은 지형을 밑에 깔기 */
   const under=["neareast","med"].filter(id=>id!==fid).map(id=>L.imageOverlay(TERRAIN[id].url,TERRAIN[id].bounds));
-  const terr=L.layerGroup([...under,L.imageOverlay(F.url,F.bounds,{attribution:"지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"})]);
+  const terr=L.layerGroup([...under,L.imageOverlay(F.url,F.bounds,{attribution:"지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth · 추가 지명 위치: OpenBible.info(CC BY 4.0)"})]);
   if(fid==="israel") terr.addLayer(L.imageOverlay(TERRAIN.israelhi.url,TERRAIN.israelhi.bounds));
   const water=L.layerGroup([...WATER.lakes.map(l=>L.polygon(l,{color:"#5f8fae",weight:1,fillColor:"#A8C6D6",fillOpacity:1,interactive:false})),...WATER.rivers.map(r=>L.polyline(r,{color:"#5f8fae",weight:2,interactive:false}))]);
   terr.addTo(map); water.addTo(map);
@@ -1207,14 +1209,15 @@ function initMap(A){
   });
   function orient(){ arrows.forEach(o=>{ const p1=map.latLngToLayerPoint(o.a),p2=map.latLngToLayerPoint(o.b); const ang=Math.atan2(p2.y-p1.y,p2.x-p1.x)*180/Math.PI; const e=o.mk.getElement()?.querySelector(".rarrow"); if(e) e.style.transform=`translate(-50%,-50%) rotate(${ang}deg)`; }); }
   const open=p=>{const b0=A.verses[0].b; const kn={c:"성읍",r:"지역",m:"산",w:"강·바다·호수"}[p.g[3]];
-    sheet(p.name,`<p>${kn} · 오늘 본문에 ${p.n}번 나옵니다.</p><p class="src">나오는 곳: ${esc(refList(p.refs,b0))}${p.n>p.refs.length?" …":""}</p><p class="src">위치는 대략적인 것입니다.</p>`);};
+    sheet(p.name,`<p>${kn} · 오늘 본문에 ${p.n}번 나옵니다.</p><p class="src">나오는 곳: ${esc(refList(p.refs,b0))}${p.n>p.refs.length?" …":""}</p><p class="src">${placeNote(p.g)}</p>`);};
   use.forEach((p,i)=>{
     const ll=[p.g[1],p.g[2]], kind=p.g[3];
     if(kind==="r"){
       const mk=L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="mlbl reg">${esc(p.name)}</span>`,iconSize:null}),keyboard:false}).addTo(map).on("click",()=>open(p));
       labels.push({mk,pri:200+i}); return;
     }
-    L.circleMarker(ll,{radius:6,color:"#fff",weight:2,fillColor:kind==="m"?"#9A6417":kind==="w"?"#2f6582":"#B4432F",fillOpacity:1}).addTo(map).on("click",()=>open(p));
+    const fc=kind==="m"?"#9A6417":kind==="w"?"#2f6582":"#B4432F", est=!!p.g[4];   /* 추정 위치(MILALWV 지도에서 더한 지명, OpenBible 확실성 70% 미만): 점선 동그라미 */
+    L.circleMarker(ll,{radius:6,color:est?fc:"#fff",weight:2,dashArray:est?"3 2":null,fillColor:est?"#fff":fc,fillOpacity:1}).addTo(map).on("click",()=>open(p));
     const mk=L.marker(ll,{icon:L.divIcon({className:"",html:`<span class="mlbl">${esc(p.name)}</span>`,iconSize:null}),keyboard:false}).addTo(map).on("click",()=>open(p));
     labels.push({mk,pri:i});
   });
@@ -2627,7 +2630,7 @@ function bind(){
     sheet(p.name,`<p>오늘 본문에 ${p.n}번 나옵니다.</p><p class="src">나오는 곳: ${esc(refList(p.refs,b0))}${p.n>p.refs.length?" …":""}</p>`);});
   m.querySelectorAll("[data-place]").forEach(g=>g.onclick=()=>{const A=dayA(view.w,view.d), p=A.places.get(g.dataset.place); const k=PLACE.get(p.name)[3]; const b0=A.verses[0].b;
     const kn={c:"성읍",r:"지역",m:"산",w:"강·바다·호수"}[k];
-    sheet(p.name,`<p>${kn} · 오늘 본문에 ${p.n}번 나옵니다.</p><p class="src">나오는 곳: ${esc(refList(p.refs,b0))}${p.n>p.refs.length?" …":""}</p><p class="src">위치는 대략적인 것입니다.</p>`);});
+    sheet(p.name,`<p>${kn} · 오늘 본문에 ${p.n}번 나옵니다.</p><p class="src">나오는 곳: ${esc(refList(p.refs,b0))}${p.n>p.refs.length?" …":""}</p><p class="src">${placeNote(PLACE.get(p.name))}</p>`);});
   m.querySelectorAll("[data-qstart]").forEach(b=>b.onclick=()=>keepScroll(()=>startQuiz(b.dataset.qstart)));
   m.querySelectorAll("[data-ans]").forEach(b=>b.onclick=()=>keepScroll(()=>answer(b.dataset.mode,+b.dataset.ans)));
   m.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>keepScroll(()=>nextQ(b.dataset.next)));
