@@ -2,7 +2,8 @@ import json,base64,hashlib,os,shutil,re
 OUT='site'; shutil.rmtree(OUT,ignore_errors=True); os.makedirs(OUT+'/terrain')
 t=open('template3.html').read()
 plan=json.load(open('plan.json'))
-t=t.replace('/*STUDY*/',open('study_ui.js').read()+'\n'+open('study_q.js').read()+'\n'+open('study_theory.js').read())
+# 성경연구는 MILALWV로 옮김(2026-10-23): 자리만 남김
+t=t.replace('/*STUDY*/','const STUDY_ON=()=>false;\nfunction studyTabSync(){ document.documentElement.classList.remove("study-on"); try{ localStorage.removeItem("cbsr-study"); }catch(e){} if(view.tab==="study") view.tab="read"; }\n')
 t=t.replace('/*LEAFLETCSS*/',open('npm/node_modules/leaflet/dist/leaflet.css').read())
 data="\n".join(open(f).read() for f in ['engine.js','glossary.js','summaries.js','weeks.js','curated.js','qt_base.js','qt_extra.js','routes.js','incl.js','clues.js'])
 data=data.replace('if(typeof module!=="undefined") module.exports={buildEntityIndex,buildGlossIndex,inScope,analyzeDay,makeQuiz,rng};','')
@@ -125,7 +126,6 @@ head=f'''<!doctype html>
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#2C5C52">
-<script>try{{if(localStorage.getItem("cbsr-study")==="1")document.documentElement.classList.add("study-on");}}catch(e){{}}</script>
 <script>try{{var t=localStorage.getItem("cbsr-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -166,9 +166,9 @@ self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''
 open(f'{OUT}/sw.js','w').write(sw)
-os.makedirs(f'{OUT}/study',exist_ok=True)
-for f in ['meta.json','words.json','strong.json']:
+for f in []:
   if os.path.exists('study/'+f): shutil.copy('study/'+f,f'{OUT}/study/'+f)
 open(f'{OUT}/.nojekyll','w').write('')
 shutil.copy('site_src/README.md',OUT+'/README.md')
+for f in ['CLAUDE.md']: shutil.copy('site_src/'+f,OUT+'/'+f); shutil.copy('site_src/'+f,OUT+'/AGENTS.md')
 print({f:os.path.getsize(os.path.join(OUT,f)) for f in os.listdir(OUT) if os.path.isfile(os.path.join(OUT,f))})
