@@ -1096,6 +1096,9 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .stage>span{white-space:nowrap}
 .bnav [data-tab="study"]{display:none}html.study-on .bnav [data-tab="study"]{display:grid}html.study-on .bnav-in{grid-template-columns:repeat(4,1fr)}
 .tab-study .weeknav,.tab-study .strip,.tab-study #revRow,.tab-study #noticeBox,.tab-study #whereLine{display:none!important}
+.msec .mh{font-family:var(--f-ui);font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--accent);margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.mdet{margin-top:10px}.mdet>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:6px 0}.mdet ol{margin:6px 0 0;padding-left:20px;line-height:1.7}
+.msec .mwvban{margin:0}
 .mwvban{display:flex;align-items:center;gap:12px;margin:14px 0 4px;padding:12px 14px;border-radius:12px;border:1px solid #D9D2C2;background:#FBF8F1;background-image:linear-gradient(rgba(31,58,107,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,107,.06) 1px,transparent 1px);background-size:16px 16px;color:#1E2230;text-decoration:none}
 .mwvban .mwvh{font-family:"Noto Serif Hebrew","SBL Hebrew",serif;font-size:22px;color:#1F3A6B;direction:rtl}
 .mwvban .mwvt{flex:1;display:grid;gap:2px}.mwvban b{font-size:14.5px;color:#1F3A6B}.mwvban small{font-size:12.5px;color:#666B77;line-height:1.5}
@@ -1570,7 +1573,7 @@ body.tts-on .totop{display:none}
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><span>이야기 통독 노트(시험판) · <span id="planName"></span></span><span class="topbtns"><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="사용법과 설정 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
+    <div class="brand"><span>이야기 통독 노트(시험판) · <span id="planName"></span></span><span class="topbtns"><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
     <div id="newsBar"></div>
     <div class="date" id="dateLine"></div>
     <div class="where" id="whereLine"></div>
@@ -7051,7 +7054,7 @@ function installCard(where){
   if(TRY) return "";
   if(where==="read"){ if(!Object.values(mem.qt||{}).some(q=>q&&q.done)) return ""; let hide=false; try{hide=localStorage.getItem("cbsr-install-hide")==="1";}catch(e){} if(hide) return "";
     return `<section class="sec"><div class="instcard"><div class="insthead"><b>홈 화면에 추가하기</b><button class="instx" id="instHide" aria-label="닫기">✕</button></div>${installBody()}</div></section>`; }
-  return `<section class="sec"><span class="label">앱처럼 쓰기</span><h2>홈 화면에 추가</h2><div class="instcard">${installBody()}</div></section>`;
+  return `<section class="sec msec"><h3 class="mh">홈 화면에 추가</h3><div class="instcard">${installBody()}</div></section>`;
 }
 function bindInstall(){
   const b=document.getElementById("instBtn"); if(b) b.onclick=async()=>{ if(!INSTALL_EVT) return; INSTALL_EVT.prompt(); try{ await INSTALL_EVT.userChoice; }catch(e){} INSTALL_EVT=null; render(); };
@@ -7060,21 +7063,21 @@ function bindInstall(){
 }
 function renderGuide(){
   const rj=MODE==="rj";
-  return `<section class="sec"><span class="label">통독표</span><h2>어떤 순서로 읽을까요?</h2><div class="plans" role="radiogroup">
+  /* 메뉴 차례: 통독(통독표·번역·시작일) → 화면 → 설치 → 도움말 → 원문 연구 → 의견 → 기록 관리 */
+  return `<section class="sec msec"><h3 class="mh">통독</h3><span class="label" style="margin-top:0px">통독표</span><div class="plans" role="radiogroup">
    <button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다. 성경 이야기의 흐름을 따라 읽습니다.</span></button>
    <button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다. 창세기부터 요한계시록까지 차례대로 읽습니다.</span></button></div>
-   <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p>
-   <button class="btn ghost small" id="tourAgain" style="margin-top:8px">둘러보기 다시 보기</button>
-   <span class="label" style="margin-top:12px">본문 보기</span><div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div>
-   <span class="label" style="margin-top:12px">통독 화면</span><div class="plans" role="radiogroup">
+   <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p><span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
+   <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p><span class="label" style="margin-top:12px">시작일</span><p class="lead">${rj?"1주차 1일째가 시작된 날입니다. 그날부터 엿새는 1–6일째, 일곱째 날은 한 주 돌아보기로 계산합니다.":"1일째를 읽기 시작한 날입니다. 그날부터 하루에 하나씩 365일째까지 이어집니다."} 지금 설정: ${fmt(parseD(mem.start),{year:"numeric",month:"long",day:"numeric",weekday:"short"})}</p>
+   <div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>
+   <span class="label" style="margin-top:10px">중간부터 쓰기 시작했다면</span><p class="lead">오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞춥니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div></section>
+  <section class="sec msec"><h3 class="mh">화면</h3><span class="label" style="margin-top:0px">통독 화면</span><div class="plans" role="radiogroup">
      <button class="plan" role="radio" aria-checked="${!SIMPLE()}" data-simple="0"><i class="dot"></i><b>모두 펼쳐 보기</b><span class="lead">본문 아래에 요약, 인물·곳·말, 지도, 퀴즈가 차례로 나옵니다.</span></button>
      <button class="plan" role="radio" aria-checked="${SIMPLE()}" data-simple="1"><i class="dot"></i><b>간단히 보기</b><span class="lead">본문과 '오늘 통독 완료' 단추만 보입니다. 요약·인물·지도·퀴즈는 '더 보기' 상자 하나에 접혀 있다가 누르면 펼쳐집니다. 처음 읽는 분께 알맞습니다.</span></button></div>
-   <span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
-   <span class="label" style="margin-top:12px">본문 듣기 목소리</span><div id="voiceList"></div>
-   <a class="mwvban" href="https://aqedah.github.io/MILALWV/" target="_blank" rel="noopener"><span class="mwvh">בְּרֵאשִׁית</span><span class="mwvt"><b>MILALWV</b><small>히브리어 원문 연구 — 구약 원문 읽기, 낱말 풀이, 장 구조, 원문 검색</small></span><i aria-hidden="true">↗</i></a>
-   <span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
-   <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p></section>`
-  +installCard("guide")+`<section class="sec guide"><span class="label">사용법</span><h2>쓰는 방법</h2>
+   <span class="label" style="margin-top:12px">본문 보기</span><div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div><span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
+   <span class="label" style="margin-top:12px">본문 듣기 목소리</span><div id="voiceList"></div></section>`
+  +installCard("guide")+`<section class="sec msec guide"><h3 class="mh">도움말</h3><button class="btn ghost small" id="tourAgain">둘러보기 다시 보기</button>
+  <details class="mdet"><summary>쓰는 방법 자세히</summary>
   <ol><li>아래 <b>오늘 통독</b>: '본문 펼치기'로 본문을 읽습니다. 읽기 전 30초 도움, 요약·오늘 알아둘 것·지도·읽는 단서, 퀴즈가 함께 있습니다. 퀴즈를 끝까지 풀거나 '오늘 통독 완료'를 누르면 진행률이 올라갑니다.</li>
   <li><b>본문 보기</b>: 장면이 바뀌는 곳에서 문단이 나뉩니다. ☰ 메뉴의 '본문 보기'에서 끄고 켤 수 있습니다.</li>
   <li><b>책갈피</b>: 절 하나를 누르고 아래 '책갈피'를 누르면 표시됩니다. 다음에 본문을 펼치면 그 자리로 가고, 다른 날을 보고 있으면 위에 '이어 읽기'가 나옵니다.</li>
@@ -7082,21 +7085,19 @@ function renderGuide(){
   <li>아래 <b>QT</b>: 이야기로 읽기, 하나님의 성품, 묵상, 오늘의 기도 순서로 말씀을 깊이 붙잡습니다. 칸마다 적은 내용은 이 기기에 저장됩니다.</li>
   <li>아래 <b>나의 기록</b>: 진행률, 연속 기록, 배지, 책별로 읽은 곳, 형광펜, QT 노트를 봅니다.</li>
   <li><b>지도</b>는 두 손가락으로 벌리거나 +/− 버튼으로 확대·축소합니다. 이동이 있으면 점선과 화살표로 경로를 보여 줍니다.</li>
-  ${rj?`<li>한 주의 마지막 날(${DAYN[dateOf(1,6).getDay()]})에는 한 주 점수를 보고 주간 도전 문제를 풉니다.</li>`:`<li>날짜 칸 아래 <b>이번 주 돌아보기</b>를 누르면 한 주 점수와 주간 도전 문제가 나옵니다. 다시 누르면 접힙니다.</li>`}</ol></section>
-  <section class="sec"><span class="label">설정</span><h2>통독 시작일</h2>
-  <p class="lead">${rj?"1주차 1일째가 시작된 날입니다. 그날부터 엿새는 1–6일째, 일곱째 날은 한 주 돌아보기로 계산합니다.":"1일째를 읽기 시작한 날입니다. 그날부터 하루에 하나씩 365일째까지 이어집니다."} 지금 설정: ${fmt(parseD(mem.start),{year:"numeric",month:"long",day:"numeric",weekday:"short"})}</p>
-  <div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>
-  <span class="label" style="margin-top:10px">이미 읽어 오신 분</span><p class="lead">중간부터 쓰기 시작했다면, 오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞출 수 있습니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div>
-  <span class="label" style="margin-top:10px">기록 지우기</span><p class="lead">기록은 이 기기의 브라우저에만 저장됩니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div></section>
-  <section class="sec"><span class="label">시험판 안내</span><p class="lead">이 어플은 중앙성서교회 교인에게 성경 통독과 QT의 유익함을 위해 제공됩니다. 현재 시험판으로 제공됩니다. 미비한 점이 있다면 피드백을 남겨주세요. 정식판에서 반영하겠습니다.</p>
+  ${rj?`<li>한 주의 마지막 날(${DAYN[dateOf(1,6).getDay()]})에는 한 주 점수를 보고 주간 도전 문제를 풉니다.</li>`:`<li>날짜 칸 아래 <b>이번 주 돌아보기</b>를 누르면 한 주 점수와 주간 도전 문제가 나옵니다. 다시 누르면 접힙니다.</li>`}</ol></details></section>
+  <section class="sec msec"><h3 class="mh">원문 연구</h3><a class="mwvban" href="https://aqedah.github.io/MILALWV/" target="_blank" rel="noopener"><span class="mwvh">בְּרֵאשִׁית</span><span class="mwvt"><b>MILALWV</b><small>히브리어 원문 연구 — 구약 원문 읽기, 낱말 풀이, 장 구조, 원문 검색</small></span><i aria-hidden="true">↗</i></a></section>
+  <section class="sec msec"><h3 class="mh">의견</h3><p class="lead">이 어플은 중앙성서교회 교인에게 성경 통독과 QT의 유익함을 위해 제공되는 시험판입니다. 미비한 점이 있다면 피드백을 남겨 주세요. 정식판에서 반영하겠습니다.</p>
   ${window.SYNC&&SYNC.available?`<button class="btn" id="fbOpen"${view.fbOpen?" hidden":""}>피드백 남기기</button>
   <div class="fbbox" id="fbBox"${view.fbOpen?"":" hidden"}><textarea id="fbText" rows="5" maxlength="3000" placeholder="불편한 점, 틀린 내용, 있었으면 하는 기능을 자유롭게 적어 주세요. 어느 날짜·화면인지 적어 주시면 더 좋습니다."></textarea><input id="fbName" type="text" maxlength="20" placeholder="이름 (적지 않아도 됩니다)"><div class="row"><button class="btn" id="fbSend">보내기</button><button class="btn ghost small" id="fbCancel">닫기</button></div><p class="lead" id="fbMsg" role="status"></p></div>`:""}</section>
+</section>
+  <section class="sec msec"><h3 class="mh">기록 관리</h3><p class="lead">이 통독표의 퀴즈, 진행률, QT 기록을 지웁니다. 되돌릴 수 없습니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div></section>
   ${window.SYNC&&SYNC.available?`<div class="adminlink"><button class="linkbtn" id="adminGo">관리자</button></div>`:""}`;
 }
 function closeMenu(){ const r=document.getElementById("drawerRoot"); if(r&&r.innerHTML){ r.innerHTML=""; document.body.style.overflow=""; } }
 function openMenu(){
   const r=document.getElementById("drawerRoot");
-  r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="사용법과 설정"><div class="drawer-head"><b>사용법 · 설정</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${newsBlock()}${renderGuide()}</aside></div>`;
+  r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="메뉴"><div class="drawer-head"><b>메뉴</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${newsBlock()}${renderGuide()}</aside></div>`;
   bindMenuNews(); try{ if(NEWS.length) localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} renderNews();
   document.body.style.overflow="hidden";
   document.getElementById("drawerX").onclick=closeMenu;
@@ -7293,7 +7294,7 @@ const TOUR=[
  {sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 '오늘 통독 완료'를 누릅니다. 진행률이 올라갑니다."},
  {sel:'.bnav [data-tab="qt"]',t:"QT",d:"읽은 말씀으로 묵상하고 한 줄을 적고 기도합니다."},
  {sel:'.bnav [data-tab="record"]',t:"나의 기록",d:"진행률, 배지, 형광펜, QT 노트를 봅니다. 여기서 휴대폰·PC 기록을 하나로 연동할 수 있습니다."},
- {sel:"#menuBtn",t:"사용법·설정",d:"통독표(리딩지저스·365), 성경 번역, 야간 모드, 시작일을 바꿉니다. 둘러보기도 여기서 다시 볼 수 있습니다."}];
+ {sel:"#menuBtn",t:"메뉴",d:"통독표와 성경 번역, 시작일, 화면 설정을 바꿉니다. 둘러보기와 쓰는 방법, 의견 보내기도 여기에 있습니다."}];
 let tourI=0;
 function startTour(){ view.tourFull=true; if(view.tab!=="read"||view.pre||view.revW||isRev(view.d)){ view.tab="read"; view.pre=false; view.revW=null; if(isRev(view.d)) view.d=5; render(); }
   document.getElementById("sheetRoot").innerHTML=""; tourI=0; tourStep(); }
