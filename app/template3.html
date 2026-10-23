@@ -1341,6 +1341,7 @@ function flowQz(w,d){ const L=[]; for(const [b,c] of dayPlan(w,d).ch){ const f=F
 function onbCard(){ return ""; if(mem.onb) return "";
   return `<section class="sec onb"><h2>성경을 처음 읽어도 괜찮습니다</h2><p>오늘 할 일은 세 가지입니다.</p><ol><li>30초 길잡이를 읽습니다.</li><li>오늘 본문을 읽습니다.</li><li>퀴즈로 다시 확인합니다.</li></ol><p class="lead">QT는 시간이 있을 때 해도 됩니다. 요약·지도·인물 설명은 필요할 때만 보세요.</p><button class="btn" id="onbGo">오늘 본문 시작하기</button></section>`; }
 
+const rjSum=(w,d)=>MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[w+"-"+d]||null;
 function prepHelp(p,w,key){
   /* 리딩지저스가 제공하는 본문 설명이 있으면 그것으로 대신합니다 */
   const RD=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key];
@@ -1521,7 +1522,9 @@ function renderRead(){
   if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 보기 · 요약, 인물과 지도, 퀴즈</summary>`; }
   if(!simple||view.moreOpen){
   h+=`<div class="helpzone">`;
-  h+=`<section class="sec"><span class="label">본문 요약</span>${p.topic?`<p class="topic">${esc(p.topic)}</p>`:""}${sumT?`<p class="summary">${markGloss(sumT,b0,new Set())}</p>`:`<p class="lead">이 날의 요약은 준비 중입니다.</p>`}</section>`;
+  { const RD=rjSum(w,d);
+    if(RD) h+=`<section class="sec"><span class="label">본문 요약</span><p class="topic">${esc(RD.title)}</p>${RD.text.split("\n").map(t=>`<p class="summary">${markGloss(t,b0,new Set())}</p>`).join("")}<p class="lead src">리딩지저스 ${RD.vol}권 ${RD.lesson}강 · ${RD.day}일차</p></section>`;
+    else h+=`<section class="sec"><span class="label">본문 요약</span>${p.topic?`<p class="topic">${esc(p.topic)}</p>`:""}${sumT?`<p class="summary">${markGloss(sumT,b0,new Set())}</p>`:`<p class="lead">이 날의 요약은 준비 중입니다.</p>`}</section>`; }
   h+=knowSection(p,A,b0);
   h+=moreSection(p,A,b0,w,d);
   h+=renderMapBox(A);
@@ -2136,7 +2139,7 @@ function renderReview365(W){
    <div class="score"><span class="badge">${g}</span><p class="lead">${msg}${T.n&&T.n<L.length?` 아직 ${L.length-T.n}일이 남아 있어요. 놓친 날도 지금 풀 수 있습니다.`:""}</p></div></section>`;
   if(BIBLE) h+=`<section class="sec"><span class="label">주간 도전 문제</span>${renderQuiz("c"+W,null,"week")}</section>`;
   h+=`<section class="sec"><span class="label">이번 주 이야기 다시 보기</span><div class="sumlist">`;
-  for(const [w,d] of L) h+=`<details><summary>${DAYN[dateOf(w,d).getDay()]} · ${esc(dayPlan(w,d).label)}</summary><p>${esc((SUMMARY[w-1]||[])[d]||"")}</p></details>`;
+  for(const [w,d] of L) h+=`<details><summary>${DAYN[dateOf(w,d).getDay()]} · ${esc(dayPlan(w,d).label)}</summary><p>${esc((rjSum(w,d)||{}).text||(SUMMARY[w-1]||[])[d]||"")}</p></details>`;
   h+=`</div></section>`+nextPreview(W);
   return h;
 }
@@ -2164,7 +2167,7 @@ function renderReview(){
   if(BIBLE) h+=`<section class="sec"><span class="label">주간 도전 문제</span>${renderQuiz(String(w),null,"week")}</section>`;
   h+=renderArcs(w);
   h+=`<section class="sec"><span class="label">이번 주 이야기 다시 보기</span><details class="flow" open><summary>이번 주 전체 흐름</summary><p>${esc(W.story)}</p><p style="color:var(--muted);font-size:14.5px">${esc(W.christ)}</p></details><div class="sumlist">`;
-  for(let d=0;d<6;d++) h+=`<details><summary>${d+1}일째 · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`;
+  for(let d=0;d<6;d++) h+=`<details><summary>${d+1}일째 · ${esc(dayPlan(w,d).label)}</summary><p>${esc((rjSum(w,d)||{}).text||SUMMARY[w-1][d])}</p></details>`;
   return h+`</div></section>`+nextPreview(weekOfDay(w,6),"다음 주 미리 보기 · 내일부터");
 }
 
