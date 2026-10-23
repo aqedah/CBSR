@@ -36,6 +36,7 @@ function blankName(text,name){ return text.replace(new RegExp("(?<![가-힣])"+e
 const honor=(t,e)=>t.slice(e.idx+e.name.length).startsWith("께");
 
 /* 하루 본문 분석 */
+const LANG_AFTER=/^(?:와|과)?(?:\s*[가-힣]{1,4}(?:와|과))?\s*[가-힣]{0,3}\s*(?:(?:말|글|문자)(?:로|으로)(?![가-힣])|방언)/;
 function analyzeDay(chs, BIBLE, EI){
   const verses=[];
   for(const [b,c] of chs) BIBLE[b-1][c-1].forEach((t,i)=>verses.push({b,c,v:i+1,t,ents:[]}));
@@ -43,7 +44,10 @@ function analyzeDay(chs, BIBLE, EI){
   for(const vs of verses){
     EI.re.lastIndex=0; let m;
     while((m=EI.re.exec(vs.t))){
-      const e=EI.map.get(m[1]); vs.ents.push({name:m[1],type:e.type,idx:m.index});
+      const e=EI.map.get(m[1]);
+      /* 언어 이름으로 쓰인 땅 이름은 빼기: '로마와 헬라 말로'(요 19:20), '아람 방언으로' */
+      if(e.type==="place"&&LANG_AFTER.test(vs.t.slice(m.index+m[1].length,m.index+m[1].length+16))) continue;
+      vs.ents.push({name:m[1],type:e.type,idx:m.index});
       const tgt=e.type==="person"?people:places;
       if(!tgt.has(m[1])) tgt.set(m[1],{name:m[1],n:0,refs:[]});
       const r=tgt.get(m[1]); r.n++; if(r.refs.length<8) r.refs.push([vs.b,vs.c,vs.v]);

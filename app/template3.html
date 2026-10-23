@@ -1042,7 +1042,7 @@ const pct=(a,b)=>b?Math.round(a/b*100):0;
 function markGloss(text,b,seen){
   const hits=[]; let m;
   GI.re.lastIndex=0; while((m=GI.re.exec(text))){ const it=GI.by.get(m[1]); if(it&&inScope(it,b)) hits.push({i:m.index,l:m[1].length,t:"g",k:it.t,s:m[1]}); }
-  PL_RE.lastIndex=0; while((m=PL_RE.exec(text))){ const cn=TR_ALIAS[m[1]]||m[1]; let k=kindOf(cn,b); if(k==="h"&&notPerson(cn,text,m.index,b)) k=null; if(k) hits.push({i:m.index,l:m[1].length,t:k,k:cn,s:m[1]}); }
+  PL_RE.lastIndex=0; while((m=PL_RE.exec(text))){ const cn=TR_ALIAS[m[1]]||m[1]; let k=kindOf(cn,b); if(k==="h"&&notPerson(cn,text,m.index,b)) k=null; if(k==="p"&&LANG_AFTER.test(text.slice(m.index+m[1].length,m.index+m[1].length+16))) k=null; if(k) hits.push({i:m.index,l:m[1].length,t:k,k:cn,s:m[1]}); }
   hits.sort((a,c)=>a.i-c.i||c.l-a.l);
   let out="",last=0;
   for(const h of hits){ if(h.i<last) continue; const key=(h.t==="g"?"":h.t+":")+h.k; if(seen.has(key)) continue; seen.add(key);
@@ -1072,7 +1072,7 @@ function notPerson(n,text,i,b){ const q=NEED_NEAR[n]; if(q&&b&&!q.books.includes
 function kindOf(n,b){ const a=plIn(n,b), h=peIn(n,b); if(a&&h){ return lists(PEOPLEINFO[n],b)&&!lists(PLACEINFO[n],b)?"h":"p"; } return a?"p":h?"h":null; }
 function entsIn(A){ const pl=[], pe=[], seen=new Set();
   for(const v of A.verses){ const gs=[]; GI.re.lastIndex=0; let g; while((g=GI.re.exec(v.t))){ const it=GI.by.get(g[1]); if(it&&inScope(it,v.b)) gs.push([g.index,g.index+g[1].length]); }
-    PL_RE.lastIndex=0; let m; while((m=PL_RE.exec(v.t))){ const n=TR_ALIAS[m[1]]||m[1], a0=m.index, a1=a0+m[1].length; if(gs.some(([x,y])=>a0<y&&a1>x)) continue; let k=kindOf(n,v.b); if(k==="h"&&notPerson(n,v.t,a0,v.b)) k=plIn(n,v.b)?"p":null; if(!k||seen.has(k+n)) continue; seen.add(k+n); (k==="p"?pl:pe).push({n,s:m[1],ref:[v.b,v.c,v.v]}); } }
+    PL_RE.lastIndex=0; let m; while((m=PL_RE.exec(v.t))){ const n=TR_ALIAS[m[1]]||m[1], a0=m.index, a1=a0+m[1].length; if(gs.some(([x,y])=>a0<y&&a1>x)) continue; let k=kindOf(n,v.b); if(k==="h"&&notPerson(n,v.t,a0,v.b)) k=plIn(n,v.b)?"p":null; if(k==="p"&&LANG_AFTER.test(v.t.slice(a1,a1+16))) continue; if(!k||seen.has(k+n)) continue; seen.add(k+n); (k==="p"?pl:pe).push({n,s:m[1],ref:[v.b,v.c,v.v]}); } }
   return {pl,pe}; }
 function placesIn(A){ return entsIn(A).pl; }
 function placeEntry(n,b){ const p=PLACEINFO[n]; if(!p) return null;
