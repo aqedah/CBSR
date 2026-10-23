@@ -1407,6 +1407,17 @@ button.bk{font-family:inherit;cursor:pointer}
 .help30 dd{margin:2px 0 0;line-height:1.6}
 .help30 .find{font-weight:600;color:var(--accent)}
 .help30 .calm{margin:8px 14px 12px}
+.rjsum{border-top:1px solid var(--line);margin:14px 0 4px;padding:12px 0 2px}
+.rjsum .rjt{display:block;font-family:var(--f-text);font-size:19px;line-height:1.4;margin-bottom:6px}
+.rjtext{font-family:var(--f-text);font-size:16px;line-height:1.75;margin:0}
+.rjtext.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rjfoot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}
+.rjmore{border:0;background:none;padding:4px 0;color:var(--accent);font-weight:700;font-size:14px;cursor:pointer}
+.rjfoot .src{font-size:12px;color:var(--muted)}
+.dmeta .rjc{font-weight:600;color:var(--ink);white-space:nowrap}
+.eyeq.qbox{border-left:3px solid var(--accent);padding:2px 0 2px 12px}
+.eyeq.qbox>b::before{content:"?";display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:11px;margin-right:5px;vertical-align:1px}
+.daycard .eyeq.qbox{margin:14px 0 14px}
 .rjdesc{padding:0 14px 12px}.daycard .rjdesc{padding:0 0 10px}
 .rjdesc .rjt{display:block;font-size:16px;color:var(--ink);margin:2px 0 6px}
 .rjdesc p{margin:0 0 8px;font-family:var(--f-text);font-size:16px;line-height:1.75}
@@ -1636,6 +1647,7 @@ function blankName(text,name){ return text.replace(new RegExp("(?<![가-힣])"+e
 const honor=(t,e)=>t.slice(e.idx+e.name.length).startsWith("께");
 
 /* 하루 본문 분석 */
+const LANG_AFTER=/^(?:와|과)?(?:\s*[가-힣]{1,4}(?:와|과))?\s*[가-힣]{0,3}\s*(?:(?:말|글|문자)(?:로|으로)(?![가-힣])|방언)/;
 function analyzeDay(chs, BIBLE, EI){
   const verses=[];
   for(const [b,c] of chs) BIBLE[b-1][c-1].forEach((t,i)=>verses.push({b,c,v:i+1,t,ents:[]}));
@@ -1643,7 +1655,10 @@ function analyzeDay(chs, BIBLE, EI){
   for(const vs of verses){
     EI.re.lastIndex=0; let m;
     while((m=EI.re.exec(vs.t))){
-      const e=EI.map.get(m[1]); vs.ents.push({name:m[1],type:e.type,idx:m.index});
+      const e=EI.map.get(m[1]);
+      /* 언어 이름으로 쓰인 땅 이름은 빼기: '로마와 헬라 말로'(요 19:20), '아람 방언으로' */
+      if(e.type==="place"&&LANG_AFTER.test(vs.t.slice(m.index+m[1].length,m.index+m[1].length+16))) continue;
+      vs.ents.push({name:m[1],type:e.type,idx:m.index});
       const tgt=e.type==="person"?people:places;
       if(!tgt.has(m[1])) tgt.set(m[1],{name:m[1],n:0,refs:[]});
       const r=tgt.get(m[1]); r.n++; if(r.refs.length<8) r.refs.push([vs.b,vs.c,vs.v]);
@@ -5565,7 +5580,8 @@ const isoD=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+Str
 /* 오늘 본문 보내기: 휴대폰 공유 창(카톡 등) → 안 되면 복사 */
 async function shareDay(w,d){ const dt=dateOf(w,d), e=EYE[keyOf(w,d)];
   const url=location.origin+location.pathname+"?p="+(MODE==="rj"?"rj":"365")+"&d="+isoD(dt);
-  const txt=`[${PI.name}] ${fmt(dt,{month:"long",day:"numeric"})}(${DAYN[dt.getDay()]})\n${isRev(d)?"한 주 돌아보기":dayPlan(w,d).label}${e&&e.q&&!isRev(d)?"\n\n읽으며 살펴보기: "+e.q:""}\n\n${url}`;
+  const R=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[keyOf(w,d)];
+  const txt=`[${PI.name}] ${fmt(dt,{month:"long",day:"numeric"})}(${DAYN[dt.getDay()]})\n${isRev(d)?"한 주 돌아보기":dayPlan(w,d).label}${R?` · ${R.title}${R.core?`\n핵심 읽기: ${R.core}`:""}\n\n${R.text}\n(리딩지저스 ${R.vol}권 ${R.lesson}강 · ${R.day}일차)`:""}\n\n${url}`;
   try{ if(navigator.share){ await navigator.share({text:txt}); return; } }catch(err){ if(err&&err.name==="AbortError") return; }
   try{ await navigator.clipboard.writeText(txt); toast("복사했습니다. 카톡에 붙여 넣으세요."); }
   catch(err){ sheet("본문 보내기",`<p class="lead">아래 글을 길게 눌러 복사해 보내세요.</p><textarea readonly rows="8" style="width:100%">${esc(txt)}</textarea>`); } }
@@ -5584,11 +5600,13 @@ function stripRef(p){ const bs=[]; for(const [b,c] of p.ch){ let g=bs[bs.length-
 const shortRef=p=>p.spec.replace(/ 1-몬 1/,"-몬").replace(/요이 1-요삼 1/,"요이-요삼").replace(/^유 1$/,"유");
 const pct=(a,b)=>b?Math.round(a/b*100):0;
 
+/* 지명 위치 안내: 추정 위치는 확실성을 함께(학자들 사이에 위치 판단이 갈리는 곳) */
+function placeNote(g){ return g&&g[4]?`<b>추정 위치</b> — 확실성 ${Math.round((g[5]||0)/10)}%. 학자들 사이에 위치 판단이 갈리는 곳입니다(위치: OpenBible.info).`:"위치는 대략적인 것입니다."; }
 /* 어려운 말 표시 */
 function markGloss(text,b,seen){
   const hits=[]; let m;
   GI.re.lastIndex=0; while((m=GI.re.exec(text))){ const it=GI.by.get(m[1]); if(it&&inScope(it,b)) hits.push({i:m.index,l:m[1].length,t:"g",k:it.t,s:m[1]}); }
-  PL_RE.lastIndex=0; while((m=PL_RE.exec(text))){ const cn=TR_ALIAS[m[1]]||m[1]; let k=kindOf(cn,b); if(k==="h"&&notPerson(cn,text,m.index,b)) k=null; if(k) hits.push({i:m.index,l:m[1].length,t:k,k:cn,s:m[1]}); }
+  PL_RE.lastIndex=0; while((m=PL_RE.exec(text))){ const cn=TR_ALIAS[m[1]]||m[1]; let k=kindOf(cn,b); if(k==="h"&&notPerson(cn,text,m.index,b)) k=null; if(k==="p"&&LANG_AFTER.test(text.slice(m.index+m[1].length,m.index+m[1].length+16))) k=null; if(k) hits.push({i:m.index,l:m[1].length,t:k,k:cn,s:m[1]}); }
   hits.sort((a,c)=>a.i-c.i||c.l-a.l);
   let out="",last=0;
   for(const h of hits){ if(h.i<last) continue; const key=(h.t==="g"?"":h.t+":")+h.k; if(seen.has(key)) continue; seen.add(key);
@@ -5618,7 +5636,7 @@ function notPerson(n,text,i,b){ const q=NEED_NEAR[n]; if(q&&b&&!q.books.includes
 function kindOf(n,b){ const a=plIn(n,b), h=peIn(n,b); if(a&&h){ return lists(PEOPLEINFO[n],b)&&!lists(PLACEINFO[n],b)?"h":"p"; } return a?"p":h?"h":null; }
 function entsIn(A){ const pl=[], pe=[], seen=new Set();
   for(const v of A.verses){ const gs=[]; GI.re.lastIndex=0; let g; while((g=GI.re.exec(v.t))){ const it=GI.by.get(g[1]); if(it&&inScope(it,v.b)) gs.push([g.index,g.index+g[1].length]); }
-    PL_RE.lastIndex=0; let m; while((m=PL_RE.exec(v.t))){ const n=TR_ALIAS[m[1]]||m[1], a0=m.index, a1=a0+m[1].length; if(gs.some(([x,y])=>a0<y&&a1>x)) continue; let k=kindOf(n,v.b); if(k==="h"&&notPerson(n,v.t,a0,v.b)) k=plIn(n,v.b)?"p":null; if(!k||seen.has(k+n)) continue; seen.add(k+n); (k==="p"?pl:pe).push({n,s:m[1],ref:[v.b,v.c,v.v]}); } }
+    PL_RE.lastIndex=0; let m; while((m=PL_RE.exec(v.t))){ const n=TR_ALIAS[m[1]]||m[1], a0=m.index, a1=a0+m[1].length; if(gs.some(([x,y])=>a0<y&&a1>x)) continue; let k=kindOf(n,v.b); if(k==="h"&&notPerson(n,v.t,a0,v.b)) k=plIn(n,v.b)?"p":null; if(k==="p"&&LANG_AFTER.test(v.t.slice(a1,a1+16))) continue; if(!k||seen.has(k+n)) continue; seen.add(k+n); (k==="p"?pl:pe).push({n,s:m[1],ref:[v.b,v.c,v.v]}); } }
   return {pl,pe}; }
 function placesIn(A){ return entsIn(A).pl; }
 function placeEntry(n,b){ const p=PLACEINFO[n]; if(!p) return null;
@@ -5689,8 +5707,6 @@ const WATER={
 const CTXL={israel:[["지중해",32.2,34.5],["염해",31.3,35.47],["요단 강",32.35,35.63],["갈릴리 바다",32.82,35.6]],asia:[["에게 해",38.6,25.2]],med:[["지중해",34.2,20.5]],neareast:[["지중해",33.6,27.5],["홍해",24.5,36.2],["유브라데 강",34.6,40.6],["힛데겔 강",35.0,43.7],["나일 강",27.0,31.0]]};
 let LMAP=null;
 const RC=["#7A2E8A","#1F5FA8","#B5562A","#0E7C6B","#B0263F","#5A6B12"];
-/* 지명 위치 안내: 추정 위치는 확실성을 함께(학자들 사이에 위치 판단이 갈리는 곳) */
-function placeNote(g){ return g&&g[4]?`<b>추정 위치</b> — 확실성 ${Math.round((g[5]||0)/10)}%. 학자들 사이에 위치 판단이 갈리는 곳입니다(위치: OpenBible.info).`:"위치는 대략적인 것입니다."; }
 function destroyMap(){ if(LMAP){ try{LMAP.off();LMAP.stop&&LMAP.stop();LMAP.remove();}catch(e){} LMAP=null; } }
 /* 이동 경로: 성경 책·장 기준 — 그날 읽는 장에 걸친 경로를 모두 */
 function routesFor(w,d){ const p=dayPlan(w,d); if(!p) return []; const has=(b,c)=>p.ch.some(x=>x[0]===b&&x[1]===c);
@@ -5905,7 +5921,7 @@ function onbCard(){ return ""; if(mem.onb) return "";
 function prepHelp(p,w,key){
   /* 리딩지저스가 제공하는 본문 설명이 있으면 그것으로 대신합니다 */
   const RD=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key];
-  if(RD) return `<details class="help30 rjd"${view.helpOpen?" open":""}><summary>읽기 전 30초 도움 <span aria-hidden="true">›</span></summary><div class="rjdesc"><b class="rjt">${esc(RD.title)}</b>${RD.text.split("\n").map(t=>`<p>${esc(t)}</p>`).join("")}${RD.core?`<p class="rjcore"><b>핵심 읽기</b> ${esc(RD.core)}</p>`:""}<p class="src">리딩지저스 ${RD.vol}권 ${RD.lesson}강 · ${RD.day}일차</p></div></details>`;
+  if(RD) return `<div class="rjsum"><b class="rjt">${esc(RD.title)}</b><p class="rjtext${view.rjOpen?"":" clamp"}" id="rjText">${RD.text.split("\n").map(t=>esc(t)).join("<br>")}</p><div class="rjfoot"><button class="rjmore" id="rjMore" aria-expanded="${!!view.rjOpen}">${view.rjOpen?"접기 ‹":"더 보기 ›"}</button><span class="src">리딩지저스 ${RD.vol}권 ${RD.lesson}강 · ${RD.day}일차</span></div></div>`;
   const g=GUIDE[key]; let W=null;
   if(MODE==="rj") W=WEEKS[w-1]; else { const [b,c]=p.ch[0]; const i=RJ_PLAN.findIndex(wk=>wk.some(dd=>dd.ch.some(x=>x[0]===b&&x[1]===c))); if(i>=0) W=RJ_WEEKS[i]; }
   const where=W&&W.story?W.story.split(/(?<=[다요]\.)\s+/)[0]:"";
@@ -6060,11 +6076,11 @@ function renderRead(){
   if(!TRY&&view.w===here.w&&view.d===here.d){ const M=missedDays(); if(M.length) h+=`<details class="missed"${view.missOpen?" open":""} id="missBox"><summary>읽지 않은 날 ${M.length}일 <span aria-hidden="true">›</span></summary><div class="qtstart-list">${M.map(([a,b])=>dayBtn(a,b)).join("")}</div></details>`; }
   // 오늘 본문: 제목 → 분량·시간 → 본문 펼치기 → (접힌) 읽기 전 30초 도움
   const dtv=dateOf(w,d), dd0=dayDiff(today0(),dtv), tag=TRY?["today","시험 본문"]:dd0===0?["today","오늘 읽을 본문"]:dd0<0?["past","지난 본문"]:["next","미리 보기"];
-  h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl"><h2>${esc(p.label)}</h2><p class="dmeta">${p.ch.length}${b0===19?"편":"장"} · 약 ${mins}분${done?` · <b class="okc">✓ 통독 완료</b>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
+  h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl"><h2>${esc(p.label)}</h2><p class="dmeta">${p.ch.length}${b0===19?"편":"장"} · 약 ${mins}분${(()=>{ const R=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key]; return R&&R.core?` · 핵심 읽기 <b class="rjc">${esc(R.core)}</b>`:""; })()}${done?` · <b class="okc">✓ 통독 완료</b>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
   const TXd=dayTools(w,d), tl=TXd?TXd.q:[];
-  const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq"><b>읽으며 살펴보기</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:"";
+  const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:"";
   if(!view.open){
     h+=`${helpBox}${eyeQ}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else {
@@ -7886,6 +7902,7 @@ function bind(){
   m.querySelectorAll("[data-pl]").forEach(el=>{el.onclick=()=>showPlace(el.dataset.pl); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showPlace(el.dataset.pl);}};});
   m.querySelectorAll("[data-pe]").forEach(el=>{el.onclick=()=>showPerson(el.dataset.pe); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showPerson(el.dataset.pe);}};});
   const hb=m.querySelector(".help30"); if(hb) hb.ontoggle=()=>{view.helpOpen=hb.open;};
+  const rm=m.querySelector("#rjMore"); if(rm) rm.onclick=()=>{ view.rjOpen=!view.rjOpen; const t=m.querySelector("#rjText"); t.classList.toggle("clamp",!view.rjOpen); rm.textContent=view.rjOpen?"접기 ‹":"더 보기 ›"; rm.setAttribute("aria-expanded",view.rjOpen); };
   const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
   m.querySelectorAll(".hbook [data-book]").forEach(x=>x.onclick=()=>showBook(+x.dataset.book));
   m.querySelectorAll("[data-qrep]").forEach(x=>x.onclick=()=>reportQuiz(x.dataset.qrep));
@@ -7995,7 +8012,7 @@ function tourBtnShow(){ const b=document.getElementById("tourBtn"); if(b) b.hidd
 const TOUR=[
  {sel:"#strip",t:"날짜",d:"날짜 칸을 누르면 그날 본문으로 갑니다. 위의 주차 제목을 누르면 다른 주를 고르거나 장으로 찾을 수 있습니다."},
  {sel:"#openText, #bible",t:"오늘 본문",d:"여기서 오늘 본문을 펼쳐 읽습니다. 절을 누르면 형광펜을 칠할 수 있고, 점선 밑줄 친 말을 누르면 풀이가 나옵니다."},
- {sel:".help30",t:"읽기 전 30초 도움",d:"펼치면 지금 성경 이야기의 어디쯤인지, 지난 이야기, 읽으면서 찾을 것이 나옵니다."},
+ {sel:".rjsum,.help30",t:"오늘 이야기 · 읽기 전 도움",d:"리딩지저스 교재가 있는 날은 오늘 본문 요약이 세 줄 보이고, 더 보기를 누르면 전부 나옵니다. 없는 날은 지금 어디쯤인지, 지난 이야기, 읽으면서 찾을 것이 접혀 있습니다."},
  {sel:".helpzone",t:"읽은 뒤에",d:"본문 요약, 오늘 알아둘 인물·곳·말, 지도가 모여 있습니다."},
  {sel:"#quizSec",t:"퀴즈",d:"읽은 내용을 퀴즈로 확인합니다. 틀리면 힌트가 나오고 본문으로 돌아가 다시 찾습니다."},
  {sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 '오늘 통독 완료'를 누릅니다. 진행률이 올라갑니다."},
