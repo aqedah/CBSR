@@ -428,23 +428,151 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .spray{margin:0;font-family:var(--f-text);font-size:15.5px;line-height:1.75;color:var(--ink)}
 .sdone{width:100%;padding:15px}.sdeep{align-self:center;font-size:13px;margin-top:4px}
 .snav{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:10px}.snav .btn{padding:13px}.snav .btn[disabled]{opacity:.35}
-#storyRoot{position:fixed;inset:0;z-index:9500;display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));animation:siIn .2s ease}
-.story-root.dark{background:linear-gradient(165deg,var(--sg1),var(--sg2));color:#fff}
-.story-root.light{background:var(--paper);color:var(--ink)}
+/* ===== 개편 시험(V2) ===== */
+.tab-today .weeknav,.tab-today .strip,.tab-today #revRow,.tab-today #whereLine,.tab-today #dateLine,.tab-today #noticeBox{display:none!important}
+.tdh{position:relative;margin:8px -16px 0;min-height:430px;overflow:hidden;background:linear-gradient(165deg,#3a2c1f,#15110d);color:#f6efe4;display:flex}
+.tdh .tdbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.62) saturate(.9)}
+.tdh::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.05) 35%,rgba(10,7,4,.85) 100%)}
+.tdin{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 18px 30px}
+.tdtop{align-self:stretch;display:flex;justify-content:space-between;align-items:center;font-size:13px;opacity:.9;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tdtoday{border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.25);color:#fff;border-radius:999px;padding:4px 10px;font-size:12.5px}
+.tdring{margin-top:auto;width:96px;height:96px;border-radius:50%;padding:3px;border:0;background:conic-gradient(#e2b874,#ff5b45,#e2b874);position:relative;cursor:pointer}
+.tdring.seen{background:rgba(255,255,255,.35)}
+.tdring img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #15110d;display:block}
+.tdring i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;color:#fff;font-size:26px;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.tdk{margin:16px 0 4px;font-size:12.5px;letter-spacing:.14em;color:#e2b874}
+.tdh h1{font:900 clamp(26px,7.6vw,32px)/1.25 "Noto Serif KR","Gowun Batang",serif;color:#fff;margin:0;word-break:keep-all;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.tdsub{font-size:13.5px;color:#d9cdbb;margin:10px 0 0}
+.tdcr{position:absolute;right:10px;bottom:6px;z-index:3;font-size:10px;color:rgba(255,255,255,.5);text-decoration:none}
+.tdsteps{display:grid;gap:8px}
+.tdstep{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:13px 14px;color:var(--ink)}
+.tdstep b{width:28px;height:28px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--gold-soft);color:var(--gold);font-size:14px}
+.tdstep span{flex:1;font-weight:700;font-size:15.5px}.tdstep small{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:1px}
+.tdstep i{font-style:normal;color:var(--muted);font-size:18px}.tdstep.ok b{background:var(--accent);color:var(--accent-ink)}.tdstep.ok i{color:var(--accent);font-weight:700}
+.wcard{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(165deg,#3a2c1f,#15110d);color:#fff;min-height:170px;display:flex;align-items:flex-end}
+.wcard.big{min-height:300px}
+.wcard .wcbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(.85)}
+.wcin{position:relative;padding:18px 18px 16px}
+.wcin q{display:block;font:700 19px/1.6 "Noto Serif KR","Gowun Batang",serif;word-break:keep-all;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+.wcin q::before{content:"“";display:block;font-size:44px;line-height:.5;color:#e2b874;margin-bottom:4px}.wcin q::after{content:""}
+.wcin small{display:block;margin-top:8px;color:#e2b874;font-size:12.5px}
+.wcin p{margin:10px 0 0;font-size:14px;color:#d9cdbb;border-left:2px solid #e2b874;padding-left:10px}
+.tdnext{position:relative;border-radius:16px;overflow:hidden;background:#15110d;color:#fff}
+.tdnext .tdnbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(3px) brightness(.4) saturate(.7);transform:scale(1.06)}
+.tdnin{position:relative;padding:20px 18px;display:grid;gap:4px;text-align:center}
+.tdnin small{color:#e2b874;font-size:12.5px;letter-spacing:.08em}.tdnin b{font:700 21px/1.35 "Noto Serif KR","Gowun Batang",serif}.tdnin span{font-size:13.5px;color:#d9cdbb}
+.tdcd{font:700 40px/1 var(--f-ui);font-variant-numeric:tabular-nums;letter-spacing:.05em;margin-top:12px}
+.tdnin em{font-style:normal;font-size:12.5px;color:#e2b874}
+.tdnin .btn{justify-self:center;margin-top:8px}
+.chsoon{display:grid;gap:8px}.chs{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;opacity:.75}.chs b{display:block;font-size:15px}.chs span{font-size:13px;color:var(--muted)}
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.wtile{position:relative;aspect-ratio:3/4;border:0;border-radius:10px;overflow:hidden;background:linear-gradient(165deg,#3a2c1f,#15110d);padding:0;color:#fff}
+.wtile .wtbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.65)}
+.wtile span{position:absolute;left:6px;right:6px;bottom:6px;font-size:12px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.8);text-align:left}
+/* ===== 이야기 카드 (스토리) ===== */
+#storyRoot{position:fixed;inset:0;z-index:9500;background:#0d0b09;color:#f6efe4;animation:siIn .2s ease;--sgold:#e2b874;--ssub:#d9cdbb;--sred:#ff5b45;--sline:rgba(255,255,255,.18);--sser:"Noto Serif KR","Gowun Batang",serif}
+#storyRoot .sfr{position:absolute;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:linear-gradient(165deg,var(--sg1,#3a2c1f),var(--sg2,#15110d))}
 html.story-on .bnav,html.story-on .totop{display:none!important}
-.sbars2{display:flex;gap:3px}.sbars2 span{flex:1;height:3px;border-radius:2px;background:rgba(127,127,127,.35);overflow:hidden}.sbars2 span i{display:block;height:100%;width:0;background:currentColor}
-.story-root.light .sbars2 span i{background:var(--accent)}.sbars2 span.done i{width:100%}.sbars2 span.run i{animation:sfill linear forwards}
+.sbars2{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;right:10px;display:flex;gap:3px;z-index:30}
+.sbars2 span{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden}.sbars2 span i{display:block;height:100%;width:0;background:#fff}
+.sbars2 span.done i{width:100%}.sbars2 span.run i{animation:sfill linear forwards}
 @keyframes sfill{from{width:0}to{width:100%}}
-.stop{display:flex;align-items:center;gap:8px;margin:10px 0 4px}.stop b{font-size:14px;flex:1}.stop b small{font-weight:500;opacity:.7;margin-left:4px}.stop span{font-size:12.5px;opacity:.75}
-.sx{border:0;background:none;color:inherit;font-size:20px;padding:4px 6px;margin-left:4px}
-.sstage{flex:1;overflow-y:auto;display:flex;flex-direction:column;justify-content:center;-webkit-tap-highlight-color:transparent;user-select:none}
-.story-root.light .sstage{justify-content:flex-start;user-select:auto;padding-top:10px}
-.snews{padding:0 6px;animation:siUp .5s ease both}.snews p{font-family:var(--f-text);font-size:clamp(23px,6.6vw,30px);line-height:1.6;font-weight:600;margin:0;word-break:keep-all;text-shadow:0 1px 12px rgba(0,0,0,.25)}
-.snews small{display:block;margin-top:18px;font-size:13px;opacity:.75;letter-spacing:.04em}
-.stapnote{text-align:center;font-size:11.5px;opacity:.55;margin:6px 0 0}
-.story-root.paused .stapnote{opacity:.9}
-.sqt{display:flex;flex-direction:column;gap:12px}
-.snav2{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:10px}.snav2 .btn{padding:13px}
+.stop{position:absolute;top:calc(env(safe-area-inset-top,0px) + 18px);left:14px;right:8px;display:flex;align-items:center;gap:8px;z-index:30;font-size:13px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.stop .sdot{width:28px;height:28px;flex:none;border-radius:50%;background:linear-gradient(135deg,#e2b874,#9c5b2e);display:grid;place-items:center;font:700 12px var(--sser);color:#1b130b;text-shadow:none}
+.stop b{font-size:13px}.stop span{opacity:.75;font-size:12.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sx{border:0;background:none;color:#fff;font-size:20px;padding:4px 8px}
+.sph{position:absolute;inset:0;overflow:hidden}
+.sph img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(.92) contrast(1.04)}
+.sph.kb img{animation:skb 12s ease-out forwards}
+@keyframes skb{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.14) translate(-2%,-1.5%)}}
+.sph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 42%,rgba(10,7,4,.9) 100%)}
+.scr{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);font-size:10px;color:rgba(255,255,255,.55);z-index:25;text-decoration:none;max-width:72%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sstage{position:absolute;inset:0;z-index:10;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.sbox{position:absolute;left:18px;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 34px);z-index:5}
+.sbox>*{animation:sup .7s both}.sbox>*:nth-child(2){animation-delay:.15s}.sbox>*:nth-child(3){animation-delay:.3s}.sbox>*:nth-child(4){animation-delay:.45s}.sbox>*:nth-child(5){animation-delay:.6s}
+@keyframes sup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.slab{display:inline-block;font-size:11.5px;letter-spacing:.12em;color:var(--sgold);font-weight:700;margin-bottom:8px}
+.sbox h1{font:900 clamp(28px,8.6vw,36px)/1.22 var(--sser);letter-spacing:-.02em;text-shadow:0 2px 14px rgba(0,0,0,.5);color:#fff;white-space:pre-line;word-break:keep-all}
+.sbox h2{word-break:keep-all;font:700 clamp(22px,6.4vw,26px)/1.3 var(--sser);letter-spacing:-.01em;margin:0 0 10px;text-shadow:0 2px 10px rgba(0,0,0,.45);color:#fff}
+.sbox p{font-size:16px;line-height:1.7;color:var(--ssub);margin:6px 0 0;word-break:keep-all;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+.sbox p b{color:#fff}
+.sq2{font:500 18px/1.6 var(--sser);color:#fff;border-left:3px solid var(--sgold);padding:2px 0 2px 12px;margin-top:12px;word-break:keep-all}
+.sq2 small{display:block;font:400 12px var(--f-ui);color:var(--sgold);margin-top:4px}
+.spanel{background:rgba(22,17,12,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--sline);border-radius:14px;padding:16px 16px 14px}
+.k-cover .sbox{bottom:auto;top:50%;transform:translateY(-50%);text-align:center}
+.k-cover .skick{font-size:13px;letter-spacing:.2em;color:var(--sgold);margin-bottom:12px}
+.k-cover .ssubt{font-size:15.5px;color:var(--ssub);margin-top:14px;line-height:1.6;white-space:pre-line}
+.k-cover .sph::after{background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,.7) 100%)}
+.k-split .sph{bottom:44%}
+.k-split .sph::after{background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,0) 70%,#1b150f 100%)}
+.k-split .sbase{position:absolute;left:0;right:0;bottom:0;height:44%;background:#1b150f}
+.k-split .sbox{top:54%;bottom:auto}
+.k-quote .sph img{filter:brightness(.42) saturate(.7)}
+.k-quote .sph::after{background:radial-gradient(ellipse at 50% 55%,rgba(0,0,0,.15),rgba(0,0,0,.75))}
+.k-quote .sbox,.k-line .sbox{bottom:auto;top:50%;transform:translateY(-50%)}
+.sbigq{font:700 clamp(22px,6.6vw,27px)/1.55 var(--sser);color:#fff;word-break:keep-all;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.sbigq::before{content:"“";display:block;font-size:64px;line-height:.6;color:var(--sgold);margin-bottom:6px}
+.sref{font-size:13px;color:var(--sgold);margin-top:10px}
+.k-line .sph img{filter:brightness(.62) saturate(.85)}
+.sbox .sline2{font:700 clamp(23px,6.8vw,29px)/1.6 var(--sser);color:#fff;word-break:keep-all;text-shadow:0 2px 14px rgba(0,0,0,.6);margin:0}
+.k-table .sph{display:none}.k-table .spaper,.k-qt .spaper{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 0%,#3a2c1f 0%,#17120d 70%)}
+.k-table .sbox{top:calc(env(safe-area-inset-top,0px) + 70px);bottom:auto}
+.sgrid{display:grid;border-top:1px solid var(--sline);margin-top:12px;font-size:13px;line-height:1.45}
+.sgrid>div{padding:9px 5px;border-bottom:1px solid var(--sline);word-break:keep-all}
+.sgrid .h{font:700 14px var(--sser);color:var(--sgold);text-align:center}
+.sgrid .k{color:#a99a85;font-size:12px;padding-left:0}
+.sgrid .c{text-align:center;color:#f6efe4}
+.sgrid .mid{background:rgba(255,91,69,.10)}.sgrid .hl{color:#fff;font-weight:700}
+.snote{font-size:14.5px;color:var(--ssub);margin-top:14px;line-height:1.65;word-break:keep-all}
+.spair2{margin-top:14px;display:grid;gap:10px}
+.spair2 div{font:500 17px/1.55 var(--sser);color:#fff;background:rgba(0,0,0,.38);border:1px solid var(--sline);border-radius:12px;padding:12px 14px;word-break:keep-all}
+.spair2 small{display:block;font:400 12px var(--f-ui);color:var(--sgold);margin-top:3px}
+.spair2 u{text-decoration:none;color:var(--sgold);border-bottom:2px solid var(--sred)}
+.k-map .smap{position:absolute;inset:0;background:#2a2118;z-index:1}
+.k-map .smap .leaflet-control-attribution{font-size:9px;background:rgba(0,0,0,.45);color:#ccc}.k-map .smap .leaflet-control-attribution a{color:#ddd}
+.k-map .sbox{z-index:500}.k-map .sbox h2{font-size:21px}.k-map .sbox p{font-size:14.5px;margin-top:0}
+.spl{color:#fff;font:700 13px var(--f-ui);white-space:nowrap;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000;display:inline-block}
+.spl::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--sred);margin-right:5px;vertical-align:-1px;box-shadow:0 0 4px #000}
+.spl.alt::before{border-color:var(--sgold)}.spl.est{font-style:italic}
+.spl.lf{transform:translateX(calc(-100% + 12px))}.spl.lf::before{display:none}
+.spl.lf::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--sred);margin-left:5px;vertical-align:-1px;box-shadow:0 0 4px #000}.spl.alt.lf::after{border-color:var(--sgold)}
+.sroute{stroke-dasharray:1600;stroke-dashoffset:1600;animation:sdraw 3.2s .4s ease-in-out forwards}
+@keyframes sdraw{to{stroke-dashoffset:0}}
+.smnav{position:absolute;z-index:600;top:50%;transform:translateY(-50%);width:32px;height:56px;border:0;background:rgba(0,0,0,.3);color:#fff;font-size:26px}
+.smnav.l{left:0;border-radius:0 10px 10px 0}.smnav.r{right:0;border-radius:10px 0 0 10px}
+.stapnote{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 56px);text-align:center;font-size:11px;color:rgba(255,255,255,.55);z-index:25;margin:0;pointer-events:none}
+.story-root.paused .sbars2{opacity:.45}
+/* QT 단계: 같은 사진을 어둡게 깔고 그 위에 글상자 */
+.k-qt .sph img{filter:brightness(.32) saturate(.6) blur(2px)}.k-qt .sph::after{background:rgba(10,7,4,.35)}
+.k-qt .sstage{overflow-y:auto;user-select:auto;-webkit-user-select:auto;padding:calc(env(safe-area-inset-top,0px) + 66px) 16px calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;flex-direction:column}
+.k-qt .sqt{flex:1;display:flex;flex-direction:column;gap:12px;justify-content:center}
+.k-qt .slab{margin-bottom:0}
+.k-qt .sq{font:700 22px/1.5 var(--sser);color:#fff;margin:0;word-break:keep-all}.k-qt .sq.small{font-size:17px;font-weight:500;color:var(--ssub)}
+.k-qt .shint{font-size:13.5px;color:#bfb29f;margin:0;line-height:1.6}
+.k-qt textarea{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--sline);color:#fff;border-radius:12px;padding:12px;font:15px/1.6 var(--f-ui)}
+.k-qt textarea::placeholder{color:#a99a85}
+.k-qt .btn{background:var(--sgold);color:#1b130b;border:0;font-weight:700}
+.k-qt .btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid var(--sline)}
+.k-qt .linkbtn{color:var(--sgold)}
+.k-qt .swrite>summary,.k-qt .smore>summary{color:var(--sgold)}
+.k-qt .sfind{border-left-color:var(--sgold)}.k-qt .sfind b{color:#fff}.k-qt .sfind q{color:#f6efe4}.k-qt .sfind small{color:var(--sgold)}.k-qt .sfind p{color:var(--ssub)}
+.k-qt .sgod b{color:var(--sgold)}.k-qt .sgod q{color:#fff;font-family:var(--sser)}.k-qt .sgod small{color:#bfb29f}
+.k-qt .amen{background:rgba(255,255,255,.1);color:#fff;border-color:var(--sline)}.k-qt .amen.on{background:var(--sgold);color:#1b130b}
+.k-qt .skcard{background:rgba(0,0,0,.35);border-color:var(--sgold)}.k-qt .skcard q{color:#fff;font-family:var(--sser)}
+.k-qt .sother span{color:#bfb29f}.k-qt .sother .skalt{background:rgba(255,255,255,.08);color:#fff;border-color:var(--sline)}
+.k-qt .spray{color:var(--ssub);font-family:var(--sser)}
+.k-qt .card,.k-qt .donecard{color:var(--ink)}
+.snav2{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:14px}.snav2 .btn{padding:13px}
+.k-fin .sph img{filter:brightness(.55) saturate(.85)}.k-fin .sbox,.k-next .sbox{bottom:auto;top:50%;transform:translateY(-50%)}
+.smine{font:500 16px/1.6 var(--sser)!important;color:#fff!important;background:rgba(0,0,0,.35);border-left:3px solid var(--sgold);padding:10px 12px;border-radius:0 10px 10px 0;margin-top:16px!important}
+.smine small{display:block;font:400 11.5px var(--f-ui);color:var(--sgold);margin-top:4px}
+.sstat{font-size:13px!important;color:#bfb29f!important;margin-top:14px!important}
+.sfbtn{display:flex;gap:8px;margin-top:20px}.sfbtn .btn{flex:1;padding:13px 8px;background:var(--sgold);color:#1b130b;border:0;font-weight:700;border-radius:12px;font-size:15px}.sfbtn .btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid var(--sline)}
+.k-next .sph img{filter:blur(2px) brightness(.45) saturate(.7)}.k-next .sbox{text-align:center}
+.scount{font:700 clamp(42px,13vw,58px)/1 var(--f-ui);font-variant-numeric:tabular-nums;letter-spacing:.04em;color:#fff;margin:24px 0 8px;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.sbox .scnote{font-size:13.5px;color:var(--sgold)}
+.sdonenote{display:grid;gap:10px;text-align:center}.sdonenote b{font:700 20px var(--sser);color:#fff}.sdonenote p{margin:0;font:500 17px/1.6 var(--sser);color:#f6efe4}.sdonenote small{color:var(--sgold);font:400 12px var(--f-ui)}
+@media (prefers-reduced-motion:reduce){.sph.kb img,.sbox>*,.sroute{animation:none}.sroute{stroke-dashoffset:0}}
 .stoday2{text-align:center}.sring{display:block;margin:14px auto 0;width:96px;height:96px;border-radius:50%;border:0;padding:4px;background:conic-gradient(var(--gold),var(--accent),var(--gold));cursor:pointer}
 .sring-in{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:var(--card);border:3px solid var(--paper);color:var(--accent);font-size:28px}
 .mwvban{display:flex;align-items:center;gap:12px;margin:14px 0 4px;padding:12px 14px;border-radius:12px;border:1px solid #D9D2C2;background:#FBF8F1;background-image:linear-gradient(rgba(31,58,107,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,107,.06) 1px,transparent 1px);background-size:16px 16px;color:#1E2230;text-decoration:none}
@@ -1056,7 +1184,7 @@ const CTX={abbr:PLAN.abbr,
 
 /* 상태 */
 const here=posOfToday();
-let view={w:here.w,d:here.d,tab:"read",open:false,quiz:null,wquiz:null,mapOpen:true};
+let view={w:here.w,d:here.d,tab:window.CBSR_V2?"today":"read",open:false,quiz:null,wquiz:null,mapOpen:true};
 const TRY_DAYS=[[35,0,"요 1–4장","장면·인물 비교"],[9,3,"삼상 16–20장","서술자의 정보·판단"],[16,0,"욥 1–7장","독자는 알고 인물은 모름"],[17,3,"시 19–24편","시에서 도구를 억지로 쓰지 않는지"]];
 if(TRY){ let k=0; try{ k=+localStorage.getItem("try-day")||0; }catch(e){} const x=TRY_DAYS[k]||TRY_DAYS[0]; view.w=x[0]; view.d=x[1]; }
 function tryPicker(){ return `<div class="trypick"><span>시험 본문</span>${TRY_DAYS.map((x,i)=>`<button class="${view.w===x[0]&&view.d===x[1]?"on":""}" data-tryday="${i}" title="${esc(x[3])}">${esc(x[2])}</button>`).join("")}</div>`; }
@@ -1590,7 +1718,7 @@ function renderRead(){
   h+=renderMapBox(A);
   h+=`</div>`;
   // 5 퀴즈
-  h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
+  if(!window.CBSR_V2) h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
   }
   if(simple) h+=`</details>`;
   // 완료
@@ -1708,6 +1836,7 @@ function qtDoneCard(w,d,kv,q){
   <div class="row" style="justify-content:center"><button class="btn small" id="qtToRec">나의 기록 보기</button><button class="btn ghost small" id="qtDone">완료 취소</button></div></div>`;
 }
 function confetti(){
+  if(window.CBSR_STORY||window.CBSR_V2) return;
   try{ if(matchMedia("(prefers-reduced-motion: reduce)").matches) return; }catch(e){}
   const c=document.createElement("canvas"); c.className="confetti"; const W=c.width=innerWidth, H=c.height=innerHeight; document.body.appendChild(c);
   const x=c.getContext("2d"), cs=getComputedStyle(document.documentElement), col=["--accent","--gold","--ok","--bad"].map(v=>cs.getPropertyValue(v).trim()||"#2C5C52");
@@ -1903,18 +2032,87 @@ function storyQT(w,d){ const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d
   const ST=sceneTraits(w,d,A,godTraits(A)), traits=ST.list, R=ST.R, L=lensesFor(w,d), eye=eyeFor(w,d,L), e=EYE[key];
   const vs=qtCands(A,traits,R,w+"-"+(d+1)), kv=qtKV(q,A,vs,w+"-"+(d+1)); view.kvShown=vId(kv);
   return {p,key,det,A,q,traits,R,eye,e,vs,kv}; }
-/* 오늘 슬라이드: 카드뉴스(저절로 넘김) + QT 다섯 장(멈춤) */
-function storySlides(w,d){ const no=dayNo(w,d), N=(typeof CARDNEWS!=="undefined"&&MODE==="y365"&&CARDNEWS[no])||null, out=[];
-  if(N) N.forEach(([t,r])=>out.push({k:"news",t,r}));
-  else { const p=dayPlan(w,d), sum=(SUMMARY[w-1]||[])[d]||""; const ss=sum.split(/(?<=[다요]\.)\s+/).filter(Boolean).slice(0,4);
-    if(p.topic) out.push({k:"news",t:p.topic}); ss.forEach(t=>out.push({k:"news",t})); }
-  ["obs","god","pair","my","end"].forEach(k=>out.push({k}));
-  return out; }
-const SN_LAB={news:"오늘 이야기",obs:"본문 관찰",god:"하나님은",pair:"이어 읽기",my:"나의 생각거리",end:"오늘의 말씀"};
-const SG_BG={narrative:["#2C5C52","#122823"],law:["#6B4A1F","#2A1C0B"],poetry:["#5A3F6E","#21162B"],wisdom:["#4F5B2A","#1E2410"],prophecy:["#7A3B2E","#2B130E"],letter:["#23426B","#0E1A2B"],apocalypse:["#3E2F5B","#140F21"]};
+/* ===== 이야기 카드: 사진 고르기 (PHOTOS: 공개 이용 사진 목록) ===== */
+const PH_KW=[[/광야|사막|떠돌/,"desert"],[/굴|동굴/,"cave"],[/양|목자|염소|양털|양 떼/,"sheep"],[/밤|별|잠들|어둠|어두/,"night_sky"],[/새벽|아침|해가 돋|해 돋/,"dawn"],[/저녁|해 질|해가 지/,"dusk"],[/폭풍|광풍|우레|천둥|회오리/,"storm_sky"],[/비가|비를|홍수|장마/,"rain"],[/바다|파도|물결|해변/,"sea"],[/배를|배에|배가|그물|어부|고기를|물고기/,"fishing_boat"],[/강|요단|나일|유브라데/,"river"],[/우물|샘|물을 길|생수/,"well"],[/추수|곡식|밀|보리|이삭|거두/,"wheat_field"],[/포도/,"vineyard"],[/감람|올리브|기름을 붓|기름 부/,"olive_tree"],[/무화과/,"fig_tree"],[/떡|빵|음식|먹을|먹이/,"bread"],[/항아리|그릇|토기|옹기|물병/,"clay_jar"],[/등불|등잔|등대/,"oil_lamp"],[/불|번제|횃불|불꽃/,"fire"],[/제단|돌판|돌무더기|돌을/,"stone_altar"],[/무덤|장사|시체/,"rock_tomb"],[/두루마리|율법책|기록하|책을/,"scroll"],[/장막|천막|성막/,"tent"],[/낙타/,"camel"],[/나귀/,"donkey"],[/칼|전쟁|군대|싸움|싸우|군사|창으로|창을|쫓|추격|병거|마병/,"army"],[/성벽|성문|성읍|도성|성을/,"city_wall"],[/폐허|무너|황폐|멸망/,"ruins"],[/산에|산으로|산 위|봉우리|시내 산|시온 산/,"mountain_peak"],[/골짜기/,"valley"],[/꽃|백합|들풀/,"flowers"],[/씨를 뿌|씨앗|흙|땅에 떨어/,"seed"],[/갈대/,"reeds"],[/백향목|레바논/,"cedar"],[/타작/,"threshing_floor"],[/길을|길에|길로|여행|떠나|나아가/,"road"],[/성전|전 뜰|지성소/,"temple_stones"],[/하늘|구름/,"sky"]];
+const PH_GENRE={narrative:["desert","road","valley","wilderness_path","dusk"],law:["desert","mountain_peak","tent","wilderness_path"],poetry:["sky","dawn","night_sky","flowers","sunrise_light_rays"],wisdom:["wheat_field","olive_tree","road","dawn"],prophecy:["ruins","storm_sky","city_wall","dusk"],letter:["ruins","road","sea","city_wall"],apocalypse:["night_sky","storm_sky","sky","sunrise_light_rays"]};
+const phHash=s=>{ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; };
+function phPick(text,ctxPl,genre,seed,used,hint){ const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
+  if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f) return f; }
+  const want=new Set(); PH_KW.forEach(([re,t])=>{ if(re.test(text)) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&want.add(t));
+  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1;
+  for(const p of P){ if(used.has(p.id)) continue; let s=0; const pl=p.pl||[];
+    if(pl.some(n=>text.includes(n))) s+=6; else if(pl.some(n=>ctxPl.includes(n))) s+=2.5;
+    (p.tags||[]).forEach(t=>{ if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; });
+    s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
+  return best; }
+/* 이야기 카드 목록: 손으로 쓴 카드(STORYC)가 있으면 그것, 없으면 본문 자료로 자동 구성 → 뒤에 QT 네 단계 */
+const smk=t=>esc(t||"").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/__(.+?)__/g,"<u>$1</u>").replace(/\n/g,"<br>");
+const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==="string"?x:(x.q||[])[0]),...(s.pair||[]).map(x=>x[0])].filter(Boolean).join(" ").replace(/\*\*|__/g,"");
+function storyMapPts(w,d,s){ const G=n=>{ const g=PLACE.get(n); return g?[n,g[1],g[2],g[4]?1:0,0]:null; };
+  const one=x=>Array.isArray(x)?(x.length>=3?[x[0],x[1],x[2],x[3]?1:0,x[4]?1:0]:G(x[0])):G(x);
+  if(s&&s.route) return {route:s.route.map(one).filter(Boolean),extra:(s.extra||[]).map(one).filter(Boolean)};
+  const R=routesFor(w,d); if(R.length&&R[0].p.length>1) return {route:R[0].p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:R[0].n};
+  const A=dayA(w,d), pts=[...A.places.values()].filter(p=>PLACE.has(p.name)).sort((a,b)=>b.n-a.n).slice(0,8).map(p=>G(p.name)).filter(Boolean);
+  return {route:[],extra:pts}; }
+function storyPairCard(w,d){ const key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], txt=det&&det.christ?det.christ:(DAYC[key]||(WEEKS[w-1]||{}).christ||""); if(!txt) return null;
+  const pr=storyPair(w,d,txt), s1=txt.split(/(?<=\.)\s+/);
+  if(pr&&vtxt(pr[0])&&vtxt(pr[1])) return {k:"echo",lab:"이어 읽기",h:"두 말씀을 나란히",pair:[[vtxt(pr[0]),rlab(pr[0])],[vtxt(pr[1]),rlab(pr[1])]],b:[s1[0]]};
+  return {k:"line",lab:"이어 읽기",t:s1.slice(0,2).join(" ")}; }
+function storySlides(w,d){ const ck=MODE+":"+keyOf(w,d); SV.cache ||= {}; if(SV.cache[ck]) return SV.cache[ck];
+  const no=dayNo(w,d), p=dayPlan(w,d), C=(typeof STORYC!=="undefined"&&MODE==="y365"&&STORYC[no])||null; let out=[];
+  if(C) out=C.cards.map(c=>Object.assign({},c));
+  else { const N=(typeof CARDNEWS!=="undefined"&&MODE==="y365"&&CARDNEWS[no])||null;
+    out.push({k:"cover",kick:p.label,h:p.topic||p.label});
+    if(N) N.forEach(([t,r])=>out.push({k:"line",t,r}));
+    else { const sum=(SUMMARY[w-1]||[])[d]||""; sum.split(/(?<=[다요]\.)\s+/).filter(Boolean).slice(0,4).forEach(t=>out.push({k:"line",t})); }
+    const M=storyMapPts(w,d,null); if(M.route.length>1||M.extra.length) out.splice(Math.min(2,out.length),0,{k:"map",auto:1,lab:"오늘 나오는 곳",h:M.route.length>1?`${M.route[0][0]}에서 ${M.route[M.route.length-1][0]}까지`:"오늘 본문의 무대",b:[(M.route.length>1?M.route:M.extra).map(x=>x[0]).join(" · ")]}); }
+  if(!C||!C.noPair){ const pc=storyPairCard(w,d); if(pc) out.push(pc); }
+  ["obs","god","my","end"].forEach(k=>out.push({k,qt:1})); out.push({k:"fin"},{k:"next"});
+  /* 사진 붙이기: 장면 글 → 장소·주제어 → 책 장르 */
+  const A=dayA(w,d), ctxPl=[...A.places.keys()], gen=GENRE_OF(p.ch[0][0]), used=new Set(); let cover=null;
+  out.forEach((s,i)=>{ if(s.qt||s.k==="map"||s.k==="table"||s.k==="fin"||s.k==="next") return; if(s.img==="none") return;
+    const ph=phPick(sTxt(s)+(i===0?" "+ctxPl.join(" "):""),ctxPl,gen,ck+":"+i,used,s.img); if(ph){ s.ph=ph; used.add(ph.id); if(!cover) cover=ph; } });
+  out.forEach(s=>{ if(s.k==="fin") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
+  SV.cache[ck]=out; return out; }
+const SN_LAB={obs:"본문 관찰",god:"하나님은",my:"나의 생각거리",end:"오늘의 말씀"};
+const SG_BG={narrative:["#3a2c1f","#15110d"],law:["#4a3418","#1a1209"],poetry:["#3a2c46","#17111d"],wisdom:["#353b1d","#15170b"],prophecy:["#4a2620","#1b0d0a"],letter:["#1f2f47","#0c1320"],apocalypse:["#2c2340","#100c18"]};
 const rlab2=r=>r?`${PLAN.abbr[r[0]-1]} ${r[1]}:${r[2]}${r[3]?"–"+r[3]:""}`:"";
+const S_KDUR={cover:7000,full:9000,split:9000,quote:10000,echo:10500,table:12000,line:7500};
+function sDur(s){ if(s.qt||s.k==="map"||s.k==="fin"||s.k==="next") return 0; const n=sTxt(s).length; return Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
+function sKind(s){ return s.qt?"qt":s.k; }
+function nextWD(w,d){ let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } return PLAN.plan[nw-1]&&PLAN.plan[nw-1][nd2]?[nw,nd2]:null; }
+const isHere=(w,d)=>w===here.w&&d===here.d;
+function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
+  if(s.k==="fin"){ if(!q.done) return `<div class="sbox"><span class="slab">오늘의 말씀 카드</span><h2>QT를 마치면 오늘의 말씀 카드가 만들어집니다</h2><div class="sfbtn"><button class="btn" data-sgo="-1">‹ 돌아가서 마치기</button></div></div>`;
+    const kv=storyQT(w,d).kv, dt=dateOf(w,d);
+    return `<div class="sbox sfin"><span class="slab">오늘의 말씀 카드 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}</span>${kv?`<div class="sbigq">${esc(kv.t)}</div><div class="sref">${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</div>`:`<h2>${esc(dayPlan(w,d).label)}</h2>`}${q.med?`<p class="smine">${esc(q.med)}<small>나의 한 줄</small></p>`:""}<p class="sstat">QT 한 날 ${qtDayCount()}일 · 연속 ${qtCalStreak()}일</p><div class="sfbtn"><button class="btn ghost" id="sShare">말씀 나누기</button><button class="btn" data-sgo="1">내일 본문 ›</button></div></div>`; }
+  const N=nextWD(w,d); if(!N) return `<div class="sbox snext"><span class="slab">마지막 날</span><h1>통독을 마쳤습니다</h1><div class="sfbtn"><button class="btn" id="sEnd">닫기</button></div></div>`;
+  const P2=dayPlan(N[0],N[1]), dt=dateOf(N[0],N[1]), live=isHere(w,d);
+  return `<div class="sbox snext"><span class="slab">내일 본문 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}(${DAYN[dt.getDay()]})</span><h1>${esc(P2.topic||P2.label)}</h1><p>${esc(P2.label)}</p>${live?`<div class="scount" id="sCount" aria-live="off">--:--:--</div><p class="scnote">자정에 열립니다</p>`:`<p class="scnote">지금 바로 열 수 있습니다</p>`}<div class="sfbtn">${window.CBSR_V2?`<button class="btn ghost" id="sToCh">도전 하나</button>`:""}<button class="btn ghost" id="sToRec">나의 기록</button><button class="btn" id="sEnd">닫기</button></div></div>`; }
+function cdText(){ const n=new Date(), m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1), s=Math.max(0,Math.floor((m-n)/1000)); return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,"0")).join(":"); }
+function storyCardHTML(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</span>`:"", h2=s.h?`<h2>${smk(s.h)}</h2>`:"";
+  const B=(s.b||[]).map(x=>typeof x==="string"?`<p>${smk(x)}</p>`:`<div class="sq2">${smk(x.q[0])}<small>${esc(x.q[1]||"")}</small></div>`).join("");
+  if(s.k==="cover") return `<div class="sbox"><div class="skick">${esc(s.kick||"")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
+  if(s.k==="quote") return `<div class="sbox">${lab}${B}<div class="sbigq" style="margin-top:14px">${smk(s.big)}</div><div class="sref">${esc(s.ref||"")}</div></div>`;
+  if(s.k==="echo") return `<div class="sbox">${lab}${h2}<div class="spair2">${(s.pair||[]).map(x=>`<div>${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${B}</div>`;
+  if(s.k==="line"){ const one=s.r&&!s.r[3]?vtxt(s.r):""; return `<div class="sbox">${lab}<p class="sline2">${smk(s.t)}</p>${s.r?(one&&one.length<=90?`<div class="sq2">${esc(one)}<small>${esc(rlab2(s.r))}</small></div>`:`<div class="sref">${esc(rlab2(s.r))}</div>`):""}</div>`; }
+  if(s.k==="table"){ const T=s.tbl, n=T.h.length, hl=new Set((T.hl||[]).map(x=>x.join(","))), mid=T.mid;
+    let g=`<div></div>`+T.h.map((x,j)=>`<div class="h${j===mid?" mid":""}">${esc(x)}</div>`).join("");
+    T.rows.forEach((row,ri)=>{ g+=`<div class="k">${esc(row[0])}</div>`+row.slice(1).map((x,j)=>`<div class="c${j===mid?" mid":""}${hl.has(ri+","+j)?" hl":""}">${esc(x)}</div>`).join(""); });
+    return `<div class="sbox">${lab}${h2}<div class="sgrid" style="grid-template-columns:72px repeat(${n},1fr)">${g}</div>${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`; }
+  if(s.k==="map") return `<div class="smap" id="smap"></div><button class="smnav l" data-sgo="-1" aria-label="이전">‹</button><button class="smnav r" data-sgo="1" aria-label="다음">›</button><div class="sbox spanel">${lab}${h2}${B}</div>`;
+  return `<div class="sbox">${lab}${h2}${B}</div>`; }
+function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||!window.L) return;
+  const M=storyMapPts(w,d,s); const map=L.map(el,{zoomControl:false,zoomSnap:.25,scrollWheelZoom:false,attributionControl:true}); SV.map=map; map.attributionControl.setPrefix(false);
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:15,attribution:"위성: Esri, Maxar, Earthstar Geographics"}).addTo(map);
+  if(M.route.length>1){ const ll=M.route.map(p=>[p[1],p[2]]); L.polyline(ll,{color:"#ff5b45",weight:9,opacity:.18,interactive:false}).addTo(map); L.polyline(ll,{color:"#ff5b45",weight:2.5,opacity:.95,className:"sroute",lineJoin:"round",interactive:false}).addTo(map); }
+  const lab=(p,alt)=>L.marker([p[1],p[2]],{icon:L.divIcon({className:"",html:`<span class="spl${alt?" alt":""}${p[3]?" est":""}${p[4]?" lf":""}">${esc(p[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]}),interactive:false}).addTo(map);
+  M.route.forEach(p=>lab(p,0)); M.extra.forEach(p=>lab(p,M.route.length>1));
+  const all=M.route.concat(M.extra).map(p=>[p[1],p[2]]); if(!all.length) return;
+  setTimeout(()=>{ try{ map.invalidateSize(); if(all.length===1) map.setView(all[0],9); else map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[40,80],paddingBottomRight:[80,250],maxZoom:11}); }catch(e){} },60); }
 function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,e,vs,kv}=X;
-  if(s.k==="news") return `<div class="snews"><p>${esc(s.t)}</p>${s.r?`<small>${esc(rlab2(s.r))}</small>`:""}</div>`;
+  if(s.k==="fin"||s.k==="next") return storyEndHTML(s,w,d);
+  if(!s.qt) return storyCardHTML(s);
   let c="";
   if(s.k==="obs"){ c+=`<p class="sq">${esc(eye.q)}</p>`;
     if(e&&e.look&&e.look.length){ if(!view.sRev) c+=`<button class="btn sfindb" id="sReveal">본문에서 찾아보기</button><p class="shint">먼저 떠올려 보고, 누르면 본문이 보여 주는 곳이 열립니다.</p>`;
@@ -1929,38 +2127,56 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
     const s1=txt.split(/(?<=\.)\s+/); c+=`<p class="sline">${esc(s1[0]||"")}</p>${s1.length>1?`<details class="smore"><summary>더 읽기</summary><p>${esc(s1.slice(1).join(" "))}</p></details>`:""}`; }
   else if(s.k==="my"){ const K=(typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null;
     c+=`<p class="sq">${esc(K?K.q:(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q)))}</p>${K&&K.r?`<p class="shint">${esc(rlab(K.r))} · ${esc(vtxt(K.r))}</p>`:""}<textarea data-qt="med" rows="3" placeholder="한 줄로 적어 보세요 (적지 않아도 됩니다)">${esc(q.med||"")}</textarea>`; }
-  else { if(q.done) c+=`<div id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</div>`;
+  else { if(q.done) c+=`<div class="sdonenote"><b>✓ 오늘 QT를 마쳤습니다</b>${kv?`<p>${esc(kv.t)} <small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></p>`:""}<button class="btn" data-sgo="1">오늘의 말씀 카드 ›</button><button class="linkbtn" id="qtDone">완료 취소</button></div>`;
     else { const pray=makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
       c+=`${kv?`<div class="skcard"><span>오늘 붙잡을 말씀</span><q>${esc(kv.t)}</q><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></div>`:""}`;
       const others=vs.filter(v=>v!==kv); if(others.length) c+=`<div class="sother"><span>다른 구절</span>${others.map(v=>`<button class="skalt" data-skv="${vId(v)}">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</button>`).join("")}</div>`;
       c+=`<p class="spray">${esc(pray)}</p><button class="btn sdone" id="qtDone">QT 완료</button>`; }
     c+=`<button class="linkbtn sdeep" id="qtDeep">깊이 QT로 보기</button>`; }
-  return `<div class="sqt">${c}</div>`; }
-const SV={i:0,t:0,start:0,left:0,hold:0,paused:false};
-const S_DUR=6500;
+  return `<div class="sqt"><span class="slab">${esc(SN_LAB[s.k]||"")}</span>${c}</div>`; }
+const SV={i:0,t:0,start:0,left:0,hold:0,paused:false,map:null,ck:"",cs:null,dur:0};
+function storyFont(){ if(document.getElementById("sfont")) return; const l=document.createElement("link"); l.id="sfont"; l.rel="stylesheet"; l.href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap"; document.head.appendChild(l); }
 function storyOpen(i){ const {w,d}=view; const k=keyOf(w,d); try{ localStorage.setItem("cbsr-story-seen",MODE+":"+k); }catch(e){}
-  if(view.scKey!==k){ view.scKey=k; view.sRev=false; }
+  if(view.scKey!==k){ view.scKey=k; view.sRev=false; } storyFont();
   let r=document.getElementById("storyRoot"); if(!r){ r=document.createElement("div"); r.id="storyRoot"; document.body.appendChild(r); }
-  SV.i=i||0; document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); storyShow(); }
-function storyClose(){ clearTimeout(SV.t); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
+  SV.i=i||0; SV.hinted=false; document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); storyShow(); }
+function storyMapOff(){ if(SV.map){ try{ SV.map.remove(); }catch(e){} SV.map=null; } }
+function storyClose(){ clearTimeout(SV.t); clearInterval(SV.cd); storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
 function storyGo(i){ const S=storySlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ return; } SV.i=i; storyShow(); }
-function storyShow(){ clearTimeout(SV.t); const {w,d}=view, S=storySlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return;
-  const quick=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches, auto=s.k==="news"&&!quick;
-  const [c1,c2]=SG_BG[GENRE_OF(dayPlan(w,d).ch[0][0])]||SG_BG.narrative, nn=S.filter(x=>x.k==="news").length;
-  r.className="story-root "+(s.k==="news"?"dark":"light"); r.style.setProperty("--sg1",c1); r.style.setProperty("--sg2",c2);
-  r.innerHTML=`<div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${S_DUR}ms"`:""}></i></span>`).join("")}</div>
-   <div class="stop"><b>${SN_LAB[s.k]}${s.k==="news"&&nn>1?` <small>${S.slice(0,SV.i+1).filter(x=>x.k==="news").length}/${nn}</small>`:""}</b><span>${esc(dayPlan(w,d).label)}</span><button class="sx" id="sClose" aria-label="닫기">✕</button></div>
-   <div class="sstage" id="sStage">${storySlideHTML(s,w,d)}</div>
-   ${s.k==="news"?`<p class="stapnote">왼쪽·오른쪽을 누르면 넘어가고, 길게 누르면 멈춥니다</p>`:`<div class="snav2"><button class="btn ghost" id="sPrev2">‹ 이전</button>${SV.i<S.length-1?`<button class="btn" id="sNext2">다음 ›</button>`:`<button class="btn" id="sEnd">닫기</button>`}</div>`}`;
+function storyShow(){ clearTimeout(SV.t); clearInterval(SV.cd); storyMapOff(); const {w,d}=view, S=storySlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return;
+  const quick=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches, dur=quick?0:sDur(s), auto=dur>0, kind=sKind(s), p=dayPlan(w,d); let ph=s.ph;
+  if(s.k==="next"){ const N=nextWD(w,d); if(N){ const S2=storySlides(N[0],N[1]); ph=S2[0]&&S2[0].ph; } }
+  const [c1,c2]=SG_BG[GENRE_OF(p.ch[0][0])]||SG_BG.narrative;
+  r.className="story-root"; r.style.setProperty("--sg1",c1); r.style.setProperty("--sg2",c2);
+  const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
+  r.innerHTML=`<div class="sfr k-${kind}">
+   ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
+   ${showPh?`<div class="sph${kind!=="qt"&&!quick?" kb":""}"><img alt="" src="${esc(ph.u)}" style="object-position:${esc(ph.fx||"50% 50%")}" referrerpolicy="no-referrer"></div>`:""}
+   ${kind==="split"?`<div class="sbase"></div>`:""}
+   <div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${dur}ms"`:""}></i></span>`).join("")}</div>
+   <div class="stop"><span class="sdot">통</span><b>${esc(p.label)}</b><span></span><button class="sx" id="sClose" aria-label="닫기">✕</button></div>
+   <div class="sstage" id="sStage">${s.qt?`${storySlideHTML(s,w,d)}<div class="snav2"><button class="btn ghost" id="sPrev2">‹ 이전</button>${SV.i<S.length-1?`<button class="btn" id="sNext2">다음 ›</button>`:`<button class="btn" id="sEnd">닫기</button>`}</div>`:storySlideHTML(s,w,d)}</div>
+   ${showPh&&kind!=="qt"&&ph.link?`<a class="scr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}
+   ${hint?`<p class="stapnote">왼쪽을 누르면 이전 · 오른쪽을 누르면 다음 · 길게 누르면 멈춤</p>`:""}</div>`;
+  if(hint){ SV.hinted=true; }
+  r.querySelectorAll(".sph img").forEach(im=>im.onerror=()=>im.remove());
   bindStoryRoot(r,s,auto);
-  if(auto){ SV.start=Date.now(); SV.left=S_DUR; SV.paused=false; SV.t=setTimeout(()=>storyGo(SV.i+1),S_DUR); } }
+  if(kind==="map") storyMapInit(w,d,s);
+  const cdEl=r.querySelector("#sCount"); if(cdEl){ const tk=()=>{ const t=cdText(); cdEl.textContent=t; if(t==="00:00:00"){ clearInterval(SV.cd); cdEl.nextElementSibling.textContent="열렸습니다"; } }; tk(); SV.cd=setInterval(tk,1000); }
+  if(auto){ SV.dur=dur; SV.start=Date.now(); SV.left=dur; SV.paused=false; SV.t=setTimeout(()=>storyGo(SV.i+1),dur); } }
 function storyPause(on){ const r=document.getElementById("storyRoot"); if(!r) return; const bar=r.querySelector(".sbars2 .run i"); if(!bar) return;
   if(on&&!SV.paused){ SV.paused=true; clearTimeout(SV.t); SV.left-=Date.now()-SV.start; bar.style.animationPlayState="paused"; r.classList.add("paused"); }
   else if(!on&&SV.paused){ SV.paused=false; SV.start=Date.now(); bar.style.animationPlayState="running"; r.classList.remove("paused"); SV.t=setTimeout(()=>storyGo(SV.i+1),Math.max(300,SV.left)); } }
 function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(key);
   r.querySelector("#sClose").onclick=storyClose;
   const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=storyClose;
-  if(s.k==="news"){ const st=r.querySelector("#sStage"); let t0=0,x0=0,y0=0,moved=false;
+  r.querySelectorAll("[data-sgo]").forEach(b=>b.onclick=()=>storyGo(SV.i+(+b.dataset.sgo)));
+  const tr2=r.querySelector("#sToRec"); if(tr2) tr2.onclick=()=>{ storyClose(); view.tab="record"; render(); scrollTo({top:0}); };
+  const tc=r.querySelector("#sToCh"); if(tc) tc.onclick=()=>{ storyClose(); view.tab="challenge"; render(); scrollTo({top:0}); };
+  const sh=r.querySelector("#sShare"); if(sh) sh.onclick=()=>{ const kv=storyQT(view.w,view.d).kv; if(!kv) return; const t=`${kv.t}
+(${PLAN.abbr[kv.b-1]} ${kv.c}:${kv.v})
+— ${dayPlan(view.w,view.d).label} 통독`; if(navigator.share) navigator.share({text:t}).catch(()=>{}); else { try{ navigator.clipboard.writeText(t); sh.textContent="복사했습니다"; }catch(e){} } };
+  if(!s.qt&&s.k!=="map"&&s.k!=="fin"&&s.k!=="next"){ const st=r.querySelector("#sStage"); let t0=0,x0=0,y0=0,moved=false;
     st.onpointerdown=e=>{ t0=Date.now(); x0=e.clientX; y0=e.clientY; moved=false; SV.hold=setTimeout(()=>storyPause(true),220); };
     st.onpointermove=e=>{ if(Math.abs(e.clientX-x0)>12||Math.abs(e.clientY-y0)>12) moved=true; };
     st.onpointerup=e=>{ clearTimeout(SV.hold); const held=Date.now()-t0>=220; if(SV.paused){ storyPause(false); if(held) return; }
@@ -1972,7 +2188,7 @@ function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(k
   r.querySelectorAll("[data-skv]").forEach(b=>b.onclick=()=>{ const q=cur(); q.kv=b.dataset.skv; touchQ(q,"kv"); save(); storyShow(); });
   const rv=r.querySelector("#sReveal"); if(rv) rv.onclick=()=>{ view.sRev=true; storyShow(); };
   const sr=r.querySelector("#scopeRead"); if(sr) sr.onclick=()=>{ const R2=sceneOf(view.w,view.d); if(!R2||!BIBLE) return; sheet("이 질문의 본문",R2.map(([b,c,s0,e2])=>`<h4 class="srh">${esc(PLAN.abbr[b-1])} ${c}:${s0}–${e2}</h4><p class="srtext">${Array.from({length:e2-s0+1},(_,i)=>s0+i).map(v=>`<sup>${v}</sup>${esc((BIBLE[b-1][c-1]||[])[v-1]||"")}`).join(" ")}</p>`).join("")); };
-  const dn=r.querySelector("#qtDone"); if(dn) dn.onclick=()=>{ const q=cur(); q.done=!q.done; touchQ(q,"done"); if(q.done){ if(!q.doneAt) q.doneAt=todayStr(); if(!q.kv&&view.kvShown) q.kv=view.kvShown; view.qtJust=true; } save(); storyShow(); if(q.done) confetti(); };
+  const dn=r.querySelector("#qtDone"); if(dn) dn.onclick=()=>{ const q=cur(); q.done=!q.done; touchQ(q,"done"); if(q.done){ if(!q.doneAt) q.doneAt=todayStr(); if(!q.kv&&view.kvShown) q.kv=view.kvShown; view.qtJust=true; } save(); if(q.done){ const S=storySlides(view.w,view.d), fi=S.findIndex(x=>x.k==="fin"); const cv=S[0]&&S[0].ph; if(cv){ q.cph=cv.id; save(); } if(fi>=0){ storyGo(fi); return; } } storyShow(); };
   const tr=r.querySelector("#qtToRec"); if(tr) tr.onclick=()=>{ storyClose(); view.tab="record"; render(); scrollTo({top:0}); };
   const dp=r.querySelector("#qtDeep"); if(dp) dp.onclick=()=>{ view.qtDeep=true; storyClose(); scrollTo({top:0}); }; }
 /* QT 탭 첫 화면(스토리 모드): 다시 보기 · 깊이 QT */
@@ -2101,7 +2317,7 @@ function speechInfo(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(
   if(who&&!(TRUST_SP.test(last)||TRUST_SP.test(who)||isPerson(last)||SPK_NOUN.test(last))) who="";
   if(!who) return {who:"",trusted:null};
   return {who, trusted:TRUST_SP.test(who)||TRUST_SP.test(last)||TRUST_P.test(last)}; }
-try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE}; }catch(e){}
+try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),list:()=>storySlides(view.w,view.d),pause:on=>storyPause(on)}}; }catch(e){}
 function verseQuestion(v){
   const K=verseKind(v), sp=speechInfo(v);
   if(sp&&sp.trusted===false&&K.k!=="prayer") return `이 말은 ${sp.who}의 말입니다. 누구에게, 무엇을 위해 한 말입니까? 앞뒤 이야기는 이 말을 믿을 만한 말로 보여 줍니까?`;
@@ -2737,13 +2953,62 @@ function openMenu(){
 
 /* 그리기 */
 /*STUDY*/
+/* ===== 개편 시험(V2): 오늘 · 본문 · 도전 · 기록 ===== */
+const V2=()=>!!window.CBSR_V2;
+const TD={cd:0};
+const phImg=(ph,cls)=>ph?`<img class="${cls||""}" src="${esc(ph.u)}" alt="" referrerpolicy="no-referrer" style="object-position:${esc(ph.fx||"50% 50%")}" onerror="this.remove()">`:"";
+function wordCardPh(w,d,q){ const id=q&&q.cph; if(id&&typeof PHOTOS!=="undefined"){ const f=PHOTOS.find(p=>p.id===id); if(f) return f; } const S=storySlides(w,d); return S[0]&&S[0].ph; }
+function wordCard(w,d,q,kv,ph,big){ const dt=dateOf(w,d);
+  return `<div class="wcard${big?" big":""}">${phImg(ph,"wcbg")}<div class="wcin"><q>${esc(kv.t)}</q><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v} · ${esc(fmt(dt,{month:"long",day:"numeric"}))}</small>${big&&q.med?`<p>${esc(q.med)}</p>`:""}</div></div>`; }
+function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
+  if(!p) return `<section class="sec"><p class="lead">오늘 본문이 없습니다.</p></section>`;
+  if(!BIBLE) return `<section class="tdh"><div class="tdin"><p class="tdk" style="margin-top:auto">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1><p class="tdsub">본문을 불러오는 중입니다…</p></div></section>`;
+  const q=qtOf(key), read=!!mem.done[key], S=storySlides(w,d), ph=S[0]&&S[0].ph, dt=dateOf(w,d), live=isHere(w,d), N=nextWD(w,d), kv=q.done?storyQT(w,d).kv:null;
+  let h=`<section class="tdh">${phImg(ph,"tdbg")}<div class="tdin">
+    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째 · 365일</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
+    <button class="tdring${q.done?" seen":""}" id="tdStory" aria-label="오늘의 이야기 보기">${phImg(ph)}<i aria-hidden="true">▶</i></button>
+    <p class="tdk">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1>
+    <p class="tdsub">${q.done?"오늘 이야기를 마쳤습니다 · 눌러서 다시 보기":`오늘의 이야기 · 사진 카드 ${S.length}장`}</p></div>
+    ${ph&&ph.link?`<a class="tdcr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}</section>`;
+  h+=`<section class="sec tdsteps">
+    <button class="tdstep${read?" ok":""}" id="tdRead"><b>1</b><span>본문 읽기<small>${read?"다 읽었습니다":esc(p.label)}</small></span><i>${read?"✓":"›"}</i></button>
+    <button class="tdstep${q.done?" ok":""}" id="tdQT"><b>2</b><span>이야기와 QT<small>${q.done?"마쳤습니다":"사진 카드를 넘기며 묵상합니다"}</small></span><i>${q.done?"✓":"›"}</i></button>
+    <button class="tdstep" id="tdCh"><b>3</b><span>도전<small>언제든지 · 오늘 본문 퀴즈</small></span><i>›</i></button></section>`;
+  if(kv) h+=`<section class="sec"><span class="label">오늘의 말씀 카드</span>${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}</section>`;
+  if(N){ const P2=dayPlan(N[0],N[1]), d2=dateOf(N[0],N[1]), S2=storySlides(N[0],N[1]), ph2=S2[0]&&S2[0].ph;
+    h+=`<section class="sec"><span class="label">내일 본문</span><div class="tdnext">${phImg(ph2,"tdnbg")}<div class="tdnin"><small>${esc(fmt(d2,{month:"long",day:"numeric"}))}(${DAYN[d2.getDay()]})</small><b>${esc(P2.topic||P2.label)}</b><span>${esc(P2.label)}</span>${live?`<div class="tdcd" id="tdCount">--:--:--</div><em>자정에 열립니다</em>`:`<button class="btn small" id="tdGoNext">열기 ›</button>`}</div></div></section>`; }
+  return h; }
+function bindToday(){ clearInterval(TD.cd);
+  const op=()=>storyOpen(0); ["tdStory","tdQT"].forEach(id=>{ const b=document.getElementById(id); if(b) b.onclick=op; });
+  const r=document.getElementById("tdRead"); if(r) r.onclick=()=>switchTab("read");
+  const c=document.getElementById("tdCh"); if(c) c.onclick=()=>switchTab("challenge");
+  const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
+  const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
+  const ce=document.getElementById("tdCount"); if(ce){ const tk=()=>{ const t=cdText(); ce.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); setTimeout(()=>location.reload(),1500); } }; tk(); TD.cd=setInterval(tk,1000); } }
+function renderChallenge(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
+  let h=`<section class="sec"><span class="label">도전 · 언제든지 열려 있습니다</span><h2>${esc(p?p.label:"")}</h2><p class="lead">읽은 본문으로 풀어 봅니다. 날짜를 바꾸면 지난 본문도 풀 수 있습니다.</p></section>`;
+  if(p) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
+  h+=`<section class="sec"><span class="label">곧 열립니다</span><div class="chsoon">${[["장면 순서 맞추기","오늘 장면 카드를 일어난 차례대로 놓습니다"],["누가 한 말일까","말과 인물을 짝짓습니다"],["단서 찾기","본문 속 반복과 전환을 찾아 누릅니다"],["말씀 카드 다시 맞히기","모은 말씀 카드의 빈칸을 채웁니다"]].map(([t,s])=>`<div class="chs"><b>${t}</b><span>${s}</span></div>`).join("")}</div></section>`;
+  return h; }
+function recordCardsHTML(){ const L=Object.entries(mem.qt).filter(([k,q])=>q.done&&q.kv).sort((a,b)=>String(b[1].doneAt||"").localeCompare(String(a[1].doneAt||""))).slice(0,view.wcAll?120:6);
+  const n=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
+  if(!n) return `<section class="sec"><span class="label">모은 말씀 카드</span><p class="lead">이야기 QT를 마치면 그날의 말씀 카드가 여기에 모입니다.</p></section>`;
+  const tiles=L.map(([k,q])=>{ const [w,d]=k.split("-").map(Number); const v=(q.kv||"").split(":"); const kv=v.length===3?{b:+v[0],c:+v[1],v:+v[2]}:null; if(!kv) return ""; kv.t=vtxt([kv.b,kv.c,kv.v]); if(!kv.t) return "";
+    let ph=null; try{ ph=wordCardPh(w,d,q); }catch(e){} return `<button class="wtile" data-wck="${esc(k)}">${phImg(ph,"wtbg")}<span>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</span></button>`; }).join("");
+  return `<section class="sec"><span class="label">모은 말씀 카드 ${n}장</span><div class="wgrid">${tiles}</div>${n>6?`<button class="morebtn" id="wcAll">${view.wcAll?"접기 ▴":"모두 보기 ▾"}</button>`:""}</section>`; }
+function bindRecordCards(){ document.querySelectorAll("[data-wck]").forEach(b=>b.onclick=()=>{ const k=b.dataset.wck, [w,d]=k.split("-").map(Number), q=mem.qt[k]; const v=(q.kv||"").split(":"), kv={b:+v[0],c:+v[1],v:+v[2]}; kv.t=vtxt([kv.b,kv.c,kv.v]); sheet(dayPlan(w,d).label,wordCard(w,d,q,kv,wordCardPh(w,d,q),true)); });
+  const a=document.getElementById("wcAll"); if(a) a.onclick=()=>{ view.wcAll=!view.wcAll; render(); }; }
+function v2Nav(){ const n=document.querySelector(".bnav-in"); if(!n) return; const I=(d)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  n.innerHTML=[["today","오늘",I('<circle cx="12" cy="12" r="8.5"/><path d="M10 8.8v6.4l5.2-3.2z"/>')],["read","본문",I('<path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1V19c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1z"/><path d="M12 6.5V20"/>')],["challenge","도전",I('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>')],["record","기록",I('<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>')]].map(([t,l,s])=>`<button class="tab" data-tab="${t}" aria-selected="${view.tab===t}">${s}<span>${l}</span></button>`).join("");
+  n.style.gridTemplateColumns="repeat(4,1fr)"; document.documentElement.classList.add("v2"); }
 function render(){
-  renderHead();
+  renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today");
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
-  try{ m.innerHTML=view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():renderRecord(); }
+  try{ m.innerHTML=view.tab==="today"?renderToday():view.tab==="challenge"?renderChallenge():view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():renderRecord(); }
   catch(e){ console.error(e); m.innerHTML=`<section class="sec"><h2>화면을 그리다 문제가 생겼습니다</h2><p class="lead">다른 탭으로 갔다가 다시 와 보세요. 계속되면 이 문구를 제작자에게 알려 주세요: ${esc(String(e&&e.message||e))}</p></section>`; }
   document.body.classList.toggle("tab-study",view.tab==="study");
+  if(window.CBSR_V2&&view.tab==="record"){ const f=m.querySelector(".sec"); if(f) f.insertAdjacentHTML("afterend",recordCardsHTML()); }
   bind(); if(view.tab==="study") bindStudy(m); else if(typeof bindStudyNotes==="function") bindStudyNotes(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); } if(TTS.on) ttsMark(false);
   if(view.tab==="read"&&!isRev(view.d)&&BIBLE&&view.mapOpen) initMap(dayA(view.w,view.d)); else destroyMap();
 }
@@ -2818,6 +3083,7 @@ function bind(){
   m.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>showINC(+b.dataset.inc));
   m.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>showClue(+b.dataset.clue));
   bindAccount(m); bindInstall(); if(view.tab==="read") churchCounts();
+  if(window.CBSR_V2){ if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); }
   bindQT(m);
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
@@ -2915,6 +3181,7 @@ const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view
 function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth"}); return; }
   TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); else if(view.tab==="study"&&t!=="study"&&typeof studyOutro==="function") studyOutro(t); view.tab=t; HSEL.clear(); render();
   const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
+if(window.CBSR_V2) v2Nav();
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
