@@ -1139,6 +1139,8 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .tdsub{font-size:13.5px;color:#d9cdbb;margin:10px 0 0}
 .tdcr{position:absolute;right:10px;bottom:6px;z-index:3;font-size:10px;color:rgba(255,255,255,.5);text-decoration:none}
 .tdsteps{display:grid;gap:8px}
+.tdh{cursor:pointer;min-height:min(72vh,560px)}
+.tdgo{margin-top:22px;border:0;border-radius:999px;padding:13px 26px;background:#e2b874;color:#1b130b;font:700 16px var(--f-ui);box-shadow:0 6px 20px rgba(0,0,0,.35)}
 .tdstep{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:13px 14px;color:var(--ink)}
 .tdstep b{width:28px;height:28px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--gold-soft);color:var(--gold);font-size:14px}
 .tdstep span{flex:1;font-weight:700;font-size:15.5px}.tdstep small{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:1px}
@@ -6381,7 +6383,7 @@ function renderRead(){
   }
   h+=`</section>`;
   if(MODE==="y365"&&(dateOf(w,d).getDay()===6||dayNo(w,d)===READ_DAYS)) h+=`<section class="sec"><div class="qcard"><span class="k">한 주를 마무리하는 날</span><p>이번 주 읽은 본문을 돌아보고 주간 도전 문제를 풀어 보세요.</p><div class="row"><button class="btn small" id="toRev">이번 주 돌아보기 ›</button></div></div></section>`;
-  h+=`<section class="sec"><span class="label">QT</span><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
+  if(!window.CBSR_V2) h+=`<section class="sec"><span class="label">QT</span><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
   view.justDone=false;
   return h;
 }
@@ -6692,7 +6694,8 @@ function phPick(text,ctxPl,genre,seed,used,hint){ const P=(typeof PHOTOS!=="unde
   const want=new Set(), hs=new Set(); PH_KW.forEach(([re,t])=>{ if(re.test(text)) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
   const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1;
   for(const p of P){ if(used.has(p.id)) continue; let s=0; const pl=p.pl||[];
-    if(pl.some(n=>text.includes(n))) s+=6; else if(pl.some(n=>ctxPl.includes(n))) s+=1.5;
+    const plw=pl.flatMap(n=>n.split(/[\/ ]/)).filter(x=>x.length>=2&&!/^(호수|해변|광야|백향목|메소포타미아)$/.test(x));
+    if(plw.some(n=>text.includes(n))) s+=6; else if(plw.some(n=>ctxPl.includes(n))) s+=1.5;
     (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=8; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; });
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
   return best; }
@@ -7622,23 +7625,17 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   if(!p) return `<section class="sec"><p class="lead">오늘 본문이 없습니다.</p></section>`;
   if(!BIBLE) return `<section class="tdh"><div class="tdin"><p class="tdk" style="margin-top:auto">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1><p class="tdsub">본문을 불러오는 중입니다…</p></div></section>`;
   const q=qtOf(key), read=!!mem.done[key], S=storySlides(w,d), ph=S[0]&&S[0].ph, dt=dateOf(w,d), live=isHere(w,d), N=nextWD(w,d), kv=q.done?storyQT(w,d).kv:null;
-  let h=`<section class="tdh">${phImg(ph,"tdbg")}<div class="tdin">
+  let h=`<section class="tdh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin">
     <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째 · 365일</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
     <p class="tdk" style="margin-top:auto">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1>
-    <p class="tdsub">${q.done?"오늘 QT를 마쳤습니다":read?"본문을 읽었습니다 · 이제 이야기 QT":"먼저 본문을 읽습니다"}</p></div>
+    <p class="tdsub">${q.done?"오늘 본문을 읽고 QT를 마쳤습니다":read?"본문을 읽었습니다":`${esc(p.label)} · 약 ${Math.max(5,Math.round(p.ch.reduce((a,[b,c])=>a+((BIBLE[b-1][c-1]||[]).join("").length),0)/600))}분`}</p>
+    <button class="tdgo" id="tdGo">${q.done?"이야기 다시 보기":read?"이야기 QT 시작":"본문 읽기"} <span aria-hidden="true">›</span></button></div>
     ${ph&&ph.link?`<a class="tdcr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}</section>`;
-  h+=`<section class="sec tdsteps">
-    <button class="tdstep${read?" ok":""}" id="tdRead"><b>1</b><span>본문 읽기<small>${read?"다 읽었습니다":esc(p.label)}</small></span><i>${read?"✓":"›"}</i></button>
-    <button class="tdstep${q.done?" ok":""}${read?"":" lock"}" id="tdQT"><b>2</b><span>이야기 QT<small>${q.done?"마쳤습니다 · 다시 보기":read?"사진 카드로 본문을 다시 보고 묵상합니다":"본문을 읽은 뒤 열립니다"}</small></span><i>${q.done?"✓":read?"›":"🔒"}</i></button>
-    <button class="tdstep" id="tdCh"><b>3</b><span>도전<small>언제든지 · 오늘 본문 퀴즈</small></span><i>›</i></button></section>`;
   if(kv) h+=`<section class="sec"><span class="label">오늘의 말씀 카드</span>${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}</section>`;
-  if(N){ const P2=dayPlan(N[0],N[1]), d2=dateOf(N[0],N[1]), S2=storySlides(N[0],N[1]), ph2=S2[0]&&S2[0].ph;
-    h+=`<section class="sec"><span class="label">내일 본문</span><div class="tdnext">${phImg(ph2,"tdnbg")}<div class="tdnin"><small>${esc(fmt(d2,{month:"long",day:"numeric"}))}(${DAYN[d2.getDay()]})</small><b>${esc(P2.topic||P2.label)}</b><span>${esc(P2.label)}</span>${live?`<div class="tdcd" id="tdCount">--:--:--</div><em>자정에 열립니다</em>`:`<button class="btn small" id="tdGoNext">열기 ›</button>`}</div></div></section>`; }
   return h; }
 function bindToday(){ clearInterval(TD.cd);
-  const tq=document.getElementById("tdQT"); if(tq) tq.onclick=()=>{ if(!mem.done[keyOf(view.w,view.d)]){ switchTab("read"); return; } storyOpen(0); };
-  const r=document.getElementById("tdRead"); if(r) r.onclick=()=>switchTab("read");
-  const c=document.getElementById("tdCh"); if(c) c.onclick=()=>switchTab("challenge");
+  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!mem.done[keyOf(view.w,view.d)]){ switchTab("read"); return; } storyOpen(0); };
+  const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
   const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
   const ce=document.getElementById("tdCount"); if(ce){ const tk=()=>{ const t=cdText(); ce.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); setTimeout(()=>location.reload(),1500); } }; tk(); TD.cd=setInterval(tk,1000); } }
@@ -7688,11 +7685,28 @@ function gameHTML(kind,w,d){ const key=keyOf(w,d), G=view.game&&view.game.kind==
   else { const C=G.c; h+=`<p class="gq">오늘 본문에 가장 여러 번 나오는 말은?</p><div class="gopts">${C.opts.map(o=>`<button class="gopt${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gclue="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
     if(G.a) h+=`<p class="lead"><b>${esc(C.ans)}</b> — ${C.n}번 나옵니다. 처음은 ${esc(vref2(C.first))}, 마지막은 ${esc(vref2(C.last))}. 처음과 마지막에 무엇이 달라졌는지 본문에서 찾아보세요.</p><div class="row"><button class="btn ghost" data-gclose="1">닫기</button></div>`; }
   return h+`</section>`; }
+function gCard(seed){ const L=Object.values(mem.qt).filter(q=>q.done&&q.kv).map(q=>{ const v=q.kv.split(":").map(Number); return {r:v,t:vtxt(v)}; }).filter(x=>x.t); if(!L.length) return null;
+  const NP=/^([가-힣]{2,}?)(에게서|에게|으로|께서|을|를|은|는|이|가|의|에|와|과|로)$/, stem=w=>{ const m=w.replace(/[^가-힣]/g,"").match(NP); return m&&!/[하되시니리]$/.test(m[1])?m[1]:null; };
+  const r=rngOf(seed), it=L[Math.floor(r()*L.length)], toks=it.t.split(/\s+/), cand=toks.map((w,i)=>[stem(w),i]).filter(([w])=>w);
+  if(!cand.length) return null; const [ans,idx]=cand[Math.floor(r()*cand.length)];
+  const pool=[...new Set(Object.values(mem.qt).filter(q=>q.kv).flatMap(q=>vtxt(q.kv.split(":").map(Number)).split(/\s+/).map(stem)).filter(w=>w&&w!==ans))];
+  const extra=["말씀","은혜","생명","평강","진리","능력","영광","소망","믿음","사랑","구원","의로움"].filter(w=>w!==ans);
+  const opts=shuf([ans,...shuf(pool.length>=3?pool:pool.concat(extra),r).slice(0,3)],r);
+  return {ref:`${PLAN.abbr[it.r[0]-1]} ${it.r[1]}:${it.r[2]}`, text:toks.map((w,i)=>i===idx?w.replace(ans,"＿＿＿"):w).join(" "), ans, opts}; }
+function cardGameHTML(){ const G=view.game&&view.game.kind==="card"?view.game:null, n=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
+  let h=`<section class="sec gsec"><span class="label">말씀 카드 다시 맞히기</span>`;
+  if(!n) return h+`<p class="lead">이야기 QT를 마치고 말씀 카드를 모으면 열립니다.</p></section>`;
+  if(!G) return h+`<p class="lead">모은 말씀 카드 ${n}장에서 빈칸을 채웁니다.</p><button class="btn" data-gstart="card">시작</button></section>`;
+  const C=G.c; h+=`<p class="gq">${esc(C.text)}<small style="display:block;color:var(--muted);font-size:12.5px">${esc(C.ref)}</small></p><div class="gopts">${C.opts.map(o=>`<button class="gopt${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gcard="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
+  if(G.a) h+=`<div class="row"><button class="btn ghost" data-gstart="card" data-gnew="1">다음 카드</button><button class="btn ghost" data-gclose="1">닫기</button></div>`;
+  return h+`</section>`; }
 function bindChallenge(){ const key=keyOf(view.w,view.d), rr=()=>keepScroll(()=>{});
   document.querySelectorAll("[data-gstart]").forEach(b=>b.onclick=()=>{ const k=b.dataset.gstart, seed=key+(b.dataset.gnew?":"+Date.now():"");
     if(k==="order"){ const o=gOrder(view.w,view.d,seed); view.game={kind:k,key,...o,pickd:[]}; }
     else if(k==="who"){ const o=gWho(view.w,view.d,seed); view.game={kind:k,key,qs:o.qs,i:0,score:0}; }
+    else if(k==="card"){ view.game={kind:k,key,c:gCard(seed)}; }
     else { view.game={kind:k,key,c:gClue(view.w,view.d,seed)}; } rr(); });
+  document.querySelectorAll("[data-gcard]").forEach(b=>b.onclick=()=>{ view.game.a=b.dataset.gcard; rr(); });
   document.querySelectorAll("[data-gclose]").forEach(b=>b.onclick=()=>{ view.game=null; rr(); });
   document.querySelectorAll("[data-gord]").forEach(b=>b.onclick=()=>{ const G=view.game, i=+b.dataset.gord, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i);
     if(G.pickd.length===4){ G.done=true; G.score=G.pickd.filter((x,k)=>x===k).length; chRec(key).order=`${G.score}/4`; save(); } rr(); });
@@ -7703,7 +7717,7 @@ function renderChallenge(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   let h=`<section class="sec"><span class="label">도전 · 언제든지 열려 있습니다</span><h2>${esc(p?p.label:"")}</h2><p class="lead">읽은 본문으로 풀어 봅니다. 날짜를 바꾸면 지난 본문도 풀 수 있습니다.</p></section>`;
   if(p) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
   if(p&&BIBLE) h+=["order","who","clue"].map(k=>gameHTML(k,w,d)).join("");
-  h+=`<section class="sec"><span class="label">곧 열립니다</span><div class="chsoon"><div class="chs"><b>말씀 카드 다시 맞히기</b><span>모은 말씀 카드의 빈칸을 채웁니다</span></div></div></section>`;
+  h+=cardGameHTML();
   return h; }
 function recordCardsHTML(){ const L=Object.entries(mem.qt).filter(([k,q])=>q.done&&q.kv).sort((a,b)=>String(b[1].doneAt||"").localeCompare(String(a[1].doneAt||""))).slice(0,view.wcAll?120:6);
   const n=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
