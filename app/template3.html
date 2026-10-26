@@ -405,6 +405,9 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .msec .mh{font-family:var(--f-ui);font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--accent);margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
 .mdet{margin-top:10px}.mdet>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:6px 0}.mdet ol{margin:6px 0 0;padding-left:20px;line-height:1.7}
 .msec .mwvban{margin:0}
+.echobox{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--card)}
+.echobox .label{margin:0 0 4px}.echo1{padding:6px 0;border-top:1px dashed var(--line)}.echo1:first-of-type{border-top:0}
+.echo1 b{font-size:13px;color:var(--gold)}.echo1 p{margin:2px 0 0;font-family:var(--f-text);font-size:15.5px;line-height:1.7}
 .mwvban{display:flex;align-items:center;gap:12px;margin:14px 0 4px;padding:12px 14px;border-radius:12px;border:1px solid #D9D2C2;background:#FBF8F1;background-image:linear-gradient(rgba(31,58,107,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(31,58,107,.06) 1px,transparent 1px);background-size:16px 16px;color:#1E2230;text-decoration:none}
 .mwvban .mwvh{font-family:"Noto Serif Hebrew","SBL Hebrew",serif;font-size:22px;color:#1F3A6B;direction:rtl}
 .mwvban .mwvt{flex:1;display:grid;gap:2px}.mwvban b{font-size:14.5px;color:#1F3A6B}.mwvban small{font-size:12.5px;color:#666B77;line-height:1.5}
@@ -1605,6 +1608,10 @@ function showEM(word){
 /* 단서 자료를 날짜별로 */
 function dayOfRef(q){ for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++) if(PLAN.plan[w-1][d].ch.some(([b,c])=>b===q[0]&&c===q[1])) return [w,d]; return null; }
 const CLUES={};
+/* QT '성경 전체로': 오늘 본문이 직접 부르는 구약 말씀(단서의 '구약의 메아리')을 원문 그대로 함께 보입니다 */
+function echoBox(w,d){ const L=(CLUES[w+"-"+(d+1)]||[]).filter(c=>c.t==="echo"); if(!L.length||!BIBLE) return "";
+  const vt=x=>{ try{ return BIBLE[x[0]-1][x[1]-1][x[2]-1]||""; }catch(e){ return ""; } };
+  return `<div class="echobox"><span class="label">본문이 부르는 구약 말씀</span>${L.map(c=>`<div class="echo1"><b>${esc(PLAN.abbr[c.r[0]-1])} ${c.r[1]}:${c.r[2]} ← ${esc(PLAN.abbr[c.o[0]-1])} ${c.o[1]}:${c.o[2]}</b><p>${esc(vt(c.o))}</p></div>`).join("")}</div>`; }
 for(const c of CLUE_LIST){ const at=dayOfRef(c.t==="pair"?c.ra:c.r); if(!at) continue; const key=at[0]+"-"+(at[1]+1); (CLUES[key] ||= []).push(c); }
 for(const c of CLUE_LIST.filter(c=>c.t==="scene")){ const me=dayOfRef(c.r); c.prev=CLUE_LIST.filter(o=>o.t==="scene"&&o.g===c.g&&o!==c).map(o=>({o,at:dayOfRef(o.r)})).filter(x=>x.at&&(x.at[0]<me[0]||(x.at[0]===me[0]&&x.at[1]<me[1]))); }
 const GAPS={}; for(const g of GAP_LIST){ const at=dayOfRef(g.r); if(at) GAPS[at[0]+"-"+(at[1]+1)]=g; }
@@ -1816,7 +1823,7 @@ function renderQT(){
   else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=moreTraits+`</section>`;
   // 3 그리스도께로
-  h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div></section>`;
+  h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div>${echoBox(w,d)}</section>`;
   // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
   const vs=qtCands(A,traits,R,w+"-"+(d+1));
   const kv=qtKV(q,A,vs,w+"-"+(d+1));
