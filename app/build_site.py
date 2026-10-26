@@ -97,7 +97,7 @@ data+=""" const M=window.CBSR_MODE==="y365"?"y365":"rj";
  for(const k in MN){ const n=k.slice(3), o=k.startsWith("pe:")?PEOPLEINFO[n]:PLACEINFO[n]; if(o){ o.m=MN[k].m; o.mc=MN[k].c; } }
  for(const k in GF){ const [m,r]=k.split(":"); if(m!==M) continue; if(GF[k].find&&GUIDE[r]) GUIDE[r].find=GF[k].find; if(GF[k].eye&&EYE[r]) EYE[r].q=GF[k].eye; }
 })();\n"""
-data+='const KWQ='+open('ux/kwq.json').read()+';\n'
+data+='const KWQ='+open('ux/kwq.json').read()+';\nconst CARDNEWS='+open('ux/cardnews.json').read()+';\n'
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
 data+='if(window.CBSR_MODE==="y365"){const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
