@@ -2053,7 +2053,7 @@ function phPick(text,ctxPl,genre,seed,used,hint){ const P=(typeof PHOTOS!=="unde
   const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1;
   for(const p of P){ if(used.has(p.id)) continue; let s=0; const pl=p.pl||[];
     const plw=pl.flatMap(n=>n.split(/[\/ ]/)).filter(x=>x.length>=2&&!/^(호수|해변|광야|백향목|메소포타미아)$/.test(x));
-    if(plw.some(n=>text.includes(n))) s+=6; else if(plw.some(n=>ctxPl.includes(n))) s+=1.5;
+    if(plw.some(n=>text.includes(n))) s+=6; else if(plw.some(n=>ctxPl.includes(n))) s+=1.5; else if(plw.length) s-=4;
     (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=8; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; });
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
   return best; }
