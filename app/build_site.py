@@ -97,6 +97,7 @@ data+=""" const M=window.CBSR_MODE==="y365"?"y365":"rj";
  for(const k in MN){ const n=k.slice(3), o=k.startsWith("pe:")?PEOPLEINFO[n]:PLACEINFO[n]; if(o){ o.m=MN[k].m; o.mc=MN[k].c; } }
  for(const k in GF){ const [m,r]=k.split(":"); if(m!==M) continue; if(GF[k].find&&GUIDE[r]) GUIDE[r].find=GF[k].find; if(GF[k].eye&&EYE[r]) EYE[r].q=GF[k].eye; }
 })();\n"""
+data+='const KWQ='+open('ux/kwq.json').read()+';\n'
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
 data+='if(window.CBSR_MODE==="y365"){const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
@@ -162,6 +163,10 @@ tbody=t.replace('<script>\n/*DATA*/','\n'+btag+'<script>\n'+data)
 tbody=tbody.replace(title,'',1)
 thead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/try.html"')
 open(f'{OUT}/try.html','w').write(thead+tbody+'\n</body>\n</html>\n')
+# QT 스토리 카드 시험 페이지: 기록은 'story:' 앞머리로 앱 기록과 분리, 365 통독표로 시작
+SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="story:",S={getItem:function(k){return L.getItem(P+k)},setItem:function(k,v){L.setItem(P+k,String(v))},removeItem:function(k){L.removeItem(P+k)},clear:function(){}};Object.defineProperty(window,"localStorage",{value:S,configurable:true});if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","y365");}catch(e){}})();</script>\n'
+shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
+open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 V=h(html+bible)
 sw=f'''/* 오프라인 지원: 앱 화면은 인터넷이 되면 늘 새로 받고(network first),
    성경 본문·지형도·아이콘·글꼴·라이브러리는 처음 받은 뒤 보관해 둡니다(cache first). 기록은 Firestore가 따로 보관합니다. */
