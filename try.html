@@ -1185,7 +1185,10 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sx{border:0;background:none;color:#fff;font-size:20px;padding:4px 8px}
 .sph{position:absolute;inset:0;overflow:hidden}
 .sph img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(.92) contrast(1.04)}
-.sph.kb img{animation:skb 12s ease-out forwards}
+.sph.kb img{animation:skb 12s ease-out forwards}.sph.v1 img{transform:scale(1.14)}.sph.v2 img{transform:scale(1.24)}.sph.kb.v1 img{animation-name:skb1}.sph.kb.v2 img{animation-name:skb2}
+@keyframes skb1{from{transform:scale(1.14) translate(-1%,0)}to{transform:scale(1.22) translate(1.5%,-1%)}}@keyframes skb2{from{transform:scale(1.24) translate(1%,-1%)}to{transform:scale(1.32) translate(-1.5%,0)}}
+.sghost{position:absolute;inset:0;z-index:40;pointer-events:none;transition:opacity .6s ease}
+#storyRoot .sfr{animation:sfin .45s ease}@keyframes sfin{from{opacity:.4}to{opacity:1}}
 @keyframes skb{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.14) translate(-2%,-1.5%)}}
 .sph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 42%,rgba(10,7,4,.9) 100%)}
 .scr{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);font-size:10px;color:rgba(255,255,255,.55);z-index:25;text-decoration:none;max-width:72%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -6982,14 +6985,16 @@ function storyQT(w,d){ const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d
 const PH_KW=[[/광야|사막|떠돌/,"desert"],[/굴|동굴/,"cave"],[/양|목자|염소|양털|양 떼/,"sheep"],[/밤|별|잠들|어둠|어두/,"night_sky"],[/새벽|아침|해가 돋|해 돋/,"dawn"],[/저녁|해 질|해가 지/,"dusk"],[/폭풍|광풍|우레|천둥|회오리/,"storm_sky"],[/비가|비를|홍수|장마/,"rain"],[/바다|파도|물결|해변/,"sea"],[/배를|배에|배가|그물|어부|고기를|물고기/,"fishing_boat"],[/강|요단|나일|유브라데/,"river"],[/우물|샘|물을 길|생수/,"well"],[/추수|곡식|밀|보리|이삭|거두/,"wheat_field"],[/포도/,"vineyard"],[/감람|올리브|기름을 붓|기름 부/,"olive_tree"],[/무화과/,"fig_tree"],[/떡|빵|음식|먹을|먹이/,"bread"],[/항아리|그릇|토기|옹기|물병/,"clay_jar"],[/등불|등잔|등대/,"oil_lamp"],[/불|번제|횃불|불꽃/,"fire"],[/제단|돌판|돌무더기|돌을/,"stone_altar"],[/무덤|장사|시체/,"rock_tomb"],[/두루마리|율법책|기록하|책을/,"scroll"],[/장막|천막|성막/,"tent"],[/낙타/,"camel"],[/나귀/,"donkey"],[/칼|전쟁|군대|싸움|싸우|군사|창으로|창을|쫓|추격|병거|마병/,"army"],[/성벽|성문|성읍|도성|성을/,"city_wall"],[/폐허|무너|황폐|멸망/,"ruins"],[/산에|산으로|산 위|봉우리|시내 산|시온 산/,"mountain_peak"],[/골짜기/,"valley"],[/꽃|백합|들풀/,"flowers"],[/씨를 뿌|씨앗|흙|땅에 떨어/,"seed"],[/갈대/,"reeds"],[/백향목|레바논/,"cedar"],[/타작/,"threshing_floor"],[/길을|길에|길로|여행|떠나|나아가/,"road"],[/성전|전 뜰|지성소/,"temple_stones"],[/하늘|구름/,"sky"]];
 const PH_GENRE={narrative:["desert","road","valley","wilderness_path","dusk"],law:["desert","mountain_peak","tent","wilderness_path"],poetry:["sky","dawn","night_sky","flowers","sunrise_light_rays"],wisdom:["wheat_field","olive_tree","road","dawn"],prophecy:["ruins","storm_sky","city_wall","dusk"],letter:["ruins","road","sea","city_wall"],apocalypse:["night_sky","storm_sky","sky","sunrise_light_rays"]};
 const phHash=s=>{ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; };
-function phPick(text,ctxPl,genre,seed,used,hint){ const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
+const STAGE_T={"배경":["desert","valley","mountain_peak","sea","city_wall","ruins","sky","clouds","wilderness_path","river","dawn","dusk"],"긴장":["storm_sky","dust","army","night_sky","cave","road","waves","rain","fire"],"전환":["hands","bread","clay_jar","oil_lamp","scroll","ancient_text","stones","seed","stone_altar","sunrise_light_rays","fire"],"의미":["dawn","sunrise_light_rays","wheat_field","flowers","olive_tree","sky","dusk","harvest"]};
+function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
   if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f) return f; }
   const want=new Set(), hs=new Set(); PH_KW.forEach(([re,t])=>{ if(re.test(text)) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
   const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1;
   for(const p of P){ if(used.has(p.id)) continue; let s=0; const pl=p.pl||[];
     const plw=pl.flatMap(n=>n.split(/[\/ ]/)).filter(x=>x.length>=2&&!/^(호수|해변|광야|백향목|메소포타미아)$/.test(x));
     if(plw.some(n=>text.includes(n))) s+=6; else if(plw.some(n=>ctxPl.includes(n))) s+=1.5; else if(plw.length) s-=4;
-    (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=8; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; });
+    (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=8; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; if(opt.stage&&(STAGE_T[opt.stage]||[]).includes(t)) s+=.9; });
+    if(opt.mood&&p.mood){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
   return best; }
 /* 이야기 카드 목록: 손으로 쓴 카드(STORYC)가 있으면 그것, 없으면 본문 자료로 자동 구성 → 뒤에 QT 네 단계 */
@@ -7016,8 +7021,17 @@ function storySlides(w,d){ const ck=MODE+":"+keyOf(w,d); SV.cache ||= {}; if(SV.
   out.push({k:"ask"});
   /* 사진 붙이기: 장면 글 → 장소·주제어 → 책 장르 */
   const A=dayA(w,d), ctxPl=[...A.places.keys()], gen=GENRE_OF(p.ch[0][0]), used=new Set(); let cover=null;
-  out.forEach((s,i)=>{ if(s.qt||s.k==="map"||s.k==="table"||s.k==="fin"||s.k==="next"||s.k==="ask") return; if(s.img==="none") return;
-    const ph=phPick(sTxt(s)+(i===0?" "+ctxPl.join(" "):""),ctxPl,gen,ck+":"+i,used,s.img); if(ph){ s.ph=ph; used.add(ph.id); if(!cover) cover=ph; } });
+  /* 장면 묶음: 같은 플롯 단계(배경·긴장·전환·의미)가 이어지는 카드는 같은 사진을 이어 쓰고 확대·위치만 바꿉니다. 하루는 표지와 같은 색감으로 맞춥니다 */
+  const noPh=s=>s.qt||s.k==="map"||s.k==="table"||s.k==="fin"||s.k==="next"||s.k==="ask"||s.img==="none";
+  const stageOf=s=>{ if(s.k==="cover") return "표지"; const h=(s.lab||"").split("·")[0].trim(); return /^(배경|긴장|전환|의미)$/.test(h)?h:""; };
+  const groups=[]; let g=null;
+  out.forEach((s,i)=>{ if(noPh(s)){ g=null; return; } const st=stageOf(s), sameHint=true;
+    if(g&&st&&st===g.st&&st!=="표지"&&sameHint&&g.list.length<3){ g.list.push(i); return; }
+    if(g&&!st&&!g.st&&s.k==="line"&&g.list.length<2){ g.list.push(i); return; }
+    g={st,list:[i],hint:s.img}; groups.push(g); });
+  groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
+    const ph=phPick(txt,ctxPl,gen,ck+":"+gi,used,G.hint,{stage:G.st,mood:cover&&cover.mood}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
+    G.list.forEach((i,k)=>{ out[i].ph=ph; out[i].phv=k; }); });
   out.forEach(s=>{ if(s.k==="fin"||s.k==="ask") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
   SV.cache[ck]=out; return out; }
 const SN_LAB={obs:"본문 관찰",god:"하나님은",my:"나의 생각거리",end:"오늘의 말씀"};
@@ -7038,6 +7052,7 @@ function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
   const N=nextWD(w,d); if(!N) return `<div class="sbox snext"><span class="slab">마지막 날</span><h1>통독을 마쳤습니다</h1><div class="sfbtn"><button class="btn" id="sEnd">닫기</button></div></div>`;
   const P2=dayPlan(N[0],N[1]), dt=dateOf(N[0],N[1]), live=isHere(w,d);
   return `<div class="sbox snext"><span class="slab">내일 본문 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}(${DAYN[dt.getDay()]})</span><h1>${esc(P2.topic||P2.label)}</h1><p>${esc(P2.label)}</p>${live?`<div class="scount" id="sCount" aria-live="off">--:--:--</div><p class="scnote">자정에 열립니다</p>`:`<p class="scnote">지금 바로 열 수 있습니다</p>`}<div class="sfbtn">${window.CBSR_V2?`<button class="btn ghost" id="sToCh">도전 하나</button>`:""}<button class="btn ghost" id="sToRec">나의 기록</button><button class="btn" id="sEnd">닫기</button></div></div>`; }
+function phPos(fx,v){ const m=String(fx||"50% 50%").match(/([\d.]+)%\s+([\d.]+)%/); let x=m?+m[1]:50, y=m?+m[2]:50; if(v===1) x=Math.min(100,x+18); if(v===2) x=Math.max(0,x-18); return x+"% "+y+"%"; }
 function cdText(){ const n=new Date(), m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1), s=Math.max(0,Math.floor((m-n)/1000)); return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,"0")).join(":"); }
 function storyCardHTML(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</span>`:"", h2=s.h?`<h2>${smk(s.h)}</h2>`:"";
   const B=(s.b||[]).map(x=>typeof x==="string"?`<p>${smk(x)}</p>`:`<div class="sq2">${smk(x.q[0])}<small>${esc(x.q[1]||"")}</small></div>`).join("");
@@ -7098,10 +7113,11 @@ function storyShow(){ clearTimeout(SV.t); clearInterval(SV.cd); storyMapOff(); c
   if(s.k==="next"){ const N=nextWD(w,d); if(N){ const S2=storySlides(N[0],N[1]); ph=S2[0]&&S2[0].ph; } }
   const [c1,c2]=SG_BG[GENRE_OF(p.ch[0][0])]||SG_BG.narrative;
   r.className="story-root"; r.style.setProperty("--sg1",c1); r.style.setProperty("--sg2",c2);
+  const old=r.querySelector(".sfr"); let ghost=null; if(old&&!quick){ ghost=old.cloneNode(true); ghost.classList.add("sghost"); ghost.querySelectorAll(".sbox,.stop,.sbars2,.scr,.stapnote,.smnav").forEach(x=>x.remove()); }
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
   r.innerHTML=`<div class="sfr k-${kind}">
    ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
-   ${showPh?`<div class="sph${kind!=="qt"&&!quick?" kb":""}"><img alt="" src="${esc(ph.u)}" style="object-position:${esc(ph.fx||"50% 50%")}" referrerpolicy="no-referrer"></div>`:""}
+   ${showPh?`<div class="sph${kind!=="qt"&&!quick?" kb":""} v${s.phv||0}"><img alt="" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
    <div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${dur}ms"`:""}></i></span>`).join("")}</div>
    <div class="stop"><span class="sdot">통</span><b>${esc(p.label)}</b><span></span><button class="sx" id="sClose" aria-label="닫기">✕</button></div>
@@ -7109,6 +7125,7 @@ function storyShow(){ clearTimeout(SV.t); clearInterval(SV.cd); storyMapOff(); c
    ${showPh&&kind!=="qt"&&ph.link?`<a class="scr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}
    ${hint?`<p class="stapnote">왼쪽을 누르면 이전 · 오른쪽을 누르면 다음 · 길게 누르면 멈춤</p>`:""}</div>`;
   if(hint){ SV.hinted=true; }
+  if(ghost){ r.prepend(ghost); requestAnimationFrame(()=>{ ghost.style.opacity="0"; }); setTimeout(()=>ghost.remove(),650); }
   r.querySelectorAll(".sph img").forEach(im=>im.onerror=()=>im.remove());
   bindStoryRoot(r,s,auto);
   if(kind==="map") storyMapInit(w,d,s);
