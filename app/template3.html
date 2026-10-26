@@ -1743,7 +1743,7 @@ function renderRead(){
   h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl"><h2>${esc(p.label)}</h2><p class="dmeta">${p.ch.length}${b0===19?"편":"장"} · 약 ${mins}분${(()=>{ const R=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key]; return R&&R.core?` · 핵심 읽기 <b class="rjc">${esc(R.core)}</b>`:""; })()}${done?` · <b class="okc">✓ 통독 완료</b>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
-  const TXd=dayTools(w,d), tl=TXd?TXd.q:[];
+  const TXd=PVQ.has(key)?null:dayTools(w,d), tl=TXd?TXd.q:[];
   const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:"";
   const V2R=!!window.CBSR_V2;
   if(V2R&&!view.v2shut) view.open=true;
@@ -1965,7 +1965,7 @@ function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").f
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
 function eyeFor(w,d,L){
   const k=keyOf(w,d), e=EYE[k];
-  const TX=dayTools(w,d);
+  const TX=PVQ.has(k)?(e&&e.tools?{q:[],look:e.tools}:null):dayTools(w,d);
   if(e) return {q:e.q,tools:TX?TX.q:[],looks:e.look.map((l,i)=>`<button class="lookbtn" data-look="${i}"><span>${esc(l.t)}</span>${TX&&TX.look&&TX.look[i]?`<i class="ltool">${TX.look[i]}</i>`:""}</button>`)};
   const C=(CLUES[w+"-"+(d+1)]||[]).filter(c=>c.t!=="scene"||c.prev.length).slice(0,3);
   return {q:L[0].q,tools:[],looks:C.map(c=>`<button class="lookbtn" data-clue="${CLUES[w+"-"+(d+1)].indexOf(c)}"><span>${esc(CLUE_LAB[c.t]||"살펴보기")} · ${esc(c.t==="pair"?c.a+" ↔ "+c.b:c.t==="scene"?c.g:fullRef(c.r))}</span>${CLUE_TOOL[c.t]?`<i class="ltool">${CLUE_TOOL[c.t]}</i>`:""}</button>`),skip0:true};
@@ -2127,11 +2127,13 @@ let PV_FORCE=null;
 function PV(){ if(PV_FORCE) return PV_FORCE; try{ const u=new URLSearchParams(location.search).get("pv"); if(u==="A"||u==="B") return u; const s=localStorage.getItem("cbsr-pv"); if(s==="A"||s==="B") return s; }catch(e){} return new Date().getFullYear()>=2028?"B":"A"; }
 function storyDay(no){ const C=(typeof STORYC!=="undefined"&&MODE==="y365")?STORYC[no]:null; if(!C) return null; if(C.A||C.B) return C[PV()]||null; return PV()==="A"?C:null; }
 const PV_ORIG={EYE:{},DETAIL:{},GUIDE:{},KWQ:{}};
+const PVQ=new Set();
 function applyPV(){ if(typeof STORYC==="undefined"||MODE!=="y365") return;
   for(const no in STORYC){ const n=+no-1, w=Math.floor(n/7)+1, d=n%7, k=w+"-"+d, k2=w+"-"+(d+1), S=storyDay(+no), Q=S&&S.qt;
     if(!(k in PV_ORIG.EYE)){ PV_ORIG.EYE[k]=EYE[k]; PV_ORIG.DETAIL[k2]=DETAIL[k2]; PV_ORIG.GUIDE[k]=GUIDE[k]; PV_ORIG.KWQ[no]=(typeof KWQ!=="undefined")?KWQ[no]:undefined; }
     const set=(o,key,v)=>{ if(v===undefined) delete o[key]; else o[key]=v; };
     set(EYE,k,Q&&Q.obs?Q.obs:PV_ORIG.EYE[k]);
+    if(Q&&Q.obs) PVQ.add(k); else PVQ.delete(k);
     set(DETAIL,k2,Q?Object.assign({},PV_ORIG.DETAIL[k2]||{},Q.god?{god:Q.god}:{},Q.christ?{christ:Q.christ}:{},Q.apply?{apply:Q.apply}:{},Q.pray?{pray:Q.pray}:{}):PV_ORIG.DETAIL[k2]);
     set(GUIDE,k,Q&&Q.guide?Object.assign({},PV_ORIG.GUIDE[k]||{},Q.guide):PV_ORIG.GUIDE[k]);
     if(typeof KWQ!=="undefined") set(KWQ,no,S&&S.kwq?S.kwq:PV_ORIG.KWQ[no]); }
