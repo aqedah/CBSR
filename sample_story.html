@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>이야기 카드 시범</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--ink:#f6efe4;--sub:#d9cdbb;--gold:#e2b874;--red:#ff5b45;--panel:rgba(22,17,12,.72);--line:rgba(255,255,255,.18)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0d0b09;color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+#st{position:fixed;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:#15110d;user-select:none;-webkit-user-select:none}
+.bars{position:absolute;top:calc(env(safe-area-inset-top) + 8px);left:10px;right:10px;display:flex;gap:4px;z-index:20}
+.bars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden}
+.bars i b{display:block;height:100%;width:0;background:#fff}
+.top{position:absolute;top:calc(env(safe-area-inset-top) + 18px);left:14px;right:14px;display:flex;align-items:center;gap:8px;z-index:20;font-size:13px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.top .dot{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e2b874,#9c5b2e);display:grid;place-items:center;font:700 12px "Noto Serif KR";color:#1b130b}
+.top .t{font-weight:700}.top .d{opacity:.75}
+.top .x{margin-left:auto;font-size:22px;line-height:1;opacity:.85;background:none;border:0;color:#fff;padding:4px 6px}
+.sl{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s}
+.sl.on{opacity:1;visibility:visible}
+.ph{position:absolute;inset:0;overflow:hidden;background:linear-gradient(160deg,#5b4330,#1d1510)}
+.ph img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(.92) contrast(1.04)}
+.sl.on .ph img{animation:kb 11s ease-out forwards}
+@keyframes kb{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.14) translate(-2%,-1.5%)}}
+.ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 45%,rgba(10,7,4,.88) 100%)}
+.cr{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom) + 6px);font-size:10px;color:rgba(255,255,255,.55);z-index:6;text-decoration:none;max-width:70%;text-align:right}
+.box{position:absolute;left:18px;right:18px;bottom:calc(env(safe-area-inset-bottom) + 34px);z-index:5}
+.sl.on .box>*{animation:up .7s both}
+.sl.on .box>*:nth-child(2){animation-delay:.15s}.sl.on .box>*:nth-child(3){animation-delay:.3s}.sl.on .box>*:nth-child(4){animation-delay:.45s}.sl.on .box>*:nth-child(5){animation-delay:.6s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.lab{display:inline-block;font-size:11.5px;letter-spacing:.12em;color:var(--gold);font-weight:700;margin-bottom:8px;text-transform:uppercase}
+h1{font:900 34px/1.22 "Noto Serif KR",serif;letter-spacing:-.02em;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+h2{font:700 25px/1.3 "Noto Serif KR",serif;letter-spacing:-.01em;margin-bottom:10px;text-shadow:0 2px 10px rgba(0,0,0,.45)}
+p{font-size:16px;line-height:1.7;color:var(--sub);margin-top:6px;word-break:keep-all}
+p b{color:#fff}
+.q{font:500 18px/1.6 "Noto Serif KR",serif;color:#fff;border-left:3px solid var(--gold);padding:2px 0 2px 12px;margin-top:12px;word-break:keep-all}
+.q small{display:block;font:400 12px "Noto Sans KR";color:var(--gold);margin-top:4px}
+.panel{background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px}
+/* cover */
+.cover .box{bottom:auto;top:50%;transform:translateY(-50%);text-align:center}
+.cover .kick{font-size:13px;letter-spacing:.2em;color:var(--gold);margin-bottom:12px}
+.cover .subt{font-size:15.5px;color:var(--sub);margin-top:14px;line-height:1.6}
+.cover .ph::after{background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,.7) 100%)}
+/* split */
+.split .ph{bottom:44%}
+.split .ph::after{background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,0) 70%,#1b150f 100%)}
+.split .base{position:absolute;left:0;right:0;bottom:0;height:44%;background:#1b150f}
+.split .box{top:54%;bottom:auto}
+/* quote */
+.quote .ph img{filter:brightness(.42) saturate(.7)}
+.quote .ph::after{background:radial-gradient(ellipse at 50% 55%,rgba(0,0,0,.15),rgba(0,0,0,.75))}
+.quote .box{bottom:auto;top:50%;transform:translateY(-50%)}
+.bigq{font:700 26px/1.55 "Noto Serif KR",serif;color:#fff;word-break:keep-all;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.bigq::before{content:"“";display:block;font-size:64px;line-height:.6;color:var(--gold);margin-bottom:6px}
+.ref{font-size:13px;color:var(--gold);margin-top:10px}
+/* table */
+.paper{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 0%,#3a2c1f 0%,#17120d 70%)}
+.tbl .box{top:calc(env(safe-area-inset-top) + 70px);bottom:auto}
+.grid{display:grid;grid-template-columns:72px 1fr 1fr 1fr;border-top:1px solid var(--line);margin-top:12px;font-size:13px;line-height:1.45}
+.grid>div{padding:9px 5px;border-bottom:1px solid var(--line);word-break:keep-all}
+.grid .h{font:700 14px "Noto Serif KR";color:var(--gold);text-align:center}
+.grid .k{color:#a99a85;font-size:12px;padding-left:0}
+.grid .c{text-align:center;color:var(--ink)}
+.grid .mid{background:rgba(255,91,69,.10)}
+.grid .hl{color:#fff;font-weight:700}
+.note{font-size:14.5px;color:var(--sub);margin-top:14px;line-height:1.65;word-break:keep-all}
+/* echo */
+.echo .pair{margin-top:14px;display:grid;gap:10px}
+.echo .pair div{font:500 17px/1.55 "Noto Serif KR";color:#fff;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.echo .pair small{display:block;font:400 12px "Noto Sans KR";color:var(--gold);margin-top:3px}
+.echo .pair u{text-decoration:none;color:var(--gold);border-bottom:2px solid var(--red)}
+/* map */
+.map{position:absolute;inset:0;background:#2a2118}
+.map .leaflet-container{background:#2a2118;font-family:"Noto Sans KR"}
+.map .box{bottom:calc(env(safe-area-inset-bottom) + 30px);z-index:500}
+.map .leaflet-control-attribution{font-size:9px;background:rgba(0,0,0,.45);color:#ccc}
+.map .leaflet-control-attribution a{color:#ddd}
+.pl{color:#fff;font:700 13px "Noto Sans KR";white-space:nowrap;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000}
+.pl::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--red);margin-right:5px;vertical-align:-1px;box-shadow:0 0 4px #000}
+.pl.alt::before{border-color:var(--gold)}
+.pl.est{font-style:italic}
+.pl.lf{display:inline-block;transform:translateX(calc(-100% + 12px))}
+.pl.lf::before{display:none}
+.pl.lf::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--red);margin-left:5px;vertical-align:-1px;box-shadow:0 0 4px #000}
+.pl.alt.lf::after{border-color:var(--gold)}
+.route{stroke-dasharray:1600;stroke-dashoffset:1600}
+.sl.on .route{animation:draw 3.2s .4s ease-in-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+/* question */
+.qq{font:700 25px/1.5 "Noto Serif KR";color:#fff;word-break:keep-all;margin-top:4px}
+.qq em{font-style:normal;color:var(--gold)}
+.btns{display:flex;gap:8px;margin-top:18px}
+.btns button{flex:1;padding:13px 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.1);color:#fff;font:700 15px "Noto Sans KR"}
+.btns button.pri{background:var(--gold);color:#1b130b;border:0}
+.credits{font-size:11px;color:#a99a85;line-height:1.6;margin-top:14px;max-height:30vh;overflow:auto}
+.credits a{color:#cdbfa9}
+.tap{position:absolute;top:70px;bottom:0;z-index:10}
+.tap.l{left:0;width:30%}.tap.r{right:0;width:70%}
+.map .tap{display:none}
+.mapnav{position:absolute;z-index:600;top:50%;transform:translateY(-50%);width:32px;height:56px;border:0;background:rgba(0,0,0,.3);color:#fff;font-size:26px}
+.mapnav.l{left:0;border-radius:0 10px 10px 0}.mapnav.r{right:0;border-radius:10px 0 0 10px}
+.paused .bars{opacity:.4}
+.hint{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top) + 56px);text-align:center;font-size:11px;color:rgba(255,255,255,.5);z-index:4}
+@media (prefers-reduced-motion:reduce){.sl.on .ph img,.sl.on .box>*,.sl.on .route{animation:none}.route{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div id="st">
+  <div class="bars" id="bars"></div>
+  <div class="top"><div class="dot">통</div><span class="t">사무엘상 24–26장</span><span class="d">· 시범</span><button class="x" id="pp" aria-label="일시정지">❚❚</button></div>
+
+  <!-- 1 표지 -->
+  <section class="sl cover" data-dur="7000">
+    <div class="ph"><img alt="" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Aerial_view_of_the_Judean_Desert_%28near_Masada%29%2C_Israel_03.jpg/1280px-Aerial_view_of_the_Judean_Desert_%28near_Masada%29%2C_Israel_03.jpg"></div>
+    <div class="box">
+      <div class="kick">사무엘상 24–26장</div>
+      <h1>두 번의 기회,<br>한 번의 분노</h1>
+      <div class="subt">칼을 쥘 수 있었던 날들,<br>다윗은 무엇을 기다렸을까</div>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?curid=24544320">유대 광야 · Godot13 · CC BY-SA 4.0</a>
+  </section>
+
+  <!-- 2 배경 -->
+  <section class="sl" data-dur="8500">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/7903/32205312117_ca0a1d492b_b.jpg"></div>
+    <div class="box">
+      <span class="lab">배경</span>
+      <h2>매일 쫓기는 사람</h2>
+      <p>사울은 왕좌를 지키려고 다윗을 쫓았습니다. 다윗은 광야의 요새에서 십 광야 산골로, 다시 마온 광야로 옮겨 다녔습니다.</p>
+      <div class="q">사울이 매일 찾되 하나님이 그를 그의 손에 넘기지 아니하시니라<small>삼상 23:14</small></div>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://www.flickr.com/photos/101203767@N07/32205312117">Drouyn · CC BY 2.0</a>
+  </section>
+
+  <!-- 3 지도 -->
+  <section class="sl map" data-dur="0" data-map="1">
+    <div id="mapEl" style="position:absolute;inset:0"></div>
+    <button class="mapnav l" data-go="-1" aria-label="이전">‹</button><button class="mapnav r" data-go="1" aria-label="다음">›</button>
+    <div class="box panel">
+      <span class="lab">이동 · 19–26장</span>
+      <h2 style="font-size:21px">기브아에서 엔게디까지</h2>
+      <p style="font-size:14.5px;margin-top:0">왕궁을 떠난 다윗은 <b>놉 → 가드 → 아둘람 → 그일라</b>를 지나 사해 서쪽 끝 <b>엔게디 요새</b>에 이릅니다(23:29). 나발의 갈멜(25장), 다시 숨은 하길라 산(26장)은 금색 점입니다.</p>
+    </div>
+  </section>
+
+  <!-- 4 긴장 -->
+  <section class="sl" data-dur="9000">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/3075/3122515116_ab3dbb2de8_b.jpg"></div>
+    <div class="box">
+      <span class="lab">긴장 · 24장</span>
+      <h2>굴 깊은 곳에서</h2>
+      <p>사울이 혼자 굴에 들어옵니다. 그 굴 깊은 곳에 <b>다윗과 그의 사람들</b>이 있었습니다(24:3).</p>
+      <p>부하들이 속삭입니다.</p>
+      <div class="q">이것이 그 날이니이다<small>삼상 24:4</small></div>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://www.flickr.com/photos/21976354@N07/3122515116">NeilsPhotography · CC BY 2.0</a>
+  </section>
+
+  <!-- 5 결정 (인용) -->
+  <section class="sl quote" data-dur="10000">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/3075/3122515116_ab3dbb2de8_b.jpg"></div>
+    <div class="box">
+      <span class="lab">결정</span>
+      <p style="color:#fff;margin-bottom:16px">다윗은 사울의 겉옷 자락만 가만히 벱니다. 그런데 <b>그것만으로도 마음이 찔렸습니다</b>(24:4–5).</p>
+      <div class="bigq">내가 손을 들어 여호와의 기름 부음을 받은 내 주를 치는 것은 여호와께서 금하시는 것이니</div>
+      <div class="ref">삼상 24:6 중</div>
+    </div>
+  </section>
+
+  <!-- 6 반응 -->
+  <section class="sl split" data-dur="8500">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/8/9688259_b27b9dc0f5_b.jpg"></div><div class="base"></div>
+    <div class="box">
+      <span class="lab">반응</span>
+      <h2>우는 왕</h2>
+      <p>굴 밖에서 다윗의 외침을 들은 사울은 <b>소리를 높여 웁니다</b>(24:16). 그리고 이렇게 말합니다.</p>
+      <div class="q">나는 너를 학대하되 너는 나를 선대하니 너는 나보다 의롭도다<small>삼상 24:17</small></div>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://www.flickr.com/photos/14738242@N00/9688259">엔게디 · Jonas B · CC BY 2.0</a>
+  </section>
+
+  <!-- 7 반전 -->
+  <section class="sl" data-dur="9500">
+    <div class="ph"><img alt="" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/118939_a_flock_of_sheep_in_emek_eyon_north_of_metula-_PikiWiki_Israel.jpg/1280px-118939_a_flock_of_sheep_in_emek_eyon_north_of_metula-_PikiWiki_Israel.jpg"></div>
+    <div class="box">
+      <span class="lab">반전 · 25장</span>
+      <h2>그런데, 나발 앞에서는</h2>
+      <p>양털 깎는 날, 다윗은 부자 나발에게 먹을 것을 청했다가 <b>"다윗은 누구며"</b>라는 모욕을 듣습니다(25:10).</p>
+      <p>사울 앞에서 손을 거두었던 다윗이 이번에는 <b>"각기 칼을 차라"</b> 명령합니다. 사백 명 가량이 그와 함께 올라갑니다(25:13).</p>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://commons.wikimedia.org/w/index.php?curid=153901287">שלמה רודד · PikiWiki Israel · CC BY 2.5</a>
+  </section>
+
+  <!-- 8 같은 말 다른 반응 -->
+  <section class="sl echo" data-dur="10000">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/3013/2658667399_6820125691_b.jpg"></div>
+    <div class="box">
+      <span class="lab">눈여겨볼 말</span>
+      <h2>선과 악, 두 번의 대답</h2>
+      <div class="pair">
+        <div>사울: "너는 나를 <u>선대</u>하니"<small>24:17 · 악을 선으로 갚은 다윗</small></div>
+        <div>다윗: "그가 <u>악</u>으로 나의 <u>선</u>을 갚는도다"<small>25:21 · 악을 칼로 갚으려는 다윗</small></div>
+      </div>
+      <p>한 장 전, 악을 선으로 갚았던 사람이 지금은 아침까지 한 사람도 남기지 않겠다고 맹세합니다(25:22).</p>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://www.flickr.com/photos/27865228@N06/2658667399">유대 광야 · david_shankbone · CC BY 2.0</a>
+  </section>
+
+  <!-- 9 막아선 사람 -->
+  <section class="sl split" data-dur="10000">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/6187/6086355843_6231e497e0_b.jpg"></div><div class="base"></div>
+    <div class="box">
+      <span class="lab">막아선 사람</span>
+      <h2>나귀에 실은 떡 이백 덩이</h2>
+      <p>나발의 아내 아비가일이 급히 음식을 싣고 내려와 다윗을 마주 만납니다(25:18–20). 그 말을 들은 다윗이 고백합니다.</p>
+      <div class="q">오늘 내가 피를 흘릴 것과 친히 복수하는 것을 네가 막았느니라<small>삼상 25:33</small></div>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://www.flickr.com/photos/12508217@N08/6086355843">Sam Howzit · CC BY 2.0</a>
+  </section>
+
+  <!-- 10 다시 찾아온 밤 -->
+  <section class="sl" data-dur="10500">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/7510/15295184534_39c67a28a3_b.jpg"></div>
+    <div class="box">
+      <span class="lab">다시 찾아온 밤 · 26장</span>
+      <h2>땅에 꽂힌 창</h2>
+      <p>하길라 산, 잠든 사울의 <b>머리 곁 땅에 창이 꽂혀</b> 있습니다(26:7). 아비새가 말합니다.</p>
+      <div class="q">하나님이 오늘 당신의 원수를 당신의 손에 넘기셨나이다<small>삼상 26:8</small></div>
+      <p>이번에 다윗은 처음부터 막습니다. <b>"죽이지 말라"</b>(26:9). 그리고 창과 물병만 가지고 떠납니다(26:12).</p>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://www.flickr.com/photos/44182113@N03/15295184534">Slipshod Photog · CC BY-ND 2.0</a>
+  </section>
+
+  <!-- 11 비교표 -->
+  <section class="sl tbl" data-dur="12000">
+    <div class="paper"></div>
+    <div class="box">
+      <span class="lab">세 장을 나란히</span>
+      <h2>같은 유혹, 달라진 손</h2>
+      <div class="grid">
+        <div></div><div class="h">24장</div><div class="h mid">25장</div><div class="h">26장</div>
+        <div class="k">상대</div><div class="c">사울</div><div class="c mid">나발</div><div class="c">사울</div>
+        <div class="k">흔든 말</div><div class="c">"이것이 그 날"</div><div class="c mid">"악으로 선을 갚는도다"</div><div class="c">"하나님이 넘기셨나이다"</div>
+        <div class="k">다윗의 손</div><div class="c">옷자락만 벰</div><div class="c mid hl">칼을 참</div><div class="c">창과 물병만 가져감</div>
+        <div class="k">멈추게 한 것</div><div class="c">찔린 마음</div><div class="c mid">아비가일</div><div class="c hl">여호와께 맡김</div>
+      </div>
+      <p class="note">두 번의 '기회' 사이에 나발 이야기가 끼어 있습니다. 가운데 장에서 다윗은 무너질 뻔했고, 누군가 그를 막았습니다.</p>
+    </div>
+  </section>
+
+  <!-- 12 연결 -->
+  <section class="sl echo" data-dur="11000">
+    <div class="ph"><img alt="" src="https://live.staticflickr.com/7391/11664245474_b854610098_b.jpg"></div>
+    <div class="box">
+      <span class="lab">이어지는 말</span>
+      <h2>나발에게서 배운 문장</h2>
+      <div class="pair">
+        <div><u>여호와께서</u> 나발을 <u>치시매</u> 그가 죽으니라<small>삼상 25:38 · 다윗이 본 것</small></div>
+        <div><u>여호와께서</u> 그를 <u>치시리니</u><small>삼상 26:10 · 다윗이 한 말</small></div>
+      </div>
+      <p>칼을 든 것은 다윗이 아니었습니다. 25장에서 본 것을, 26장의 다윗은 자기 입으로 말합니다.</p>
+    </div>
+    <a class="cr" target="_blank" rel="noopener" href="https://www.flickr.com/photos/8721758@N06/11664245474">사해 쪽 유대 광야 · Jorge Lascar · CC BY 2.0</a>
+  </section>
+
+  <!-- 13 나의 생각거리 -->
+  <section class="sl cover" data-dur="0">
+    <div class="ph"><img alt="" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Aerial_view_of_the_Judean_Desert_%28near_Masada%29%2C_Israel_03.jpg/1280px-Aerial_view_of_the_Judean_Desert_%28near_Masada%29%2C_Israel_03.jpg"></div>
+    <div class="box" style="text-align:left">
+      <span class="lab">나의 생각거리</span>
+      <div class="qq">나에게 <em>"이것이 그 날"</em>처럼 보이는 지름길은 무엇입니까?</div>
+      <p>상황이 열렸다고 다 하나님의 뜻일까요? 오늘 내가 내려놓아야 할 '칼'은 무엇입니까?</p>
+      <div class="btns"><button id="again">처음부터</button><button class="pri" onclick="alert('앱에서는 여기서 QT 기록으로 이어집니다.')">QT로 이어가기</button></div>
+      <div class="credits">
+        사진: Godot13(CC BY-SA 4.0), Drouyn, NeilsPhotography, Jonas B, david_shankbone, Sam Howzit, Jorge Lascar(이상 CC BY 2.0), שלמה רודד/PikiWiki Israel(CC BY 2.5), Slipshod Photog(CC BY-ND 2.0) — 위키미디어 공용·Flickr. 위성 지도: Esri, Maxar, Earthstar Geographics. 성경: 개역개정.<br>
+        시범 페이지입니다. 문장은 본문에서 만들었고, 사진은 공개 라이선스 자료를 원래 주소에서 불러옵니다.
+      </div>
+    </div>
+  </section>
+
+  <div class="tap l" data-go="-1"></div><div class="tap r" data-go="1"></div>
+  <div class="hint" id="hint">왼쪽 누르면 이전 · 오른쪽 누르면 다음 · 길게 누르면 멈춤</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+const S=[...document.querySelectorAll('.sl')],bars=document.getElementById('bars'),st=document.getElementById('st');
+S.forEach(()=>{const i=document.createElement('i');i.appendChild(document.createElement('b'));bars.appendChild(i)});
+const B=[...bars.querySelectorAll('b')];
+let cur=-1,t0=0,dur=0,raf=0,paused=false,elapsed=0,map=null;
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+document.querySelectorAll('.ph img').forEach(im=>im.addEventListener('error',()=>im.remove()));
+function show(n){
+  if(n<0)n=0; if(n>=S.length){n=S.length-1}
+  cur=n; S.forEach((s,i)=>s.classList.toggle('on',i===n));
+  B.forEach((b,i)=>b.style.width=i<n?'100%':'0');
+  dur=reduce?0:+S[n].dataset.dur; elapsed=0; t0=performance.now();
+  if(S[n].dataset.map) initMap();
+  cancelAnimationFrame(raf); if(dur) raf=requestAnimationFrame(tick); else B[n].style.width='100%';
+}
+function tick(now){
+  if(!paused){elapsed=now-t0; B[cur].style.width=Math.min(100,elapsed/dur*100)+'%'; if(elapsed>=dur){show(cur+1);return}}
+  else t0=now-elapsed;
+  raf=requestAnimationFrame(tick);
+}
+function go(d){ if(cur+d>=S.length) return; show(cur+d) }
+st.querySelectorAll('[data-go]').forEach(el=>{
+  let hold=0,held=false;
+  el.addEventListener('pointerdown',()=>{held=false;hold=setTimeout(()=>{held=true;setPause(true)},220)});
+  el.addEventListener('pointerup',e=>{clearTimeout(hold); if(held){setPause(false);return} go(+el.dataset.go)});
+  el.addEventListener('pointerleave',()=>{clearTimeout(hold); if(held){setPause(false);held=false}});
+});
+function setPause(p){paused=p;st.classList.toggle('paused',p);document.getElementById('pp').textContent=p?'▶':'❚❚'}
+document.getElementById('pp').onclick=()=>setPause(!paused);
+document.getElementById('again').onclick=()=>show(0);
+let sx=0;st.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+st.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>60 && !e.target.closest('#mapEl')) go(dx<0?1:-1)},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key===' ')setPause(!paused)});
+setTimeout(()=>document.getElementById('hint').style.display='none',6000);
+
+function initMap(){
+  if(map){setTimeout(()=>map.invalidateSize(),50);return}
+  map=L.map('mapEl',{zoomControl:false,zoomSnap:.25,attributionControl:true,scrollWheelZoom:false});
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:15,attribution:'위성: Esri, Maxar, Earthstar Geographics'}).addTo(map);
+  // [이름, 위도, 경도, 장절, 추정?]
+  // [이름, 위도, 경도, 장절, 추정?, 이름을 왼쪽에?]
+  const R=[["기브아",31.82,35.23,"19장",0,0],["라마 나욧",31.85,35.232,"19:18",1,1],["놉",31.795,35.24,"21:1",1,0],["가드",31.70,34.85,"21:10"],["아둘람",31.65,34.98,"22:1"],["그일라",31.614,35.004,"23:5"],["십",31.48,35.13,"23:14",0,1],["마온",31.409,35.134,"23:24"],["엔게디",31.46,35.39,"23:29"]];
+  const X=[["갈멜(유다)",31.425,35.135,"25장",1,1],["하길라 산",31.4703,35.2228,"26장",1]];
+  const line=L.polyline(R.map(p=>[p[1],p[2]]),{color:'#ff5b45',weight:2.5,opacity:.95,className:'route',lineJoin:'round'}).addTo(map);
+  L.polyline(R.map(p=>[p[1],p[2]]),{color:'#ff5b45',weight:9,opacity:.18}).addTo(map);
+  const lab=(p,alt)=>L.marker([p[1],p[2]],{icon:L.divIcon({className:'',html:`<span class="pl${alt?' alt':''}${p[4]?' est':''}${p[5]?' lf':''}">${p[0]}</span>`,iconSize:[0,0],iconAnchor:[6,8]}),interactive:false}).addTo(map);
+  R.forEach(p=>lab(p)); X.forEach(p=>lab(p,1));
+  const fit=()=>map.fitBounds(L.latLngBounds(R.concat(X).map(p=>[p[1],p[2]])),{paddingTopLeft:[40,80],paddingBottomRight:[80,250]});
+  setTimeout(()=>{map.invalidateSize();fit()},60);
+}
+show(0);
+})();
+</script>
+</body>
+</html>
