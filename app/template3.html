@@ -464,6 +464,10 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .tdcd{font:700 40px/1 var(--f-ui);font-variant-numeric:tabular-nums;letter-spacing:.05em;margin-top:12px}
 .tdnin em{font-style:normal;font-size:12.5px;color:#e2b874}
 .tdnin .btn{justify-self:center;margin-top:8px}
+.gord,.gopts{display:grid;gap:8px;margin:6px 0 10px}.gopt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 12px;font-size:15px;line-height:1.55}
+.gopt b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--paper);border:1px solid var(--line);font-size:13px}.gopt.on b{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.gopt small{display:block;color:var(--muted);font-size:12px;margin-top:3px}.gopt.ok{border-color:var(--ok,#2e7d4f);background:color-mix(in srgb,var(--ok,#2e7d4f) 10%,var(--card))}.gopt.no{border-color:#c0563f;background:color-mix(in srgb,#c0563f 8%,var(--card))}
+.gq{font-family:var(--f-text);font-size:17px;line-height:1.7;margin:4px 0 8px}.gres{font-weight:700;font-size:17px;margin:4px 0 8px}
 .chsoon{display:grid;gap:8px}.chs{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;opacity:.75}.chs b{display:block;font-size:15px}.chs span{font-size:13px;color:var(--muted)}
 .wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .wtile{position:relative;aspect-ratio:3/4;border:0;border-radius:10px;overflow:hidden;background:linear-gradient(165deg,#3a2c1f,#15110d);padding:0;color:#fff}
@@ -2327,7 +2331,7 @@ function speechInfo(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(
   if(who&&!(TRUST_SP.test(last)||TRUST_SP.test(who)||isPerson(last)||SPK_NOUN.test(last))) who="";
   if(!who) return {who:"",trusted:null};
   return {who, trusted:TRUST_SP.test(who)||TRUST_SP.test(last)||TRUST_P.test(last)}; }
-try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),list:()=>storySlides(view.w,view.d),pause:on=>storyPause(on)}}; }catch(e){}
+try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),pause:on=>storyPause(on)}}; }catch(e){}
 function verseQuestion(v){
   const K=verseKind(v), sp=speechInfo(v);
   if(sp&&sp.trusted===false&&K.k!=="prayer") return `이 말은 ${sp.who}의 말입니다. 누구에게, 무엇을 위해 한 말입니까? 앞뒤 이야기는 이 말을 믿을 만한 말로 보여 줍니까?`;
@@ -2994,10 +2998,68 @@ function bindToday(){ clearInterval(TD.cd);
   const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
   const ce=document.getElementById("tdCount"); if(ce){ const tk=()=>{ const t=cdText(); ce.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); setTimeout(()=>location.reload(),1500); } }; tk(); TD.cd=setInterval(tk,1000); } }
+/* ===== 도전: 장면 순서 맞추기 · 누가 한 말일까 · 단서 찾기 (본문에서 자동으로 만듦) ===== */
+function rngOf(seed){ let s=phHash(String(seed))||1; return ()=>{ s^=s<<13; s>>>=0; s^=s>>>17; s^=s<<5; s>>>=0; return (s%100000)/100000; }; }
+const shuf=(a,r)=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const gcut=(t,n)=>t.length>n?t.slice(0,n).replace(/\s\S*$/,"")+" …":t;
+function gOrder(w,d,seed){ const A=dayA(w,d), V=A.verses.filter(v=>v.t.length>=18&&v.t.length<=150); if(V.length<8) return null;
+  const r=rngOf(seed), n=4, seg=V.length/n, pick=[];
+  for(let i=0;i<n;i++){ const pool=V.slice(Math.floor(i*seg),Math.floor((i+1)*seg)); const pr=pool.filter(v=>/[가-힣]+(이|가|께서)\s/.test(v.t)&&!/^(그|이|또)\s/.test(v.t)); const P=pr.length?pr:pool; pick.push(P[Math.floor(r()*P.length)]); }
+  return {items:pick, shown:shuf([0,1,2,3],r)}; }
+const GOD_N=/^(여호와|하나님|주|여호와 하나님|주 여호와|만군의 여호와)$/;
+function speechOnly(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")], R=S&&S[`${v.b}-${v.c}-${v.v}`]; if(!R||!R.length) return v.t; return R.map(([x,y])=>v.t.slice(x,y)).join(" … ").trim()||v.t; }
+function gWho(w,d,seed){ const A=dayA(w,d), r=rngOf(seed), by={};
+  for(const v of A.verses){ let s=null; try{ s=speechInfo(v); }catch(e){} if(!s||!s.who) continue; let who=s.who.split(" ").pop(); if(GOD_N.test(who)) who="하나님(여호와)"; if(/^예수/.test(who)) who="예수님";
+    if(/^(일|말씀|사람|사람들|자|자들|그|그들|무리|백성)$/.test(who)) continue;
+    const t=speechOnly(v); if(t.length<8||t.length>130) continue; (by[who] ||= []).push({v,t}); }
+  const whos=Object.keys(by); if(whos.length<2) return null;
+  const sp=shuf(whos,r).slice(0,4), qs=shuf(sp,r).map(wn=>{ const a=by[wn]; return {...a[Math.floor(r()*a.length)],ans:wn}; });
+  return {qs:qs.slice(0,4).map(q=>({...q,opts:shuf(sp,r)}))}; }
+const JOSA=/(에게서|으로부터|에게|께서|에서|으로|이라|이니|이요|이며|와|과|을|를|은|는|이|가|의|에|도|만|로)$/;
+const STOPW=new Set("그 이 저 나 너 내 네 우리 너희 그들 그녀 자기 또 이에 그러므로 그러나 하나님 여호와 주 주께서 당신 말 것 자 자들 사람 사람들 일 곳 날 모든 다 수 중 앞 뒤 안 밖 위 아래 이름 손 땅 집 해 년 명 때 무리 거기 여기 이것 그것 저희".split(" "));
+function gClue(w,d,seed){ const A=dayA(w,d), cnt=new Map(), at=new Map();
+  const isPer=n=>{ try{ const e=EI.map.get(n); return !!(e&&e.type==="person"); }catch(e){ return false; } }, forms=new Map();
+  for(const v of A.verses){ for(const tok of v.t.replace(/[^가-힣\s]/g," ").split(/\s+/)){ if(tok.length<2) continue; const s=tok.replace(JOSA,""); if(s===tok||s.length<2||STOPW.has(s)||isPer(s)) continue;
+      if(/(이|히|리|기|우|추|시|하|되)$/.test(s)&&s.length<=3&&!EI.map.has(s)) continue;
+      cnt.set(s,(cnt.get(s)||0)+1); if(!forms.has(s)) forms.set(s,new Set()); forms.get(s).add(tok.slice(s.length)); if(!at.has(s)) at.set(s,[]); at.get(s).push(v); } }
+  const L=[...cnt.entries()].filter(x=>x[1]>=3?forms.get(x[0]).size>=2||EI.map.has(x[0]):true).sort((a,b)=>b[1]-a[1]); if(!L.length||L[0][1]<3) return null;
+  const ans=L[0][0], low=L.filter(x=>x[1]===1&&x[0].length>=2&&/^(을|를|은|는|의|에|으로|로|과|와|이|가)$/.test([...forms.get(x[0])][0])&&!/[하되니지므려거며고여게리시겠었았던는]$/.test(x[0])).map(x=>x[0]); if(low.length<3) return null; const r=rngOf(seed);
+  const vs=at.get(ans); return {ans,n:L[0][1],opts:shuf([ans,...shuf(low,r).slice(0,3)],r),first:vs[0],last:vs[vs.length-1]}; }
+const vref2=v=>`${PLAN.abbr[v.b-1]} ${v.c}:${v.v}`;
+function chRec(key){ mem.ch ||= {}; return mem.ch[key] ||= {}; }
+function gameHTML(kind,w,d){ const key=keyOf(w,d), G=view.game&&view.game.kind===kind&&view.game.key===key?view.game:null, R=chRec(key)[kind];
+  const head={order:["장면 순서 맞추기","오늘 본문에서 뽑은 네 장면을 일어난 차례대로 누릅니다"],who:["누가 한 말일까","본문 속 말과 말한 사람을 짝짓습니다"],clue:["단서 찾기","오늘 본문에 가장 여러 번 되풀이된 말을 찾습니다"]}[kind];
+  let h=`<section class="sec gsec"><span class="label">${head[0]}</span>`;
+  if(!G){ const ok=kind==="order"?gOrder(w,d,key):kind==="who"?gWho(w,d,key):gClue(w,d,key);
+    if(!ok) return h+`<p class="lead">오늘 본문으로는 이 도전을 만들기 어렵습니다.</p></section>`;
+    return h+`<p class="lead">${head[1]}${R?` · 지난 결과 <b>${esc(R)}</b>`:""}</p><button class="btn" data-gstart="${kind}">${R?"다시 하기":"시작"}</button></section>`; }
+  if(kind==="order"){ const {items,shown,pickd=[] ,done}=G;
+    h+=`<div class="gord">${shown.map(i=>{ const pos=pickd.indexOf(i); const v=items[i]; const right=done?(pos===i):null;
+      return `<button class="gopt${pos>=0?" on":""}${done?(right?" ok":" no"):""}" data-gord="${i}"${done?" disabled":""}><b>${pos>=0?pos+1:""}</b><span>${esc(gcut(v.t,80))}${done?`<small>${esc(vref2(v))}${right?"":` · ${i+1}번째`}</small>`:""}</span></button>`; }).join("")}</div>`;
+    h+=done?`<p class="gres">${G.score}/4 맞혔습니다</p><div class="row"><button class="btn ghost" data-gstart="order" data-gnew="1">다른 장면으로</button><button class="btn ghost" data-gclose="1">닫기</button></div>`:`<p class="lead">${pickd.length?"다시 누르면 순서를 지웁니다":"먼저 일어난 장면부터 누르세요"}</p>`; }
+  else if(kind==="who"){ const q=G.qs[G.i];
+    if(G.i>=G.qs.length) h+=`<p class="gres">${G.score}/${G.qs.length} 맞혔습니다</p><div class="row"><button class="btn ghost" data-gstart="who" data-gnew="1">다른 말로</button><button class="btn ghost" data-gclose="1">닫기</button></div>`;
+    else { h+=`<p class="gq">“${esc(gcut(q.t,120))}”</p><div class="gopts">${q.opts.map(o=>`<button class="gopt${G.a?(o===q.ans?" ok":o===G.a?" no":""):""}" data-gwho="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
+      if(G.a) h+=`<p class="lead">${G.a===q.ans?"맞습니다.":`${esc(q.ans)}의 말입니다.`} ${esc(vref2(q.v))}</p><button class="btn" data-gnext="1">${G.i<G.qs.length-1?"다음":"결과 보기"}</button>`; } }
+  else { const C=G.c; h+=`<p class="gq">오늘 본문에 가장 여러 번 나오는 말은?</p><div class="gopts">${C.opts.map(o=>`<button class="gopt${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gclue="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
+    if(G.a) h+=`<p class="lead"><b>${esc(C.ans)}</b> — ${C.n}번 나옵니다. 처음은 ${esc(vref2(C.first))}, 마지막은 ${esc(vref2(C.last))}. 처음과 마지막에 무엇이 달라졌는지 본문에서 찾아보세요.</p><div class="row"><button class="btn ghost" data-gclose="1">닫기</button></div>`; }
+  return h+`</section>`; }
+function bindChallenge(){ const key=keyOf(view.w,view.d), rr=()=>keepScroll(()=>{});
+  document.querySelectorAll("[data-gstart]").forEach(b=>b.onclick=()=>{ const k=b.dataset.gstart, seed=key+(b.dataset.gnew?":"+Date.now():"");
+    if(k==="order"){ const o=gOrder(view.w,view.d,seed); view.game={kind:k,key,...o,pickd:[]}; }
+    else if(k==="who"){ const o=gWho(view.w,view.d,seed); view.game={kind:k,key,qs:o.qs,i:0,score:0}; }
+    else { view.game={kind:k,key,c:gClue(view.w,view.d,seed)}; } rr(); });
+  document.querySelectorAll("[data-gclose]").forEach(b=>b.onclick=()=>{ view.game=null; rr(); });
+  document.querySelectorAll("[data-gord]").forEach(b=>b.onclick=()=>{ const G=view.game, i=+b.dataset.gord, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i);
+    if(G.pickd.length===4){ G.done=true; G.score=G.pickd.filter((x,k)=>x===k).length; chRec(key).order=`${G.score}/4`; save(); } rr(); });
+  document.querySelectorAll("[data-gwho]").forEach(b=>b.onclick=()=>{ const G=view.game; G.a=b.dataset.gwho; if(G.a===G.qs[G.i].ans) G.score++; rr(); });
+  document.querySelectorAll("[data-gnext]").forEach(b=>b.onclick=()=>{ const G=view.game; G.i++; G.a=null; if(G.i>=G.qs.length){ chRec(key).who=`${G.score}/${G.qs.length}`; save(); } rr(); });
+  document.querySelectorAll("[data-gclue]").forEach(b=>b.onclick=()=>{ const G=view.game; G.a=b.dataset.gclue; chRec(key).clue=G.a===G.c.ans?"찾음":"다시"; save(); rr(); }); }
 function renderChallenge(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   let h=`<section class="sec"><span class="label">도전 · 언제든지 열려 있습니다</span><h2>${esc(p?p.label:"")}</h2><p class="lead">읽은 본문으로 풀어 봅니다. 날짜를 바꾸면 지난 본문도 풀 수 있습니다.</p></section>`;
   if(p) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
-  h+=`<section class="sec"><span class="label">곧 열립니다</span><div class="chsoon">${[["장면 순서 맞추기","오늘 장면 카드를 일어난 차례대로 놓습니다"],["누가 한 말일까","말과 인물을 짝짓습니다"],["단서 찾기","본문 속 반복과 전환을 찾아 누릅니다"],["말씀 카드 다시 맞히기","모은 말씀 카드의 빈칸을 채웁니다"]].map(([t,s])=>`<div class="chs"><b>${t}</b><span>${s}</span></div>`).join("")}</div></section>`;
+  if(p&&BIBLE) h+=["order","who","clue"].map(k=>gameHTML(k,w,d)).join("");
+  h+=`<section class="sec"><span class="label">곧 열립니다</span><div class="chsoon"><div class="chs"><b>말씀 카드 다시 맞히기</b><span>모은 말씀 카드의 빈칸을 채웁니다</span></div></div></section>`;
   return h; }
 function recordCardsHTML(){ const L=Object.entries(mem.qt).filter(([k,q])=>q.done&&q.kv).sort((a,b)=>String(b[1].doneAt||"").localeCompare(String(a[1].doneAt||""))).slice(0,view.wcAll?120:6);
   const n=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
@@ -3093,7 +3155,7 @@ function bind(){
   m.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>showClue(+b.dataset.clue));
   bindAccount(m); bindInstall(); if(view.tab==="read") churchCounts();
   { const ts=document.getElementById("toStory"); if(ts) ts.onclick=()=>storyOpen(0); }
-  if(window.CBSR_V2){ if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); }
+  if(window.CBSR_V2){ if(view.tab==="challenge") bindChallenge(); if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); }
   bindQT(m);
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
