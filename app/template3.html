@@ -438,6 +438,7 @@ html.v2 .tdttl{margin-top:auto}
 html.v2 .tdk{margin:0 0 6px;letter-spacing:0;font-size:13.5px;font-weight:600;color:var(--ember)}
 html.v2 .tdh h1{font:800 clamp(28px,8.2vw,36px)/1.22 var(--f-disp);letter-spacing:-.01em}
 html.v2 .tdcr{top:40px;bottom:auto;right:20px}
+.pvsw{margin-left:8px;border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.3);color:#fff;border-radius:999px;padding:2px 9px;font-size:12px;cursor:pointer}
 .tdsheet{position:relative;z-index:3;margin:-26px -16px 0;background:var(--paper);border-radius:24px 24px 0 0;padding:24px 20px 6px;display:grid;gap:14px}
 .tdprev{margin:0;font-size:14px;line-height:1.65;color:var(--muted)}
 .tdprev span,.tdfind span{display:block;font-size:12.5px;font-weight:700;color:var(--gold);margin-bottom:2px}
@@ -567,6 +568,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sgrid .h{font:700 14px var(--sser);color:var(--sgold);text-align:center}
 .sgrid .k{color:#a99a85;font-size:12px;padding-left:0}
 .sgrid .c{text-align:center;color:#f6efe4}
+.sgrid.hide-hl .hl{color:inherit;font-weight:inherit}.rvhide{display:none}.sreveal{margin-top:14px;width:100%;border:1px solid var(--sgold);background:rgba(226,184,116,.12);color:var(--sgold);border-radius:12px;padding:11px;font:700 14.5px var(--f-ui);cursor:pointer}
 .sgrid .mid{background:rgba(255,91,69,.10)}.sgrid .hl{color:#fff;font-weight:700}
 .snote{font-size:14.5px;color:var(--ssub);margin-top:14px;line-height:1.65;word-break:keep-all}
 .spair2{margin-top:14px;display:grid;gap:10px}
@@ -2068,7 +2070,7 @@ function renderQT(){
   // 5 한 줄 묵상
   h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
   // 6 기도
-  const pray=makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
+  const pray=(det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
   h+=`<section class="sec"><span class="label">오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
   // QT 완료: 맨 마지막에만
   h+=q.done?`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`:`<section class="sec"><div class="row"><button class="btn" id="qtDone" style="width:100%;padding:15px">QT 완료</button></div><p class="lead" id="qtSaved" style="text-align:center"></p></section>`;
@@ -2120,8 +2122,22 @@ function storyPairCard(w,d){ const key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], txt=
   const pr=storyPair(w,d,txt), s1=txt.split(/(?<=\.)\s+/);
   if(pr&&vtxt(pr[0])&&vtxt(pr[1])) return {k:"echo",lab:"이어 읽기",h:"두 말씀을 나란히",pair:[[vtxt(pr[0]),rlab(pr[0])],[vtxt(pr[1]),rlab(pr[1])]],b:[s1[0]]};
   return {k:"line",lab:"이어 읽기",t:s1.slice(0,2).join(" ")}; }
-function storySlides(w,d){ const ck=MODE+":"+keyOf(w,d); SV.cache ||= {}; if(SV.cache[ck]) return SV.cache[ck];
-  const no=dayNo(w,d), p=dayPlan(w,d), C=(typeof STORYC!=="undefined"&&MODE==="y365"&&STORYC[no])||null; let out=[];
+/* 관점: A=1년차(2027), B=2년차(2028). 같은 본문이라도 해마다 다른 이야기와 QT */
+let PV_FORCE=null;
+function PV(){ if(PV_FORCE) return PV_FORCE; try{ const u=new URLSearchParams(location.search).get("pv"); if(u==="A"||u==="B") return u; const s=localStorage.getItem("cbsr-pv"); if(s==="A"||s==="B") return s; }catch(e){} return new Date().getFullYear()>=2028?"B":"A"; }
+function storyDay(no){ const C=(typeof STORYC!=="undefined"&&MODE==="y365")?STORYC[no]:null; if(!C) return null; if(C.A||C.B) return C[PV()]||null; return PV()==="A"?C:null; }
+const PV_ORIG={EYE:{},DETAIL:{},GUIDE:{},KWQ:{}};
+function applyPV(){ if(typeof STORYC==="undefined"||MODE!=="y365") return;
+  for(const no in STORYC){ const n=+no-1, w=Math.floor(n/7)+1, d=n%7, k=w+"-"+d, k2=w+"-"+(d+1), S=storyDay(+no), Q=S&&S.qt;
+    if(!(k in PV_ORIG.EYE)){ PV_ORIG.EYE[k]=EYE[k]; PV_ORIG.DETAIL[k2]=DETAIL[k2]; PV_ORIG.GUIDE[k]=GUIDE[k]; PV_ORIG.KWQ[no]=(typeof KWQ!=="undefined")?KWQ[no]:undefined; }
+    const set=(o,key,v)=>{ if(v===undefined) delete o[key]; else o[key]=v; };
+    set(EYE,k,Q&&Q.obs?Q.obs:PV_ORIG.EYE[k]);
+    set(DETAIL,k2,Q?Object.assign({},PV_ORIG.DETAIL[k2]||{},Q.god?{god:Q.god}:{},Q.christ?{christ:Q.christ}:{},Q.apply?{apply:Q.apply}:{},Q.pray?{pray:Q.pray}:{}):PV_ORIG.DETAIL[k2]);
+    set(GUIDE,k,Q&&Q.guide?Object.assign({},PV_ORIG.GUIDE[k]||{},Q.guide):PV_ORIG.GUIDE[k]);
+    if(typeof KWQ!=="undefined") set(KWQ,no,S&&S.kwq?S.kwq:PV_ORIG.KWQ[no]); }
+  if(SV) SV.cache={}; }
+function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {}; if(SV.cache[ck]) return SV.cache[ck];
+  const no=dayNo(w,d), p=dayPlan(w,d), C=storyDay(no); let out=[];
   if(C) out=C.cards.map(c=>Object.assign({},c));
   else { const N=(typeof CARDNEWS!=="undefined"&&MODE==="y365"&&CARDNEWS[no])||null;
     out.push({k:"cover",kick:p.label,h:p.topic||p.label});
@@ -2131,6 +2147,8 @@ function storySlides(w,d){ const ck=MODE+":"+keyOf(w,d); SV.cache ||= {}; if(SV.
   out.push({k:"ask"});
   /* 사진 붙이기: 장면 글 → 장소·주제어 → 책 장르 */
   const A=dayA(w,d), ctxPl=[...A.places.keys()], gen=GENRE_OF(p.ch[0][0]), used=new Set(); let cover=null;
+  /* 2년차(B)는 1년차(A)가 쓴 사진을 피합니다 */
+  if(PV()==="B"&&!PV_FORCE){ PV_FORCE="A"; try{ storySlides(w,d).forEach(x=>{ if(x.ph) used.add(x.ph.id); }); } finally{ PV_FORCE=null; } }
   /* 장면 묶음: 같은 플롯 단계(배경·긴장·전환·의미)가 이어지는 카드는 같은 사진을 이어 쓰고 확대·위치만 바꿉니다. 하루는 표지와 같은 색감으로 맞춥니다 */
   const noPh=s=>s.qt||s.k==="map"||s.k==="table"||s.k==="fin"||s.k==="next"||s.k==="ask"||s.img==="none";
   const stageOf=s=>{ if(s.k==="cover") return "표지"; const h=(s.lab||"").split("·")[0].trim(); return /^(배경|긴장|전환|의미)$/.test(h)?h:""; };
@@ -2148,7 +2166,7 @@ const SN_LAB={obs:"본문 관찰",god:"하나님은",my:"나의 생각거리",en
 const SG_BG={narrative:["#3a2c1f","#15110d"],law:["#4a3418","#1a1209"],poetry:["#3a2c46","#17111d"],wisdom:["#353b1d","#15170b"],prophecy:["#4a2620","#1b0d0a"],letter:["#1f2f47","#0c1320"],apocalypse:["#2c2340","#100c18"]};
 const rlab2=r=>r?`${PLAN.abbr[r[0]-1]} ${r[1]}:${r[2]}${r[3]?"–"+r[3]:""}`:"";
 const S_KDUR={cover:7000,full:9000,split:9000,quote:10000,echo:10500,table:12000,line:7500};
-function sDur(s){ if(s.qt||s.k==="map"||s.k==="fin"||s.k==="next"||s.k==="ask") return 0; const n=sTxt(s).length; return Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
+function sDur(s){ if(s.qt||s.k==="table"||s.k==="echo"||s.k==="map"||s.k==="fin"||s.k==="next"||s.k==="ask") return 0; const n=sTxt(s).length; return Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
 function sKind(s){ return s.qt?"qt":s.k; }
 function nextWD(w,d){ let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } return PLAN.plan[nw-1]&&PLAN.plan[nw-1][nd2]?[nw,nd2]:null; }
 const isHere=(w,d)=>w===here.w&&d===here.d;
@@ -2173,7 +2191,8 @@ function storyCardHTML(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</sp
   if(s.k==="table"){ const T=s.tbl, n=T.h.length, hl=new Set((T.hl||[]).map(x=>x.join(","))), mid=T.mid;
     let g=`<div></div>`+T.h.map((x,j)=>`<div class="h${j===mid?" mid":""}">${esc(x)}</div>`).join("");
     T.rows.forEach((row,ri)=>{ g+=`<div class="k">${esc(row[0])}</div>`+row.slice(1).map((x,j)=>`<div class="c${j===mid?" mid":""}${hl.has(ri+","+j)?" hl":""}">${esc(x)}</div>`).join(""); });
-    return `<div class="sbox">${lab}${h2}<div class="sgrid" style="grid-template-columns:72px repeat(${n},1fr)">${g}</div>${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`; }
+    const rv=T.hl&&T.hl.length;
+    return `<div class="sbox${rv?" sask-rv":""}">${lab}${h2}<div class="sgrid${rv?" hide-hl":""}" style="grid-template-columns:72px repeat(${n},1fr)">${g}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 달라진 칸 보기</button>`:""}${s.note?`<p class="snote${rv?" rvhide":""}">${smk(s.note)}</p>`:""}</div>`; }
   if(s.k==="map") return `<div class="smap" id="smap"></div><button class="smnav l" data-sgo="-1" aria-label="이전">‹</button><button class="smnav r" data-sgo="1" aria-label="다음">›</button><div class="sbox spanel">${lab}${h2}${B}</div>`;
   return `<div class="sbox">${lab}${h2}${B}</div>`; }
 function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||!window.L) return;
@@ -2202,7 +2221,7 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
   else if(s.k==="my"){ const K=(typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null;
     c+=`<p class="sq">${esc(K?K.q:(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q)))}</p>${K&&K.r?`<p class="shint">${esc(rlab(K.r))} · ${esc(vtxt(K.r))}</p>`:""}<textarea data-qt="med" rows="3" placeholder="한 줄로 적어 보세요 (적지 않아도 됩니다)">${esc(q.med||"")}</textarea>`; }
   else { if(q.done) c+=`<div class="sdonenote"><b>✓ 오늘 QT를 마쳤습니다</b>${kv?`<p>${esc(kv.t)} <small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></p>`:""}<button class="btn" data-sgo="1">오늘의 말씀 카드 ›</button><button class="linkbtn" id="qtDone">완료 취소</button></div>`;
-    else { const pray=makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
+    else { const pray=(det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
       c+=`${kv?`<div class="skcard"><span>오늘 붙잡을 말씀</span><q>${esc(kv.t)}</q><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></div>`:""}`;
       const others=vs.filter(v=>v!==kv); if(others.length) c+=`<div class="sother"><span>다른 구절</span>${others.map(v=>`<button class="skalt" data-skv="${vId(v)}">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</button>`).join("")}</div>`;
       c+=`<p class="spray">${esc(pray)}</p><button class="btn sdone" id="qtDone">QT 완료</button>`; }
@@ -2263,6 +2282,7 @@ function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(k
   const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=storyClose;
   r.querySelectorAll("[data-sgo]").forEach(b=>b.onclick=()=>storyGo(SV.i+(+b.dataset.sgo)));
   const g0=r.querySelector("[data-sgo0]"); if(g0) g0.onclick=()=>storyGo(0);
+  const rvb=r.querySelector("[data-reveal]"); if(rvb) rvb.onclick=()=>{ const bx=rvb.closest(".sbox"); bx.querySelector(".sgrid").classList.remove("hide-hl"); bx.querySelectorAll(".rvhide").forEach(x=>x.classList.remove("rvhide")); rvb.remove(); };
   const tq=r.querySelector("#sToQT"); if(tq) tq.onclick=()=>{ storyClose(); view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); };
   const tr2=r.querySelector("#sToRec"); if(tr2) tr2.onclick=()=>{ storyClose(); view.tab="record"; render(); scrollTo({top:0}); };
   const tc=r.querySelector("#sToCh"); if(tc) tc.onclick=()=>{ storyClose(); view.tab="challenge"; render(); scrollTo({top:0}); };
@@ -2272,7 +2292,7 @@ function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(k
   if(!s.qt&&s.k!=="map"&&s.k!=="fin"&&s.k!=="next"&&s.k!=="ask"){ const st=r.querySelector("#sStage"); let t0=0,x0=0,y0=0,moved=false;
     st.onpointerdown=e=>{ t0=Date.now(); x0=e.clientX; y0=e.clientY; moved=false; SV.hold=setTimeout(()=>storyPause(true),220); };
     st.onpointermove=e=>{ if(Math.abs(e.clientX-x0)>12||Math.abs(e.clientY-y0)>12) moved=true; };
-    st.onpointerup=e=>{ clearTimeout(SV.hold); const held=Date.now()-t0>=220; if(SV.paused){ storyPause(false); if(held) return; }
+    st.onpointerup=e=>{ clearTimeout(SV.hold); if(e.target.closest("button,a,summary")) return; const held=Date.now()-t0>=220; if(SV.paused){ storyPause(false); if(held) return; }
       const dx=e.clientX-x0; if(moved&&Math.abs(dx)>50){ storyGo(SV.i+(dx<0?1:-1)); return; } if(moved) return;
       const W=st.getBoundingClientRect(); storyGo(SV.i+((e.clientX-W.left)<W.width*0.3?-1:1)); };
     st.onpointercancel=()=>{ clearTimeout(SV.hold); storyPause(false); }; }
@@ -3060,7 +3080,7 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   const q=qtOf(key), read=!!mem.done[key], S=storySlides(w,d), ph=S[0]&&S[0].ph, dt=dateOf(w,d), live=isHere(w,d), kv=q.done?storyQT(w,d).kv:null, g=GUIDE[key]||{}, mins=tdMins(w,d);
   const stage=q.done?2:read?1:0;
   let h=`<section class="tdh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin">
-    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
+    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
     <div class="tdttl"><p class="tdk">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1></div></div>
     ${ph&&ph.link?`<a class="tdcr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}</section>
   <section class="tdsheet">`;
@@ -3081,6 +3101,7 @@ function bindToday(){ clearInterval(TD.cd);
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
   const tg=document.getElementById("tdGo"); if(tg) tg.onclick=go;
   const rr=document.getElementById("tdReread"); if(rr) rr.onclick=toText;
+  const pv=document.getElementById("pvSw"); if(pv) pv.onclick=e=>{ e.stopPropagation(); try{ localStorage.setItem("cbsr-pv",PV()==="B"?"A":"B"); }catch(er){} applyPV(); render(); };
   const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
   const ce=document.getElementById("tdCount"); if(ce){ const tk=()=>{ const t=cdText(); ce.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); setTimeout(()=>location.reload(),1500); } }; tk(); TD.cd=setInterval(tk,1000); } }
@@ -3358,6 +3379,7 @@ const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view
 function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth"}); return; }
   TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); else if(view.tab==="study"&&t!=="study"&&typeof studyOutro==="function") studyOutro(t); view.tab=t; HSEL.clear(); render();
   const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
+applyPV();
 if(window.CBSR_V2) v2Nav();
 /* 검토용: v2.html?day=80 → 그날 이야기 바로 열기(통독 완료 여부와 상관없이) */
 if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=365&&MODE==="y365"){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const t0=Date.now(), go=()=>{ if(BIBLE){ render(); storyOpen(0); } else if(Date.now()-t0<15000) setTimeout(go,300); }; setTimeout(go,300); } }
