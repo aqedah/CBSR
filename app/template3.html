@@ -2038,11 +2038,11 @@ const PH_GENRE={narrative:["desert","road","valley","wilderness_path","dusk"],la
 const phHash=s=>{ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; };
 function phPick(text,ctxPl,genre,seed,used,hint){ const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
   if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f) return f; }
-  const want=new Set(); PH_KW.forEach(([re,t])=>{ if(re.test(text)) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&want.add(t));
+  const want=new Set(), hs=new Set(); PH_KW.forEach(([re,t])=>{ if(re.test(text)) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
   const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1;
   for(const p of P){ if(used.has(p.id)) continue; let s=0; const pl=p.pl||[];
-    if(pl.some(n=>text.includes(n))) s+=6; else if(pl.some(n=>ctxPl.includes(n))) s+=2.5;
-    (p.tags||[]).forEach(t=>{ if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; });
+    if(pl.some(n=>text.includes(n))) s+=6; else if(pl.some(n=>ctxPl.includes(n))) s+=1.5;
+    (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=8; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; });
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
   return best; }
 /* 이야기 카드 목록: 손으로 쓴 카드(STORYC)가 있으면 그것, 없으면 본문 자료로 자동 구성 → 뒤에 QT 네 단계 */
