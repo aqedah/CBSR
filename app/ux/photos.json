@@ -2543,5 +2543,541 @@
   ],
   "mood": "dark",
   "fx": "40% 50%"
+ },
+ {
+  "id": "lightning-storm-cloud",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/PikiWiki_Israel_46335_Geography_of_Israel.JPG/1280px-PikiWiki_Israel_46335_Geography_of_Israel.JPG",
+  "w": 1280,
+  "h": 853,
+  "by": "talya einstein",
+  "lic": "CC BY 2.5",
+  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_46335_Geography_of_Israel.JPG",
+  "pl": [],
+  "tags": [
+   "lightning",
+   "storm_sky"
+  ],
+  "mood": "dark",
+  "fx": "60% 50%"
+ },
+ {
+  "id": "lightning-black-night",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/PikiWiki_Israel_46334_Geography_of_Israel.JPG/1280px-PikiWiki_Israel_46334_Geography_of_Israel.JPG",
+  "w": 1280,
+  "h": 853,
+  "by": "talya einstein",
+  "lic": "CC BY 2.5",
+  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_46334_Geography_of_Israel.JPG",
+  "pl": [],
+  "tags": [
+   "lightning",
+   "darkness",
+   "night_sky"
+  ],
+  "mood": "dark",
+  "fx": "25% 50%"
+ },
+ {
+  "id": "hermon-snow-slopes",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg/1280px-Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg",
+  "w": 1280,
+  "h": 960,
+  "by": "Nunusandio",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg",
+  "pl": [
+   "헤르몬산"
+  ],
+  "tags": [
+   "snow",
+   "mountain_peak"
+  ],
+  "mood": "cool",
+  "fx": "55% 50%"
+ },
+ {
+  "id": "david-falls-ein-gedi-green",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Nahal_David_waterfall%2C_Ein_Gedi_%28531059035%29.jpg/1280px-Nahal_David_waterfall%2C_Ein_Gedi_%28531059035%29.jpg",
+  "w": 1280,
+  "h": 1925,
+  "by": "Mary Madigan from Highland Park, NJ and Santa Fe, NM, USA",
+  "lic": "CC BY 2.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Nahal_David_waterfall,_Ein_Gedi_(531059035).jpg",
+  "pl": [
+   "엔게디"
+  ],
+  "tags": [
+   "waterfall",
+   "spring_water"
+  ],
+  "mood": "cool",
+  "fx": "55% 50%"
+ },
+ {
+  "id": "david-falls-ein-gedi-rock",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/PikiWiki_Israel_4280_Waterfall_in_Ein_Gedi.jpg/1280px-PikiWiki_Israel_4280_Waterfall_in_Ein_Gedi.jpg",
+  "w": 1280,
+  "h": 1931,
+  "by": "נצח פרביאש",
+  "lic": "CC BY 2.5",
+  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_4280_Waterfall_in_Ein_Gedi.jpg",
+  "pl": [
+   "엔게디"
+  ],
+  "tags": [
+   "waterfall",
+   "desert",
+   "spring_water"
+  ],
+  "mood": "bright",
+  "fx": "45% 50%"
+ },
+ {
+  "id": "david-falls-ein-gedi-cave",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/David_Waterfall_%281%29.JPG/1280px-David_Waterfall_%281%29.JPG",
+  "w": 1280,
+  "h": 2276,
+  "by": "ГП",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:David_Waterfall_(1).JPG",
+  "pl": [
+   "엔게디"
+  ],
+  "tags": [
+   "waterfall",
+   "cave"
+  ],
+  "mood": "cool",
+  "fx": "65% 50%"
+ },
+ {
+  "id": "rainbow-over-dead-sea",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/PikiWiki_Israel_48420_Rainbow_above_the_Dead_Sea.JPG/1280px-PikiWiki_Israel_48420_Rainbow_above_the_Dead_Sea.JPG",
+  "w": 1280,
+  "h": 960,
+  "by": "אלישבע ורנר-רייז",
+  "lic": "CC BY 2.5",
+  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_48420_Rainbow_above_the_Dead_Sea.JPG",
+  "pl": [
+   "사해"
+  ],
+  "tags": [
+   "rainbow",
+   "storm_sky",
+   "sea"
+  ],
+  "mood": "cool",
+  "fx": "68% 50%"
+ },
+ {
+  "id": "milky-way-wadi-rum",
+  "u": "https://live.staticflickr.com/7454/9691597504_056d14bd4a_b.jpg",
+  "w": 1024,
+  "h": 683,
+  "by": "indii.org / Lawrence Murray",
+  "lic": "CC BY 2.0",
+  "link": "https://www.flickr.com/photos/22699083@N04/9691597504",
+  "pl": [],
+  "tags": [
+   "stars",
+   "night_sky"
+  ],
+  "mood": "dark",
+  "fx": "70% 50%"
+ },
+ {
+  "id": "wadi-rum-night-cliffs",
+  "u": "https://live.staticflickr.com/7081/7077612481_cf56babd1a_b.jpg",
+  "w": 1024,
+  "h": 683,
+  "by": "askii",
+  "lic": "CC BY-SA 2.0",
+  "link": "https://www.flickr.com/photos/52170751@N07/7077612481",
+  "pl": [],
+  "tags": [
+   "night_sky",
+   "darkness",
+   "desert"
+  ],
+  "mood": "dark",
+  "fx": "55% 50%"
+ },
+ {
+  "id": "wadi-mujib-stream",
+  "u": "https://live.staticflickr.com/2818/9280030667_237458d80e_b.jpg",
+  "w": 1024,
+  "h": 576,
+  "by": "Hiking in Jordan",
+  "lic": "CC BY-SA 2.0",
+  "link": "https://www.flickr.com/photos/98703782@N04/9280030667",
+  "pl": [],
+  "tags": [
+   "spring_water",
+   "river",
+   "valley"
+  ],
+  "mood": "warm",
+  "fx": "62% 50%"
+ },
+ {
+  "id": "ein-fara-spring-pool",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/%D8%B9%D9%8A%D9%86_%D9%81%D8%A7%D8%B1%D8%A9_%D9%A3.jpg/1280px-%D8%B9%D9%8A%D9%86_%D9%81%D8%A7%D8%B1%D8%A9_%D9%A3.jpg",
+  "w": 1280,
+  "h": 1707,
+  "by": "جمان المحتسب",
+  "lic": "CC0",
+  "link": "https://commons.wikimedia.org/wiki/File:%D8%B9%D9%8A%D9%86_%D9%81%D8%A7%D8%B1%D8%A9_%D9%A3.jpg",
+  "pl": [],
+  "tags": [
+   "spring_water",
+   "reeds"
+  ],
+  "mood": "cool",
+  "fx": "40% 50%"
+ },
+ {
+  "id": "rain-curtain-dust-mesa",
+  "u": "https://live.staticflickr.com/8106/8632921840_5acfe97348_b.jpg",
+  "w": 1023,
+  "h": 683,
+  "by": "ArchesNPS",
+  "lic": "Public domain",
+  "link": "https://www.flickr.com/photos/72578886@N08/8632921840",
+  "pl": [],
+  "tags": [
+   "rain",
+   "sandstorm",
+   "storm_sky"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "brush-fire-flames",
+  "u": "https://live.staticflickr.com/7084/7087306369_3b533ece2f_b.jpg",
+  "w": 1024,
+  "h": 768,
+  "by": "U. S. Fish and Wildlife Service - Northeast Region",
+  "lic": "Public domain",
+  "link": "https://www.flickr.com/photos/43322816@N08/7087306369",
+  "pl": [],
+  "tags": [
+   "fire",
+   "thorns"
+  ],
+  "mood": "warm",
+  "fx": "65% 50%"
+ },
+ {
+  "id": "flame-in-darkness",
+  "u": "https://live.staticflickr.com/2226/1902007773_6a0e91f52f_b.jpg",
+  "w": 1024,
+  "h": 646,
+  "by": "Dominic's pics",
+  "lic": "CC BY 2.0",
+  "link": "https://www.flickr.com/photos/64097751@N00/1902007773",
+  "pl": [],
+  "tags": [
+   "fire",
+   "darkness"
+  ],
+  "mood": "dark",
+  "fx": "65% 50%"
+ },
+ {
+  "id": "smoke-over-hills",
+  "u": "https://live.staticflickr.com/4113/5033331741_e41fbc9422_b.jpg",
+  "w": 1000,
+  "h": 667,
+  "by": "Namibnat",
+  "lic": "CC BY 2.0",
+  "link": "https://www.flickr.com/photos/12234865@N04/5033331741",
+  "pl": [],
+  "tags": [
+   "fire",
+   "wind"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%"
+ },
+ {
+  "id": "locust-swarm-blue-sky",
+  "u": "https://live.staticflickr.com/8847/28923080670_258e4904f9_b.jpg",
+  "w": 1024,
+  "h": 768,
+  "by": "Hotel Kaesong",
+  "lic": "CC BY-SA 2.0",
+  "link": "https://www.flickr.com/photos/68240136@N02/28923080670",
+  "pl": [],
+  "tags": [
+   "locust",
+   "sky"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "desert-locusts-pair",
+  "u": "https://live.staticflickr.com/3471/3278205503_020f4a9a41_b.jpg",
+  "w": 1024,
+  "h": 768,
+  "by": "wwarby",
+  "lic": "CC BY 2.0",
+  "link": "https://www.flickr.com/photos/26782864@N00/3278205503",
+  "pl": [],
+  "tags": [
+   "locust",
+   "desert"
+  ],
+  "mood": "warm",
+  "fx": "40% 50%"
+ },
+ {
+  "id": "locust-hoppers-sand",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Schistocerca_gregaria_L4_hopper_band.jpg",
+  "w": 1000,
+  "h": 750,
+  "by": "ChriKo",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Schistocerca_gregaria_L4_hopper_band.jpg",
+  "pl": [],
+  "tags": [
+   "locust",
+   "desert"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "locust-swarm-cloud-bw",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Schisto09.jpg/1280px-Schisto09.jpg",
+  "w": 1280,
+  "h": 799,
+  "by": "MichelLecoq",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Schisto09.jpg",
+  "pl": [],
+  "tags": [
+   "locust",
+   "darkness",
+   "storm_sky"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "locust-swarm-plain",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/6_Migratory_locust_Locusta_migratoria.jpg/1280px-6_Migratory_locust_Locusta_migratoria.jpg",
+  "w": 1280,
+  "h": 828,
+  "by": "Michel Lecoq",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:6_Migratory_locust_Locusta_migratoria.jpg",
+  "pl": [],
+  "tags": [
+   "locust",
+   "wilderness_path"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "frog-in-pond-algae",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Bedriaga_Frog.jpg/1280px-Bedriaga_Frog.jpg",
+  "w": 1280,
+  "h": 960,
+  "by": "Jeffrey Sciberras",
+  "lic": "CC BY 3.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Bedriaga_Frog.jpg",
+  "pl": [],
+  "tags": [
+   "frog"
+  ],
+  "mood": "cool",
+  "fx": "40% 50%"
+ },
+ {
+  "id": "frog-in-muddy-water",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Pelophylax_bedriagae_-_Levant_Batakl%C4%B1k_Kurba%C4%9Fas%C4%B1.jpg/1280px-Pelophylax_bedriagae_-_Levant_Batakl%C4%B1k_Kurba%C4%9Fas%C4%B1.jpg",
+  "w": 1280,
+  "h": 848,
+  "by": "Zeynel Cebeci",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Pelophylax_bedriagae_-_Levant_Batakl%C4%B1k_Kurba%C4%9Fas%C4%B1.jpg",
+  "pl": [],
+  "tags": [
+   "frog"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "frog-jordan-river",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Pelophylax_bedriagae%2C_Jordan_River.jpg/1280px-Pelophylax_bedriagae%2C_Jordan_River.jpg",
+  "w": 1280,
+  "h": 960,
+  "by": "DinaKuzia",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Pelophylax_bedriagae,_Jordan_River.jpg",
+  "pl": [
+   "요단강"
+  ],
+  "tags": [
+   "frog",
+   "river"
+  ],
+  "mood": "cool",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "dew-on-grass",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/The_beauty_of_the_dew_drops.jpg/1280px-The_beauty_of_the_dew_drops.jpg",
+  "w": 1280,
+  "h": 1137,
+  "by": "Baby Devi 26",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:The_beauty_of_the_dew_drops.jpg",
+  "pl": [],
+  "tags": [
+   "rain"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "dew-on-grass-blade",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Dew_drops_on_grass.jpg/1280px-Dew_drops_on_grass.jpg",
+  "w": 1280,
+  "h": 1707,
+  "by": "Baby Devi 26",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Dew_drops_on_grass.jpg",
+  "pl": [],
+  "tags": [
+   "rain"
+  ],
+  "mood": "cool",
+  "fx": "45% 50%"
+ },
+ {
+  "id": "total-eclipse-corona",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Eclipse-totale-2026-couronne-Luc-Viatour.jpg/1280px-Eclipse-totale-2026-couronne-Luc-Viatour.jpg",
+  "w": 1280,
+  "h": 947,
+  "by": "Lviatour",
+  "lic": "CC BY-SA 4.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Eclipse-totale-2026-couronne-Luc-Viatour.jpg",
+  "pl": [],
+  "tags": [
+   "darkness",
+   "sky"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "negev-cirrus-sunset",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Astfeld-025.JPG/1280px-Astfeld-025.JPG",
+  "w": 1280,
+  "h": 909,
+  "by": "Josef F. Stuefer",
+  "lic": "CC BY-SA 3.0",
+  "link": "https://commons.wikimedia.org/wiki/File:Astfeld-025.JPG",
+  "pl": [
+   "네게브"
+  ],
+  "tags": [
+   "dusk",
+   "clouds",
+   "sunrise_light_rays"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%"
+ },
+ {
+  "id": "dead-sea-sunrise-moab",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Sunrise_over_the_Dead_Sea_-_2010.JPG/1280px-Sunrise_over_the_Dead_Sea_-_2010.JPG",
+  "w": 1280,
+  "h": 901,
+  "by": "High Contrast",
+  "lic": "CC BY 3.0 de",
+  "link": "https://commons.wikimedia.org/wiki/File:Sunrise_over_the_Dead_Sea_-_2010.JPG",
+  "pl": [
+   "사해"
+  ],
+  "tags": [
+   "dawn",
+   "sea"
+  ],
+  "mood": "warm",
+  "fx": "57% 50%"
+ },
+ {
+  "id": "dead-sea-salt-shore-sunrise",
+  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/94725_dead_sea_sunrise_PikiWiki_Israel.jpg/1280px-94725_dead_sea_sunrise_PikiWiki_Israel.jpg",
+  "w": 1280,
+  "h": 720,
+  "by": "דוידי ורדי",
+  "lic": "CC BY 2.5",
+  "link": "https://commons.wikimedia.org/wiki/File:94725_dead_sea_sunrise_PikiWiki_Israel.jpg",
+  "pl": [
+   "사해"
+  ],
+  "tags": [
+   "dawn",
+   "sea",
+   "salt"
+  ],
+  "mood": "warm",
+  "fx": "48% 50%"
+ },
+ {
+  "id": "dead-tree-dark-sky",
+  "u": "https://live.staticflickr.com/374/18609730312_664a077099_b.jpg",
+  "w": 1023,
+  "h": 682,
+  "by": "bjimmy934",
+  "lic": "CC BY 2.0",
+  "link": "https://www.flickr.com/photos/96828128@N02/18609730312",
+  "pl": [],
+  "tags": [
+   "storm_sky",
+   "darkness",
+   "sea"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "island-under-storm-clouds",
+  "u": "https://live.staticflickr.com/84/210860008_1295708bd1_b.jpg",
+  "w": 768,
+  "h": 1023,
+  "by": "mozzercork",
+  "lic": "CC BY 2.0",
+  "link": "https://www.flickr.com/photos/98382796@N00/210860008",
+  "pl": [],
+  "tags": [
+   "storm_sky",
+   "sea",
+   "clouds"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%"
+ },
+ {
+  "id": "hailstones-heap",
+  "u": "https://live.staticflickr.com/5581/15148092311_176a339eb5_b.jpg",
+  "w": 1024,
+  "h": 768,
+  "by": "James St. John",
+  "lic": "CC BY 2.0",
+  "link": "https://www.flickr.com/photos/47445767@N05/15148092311",
+  "pl": [],
+  "tags": [
+   "hail"
+  ],
+  "mood": "cool",
+  "fx": "50% 50%"
  }
 ]
