@@ -53,6 +53,10 @@ for i,d in enumerate(P365):
     if not v: continue
     GD[f"{w}-{j}"]=v['g']; EY[f"{w}-{j}"]=v['e']
     CQ[f"{w}-{j+1}"]=[{k:q[k] for k in ('t','kind','q','o','a','h','ref')} for q in v['qz']]
+# 리딩지저스에서 손으로 다듬은 QT 질문(요 3–4장: 니고데모·사마리아 여자, 범위·붙잡을 구절 포함)을 365 같은 범위 날에 옮김
+_RJ=json.load(open('srj/all.json'))
+for _i,_d in enumerate(P365):
+    if [tuple(x) for x in _d['ch']]==[(43,3),(43,4)]: EY[f"{_i//7+1}-{_i%7}"]=_RJ['35-1']['e']; Y_TOOL_FROM={f"y365:{_i//7+1}-{_i%7}":"rj:35-0"}
 TRV=hashlib.sha1((open('bible_snb.b64').read()[:3000]+open('bible_shg.b64').read()[:3000]).encode()).hexdigest()[:8] if os.path.exists('bible_snb.b64') else '1'
 data+='window.TR_VER="'+TRV+'";\n'
 data+='const BOOKINFO='+open('books/all.json').read()+';\n'
@@ -76,6 +80,7 @@ data+='const TRAITS_C='+open('traits/all.json').read()+';\n'
 data+='const PARA='+open('para/all.json').read()+';\n'
 data+='const SCX='+open('scene/scx.json').read()+';\n'
 data+='const TOOLX='+(open('tools/toolx.json').read() if os.path.exists('tools/toolx.json') else '{}')+';\n'
+data+='if(window.CBSR_MODE==="y365"){const F='+J(Y_TOOL_FROM)+';for(const k in F) if(TOOLX[F[k]]) TOOLX[k]=TOOLX[F[k]];}\n'
 data+='const RJDESC='+(open('rjdesc/rjdesc.json').read() if os.path.exists('rjdesc/rjdesc.json') else '{}')+';\n'
 data+='const CHRIST_K='+J({k:v['k'] for k,v in CK.items()})+';\n'
 FIXD={"35-1":{"god":"밤에 예수님을 찾아온 유대인의 지도자 니고데모와 우물가에서 예수님의 말씀을 듣게 된 사마리아 여자는 서로 다른 자리에서 예수님을 만납니다. 니고데모는 먼저 예수님을 찾아왔고(3:2), 사마리아 여자에게는 예수님이 먼저 말을 거셨습니다(4:7). 예수님은 니고데모에게 인자가 들려야 하며 믿는 자가 영생을 얻는다고 말씀하시고(3:14–15), 사마리아 여자에게는 자신이 메시아이심을 밝히십니다(4:25–26). 여자의 증언으로 많은 사람이 예수님을 믿고(4:39), 이어 예수님의 말씀을 직접 듣고 그분을 세상의 구주로 고백합니다(4:41–42). 서로 다른 사람들에게 자신을 드러내시고 생명의 말씀을 전하시는 예수님을 봅니다.","christ":"요한복음은 창세기처럼 '태초에'라는 말로 시작합니다(요 1:1; 창 1:1). 만물이 말씀으로 말미암아 지은 바 되었고(1:3), 그 말씀이 육신이 되어 우리 가운데 거하셨습니다(1:14). 니고데모에게 말씀하신 거듭남(3:3)과 사마리아 여자에게 약속하신 샘물(4:14)은 서로 다른 그림이지만, 둘 다 사람이 스스로 만들어 낼 수 없는 생명을 가리킵니다. 창조의 말씀이신 예수님이 사람들에게 생명을 주시는 분으로 나타나십니다."}}
@@ -93,6 +98,8 @@ data+=""" const M=window.CBSR_MODE==="y365"?"y365":"rj";
  for(const k in GF){ const [m,r]=k.split(":"); if(m!==M) continue; if(GF[k].find&&GUIDE[r]) GUIDE[r].find=GF[k].find; if(GF[k].eye&&EYE[r]) EYE[r].q=GF[k].eye; }
 })();\n"""
 Y365NT=json.load(open('ux/christ_y365nt.json'))
+DY=json.load(open('ux/detail_y365.json'))
+data+='if(window.CBSR_MODE==="y365"){const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
 YN={f"{(int(n)-1)//7+1}-{(int(n)-1)%7}":v for n,v in Y365NT.items()}
 data+='if(window.CBSR_MODE==="y365"){const YN='+J(YN)+';for(const k in YN){ DAYC[k]=YN[k].t; CHRIST_K["y:"+k]=YN[k].k; }}\n'
 data+="\nconst TRMAP_SNB="+open('trmap/snb.json').read()+";\nconst TRMAP_SHG="+open('trmap/shg.json').read()+";\n"+open('trconv.js').read()

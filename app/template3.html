@@ -1682,9 +1682,12 @@ function confetti(){
 }
 function qtOf(key){ return mem.qt[key] ||= {}; }
 function lensesFor(w,d){
-  const det=DETAIL[w+"-"+(d+1)]; if(det&&det.lenses) return det.lenses;
+  const det=DETAIL[w+"-"+(d+1)];
   const g=GENRE_OF(dayPlan(w,d).ch[0][0]); const L=LENSES[g], st=((w-1)*6+d)%L.length;
-  return [0,1,2].map(i=>L[(st+i)%L.length]);
+  const auto=[0,1,2,3,4].map(i=>L[(st+i)%L.length]);
+  if(!(det&&det.lenses)) return auto.slice(0,3);
+  /* 손으로 쓴 렌즈가 셋보다 적으면 같은 종류가 아닌 자동 렌즈로 채움 */
+  const out=det.lenses.slice(0,3); for(const x of auto){ if(out.length>=3) break; if(!out.some(y=>y.k===x.k)) out.push(x); } return out;
 }
 function clueFor(k,A,w,d,q){
   /* 질문이 가리키는 장(예: 16:7 → 16장)을 찾아 그 장의 정보로 단서를 줍니다 */
