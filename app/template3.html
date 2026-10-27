@@ -567,6 +567,17 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .wtile .wtbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.65)}
 .wtile span{position:absolute;left:6px;right:6px;bottom:6px;font-size:12px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.8);text-align:left}
 /* ===== 이야기 카드 (스토리) ===== */
+/* v2 가독성: 회색 안내 글을 진하게, 작은 글씨를 키우고, 명조체를 Noto Serif KR 500으로 (v1은 그대로) */
+html.v2{--muted:#3F4A45;--gold:#7A4C0C;--f-text:"Noto Serif KR","Gowun Batang","Nanum Myeongjo","AppleMyungjo",serif}
+@media (prefers-color-scheme: dark){html.v2:not([data-theme="light"]){--muted:#B8C4BD;--gold:#EBC27A}}
+html.v2[data-theme="dark"]{--muted:#B8C4BD;--gold:#EBC27A}
+html.v2 .lead{font-size:15px}html.v2 .fieldhint,html.v2 .lookhint{font-size:14px}html.v2 .lookbtn .lref{font-size:13px}
+html.v2 .day .dn,html.v2 .day .ds{font-size:12.5px}html.v2 .brand{font-size:12.5px}
+html.v2 textarea::placeholder{color:#66706B;opacity:1}
+html.v2 .rg.fut b,html.v2 .rg.fut small{opacity:.85}
+html.v2 .k-quote .sph::after{background:radial-gradient(ellipse at 50% 55%,rgba(0,0,0,.5),rgba(0,0,0,.8))}
+html.v2 .k-line .sph::after{background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.55) 30%,rgba(0,0,0,.65) 70%,rgba(10,7,4,.9))}
+html.v2 #storyRoot{--ssub:#EFE6D8}
 #readRoot{position:fixed;inset:0;z-index:9500;background:#0d0b09;color:#f3ece0;animation:siIn .2s ease}
 #readRoot .rdfr{position:absolute;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:linear-gradient(170deg,#2b2219,#14100c)}
 #readRoot .rdhead{position:absolute;left:0;right:0;top:0;z-index:5;padding:10px 12px 6px;background:linear-gradient(#000a,#0000)}
@@ -3507,7 +3518,7 @@ function gpBind(){ const G=view.gp, key=keyOf(view.w,view.d), el=document.getEle
   el.querySelectorAll("[data-gpt]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.gpt, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i); G.step=G.pickd.length; if(G.pickd.length===G.pts.length){ G.done=true; G.score=G.pickd.filter((x,k)=>x===G.ord[k]).length; G.res=`${G.score}/${G.pts.length}`; chRec(key).trip=G.res; save(); } gpShow(); }); }
 function v2Nav(){ const n=document.querySelector(".bnav-in"); if(!n) return; const I=(d)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
   n.innerHTML=[["today","오늘",I('<circle cx="12" cy="12" r="8.5"/><path d="M10 8.8v6.4l5.2-3.2z"/>')],["read","본문",I('<path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1V19c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1z"/><path d="M12 6.5V20"/>')],["qt","QT",I('<path d="M6 3.5h9l3 3V20.5H6z"/><path d="M9 9h6M9 13h6M9 17h4"/>')],["challenge","도전",I('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>')],["record","기록",I('<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>')]].map(([t,l,s])=>`<button class="tab" data-tab="${t}" aria-selected="${view.tab===t}">${s}<span>${l}</span></button>`).join("");
-  n.style.gridTemplateColumns="repeat(5,1fr)"; document.documentElement.classList.add("v2");
+  n.style.gridTemplateColumns="repeat(5,1fr)"; document.documentElement.classList.add("v2"); storyFont();
   const dl=document.getElementById("dateLine"), tp=document.querySelector("header.top"); if(dl&&tp&&!dl._v2){ dl._v2=1; dl.setAttribute("role","button"); dl.tabIndex=0; const t=()=>tp.classList.toggle("wkopen"); dl.onclick=t; dl.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); t(); } }; } }
 function render(){
   renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today");
