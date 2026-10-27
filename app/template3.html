@@ -431,6 +431,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .snav{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:10px}.snav .btn{padding:13px}.snav .btn[disabled]{opacity:.35}
 
 /* ===== V2 리뉴얼: 오늘(사진 + 종이 한 장) · 본문 먼저 ===== */
+details.qa summary{cursor:pointer;font-weight:700;color:var(--muted)}details.qa .qaq{font-weight:700;margin:10px 0 4px}details.qa .qaa{margin:0;line-height:1.7}
 html.v2{--night:#16120E;--ember:#E2B874;--f-disp:"Noto Serif KR","Gowun Batang",serif}
 html.v2 .tdh{min-height:min(46vh,420px);cursor:pointer}
 html.v2 .tdin{align-items:stretch;text-align:left;padding:16px 20px 48px}
@@ -2116,6 +2117,8 @@ function renderQT(){
   if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); h+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;});
   else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=moreTraits+`</section>`;
+  // 읽다가 궁금한 점(이름·숫자 차이 등): 접어 두는 짧은 설명. 문제가 생기면 QA_ON을 false로
+  { const SDQ=(typeof dayNo==="function")?storyDay(dayNo(w,d)):null; if(QA_ON&&SDQ&&SDQ.qa&&SDQ.qa.length) h+=`<section class="sec"><details class="qa"><summary>읽다가 궁금한 점</summary>${SDQ.qa.map(x=>`<p class="qaq">${esc(x.q)}</p><p class="qaa">${esc(x.a)}</p>`).join("")}</details></section>`; }
   // 3 그리스도께로
   const PVK=PVQ.has(key), PCK={quote:"신약의 직접 인용",mention:"신약의 직접 언급",repeat:"같은 표현의 되풀이",phrase:"같은 표현의 되풀이",self:"본문 스스로의 지시"};
   if(PVK){ if(det&&det.christ) h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${det.ck&&PCK[det.ck]?`<span class="ckind">${PCK[det.ck]}</span>`:""}<div class="qcard"><p>${esc(det.christ)}</p></div></section>`; }
@@ -2188,6 +2191,7 @@ function storyPairCard(w,d){ const key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], txt=
   const pr=storyPair(w,d,txt), s1=txt.split(/(?<=\.)\s+/);
   if(pr&&vtxt(pr[0])&&vtxt(pr[1])) return {k:"echo",lab:"이어 읽기",h:"두 말씀을 나란히",pair:[[vtxt(pr[0]),rlab(pr[0])],[vtxt(pr[1]),rlab(pr[1])]],b:[s1[0]]};
   return {k:"line",lab:"이어 읽기",t:s1.slice(0,2).join(" ")}; }
+const QA_ON=true;
 /* 관점: A=1년차(2027), B=2년차(2028). 같은 본문이라도 해마다 다른 이야기와 QT */
 let PV_FORCE=null;
 function PV(){ if(PV_FORCE) return PV_FORCE; try{ const u=new URLSearchParams(location.search).get("pv"); if(u==="A"||u==="B") return u; const s=localStorage.getItem("cbsr-pv"); if(s==="A"||s==="B") return s; }catch(e){} return new Date().getFullYear()>=2028?"B":"A"; }
