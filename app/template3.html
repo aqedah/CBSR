@@ -496,7 +496,7 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .gptop{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px 10px}.gptop b{font:700 17px var(--f-disp,serif)}
 .gpdots{flex:1;display:flex;gap:4px}.gpdots i{width:18px;height:4px;border-radius:2px;background:rgba(255,255,255,.2)}.gpdots i.on{background:#e2b874}
 .gpx{border:0;background:none;color:#fff;font-size:20px}
-.gpbody{flex:1;overflow:auto;padding:6px 16px;display:flex;flex-direction:column;gap:14px}.gpbody>:first-child{margin-top:auto}.gpbody>:last-child{margin-bottom:auto}
+.gpbody{flex:1;overflow:auto;padding:6px 16px;display:flex;flex-direction:column;gap:14px}.gpbody>:first-child{margin-top:auto}.nucd{margin:8px 0 4px;font-size:14px}.nucd b{font-size:20px;font-variant-numeric:tabular-nums;color:var(--accent)}.gpbody>:last-child{margin-bottom:auto}
 .gpq{margin:0;text-align:center;color:#d9cdbb;font-size:15px}.gpq b{color:#fff;font-size:22px}.gpbig{font:800 52px var(--f-ui);text-align:center;margin:40px 0}
 .gpgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .gpcard{position:relative;aspect-ratio:3/4;border:2px solid transparent;border-radius:14px;overflow:hidden;padding:0;background:#2a2118;color:#fff;text-align:left;cursor:pointer}
@@ -2143,7 +2143,8 @@ function nextUp(w,d){ if(TRY) return view.tab==="qt"?`<div class="nextup"><span 
   const dt=dateOf(nw,nd2), when=fmt(dt,{month:"long",day:"numeric"})+"("+DAYN[dt.getDay()]+")";
   if(isRev(nd2)) return `<div class="nextup"><span class="k">다음 · ${esc(when)}</span><b>한 주 돌아보기</b><p>이번 주 본문을 돌아보고 주간 문제를 풉니다.</p></div>`;
   const e=EYE[keyOf(nw,nd2)];
-  return `<div class="nextup"><span class="k">다음 본문 · ${esc(when)}</span><b>${esc(dayPlan(nw,nd2).label)}</b>${e&&e.q?`<p>${esc(e.q)}</p>`:""}</div>`; }
+  const open=window.CBSR_V2?(isHere(w,d)?`<p class="nucd"><b id="qtCount">--:--:--</b> 뒤, 자정에 열립니다</p>`:`<p class="nucd">지금 바로 열 수 있습니다</p><button class="btn small" id="qtNextDay" data-nw="${nw}" data-nd="${nd2}">다음 본문으로 ›</button>`):"";
+  return `<div class="nextup"><span class="k">다음 본문 · ${esc(when)}</span><b>${esc(dayPlan(nw,nd2).label)}</b>${e&&e.q?`<p>${esc(e.q)}</p>`:""}${open}</div>`; }
 function renderQT(){
   const {w,d}=view;
   if(!BIBLE) return `<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
@@ -3510,6 +3511,9 @@ function seeVerse(b,c,v){
   if(el){ el.scrollIntoView({block:v?"center":"start"}); if(v){el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2600);} }
 }
 function bind(){
+  const qc=document.getElementById("qtCount"); if(qc){ const tk=()=>{ const t=cdText(); qc.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); qc.parentNode.textContent="내일 본문이 열렸습니다"; } }; tk(); clearInterval(TD.cd); TD.cd=setInterval(tk,1000); }
+  const qn=document.getElementById("qtNextDay"); if(qn) qn.onclick=()=>{ view.w=+qn.dataset.nw; view.d=+qn.dataset.nd; view.tab="today"; render(); scrollTo({top:0}); };
+
   const m=document.getElementById("main");
   const sh=document.getElementById("shareDay"); if(sh) sh.onclick=()=>shareDay(view.w,view.d);
   bindToolChips(m);
