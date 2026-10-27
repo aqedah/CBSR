@@ -8198,7 +8198,7 @@ function speechInfo(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(
   if(who&&!(TRUST_SP.test(last)||TRUST_SP.test(who)||isPerson(last)||SPK_NOUN.test(last))) who="";
   if(!who) return {who:"",trusted:null};
   return {who, trusted:TRUST_SP.test(who)||TRUST_SP.test(last)||TRUST_P.test(last)}; }
-try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),pause:on=>storyPause(on)}}; }catch(e){}
+try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),plan:(w,d)=>dayPlan(w,d),pause:on=>storyPause(on)}}; }catch(e){}
 function verseQuestion(v){
   const K=verseKind(v), sp=speechInfo(v);
   if(sp&&sp.trusted===false&&K.k!=="prayer") return `이 말은 ${sp.who}의 말입니다. 누구에게, 무엇을 위해 한 말입니까? 앞뒤 이야기는 이 말을 믿을 만한 말로 보여 줍니까?`;
@@ -9222,7 +9222,7 @@ applyPV();
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&MODE==="y365"&&Math.max(2026,NOW().getFullYear())>ED_Y){ try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} location.reload(); } });
 if(window.CBSR_V2) v2Nav();
 /* 검토용: v2.html?day=80 → 그날 이야기 바로 열기(통독 완료 여부와 상관없이) */
-if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=(MODE==="rj"?315:365)&&(MODE==="y365"||MODE==="rj")){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const go=()=>{ if(BIBLE){ render(); storyOpen(0); } else setTimeout(go,300); }; setTimeout(go,300); } }
+if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=(MODE==="rj"?315:365)&&(MODE==="y365"||MODE==="rj")){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const ci=+(new URLSearchParams(location.search).get("card")||0); const go=()=>{ if(BIBLE){ render(); storyOpen(Math.max(0,ci)); } else setTimeout(go,300); }; setTimeout(go,300); } }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
