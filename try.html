@@ -8985,6 +8985,8 @@ function speechOnly(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")], R=S
 function gWho(w,d,seed){ const A=dayA(w,d), r=rngOf(seed), by={};
   for(const v of A.verses){ let s=null; try{ s=speechInfo(v); }catch(e){} if(!s||!s.who) continue; let who=s.who.split(" ").pop(); if(GOD_N.test(who)) who="하나님(여호와)"; if(/^예수/.test(who)) who="예수님";
     if(/^(일|말씀|사람|사람들|자|자들|그|그들|무리|백성)$/.test(who)) continue;
+    /* 한 절에 말이 둘 이상이면(예: 요 20:15 예수님의 말과 마리아의 말) 말한 사람이 섞일 수 있어 문제로 쓰지 않습니다 */
+    { const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")], R=S&&S[`${v.b}-${v.c}-${v.v}`]; if(R&&R.length>1) continue; }
     const t=speechOnly(v); if(t.length<8||t.length>130) continue; (by[who] ||= []).push({v,t}); }
   const whos=Object.keys(by); if(whos.length<2) return null;
   const sp=shuf(whos,r).slice(0,4), qs=shuf(sp,r).map(wn=>{ const a=by[wn]; return {...a[Math.floor(r()*a.length)],ans:wn}; });
