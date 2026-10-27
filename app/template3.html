@@ -523,6 +523,14 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .stop{position:absolute;top:calc(env(safe-area-inset-top,0px) + 18px);left:14px;right:8px;display:flex;align-items:center;gap:8px;z-index:30;font-size:13px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .stop .sdot{width:28px;height:28px;flex:none;border-radius:50%;background:linear-gradient(135deg,#e2b874,#9c5b2e);display:grid;place-items:center;font:700 12px var(--sser);color:#1b130b;text-shadow:none}
 .stop b{font-size:13px}.stop span{opacity:.75;font-size:12.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sfb{font-size:18px;position:relative}.sfb.has::after{content:"";position:absolute;right:4px;top:4px;width:7px;height:7px;border-radius:50%;background:#e2b874}
+.fbov{position:absolute;inset:0;z-index:900;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}#main .fbov,body>.fbov{position:fixed;z-index:9900}
+.fbbox{width:100%;max-width:520px;background:#fffdf8;color:#1b2420;border-radius:16px 16px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 14px);display:grid;gap:10px;font-family:var(--f-ui,system-ui)}
+.fbbox b{font-size:15px}.fbbox textarea{width:100%;font:15px/1.6 var(--f-ui,system-ui);border:1px solid #d9e0da;border-radius:10px;padding:10px;min-height:110px;color:#1b2420;background:#fff}
+.fbrow{display:flex;gap:8px}.fbrow button{flex:1;padding:11px;border-radius:10px;border:1px solid #d9e0da;background:#fff;font-weight:700;color:#1b2420}.fbrow .pri{background:#2c5c52;color:#fff;border-color:#2c5c52}
+.fbn{margin:0;font-size:12px;color:#5b6862}
+.sfbcopy{margin-top:12px;width:100%;border:1px dashed rgba(255,255,255,.4);background:none;color:#e2b874;border-radius:12px;padding:10px;font:600 13.5px var(--f-ui)}
+.qtfbn{background:var(--gold-soft);border-radius:10px;padding:10px 12px;margin:6px 0;white-space:pre-wrap}
 .sx{border:0;background:none;color:#fff;font-size:20px;padding:4px 8px}.sps{font-size:14px;letter-spacing:-2px}
 .sph{position:absolute;inset:0;overflow:hidden}
 .sph img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(.92) contrast(1.04)}
@@ -2075,6 +2083,7 @@ function renderQT(){
   const pray=(det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
   h+=`<section class="sec"><span class="label">오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
   // QT 완료: 맨 마지막에만
+  if(FB_ON){ const fr=fbAll()[fbKey("qt")]; h+=`<section class="sec qtfb"><span class="label">검토 메모 · 이 날 QT</span><p class="lead">관찰 질문, 성품, 성경 전체로, 묵상, 기도에 대해 고칠 점을 적습니다.</p>${fr?`<p class="qtfbn">${esc(fr.n)}</p>`:""}<div class="row"><button class="btn ghost small" id="qtFb">${fr?"메모 고치기":"메모 쓰기"}</button><button class="btn ghost small" id="qtFbCopy">검토 메모 모아 복사 (${Object.keys(fbAll()).length}개)</button></div></section>`; }
   h+=q.done?`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`:`<section class="sec"><div class="row"><button class="btn" id="qtDone" style="width:100%;padding:15px">QT 완료</button></div><p class="lead" id="qtSaved" style="text-align:center"></p></section>`;
   view.qtJust=false;
   return h;
@@ -2177,7 +2186,7 @@ const isHere=(w,d)=>w===here.w&&d===here.d;
 function askQ(w,d){ const K=(typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null; if(K) return {q:K.q,r:K.r};
   const det=DETAIL[w+"-"+(d+1)]; if(det&&det.apply) return {q:det.apply}; const X=storyQT(w,d); return {q:X.kv?verseQuestion(X.kv):APPLY_Q}; }
 function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
-  if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">QT로 이어가기</button></div></div>`; }
+  if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">QT로 이어가기</button></div>${FB_ON?`<button class="sfbcopy" id="sFbCopy">검토 메모 모아 복사 (${Object.keys(fbAll()).length}개)</button>`:""}</div>`; }
   if(s.k==="fin"){ if(!q.done) return `<div class="sbox"><span class="slab">오늘의 말씀 카드</span><h2>QT를 마치면 오늘의 말씀 카드가 만들어집니다</h2><div class="sfbtn"><button class="btn" data-sgo="-1">‹ 돌아가서 마치기</button></div></div>`;
     const kv=storyQT(w,d).kv, dt=dateOf(w,d);
     return `<div class="sbox sfin"><span class="slab">오늘의 말씀 카드 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}</span>${kv?`<div class="sbigq">${esc(kv.t)}</div><div class="sref">${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</div>`:`<h2>${esc(dayPlan(w,d).label)}</h2>`}${q.med?`<p class="smine">${esc(q.med)}<small>나의 한 줄</small></p>`:""}<p class="sstat">QT 한 날 ${qtDayCount()}일 · 연속 ${qtCalStreak()}일</p><div class="sfbtn"><button class="btn ghost" id="sShare">말씀 나누기</button><button class="btn" data-sgo="1">내일 본문 ›</button></div></div>`; }
@@ -2233,6 +2242,21 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
   return `<div class="sqt"><span class="slab">${esc(SN_LAB[s.k]||"")}</span>${c}</div>`; }
 const SV={i:0,t:0,start:0,left:0,hold:0,paused:false,map:null,ck:"",cs:null,dur:0};
 function storyFont(){ if(document.getElementById("sfont")) return; const l=document.createElement("link"); l.id="sfont"; l.rel="stylesheet"; l.href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap"; document.head.appendChild(l); }
+/* ===== 검토 메모: 카드를 보다가 바로 적기 (주소에 ?review=1 → 이 기기에서 계속 켜짐, ?review=0 → 끔) ===== */
+const FB_ON=(()=>{ try{ const u=new URLSearchParams(location.search).get("review"); if(u==="1") localStorage.setItem("cbsr-review-mode","1"); if(u==="0") localStorage.removeItem("cbsr-review-mode"); return localStorage.getItem("cbsr-review-mode")==="1"; }catch(e){ return false; } })();
+function fbAll(){ try{ return JSON.parse(localStorage.getItem("cbsr-cardfb")||"{}"); }catch(e){ return {}; } }
+function fbSave(o){ try{ localStorage.setItem("cbsr-cardfb",JSON.stringify(o)); }catch(e){} }
+function fbKey(i){ return dayNo(view.w,view.d)+(storyDay(dayNo(view.w,view.d))?PV():"")+"#"+i; }
+function fbText(){ const o=fbAll(); return Object.keys(o).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})).map(k=>{ const r=o[k], m=k.match(/^(\d+)([AB]?)#(.+)$/); if(!m) return ""; return `${m[1]}일${m[2]==="A"?" 2027판":m[2]==="B"?" 2028판":""} · ${m[3]==="qt"?"QT":(+m[3]+1)+"번째 카드"}${r.lab?" ("+r.lab+")":""}: ${r.n}`; }).filter(Boolean).join("\n"); }
+function fbCopy(btn){ const t=fbText(); const done=()=>{ if(btn){ btn.textContent="복사했습니다 — 대화에 붙여 넣어 주세요"; } }; try{ navigator.clipboard.writeText(t||"(메모 없음)").then(done,()=>{ prompt("아래 글을 복사해 주세요",t); }); }catch(e){ prompt("아래 글을 복사해 주세요",t); } }
+function fbOpen(i,lab,host,after){ const o=fbAll(), k=fbKey(i), r=o[k]||{}; const ov=document.createElement("div"); ov.className="fbov";
+  ov.innerHTML=`<div class="fbbox" role="dialog" aria-label="검토 메모"><b>${esc(String(i)==="qt"?"QT 메모":(+i+1)+"번째 카드")}${lab?` · ${esc(lab)}`:""}</b><textarea rows="5" placeholder="고칠 점, 바꿀 문장, 좋았던 점을 바로 적어 주세요">${esc(r.n||"")}</textarea><div class="fbrow"><button data-del>지우기</button><button data-x>닫기</button><button data-s class="pri">저장</button></div><p class="fbn">메모 ${Object.keys(o).length}개 · 다 본 뒤 마지막 카드나 시험 날 모음에서 '메모 모아 복사'</p></div>`;
+  (host||document.body).appendChild(ov); const ta=ov.querySelector("textarea"); setTimeout(()=>ta.focus(),50);
+  const close=()=>{ ov.remove(); if(after) after(); };
+  ov.querySelector("[data-x]").onclick=close;
+  ov.querySelector("[data-s]").onclick=()=>{ const O=fbAll(); const v=ta.value.trim(); if(v) O[k]={n:v,lab:lab||"",t:Date.now()}; else delete O[k]; fbSave(O); close(); };
+  ov.querySelector("[data-del]").onclick=()=>{ const O=fbAll(); delete O[k]; fbSave(O); close(); };
+  ov.addEventListener("pointerup",e=>e.stopPropagation()); ov.addEventListener("pointerdown",e=>e.stopPropagation()); }
 function storyOpen(i,mode){ const {w,d}=view; const k=keyOf(w,d); try{ localStorage.setItem("cbsr-story-seen",MODE+":"+k); }catch(e){}
   if(view.scKey!==k){ view.scKey=k; view.sRev=false; } storyFont();
   let r=document.getElementById("storyRoot"); if(!r){ r=document.createElement("div"); r.id="storyRoot"; document.body.appendChild(r); }
@@ -2259,7 +2283,7 @@ function storyShow(){ clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.
    ${showPh?`<div class="sph v${s.phv||0}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
    <div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${dur}ms"`:""}></i></span>`).join("")}</div>
-   <div class="stop"><span class="sdot">통</span><b>${esc(p.label)}</b><span></span>${auto?`<button class="sx sps" id="sPause" aria-label="멈춤">❚❚</button>`:""}<button class="sx" id="sClose" aria-label="닫기">✕</button></div>
+   <div class="stop"><span class="sdot">통</span><b>${esc(p.label)}</b><span></span>${FB_ON?`<button class="sx sfb${fbAll()[fbKey(SV.i)]?" has":""}" id="sFb" aria-label="이 카드에 검토 메모">✎</button>`:""}${auto?`<button class="sx sps" id="sPause" aria-label="멈춤">❚❚</button>`:""}<button class="sx" id="sClose" aria-label="닫기">✕</button></div>
    <div class="sstage" id="sStage">${s.qt?`${storySlideHTML(s,w,d)}<div class="snav2"><button class="btn ghost" id="sPrev2">‹ 이전</button>${SV.i<S.length-1?`<button class="btn" id="sNext2">다음 ›</button>`:`<button class="btn" id="sEnd">닫기</button>`}</div>`:storySlideHTML(s,w,d)}</div>
    ${showPh&&kind!=="qt"&&ph.link?`<a class="scr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}
    ${hint?`<p class="stapnote">왼쪽을 누르면 이전 · 오른쪽을 누르면 다음 · 길게 누르면 멈춤</p>`:""}</div>`;
@@ -2285,6 +2309,8 @@ function storyPause(on){ const r=document.getElementById("storyRoot"); if(!r) re
 function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(key);
   r.querySelector("#sClose").onclick=storyClose;
   const sp=r.querySelector("#sPause"); if(sp) sp.onclick=()=>storyPause(!SV.paused);
+  const fbb=r.querySelector("#sFb"); if(fbb) fbb.onclick=()=>{ const was=SV.paused; storyPause(true); const lab=(s.lab||(s.k==="cover"?"표지":s.k==="ask"?"나의 생각거리":s.k)); fbOpen(SV.i,lab,r,()=>{ fbb.classList.toggle("has",!!fbAll()[fbKey(SV.i)]); if(!was) storyPause(false); }); };
+  const fbc=r.querySelector("#sFbCopy"); if(fbc) fbc.onclick=()=>fbCopy(fbc);
   const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=storyClose;
   r.querySelectorAll("[data-sgo]").forEach(b=>b.onclick=()=>storyGo(SV.i+(+b.dataset.sgo)));
   const g0=r.querySelector("[data-sgo0]"); if(g0) g0.onclick=()=>storyGo(0);
@@ -3235,6 +3261,8 @@ function bind(){
   m.querySelectorAll("[data-pe]").forEach(el=>{el.onclick=()=>showPerson(el.dataset.pe); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showPerson(el.dataset.pe);}};});
   const hb=m.querySelector(".help30"); if(hb) hb.ontoggle=()=>{view.helpOpen=hb.open;};
   const va=document.getElementById("v2Aid"); if(va) va.ontoggle=()=>{ view.aidOpen=va.open; };
+  const qf=document.getElementById("qtFb"); if(qf) qf.onclick=()=>fbOpen("qt","QT",document.body,()=>{ const y=scrollY; render(); scrollTo({top:y}); });
+  const qfc=document.getElementById("qtFbCopy"); if(qfc) qfc.onclick=()=>fbCopy(qfc);
   const rm=m.querySelector("#rjMore"); if(rm) rm.onclick=()=>{ view.rjOpen=!view.rjOpen; const t=m.querySelector("#rjText"); t.classList.toggle("clamp",!view.rjOpen); rm.textContent=view.rjOpen?"접기 ‹":"더 보기 ›"; rm.setAttribute("aria-expanded",view.rjOpen); };
   const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
   m.querySelectorAll(".hbook [data-book]").forEach(x=>x.onclick=()=>showBook(+x.dataset.book));
