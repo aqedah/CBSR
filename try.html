@@ -1164,12 +1164,12 @@ html.v2 .bnav .tab[aria-selected="true"]::before{content:"";position:absolute;to
 
 /* V2: 요일 고리 + 놀이판 */
 html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,html.v2 #revRow{display:none!important}
-.rgwrap{margin:4px -16px 6px;padding:0 0 10px;border-bottom:1px solid var(--line)}
+.rgwrap{margin:4px -16px 6px;padding:0 0 10px;border-bottom:1px solid var(--line);min-width:0;max-width:100vw;overflow:hidden}
 .rghead{display:flex;align-items:baseline;gap:8px;padding:0 16px 8px}.rghead b{font:700 20px var(--f-disp,serif);white-space:nowrap}.rghead span{color:var(--muted);font-size:14px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rgtoday{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font-size:12.5px;color:var(--accent)}
 .rgcal{border:0;background:none;color:var(--muted);padding:4px;align-self:center}
 .rgrow{display:flex;align-items:center}.rgnav{flex:none;width:26px;height:56px;border:0;background:none;color:var(--muted);font-size:22px}
-.rgs{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.rgs{display:flex;gap:6px;overflow-x:auto;width:100%;max-width:100vw;box-sizing:border-box;padding:4px 16px 2px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.rgs::-webkit-scrollbar{display:none}.rg{flex:none;width:54px;scroll-snap-align:center}
 .rg{border:0;background:none;padding:0;display:grid;justify-items:center;gap:3px;color:var(--ink);cursor:pointer}.rg-x{visibility:hidden}
 .rgi{position:relative;width:46px;height:46px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#e2b874,#c0563f);display:block}
 .rgi img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:2px solid var(--paper);display:block;background:#3a2c1f}
@@ -1177,7 +1177,7 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .rg.sel .rgi{width:52px;height:52px;margin-top:-3px;background:var(--accent)}.rg.sel b{color:var(--accent)}
 .rgd,.rgq{position:absolute;right:-2px;bottom:-2px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;border:2px solid var(--paper)}
 .rgd{background:var(--card);color:var(--accent)}.rgq{background:var(--accent);color:#fff}
-.rg b{font-size:12px;font-weight:700}.rg small{font-size:10px;color:var(--muted);white-space:nowrap;max-width:52px;overflow:hidden;text-overflow:ellipsis}
+.rg b{font-size:12px;font-weight:700}.rg small{font-size:10.5px;color:var(--muted)}
 .ghub{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .gtile{position:relative;aspect-ratio:1/1;border:0;border-radius:18px;overflow:hidden;color:#fff;text-align:left;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;background:#2a2118 var(--gp) center/cover;cursor:pointer}
 .gtile::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(10,7,4,.78))}
@@ -8257,18 +8257,17 @@ function bindRecordCards(){ document.querySelectorAll("[data-wck]").forEach(b=>b
   const a=document.getElementById("wcAll"); if(a) a.onclick=()=>{ view.wcAll=!view.wcAll; render(); }; }
 
 /* ===== V2: 인스타그램식 요일 고리(본문·도전 탭 위) ===== */
-function dayRingHTML(){ const W=dispW(), here0=today0(); let r="";
-  for(let i=0;i<7;i++){ const c=cellOf(W,i); if(!c.w){ r+=`<span class="rg rg-x"></span>`; continue; }
-    const key=keyOf(c.w,c.d), done=!!mem.done[key], qtd=!!(mem.qt[key]&&mem.qt[key].done), sel=c.w===view.w&&c.d===view.d&&!view.pre&&!view.revW, tod=dayDiff(c.dt,here0)===0, fut=dayDiff(c.dt,here0)>0;
-    let ph=null; try{ const S=storySlides(c.w,c.d); ph=S[0]&&S[0].ph; }catch(e){}
-    const p=dayPlan(c.w,c.d), lab=p?p.label.replace(/장$|편$/,"").replace(/^(\S+)\s/,(m,b)=>(PLAN.abbr[PLAN.full.indexOf(b)]||b)+" "):"";
-    r+=`<button class="rg${sel?" sel":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${c.w}-${c.d}" aria-label="${esc(fmt(c.dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p?p.label:"")}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}</span><b>${tod?"오늘":DAYN[c.dt.getDay()]}</b><small>${esc(lab)}</small></button>`; }
+function dayRingHTML(){ const here0=today0(), selN=dayNo(view.w,view.d), N=READ_DAYS; let r="";
+  const from=Math.max(1,selN-28), to=Math.min(N,selN+28);
+  for(let n=from;n<=to;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(!dayPlan(w,d)) continue; const dt=dateOf(w,d), key=keyOf(w,d), done=!!mem.done[key], qtd=!!(mem.qt[key]&&mem.qt[key].done), sel=n===selN&&!view.pre&&!view.revW, dd=dayDiff(here0,dt), tod=dd===0, fut=dd>0;
+    let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
+    const p=dayPlan(w,d);
+    r+=`<button class="rg${sel?" sel":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${w}-${d}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p.label)}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}</span><b>${tod?"오늘":DAYN[dt.getDay()]}</b><small>${dt.getMonth()+1}/${dt.getDate()}</small></button>`; }
   const dt=dateOf(view.w,view.d), p=dayPlan(view.w,view.d), isT=view.w===here.w&&view.d===here.d;
   return `<section class="rgwrap"><div class="rghead"><b>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><span>${esc(p?p.label:"")}</span>${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button></div>
-    <div class="rgrow"><button class="rgnav" id="rgPrev" aria-label="지난주">‹</button><div class="rgs">${r}</div><button class="rgnav" id="rgNext" aria-label="다음 주">›</button></div></section>`; }
+    <div class="rgs" id="rgScroll">${r}</div></section>`; }
 function bindDayRing(){ document.querySelectorAll("[data-rg]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.rg.split("-").map(Number); const t=view.tab; view.pre=false; view.revW=null; view.w=w; view.d=d; view.open=false; view.game=null; view.tab=t; render(); scrollTo({top:0}); });
-  const pr=document.getElementById("rgPrev"); if(pr) pr.onclick=()=>{ const t=view.tab; gotoW(dispW()-1,curCol()); view.tab=t; render(); };
-  const nx=document.getElementById("rgNext"); if(nx) nx.onclick=()=>{ const t=view.tab; gotoW(dispW()+1,curCol()); view.tab=t; render(); };
+  const sc=document.getElementById("rgScroll"), se=document.getElementById("rgSel"); if(sc&&se){ const a=sc.getBoundingClientRect(), b=se.getBoundingClientRect(); sc.scrollLeft+=b.left-a.left-a.width/2+b.width/2; }
   const cl=document.getElementById("rgCal"); if(cl) cl.onclick=openWeekPicker;
   const td=document.getElementById("rgToday"); if(td) td.onclick=()=>{ const t=view.tab; view.pre=false; view.revW=null; view.w=here.w; view.d=here.d; view.game=null; view.tab=t; render(); scrollTo({top:0}); }; }
 
