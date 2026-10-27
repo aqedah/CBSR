@@ -42,3 +42,13 @@ open(OUT+'/pilot.html','w').write('<!doctype html><html lang="ko"><head><meta ch
 for _fn,_lo,_hi,_mn in [('jan',1,31,'1월'),('feb',32,59,'2월'),('rest',301,365,'301–365일(2026년 남은 날)')]:
     _jr=[r for r in _rows if _re.search(r"data-day='(\d+)'",r) and _lo<=int(_re.search(r"data-day='(\d+)'",r).group(1))<=_hi]
     open(OUT+'/'+_fn+'.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+_mn+' 검토</title><meta name="robots" content="noindex"><style>'+_CSS+'</style></head><body><h1>'+(_mn if _fn=='rest' else '2027판 '+_mn+'('+str(_lo)+'–'+str(_hi)+'일)')+' 검토</h1><p>날마다 중심 물음과 카드 흐름, QT 묶음을 봅니다. \'카드로 보기\'를 누르면 실제 화면이 열리고, 카드 위쪽 ✎로 그 카드에 바로 메모합니다. 카드를 다 넘긴 뒤 \'QT로 이어가기\'로 QT까지 확인합니다. 다 본 뒤 \'메모 복사\'를 눌러 대화에 붙여 넣어 주세요.</p><div id="bar"><span id="cnt"></span><span id="cnt2"></span><button id="cp">메모 복사</button></div>'+''.join(_jr)+'<script>'+_JS+'</script></body></html>')
+
+# 리딩지저스 이야기 카드 검토 페이지 (rj.html): story_rj.json, 날 번호 = (주-1)*7+요일+1
+_SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
+_RP=json.load(open('plan.json'))['plan']; _rr=[]
+for k in sorted(_SRJ,key=int):
+    n=int(k)-1; w,d=n//7+1,n%7; lab=_RP[w-1][d]['label'] if w-1<len(_RP) and d<len(_RP[w-1]) else ''
+    o=_SRJ[k]; inner=_pvhtml(k,'',o,(o.get('kwq') or {}).get('q',''))
+    inner=inner.replace("v2.html?p=365&review=1&day="+k,"v2.html?p=rj&review=1&day="+k)
+    _rr.append("<section data-day='%s'><h2>%s주차 %s일째 · %s</h2>%s</section>"%(k,w,d+1,_h.escape(lab),inner))
+open(OUT+'/rj.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>리딩지저스 이야기 카드 검토</title><meta name="robots" content="noindex"><style>'+_CSS+'</style></head><body><h1>리딩지저스 45주 이야기 카드 검토</h1><p>36–45주차(사도행전–요한계시록). \'카드로 보기\'로 실제 화면을 열고, ✎로 카드에 바로 메모합니다. 다 본 뒤 \'메모 복사\'를 눌러 대화에 붙여 넣어 주세요.</p><div id="bar"><span id="cnt"></span><span id="cnt2"></span><button id="cp">메모 복사</button></div>'+''.join(_rr)+'<script>'+_JS+'</script></body></html>')
