@@ -100,7 +100,7 @@ data+=""" const M=window.CBSR_MODE==="y365"?"y365":"rj";
 data+='const KWQ='+open('ux/kwq.json').read()+';\nconst CARDNEWS='+open('ux/cardnews.json').read()+';\n'
 _PH=json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else []
 _SC=json.load(open('ux/story_cards.json')) if os.path.exists('ux/story_cards.json') else {}
-data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','by','lic','link','pl','tags','fx')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
+data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','by','lic','link','pl','tags','fx','mood','set')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
 data+='if(window.CBSR_MODE==="y365"){const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
@@ -118,6 +118,7 @@ for tk in ('snb','shg'):
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
 for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html']: shutil.copy('site_src/'+f,OUT+'/'+f)
 shutil.copytree('site_src/icons',OUT+'/icons')
+shutil.copytree('site_src/img',OUT+'/img')
 FB="https://www.gstatic.com/firebasejs/10.14.1/"
 tags=(f'<script src="{FB}firebase-app-compat.js"></script>\n<script src="{FB}firebase-auth-compat.js"></script>\n<script src="{FB}firebase-firestore-compat.js"></script>\n'
       f'<script src="config.js?v={h(open("site_src/config.js").read())}"></script>\n<script src="sync.js?v={h(open("site_src/sync.js").read())}"></script>\n<script src="bible.js?v={h(bible[:5000]+str(len(bible)))}"></script>\n')
@@ -183,7 +184,7 @@ self.addEventListener("install",e=>{{e.waitUntil(caches.open(V).then(c=>c.addAll
 self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));}});
 self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(/firestore\\.googleapis\\.com|identitytoolkit|securetoken|firebaseinstallations/.test(u.hostname))return;
-  const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/icons\\//.test(u.pathname);
+  const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/icons\\/|\\/img\\//.test(u.pathname);
   if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r).then(m=>m||caches.match("index.html"))));return;}}
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''

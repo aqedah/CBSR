@@ -1,3083 +1,2667 @@
 [
  {
-  "id": "judean-desert-aerial-masada",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Aerial_view_of_the_Judean_Desert_%28near_Masada%29%2C_Israel_03.jpg/1280px-Aerial_view_of_the_Judean_Desert_%28near_Masada%29%2C_Israel_03.jpg",
-  "w": 1280,
-  "h": 1928,
-  "by": "Godot13",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=24544320",
-  "pl": [
-   "유대 광야"
-  ],
-  "tags": [
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "desert-riders-dust",
-  "u": "https://live.staticflickr.com/7903/32205312117_ca0a1d492b_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Drouyn",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/101203767@N07/32205312117",
+  "id": "g01_01",
+  "u": "img/g/g01_01.jpg",
+  "w": 1277,
+  "h": 671,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "dust",
-   "army",
-   "desert"
+   "sunrise_light_rays",
+   "sky",
+   "darkness",
+   "water"
   ],
-  "mood": "warm",
-  "fx": "50% 50%"
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 1
  },
  {
-  "id": "ein-gedi-valley",
-  "u": "https://live.staticflickr.com/8/9688259_b27b9dc0f5_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Jonas B",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/14738242@N00/9688259",
-  "pl": [
-   "엔게디"
-  ],
-  "tags": [
-   "desert",
-   "valley"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "judean-desert-shankbone",
-  "u": "https://live.staticflickr.com/3013/2658667399_6820125691_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "david_shankbone",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/27865228@N06/2658667399",
-  "pl": [
-   "유대 광야"
-  ],
-  "tags": [
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "clay-jars-howzit",
-  "u": "https://live.staticflickr.com/6187/6086355843_6231e497e0_b.jpg",
-  "w": 1023,
-  "h": 680,
-  "by": "Sam Howzit",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/12508217@N08/6086355843",
+  "id": "g01_02",
+  "u": "img/g/g01_02.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "clay_jar"
-  ],
-  "mood": "warm",
-  "fx": "20% 50%"
- },
- {
-  "id": "ein-gedi-ibexes",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Two_Nubian_Ibexes%2C_Ein_Gedi_nature_reserve%2C_The_Judean_desert%2C_Israel.jpg/1280px-Two_Nubian_Ibexes%2C_Ein_Gedi_nature_reserve%2C_The_Judean_desert%2C_Israel.jpg",
-  "w": 1280,
-  "h": 853,
-  "by": "Yuvalr",
-  "lic": "CC BY-SA 3.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=16480524",
-  "pl": [
-   "엔게디"
-  ],
-  "tags": [
+   "night_sky",
+   "stars",
    "desert"
   ],
-  "mood": "warm",
-  "fx": "40% 50%"
+  "mood": "dark",
+  "fx": "55% 50%",
+  "set": 1
  },
  {
-  "id": "kedem-waterfall-judean-desert",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Kedem_Waterfall%2C_Judean_Desert%2C_Israel.jpg/1280px-Kedem_Waterfall%2C_Judean_Desert%2C_Israel.jpg",
+  "id": "g01_03",
+  "u": "img/g/g01_03.jpg",
   "w": 1280,
-  "h": 1707,
-  "by": "Yuvalr",
-  "lic": "CC BY-SA 3.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=18568635",
-  "pl": [
-   "엔게디"
-  ],
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
   "tags": [
-   "waterfall",
-   "desert"
+   "storm_sky",
+   "lightning"
   ],
-  "mood": "warm",
-  "fx": "60% 50%"
+  "mood": "dark",
+  "fx": "60% 50%",
+  "set": 1
  },
  {
-  "id": "david-waterfall-ein-gedi",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/PikiWiki_Israel_4281_Waterfall_in_Ein_Gedi.jpg/1280px-PikiWiki_Israel_4281_Waterfall_in_Ein_Gedi.jpg",
+  "id": "g01_04",
+  "u": "img/g/g01_04.jpg",
   "w": 1280,
-  "h": 1931,
-  "by": "Nechat Parbiash",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=7633928",
-  "pl": [
-   "엔게디"
-  ],
-  "tags": [
-   "waterfall",
-   "well"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "ein-gedi-canyon-path",
-  "u": "https://live.staticflickr.com/3953/15639350021_ccfa15b82c_b.jpg",
-  "w": 1024,
-  "h": 678,
-  "by": "kasio69",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/37904342@N04/15639350021",
-  "pl": [
-   "엔게디"
-  ],
-  "tags": [
-   "wilderness_path",
-   "desert",
-   "valley"
-  ],
-  "mood": "bright",
-  "fx": "40% 50%"
- },
- {
-  "id": "dead-sea-sunrise-tree",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Dead_Sea_Sunrise.jpg/1280px-Dead_Sea_Sunrise.jpg",
-  "w": 1280,
-  "h": 847,
-  "by": "Grauesel",
-  "lic": "CC BY-SA 3.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=191682",
-  "pl": [
-   "사해"
-  ],
+  "h": 691,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
   "tags": [
    "dawn",
+   "desert",
    "sunrise_light_rays"
   ],
   "mood": "warm",
-  "fx": "65% 50%"
+  "fx": "50% 50%",
+  "set": 1
  },
  {
-  "id": "galilee-sunset-clouds",
-  "u": "https://live.staticflickr.com/7142/6766426781_5a9d24dbc7_b.jpg",
-  "w": 1023,
-  "h": 685,
-  "by": "Smirnova Ksenia",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/52331890@N08/6766426781",
-  "pl": [
-   "갈릴리 호수"
-  ],
+  "id": "g01_05",
+  "u": "img/g/g01_05.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
   "tags": [
-   "dusk",
-   "sea",
-   "sky",
-   "clouds"
+   "olive_tree",
+   "dusk"
   ],
-  "mood": "dark",
-  "fx": "35% 50%"
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 1
  },
  {
-  "id": "jordan-river",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/8/82/Jordan_River.jpg",
-  "w": 1200,
-  "h": 1800,
-  "by": "Unknown (Wikimedia Commons)",
-  "lic": "CC BY-SA 2.5",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=439193",
+  "id": "g01_06",
+  "u": "img/g/g01_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "soil",
+   "drought",
+   "desert"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 1
+ },
+ {
+  "id": "g01_07",
+  "u": "img/g/g01_07.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "well",
+   "spring",
+   "water",
+   "stones"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 1
+ },
+ {
+  "id": "g01_08",
+  "u": "img/g/g01_08.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
    "요단강"
   ],
   "tags": [
    "river",
-   "reeds"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "jerusalem-old-city-wall-stones",
-  "u": "https://live.staticflickr.com/65535/51984298131_71e44451bb_b.jpg",
-  "w": 683,
-  "h": 1024,
-  "by": "David Pirmann",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/9905418@N05/51984298131",
-  "pl": [
-   "예루살렘"
-  ],
-  "tags": [
-   "city_wall",
-   "ruins"
-  ],
-  "mood": "bright",
-  "fx": "40% 50%"
- },
- {
-  "id": "capernaum-synagogue",
-  "u": "https://live.staticflickr.com/1801/42438931985_bc8843193b_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Gary Lee Todd, Ph.D.",
-  "lic": "CC0",
-  "link": "https://www.flickr.com/photos/101561334@N08/42438931985",
-  "pl": [
-   "가버나움"
-  ],
-  "tags": [
-   "ruins",
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "sinai-peaks-bw",
-  "u": "https://live.staticflickr.com/5021/5671452142_d9b04d994d_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "tom chandler",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/53965294@N00/5671452142",
-  "pl": [
-   "시내산"
-  ],
-  "tags": [
-   "mountain_peak",
-   "desert"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "sinai-sunrise",
-  "u": "https://live.staticflickr.com/5022/5671418680_46867f28e4_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "tom chandler",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/53965294@N00/5671418680",
-  "pl": [
-   "시내산"
-  ],
-  "tags": [
-   "mountain_peak",
-   "sunrise_light_rays"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "nile-golden-felucca",
-  "u": "https://live.staticflickr.com/4102/4902845795_d7fc58d6f3_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Jonah Bettio",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/8307309@N07/4902845795",
-  "pl": [
-   "이집트/나일강"
-  ],
-  "tags": [
-   "river",
-   "fishing_boat",
-   "dusk"
+   "reeds",
+   "dawn"
   ],
   "mood": "warm",
-  "fx": "45% 50%"
+  "fx": "50% 50%",
+  "set": 1
  },
  {
-  "id": "negev-canyon",
-  "u": "https://live.staticflickr.com/3056/2642247084_ae2d67c4be_b.jpg",
-  "w": 1023,
-  "h": 721,
-  "by": "Chalky Lives",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/90556839@N00/2642247084",
-  "pl": [
-   "네게브"
-  ],
-  "tags": [
-   "desert",
-   "valley"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "cyclamen-carmel",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Yagur_%E2%80%93_Nesher%2C_the_Green_Path_%E2%80%93_Mount_Carmel_016.JPG/1280px-Yagur_%E2%80%93_Nesher%2C_the_Green_Path_%E2%80%93_Mount_Carmel_016.JPG",
+  "id": "g01_09",
+  "u": "img/g/g01_09.jpg",
   "w": 1280,
-  "h": 1707,
-  "by": "Hanay",
-  "lic": "CC BY-SA 3.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=9620071",
-  "pl": [
-   "갈멜산"
-  ],
-  "tags": [
-   "flowers"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "megiddo-round-altar",
-  "u": "https://live.staticflickr.com/514/19888642855_203f7ae0c6_b.jpg",
-  "w": 1024,
-  "h": 678,
-  "by": "Following Hadrian",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/41523983@N08/19888642855",
-  "pl": [
-   "므깃도"
-  ],
-  "tags": [
-   "ruins",
-   "stone_altar"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "gezer-six-chambered-gate",
-  "u": "https://live.staticflickr.com/3259/5751793235_2f8a4c03ab_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Ian W Scott",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/38000818@N06/5751793235",
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "city_wall",
-   "ruins",
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "caesarea-aqueduct",
-  "u": "https://live.staticflickr.com/4426/36917815590_c89bc1e71a_b.jpg",
-  "w": 1024,
-  "h": 773,
-  "by": "larrywkoester",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/126110866@N08/36917815590",
-  "pl": [
-   "가이사랴"
-  ],
-  "tags": [
-   "ruins",
-   "sea"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "ephesus-library-celsus",
-  "u": "https://live.staticflickr.com/3345/3647152078_67c8fe95d4_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Dennis from Atlanta",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/89116575@N00/3647152078",
-  "pl": [
-   "에베소"
-  ],
-  "tags": [
-   "ruins",
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "ephesus-hillside-ruins",
-  "u": "https://live.staticflickr.com/3604/3647142268_f4282378aa_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Dennis from Atlanta",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/89116575@N00/3647142268",
-  "pl": [
-   "에베소"
-  ],
-  "tags": [
-   "ruins",
-   "road",
-   "valley"
-  ],
-  "mood": "warm",
-  "fx": "40% 50%"
- },
- {
-  "id": "corinth-temple-of-apollo",
-  "u": "https://live.staticflickr.com/1929/43583808490_c27d5cd526_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "michael kogan",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/56283488@N06/43583808490",
-  "pl": [
-   "고린도"
-  ],
-  "tags": [
-   "ruins",
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "areopagus-ascent-steps",
-  "u": "https://live.staticflickr.com/518/30852760093_e46d488421_b.jpg",
-  "w": 685,
-  "h": 1023,
-  "by": "Andy Montgomery",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/50141284@N04/30852760093",
-  "pl": [
-   "아테네"
-  ],
-  "tags": [
-   "stones",
-   "wilderness_path"
-  ],
-  "mood": "bright",
-  "fx": "55% 50%"
- },
- {
-  "id": "acropolis-from-areopagus",
-  "u": "https://live.staticflickr.com/8505/29030644431_5d3226bfaf_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Andy Hay",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/29172291@N00/29030644431",
-  "pl": [
-   "아테네"
-  ],
-  "tags": [
-   "ruins",
-   "mountain_peak"
-  ],
-  "mood": "bright",
-  "fx": "55% 50%"
- },
- {
-  "id": "euphrates-river-turkey",
-  "u": "https://live.staticflickr.com/65535/52033391284_a8b554c02e_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Following Hadrian",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/41523983@N08/52033391284",
-  "pl": [
-   "바벨론/메소포타미아/유브라데"
-  ],
-  "tags": [
-   "river",
-   "dusk"
-  ],
-  "mood": "warm",
-  "fx": "55% 50%"
- },
- {
-  "id": "under-cedar-branches",
-  "u": "https://live.staticflickr.com/7269/7537472472_05c537ae80_b.jpg",
-  "w": 1023,
-  "h": 682,
-  "by": "rabiem22",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/28490141@N03/7537472472",
-  "pl": [
-   "레바논 백향목"
-  ],
-  "tags": [
-   "cedar"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "wadi-rum-dunes",
-  "u": "https://live.staticflickr.com/4497/37622516012_e2eed03257_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "soomness",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/143850343@N06/37622516012",
-  "pl": [],
-  "tags": [
-   "desert",
-   "wilderness_path"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "masada-snake-path",
-  "u": "https://live.staticflickr.com/4199/34873035796_770e3c080b_b.jpg",
-  "w": 683,
-  "h": 1024,
-  "by": "archer10 (Dennis)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/22490717@N02/34873035796",
-  "pl": [
-   "유대 광야"
-  ],
-  "tags": [
-   "wilderness_path",
-   "desert",
-   "mountain_peak"
-  ],
-  "mood": "bright",
-  "fx": "40% 50%"
- },
- {
-  "id": "milky-way-tall",
-  "u": "https://live.staticflickr.com/1010/898622334_90d3ab0b82_b.jpg",
-  "w": 731,
-  "h": 1024,
-  "by": "jurvetson",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/44124348109@N01/898622334",
-  "pl": [],
-  "tags": [
-   "night_sky"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "milky-way-desert-rocks",
-  "u": "https://live.staticflickr.com/4193/34696114225_c8f0861fac_b.jpg",
-  "w": 1023,
-  "h": 683,
-  "by": "Coconino NF Photography",
-  "lic": "CC0",
-  "link": "https://www.flickr.com/photos/42034606@N05/34696114225",
-  "pl": [],
-  "tags": [
-   "night_sky",
-   "desert"
-  ],
-  "mood": "dark",
-  "fx": "40% 50%"
- },
- {
-  "id": "clouds-twilight",
-  "u": "https://live.staticflickr.com/2385/2217512391_7d61c96de5_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Fractal Artist",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/8720628@N04/2217512391",
-  "pl": [],
-  "tags": [
-   "storm_sky",
-   "sky",
-   "clouds",
-   "dusk"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "sea-storm-sunrays",
-  "u": "https://live.staticflickr.com/2491/3941739677_41a9b36372_b.jpg",
-  "w": 1023,
-  "h": 686,
-  "by": "~Brenda-Starr~",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/37753256@N08/3941739677",
-  "pl": [],
-  "tags": [
-   "sunrise_light_rays",
    "sea",
-   "storm_sky"
-  ],
-  "mood": "dark",
-  "fx": "55% 50%"
- },
- {
-  "id": "lightning-storm-rain",
-  "u": "https://live.staticflickr.com/7434/8976442461_f2dab7aaa9_b.jpg",
-  "w": 1024,
-  "h": 681,
-  "by": "Nick-K (Nikos Koutoulas)",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/33284937@N04/8976442461",
-  "pl": [],
-  "tags": [
-   "storm_sky",
-   "rain"
-  ],
-  "mood": "dark",
-  "fx": "45% 50%"
- },
- {
-  "id": "stormy-waves",
-  "u": "https://live.staticflickr.com/3710/10631257575_669904ce61_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Infomastern",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/55856449@N04/10631257575",
-  "pl": [],
-  "tags": [
    "waves",
-   "sea",
    "storm_sky"
   ],
   "mood": "dark",
-  "fx": "50% 50%"
+  "fx": "55% 50%",
+  "set": 1
  },
  {
-  "id": "spring-stream",
-  "u": "https://live.staticflickr.com/5706/30017958221_6d344046c8_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Coconino NF Photography",
-  "lic": "Public domain",
-  "link": "https://www.flickr.com/photos/42034606@N05/30017958221",
-  "pl": [],
-  "tags": [
-   "river",
-   "well"
+  "id": "g01_10",
+  "u": "img/g/g01_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "갈릴리"
   ],
-  "mood": "cool",
-  "fx": "50% 50%"
+  "tags": [
+   "sea",
+   "dawn",
+   "lake"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 1
  },
  {
-  "id": "wheat-ears",
-  "u": "https://live.staticflickr.com/4425/37361689882_a79ca33929_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Tree Leaf Clover",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/50744999@N02/37361689882",
+  "id": "g01_11",
+  "u": "img/g/g01_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
    "wheat_field",
    "harvest"
   ],
   "mood": "warm",
-  "fx": "50% 50%"
+  "fx": "50% 50%",
+  "set": 1
  },
  {
-  "id": "grapes-autumn",
-  "u": "https://live.staticflickr.com/4415/37189546252_fa832bbc9f_b.jpg",
-  "w": 683,
-  "h": 1024,
-  "by": "enneafive",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/75612671@N03/37189546252",
+  "id": "g01_12",
+  "u": "img/g/g01_12.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
+   "fig_tree",
    "vineyard",
-   "grapes"
+   "stones"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 1
+ },
+ {
+  "id": "g01_13",
+  "u": "img/g/g01_13.jpg",
+  "w": 1280,
+  "h": 644,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "헤르몬"
+  ],
+  "tags": [
+   "mountain_peak",
+   "flowers",
+   "pasture"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 1
+ },
+ {
+  "id": "g01_14",
+  "u": "img/g/g01_14.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "dust",
+   "sandstorm",
+   "desert",
+   "wind"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 1
+ },
+ {
+  "id": "g01_15",
+  "u": "img/g/g01_15.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "clouds",
+   "sunrise_light_rays",
+   "sky"
   ],
   "mood": "dark",
-  "fx": "50% 50%"
+  "fx": "50% 50%",
+  "set": 1
  },
  {
-  "id": "fig-tree-leaves",
-  "u": "https://live.staticflickr.com/2666/3881001344_f2a8defb1e_b.jpg",
-  "w": 1024,
-  "h": 680,
-  "by": "fsse8info",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/37031529@N00/3881001344",
-  "pl": [],
-  "tags": [
-   "fig_tree"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "flatbread-round",
-  "u": "https://live.staticflickr.com/196/493953074_12af353088_b.jpg",
-  "w": 1021,
-  "h": 1024,
-  "by": "Ruth and Dave",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/95142644@N00/493953074",
-  "pl": [],
-  "tags": [
-   "bread"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "jerash-oval-plaza-colonnade",
-  "u": "https://live.staticflickr.com/65535/2216791949_a4a7f65c85_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "archer10 (Dennis)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/22490717@N02/2216791949",
-  "pl": [],
-  "tags": [
-   "ruins",
-   "road",
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "60% 50%"
- },
- {
-  "id": "rock-tomb-naqsh-e-rostam",
-  "u": "https://live.staticflickr.com/3351/4615488322_c464392912_b.jpg",
-  "w": 768,
-  "h": 1024,
-  "by": "dynamosquito",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/25182210@N07/4615488322",
-  "pl": [],
-  "tags": [
-   "rock_tomb"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "qumran-cave-11",
-  "u": "https://live.staticflickr.com/4200/34879952755_25da729e23_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "archer10 (Dennis)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/22490717@N02/34879952755",
-  "pl": [
-   "사해",
-   "유대 광야"
-  ],
-  "tags": [
-   "cave",
-   "desert"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "qumran-scroll-caves",
-  "u": "https://live.staticflickr.com/4276/34829607716_91bc375fa7_b.jpg",
-  "w": 683,
-  "h": 1024,
-  "by": "archer10 (Dennis)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/22490717@N02/34829607716",
-  "pl": [
-   "사해",
-   "유대 광야"
-  ],
-  "tags": [
-   "cave",
-   "desert",
-   "valley"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "petra-rock-cut-tomb-little-petra",
-  "u": "https://live.staticflickr.com/65535/49785120286_f1489145b8_b.jpg",
-  "w": 1024,
-  "h": 678,
-  "by": "Following Hadrian",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/41523983@N08/49785120286",
-  "pl": [
-   "페트라"
-  ],
-  "tags": [
-   "rock_tomb"
-  ],
-  "mood": "warm",
-  "fx": "60% 50%"
- },
- {
-  "id": "bedouin-tent",
-  "u": "https://live.staticflickr.com/3083/3187908445_6849f0dd41_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "ian.plumb",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/65709822@N00/3187908445",
+  "id": "g02_01",
+  "u": "img/g/g02_01.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
    "tent",
-   "desert"
-  ],
-  "mood": "bright",
-  "fx": "55% 50%"
- },
- {
-  "id": "camels-dust-storm",
-  "u": "https://live.staticflickr.com/3653/3465645595_c51c19624a_b.jpg",
-  "w": 1024,
-  "h": 577,
-  "by": "Retlaw Snellac Photography",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/74089637@N00/3465645595",
-  "pl": [],
-  "tags": [
-   "camel",
-   "dust",
-   "desert"
+   "fire",
+   "dusk",
+   "night_sky"
   ],
   "mood": "warm",
-  "fx": "60% 50%"
+  "fx": "45% 50%",
+  "set": 2
  },
  {
-  "id": "camel-wadi-rum",
-  "u": "https://live.staticflickr.com/3258/3862994453_154fc24c39_b.jpg",
-  "w": 1024,
-  "h": 799,
-  "by": "kyle simourd",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/89241789@N00/3862994453",
+  "id": "g02_02",
+  "u": "img/g/g02_02.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "camel",
-   "desert"
+   "hands",
+   "tent",
+   "elder"
+  ],
+  "mood": "dark",
+  "fx": "45% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_03",
+  "u": "img/g/g02_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "sheep",
+   "shepherd",
+   "wilderness_path",
+   "dust"
   ],
   "mood": "warm",
-  "fx": "40% 50%"
+  "fx": "45% 50%",
+  "set": 2
  },
  {
-  "id": "donkey-desert",
-  "u": "https://live.staticflickr.com/1960/44656740944_bb0a2e3f85_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "hanna vaknin",
-  "lic": "CC0",
-  "link": "https://www.flickr.com/photos/151301292@N04/44656740944",
+  "id": "g02_04",
+  "u": "img/g/g02_04.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "donkey",
-   "desert"
+   "stone_altar",
+   "fire",
+   "stones"
   ],
   "mood": "warm",
-  "fx": "60% 50%"
+  "fx": "45% 50%",
+  "set": 2
  },
  {
-  "id": "sunrise-above-clouds",
-  "u": "https://live.staticflickr.com/8005/7237040726_35ff4db3d9_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "daveynin",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/44124370018@N01/7237040726",
+  "id": "g02_05",
+  "u": "img/g/g02_05.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "sunrise_light_rays",
+   "well",
+   "clay_jar",
+   "woman"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_06",
+  "u": "img/g/g02_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "night_sky",
+   "stars",
+   "elder"
+  ],
+  "mood": "dark",
+  "fx": "55% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_07",
+  "u": "img/g/g02_07.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "모리아"
+  ],
+  "tags": [
+   "road",
    "mountain_peak",
-   "clouds",
-   "dawn"
+   "wilderness_path"
   ],
   "mood": "warm",
-  "fx": "48% 50%"
+  "fx": "50% 50%",
+  "set": 2
  },
  {
-  "id": "anemone-coronaria",
-  "u": "https://live.staticflickr.com/65535/52076086298_22be99e36d_b.jpg",
-  "w": 1024,
-  "h": 1024,
-  "by": "Tim Green aka atoach",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/93416311@N00/52076086298",
-  "pl": [],
-  "tags": [
-   "flowers"
+  "id": "g02_08",
+  "u": "img/g/g02_08.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "모리아"
   ],
-  "mood": "cool",
-  "fx": "50% 50%"
+  "tags": [
+   "thorns",
+   "ram",
+   "sunrise_light_rays"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 2
  },
  {
-  "id": "seeds-in-soil",
-  "u": "https://live.staticflickr.com/2906/33508502670_1c99bf4960_b.jpg",
-  "w": 1024,
-  "h": 606,
-  "by": "USDAgov",
-  "lic": "Public domain",
-  "link": "https://www.flickr.com/photos/41284017@N08/33508502670",
+  "id": "g02_09",
+  "u": "img/g/g02_09.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "벧엘"
+  ],
+  "tags": [
+   "stones",
+   "night_sky",
+   "sleep"
+  ],
+  "mood": "dark",
+  "fx": "60% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_10",
+  "u": "img/g/g02_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "얍복"
+  ],
+  "tags": [
+   "river",
+   "night_sky",
+   "darkness"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_11",
+  "u": "img/g/g02_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "seed",
+   "hands",
+   "embrace",
+   "brothers"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_12",
+  "u": "img/g/g02_12.jpg",
+  "w": 1280,
+  "h": 679,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "robe",
    "soil"
   ],
   "mood": "dark",
-  "fx": "50% 50%"
+  "fx": "50% 50%",
+  "set": 2
  },
  {
-  "id": "seeds-in-hand",
-  "u": "https://live.staticflickr.com/2884/33049911784_92fac8b587_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "USDAgov",
-  "lic": "Public domain",
-  "link": "https://www.flickr.com/photos/41284017@N08/33049911784",
+  "id": "g02_13",
+  "u": "img/g/g02_13.jpg",
+  "w": 659,
+  "h": 639,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "도단"
+  ],
+  "tags": [
+   "cave",
+   "pit",
+   "sunrise_light_rays"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_14",
+  "u": "img/g/g02_14.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "seed",
+   "camel",
+   "desert",
+   "road"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 2
+ },
+ {
+  "id": "g02_15",
+  "u": "img/g/g02_15.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "이집트"
+  ],
+  "tags": [
+   "wheat_field",
+   "grain",
+   "silver_cup"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 2
+ },
+ {
+  "id": "g03_01",
+  "u": "img/g/g03_01.jpg",
+  "w": 1280,
+  "h": 715,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "이집트"
+  ],
+  "tags": [
+   "temple_stones",
+   "sunrise_light_rays",
+   "egypt"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_02",
+  "u": "img/g/g03_02.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "이집트"
+  ],
+  "tags": [
+   "bricks",
+   "slavery",
    "hands"
   ],
   "mood": "warm",
-  "fx": "45% 50%"
+  "fx": "60% 50%",
+  "set": 3
  },
  {
-  "id": "reeds-sunset",
-  "u": "https://live.staticflickr.com/4657/40031908202_837cacf2fd_b.jpg",
-  "w": 1023,
-  "h": 607,
-  "by": "scott1346",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/42549779@N06/40031908202",
-  "pl": [],
+  "id": "g03_03",
+  "u": "img/g/g03_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "나일강"
+  ],
   "tags": [
    "reeds",
-   "dusk"
-  ],
-  "mood": "warm",
-  "fx": "45% 50%"
- },
- {
-  "id": "threshing-floor",
-  "u": "https://live.staticflickr.com/5219/5384553955_ec3bfc9946_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "M^3",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/48889035406@N01/5384553955",
-  "pl": [],
-  "tags": [
-   "threshing_floor",
-   "harvest"
-  ],
-  "mood": "warm",
-  "fx": "70% 50%"
- },
- {
-  "id": "roman-road-salamis",
-  "u": "https://live.staticflickr.com/2941/15422196545_ddec620e0e_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Monika Kostera (urbanlegend)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/17989497@N00/15422196545",
-  "pl": [],
-  "tags": [
-   "road",
-   "ruins",
-   "stones"
+   "river",
+   "basket"
   ],
   "mood": "bright",
-  "fx": "50% 50%"
+  "fx": "60% 50%",
+  "set": 3
  },
  {
-  "id": "roman-road-colonnade",
-  "u": "https://live.staticflickr.com/4093/4901860613_4551bd129f_b.jpg",
-  "w": 768,
-  "h": 1024,
-  "by": "KJGarbutt",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/25187937@N05/4901860613",
-  "pl": [],
-  "tags": [
-   "road",
-   "ruins",
-   "city_wall"
+  "id": "g03_04",
+  "u": "img/g/g03_04.jpg",
+  "w": 1280,
+  "h": 688,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "이집트"
   ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "thunderhead-dusk",
-  "u": "https://live.staticflickr.com/1191/543334336_dc24ebe65e_b.jpg",
-  "w": 1024,
-  "h": 613,
-  "by": "Nicholas_T",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/14922165@N00/543334336",
-  "pl": [],
   "tags": [
-   "storm_sky",
-   "dusk",
-   "clouds"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "stormy-weather-lake",
-  "u": "https://live.staticflickr.com/8701/17239706346_9c0644761b_b.jpg",
-  "w": 1024,
-  "h": 509,
-  "by": "Free the Image",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/104206495@N05/17239706346",
-  "pl": [],
-  "tags": [
-   "storm_sky",
-   "rain",
-   "dusk"
+   "palace",
+   "egypt",
+   "throne"
   ],
   "mood": "dark",
-  "fx": "50% 50%"
+  "fx": "50% 50%",
+  "set": 3
  },
  {
-  "id": "galilee-dusk-clouds",
-  "u": "https://live.staticflickr.com/123/420194062_9a9987864f_b.jpg",
+  "id": "g03_05",
+  "u": "img/g/g03_05.jpg",
+  "w": 1280,
+  "h": 601,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "미디안"
+  ],
+  "tags": [
+   "desert",
+   "shepherd",
+   "wilderness_path"
+  ],
+  "mood": "bright",
+  "fx": "55% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_06",
+  "u": "img/g/g03_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "호렙"
+  ],
+  "tags": [
+   "fire",
+   "thorns",
+   "mountain_peak"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_07",
+  "u": "img/g/g03_07.jpg",
+  "w": 1020,
+  "h": 742,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "이집트"
+  ],
+  "tags": [
+   "blood",
+   "doorpost",
+   "night_sky"
+  ],
+  "mood": "dark",
+  "fx": "45% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_08",
+  "u": "img/g/g03_08.jpg",
+  "w": 1280,
+  "h": 600,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "night_sky",
+   "crowd",
+   "donkey",
+   "fire"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_09",
+  "u": "img/g/g03_09.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "홍해"
+  ],
+  "tags": [
+   "sea",
+   "waves",
+   "path"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_10",
+  "u": "img/g/g03_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "이집트"
+  ],
+  "tags": [
+   "army",
+   "chariot",
+   "dust",
+   "horse"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_11",
+  "u": "img/g/g03_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "홍해"
+  ],
+  "tags": [
+   "timbrel",
+   "sea",
+   "hands",
+   "festival"
+  ],
+  "mood": "bright",
+  "fx": "55% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_12",
+  "u": "img/g/g03_12.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "마라"
+  ],
+  "tags": [
+   "water",
+   "desert",
+   "well"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 3
+ },
+ {
+  "id": "g03_13",
+  "u": "img/g/g03_13.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "manna",
+   "dawn",
+   "desert"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 3
+ },
+ {
+  "id": "g04_01",
+  "u": "img/g/g04_01.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "tent",
+   "desert",
+   "tabernacle"
+  ],
+  "mood": "warm",
+  "fx": "40% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_02",
+  "u": "img/g/g04_02.jpg",
+  "w": 1280,
+  "h": 617,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "tabernacle",
+   "stone_altar",
+   "fire",
+   "curtain"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_03",
+  "u": "img/g/g04_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "hands",
+   "lamb",
+   "sheep",
+   "priest"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_04",
+  "u": "img/g/g04_04.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "hands",
+   "water",
+   "laver",
+   "priest"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_05",
+  "u": "img/g/g04_05.jpg",
   "w": 1023,
-  "h": 877,
-  "by": "rachelyra",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/88578385@N00/420194062",
-  "pl": [
-   "갈릴리 호수"
-  ],
-  "tags": [
-   "dusk",
-   "clouds",
-   "sea"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "ein-avdat-canyon",
-  "u": "https://live.staticflickr.com/1812/43075257565_bda625ae59_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Greg Schechter",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/17004938@N00/43075257565",
-  "pl": [
-   "네게브"
-  ],
-  "tags": [
-   "valley",
-   "well",
-   "desert"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "herodium",
-  "u": "https://live.staticflickr.com/7135/27728204965_b163023d78_b.jpg",
-  "w": 1024,
-  "h": 678,
-  "by": "Following Hadrian",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/41523983@N08/27728204965",
-  "pl": [
-   "유대 광야"
-  ],
-  "tags": [
-   "mountain_peak",
-   "desert"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "caesarea-vaulted-ruins",
-  "u": "https://live.staticflickr.com/7478/15040811544_c35bba59de_b.jpg",
-  "w": 1024,
-  "h": 678,
-  "by": "Following Hadrian",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/41523983@N08/15040811544",
-  "pl": [
-   "가이사랴"
-  ],
-  "tags": [
-   "ruins",
-   "city_wall",
-   "cave"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "rolling-stone-tomb-nazareth",
-  "u": "https://live.staticflickr.com/5142/5803250852_1713d12ab0_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Ian W Scott",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/38000818@N06/5803250852",
-  "pl": [
-   "나사렛"
-  ],
-  "tags": [
-   "rock_tomb",
-   "stones"
-  ],
-  "mood": "warm",
-  "fx": "45% 50%"
- },
- {
-  "id": "dead-sea-salt-crystals",
-  "u": "https://live.staticflickr.com/8002/6979209436_30ab8a63e6_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "TheBoth",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/7503706@N06/6979209436",
-  "pl": [
-   "사해"
-  ],
-  "tags": [
-   "stones"
-  ],
-  "mood": "dark",
-  "fx": "70% 50%"
- },
- {
-  "id": "gethsemane-garden",
-  "u": "https://live.staticflickr.com/2253/2263201339_75690f1bb1_b.jpg",
-  "w": 1024,
-  "h": 679,
-  "by": "twiga_swala",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/21013862@N08/2263201339",
-  "pl": [
-   "감람산"
-  ],
-  "tags": [
-   "olive_tree"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "ishtar-gate-foundations",
-  "u": "https://live.staticflickr.com/5827/30281149920_f32c3ff37d_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "D-Stanley",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/79721788@N00/30281149920",
-  "pl": [
-   "바벨론/메소포타미아/유브라데"
-  ],
-  "tags": [
-   "city_wall",
-   "ruins"
-  ],
-  "mood": "bright",
-  "fx": "40% 50%"
- },
- {
-  "id": "babylon-dragon-relief",
-  "u": "https://live.staticflickr.com/5668/30290231470_6b703d1e53_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "D-Stanley",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/79721788@N00/30290231470",
-  "pl": [
-   "바벨론/메소포타미아/유브라데"
-  ],
-  "tags": [
-   "city_wall",
-   "temple_stones"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "torah-scroll-open",
-  "u": "https://live.staticflickr.com/3619/3370859327_ca39731af9_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Lawrie Cate",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/24298372@N04/3370859327",
-  "pl": [],
-  "tags": [
-   "scroll",
-   "ancient_text",
-   "oil_lamp"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "torah-scroll-hebrew-detail",
-  "u": "https://live.staticflickr.com/7638/26640747463_b292e0f8e6_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Adam Jones, Ph.D. - Global Photo Archive",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/41000732@N04/26640747463",
-  "pl": [],
-  "tags": [
-   "scroll",
-   "ancient_text"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "clay-oil-lamp-flame",
-  "u": "https://live.staticflickr.com/6190/6143445707_0f4ca8ea49_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Chobist",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/61676931@N04/6143445707",
+  "h": 612,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
    "oil_lamp",
-   "fire"
+   "darkness"
   ],
   "mood": "dark",
-  "fx": "50% 50%"
+  "fx": "50% 50%",
+  "set": 4
  },
  {
-  "id": "fire-and-oil-lamp",
-  "u": "https://live.staticflickr.com/253/450805871_f2ed9e2642_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "jaliyaj",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/84303558@N00/450805871",
-  "pl": [],
-  "tags": [
-   "fire",
-   "oil_lamp"
-  ],
-  "mood": "dark",
-  "fx": "55% 50%"
- },
- {
-  "id": "hermon-snow-from-hula",
-  "u": "https://live.staticflickr.com/7181/6814952370_0f053da6f6_b.jpg",
-  "w": 1024,
-  "h": 681,
-  "by": "Flavio~",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/37873897@N06/6814952370",
+  "id": "g04_06",
+  "u": "img/g/g04_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
-   "헤르몬산"
+   "시내산"
   ],
   "tags": [
+   "stone_tablets",
    "mountain_peak",
-   "reeds"
-  ],
-  "mood": "bright",
-  "fx": "60% 50%"
- },
- {
-  "id": "poppies-golan",
-  "u": "https://live.staticflickr.com/5463/8758904168_573f2a0b0e_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Ian W Scott",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/38000818@N06/8758904168",
-  "pl": [],
-  "tags": [
-   "flowers"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "colosseum-arches",
-  "u": "https://live.staticflickr.com/3544/3372033853_fe09110cfc_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "francescot24",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/9976846@N05/3372033853",
-  "pl": [
-   "로마"
-  ],
-  "tags": [
-   "ruins"
+   "sunrise_light_rays"
   ],
   "mood": "warm",
-  "fx": "40% 50%"
+  "fx": "50% 50%",
+  "set": 4
  },
  {
-  "id": "appian-way",
-  "u": "https://live.staticflickr.com/7417/12225605415_f53e7948d2_b.jpg",
-  "w": 1024,
-  "h": 675,
-  "by": "trishhartmann",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/21078769@N00/12225605415",
-  "pl": [
-   "로마"
-  ],
+  "id": "g04_07",
+  "u": "img/g/g04_07.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
   "tags": [
-   "road",
-   "ruins"
+   "idol",
+   "crowd",
+   "golden_calf",
+   "dust"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_08",
+  "u": "img/g/g04_08.jpg",
+  "w": 1280,
+  "h": 545,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "stones",
+   "broken",
+   "stone_tablets"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_09",
+  "u": "img/g/g04_09.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "stones",
+   "water",
+   "spring"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_10",
+  "u": "img/g/g04_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "bronze_serpent",
+   "pole",
+   "desert"
   ],
   "mood": "bright",
-  "fx": "50% 50%"
+  "fx": "40% 50%",
+  "set": 4
  },
  {
-  "id": "jericho-tel-trench",
-  "u": "https://live.staticflickr.com/65535/52790605702_6eabb73bf8_b.jpg",
-  "w": 1024,
-  "h": 680,
-  "by": "Juhele_CZ",
-  "lic": "CC0",
-  "link": "https://www.flickr.com/photos/96541566@N06/52790605702",
+  "id": "g04_11",
+  "u": "img/g/g04_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "birds",
+   "tent",
+   "dust"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_12",
+  "u": "img/g/g04_12.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "가나안"
+  ],
+  "tags": [
+   "grapes",
+   "vineyard",
+   "men"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_13",
+  "u": "img/g/g04_13.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "stones",
+   "graves",
+   "dusk"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 4
+ },
+ {
+  "id": "g04_14",
+  "u": "img/g/g04_14.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "느보산"
+  ],
+  "tags": [
+   "valley",
+   "mountain_peak",
+   "sunrise_light_rays",
+   "land"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 4
+ },
+ {
+  "id": "g05_02",
+  "u": "img/g/g05_02.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "길갈"
+  ],
+  "tags": [
+   "stones",
+   "memorial"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 5
+ },
+ {
+  "id": "g05_03",
+  "u": "img/g/g05_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
    "여리고"
   ],
   "tags": [
+   "city_wall",
    "ruins",
-   "valley"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "galilean-fishing-net",
-  "u": "https://live.staticflickr.com/206/507838991_5e95fe2be6_b.jpg",
-  "w": 768,
-  "h": 1024,
-  "by": "hoyasmeg",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/62126383@N00/507838991",
-  "pl": [],
-  "tags": [
-   "net",
-   "sea"
-  ],
-  "mood": "cool",
-  "fx": "50% 50%"
- },
- {
-  "id": "sinai-desert-cliff",
-  "u": "https://live.staticflickr.com/6120/6306690252_7e0b5c475e_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "prilfish",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/37707866@N00/6306690252",
-  "pl": [
-   "시내산"
-  ],
-  "tags": [
-   "desert",
-   "mountain_peak",
-   "valley"
+   "dust"
   ],
   "mood": "warm",
-  "fx": "60% 50%"
+  "fx": "50% 50%",
+  "set": 5
  },
  {
-  "id": "nile-felucca-silhouettes",
-  "u": "https://live.staticflickr.com/4017/4254129324_ea1cf12966_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Kyle Taylor, Dream It. Do It.",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/95672737@N00/4254129324",
-  "pl": [
-   "이집트/나일강"
-  ],
+  "id": "g05_04",
+  "u": "img/g/g05_04.jpg",
+  "w": 1276,
+  "h": 742,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
   "tags": [
-   "river",
-   "fishing_boat",
-   "dusk"
+   "house",
+   "clay_jar",
+   "village"
   ],
   "mood": "warm",
-  "fx": "62% 50%"
+  "fx": "45% 50%",
+  "set": 5
  },
  {
-  "id": "red-sea-sunrise-waves",
-  "u": "https://live.staticflickr.com/2879/13620410425_25447ffae7_b.jpg",
-  "w": 1024,
-  "h": 680,
-  "by": "Jorge Lascar",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/8721758@N06/13620410425",
+  "id": "g05_05",
+  "u": "img/g/g05_05.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "sea",
-   "waves",
-   "dusk"
+   "city_gate",
+   "elders"
   ],
   "mood": "warm",
-  "fx": "50% 50%"
+  "fx": "55% 50%",
+  "set": 5
  },
  {
-  "id": "cedars-of-lebanon",
-  "u": "https://live.staticflickr.com/8158/28607459303_efe863dd95_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "rabiem22",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/28490141@N03/28607459303",
-  "pl": [
-   "레바논 백향목"
-  ],
-  "tags": [
-   "cedar"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "cedar-forest-mist-chouf",
-  "u": "https://live.staticflickr.com/1647/25796517712_ff3d120704_b.jpg",
-  "w": 1023,
-  "h": 767,
-  "by": "jonhyblaze",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/76058659@N03/25796517712",
-  "pl": [
-   "레바논 백향목"
-  ],
-  "tags": [
-   "cedar",
-   "stones"
-  ],
-  "mood": "cool",
-  "fx": "50% 50%"
- },
- {
-  "id": "philippi-arches",
-  "u": "https://live.staticflickr.com/7904/33548020038_5b668de146_b.jpg",
-  "w": 1024,
-  "h": 685,
-  "by": "Andy Montgomery",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/50141284@N04/33548020038",
-  "pl": [
-   "빌립보"
-  ],
-  "tags": [
-   "ruins",
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "40% 50%"
- },
- {
-  "id": "rock-shelf-storm-surf-bw",
-  "u": "https://live.staticflickr.com/5293/5539695590_a21234788d_b.jpg",
-  "w": 683,
-  "h": 1024,
-  "by": "Luke Peterson Photography",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/55878142@N07/5539695590",
+  "id": "g05_06",
+  "u": "img/g/g05_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "waves",
-   "storm_sky",
-   "sea"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "stormy-rock-shore-dusk",
-  "u": "https://live.staticflickr.com/5107/5770939725_6f25b465f8_b.jpg",
-  "w": 683,
-  "h": 1024,
-  "by": "Gemma Stiles",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/57254022@N03/5770939725",
-  "pl": [],
-  "tags": [
-   "waves",
-   "storm_sky",
-   "sea"
-  ],
-  "mood": "dark",
-  "fx": "45% 50%"
- },
- {
-  "id": "galilee-sunrise-orange",
-  "u": "https://live.staticflickr.com/211/508230053_a71ef9acc0_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "hoyasmeg",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/62126383@N00/508230053",
-  "pl": [
-   "갈릴리 호수"
-  ],
-  "tags": [
-   "sea",
-   "dawn"
-  ],
-  "mood": "warm",
-  "fx": "49% 50%"
- },
- {
-  "id": "barley-field-bw-sky",
-  "u": "https://live.staticflickr.com/4259/34678151060_a50e371553_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "enneafive",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/75612671@N03/34678151060",
-  "pl": [],
-  "tags": [
-   "barley",
+   "threshing_floor",
+   "harvest",
    "wheat_field"
   ],
-  "mood": "cool",
-  "fx": "50% 50%"
- },
- {
-  "id": "windblown-barley-field",
-  "u": "https://live.staticflickr.com/3016/2561552954_a83870886f_b.jpg",
-  "w": 1024,
-  "h": 602,
-  "by": "crabchick",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/62327186@N00/2561552954",
-  "pl": [],
-  "tags": [
-   "barley",
-   "wheat_field",
-   "harvest"
-  ],
   "mood": "warm",
-  "fx": "50% 50%"
+  "fx": "50% 50%",
+  "set": 5
  },
  {
-  "id": "golden-barley-wind",
-  "u": "https://live.staticflickr.com/3852/14512997324_312172748a_b.jpg",
-  "w": 1024,
-  "h": 630,
-  "by": "Stiller Beobachter",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/56091199@N03/14512997324",
-  "pl": [],
+  "id": "g05_07",
+  "u": "img/g/g05_07.jpg",
+  "w": 1280,
+  "h": 697,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "오브라"
+  ],
   "tags": [
-   "barley",
    "wheat_field",
-   "harvest"
+   "winepress",
+   "cave",
+   "hiding"
   ],
-  "mood": "warm",
-  "fx": "50% 50%"
+  "mood": "dark",
+  "fx": "55% 50%",
+  "set": 5
  },
  {
-  "id": "green-barley-poppy",
-  "u": "https://live.staticflickr.com/55/180514815_60c7ed00a0_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "zakwitnij",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/11656083@N00/180514815",
-  "pl": [],
+  "id": "g05_10",
+  "u": "img/g/g05_10.jpg",
+  "w": 1280,
+  "h": 677,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "가사"
+  ],
   "tags": [
-   "barley",
-   "flowers"
+   "pillars",
+   "strength",
+   "temple_stones"
   ],
-  "mood": "bright",
-  "fx": "44% 50%"
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 5
  },
  {
-  "id": "ripe-wheat-ears-closeup",
-  "u": "https://live.staticflickr.com/2843/12043332923_2385d620dd_b.jpg",
-  "w": 1024,
-  "h": 685,
-  "by": "Debbie_Long",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/98602044@N05/12043332923",
-  "pl": [],
+  "id": "g05_11",
+  "u": "img/g/g05_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "베들레헴"
+  ],
   "tags": [
    "wheat_field",
    "harvest",
-   "seed"
+   "woman"
   ],
   "mood": "warm",
-  "fx": "50% 50%"
+  "fx": "55% 50%",
+  "set": 5
  },
  {
-  "id": "dark-grape-clusters-vine",
-  "u": "https://live.staticflickr.com/8486/8157526778_93928695ec_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "StateofIsrael",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/86083886@N02/8157526778",
+  "id": "g05_12",
+  "u": "img/g/g05_12.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "grapes",
-   "vineyard"
+   "harvest",
+   "wheat_field",
+   "sheaves"
   ],
-  "mood": "cool",
-  "fx": "45% 50%"
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 5
  },
  {
-  "id": "green-grape-clusters",
-  "u": "https://live.staticflickr.com/8066/8157535010_e937df0928_b.jpg",
-  "w": 1024,
-  "h": 678,
-  "by": "StateofIsrael",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/86083886@N02/8157535010",
+  "id": "g05_13",
+  "u": "img/g/g05_13.jpg",
+  "w": 1280,
+  "h": 679,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "베들레헴"
+  ],
+  "tags": [
+   "threshing_floor",
+   "night_sky",
+   "sleep"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 5
+ },
+ {
+  "id": "g05_14",
+  "u": "img/g/g05_14.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "실로"
+  ],
+  "tags": [
+   "tent",
+   "tabernacle",
+   "dusk"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 5
+ },
+ {
+  "id": "g05_15",
+  "u": "img/g/g05_15.jpg",
+  "w": 1065,
+  "h": 742,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "실로"
+  ],
+  "tags": [
+   "woman",
+   "prayer",
+   "temple_stones"
+  ],
+  "mood": "dark",
+  "fx": "45% 50%",
+  "set": 5
+ },
+ {
+  "id": "g06_01",
+  "u": "img/g/g06_01.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "grapes",
-   "vineyard"
+   "oil",
+   "horn",
+   "anointing",
+   "sunrise_light_rays"
   ],
-  "mood": "bright",
-  "fx": "35% 50%"
+  "mood": "warm",
+  "fx": "40% 50%",
+  "set": 6
  },
  {
-  "id": "green-wheat-galilee-field",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/9/9e/PikiWiki_Israel_7816_Fields_of_Bethlehem_of_Galilee.JPG",
-  "w": 1024,
-  "h": 768,
-  "by": "יהודית גרעין-כל Yehudit Garinkol",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=9752789",
+  "id": "g06_02",
+  "u": "img/g/g06_02.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "베들레헴"
+  ],
+  "tags": [
+   "shepherd",
+   "pasture",
+   "dawn",
+   "boy"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 6
+ },
+ {
+  "id": "g06_03",
+  "u": "img/g/g06_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "엘라"
+  ],
+  "tags": [
+   "hands",
+   "stones",
+   "sling"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 6
+ },
+ {
+  "id": "g06_04",
+  "u": "img/g/g06_04.jpg",
+  "w": 1280,
+  "h": 679,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "엘라"
+  ],
+  "tags": [
+   "army",
+   "armor",
+   "valley"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 6
+ },
+ {
+  "id": "g06_05",
+  "u": "img/g/g06_05.jpg",
+  "w": 1280,
+  "h": 686,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "엔게디"
+  ],
+  "tags": [
+   "cave",
+   "darkness",
+   "men"
+  ],
+  "mood": "dark",
+  "fx": "60% 50%",
+  "set": 6
+ },
+ {
+  "id": "g06_06",
+  "u": "img/g/g06_06.jpg",
+  "w": 1090,
+  "h": 742,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "엔게디"
+  ],
+  "tags": [
+   "hands",
+   "robe",
+   "cave"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 6
+ },
+ {
+  "id": "g06_07",
+  "u": "img/g/g06_07.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "wheat_field"
+   "spear",
+   "clay_jar",
+   "night_sky",
+   "camp"
   ],
-  "mood": "bright",
-  "fx": "50% 50%"
+  "mood": "dark",
+  "fx": "55% 50%",
+  "set": 6
  },
  {
-  "id": "garden-tomb-wine-press",
-  "u": "https://live.staticflickr.com/3246/3038719503_59efcca721_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "lukask",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/15218964@N00/3038719503",
+  "id": "g06_08",
+  "u": "img/g/g06_08.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
    "예루살렘"
   ],
   "tags": [
-   "wine_press",
-   "stones"
-  ],
-  "mood": "bright",
-  "fx": "55% 50%"
- },
- {
-  "id": "olive-press-stone-weights",
-  "u": "https://live.staticflickr.com/213/513687085_016bb5ec65_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "hoyasmeg",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/62126383@N00/513687085",
-  "pl": [],
-  "tags": [
-   "olive_press",
-   "stones"
+   "city_wall",
+   "jerusalem",
+   "fortress"
   ],
   "mood": "warm",
-  "fx": "50% 50%"
+  "fx": "45% 50%",
+  "set": 6
  },
  {
-  "id": "olive-press-cave-basin",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/PikiWiki_Israel_71653_an_ancient_olive_press_house.jpg/1280px-PikiWiki_Israel_71653_an_ancient_olive_press_house.jpg",
+  "id": "g06_09",
+  "u": "img/g/g06_09.jpg",
   "w": 1280,
-  "h": 927,
-  "by": "ישראל פרקר Israel Preker",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=94017765",
-  "pl": [],
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
   "tags": [
-   "olive_press",
-   "cave",
-   "stones"
+   "roof",
+   "dusk",
+   "palace",
+   "city"
   ],
   "mood": "dark",
-  "fx": "65% 50%"
+  "fx": "60% 50%",
+  "set": 6
  },
  {
-  "id": "olive-press-crushing-basin",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/PikiWiki_Israel_71651_an_ancient_olive_press_house.jpg/1280px-PikiWiki_Israel_71651_an_ancient_olive_press_house.jpg",
+  "id": "g06_10",
+  "u": "img/g/g06_10.jpg",
   "w": 1280,
-  "h": 960,
-  "by": "ישראל פרקר Israel Preker",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=94017774",
-  "pl": [],
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "레바논"
+  ],
   "tags": [
-   "olive_press",
-   "cave",
-   "stones"
+   "cedar",
+   "men",
+   "labor"
   ],
   "mood": "warm",
-  "fx": "45% 50%"
+  "fx": "50% 50%",
+  "set": 6
  },
  {
-  "id": "mustard-flowers-yellow",
-  "u": "https://live.staticflickr.com/65535/53060793808_92808b3a96_b.jpg",
-  "w": 1024,
-  "h": 680,
-  "by": "The Fun Chronicles",
-  "lic": "CC0",
-  "link": "https://www.flickr.com/photos/196406308@N04/53060793808",
+  "id": "g06_12",
+  "u": "img/g/g06_12.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "mustard",
-   "flowers"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "red-anemone-closeup",
-  "u": "https://live.staticflickr.com/4045/4296904401_63966d8eb1_b.jpg",
-  "w": 1024,
-  "h": 987,
-  "by": "Zachi Evenor",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/40794167@N05/4296904401",
-  "pl": [],
-  "tags": [
-   "lily",
-   "flowers"
-  ],
-  "mood": "bright",
-  "fx": "55% 50%"
- },
- {
-  "id": "wild-mountain-tulip-rock",
-  "u": "https://live.staticflickr.com/5029/5571236507_111fe24db7_b.jpg",
-  "w": 983,
-  "h": 1024,
-  "by": "Zachi Evenor",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/40794167@N05/5571236507",
-  "pl": [],
-  "tags": [
-   "lily",
-   "flowers"
-  ],
-  "mood": "bright",
-  "fx": "55% 50%"
- },
- {
-  "id": "purple-thistle-thorns",
-  "u": "https://live.staticflickr.com/8425/7705985300_f33e549663_b.jpg",
-  "w": 683,
-  "h": 1024,
-  "by": "archer10 (Dennis)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/22490717@N02/7705985300",
-  "pl": [],
-  "tags": [
-   "thorns"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "nubian-ibex-pair-rocks",
-  "u": "https://live.staticflickr.com/4228/34068828393_6b2e1f2b3b_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "archer10 (Dennis)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/22490717@N02/34068828393",
-  "pl": [],
-  "tags": [
-   "goat",
-   "wilderness_path"
-  ],
-  "mood": "warm",
-  "fx": "55% 50%"
- },
- {
-  "id": "nubian-ibex-herd-rocks",
-  "u": "https://live.staticflickr.com/4195/34879470985_20a11155ef_b.jpg",
-  "w": 1024,
-  "h": 711,
-  "by": "archer10 (Dennis)",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/22490717@N02/34879470985",
-  "pl": [],
-  "tags": [
-   "goat"
-  ],
-  "mood": "warm",
-  "fx": "55% 50%"
- },
- {
-  "id": "lamb-by-tree",
-  "u": "https://live.staticflickr.com/5450/7056591191_ca5d6f5d9c_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "GrahamPics1",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/76526364@N06/7056591191",
-  "pl": [],
-  "tags": [
-   "sheep",
-   "pasture"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "lone-camel-desert-scrub",
-  "u": "https://live.staticflickr.com/4851/46077148912_09137e0b31_b.jpg",
-  "w": 1024,
-  "h": 897,
-  "by": "amanderson2",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/49399018@N00/46077148912",
-  "pl": [],
-  "tags": [
-   "camel",
-   "desert"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "collared-dove-branch",
-  "u": "https://live.staticflickr.com/7443/9648770127_75a5945187_b.jpg",
-  "w": 1024,
-  "h": 676,
-  "by": "Paul.J.Hurtado",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/33323109@N03/9648770127",
-  "pl": [],
-  "tags": [
-   "dove"
-  ],
-  "mood": "cool",
-  "fx": "50% 50%"
- },
- {
-  "id": "raven-silhouette-branch",
-  "u": "https://live.staticflickr.com/3153/2292571805_82d818e973_b.jpg",
-  "w": 1024,
-  "h": 732,
-  "by": "John-Morgan",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/24742305@N00/2292571805",
-  "pl": [],
-  "tags": [
-   "raven"
+   "woman",
+   "child",
+   "judgment",
+   "temple_stones"
   ],
   "mood": "dark",
-  "fx": "36% 50%"
+  "fx": "60% 50%",
+  "set": 6
  },
  {
-  "id": "white-tailed-eagle-flight",
-  "u": "https://live.staticflickr.com/5656/21548063471_639a9cf264_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Infomastern",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/55856449@N04/21548063471",
-  "pl": [],
-  "tags": [
-   "eagle",
-   "sky"
-  ],
-  "mood": "cool",
-  "fx": "50% 50%"
- },
- {
-  "id": "golden-eagle-flight",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Golden_Eagle_flying.jpg/1280px-Golden_Eagle_flying.jpg",
+  "id": "g06_13",
+  "u": "img/g/g06_13.jpg",
   "w": 1280,
-  "h": 857,
-  "by": "Chuck Abbe from San Luis Obispo, California",
-  "lic": "CC BY 2.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=8689771",
-  "pl": [],
-  "tags": [
-   "eagle",
-   "sky"
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "갈멜산"
   ],
-  "mood": "cool",
-  "fx": "60% 50%"
- },
- {
-  "id": "lion-behind-rock",
-  "u": "https://live.staticflickr.com/2480/4006895689_0bdab1fe4f_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Yagan Kiely",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/26320335@N06/4006895689",
-  "pl": [],
   "tags": [
-   "lion"
+   "fire",
+   "stone_altar",
+   "storm_sky"
   ],
   "mood": "warm",
-  "fx": "53% 50%"
+  "fx": "50% 50%",
+  "set": 6
  },
  {
-  "id": "lion-mane-portrait",
-  "u": "https://live.staticflickr.com/7623/16308679973_331c4d41b4_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Airwolfhound",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/24874528@N04/16308679973",
-  "pl": [],
-  "tags": [
-   "lion"
-  ],
-  "mood": "warm",
-  "fx": "52% 50%"
- },
- {
-  "id": "dark-grapes-autumn-vine",
-  "u": "https://live.staticflickr.com/8440/8011959622_00580844ba_b.jpg",
-  "w": 1024,
-  "h": 682,
-  "by": "tribp",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/82088316@N05/8011959622",
-  "pl": [],
-  "tags": [
-   "grapes",
-   "vineyard"
-  ],
-  "mood": "warm",
-  "fx": "70% 50%"
- },
- {
-  "id": "netanya-cliff-beach",
-  "u": "https://live.staticflickr.com/229/494259714_3cae4987f2_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "hoyasmeg",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/62126383@N00/494259714",
-  "pl": [
-   "지중해 해변"
-  ],
-  "tags": [
-   "sea",
-   "stones"
-  ],
-  "mood": "cool",
-  "fx": "30% 50%"
- },
- {
-  "id": "red-rocks-turquoise-sea",
-  "u": "https://live.staticflickr.com/4107/4977842087_f624bdf5b6_b.jpg",
-  "w": 1024,
-  "h": 681,
-  "by": "Jake Gagne",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/8818624@N07/4977842087",
-  "pl": [],
-  "tags": [
-   "sea",
-   "waves",
-   "stones"
-  ],
-  "mood": "cool",
-  "fx": "60% 50%"
- },
- {
-  "id": "shelf-cloud-over-sea",
-  "u": "https://live.staticflickr.com/5552/15007956292_31d89d12f8_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Jukk_a",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/97702840@N00/15007956292",
-  "pl": [],
-  "tags": [
-   "storm_sky",
-   "sea",
-   "clouds"
-  ],
-  "mood": "dark",
-  "fx": "45% 50%"
- },
- {
-  "id": "fig-tree-ripening-figs",
-  "u": "https://live.staticflickr.com/2284/3871022371_d75fbf2a87_b.jpg",
-  "w": 853,
-  "h": 1024,
-  "by": "psd",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/45581782@N00/3871022371",
-  "pl": [],
-  "tags": [
-   "fig_tree"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "sheep-shade-under-tree",
-  "u": "https://live.staticflickr.com/2869/10411398253_b89792ab9d_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Miguel Virkkunen Carvalho",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/46076152@N05/10411398253",
-  "pl": [],
-  "tags": [
-   "sheep",
-   "pasture"
-  ],
-  "mood": "bright",
-  "fx": "42% 50%"
- },
- {
-  "id": "wadi-perazim-flour-cave-narrows",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Judean-desert-wadi-perazim-flour-cave.jpg/1280px-Judean-desert-wadi-perazim-flour-cave.jpg",
+  "id": "g06_14",
+  "u": "img/g/g06_14.jpg",
   "w": 1280,
-  "h": 1916,
-  "by": "Mboesch",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=45152688",
-  "pl": [
-   "유대 광야"
-  ],
-  "tags": [
-   "cave",
-   "wilderness_path"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "wadi-perazim-canyon-walls",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Judean-desert-wadi-perazim-f.jpg/1280px-Judean-desert-wadi-perazim-f.jpg",
-  "w": 1280,
-  "h": 851,
-  "by": "Mboesch",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=45152655",
-  "pl": [
-   "유대 광야"
-  ],
-  "tags": [
-   "valley",
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "60% 50%"
- },
- {
-  "id": "dead-sea-salt-disc",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Dead_Sea_salt_formation.jpg/1280px-Dead_Sea_salt_formation.jpg",
-  "w": 1280,
-  "h": 852,
-  "by": "Tiia Monto",
-  "lic": "CC BY-SA 3.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=46963582",
-  "pl": [
-   "사해"
-  ],
-  "tags": [
-   "salt"
-  ],
-  "mood": "cool",
-  "fx": "48% 50%"
- },
- {
-  "id": "dead-sea-salt-aerial-texture",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Dead_Sea_salt_formation_%28Aerial_view%2C_2007%29_05.jpg/1280px-Dead_Sea_salt_formation_%28Aerial_view%2C_2007%29_05.jpg",
-  "w": 1280,
-  "h": 850,
-  "by": "Godot13",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=24015883",
-  "pl": [
-   "사해"
-  ],
-  "tags": [
-   "salt"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "negev-makhtesh-ramon-aerial",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Israel-2013-Aerial_05-Negev-Makhtesh_Ramon.jpg/1280px-Israel-2013-Aerial_05-Negev-Makhtesh_Ramon.jpg",
-  "w": 1280,
-  "h": 1025,
-  "by": "Godot13",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=25629385",
-  "pl": [
-   "네게브"
-  ],
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
   "tags": [
    "desert",
-   "valley"
+   "broom_tree",
+   "sleep",
+   "drought"
   ],
   "mood": "warm",
-  "fx": "30% 50%"
+  "fx": "55% 50%",
+  "set": 6
  },
  {
-  "id": "sinai-wadi-aerial-mountains",
-  "u": "https://live.staticflickr.com/61/169764289_056d098be2_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Lars Plougmann",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/75062596@N00/169764289",
-  "pl": [
-   "시내산"
-  ],
-  "tags": [
-   "mountain_peak",
-   "valley"
-  ],
-  "mood": "dark",
-  "fx": "45% 50%"
- },
- {
-  "id": "sinai-mountains-sunset-silhouette",
-  "u": "https://live.staticflickr.com/45/136116020_aea36eaa15_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Lars Plougmann",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/75062596@N00/136116020",
-  "pl": [
-   "시내산"
-  ],
-  "tags": [
-   "mountain_peak",
-   "dusk"
-  ],
-  "mood": "warm",
-  "fx": "65% 50%"
- },
- {
-  "id": "sinai-rocky-wadi-peaks",
-  "u": "https://live.staticflickr.com/3110/3150577057_6643c7c047_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "mattk1979",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/24879135@N04/3150577057",
-  "pl": [
-   "시내산"
-  ],
-  "tags": [
-   "mountain_peak",
-   "stones"
-  ],
-  "mood": "bright",
-  "fx": "55% 50%"
- },
- {
-  "id": "mount-sinai-summit-sunrise",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Sunrise_at_Mount_Moses.jpg/1280px-Sunrise_at_Mount_Moses.jpg",
+  "id": "g06_15",
+  "u": "img/g/g06_15.jpg",
   "w": 1280,
-  "h": 829,
-  "by": "Ahmedherz",
-  "lic": "CC BY-SA 3.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=35269839",
+  "h": 729,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
-   "시내산"
-  ],
-  "tags": [
-   "mountain_peak",
-   "dawn"
-  ],
-  "mood": "warm",
-  "fx": "35% 50%"
- },
- {
-  "id": "abu-simbel-colossi-bw",
-  "u": "https://live.staticflickr.com/7148/6633729811_993fef19fe_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Ndecam",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/37035967@N07/6633729811",
-  "pl": [
-   "이집트/나일강"
-  ],
-  "tags": [
-   "temple_stones"
-  ],
-  "mood": "dark",
-  "fx": "30% 50%"
- },
- {
-  "id": "qumran-cliffs-cave-mouth",
-  "u": "https://live.staticflickr.com/226/509700490_100ab54cd4_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "hoyasmeg",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/62126383@N00/509700490",
-  "pl": [
-   "유대 광야"
+   "호렙"
   ],
   "tags": [
    "cave",
-   "wilderness_path"
+   "sunrise_light_rays",
+   "mountain_peak"
   ],
   "mood": "warm",
-  "fx": "50% 50%"
+  "fx": "50% 50%",
+  "set": 6
  },
  {
-  "id": "judean-desert-deep-gorge",
-  "u": "https://live.staticflickr.com/1437/548199611_80a4d8bc0e_b.jpg",
-  "w": 768,
-  "h": 1024,
-  "by": "losfuegos",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/53775922@N00/548199611",
+  "id": "g07_01",
+  "u": "img/g/g07_01.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
-   "유대 광야"
+   "앗수르"
   ],
-  "tags": [
-   "valley",
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "karnak-column-cartouches-shadow",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Karnak_temple_column.jpg/1280px-Karnak_temple_column.jpg",
-  "w": 1280,
-  "h": 960,
-  "by": "Mmelouk",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=59240042",
-  "pl": [
-   "이집트/나일강"
-  ],
-  "tags": [
-   "temple_stones",
-   "ancient_text"
-  ],
-  "mood": "dark",
-  "fx": "55% 50%"
- },
- {
-  "id": "karnak-hypostyle-columns",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Karnak_temple_columns_top_head.jpg/1280px-Karnak_temple_columns_top_head.jpg",
-  "w": 1280,
-  "h": 911,
-  "by": "Mmelouk",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=59240040",
-  "pl": [
-   "이집트/나일강"
-  ],
-  "tags": [
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "luxor-temple-horus-relief",
-  "u": "https://live.staticflickr.com/2097/1853323374_8d031e66b3_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "astique",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/85049097@N00/1853323374",
-  "pl": [
-   "이집트/나일강"
-  ],
-  "tags": [
-   "temple_stones"
-  ],
-  "mood": "warm",
-  "fx": "72% 50%"
- },
- {
-  "id": "persepolis-palace-doorways",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Persepolis_ruins_05.jpg/1280px-Persepolis_ruins_05.jpg",
-  "w": 1280,
-  "h": 960,
-  "by": "Majid Taghipour",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=73396307",
-  "pl": [],
-  "tags": [
-   "ruins",
-   "gate"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "persepolis-lion-bull-relief",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Persepolis_Relief_10.jpg/1280px-Persepolis_Relief_10.jpg",
-  "w": 1280,
-  "h": 857,
-  "by": "Pawel Ryszawa",
-  "lic": "CC BY 3.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=109162950",
-  "pl": [],
-  "tags": [
-   "lion",
-   "cattle",
-   "temple_stones"
-  ],
-  "mood": "warm",
-  "fx": "40% 50%"
- },
- {
-  "id": "persepolis-gate-lamassu",
-  "u": "https://live.staticflickr.com/4066/4670203537_11ebeb6c0b_b.jpg",
-  "w": 680,
-  "h": 1024,
-  "by": "A.Davey",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/40595948@N00/4670203537",
-  "pl": [],
-  "tags": [
-   "gate",
-   "temple_stones"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "kish-ziggurat-mound",
-  "u": "https://live.staticflickr.com/5634/30563365961_776886c48a_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "D-Stanley",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/79721788@N00/30563365961",
-  "pl": [
-   "바벨론/메소포타미아/유브라데"
-  ],
-  "tags": [
-   "ruins",
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "45% 50%"
- },
- {
-  "id": "babylon-nebuchadnezzar-palace-ruins",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Ruins_of_the_so-called_North_Palace_of_king_Nebuchadnezzar_II_at_Babylon%2C_Iraq.jpg/1280px-Ruins_of_the_so-called_North_Palace_of_king_Nebuchadnezzar_II_at_Babylon%2C_Iraq.jpg",
-  "w": 1280,
-  "h": 851,
-  "by": "Osama Shukir Muhammed Amin FRCP(Glasg)",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=72501453",
-  "pl": [
-   "바벨론/메소포타미아/유브라데"
-  ],
-  "tags": [
-   "ruins",
-   "city_wall"
-  ],
-  "mood": "warm",
-  "fx": "40% 50%"
- },
- {
-  "id": "assyrian-siege-relief-nineveh",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Ashurbanipal_II%27s_army_attacking_Memphis%2C_Egypt%2C_645-635_BCE%2C_from_Nineveh%2C_Iraq._British_Museum.jpg/1280px-Ashurbanipal_II%27s_army_attacking_Memphis%2C_Egypt%2C_645-635_BCE%2C_from_Nineveh%2C_Iraq._British_Museum.jpg",
-  "w": 1280,
-  "h": 777,
-  "by": "Osama Shukir Muhammed Amin FRCP(Glasg)",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=91393328",
-  "pl": [],
-  "tags": [
-   "army"
-  ],
-  "mood": "warm",
-  "fx": "35% 50%"
- },
- {
-  "id": "lachish-relief-assyrian-archers",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Lachish_Relief%2C_British_Museum_14.jpg/1280px-Lachish_Relief%2C_British_Museum_14.jpg",
-  "w": 1280,
-  "h": 847,
-  "by": "Photograph by Mike Peel (www.mikepeel.net).",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=11604184",
-  "pl": [],
   "tags": [
    "army",
-   "temple_stones"
+   "armor",
+   "spear",
+   "desert"
   ],
   "mood": "warm",
-  "fx": "45% 50%"
+  "fx": "30% 50%",
+  "set": 7
  },
  {
-  "id": "nimrud-lamassu-warm",
-  "u": "https://live.staticflickr.com/7388/9817445045_193b20a4a9_b.jpg",
-  "w": 679,
-  "h": 1024,
-  "by": "Gary Lee Todd, Ph.D.",
-  "lic": "CC0",
-  "link": "https://www.flickr.com/photos/101561334@N08/9817445045",
-  "pl": [],
-  "tags": [
-   "temple_stones"
-  ],
-  "mood": "warm",
-  "fx": "70% 40%"
- },
- {
-  "id": "susa-archers-glazed-frieze",
-  "u": "https://live.staticflickr.com/2732/4489670087_6a3b32e9c3_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "dynamosquito",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/25182210@N07/4489670087",
-  "pl": [],
-  "tags": [
-   "army"
-  ],
-  "mood": "cool",
-  "fx": "50% 50%"
- },
- {
-  "id": "malta-dingli-cliffs-sea",
-  "u": "https://live.staticflickr.com/5528/14051055957_47932811b7_b.jpg",
-  "w": 768,
-  "h": 1024,
-  "by": "Bernt Rostad",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/67975030@N00/14051055957",
-  "pl": [
-   "몰타(멜리데)"
-  ],
-  "tags": [
-   "sea"
-  ],
-  "mood": "cool",
-  "fx": "45% 50%"
- },
- {
-  "id": "roman-coins-display",
-  "u": "https://live.staticflickr.com/5747/22976673229_1823b8be97_b.jpg",
-  "w": 576,
-  "h": 1024,
-  "by": "archieflickers",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/13898829@N04/22976673229",
-  "pl": [],
-  "tags": [
-   "coins"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "dead-sea-scroll-qohelet-fragment",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Dead_Sea_Scroll_109%2C_Qohelet_or_Ecclesiastes%2C_from_Qumran_Cave_4._The_Jordan_Museum%2C_Amman.jpg/1280px-Dead_Sea_Scroll_109%2C_Qohelet_or_Ecclesiastes%2C_from_Qumran_Cave_4._The_Jordan_Museum%2C_Amman.jpg",
+  "id": "g07_02",
+  "u": "img/g/g07_02.jpg",
   "w": 1280,
-  "h": 781,
-  "by": "Osama Shukir Muhammed Amin FRCP(Glasg)",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/w/index.php?curid=67687997",
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "라기스"
+  ],
+  "tags": [
+   "army",
+   "city_wall",
+   "siege"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 7
+ },
+ {
+  "id": "g07_03",
+  "u": "img/g/g07_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "ruins",
+   "fire",
+   "city_wall",
+   "smoke"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 7
+ },
+ {
+  "id": "g07_04",
+  "u": "img/g/g07_04.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "chains",
+   "captives",
+   "road",
+   "desert"
+  ],
+  "mood": "warm",
+  "fx": "60% 50%",
+  "set": 7
+ },
+ {
+  "id": "g07_05",
+  "u": "img/g/g07_05.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "바벨론"
+  ],
+  "tags": [
+   "lyre",
+   "river",
+   "willow"
+  ],
+  "mood": "dark",
+  "fx": "55% 50%",
+  "set": 7
+ },
+ {
+  "id": "g07_06",
+  "u": "img/g/g07_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "바벨론"
+  ],
+  "tags": [
+   "city_gate",
+   "babylon"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 7
+ },
+ {
+  "id": "g07_07",
+  "u": "img/g/g07_07.jpg",
+  "w": 1280,
+  "h": 723,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "hands",
+   "clay_jar",
+   "potter"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 7
+ },
+ {
+  "id": "g07_08",
+  "u": "img/g/g07_08.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "clay_jar",
+   "broken",
+   "soil"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 7
+ },
+ {
+  "id": "g07_09",
+  "u": "img/g/g07_09.jpg",
+  "w": 1280,
+  "h": 722,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
    "scroll",
-   "ancient_text"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "qumran-cave-4",
-  "u": "https://live.staticflickr.com/8202/8246948498_b0bbfd6a5b_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "Lux Moundi",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/62808641@N00/8246948498",
-  "pl": [
-   "유대 광야"
-  ],
-  "tags": [
-   "cave",
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "masada-cistern-light",
-  "u": "https://live.staticflickr.com/168/425812100_4b0c8d218c_b.jpg",
-  "w": 768,
-  "h": 1024,
-  "by": "rachelyra",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/88578385@N00/425812100",
-  "pl": [],
-  "tags": [
-   "cave",
-   "well"
-  ],
-  "mood": "dark",
-  "fx": "40% 50%"
- },
- {
-  "id": "lightning-storm-cloud",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/PikiWiki_Israel_46335_Geography_of_Israel.JPG/1280px-PikiWiki_Israel_46335_Geography_of_Israel.JPG",
-  "w": 1280,
-  "h": 853,
-  "by": "talya einstein",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_46335_Geography_of_Israel.JPG",
-  "pl": [],
-  "tags": [
-   "lightning",
-   "storm_sky"
-  ],
-  "mood": "dark",
-  "fx": "60% 50%"
- },
- {
-  "id": "lightning-black-night",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/PikiWiki_Israel_46334_Geography_of_Israel.JPG/1280px-PikiWiki_Israel_46334_Geography_of_Israel.JPG",
-  "w": 1280,
-  "h": 853,
-  "by": "talya einstein",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_46334_Geography_of_Israel.JPG",
-  "pl": [],
-  "tags": [
-   "lightning",
-   "darkness",
-   "night_sky"
-  ],
-  "mood": "dark",
-  "fx": "25% 50%"
- },
- {
-  "id": "hermon-snow-slopes",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg/1280px-Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg",
-  "w": 1280,
-  "h": 960,
-  "by": "Nunusandio",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Mount_Hermon_Qalaat_al-Jandal_snow_landscape.jpg",
-  "pl": [
-   "헤르몬산"
-  ],
-  "tags": [
-   "snow",
-   "mountain_peak"
-  ],
-  "mood": "cool",
-  "fx": "55% 50%"
- },
- {
-  "id": "david-falls-ein-gedi-green",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Nahal_David_waterfall%2C_Ein_Gedi_%28531059035%29.jpg/1280px-Nahal_David_waterfall%2C_Ein_Gedi_%28531059035%29.jpg",
-  "w": 1280,
-  "h": 1925,
-  "by": "Mary Madigan from Highland Park, NJ and Santa Fe, NM, USA",
-  "lic": "CC BY 2.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Nahal_David_waterfall,_Ein_Gedi_(531059035).jpg",
-  "pl": [
-   "엔게디"
-  ],
-  "tags": [
-   "waterfall",
-   "spring_water"
-  ],
-  "mood": "cool",
-  "fx": "55% 50%"
- },
- {
-  "id": "david-falls-ein-gedi-rock",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/PikiWiki_Israel_4280_Waterfall_in_Ein_Gedi.jpg/1280px-PikiWiki_Israel_4280_Waterfall_in_Ein_Gedi.jpg",
-  "w": 1280,
-  "h": 1931,
-  "by": "נצח פרביאש",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_4280_Waterfall_in_Ein_Gedi.jpg",
-  "pl": [
-   "엔게디"
-  ],
-  "tags": [
-   "waterfall",
-   "desert",
-   "spring_water"
-  ],
-  "mood": "bright",
-  "fx": "45% 50%"
- },
- {
-  "id": "david-falls-ein-gedi-cave",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/David_Waterfall_%281%29.JPG/1280px-David_Waterfall_%281%29.JPG",
-  "w": 1280,
-  "h": 2276,
-  "by": "ГП",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:David_Waterfall_(1).JPG",
-  "pl": [
-   "엔게디"
-  ],
-  "tags": [
-   "waterfall",
-   "cave"
-  ],
-  "mood": "cool",
-  "fx": "65% 50%"
- },
- {
-  "id": "rainbow-over-dead-sea",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/PikiWiki_Israel_48420_Rainbow_above_the_Dead_Sea.JPG/1280px-PikiWiki_Israel_48420_Rainbow_above_the_Dead_Sea.JPG",
-  "w": 1280,
-  "h": 960,
-  "by": "אלישבע ורנר-רייז",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/wiki/File:PikiWiki_Israel_48420_Rainbow_above_the_Dead_Sea.JPG",
-  "pl": [
-   "사해"
-  ],
-  "tags": [
-   "rainbow",
-   "storm_sky",
-   "sea"
-  ],
-  "mood": "cool",
-  "fx": "68% 50%"
- },
- {
-  "id": "milky-way-wadi-rum",
-  "u": "https://live.staticflickr.com/7454/9691597504_056d14bd4a_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "indii.org / Lawrence Murray",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/22699083@N04/9691597504",
-  "pl": [],
-  "tags": [
-   "stars",
-   "night_sky"
-  ],
-  "mood": "dark",
-  "fx": "70% 50%"
- },
- {
-  "id": "wadi-rum-night-cliffs",
-  "u": "https://live.staticflickr.com/7081/7077612481_cf56babd1a_b.jpg",
-  "w": 1024,
-  "h": 683,
-  "by": "askii",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/52170751@N07/7077612481",
-  "pl": [],
-  "tags": [
-   "night_sky",
-   "darkness",
-   "desert"
-  ],
-  "mood": "dark",
-  "fx": "55% 50%"
- },
- {
-  "id": "wadi-mujib-stream",
-  "u": "https://live.staticflickr.com/2818/9280030667_237458d80e_b.jpg",
-  "w": 1024,
-  "h": 576,
-  "by": "Hiking in Jordan",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/98703782@N04/9280030667",
-  "pl": [],
-  "tags": [
-   "spring_water",
-   "river",
-   "valley"
-  ],
-  "mood": "warm",
-  "fx": "62% 50%"
- },
- {
-  "id": "ein-fara-spring-pool",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/%D8%B9%D9%8A%D9%86_%D9%81%D8%A7%D8%B1%D8%A9_%D9%A3.jpg/1280px-%D8%B9%D9%8A%D9%86_%D9%81%D8%A7%D8%B1%D8%A9_%D9%A3.jpg",
-  "w": 1280,
-  "h": 1707,
-  "by": "جمان المحتسب",
-  "lic": "CC0",
-  "link": "https://commons.wikimedia.org/wiki/File:%D8%B9%D9%8A%D9%86_%D9%81%D8%A7%D8%B1%D8%A9_%D9%A3.jpg",
-  "pl": [],
-  "tags": [
-   "spring_water",
-   "reeds"
-  ],
-  "mood": "cool",
-  "fx": "40% 50%"
- },
- {
-  "id": "rain-curtain-dust-mesa",
-  "u": "https://live.staticflickr.com/8106/8632921840_5acfe97348_b.jpg",
-  "w": 1023,
-  "h": 683,
-  "by": "ArchesNPS",
-  "lic": "Public domain",
-  "link": "https://www.flickr.com/photos/72578886@N08/8632921840",
-  "pl": [],
-  "tags": [
-   "rain",
-   "sandstorm",
-   "storm_sky"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "brush-fire-flames",
-  "u": "https://live.staticflickr.com/7084/7087306369_3b533ece2f_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "U. S. Fish and Wildlife Service - Northeast Region",
-  "lic": "Public domain",
-  "link": "https://www.flickr.com/photos/43322816@N08/7087306369",
-  "pl": [],
-  "tags": [
    "fire",
-   "thorns"
+   "palace"
   ],
-  "mood": "warm",
-  "fx": "65% 50%"
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 7
  },
  {
-  "id": "flame-in-darkness",
-  "u": "https://live.staticflickr.com/2226/1902007773_6a0e91f52f_b.jpg",
-  "w": 1024,
-  "h": 646,
-  "by": "Dominic's pics",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/64097751@N00/1902007773",
+  "id": "g07_10",
+  "u": "img/g/g07_10.jpg",
+  "w": 1280,
+  "h": 691,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "fire",
+   "pit",
+   "rope",
+   "cave",
    "darkness"
   ],
   "mood": "dark",
-  "fx": "65% 50%"
+  "fx": "50% 50%",
+  "set": 7
  },
  {
-  "id": "smoke-over-hills",
-  "u": "https://live.staticflickr.com/4113/5033331741_e41fbc9422_b.jpg",
-  "w": 1000,
-  "h": 667,
-  "by": "Namibnat",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/12234865@N04/5033331741",
-  "pl": [],
-  "tags": [
-   "fire",
-   "wind"
-  ],
-  "mood": "warm",
-  "fx": "45% 50%"
- },
- {
-  "id": "locust-swarm-blue-sky",
-  "u": "https://live.staticflickr.com/8847/28923080670_258e4904f9_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "Hotel Kaesong",
-  "lic": "CC BY-SA 2.0",
-  "link": "https://www.flickr.com/photos/68240136@N02/28923080670",
-  "pl": [],
-  "tags": [
-   "locust",
-   "sky"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "desert-locusts-pair",
-  "u": "https://live.staticflickr.com/3471/3278205503_020f4a9a41_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "wwarby",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/26782864@N00/3278205503",
-  "pl": [],
-  "tags": [
-   "locust",
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "40% 50%"
- },
- {
-  "id": "locust-hoppers-sand",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Schistocerca_gregaria_L4_hopper_band.jpg",
-  "w": 1000,
-  "h": 750,
-  "by": "ChriKo",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Schistocerca_gregaria_L4_hopper_band.jpg",
-  "pl": [],
-  "tags": [
-   "locust",
-   "desert"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "locust-swarm-cloud-bw",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Schisto09.jpg/1280px-Schisto09.jpg",
+  "id": "g07_11",
+  "u": "img/g/g07_11.jpg",
   "w": 1280,
-  "h": 799,
-  "by": "MichelLecoq",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Schisto09.jpg",
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "locust",
-   "darkness",
-   "storm_sky"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "locust-swarm-plain",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/6_Migratory_locust_Locusta_migratoria.jpg/1280px-6_Migratory_locust_Locusta_migratoria.jpg",
-  "w": 1280,
-  "h": 828,
-  "by": "Michel Lecoq",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:6_Migratory_locust_Locusta_migratoria.jpg",
-  "pl": [],
-  "tags": [
-   "locust",
-   "wilderness_path"
-  ],
-  "mood": "bright",
-  "fx": "50% 50%"
- },
- {
-  "id": "frog-in-pond-algae",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Bedriaga_Frog.jpg/1280px-Bedriaga_Frog.jpg",
-  "w": 1280,
-  "h": 960,
-  "by": "Jeffrey Sciberras",
-  "lic": "CC BY 3.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Bedriaga_Frog.jpg",
-  "pl": [],
-  "tags": [
-   "frog"
-  ],
-  "mood": "cool",
-  "fx": "40% 50%"
- },
- {
-  "id": "frog-in-muddy-water",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Pelophylax_bedriagae_-_Levant_Batakl%C4%B1k_Kurba%C4%9Fas%C4%B1.jpg/1280px-Pelophylax_bedriagae_-_Levant_Batakl%C4%B1k_Kurba%C4%9Fas%C4%B1.jpg",
-  "w": 1280,
-  "h": 848,
-  "by": "Zeynel Cebeci",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Pelophylax_bedriagae_-_Levant_Batakl%C4%B1k_Kurba%C4%9Fas%C4%B1.jpg",
-  "pl": [],
-  "tags": [
-   "frog"
-  ],
-  "mood": "warm",
-  "fx": "50% 50%"
- },
- {
-  "id": "frog-jordan-river",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Pelophylax_bedriagae%2C_Jordan_River.jpg/1280px-Pelophylax_bedriagae%2C_Jordan_River.jpg",
-  "w": 1280,
-  "h": 960,
-  "by": "DinaKuzia",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Pelophylax_bedriagae,_Jordan_River.jpg",
-  "pl": [
-   "요단강"
-  ],
-  "tags": [
-   "frog",
-   "river"
-  ],
-  "mood": "cool",
-  "fx": "50% 50%"
- },
- {
-  "id": "dew-on-grass",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/The_beauty_of_the_dew_drops.jpg/1280px-The_beauty_of_the_dew_drops.jpg",
-  "w": 1280,
-  "h": 1137,
-  "by": "Baby Devi 26",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:The_beauty_of_the_dew_drops.jpg",
-  "pl": [],
-  "tags": [
-   "rain"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "dew-on-grass-blade",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Dew_drops_on_grass.jpg/1280px-Dew_drops_on_grass.jpg",
-  "w": 1280,
-  "h": 1707,
-  "by": "Baby Devi 26",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Dew_drops_on_grass.jpg",
-  "pl": [],
-  "tags": [
-   "rain"
-  ],
-  "mood": "cool",
-  "fx": "45% 50%"
- },
- {
-  "id": "total-eclipse-corona",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Eclipse-totale-2026-couronne-Luc-Viatour.jpg/1280px-Eclipse-totale-2026-couronne-Luc-Viatour.jpg",
-  "w": 1280,
-  "h": 947,
-  "by": "Lviatour",
-  "lic": "CC BY-SA 4.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Eclipse-totale-2026-couronne-Luc-Viatour.jpg",
-  "pl": [],
-  "tags": [
-   "darkness",
-   "sky"
-  ],
-  "mood": "dark",
-  "fx": "50% 50%"
- },
- {
-  "id": "negev-cirrus-sunset",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Astfeld-025.JPG/1280px-Astfeld-025.JPG",
-  "w": 1280,
-  "h": 909,
-  "by": "Josef F. Stuefer",
-  "lic": "CC BY-SA 3.0",
-  "link": "https://commons.wikimedia.org/wiki/File:Astfeld-025.JPG",
-  "pl": [
-   "네게브"
-  ],
-  "tags": [
-   "dusk",
-   "clouds",
+   "bones",
+   "valley",
+   "dust",
    "sunrise_light_rays"
   ],
   "mood": "warm",
-  "fx": "55% 50%"
+  "fx": "50% 50%",
+  "set": 7
  },
  {
-  "id": "dead-sea-sunrise-moab",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Sunrise_over_the_Dead_Sea_-_2010.JPG/1280px-Sunrise_over_the_Dead_Sea_-_2010.JPG",
+  "id": "g07_12",
+  "u": "img/g/g07_12.jpg",
   "w": 1280,
-  "h": 901,
-  "by": "High Contrast",
-  "lic": "CC BY 3.0 de",
-  "link": "https://commons.wikimedia.org/wiki/File:Sunrise_over_the_Dead_Sea_-_2010.JPG",
+  "h": 740,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
-   "사해"
+   "바벨론"
   ],
   "tags": [
-   "dawn",
-   "sea"
+   "lion",
+   "cave",
+   "sunrise_light_rays",
+   "darkness"
   ],
-  "mood": "warm",
-  "fx": "57% 50%"
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 7
  },
  {
-  "id": "dead-sea-salt-shore-sunrise",
-  "u": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/94725_dead_sea_sunrise_PikiWiki_Israel.jpg/1280px-94725_dead_sea_sunrise_PikiWiki_Israel.jpg",
+  "id": "g07_13",
+  "u": "img/g/g07_13.jpg",
   "w": 1280,
-  "h": 720,
-  "by": "דוידי ורדי",
-  "lic": "CC BY 2.5",
-  "link": "https://commons.wikimedia.org/wiki/File:94725_dead_sea_sunrise_PikiWiki_Israel.jpg",
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [
-   "사해"
+   "바벨론"
   ],
   "tags": [
-   "dawn",
-   "sea",
-   "salt"
+   "fire",
+   "furnace"
   ],
   "mood": "warm",
-  "fx": "48% 50%"
+  "fx": "45% 50%",
+  "set": 7
  },
  {
-  "id": "dead-tree-dark-sky",
-  "u": "https://live.staticflickr.com/374/18609730312_664a077099_b.jpg",
-  "w": 1023,
-  "h": 682,
-  "by": "bjimmy934",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/96828128@N02/18609730312",
+  "id": "g07_15",
+  "u": "img/g/g07_15.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "city_wall",
+   "builder",
+   "stones",
+   "dusk"
+  ],
+  "mood": "warm",
+  "fx": "60% 50%",
+  "set": 7
+ },
+ {
+  "id": "g08_01",
+  "u": "img/g/g08_01.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "night_sky",
+   "stars",
+   "man"
+  ],
+  "mood": "dark",
+  "fx": "45% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_02",
+  "u": "img/g/g08_02.jpg",
+  "w": 1280,
+  "h": 692,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "lyre",
+   "hands"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_03",
+  "u": "img/g/g08_03.jpg",
+  "w": 1280,
+  "h": 692,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "ashes",
+   "hands",
+   "sorrow"
+  ],
+  "mood": "dark",
+  "fx": "55% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_04",
+  "u": "img/g/g08_04.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "friends",
+   "desert",
+   "sorrow"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_05",
+  "u": "img/g/g08_05.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
    "storm_sky",
+   "whirlwind",
+   "desert"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_06",
+  "u": "img/g/g08_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "deer",
+   "water",
+   "stream"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_07",
+  "u": "img/g/g08_07.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "sheep",
+   "pasture",
+   "water"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_08",
+  "u": "img/g/g08_08.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "valley",
+   "shepherd",
    "darkness",
+   "sunrise_light_rays"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_09",
+  "u": "img/g/g08_09.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "temple_stones",
+   "steps",
+   "pilgrim"
+  ],
+  "mood": "warm",
+  "fx": "65% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_10",
+  "u": "img/g/g08_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "threshing_floor",
+   "chaff",
+   "wind"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_11",
+  "u": "img/g/g08_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "tree",
+   "river",
+   "water"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_12",
+  "u": "img/g/g08_12.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "house",
+   "ruins",
+   "storm_sky",
+   "rock"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_13",
+  "u": "img/g/g08_13.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "labor",
+   "dusk",
+   "man"
+  ],
+  "mood": "warm",
+  "fx": "40% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_14",
+  "u": "img/g/g08_14.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "vineyard",
+   "flowers",
+   "stones"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 8
+ },
+ {
+  "id": "g08_15",
+  "u": "img/g/g08_15.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "city_wall",
+   "watchman",
+   "dawn"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 8
+ },
+ {
+  "id": "g09_01",
+  "u": "img/g/g09_01.jpg",
+  "w": 1280,
+  "h": 545,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "갈릴리"
+  ],
+  "tags": [
+   "fishing_boat",
+   "sea",
+   "dawn"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_02",
+  "u": "img/g/g09_02.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "갈릴리"
+  ],
+  "tags": [
+   "fishing_boat",
+   "net",
    "sea"
   ],
   "mood": "dark",
-  "fx": "50% 50%"
+  "fx": "60% 50%",
+  "set": 9
  },
  {
-  "id": "island-under-storm-clouds",
-  "u": "https://live.staticflickr.com/84/210860008_1295708bd1_b.jpg",
-  "w": 768,
-  "h": 1023,
-  "by": "mozzercork",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/98382796@N00/210860008",
-  "pl": [],
+  "id": "g09_03",
+  "u": "img/g/g09_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "갈릴리"
+  ],
   "tags": [
+   "net",
+   "fish",
+   "hands"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_04",
+  "u": "img/g/g09_04.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "갈릴리"
+  ],
+  "tags": [
+   "fishing_boat",
    "storm_sky",
-   "sea",
-   "clouds"
+   "waves"
   ],
   "mood": "dark",
-  "fx": "50% 50%"
+  "fx": "40% 50%",
+  "set": 9
  },
  {
-  "id": "hailstones-heap",
-  "u": "https://live.staticflickr.com/5581/15148092311_176a339eb5_b.jpg",
-  "w": 1024,
-  "h": 768,
-  "by": "James St. John",
-  "lic": "CC BY 2.0",
-  "link": "https://www.flickr.com/photos/47445767@N05/15148092311",
+  "id": "g09_05",
+  "u": "img/g/g09_05.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "갈릴리"
+  ],
+  "tags": [
+   "crowd",
+   "pasture",
+   "hill"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_06",
+  "u": "img/g/g09_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
   "pl": [],
   "tags": [
-   "hail"
+   "bread",
+   "fish",
+   "basket"
   ],
-  "mood": "cool",
-  "fx": "50% 50%"
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_07",
+  "u": "img/g/g09_07.jpg",
+  "w": 1280,
+  "h": 689,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "가버나움"
+  ],
+  "tags": [
+   "scroll",
+   "synagogue",
+   "sunrise_light_rays"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_08",
+  "u": "img/g/g09_08.jpg",
+  "w": 1280,
+  "h": 737,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "수가"
+  ],
+  "tags": [
+   "well",
+   "clay_jar"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_09",
+  "u": "img/g/g09_09.jpg",
+  "w": 1280,
+  "h": 679,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "oil",
+   "feet",
+   "alabaster"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_10",
+  "u": "img/g/g09_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "여리고"
+  ],
+  "tags": [
+   "tree",
+   "man",
+   "road"
+  ],
+  "mood": "warm",
+  "fx": "40% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_11",
+  "u": "img/g/g09_11.jpg",
+  "w": 1174,
+  "h": 742,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "겟세마네"
+  ],
+  "tags": [
+   "olive_tree",
+   "prayer",
+   "night_sky"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_13",
+  "u": "img/g/g09_13.jpg",
+  "w": 1280,
+  "h": 739,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "fire",
+   "courtyard",
+   "night_sky",
+   "rooster"
+  ],
+  "mood": "dark",
+  "fx": "45% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_14",
+  "u": "img/g/g09_14.jpg",
+  "w": 1280,
+  "h": 585,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "골고다"
+  ],
+  "tags": [
+   "cross",
+   "storm_sky",
+   "hill"
+  ],
+  "mood": "dark",
+  "fx": "55% 50%",
+  "set": 9
+ },
+ {
+  "id": "g09_15",
+  "u": "img/g/g09_15.jpg",
+  "w": 1280,
+  "h": 735,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "rock_tomb",
+   "sunrise_light_rays",
+   "dawn"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 9
+ },
+ {
+  "id": "g10_01",
+  "u": "img/g/g10_01.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "oil_lamp",
+   "room",
+   "prayer"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_02",
+  "u": "img/g/g10_02.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "temple_stones",
+   "gate",
+   "beggar",
+   "sunrise_light_rays"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_03",
+  "u": "img/g/g10_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "robe",
+   "dust",
+   "stones"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_05",
+  "u": "img/g/g10_05.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "다메섹"
+  ],
+  "tags": [
+   "road",
+   "sunrise_light_rays",
+   "dust"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_06",
+  "u": "img/g/g10_06.jpg",
+  "w": 1280,
+  "h": 679,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "다메섹"
+  ],
+  "tags": [
+   "city_wall",
+   "basket",
+   "rope",
+   "night_sky"
+  ],
+  "mood": "dark",
+  "fx": "70% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_07",
+  "u": "img/g/g10_07.jpg",
+  "w": 1280,
+  "h": 679,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "road",
+   "olive_tree",
+   "men"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_08",
+  "u": "img/g/g10_08.jpg",
+  "w": 1280,
+  "h": 716,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "빌립보"
+  ],
+  "tags": [
+   "prison",
+   "chains",
+   "sunrise_light_rays"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_09",
+  "u": "img/g/g10_09.jpg",
+  "w": 1280,
+  "h": 679,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "아덴"
+  ],
+  "tags": [
+   "ruins",
+   "city",
+   "temple_stones"
+  ],
+  "mood": "warm",
+  "fx": "70% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_10",
+  "u": "img/g/g10_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "ship",
+   "harbor",
+   "sea"
+  ],
+  "mood": "bright",
+  "fx": "40% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_11",
+  "u": "img/g/g10_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "멜리데"
+  ],
+  "tags": [
+   "ship",
+   "storm_sky",
+   "waves",
+   "shipwreck"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_13",
+  "u": "img/g/g10_13.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "bread",
+   "hands",
+   "table"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_14",
+  "u": "img/g/g10_14.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "밧모"
+  ],
+  "tags": [
+   "sea",
+   "rock",
+   "man",
+   "sunrise_light_rays"
+  ],
+  "mood": "dark",
+  "fx": "45% 50%",
+  "set": 10
+ },
+ {
+  "id": "g10_15",
+  "u": "img/g/g10_15.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "river",
+   "tree",
+   "sunrise_light_rays"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 10
  }
 ]
