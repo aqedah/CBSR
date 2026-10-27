@@ -7075,10 +7075,16 @@ function showPlace(n){
   sheet((TRMAP&&TRMAP.n[n])||n,`<p class="src">지명 · ${esc(p.k)}${onMap?" · 오늘 지도에 표시되는 곳":""}</p><p>${esc(e[1])}</p>${p.m?`<p class="vq"><b>이름의 뜻</b>${p.mc?` <span class="mc mc-${p.mc}">${MC_L[p.mc]}</span>`:""}<br>${esc(p.m)}</p>`:""}`);
 }
 /* 팝업 */
+/* 휴대폰 '뒤로 가기'로 열린 화면(본문 보기·스토리 QT·놀이·아래 창)만 닫고 페이지는 떠나지 않게 합니다 (v2) */
+const OVS=[]; let OVskip=0;
+function ovOpen(f){ if(!window.CBSR_V2||OVS.includes(f)) return; OVS.push(f); try{ history.pushState({cbsrOv:OVS.length},""); }catch(e){} }
+function ovDone(f){ const i=OVS.lastIndexOf(f); if(i<0) return; OVS.splice(i,1); OVskip++; try{ history.back(); }catch(e){ OVskip--; } }
+window.addEventListener("popstate",()=>{ if(OVskip>0){ OVskip--; return; } const f=OVS.pop(); if(f) f(true); });
 function sheet(title,body){
   const root=document.getElementById("sheetRoot");
   root.innerHTML=`<div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-head"><h3>${esc(title)}</h3><button class="iconbtn sheet-x" id="sheetX" aria-label="닫기">✕</button></div>${body}<div class="row sheet-foot"><button class="btn small" id="sheetClose">닫기</button></div></div></div>`;
-  const close=()=>{root.innerHTML="";};
+  const sheetOff=pop=>{ root.innerHTML=""; if(pop!==true) ovDone(sheetOff); }; const close=()=>sheetOff();
+  if(window.CBSR_V2){ for(const f of OVS.filter(f=>f.__sheet)) OVS.splice(OVS.indexOf(f),1); sheetOff.__sheet=1; ovOpen(sheetOff); }
   document.getElementById("sheetClose").onclick=close;
   document.getElementById("sheetBg").onclick=e=>{if(e.target.id==="sheetBg")close();};
   root.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.jump.split("-").map(Number); close(); go(w,d);});
@@ -7862,9 +7868,9 @@ function rdOpen(at){ const {w,d}=view, k=keyOf(w,d); storyFont(); RV.key=MODE+":
   let last=0; try{ last=+((JSON.parse(localStorage.getItem("cbsr-rdpos")||"{}"))[RV.key]||0); }catch(e){}
   RV.i=at!=null?at:(last>0&&last<=RV.pages.length?last:0);
   mem.seen ||= {}; mem.seen[k]=1; save();
-  let r=document.getElementById("readRoot"); if(!r){ r=document.createElement("div"); r.id="readRoot"; document.body.appendChild(r); }
+  let r=document.getElementById("readRoot"); if(!r){ r=document.createElement("div"); r.id="readRoot"; document.body.appendChild(r); ovOpen(rdClose); }
   document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); rdShow(); }
-function rdClose(){ const r=document.getElementById("readRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
+function rdClose(pop){ if(pop!==true) ovDone(rdClose); const r=document.getElementById("readRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
 function rdSave(){ try{ const o=JSON.parse(localStorage.getItem("cbsr-rdpos")||"{}"); o[RV.key]=RV.i; localStorage.setItem("cbsr-rdpos",JSON.stringify(o)); }catch(e){} }
 function rdShow(){ const r=document.getElementById("readRoot"); if(!r) return; const {w,d}=view, p=dayPlan(w,d), k=keyOf(w,d), N=RV.pages.length+2, i=RV.i;
   const S=(typeof storySlides==="function"&&window.CBSR_V2)?storySlides(w,d):[], cph=S[0]&&S[0].ph, mins=Math.max(1,Math.round(p.ch.reduce((a,[b,c])=>a+(BIBLE[b-1][c-1]||[]).join("").length,0)/500));
@@ -7878,11 +7884,11 @@ function rdShow(){ const r=document.getElementById("readRoot"); if(!r) return; c
   if(i===0||i===N-1) r.querySelectorAll(".rdtap").forEach(t=>t.style.pointerEvents=i===N-1?"none":"");
   const go=n=>{ RV.i=Math.max(0,Math.min(N-1,n)); rdSave(); rdShow(); };
   r.querySelector("#rdL").onclick=()=>go(i-1); r.querySelector("#rdR").onclick=()=>go(i+1);
-  r.querySelector("#rdX").onclick=rdClose;
+  r.querySelector("#rdX").onclick=()=>rdClose();
   const fs=dlt=>{ const f=Math.max(15,Math.min(28,rdFontPx()+dlt)); try{ localStorage.setItem("cbsr-rdfs",f); }catch(e){} const pv=RV.pages[i-1], at=pv?pv.v1:0, ch=pv?[pv.b,pv.c]:null; RV.pages=rdPages(w,d); if(ch){ const j=RV.pages.findIndex(x=>x.b===ch[0]&&x.c===ch[1]&&x.v1<=at&&x.v2>=at); if(j>=0) RV.i=j+1; } rdSave(); rdShow(); };
   r.querySelector("#rdFm").onclick=()=>fs(-2); r.querySelector("#rdFp").onclick=()=>fs(2);
   const dn=r.querySelector("#rdDone"); if(dn) dn.onclick=()=>{ touchDone(k); mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k); save(); confetti(); setTimeout(churchCounts,1500); rdShow(); };
-  const st=r.querySelector("#rdStory"); if(st) st.onclick=()=>{ const rr=document.getElementById("readRoot"); if(rr) rr.remove(); document.documentElement.classList.remove("story-on"); storyOpen(0); };
+  const st=r.querySelector("#rdStory"); if(st) st.onclick=()=>{ const oi=OVS.indexOf(rdClose); if(oi>=0) OVS.splice(oi,1); const rr=document.getElementById("readRoot"); if(rr) rr.remove(); document.documentElement.classList.remove("story-on"); storyOpen(0); };
   const nt=r.querySelector("#rdNote"); if(nt) nt.onclick=()=>{ view.tab="qt"; view.qtDeep=true; rdClose(); scrollTo({top:0}); };
   const ag=r.querySelector("#rdAgain"); if(ag) ag.onclick=()=>go(1);
   let x0=null,y0=null; const fr=r.querySelector(".rdfr");
@@ -8080,10 +8086,10 @@ function fbOpen(i,lab,host,after){ const o=fbAll(), k=fbKey(i), r=o[k]||{}; cons
   ov.addEventListener("pointerup",e=>e.stopPropagation()); ov.addEventListener("pointerdown",e=>e.stopPropagation()); }
 function storyOpen(i,mode){ const {w,d}=view; const k=keyOf(w,d); try{ localStorage.setItem("cbsr-story-seen",MODE+":"+k); }catch(e){}
   if(view.scKey!==k){ view.scKey=k; view.sRev=false; } storyFont();
-  let r=document.getElementById("storyRoot"); if(!r){ r=document.createElement("div"); r.id="storyRoot"; document.body.appendChild(r); }
+  let r=document.getElementById("storyRoot"); if(!r){ r=document.createElement("div"); r.id="storyRoot"; document.body.appendChild(r); ovOpen(storyClose); }
   SV.mode=mode||""; SV.i=i||0; SV.hinted=!!mode; document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); storyShow(); }
 function storyMapOff(){ if(SV.map){ try{ SV.map.remove(); }catch(e){} SV.map=null; } }
-function storyClose(){ clearTimeout(SV.t); clearInterval(SV.cd); if(SV.mode==="fin"&&window.CBSR_V2){ view.tab="today"; SV.mode=""; scrollTo({top:0}); } storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
+function storyClose(pop){ if(pop!==true) ovDone(storyClose); clearTimeout(SV.t); clearInterval(SV.cd); if(SV.mode==="fin"&&window.CBSR_V2){ view.tab="today"; SV.mode=""; scrollTo({top:0}); } storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
 function curSlides(w,d){ if(SV.mode==="fin"){ const S=storySlides(w,d); return [{k:"fin",ph:S[0]&&S[0].ph},{k:"next"}]; } return storySlides(w,d); }
 function storyGo(i){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ return; } SV.i=i; storyShow(); }
 const SKB=[["scale(1.06) translate(0,0)","scale(1.14) translate(-2%,-1%)"],["scale(1.14) translate(-2%,-1%)","scale(1.16) translate(3%,1%)"],["scale(1.16) translate(3%,1%)","scale(1.16) translate(-3%,0)"]];
@@ -9126,8 +9132,8 @@ function gpOpen(k){ const {w,d}=view, key=keyOf(w,d), seed=key+":"+Date.now();
   else if(k==="trip"){ const o=gJourney(w,d,seed); const sh=shuf(o.pts,rngOf(seed)); view.gp={k,pts:sh,ord:o.pts.map(x=>sh.indexOf(x)),pickd:[],total:sh.length,step:0}; }
   else if(k==="card"){ view.gp={k,c:gCard(seed)}; }
   gpShow(); }
-function gpShow(){ document.getElementById("gPlay")?.remove(); if(!view.gp) return; document.body.insertAdjacentHTML("beforeend",gplayHTML()); document.documentElement.classList.add("story-on"); gpBind(); }
-function gpClose(){ view.gp=null; document.getElementById("gPlay")?.remove(); document.documentElement.classList.remove("story-on"); render(); }
+function gpShow(){ document.getElementById("gPlay")?.remove(); if(!view.gp) return; ovOpen(gpClose); document.body.insertAdjacentHTML("beforeend",gplayHTML()); document.documentElement.classList.add("story-on"); gpBind(); }
+function gpClose(pop){ if(pop!==true) ovDone(gpClose); view.gp=null; document.getElementById("gPlay")?.remove(); document.documentElement.classList.remove("story-on"); render(); }
 function gpBind(){ const G=view.gp, key=keyOf(view.w,view.d), el=document.getElementById("gPlay"); if(!el) return;
   el.querySelectorAll("[data-gpx]").forEach(b=>b.onclick=gpClose);
   el.querySelectorAll("[data-gpagain]").forEach(b=>b.onclick=()=>gpOpen(G.k));
