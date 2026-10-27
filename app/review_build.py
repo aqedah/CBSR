@@ -52,3 +52,31 @@ for k in sorted(_SRJ,key=int):
     inner=inner.replace("v2.html?p=365&review=1&day="+k,"v2.html?p=rj&review=1&day="+k)
     _rr.append("<section data-day='%s'><h2>%s주차 %s일째 · %s</h2>%s</section>"%(k,w,d+1,_h.escape(lab),inner))
 open(OUT+'/rj.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>리딩지저스 이야기 카드 검토</title><meta name="robots" content="noindex"><style>'+_CSS+'</style></head><body><h1>리딩지저스 45주 이야기 카드 검토</h1><p>36–45주차(사도행전–요한계시록). \'카드로 보기\'로 실제 화면을 열고, ✎로 카드에 바로 메모합니다. 다 본 뒤 \'메모 복사\'를 눌러 대화에 붙여 넣어 주세요.</p><div id="bar"><span id="cnt"></span><span id="cnt2"></span><button id="cp">메모 복사</button></div>'+''.join(_rr)+'<script>'+_JS+'</script></body></html>')
+
+# 그림 목록 페이지 (gallery.html): ux/photos_master.json — 태그·쓰는 자리·뺀 이유를 한눈에
+_PM=json.load(open('ux/photos_master.json')) if os.path.exists('ux/photos_master.json') else []
+_PU=json.load(open('ux/photos_use.json')) if os.path.exists('ux/photos_use.json') else {}
+_FULL=json.load(open('plan.json'))['full']
+_SETN={1:'자연·하늘',2:'족장',3:'애굽·출애굽',4:'광야·성막',5:'정착·사사',6:'왕국',7:'분열·포로',8:'시·지혜·일상',9:'복음서',10:'사도행전·서신',11:'원역사(창 1–11)'}
+def _refs(rs): return ', '.join(_FULL[b-1]+' '+(str(a) if a==z else '%d–%d'%(a,z))+'장' for b,a,z in rs)
+_gc=[]
+for r in _PM:
+    kind='뺌' if r['out'] else ('특정 장면' if r['scope']=='s' else '두루 쓰는 배경')
+    src=('img/gx/' if r['out'] else 'img/g/')+r['id']+'.jpg'
+    info=[]
+    if r['out']: info.append("<b class='x'>뺀 이유: %s</b>"%_h.escape(r['out']))
+    if r['scope']=='s' and not r['out']:
+        if r['refs']: info.append('쓰는 장: '+_h.escape(_refs(r['refs'])))
+        if r['kw']: info.append('카드 글에 이 말이 있으면: '+_h.escape(' · '.join(r['kw'])))
+    else: info.append('시대: '+_h.escape(', '.join(_SETN.get(x,str(x)) for x in r['sets'])))
+    info.append('태그: '+_h.escape(', '.join(r['tags'])))
+    if not r['out']: info.append('지금 쓰인 카드: %d장'%_PU.get(r['id'],0))
+    _gc.append("<figure data-k='%s' data-id='%s'><img loading='lazy' src='%s' alt=''><figcaption><span class='gid'>%s</span> <span class='kd'>%s</span><b>%s</b><small>%s</small><textarea data-fb='%s' placeholder='이 그림 메모'></textarea></figcaption></figure>"%(kind,r['id'],src,r['id'],kind,_h.escape(r['memo']),'<br>'.join(info),r['id']))
+_GCSS="body{font-family:system-ui,sans-serif;margin:0;padding:16px;background:#f6f3ee;color:#222}h1{font-size:20px}#gf{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 14px}#gf button{border:1px solid #bbb;background:#fff;border-radius:16px;padding:6px 12px}#gf button.on{background:#333;color:#fff}#gq{padding:6px 10px;border:1px solid #bbb;border-radius:8px;flex:1;min-width:140px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}figure{margin:0;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px #0002}figure img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}figcaption{padding:8px 10px;font-size:13px;line-height:1.5}figcaption b{display:block;font-size:14px;margin:2px 0}figcaption small{color:#555;display:block}.gid{color:#888;font-size:12px}.kd{font-size:12px;background:#eee;border-radius:6px;padding:1px 6px}figure[data-k='뺌'] .kd{background:#f6d5d0}b.x{color:#a33;display:inline;font-size:13px}textarea{width:100%;box-sizing:border-box;margin-top:6px;font:inherit;font-size:13px;min-height:34px;border:1px solid #ddd;border-radius:6px}#bar{position:sticky;top:0;background:#f6f3eeee;padding:6px 0;z-index:2}#cp{padding:6px 12px}"
+_GJS="""const K='gallery-fb';let M={};try{M=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+document.querySelectorAll('textarea[data-fb]').forEach(t=>{t.value=M[t.dataset.fb]||'';t.oninput=()=>{M[t.dataset.fb]=t.value;if(!t.value)delete M[t.dataset.fb];try{localStorage.setItem(K,JSON.stringify(M))}catch(e){};cnt()}});
+function cnt(){document.getElementById('cnt').textContent='메모 '+Object.keys(M).length+'개'}cnt();
+document.getElementById('cp').onclick=()=>{const t=Object.keys(M).sort().map(k=>'그림 '+k+': '+M[k]).join('\\n')||'(메모 없음)';navigator.clipboard.writeText(t).then(()=>{document.getElementById('cp').textContent='복사했습니다'},()=>prompt('복사해 주세요',t))};
+let F='all';const q=document.getElementById('gq');function ap(){const s=q.value.trim();document.querySelectorAll('figure').forEach(f=>{const ok=(F==='all'||f.dataset.k===F)&&(!s||f.textContent.includes(s));f.style.display=ok?'':'none'})}
+document.querySelectorAll('#gf button').forEach(b=>b.onclick=()=>{F=b.dataset.f;document.querySelectorAll('#gf button').forEach(x=>x.classList.toggle('on',x===b));ap()});q.oninput=ap;"""
+open(OUT+'/gallery.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>이야기 카드 그림 목록</title><meta name="robots" content="noindex"><style>'+_GCSS+'</style></head><body><h1>이야기 카드 그림 목록</h1><p>쓰는 그림 %d장, 뺀 그림 %d장. <b>특정 장면</b> 그림은 그 장을 읽는 날이거나 카드 글에 적힌 말이 있을 때만 나옵니다. <b>두루 쓰는 배경</b>은 시대가 맞는 날에 나옵니다. 고칠 점은 그림 아래에 적고 \'메모 복사\'를 눌러 대화에 붙여 넣어 주세요.</p><div id="bar"><div id="gf"><button data-f="all" class="on">전체</button><button data-f="특정 장면">특정 장면</button><button data-f="두루 쓰는 배경">두루 쓰는 배경</button><button data-f="뺌">뺀 그림</button><input id="gq" placeholder="찾기: 언약궤, 출애굽기, g15…"></div><span id="cnt"></span> <button id="cp">메모 복사</button></div><div class="grid">'%(sum(1 for r in _PM if not r['out']),sum(1 for r in _PM if r['out']))+''.join(_gc)+'</div><script>'+_GJS+'</script></body></html>')

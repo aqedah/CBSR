@@ -2192,15 +2192,24 @@ const PH_GENRE={narrative:["desert","road","valley","wilderness_path","dusk"],la
 const phHash=s=>{ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; };
 const STAGE_T={"배경":["desert","valley","mountain_peak","sea","city_wall","ruins","sky","clouds","wilderness_path","river","dawn","dusk","pasture","palm","goat","cattle"],"긴장":["storm_sky","dust","army","night_sky","cave","road","waves","rain","fire","lightning","wind","hail","sandstorm","flood","earthquake","darkness","locust","sword","chains","prison","thorns","lion","wolf"],"전환":["hands","bread","clay_jar","oil_lamp","scroll","ancient_text","stones","seed","stone_altar","sunrise_light_rays","fire"],"의미":["dawn","sunrise_light_rays","wheat_field","flowers","olive_tree","sky","dusk","harvest","rainbow","lily","sheaves","barley","pasture","spring_water","dove","stars"]};
 /* 그림 묶음(set)과 시대: 1 자연·하늘(어디나) 2 족장 3 애굽·출애굽 4 광야·성막 5 정착·사사 6 왕국 7 분열·포로 8 시·지혜(구약 일상) 9 복음서 10 사도행전·서신 11 원역사(창 1–11) */
-function ERA_OK(b,c){ if(b===1) return c<=11?[1,11,8]:[1,2,8]; if(b===2) return c<=15?[1,3,4,8]:[1,4,3,8]; if(b<=5) return [1,4,3,8]; if(b<=8) return [1,5,4,8]; if(b<=14) return [1,6,5,8]; if(b<=17) return [1,7,8]; if(b<=22) return [1,8,2,5,6]; if(b<=39) return [1,7,6,8]; if(b<=43) return [1,9,8]; return [1,10,9]; }
-function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt.era||null; const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
+function ERA_OK(b,c){ if(b===1) return c<=11?[1,11,8]:c>=37?[1,2,3,8]:[1,2,8]; if(b===2) return c<=15?[1,3,4,8]:[1,4,8]; if(b<=5) return [1,4,8]; if(b<=8) return [1,5,4,8]; if(b<=14) return [1,6,5,8]; if(b<=17) return [1,7,8]; if(b<=22) return [1,8,2,5,6]; if(b<=39) return [1,7,6,8]; if(b<=43) return [1,9,8]; return [1,10,9]; }
+/* 그림 고르기: 특정 장면 그림(scope "s")은 그날 읽는 장이 그 그림의 장(refs)에 들거나 카드 글에 그 장면의 낱말(kw)이 있을 때만 씁니다.
+   두루 쓰는 배경(scope "g")은 그 시대 묶음(sets)이 맞을 때만 씁니다. 같은 장면의 둘째 그림(g21 ↔ g11)은 하루에 한 번만 */
+const PH_TWIN=id=>/^g21_/.test(id)?"g11_"+id.slice(4):/^g11_/.test(id)?"g21_"+id.slice(4):"";
+function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt.era||null, CH=opt.ch||[]; const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
   if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f) return f; }
   const want=new Set(), hs=new Set(); PH_KW.forEach(([re,t])=>{ if(re.test(text)) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
-  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1;
-  for(const p of P){ if(used.has(p.id)) continue; let s=0; const pl=p.pl||[];
-    const plw=pl.flatMap(n=>n.split(/[\/ ]/)).filter(x=>x.length>=2&&!/^(호수|해변|광야|백향목|메소포타미아)$/.test(x));
-    if(plw.some(n=>text.includes(n))) s+=6; else if(plw.some(n=>ctxPl.includes(n))) s+=1.5; else if(plw.length) s-=4;
-    if(eok&&p.set&&!eok.includes(p.set)) s-=12; else if(eok&&p.set&&p.set===eok[1]) s+=1.2; (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=8; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; if(opt.stage&&(STAGE_T[opt.stage]||[]).includes(t)) s+=.9; });
+  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9;
+  const kt=opt.kwText||text, dayB=CH.length?CH[0][0]:0;
+  /* 카드가 장절을 밝혔으면(예: 22:3) 그 장으로 좁혀서 장면 그림을 고릅니다 */
+  const cited=new Set([...kt.matchAll(/(?:^|[^가-힣\d])(\d{1,3}):\d/g)].map(m=>+m[1])), CHc=CH.filter(x=>cited.has(x[1])), CH2=CHc.length?CHc:CH;
+  const inRef=p=>(p.refs||[]).some(([b,a,z])=>CH2.some(x=>x[0]===b&&x[1]>=a&&x[1]<=z));
+  for(const p of P){ if(used.has(p.id)||used.has(PH_TWIN(p.id))) continue; let s=0; const sets=p.sets||(p.set?[p.set]:[]), eraOk=!eok||!sets.length||sets.some(x=>eok.includes(x));
+    if(p.scope==="s"){ const r=inRef(p), k=(p.kw||[]).some(w=>kt.includes(w)); if(!r&&!k) continue; if(!r&&!eraOk&&!(dayB>=40&&sets.every(x=>x<=8||x===11))) continue; s+=k?(r?14:9):3; }
+    else if(!eraOk) continue;
+    const pl=p.pl||[]; if(pl.some(n=>kt.includes(n))) s+=4; else if(pl.some(n=>ctxPl.some(c=>c.includes(n)||n.includes(c)))) s+=1; else if(pl.length&&p.scope!=="s") s-=2;
+    if(eok&&sets.includes(eok[1])) s+=1.2;
+    (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=3; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; if(opt.stage&&(STAGE_T[opt.stage]||[]).includes(t)) s+=.9; });
     if(opt.mood&&p.mood){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
   return best; }
@@ -2238,7 +2247,11 @@ function applyPV(){ const SC=SC_SRC(); if(!SC) return;
   if(SV) SV.cache={}; }
 function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {}; if(SV.cache[ck]) return SV.cache[ck];
   const no=dayNo(w,d), p=dayPlan(w,d), C=storyDay(no); let out=[];
-  if(C) out=C.cards.map(c=>Object.assign({},c));
+  if(C){ out=C.cards.map(c=>Object.assign({},c));
+    /* 손으로 쓴 원고에 지도 카드가 없으면, 그날 나오는 곳·이동 경로를 배경 카드 뒤에 자동으로 넣습니다 */
+    if(!out.some(c=>c.k==="map")&&!C.nomap){ const M=storyMapPts(w,d,null), gn=GENRE_OF(p.ch[0][0]);
+      if(M.route.length>1||(M.extra.length&&!/^(law|poetry|wisdom)$/.test(gn))){ let at=-1; out.forEach((c,i)=>{ if(/^배경/.test(c.lab||"")) at=i; }); if(at<0) at=Math.min(1,out.length-1);
+        out.splice(at+1,0,{k:"map",auto:1,lab:M.route.length>1?"이동":"오늘 나오는 곳",h:M.route.length>1?`${M.route[0][0]}에서 ${M.route[M.route.length-1][0]}까지`:"오늘 본문의 무대",b:[(M.route.length>1?M.route:M.extra).map(x=>x[0]).join(" · ")]}); } } }
   else { const N=(typeof CARDNEWS!=="undefined"&&MODE==="y365"&&CARDNEWS[no])||null;
     out.push({k:"cover",kick:p.label,h:p.topic||p.label});
     if(N) N.forEach(([t,r])=>out.push({k:"line",t,r}));
@@ -2258,7 +2271,7 @@ function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {
 
     g={st,list:[i],hint:s.img}; groups.push(g); });
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
-    const ph=phPick(txt,ctxPl,gen,ck+":"+gi,used,G.hint,{stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1])}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
+    const ph=phPick(txt,ctxPl,gen,ck+":"+gi,used,G.hint,{stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
     G.list.forEach((i,k)=>{ out[i].ph=ph; out[i].phv=k; }); });
   out.forEach(s=>{ if(s.k==="fin"||s.k==="ask") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
   SV.cache[ck]=out; return out; }
@@ -2549,7 +2562,7 @@ function speechInfo(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(
   if(who&&!(TRUST_SP.test(last)||TRUST_SP.test(who)||isPerson(last)||SPK_NOUN.test(last))) who="";
   if(!who) return {who:"",trusted:null};
   return {who, trusted:TRUST_SP.test(who)||TRUST_SP.test(last)||TRUST_P.test(last)}; }
-try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),pause:on=>storyPause(on)}}; }catch(e){}
+try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),pause:on=>storyPause(on)}}; }catch(e){}
 function verseQuestion(v){
   const K=verseKind(v), sp=speechInfo(v);
   if(sp&&sp.trusted===false&&K.k!=="prayer") return `이 말은 ${sp.who}의 말입니다. 누구에게, 무엇을 위해 한 말입니까? 앞뒤 이야기는 이 말을 믿을 만한 말로 보여 줍니까?`;
