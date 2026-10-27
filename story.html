@@ -7138,8 +7138,8 @@ function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {
   const stageOf=s=>{ if(s.k==="cover") return "표지"; const h=(s.lab||"").split("·")[0].trim(); return /^(배경|긴장|전환|의미)$/.test(h)?h:""; };
   const groups=[]; let g=null;
   out.forEach((s,i)=>{ if(noPh(s)){ g=null; return; } const st=stageOf(s), sameHint=true;
-    if(g&&st&&st===g.st&&st!=="표지"&&sameHint&&g.list.length<2){ g.list.push(i); return; }
-    if(g&&!st&&!g.st&&s.k==="line"&&g.list.length<2){ g.list.push(i); return; }
+    
+
     g={st,list:[i],hint:s.img}; groups.push(g); });
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
     const ph=phPick(txt,ctxPl,gen,ck+":"+gi,used,G.hint,{stage:G.st,mood:cover&&cover.mood}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
@@ -7150,7 +7150,7 @@ const SN_LAB={obs:"본문 관찰",god:"하나님은",my:"나의 생각거리",en
 const SG_BG={narrative:["#3a2c1f","#15110d"],law:["#4a3418","#1a1209"],poetry:["#3a2c46","#17111d"],wisdom:["#353b1d","#15170b"],prophecy:["#4a2620","#1b0d0a"],letter:["#1f2f47","#0c1320"],apocalypse:["#2c2340","#100c18"]};
 const rlab2=r=>r?`${PLAN.abbr[r[0]-1]} ${r[1]}:${r[2]}${r[3]?"–"+r[3]:""}`:"";
 const S_KDUR={cover:7000,full:9000,split:9000,quote:10000,echo:10500,table:12000,line:7500};
-function sDur(s){ if(s.qt||s.k==="table"||s.k==="echo"||s.k==="map"||s.k==="fin"||s.k==="next"||s.k==="ask") return 0; const n=sTxt(s).length; return Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
+function sDur(s){ if(s.qt||s.k==="table"||s.k==="echo"||s.k==="map"||s.k==="fin"||s.k==="next"||s.k==="ask") return 0; const n=sTxt(s).length; return 1000+Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
 function sKind(s){ return s.qt?"qt":s.k; }
 function nextWD(w,d){ let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } return PLAN.plan[nw-1]&&PLAN.plan[nw-1][nd2]?[nw,nd2]:null; }
 const isHere=(w,d)=>w===here.w&&d===here.d;
