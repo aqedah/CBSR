@@ -2117,7 +2117,7 @@ function renderQT(){
   else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=moreTraits+`</section>`;
   // 3 그리스도께로
-  const PVK=PVQ.has(key), PCK={quote:"신약의 직접 인용",repeat:"같은 문장의 되풀이",self:"본문 스스로의 지시"};
+  const PVK=PVQ.has(key), PCK={quote:"신약의 직접 인용",mention:"신약의 직접 언급",repeat:"같은 문장의 되풀이",phrase:"같은 표현의 되풀이",self:"본문 스스로의 지시"};
   if(PVK){ if(det&&det.christ) h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${det.ck&&PCK[det.ck]?`<span class="ckind">${PCK[det.ck]}</span>`:""}<div class="qcard"><p>${esc(det.christ)}</p></div></section>`; }
   else h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div>${echoBox(w,d)}</section>`;
   // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
