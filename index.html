@@ -1217,7 +1217,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .stop{position:absolute;top:calc(env(safe-area-inset-top,0px) + 18px);left:14px;right:8px;display:flex;align-items:center;gap:8px;z-index:30;font-size:13px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .stop .sdot{width:28px;height:28px;flex:none;border-radius:50%;background:linear-gradient(135deg,#e2b874,#9c5b2e);display:grid;place-items:center;font:700 12px var(--sser);color:#1b130b;text-shadow:none}
 .stop b{font-size:13px}.stop span{opacity:.75;font-size:12.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sx{border:0;background:none;color:#fff;font-size:20px;padding:4px 8px}
+.sx{border:0;background:none;color:#fff;font-size:20px;padding:4px 8px}.sps{font-size:14px;letter-spacing:-2px}
 .sph{position:absolute;inset:0;overflow:hidden}
 .sph img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(.92) contrast(1.04)}
 .sph.v1 img{transform:scale(1.14)}.sph.v2 img{transform:scale(1.24)}
@@ -1262,7 +1262,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sgrid .h{font:700 14px var(--sser);color:var(--sgold);text-align:center}
 .sgrid .k{color:#a99a85;font-size:12px;padding-left:0}
 .sgrid .c{text-align:center;color:#f6efe4}
-.sgrid.hide-hl .hl{color:inherit;font-weight:inherit}.rvhide{display:none}.sreveal{margin-top:14px;width:100%;border:1px solid var(--sgold);background:rgba(226,184,116,.12);color:var(--sgold);border-radius:12px;padding:11px;font:700 14.5px var(--f-ui);cursor:pointer}
+.sgrid.hide-hl .hl{color:inherit;font-weight:inherit}.spair2.hide-u u{color:inherit;border-bottom:0}.rvhide{display:none}.sreveal{margin-top:14px;width:100%;border:1px solid var(--sgold);background:rgba(226,184,116,.12);color:var(--sgold);border-radius:12px;padding:11px;font:700 14.5px var(--f-ui);cursor:pointer}
 .sgrid .mid{background:rgba(255,91,69,.10)}.sgrid .hl{color:#fff;font-weight:700}
 .snote{font-size:14.5px;color:var(--ssub);margin-top:14px;line-height:1.65;word-break:keep-all}
 .spair2{margin-top:14px;display:grid;gap:10px}
@@ -7026,7 +7026,7 @@ function renderQT(){
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
   let moreTraits=""; if(traits.length>2) moreTraits=`<details class="mine"><summary>본문에서 찾은 하나님의 성품 더 보기</summary>`+traits.slice(2).map(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;}).join("")+`</details>`;
   dp+=`</details>`;
-  h+=`<section class="sec deepsec">${dp}</section>`;
+  if(!PVQ.has(key)) h+=`<section class="sec deepsec">${dp}</section>`;
   // 2 하나님은 어떤 분
   h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span><small>이 본문에서 하나님은 어떤 분인가</small></div>`;
   if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
@@ -7034,7 +7034,9 @@ function renderQT(){
   else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=moreTraits+`</section>`;
   // 3 그리스도께로
-  h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div>${echoBox(w,d)}</section>`;
+  const PVK=PVQ.has(key), PCK={quote:"신약의 직접 인용",repeat:"같은 문장의 되풀이",self:"본문 스스로의 지시"};
+  if(PVK){ if(det&&det.christ) h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${det.ck&&PCK[det.ck]?`<span class="ckind">${PCK[det.ck]}</span>`:""}<div class="qcard"><p>${esc(det.christ)}</p></div></section>`; }
+  else h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div>${echoBox(w,d)}</section>`;
   // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
   const vs=qtCands(A,traits,R,w+"-"+(d+1));
   const kv=qtKV(q,A,vs,w+"-"+(d+1));
@@ -7044,9 +7046,9 @@ function renderQT(){
   h+=`<div class="row"><button class="btn ghost small" id="qtPickV">본문에서 직접 고르기</button></div>`;
   h+=`</section>`;
   /* 나의 자리: 예전 '더 깊이'의 '내 자리' 질문을 적용 단계로(저장 칸은 그대로 l0~l2) */
-  { const li=L.findIndex(l=>l.k==="내 자리"); if(li>=0) h+=`<section class="sec"><details class="mine"${q["l"+li]?" open":""}><summary>나의 자리</summary><p class="lead" style="margin:6px 0">${esc(L[li].q)}</p><textarea data-qt="l${li}" rows="2" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+li]||"")}</textarea></details></section>`; }
+  { const li=L.findIndex(l=>l.k==="내 자리"); if(li>=0&&!PVQ.has(key)) h+=`<section class="sec"><details class="mine"${q["l"+li]?" open":""}><summary>나의 자리</summary><p class="lead" style="margin:6px 0">${esc(L[li].q)}</p><textarea data-qt="l${li}" rows="2" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+li]||"")}</textarea></details></section>`; }
   // 5 한 줄 묵상
-  h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
+  h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
   // 6 기도
   const pray=(det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
   h+=`<section class="sec"><span class="label">오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
@@ -7112,7 +7114,7 @@ function applyPV(){ if(typeof STORYC==="undefined"||MODE!=="y365") return;
     const set=(o,key,v)=>{ if(v===undefined) delete o[key]; else o[key]=v; };
     set(EYE,k,Q&&Q.obs?Q.obs:PV_ORIG.EYE[k]);
     if(Q&&Q.obs) PVQ.add(k); else PVQ.delete(k);
-    set(DETAIL,k2,Q?Object.assign({},PV_ORIG.DETAIL[k2]||{},Q.god?{god:Q.god}:{},Q.christ?{christ:Q.christ}:{},Q.apply?{apply:Q.apply}:{},Q.pray?{pray:Q.pray}:{}):PV_ORIG.DETAIL[k2]);
+    set(DETAIL,k2,Q?Object.assign({},PV_ORIG.DETAIL[k2]||{},Q.god?{god:Q.god}:{},"christ" in Q?{christ:Q.christ,ck:Q.ck||""}:{},Q.apply?{apply:Q.apply}:{},Q.pray?{pray:Q.pray}:{}):PV_ORIG.DETAIL[k2]);
     set(GUIDE,k,Q&&Q.guide?Object.assign({},PV_ORIG.GUIDE[k]||{},Q.guide):PV_ORIG.GUIDE[k]);
     if(typeof KWQ!=="undefined") set(KWQ,no,S&&S.kwq?S.kwq:PV_ORIG.KWQ[no]); }
   if(SV) SV.cache={}; }
@@ -7166,7 +7168,7 @@ function storyCardHTML(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</sp
   const B=(s.b||[]).map(x=>typeof x==="string"?`<p>${smk(x)}</p>`:`<div class="sq2">${smk(x.q[0])}<small>${esc(x.q[1]||"")}</small></div>`).join("");
   if(s.k==="cover") return `<div class="sbox"><div class="skick">${esc(s.kick||"")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
   if(s.k==="quote") return `<div class="sbox">${lab}${B}<div class="sbigq" style="margin-top:14px">${smk(s.big)}</div><div class="sref">${esc(s.ref||"")}</div></div>`;
-  if(s.k==="echo") return `<div class="sbox">${lab}${h2}<div class="spair2">${(s.pair||[]).map(x=>`<div>${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${B}</div>`;
+  if(s.k==="echo"){ const rv=!!s.reveal; return `<div class="sbox">${lab}${h2}<div class="spair2${rv?" hide-u":""}">${(s.pair||[]).map(x=>`<div>${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 같은 말과 달라진 말 보기</button><div class="rvhide">${B}${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`:B}</div>`; }
   if(s.k==="line"){ const one=s.r&&!s.r[3]?vtxt(s.r):""; return `<div class="sbox">${lab}<p class="sline2">${smk(s.t)}</p>${s.r?(one&&one.length<=90?`<div class="sq2">${esc(one)}<small>${esc(rlab2(s.r))}</small></div>`:`<div class="sref">${esc(rlab2(s.r))}</div>`):""}</div>`; }
   if(s.k==="table"){ const T=s.tbl, n=T.h.length, hl=new Set((T.hl||[]).map(x=>x.join(","))), mid=T.mid;
     let g=`<div></div>`+T.h.map((x,j)=>`<div class="h${j===mid?" mid":""}">${esc(x)}</div>`).join("");
@@ -7199,7 +7201,7 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
     if(pr&&vtxt(pr[0])&&vtxt(pr[1])) c+=`<div class="spair"><div><small>${esc(rlab(pr[0]))}</small><q>${esc(vtxt(pr[0]))}</q></div><i aria-hidden="true">↕</i><div class="ot"><small>${esc(rlab(pr[1]))}</small><q>${esc(vtxt(pr[1]))}</q></div></div>`;
     const s1=txt.split(/(?<=\.)\s+/); c+=`<p class="sline">${esc(s1[0]||"")}</p>${s1.length>1?`<details class="smore"><summary>더 읽기</summary><p>${esc(s1.slice(1).join(" "))}</p></details>`:""}`; }
   else if(s.k==="my"){ const K=(typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null;
-    c+=`<p class="sq">${esc(K?K.q:(kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q)))}</p>${K&&K.r?`<p class="shint">${esc(rlab(K.r))} · ${esc(vtxt(K.r))}</p>`:""}<textarea data-qt="med" rows="3" placeholder="한 줄로 적어 보세요 (적지 않아도 됩니다)">${esc(q.med||"")}</textarea>`; }
+    c+=`<p class="sq">${esc(K?K.q:(PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q)))}</p>${K&&K.r?`<p class="shint">${esc(rlab(K.r))} · ${esc(vtxt(K.r))}</p>`:""}<textarea data-qt="med" rows="3" placeholder="한 줄로 적어 보세요 (적지 않아도 됩니다)">${esc(q.med||"")}</textarea>`; }
   else { if(q.done) c+=`<div class="sdonenote"><b>✓ 오늘 QT를 마쳤습니다</b>${kv?`<p>${esc(kv.t)} <small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></p>`:""}<button class="btn" data-sgo="1">오늘의 말씀 카드 ›</button><button class="linkbtn" id="qtDone">완료 취소</button></div>`;
     else { const pray=(det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
       c+=`${kv?`<div class="skcard"><span>오늘 붙잡을 말씀</span><q>${esc(kv.t)}</q><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></div>`:""}`;
@@ -7235,7 +7237,7 @@ function storyShow(){ clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.
    ${showPh?`<div class="sph v${s.phv||0}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
    <div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${dur}ms"`:""}></i></span>`).join("")}</div>
-   <div class="stop"><span class="sdot">통</span><b>${esc(p.label)}</b><span></span><button class="sx" id="sClose" aria-label="닫기">✕</button></div>
+   <div class="stop"><span class="sdot">통</span><b>${esc(p.label)}</b><span></span>${auto?`<button class="sx sps" id="sPause" aria-label="멈춤">❚❚</button>`:""}<button class="sx" id="sClose" aria-label="닫기">✕</button></div>
    <div class="sstage" id="sStage">${s.qt?`${storySlideHTML(s,w,d)}<div class="snav2"><button class="btn ghost" id="sPrev2">‹ 이전</button>${SV.i<S.length-1?`<button class="btn" id="sNext2">다음 ›</button>`:`<button class="btn" id="sEnd">닫기</button>`}</div>`:storySlideHTML(s,w,d)}</div>
    ${showPh&&kind!=="qt"&&ph.link?`<a class="scr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}
    ${hint?`<p class="stapnote">왼쪽을 누르면 이전 · 오른쪽을 누르면 다음 · 길게 누르면 멈춤</p>`:""}</div>`;
@@ -7255,14 +7257,16 @@ function storyShow(){ clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.
   const cdEl=r.querySelector("#sCount"); if(cdEl){ const tk=()=>{ const t=cdText(); cdEl.textContent=t; if(t==="00:00:00"){ clearInterval(SV.cd); cdEl.nextElementSibling.textContent="열렸습니다"; } }; tk(); SV.cd=setInterval(tk,1000); }
   if(auto){ SV.dur=dur; SV.start=Date.now(); SV.left=dur; SV.paused=false; SV.t=setTimeout(()=>storyGo(SV.i+1),dur); } }
 function storyPause(on){ const r=document.getElementById("storyRoot"); if(!r) return; const bar=r.querySelector(".sbars2 .run i"); if(!bar) return;
+  const spb=r.querySelector("#sPause"); if(spb){ spb.textContent=on?"▶":"❚❚"; spb.setAttribute("aria-label",on?"이어 보기":"멈춤"); }
   if(on&&!SV.paused){ SV.paused=true; clearTimeout(SV.t); SV.left-=Date.now()-SV.start; bar.style.animationPlayState="paused"; r.classList.add("paused"); }
   else if(!on&&SV.paused){ SV.paused=false; SV.start=Date.now(); bar.style.animationPlayState="running"; r.classList.remove("paused"); SV.t=setTimeout(()=>storyGo(SV.i+1),Math.max(300,SV.left)); } }
 function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(key);
   r.querySelector("#sClose").onclick=storyClose;
+  const sp=r.querySelector("#sPause"); if(sp) sp.onclick=()=>storyPause(!SV.paused);
   const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=storyClose;
   r.querySelectorAll("[data-sgo]").forEach(b=>b.onclick=()=>storyGo(SV.i+(+b.dataset.sgo)));
   const g0=r.querySelector("[data-sgo0]"); if(g0) g0.onclick=()=>storyGo(0);
-  const rvb=r.querySelector("[data-reveal]"); if(rvb) rvb.onclick=()=>{ const bx=rvb.closest(".sbox"); bx.querySelector(".sgrid").classList.remove("hide-hl"); bx.querySelectorAll(".rvhide").forEach(x=>x.classList.remove("rvhide")); rvb.remove(); };
+  const rvb=r.querySelector("[data-reveal]"); if(rvb) rvb.onclick=()=>{ const bx=rvb.closest(".sbox"); bx.querySelectorAll(".hide-hl,.hide-u").forEach(x=>x.classList.remove("hide-hl","hide-u")); bx.querySelectorAll(".rvhide").forEach(x=>x.classList.remove("rvhide")); rvb.remove(); };
   const tq=r.querySelector("#sToQT"); if(tq) tq.onclick=()=>{ storyClose(); view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); };
   const tr2=r.querySelector("#sToRec"); if(tr2) tr2.onclick=()=>{ storyClose(); view.tab="record"; render(); scrollTo({top:0}); };
   const tc=r.querySelector("#sToCh"); if(tc) tc.onclick=()=>{ storyClose(); view.tab="challenge"; render(); scrollTo({top:0}); };
@@ -8083,7 +8087,7 @@ function bindToday(){ clearInterval(TD.cd);
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
   const tg=document.getElementById("tdGo"); if(tg) tg.onclick=go;
   const rr=document.getElementById("tdReread"); if(rr) rr.onclick=toText;
-  const pv=document.getElementById("pvSw"); if(pv) pv.onclick=e=>{ e.stopPropagation(); try{ localStorage.setItem("cbsr-pv",PV()==="B"?"A":"B"); }catch(er){} applyPV(); render(); };
+  const pv=document.getElementById("pvSw"); if(pv) pv.onclick=e=>{ e.stopPropagation(); const nv=PV()==="B"?"A":"B"; try{ localStorage.setItem("cbsr-pv",nv); }catch(er){} try{ const u=new URL(location.href); if(u.searchParams.has("pv")){ u.searchParams.set("pv",nv); history.replaceState(null,"",u); } }catch(er){} applyPV(); render(); };
   const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
   const ce=document.getElementById("tdCount"); if(ce){ const tk=()=>{ const t=cdText(); ce.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); setTimeout(()=>location.reload(),1500); } }; tk(); TD.cd=setInterval(tk,1000); } }
@@ -8364,7 +8368,7 @@ function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth
 applyPV();
 if(window.CBSR_V2) v2Nav();
 /* 검토용: v2.html?day=80 → 그날 이야기 바로 열기(통독 완료 여부와 상관없이) */
-if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=365&&MODE==="y365"){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const t0=Date.now(), go=()=>{ if(BIBLE){ render(); storyOpen(0); } else if(Date.now()-t0<15000) setTimeout(go,300); }; setTimeout(go,300); } }
+if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=365&&MODE==="y365"){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const go=()=>{ if(BIBLE){ render(); storyOpen(0); } else setTimeout(go,300); }; setTimeout(go,300); } }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
