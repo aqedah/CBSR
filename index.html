@@ -1261,6 +1261,31 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .wtile .wtbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.65)}
 .wtile span{position:absolute;left:6px;right:6px;bottom:6px;font-size:12px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.8);text-align:left}
 /* ===== 이야기 카드 (스토리) ===== */
+#readRoot{position:fixed;inset:0;z-index:9500;background:#0d0b09;color:#f3ece0;animation:siIn .2s ease}
+#readRoot .rdfr{position:absolute;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:linear-gradient(170deg,#2b2219,#14100c)}
+#readRoot .rdhead{position:absolute;left:0;right:0;top:0;z-index:5;padding:10px 12px 6px;background:linear-gradient(#000a,#0000)}
+#readRoot .sbars{display:flex;gap:3px}#readRoot .sbars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}#readRoot .sbars i.on,#readRoot .sbars i.cur{background:#fff}
+#readRoot .rdbar{height:3px;background:rgba(255,255,255,.25);border-radius:2px}#readRoot .rdbar i{display:block;height:100%;background:#fff;border-radius:2px}
+#readRoot .rdtop{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px}#readRoot .rdtop b{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#readRoot .rdav{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#8a6a45;font-size:13px;font-weight:700;flex:none}
+#readRoot .rdpg{font-size:12px;color:#cbbfae}
+#readRoot .rdbtn{background:none;border:0;color:#fff;font:inherit;font-size:14px;padding:6px 5px;cursor:pointer;position:relative;z-index:6}#readRoot .rdx{font-size:18px}
+#readRoot .rdpage{position:absolute;inset:0;padding:96px 22px 40px}
+.rdtext{font-family:"Noto Serif KR","Gowun Batang",serif;line-height:1.85;color:#f3ece0;word-break:keep-all}
+.rdtext p{margin:0 0 .7em}.rdtext sup{font-size:.58em;color:#e2b874;margin-right:3px;font-family:system-ui,sans-serif}
+.rdtext .rdch{font-size:1.2em;color:#e2b874;margin:0 0 .7em;line-height:1.4}.rdtext .rdch small{display:block;font-size:.66em;color:#d9cdbb;font-weight:400;margin-top:3px;font-family:system-ui,sans-serif}
+.rdtext .rdch2{font-size:.72em;color:#a99a86;margin:0 0 .6em;font-weight:500;font-family:system-ui,sans-serif}
+#readRoot .rdref{position:absolute;left:22px;bottom:16px;font-size:12px;color:#a99a86}
+#readRoot .rdcover{position:absolute;inset:0;background-size:cover;background-color:#2b2219}
+#readRoot .rdcover:after{content:"";position:absolute;inset:0;background:linear-gradient(#0003 30%,#000d 75%)}
+#readRoot .rdcov{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 24px 48px}
+#readRoot .rdk{display:inline-block;font-size:13px;color:#e2b874;letter-spacing:.04em;margin-bottom:8px}
+#readRoot .rdcov h1{font-family:"Noto Serif KR",serif;font-size:32px;margin:0 0 6px;line-height:1.3}#readRoot .rdcov p{margin:4px 0;color:#d9cdbb;font-size:15px}
+#readRoot .rdfind{margin-top:14px!important;padding:10px 12px;border-left:3px solid #e2b874;background:#0006;border-radius:6px;line-height:1.6}#readRoot .rdfind span{display:block;font-size:12px;color:#e2b874}
+#readRoot .rdhint{font-size:13px!important;color:#bfb2a0!important;margin-top:16px!important}
+#readRoot .rdend{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:stretch;padding:0 28px;gap:10px;text-align:center}
+#readRoot .rdend h2{font-family:"Noto Serif KR",serif;font-size:24px;margin:0 0 14px}#readRoot .rdbig{padding:15px;font-size:16px}#readRoot .btn.ghost{color:#fff;border-color:#fff8}#readRoot .linkbtn{color:#d9cdbb;margin-top:8px}
+#readRoot .rdtap{position:absolute;top:80px;bottom:0;z-index:3}#readRoot .rdl{left:0;width:30%}#readRoot .rdr{right:0;width:70%}
 #storyRoot{position:fixed;inset:0;z-index:9500;background:#0d0b09;color:#f6efe4;animation:siIn .2s ease;--sgold:#e2b874;--ssub:#d9cdbb;--sred:#ff5b45;--sline:rgba(255,255,255,.18);--sser:"Noto Serif KR","Gowun Batang",serif}
 #storyRoot .sfr{position:absolute;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:linear-gradient(165deg,var(--sg1,#3a2c1f),var(--sg2,#15110d))}
 html.story-on .bnav,html.story-on .totop{display:none!important}
@@ -1341,8 +1366,8 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .spl.lf::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--sred);margin-left:5px;vertical-align:-1px;box-shadow:0 0 4px #000}.spl.alt.lf::after{border-color:var(--sgold)}
 .sroute{stroke-dasharray:1600;stroke-dashoffset:1600;animation:sdraw 6.5s .6s ease-in-out forwards}
 @keyframes sdraw{to{stroke-dashoffset:0}}
-.smnav{position:absolute;z-index:600;top:50%;transform:translateY(-50%);width:32px;height:56px;border:0;background:rgba(0,0,0,.3);color:#fff;font-size:26px}
-.smnav.l{left:0;border-radius:0 10px 10px 0}.smnav.r{right:0;border-radius:10px 0 0 10px}
+.smnav{position:absolute;z-index:600;top:0;bottom:0;width:50%;border:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.smnav.l{left:0}.smnav.r{right:0}
 .stapnote{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 56px);text-align:center;font-size:11px;color:rgba(255,255,255,.55);z-index:25;margin:0;pointer-events:none}
 .story-root.paused .sbars2{opacity:.45}
 /* QT 단계: 같은 사진을 어둡게 깔고 그 위에 글상자 */
@@ -7477,7 +7502,7 @@ function renderRead(){
   const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:"";
   const V2R=!!window.CBSR_V2;
   if(V2R&&!view.v2shut) view.open=true;
-  const aid=V2R&&(helpBox||eyeQ)?`<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>지난 이야기 · 살펴볼 질문</small></summary>${helpBox.replace('<details class="help30"','<details class="help30" open')}${eyeQ}</details>`:"";
+  const aid=false&&V2R&&(helpBox||eyeQ)?`<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>지난 이야기 · 살펴볼 질문</small></summary>${helpBox.replace('<details class="help30"','<details class="help30" open')}${eyeQ}</details>`:"";
   if(!view.open){
     h+=V2R?`${aid}<button class="openbtn" id="openText">본문 펼치기</button>`:`${helpBox}${eyeQ}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else if(V2R){
@@ -7816,6 +7841,54 @@ function renderQT(){
   view.qtJust=false;
   return h;
 }
+
+/* ===== 본문 스토리 보기(v2): 오늘 본문을 스토리처럼 한 장씩 넘기며 읽습니다 ===== */
+const RV={pages:[],i:0,key:""};
+function rdFontPx(){ try{ return +localStorage.getItem("cbsr-rdfs")||19; }catch(e){ return 19; } }
+function rdPages(w,d){ const p=dayPlan(w,d), box=document.createElement("div"), fs=rdFontPx();
+  const W=Math.min(innerWidth,520)-44, H=innerHeight-150; box.className="rdtext"; box.style.cssText=`position:absolute;visibility:hidden;left:-9999px;top:0;width:${W}px;font-size:${fs}px`; document.body.appendChild(box);
+  const pages=[]; let cur=null;
+  const start=(b,c,first)=>{ cur={b,c,first,html:first?`<h3 class="rdch">${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}${FLOW[b+"-"+c]?`<small>${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`:""}</h3>`:`<h4 class="rdch2">${esc(PLAN.abbr[b-1])} ${c}${b===19?"편":"장"}</h4>`,v1:0,v2:0,n:0}; };
+  for(const [b,c] of p.ch){ const V=BIBLE[b-1][c-1]||[], P=new Set(PARA[b+"-"+c]||[]); start(b,c,true);
+    V.forEach((t,i)=>{ const v=i+1, piece=`${P.has(v)&&cur.n?`</p><p>`:""}<span class="rv"><sup>${v}</sup>${esc(t)}</span> `;
+      box.innerHTML=cur.html+`<p>`+piece+`</p>`;
+      if(cur.n&&box.scrollHeight>H){ pages.push(cur); start(b,c,false); }
+      else if(cur.n&&P.has(v)&&box.scrollHeight>H*.82){ pages.push(cur); start(b,c,false); }
+      cur.html+=(cur.n?piece:piece.replace(/^<\/p><p>/,"")); if(!cur.v1) cur.v1=v; cur.v2=v; cur.n++; });
+    pages.push(cur); }
+  box.remove(); return pages.map(x=>Object.assign(x,{html:x.html.replace(/(<\/h[34]>)/,"$1<p>")+"</p>"})); }
+function rdOpen(at){ const {w,d}=view, k=keyOf(w,d); storyFont(); RV.key=MODE+":"+k; RV.pages=rdPages(w,d);
+  let last=0; try{ last=+((JSON.parse(localStorage.getItem("cbsr-rdpos")||"{}"))[RV.key]||0); }catch(e){}
+  RV.i=at!=null?at:(last>0&&last<=RV.pages.length?last:0);
+  mem.seen ||= {}; mem.seen[k]=1; save();
+  let r=document.getElementById("readRoot"); if(!r){ r=document.createElement("div"); r.id="readRoot"; document.body.appendChild(r); }
+  document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); rdShow(); }
+function rdClose(){ const r=document.getElementById("readRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
+function rdSave(){ try{ const o=JSON.parse(localStorage.getItem("cbsr-rdpos")||"{}"); o[RV.key]=RV.i; localStorage.setItem("cbsr-rdpos",JSON.stringify(o)); }catch(e){} }
+function rdShow(){ const r=document.getElementById("readRoot"); if(!r) return; const {w,d}=view, p=dayPlan(w,d), k=keyOf(w,d), N=RV.pages.length+2, i=RV.i;
+  const S=(typeof storySlides==="function"&&window.CBSR_V2)?storySlides(w,d):[], cph=S[0]&&S[0].ph, mins=Math.max(1,Math.round(p.ch.reduce((a,[b,c])=>a+(BIBLE[b-1][c-1]||[]).join("").length,0)/500));
+  const bar=N<=36?`<div class="sbars">${Array.from({length:N},(_,j)=>`<i class="${j<i?"on":j===i?"cur":""}"></i>`).join("")}</div>`:`<div class="rdbar"><i style="width:${Math.round((i+1)/N*100)}%"></i></div>`;
+  const head=`<div class="rdhead">${bar}<div class="rdtop"><span class="rdav">통</span><b>${esc(p.label)}</b><span class="rdpg">${i>0&&i<N-1?`${i}/${N-2}`:""}</span><button class="rdbtn" id="rdFm" aria-label="글자 작게">가−</button><button class="rdbtn" id="rdFp" aria-label="글자 크게">가+</button><button class="rdbtn rdx" id="rdX" aria-label="닫기">✕</button></div></div>`;
+  let body="";
+  if(i===0) body=`<div class="rdcover"${cph?` style="background-image:url('${esc(cph.u)}');background-position:${esc(cph.fx||"50% 50%")}"`:""}><div class="rdcov"><span class="rdk">오늘 읽을 본문</span><h1>${esc(p.label)}</h1><p>${p.ch.length}${p.ch[0][0]===19?"편":"장"} · 약 ${mins}분 · ${RV.pages.length}쪽</p>${(GUIDE[k]&&GUIDE[k].find)?`<p class="rdfind"><span>읽으면서 찾아보세요</span>${esc(GUIDE[k].find)}</p>`:""}<p class="rdhint">화면 오른쪽을 누르면 다음 쪽, 왼쪽은 앞 쪽입니다</p></div></div>`;
+  else if(i===N-1){ const done=!!mem.done[k]; body=`<div class="rdend"><span class="rdk">${esc(p.label)}</span><h2>${done?"오늘 본문을 다 읽었습니다":"여기까지가 오늘 본문입니다"}</h2>${done?"":`<button class="btn rdbig" id="rdDone">다 읽었어요</button>`}${done?`<button class="btn rdbig" id="rdStory">스토리 QT 시작</button><button class="btn ghost rdbig" id="rdNote">묵상 노트 바로 쓰기</button>`:""}<button class="linkbtn" id="rdAgain">처음부터 다시 읽기</button></div>`; }
+  else { const pg=RV.pages[i-1]; body=`<div class="rdpage"><div class="rdtext" style="font-size:${rdFontPx()}px">${pg.html}</div><span class="rdref">${esc(PLAN.abbr[pg.b-1])} ${pg.c}:${pg.v1}${pg.v2!==pg.v1?"–"+pg.v2:""}</span></div>`; }
+  r.innerHTML=`<div class="rdfr">${head}${body}<div class="rdtap rdl" id="rdL"></div><div class="rdtap rdr" id="rdR"></div></div>`;
+  if(i===0||i===N-1) r.querySelectorAll(".rdtap").forEach(t=>t.style.pointerEvents=i===N-1?"none":"");
+  const go=n=>{ RV.i=Math.max(0,Math.min(N-1,n)); rdSave(); rdShow(); };
+  r.querySelector("#rdL").onclick=()=>go(i-1); r.querySelector("#rdR").onclick=()=>go(i+1);
+  r.querySelector("#rdX").onclick=rdClose;
+  const fs=dlt=>{ const f=Math.max(15,Math.min(28,rdFontPx()+dlt)); try{ localStorage.setItem("cbsr-rdfs",f); }catch(e){} const pv=RV.pages[i-1], at=pv?pv.v1:0, ch=pv?[pv.b,pv.c]:null; RV.pages=rdPages(w,d); if(ch){ const j=RV.pages.findIndex(x=>x.b===ch[0]&&x.c===ch[1]&&x.v1<=at&&x.v2>=at); if(j>=0) RV.i=j+1; } rdSave(); rdShow(); };
+  r.querySelector("#rdFm").onclick=()=>fs(-2); r.querySelector("#rdFp").onclick=()=>fs(2);
+  const dn=r.querySelector("#rdDone"); if(dn) dn.onclick=()=>{ touchDone(k); mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k); save(); confetti(); setTimeout(churchCounts,1500); rdShow(); };
+  const st=r.querySelector("#rdStory"); if(st) st.onclick=()=>{ const rr=document.getElementById("readRoot"); if(rr) rr.remove(); document.documentElement.classList.remove("story-on"); storyOpen(0); };
+  const nt=r.querySelector("#rdNote"); if(nt) nt.onclick=()=>{ view.tab="qt"; view.qtDeep=true; rdClose(); scrollTo({top:0}); };
+  const ag=r.querySelector("#rdAgain"); if(ag) ag.onclick=()=>go(1);
+  let x0=null,y0=null; const fr=r.querySelector(".rdfr");
+  fr.addEventListener("touchstart",e=>{ x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
+  fr.addEventListener("touchend",e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null; if(dy>90&&Math.abs(dx)<60){ rdClose(); return; } if(Math.abs(dx)>50&&Math.abs(dy)<60){ e.preventDefault(); go(dx<0?i+1:i-1); } });
+  document.onkeydown=e=>{ if(!document.getElementById("readRoot")) { document.onkeydown=null; return; } if(e.key==="ArrowRight") go(i+1); else if(e.key==="ArrowLeft") go(i-1); else if(e.key==="Escape") rdClose(); };
+}
 /* ===== QT 스토리 카드 (한 화면에 한 걸음) ===== */
 const STORY=()=>!!window.CBSR_STORY;
 const STORY_N=["오늘 장면","하나님은","이어 읽기","내 한 줄","마침"];
@@ -7952,14 +8025,15 @@ function storyCardHTML(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</sp
     T.rows.forEach((row,ri)=>{ g+=`<div class="k">${esc(row[0])}</div>`+row.slice(1).map((x,j)=>`<div class="c${j===mid?" mid":""}${hl.has(ri+","+j)?" hl":""}">${esc(x)}</div>`).join(""); });
     const rv=T.hl&&T.hl.length;
     return `<div class="sbox${rv?" sask-rv":""}">${lab}${h2}<div class="sgrid${rv?" hide-hl":""}" style="grid-template-columns:72px repeat(${n},1fr)">${g}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 달라진 칸 보기</button>`:""}${s.note?`<p class="snote${rv?" rvhide":""}">${smk(s.note)}</p>`:""}</div>`; }
-  if(s.k==="map") return `<div class="smap" id="smap"></div><button class="smnav l" data-sgo="-1" aria-label="이전">‹</button><button class="smnav r" data-sgo="1" aria-label="다음">›</button><div class="sbox spanel">${lab}${h2}${B}</div>`;
+  if(s.k==="map") return `<div class="smap" id="smap"></div><button class="smnav l" data-sgo="-1" aria-label="이전"></button><button class="smnav r" data-sgo="1" aria-label="다음"></button><div class="sbox spanel">${lab}${h2}${B}</div>`;
   return `<div class="sbox">${lab}${h2}${B}</div>`; }
 function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||!window.L) return;
-  const M=storyMapPts(w,d,s); const map=L.map(el,{zoomControl:false,zoomSnap:.25,scrollWheelZoom:false,attributionControl:true}); SV.map=map; map.attributionControl.setPrefix(false);
+  const M=storyMapPts(w,d,s); const map=L.map(el,{zoomControl:false,zoomSnap:.25,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,attributionControl:true}); SV.map=map; map.attributionControl.setPrefix(false);
   L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:15,attribution:"위성: Esri, Maxar, Earthstar Geographics"}).addTo(map);
   if(M.route.length>1){ const ll=M.route.map(p=>[p[1],p[2]]); L.polyline(ll,{color:"#ff5b45",weight:9,opacity:.18,interactive:false}).addTo(map); L.polyline(ll,{color:"#ff5b45",weight:2.5,opacity:.95,className:"sroute",lineJoin:"round",interactive:false}).addTo(map); }
   const lab=(p,alt)=>L.marker([p[1],p[2]],{icon:L.divIcon({className:"",html:`<span class="spl${alt?" alt":""}${p[3]?" est":""}${p[4]?" lf":""}">${esc(p[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]}),interactive:false}).addTo(map);
-  M.route.forEach(p=>lab(p,0)); M.extra.forEach(p=>lab(p,M.route.length>1));
+  /* 너무 가까운 이름(예: 예루살렘과 유다)은 겹치므로 먼저 나온 것만 씁니다 */
+  const put=[]; const near=p=>put.some(q=>Math.abs(q[1]-p[1])<.22&&Math.abs(q[2]-p[2])<.3); M.route.forEach(p=>{ lab(p,0); put.push(p); }); M.extra.forEach(p=>{ if(near(p)) return; lab(p,M.route.length>1); put.push(p); });
   const all=M.route.concat(M.extra).map(p=>[p[1],p[2]]); if(!all.length) return;
   setTimeout(()=>{ try{ map.invalidateSize(); if(all.length===1) map.setView(all[0],9); else map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[40,80],paddingBottomRight:[80,250],maxZoom:11}); }catch(e){} },60); }
 function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,e,vs,kv}=X;
@@ -8872,21 +8946,30 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   if(stage===0){
     if(g.today) h+=`<p class="tdstory">${esc(g.today)}</p>`;
     if(g.find) h+=`<p class="tdfind"><span>읽으면서 찾아보세요</span>${esc(g.find)}</p>`;
+    h+=tdAid(w,d,p);
     h+=`<button class="tdmain" id="tdGo">본문 읽기<small>${p.ch.length}${p.ch[0][0]===19?"편":"장"} · 약 ${mins}분</small></button>`;
   } else if(stage===1){
-    h+=`<p class="tdstate">✓ 본문을 읽었습니다</p>${g.find?`<p class="tdfind"><span>읽으면서 찾은 것을 이야기로 따라가 보세요</span>${esc(g.find)}</p>`:""}<button class="tdmain" id="tdGo">스토리 QT 시작</button><button class="tdsub2" id="tdNote">묵상 노트 바로 쓰기</button><button class="tdsub2" id="tdReread">본문 다시 읽기</button>`;
+    h+=`<p class="tdstate">✓ 본문을 읽었습니다</p>${g.find?`<p class="tdfind"><span>읽으면서 찾은 것을 이야기로 따라가 보세요</span>${esc(g.find)}</p>`:""}${tdAid(w,d,p)}<button class="tdmain" id="tdGo">스토리 QT 시작</button><button class="tdsub2" id="tdNote">묵상 노트 바로 쓰기</button><button class="tdsub2" id="tdReread">본문 다시 읽기</button>`;
   } else {
     h+=`<p class="tdstate">✓ 오늘 본문을 읽고 QT를 마쳤습니다</p>${kv?wordCard(w,d,q,kv,wordCardPh(w,d,q),true):""}<button class="tdmain ghost" id="tdGo">스토리 QT 다시 보기</button><button class="tdsub2" id="tdNote">묵상 노트 보기</button>`;
   }
   h+=`</section>`;
   return h; }
+/* 오늘 탭의 읽기 도우미: 지난 이야기(리딩지저스는 교재 설명)와 읽으며 살펴볼 질문 */
+function tdAid(w,d,p){ const key=keyOf(w,d), g=GUIDE[key]||{}, RD=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key];
+  const prev=RD?prepHelp(p,w,key):(g.prev?`<div class="qbox"><b>지난 이야기</b><p>${esc(g.prev)}</p></div>`:"");
+  const eq=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p></div>`:"";
+  if(!prev&&!eq) return "";
+  return `<details class="v2aid tdaid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>${RD?"교재 설명":"지난 이야기"} · 살펴볼 질문</small></summary>${prev}${eq}</details>`; }
 function bindToday(){ clearInterval(TD.cd);
   const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
-  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!mem.done[keyOf(view.w,view.d)]){ toText(); return; } storyOpen(0); };
+  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!mem.done[keyOf(view.w,view.d)]){ if(window.CBSR_V2&&BIBLE) rdOpen(); else toText(); return; } storyOpen(0); };
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
   const tg=document.getElementById("tdGo"); if(tg) tg.onclick=go;
+  const va2=document.getElementById("v2Aid"); if(va2) va2.ontoggle=()=>{ view.aidOpen=va2.open; };
+  const rm2=document.getElementById("rjMore"); if(rm2&&!rm2.onclick) rm2.onclick=()=>{ view.rjOpen=!view.rjOpen; render(); };
   const tn=document.getElementById("tdNote"); if(tn) tn.onclick=()=>{ view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); };
-  const rr=document.getElementById("tdReread"); if(rr) rr.onclick=toText;
+  const rr=document.getElementById("tdReread"); if(rr) rr.onclick=()=>{ if(window.CBSR_V2&&BIBLE) rdOpen(1); else toText(); };
   const pv=document.getElementById("pvSw"); if(pv) pv.onclick=e=>{ e.stopPropagation(); const nv=PV()==="B"?"A":"B"; try{ localStorage.setItem("cbsr-pv",nv); }catch(er){} try{ const u=new URL(location.href); if(u.searchParams.has("pv")){ u.searchParams.set("pv",nv); history.replaceState(null,"",u); } }catch(er){} applyPV(); render(); };
   const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
@@ -8947,7 +9030,7 @@ function gCard(seed){ const L=Object.values(mem.qt).filter(q=>q.done&&q.kv).map(
   return {ref:`${PLAN.abbr[it.r[0]-1]} ${it.r[1]}:${it.r[2]}`, text:toks.map((w,i)=>i===idx?w.replace(ans,"＿＿＿"):w).join(" "), ans, opts}; }
 function cardGameHTML(){ const G=view.game&&view.game.kind==="card"?view.game:null, n=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
   let h=`<section class="sec gsec"><span class="label">말씀 카드 다시 맞히기</span>`;
-  if(!n) return h+`<p class="lead">QT를 마치고 말씀 카드를 모으면 열립니다.</p></section>`;
+  if(!n) return h+`<p class="lead">묵상 노트를 마치고 말씀 카드를 모으면 열립니다.</p></section>`;
   if(!G) return h+`<p class="lead">모은 말씀 카드 ${n}장에서 빈칸을 채웁니다.</p><button class="btn" data-gstart="card">시작</button></section>`;
   const C=G.c; h+=`<p class="gq">${esc(C.text)}<small style="display:block;color:var(--muted);font-size:12.5px">${esc(C.ref)}</small></p><div class="gopts">${C.opts.map(o=>`<button class="gopt${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gcard="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
   if(G.a) h+=`<div class="row"><button class="btn ghost" data-gstart="card" data-gnew="1">다음 카드</button><button class="btn ghost" data-gclose="1">닫기</button></div>`;
@@ -8973,7 +9056,7 @@ function renderChallenge(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   return h; }
 function recordCardsHTML(){ const L=Object.entries(mem.qt).filter(([k,q])=>q.done&&q.kv).sort((a,b)=>String(b[1].doneAt||"").localeCompare(String(a[1].doneAt||""))).slice(0,view.wcAll?120:6);
   const n=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
-  if(!n) return `<section class="sec"><span class="label">모은 말씀 카드</span><p class="lead">QT를 마치면 그날의 말씀 카드가 여기에 모입니다.</p></section>`;
+  if(!n) return `<section class="sec"><span class="label">모은 말씀 카드</span><p class="lead">묵상 노트를 마치면 그날의 말씀 카드가 여기에 모입니다.</p></section>`;
   const tiles=L.map(([k,q])=>{ const [w,d]=k.split("-").map(Number); const v=(q.kv||"").split(":"); const kv=v.length===3?{b:+v[0],c:+v[1],v:+v[2]}:null; if(!kv) return ""; kv.t=vtxt([kv.b,kv.c,kv.v]); if(!kv.t) return "";
     let ph=null; try{ ph=wordCardPh(w,d,q); }catch(e){} return `<button class="wtile" data-wck="${esc(k)}">${phImg(ph,"wtbg")}<span>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</span></button>`; }).join("");
   return `<section class="sec"><span class="label">모은 말씀 카드 ${n}장</span><div class="wgrid">${tiles}</div>${n>6?`<button class="morebtn" id="wcAll">${view.wcAll?"접기 ▴":"모두 보기 ▾"}</button>`:""}</section>`; }
@@ -9008,7 +9091,7 @@ function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=
   h+=T.map(([k,t,ic],i)=>{ const tp=PS[(i*2+1)%Math.max(1,PS.length)]||ph; return `<button class="gtile" data-gplay="${k}"${tp?` style="--gp:url('${esc(tp.u)}')"`:""}><span class="gic">${ic}</span><b>${t}</b>${star(GSTAR(R[k]))}</button>`; }).join("");
   h+=`</section>`;
   const nq=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
-  h+=`<section class="gextra"><button class="gwide" data-gplay="card"><b>말씀 카드 빈칸</b><span>${nq?`모은 카드 ${nq}장`:"QT를 마치면 열립니다"}</span></button><details class="gquiz"${view.quizOpen?" open":""} id="gQuiz"><summary><b>본문 퀴즈</b><span>O/X · 4지선다</span></summary>${p?renderQuiz(key,null,"day"):""}</details></section>`;
+  h+=`<section class="gextra"><button class="gwide" data-gplay="card"><b>말씀 카드 빈칸</b><span>${nq?`모은 카드 ${nq}장`:"묵상 노트를 하루 마치면 열립니다"}</span></button><details class="gquiz"${view.quizOpen?" open":""} id="gQuiz"><summary><b>본문 퀴즈</b><span>O/X · 4지선다</span></summary>${p?renderQuiz(key,null,"day"):""}</details></section>`;
   return h; }
 function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`<div class="gptop"><b>${esc({order:"장면 순서",who:"누가 말했나",clue:"되풀이되는 말",trip:"여정 따라가기",card:"말씀 카드 빈칸"}[G.k])}</b><span class="gpdots">${G.total?Array.from({length:G.total},(_,i)=>`<i class="${i<G.step?"on":""}"></i>`).join(""):""}</span><button class="gpx" data-gpx="1" aria-label="닫기">✕</button></div>`;
   let body="";
@@ -9020,7 +9103,7 @@ function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`
   else if(G.k==="trip"){ const P=G.pts, la=P.map(x=>x.la), lo=P.map(x=>x.lo), a0=Math.min(...la), a1=Math.max(...la), o0=Math.min(...lo), o1=Math.max(...lo), sx=x=>12+76*((x-o0)/((o1-o0)||1)), sy=y=>12+76*(1-(y-a0)/((a1-a0)||1));
       const path=G.pickd.map(i=>`${sx(P[i].lo)},${sy(P[i].la)}`).join(" ");
       body=`<p class="gpq">${G.done?`${G.score}/${P.length}`:"이야기가 지나간 순서대로 지명을 누르세요"}</p><div class="gpmap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${path}" fill="none" stroke="#e2b874" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>${P.map((x,i)=>{ const pos=G.pickd.indexOf(i), ok=G.done?pos===i:null; return `<button class="gppt${pos>=0?" on":""}${G.done?(ok?" ok":" no"):""}" style="left:${sx(x.lo)}%;top:${sy(x.la)}%" data-gpt="${i}"${G.done?" disabled":""}><i>${pos>=0?pos+1:""}</i><span>${esc(x.n)}</span></button>`; }).join("")}</div>`; }
-  else if(G.k==="card"){ const C=G.c; if(!C) body=`<p class="gpq">QT를 마치고 말씀 카드를 모으면 열립니다.</p>`; else body=`<div class="gpbub">${esc(C.text)}<small>${esc(C.ref)}</small></div><div class="gpbubs">${C.opts.map(o=>`<button class="gpb${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gpk="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`; }
+  else if(G.k==="card"){ const C=G.c; if(!C) body=`<p class="gpq">묵상 노트를 마치면 그날 고른 '붙잡을 한 구절'이 말씀 카드로 모입니다. 카드가 한 장 이상 모이면 그 구절의 빈칸 문제가 열립니다.</p>`; else body=`<div class="gpbub">${esc(C.text)}<small>${esc(C.ref)}</small></div><div class="gpbubs">${C.opts.map(o=>`<button class="gpb${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gpk="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`; }
   const fin=G.done||(G.k==="who"&&G.i>=G.qs.length)||(G.k!=="order"&&G.k!=="trip"&&G.k!=="who"&&G.a);
   const nextBtn=G.k==="who"&&G.a&&G.i<G.qs.length?`<button class="gpbtn" data-gpn="1">${G.i<G.qs.length-1?"다음":"결과"}</button>`:"";
   return `<div class="gplay" id="gPlay">${top}<div class="gpbody">${body}</div><div class="gpfoot">${nextBtn}${fin?`<div class="gpres">${[0,1,2].map(i=>`<i class="${i<GSTAR(G.res)?"on":""}">★</i>`).join("")}</div><button class="gpbtn ghost" data-gpagain="1">다시</button><button class="gpbtn" data-gpx="1">닫기</button>`:""}</div></div>`; }
