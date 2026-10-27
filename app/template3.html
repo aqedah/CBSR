@@ -2063,7 +2063,7 @@ function renderQT(){
   const vs=qtCands(A,traits,R,w+"-"+(d+1));
   const kv=qtKV(q,A,vs,w+"-"+(d+1));
   const opts=kv&&!vs.includes(kv)?[kv,...vs]:vs; view.kvShown=vId(kv);
-  h+=`<section class="sec"><div class="stage"><b>4</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>`;
+  h+=`<section class="sec"><div class="stage"><b>${PVK&&!(det&&det.christ)?3:4}</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>`;
   if(opts.length) h+=`<div class="vpick" role="radiogroup" aria-label="붙잡을 구절">${opts.map(v=>{const on=v===kv; return `<button class="vopt${on?" on":""}" role="radio" aria-checked="${on}" data-kv="${vId(v)}"><small>${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</small><span>${esc(v.t)}</span></button>`;}).join("")}</div>`;
   h+=`<div class="row"><button class="btn ghost small" id="qtPickV">본문에서 직접 고르기</button></div>`;
   h+=`</section>`;
