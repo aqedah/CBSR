@@ -18,7 +18,7 @@ def _pvhtml(k,pv,o,kq):
     hsh=_hl.sha1(json.dumps(o,ensure_ascii=False,sort_keys=True).encode()).hexdigest()[:8]
     lab={'A':'2027판','B':'2028판','':''}[pv]
     q=(o.get('kwq') or {}).get('q') or kq
-    return "<div class='pv' data-id='%s%s:%s'><h3>%s <small>%s</small></h3><p class='sp'>%s</p><ol>%s</ol>%s<p class='kq'>나의 생각거리: %s</p><div class='act'><a href='v2.html?day=%s%s' target='_blank'>카드로 보기 ›</a><button data-ok>승인</button><textarea placeholder='고칠 점 (이 기기에 저장)'></textarea></div></div>"%(k,pv,hsh,lab,_TN.get(o.get('type',''),o.get('type','—')),_h.escape(o.get('spine','(중심 한 줄 없음)')),li,qt,_h.escape(q),k,('&pv='+pv) if pv else '')
+    return "<div class='pv' data-id='%s%s:%s'><h3>%s <small>%s</small></h3><p class='sp'>%s</p><ol>%s</ol>%s<p class='kq'>나의 생각거리: %s</p><div class='act'><a href='v2.html?p=365&day=%s%s' target='_blank'>카드로 보기 ›</a><button data-ok>승인</button><textarea placeholder='고칠 점 (이 기기에 저장)'></textarea></div></div>"%(k,pv,hsh,lab,_TN.get(o.get('type',''),o.get('type','—')),_h.escape(o.get('spine','(중심 한 줄 없음)')),li,qt,_h.escape(q),k,('&pv='+pv) if pv else '')
 for k in sorted([k for k in _SC if not k.startswith('_')],key=int):
     o=_SC[k]; pl=P365[int(k)-1]; kq=_KQ.get(k,{}).get('q','')
     if 'A' in o or 'B' in o: inner="<div class='two'>"+''.join(_pvhtml(k,pv,o[pv],kq) for pv in ('A','B') if pv in o)+"</div>"

@@ -171,7 +171,7 @@ SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="
 shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
 open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
-VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('P="story:"','P="v2:"')
+VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]day=/.test(location.search)||S.getItem("cbsr-mode")==null)')
 exec(open('review_build.py').read())
 open(f'{OUT}/v2.html','w').write(shead.replace(SSHIM,VSHIM).replace('story.html','v2.html')+body+'\n</body>\n</html>\n')
 V=h(html+bible)
