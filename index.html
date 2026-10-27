@@ -8938,7 +8938,7 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   if(!p) return `<section class="sec"><p class="lead">오늘 본문이 없습니다.</p></section>`;
   if(!BIBLE) return `<section class="tdh"><div class="tdin"><p class="tdk" style="margin-top:auto">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1><p class="tdsub">본문을 불러오는 중입니다…</p></div></section>`;
   const q=qtOf(key), read=!!mem.done[key], S=storySlides(w,d), ph=S[0]&&S[0].ph, dt=dateOf(w,d), live=isHere(w,d), kv=q.done?storyQT(w,d).kv:null, g=GUIDE[key]||{}, mins=tdMins(w,d);
-  const stage=q.done?2:read?1:0;
+  const stage=q.done?2:read?1:0; TD.stage=stage;
   let h=`<section class="tdh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin">
     <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2&&MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
     <div class="tdttl"><p class="tdk">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1></div></div>
@@ -8964,7 +8964,8 @@ function tdAid(w,d,p){ const key=keyOf(w,d), g=GUIDE[key]||{}, RD=MODE==="rj"&&t
   return `<details class="v2aid tdaid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>${RD?"교재 설명":"지난 이야기"} · 살펴볼 질문</small></summary>${prev}${eq}</details>`; }
 function bindToday(){ clearInterval(TD.cd);
   const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
-  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!mem.done[keyOf(view.w,view.d)]){ if(window.CBSR_V2&&BIBLE) rdOpen(); else toText(); return; } storyOpen(0); };
+  /* 화면에 보이는 단계(TD.stage)를 따릅니다: 0이면 본문 읽기, 그 뒤는 스토리 QT. 화면을 그린 뒤 기록이 바뀌어도(다른 기기 동기화 등) 버튼 이름과 동작이 어긋나지 않게 */
+  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!TD.stage){ if(window.CBSR_V2&&BIBLE) rdOpen(); else toText(); return; } storyOpen(0); };
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
   const tg=document.getElementById("tdGo"); if(tg) tg.onclick=go;
   const va2=document.getElementById("v2Aid"); if(va2) va2.ontoggle=()=>{ view.aidOpen=va2.open; };
