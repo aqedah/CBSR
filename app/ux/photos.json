@@ -2663,5 +2663,307 @@
   "mood": "bright",
   "fx": "50% 50%",
   "set": 10
+ },
+ {
+  "id": "g11_01",
+  "u": "img/g/g11_01.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "clouds",
+   "pillar",
+   "desert",
+   "tent"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 4
+ },
+ {
+  "id": "g11_02",
+  "u": "img/g/g11_02.jpg",
+  "w": 1280,
+  "h": 683,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "시내산"
+  ],
+  "tags": [
+   "mountain_peak",
+   "storm_sky",
+   "fire",
+   "smoke"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 4
+ },
+ {
+  "id": "g11_03",
+  "u": "img/g/g11_03.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "trumpet",
+   "priest",
+   "tent",
+   "camp"
+  ],
+  "mood": "warm",
+  "fx": "55% 50%",
+  "set": 4
+ },
+ {
+  "id": "g11_04",
+  "u": "img/g/g11_04.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "요단강"
+  ],
+  "tags": [
+   "ark",
+   "priest",
+   "river",
+   "sunrise_light_rays"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 5
+ },
+ {
+  "id": "g11_05",
+  "u": "img/g/g11_05.jpg",
+  "w": 1280,
+  "h": 694,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "fire",
+   "clay_jar",
+   "night_sky",
+   "army"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 5
+ },
+ {
+  "id": "g11_06",
+  "u": "img/g/g11_06.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "army",
+   "philistine",
+   "dusk"
+  ],
+  "mood": "dark",
+  "fx": "40% 50%",
+  "set": 5
+ },
+ {
+  "id": "g11_07",
+  "u": "img/g/g11_07.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "예루살렘"
+  ],
+  "tags": [
+   "temple_stones",
+   "stone_altar",
+   "smoke",
+   "priest",
+   "sunrise_light_rays"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 6
+ },
+ {
+  "id": "g11_08",
+  "u": "img/g/g11_08.jpg",
+  "w": 1280,
+  "h": 721,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "페르시아"
+  ],
+  "tags": [
+   "palace",
+   "persia",
+   "pillars",
+   "throne"
+  ],
+  "mood": "dark",
+  "fx": "50% 50%",
+  "set": 7
+ },
+ {
+  "id": "g11_09",
+  "u": "img/g/g11_09.jpg",
+  "w": 1280,
+  "h": 736,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "army",
+   "roman",
+   "spear",
+   "fire",
+   "night_sky"
+  ],
+  "mood": "dark",
+  "fx": "60% 50%",
+  "set": 9
+ },
+ {
+  "id": "g11_10",
+  "u": "img/g/g11_10.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "scroll",
+   "hands",
+   "oil_lamp",
+   "letter"
+  ],
+  "mood": "warm",
+  "fx": "45% 50%",
+  "set": 10
+ },
+ {
+  "id": "g11_11",
+  "u": "img/g/g11_11.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "가사"
+  ],
+  "tags": [
+   "road",
+   "chariot",
+   "scroll",
+   "desert"
+  ],
+  "mood": "warm",
+  "fx": "50% 50%",
+  "set": 10
+ },
+ {
+  "id": "g11_12",
+  "u": "img/g/g11_12.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "바벨"
+  ],
+  "tags": [
+   "tower",
+   "bricks",
+   "city",
+   "labor"
+  ],
+  "mood": "warm",
+  "fx": "35% 50%",
+  "set": 11
+ },
+ {
+  "id": "g11_13",
+  "u": "img/g/g11_13.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "ark_noah",
+   "rain",
+   "flood",
+   "sea",
+   "storm_sky"
+  ],
+  "mood": "dark",
+  "fx": "45% 50%",
+  "set": 11
+ },
+ {
+  "id": "g11_14",
+  "u": "img/g/g11_14.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [
+   "아라랏"
+  ],
+  "tags": [
+   "dove",
+   "olive_leaf",
+   "mountain_peak",
+   "sunrise_light_rays"
+  ],
+  "mood": "warm",
+  "fx": "35% 50%",
+  "set": 11
+ },
+ {
+  "id": "g11_15",
+  "u": "img/g/g11_15.jpg",
+  "w": 1280,
+  "h": 690,
+  "by": "",
+  "lic": "",
+  "link": "",
+  "pl": [],
+  "tags": [
+   "rainbow",
+   "clouds",
+   "stone_altar",
+   "smoke",
+   "pasture"
+  ],
+  "mood": "bright",
+  "fx": "50% 50%",
+  "set": 11
  }
 ]
