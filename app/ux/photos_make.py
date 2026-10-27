@@ -11,9 +11,9 @@ def parse_refs(s):
 rows=[]
 for ln in open('master.txt',encoding='utf8'):
     if ln.startswith('#') or not ln.strip(): continue
-    f=ln.rstrip('\n').split('|'); assert len(f)==11,(len(f),ln)
-    id_,sc,refs,kw,tags,pl,sets,mood,fx,memo,out=f
-    rows.append(dict(id=id_,scope=sc,refs=parse_refs(refs),kw=[k for k in kw.split('/') if k],tags=tags.split(','),pl=[pl] if pl else [],sets=[int(x) for x in sets.split(',')],mood=mood,fx=f'{fx}% 50%',memo=memo,out=out.replace('뺌: ','')))
+    f=ln.rstrip('\n').split('|'); assert len(f)==13,(len(f),ln)
+    id_,sc,refs,kw,tags,pl,sets,mood,fx,memo,out,deny,role=f
+    rows.append(dict(id=id_,scope=sc,refs=parse_refs(refs),kw=[k for k in kw.split('/') if k],tags=tags.split(','),pl=[pl] if pl else [],sets=[int(x) for x in sets.split(',')],mood=mood,fx=f'{fx}% 50%',memo=memo,out=out.replace('뺌: ',''),deny=[x for x in deny.split('/') if x],role=role))
 def crop(im):
     a=np.asarray(im.convert('L'),float); H,W=a.shape; rm=a.mean(1)
     t=0
@@ -44,7 +44,7 @@ for r in rows:
             im.save(fp,quality=80,optimize=True); made+=1
     w,h=Image.open(fp).size
     r.update(u=f'img/g/{r["id"]}.jpg',w=w,h=h,set=r['sets'][0])
-P=[{k:r[k] for k in ('id','u','w','h','tags','pl','mood','fx','set','sets','scope','refs','kw','memo')} for r in rows if not r['out']]
+P=[{k:r[k] for k in ('id','u','w','h','tags','pl','mood','fx','set','sets','scope','refs','kw','memo','deny','role')} for r in rows if not r['out']]
 json.dump(P,open('/home/claude/rj/ux/photos.json','w'),ensure_ascii=False,separators=(',',':'))
 json.dump(rows,open('master.json','w'),ensure_ascii=False); json.dump(rows,open('/home/claude/rj/ux/photos_master.json','w'),ensure_ascii=False)
 print('made',made,'photos',len(P),'out',sum(1 for r in rows if r['out']), 'files',len(os.listdir(G)))

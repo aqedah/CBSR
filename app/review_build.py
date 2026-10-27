@@ -61,14 +61,17 @@ _SETN={1:'자연·하늘',2:'족장',3:'애굽·출애굽',4:'광야·성막',5:
 def _refs(rs): return ', '.join(_FULL[b-1]+' '+(str(a) if a==z else '%d–%d'%(a,z))+'장' for b,a,z in rs)
 _gc=[]
 for r in _PM:
+    RL={'scene':'사건 장면','setting':'장소·생활 배경','object':'소품·동작','landscape':'자연·지형','symbolic':'비유·환상·상징'}
     kind='뺌' if r['out'] else ('특정 장면' if r['scope']=='s' else '두루 쓰는 배경')
     src=('img/gx/' if r['out'] else 'img/g/')+r['id']+'.jpg'
     info=[]
     if r['out']: info.append("<b class='x'>뺀 이유: %s</b>"%_h.escape(r['out']))
     if r['scope']=='s' and not r['out']:
-        if r['refs']: info.append('쓰는 장: '+_h.escape(_refs(r['refs'])))
-        if r['kw']: info.append('카드 글에 이 말이 있으면: '+_h.escape(' · '.join(r['kw'])))
+        if r['refs']: info.append('쓰는 장(표지 카드에서만, 다른 카드는 아래 말이 있어야 함): '+_h.escape(_refs(r['refs'])))
+        if r['kw']: info.append('카드 글에 이 말이 있으면: '+_h.escape(' · '.join(k.rstrip('~') for k in r['kw'])))
     else: info.append('시대: '+_h.escape(', '.join(_SETN.get(x,str(x)) for x in r['sets'])))
+    if r.get('deny'): info.append('이 말이 있으면 쓰지 않음: '+_h.escape(' · '.join(r['deny'])))
+    if r.get('role'): info.append('용도: '+RL.get(r['role'],r['role']))
     info.append('태그: '+_h.escape(', '.join(r['tags'])))
     if not r['out']:
         U=_PU.get(r['id'],[])
@@ -84,4 +87,4 @@ function cnt(){document.getElementById('cnt').textContent='메모 '+Object.keys(
 document.getElementById('cp').onclick=()=>{const t=Object.keys(M).sort().map(k=>'그림 '+k+': '+M[k]).join('\\n')||'(메모 없음)';navigator.clipboard.writeText(t).then(()=>{document.getElementById('cp').textContent='복사했습니다'},()=>prompt('복사해 주세요',t))};
 let F='all';const q=document.getElementById('gq');function ap(){const s=q.value.trim();document.querySelectorAll('figure').forEach(f=>{const ok=(F==='all'||f.dataset.k===F)&&(!s||f.textContent.includes(s));f.style.display=ok?'':'none'})}
 document.querySelectorAll('#gf button').forEach(b=>b.onclick=()=>{F=b.dataset.f;document.querySelectorAll('#gf button').forEach(x=>x.classList.toggle('on',x===b));ap()});q.oninput=ap;"""
-open(OUT+'/gallery.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>이야기 카드 그림 목록</title><meta name="robots" content="noindex"><style>'+_GCSS+'</style></head><body><h1>이야기 카드 그림 목록</h1><p>쓰는 그림 %d장, 뺀 그림 %d장. <b>특정 장면</b> 그림은 그 장을 읽는 날이거나 카드 글에 적힌 말이 있을 때만 나옵니다. <b>두루 쓰는 배경</b>은 시대가 맞는 날에 나옵니다. 고칠 점은 그림 아래에 적고 \'메모 복사\'를 눌러 대화에 붙여 넣어 주세요.</p><div id="bar"><div id="gf"><button data-f="all" class="on">전체</button><button data-f="특정 장면">특정 장면</button><button data-f="두루 쓰는 배경">두루 쓰는 배경</button><button data-f="뺌">뺀 그림</button><input id="gq" placeholder="찾기: 언약궤, 출애굽기, g15…"></div><span id="cnt"></span> <button id="cp">메모 복사</button></div><div class="grid">'%(sum(1 for r in _PM if not r['out']),sum(1 for r in _PM if r['out']))+''.join(_gc)+'</div><script>'+_GJS+'</script></body></html>')
+open(OUT+'/gallery.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>이야기 카드 그림 목록</title><meta name="robots" content="noindex"><style>'+_GCSS+'</style></head><body><h1>이야기 카드 그림 목록</h1><p>쓰는 그림 %d장, 뺀 그림 %d장. <b>특정 장면</b> 그림은 카드 글에 그 장면의 말이 있을 때만 나옵니다(표지 카드는 그 장을 읽는 날이면 나옴). 그림마다 「이 말이 있으면 쓰지 않음」을 두어 다른 사건과 섞이지 않게 했습니다. <b>두루 쓰는 배경</b> 중 자연 풍경은 시대가 맞는 날에 나오고, 장소·소품 그림은 카드와 이어지는 말이 있을 때만 나옵니다. 고칠 점은 그림 아래에 적고 \'메모 복사\'를 눌러 대화에 붙여 넣어 주세요.</p><div id="bar"><div id="gf"><button data-f="all" class="on">전체</button><button data-f="특정 장면">특정 장면</button><button data-f="두루 쓰는 배경">두루 쓰는 배경</button><button data-f="뺌">뺀 그림</button><input id="gq" placeholder="찾기: 언약궤, 출애굽기, g15…"></div><span id="cnt"></span> <button id="cp">메모 복사</button></div><div class="grid">'%(sum(1 for r in _PM if not r['out']),sum(1 for r in _PM if r['out']))+''.join(_gc)+'</div><script>'+_GJS+'</script></body></html>')

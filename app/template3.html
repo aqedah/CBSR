@@ -2290,10 +2290,17 @@ function storyQT(w,d){ const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d
   const vs=qtCands(A,traits,R,w+"-"+(d+1)), kv=qtKV(q,A,vs,w+"-"+(d+1)); view.kvShown=vId(kv);
   return {p,key,det,A,q,traits,R,eye,e,vs,kv}; }
 /* ===== 이야기 카드: 사진 고르기 (PHOTOS: 공개 이용 사진 목록) ===== */
-const PH_KW=[[/광야|사막|떠돌/,"desert"],[/굴|동굴/,"cave"],[/양|목자|염소|양털|양 떼/,"sheep"],[/밤|별|잠들|어둠|어두/,"night_sky"],[/새벽|아침|해가 돋|해 돋/,"dawn"],[/저녁|해 질|해가 지/,"dusk"],[/폭풍|광풍|우레|천둥|회오리/,"storm_sky"],[/비가|비를|홍수|장마/,"rain"],[/바다|파도|물결|해변/,"sea"],[/배를|배에|배가|그물|어부|고기를|물고기/,"fishing_boat"],[/강|요단|나일|유브라데/,"river"],[/우물|샘|물을 길|생수/,"well"],[/추수|곡식|밀|보리|이삭|거두/,"wheat_field"],[/포도/,"vineyard"],[/감람|올리브|기름을 붓|기름 부/,"olive_tree"],[/무화과/,"fig_tree"],[/떡|빵|음식|먹을|먹이/,"bread"],[/항아리|그릇|토기|옹기|물병/,"clay_jar"],[/등불|등잔|등대/,"oil_lamp"],[/불|번제|횃불|불꽃/,"fire"],[/제단|돌판|돌무더기|돌을/,"stone_altar"],[/무덤|장사|시체/,"rock_tomb"],[/두루마리|율법책|기록하|책을/,"scroll"],[/장막|천막|성막/,"tent"],[/낙타/,"camel"],[/나귀/,"donkey"],[/칼|전쟁|군대|싸움|싸우|군사|창으로|창을|쫓|추격|병거|마병/,"army"],[/성벽|성문|성읍|도성|성을/,"city_wall"],[/폐허|무너|황폐|멸망/,"ruins"],[/산에|산으로|산 위|봉우리|시내 산|시온 산/,"mountain_peak"],[/골짜기/,"valley"],[/꽃|백합|들풀/,"flowers"],[/씨를 뿌|씨앗|흙|땅에 떨어/,"seed"],[/갈대/,"reeds"],[/백향목|레바논/,"cedar"],[/타작/,"threshing_floor"],[/길을|길에|길로|여행|떠나|나아가/,"road"],[/성전|전 뜰|지성소/,"temple_stones"],[/하늘|구름/,"sky"],[/번개|우레|천둥/,"lightning"],[/바람|광풍|동풍/,"wind"],[/우박/,"hail"],[/눈같이|눈처럼|백설|헤르몬/,"snow"],[/별/,"stars"],[/달이|달과|달빛|월삭/,"moon"],[/무지개/,"rainbow"],[/모래|티끌|먼지/,"sandstorm"],[/샘|시내|물이 솟|샘물/,"spring_water"],[/홍수|물이 넘|창일/,"flood"],[/지진|진동/,"earthquake"],[/흑암|캄캄|어둠/,"darkness"],[/메뚜기|황충/,"locust"],[/개구리/,"frog"],[/비둘기/,"dove"],[/까마귀/,"raven"],[/독수리/,"eagle"],[/사자/,"lion"],[/이리/,"wolf"],[/염소/,"goat"],[/송아지|황소|암소|멍에|소를|소와|소가/,"cattle"],[/물고기|고기를|고기 /,"fish"],[/종려/,"palm"],[/가시|엉겅퀴|떨기나무/,"thorns"],[/백합/,"lily"],[/보리/,"barley"],[/곡식 단|볏단|단을/,"sheaves"],[/쟁기|밭을 갈|밭 갈/,"plow"],[/포도주 틀|술틀|포도즙/,"wine_press"],[/기름 짜|감람 기름/,"olive_press"],[/풀밭|초장|꼴/,"pasture"],[/성문|문 앞|문에서/,"gate"],[/옥에|감옥|옥중|갇히|갇혀/,"prison"],[/쇠사슬|결박|사슬/,"chains"],[/칼을|칼로|검을|칼이/,"sword"],[/보좌|왕좌/,"throne"],[/은전|드라크마|데나리온|은 삼십/,"coins"],[/겨자/,"mustard"],[/소금/,"salt"]];
+/* 카드 글 → 그림 태그. 낱말 경계를 지켜서 찾습니다(얼굴의 '굴', 양심의 '양', 영화로써의 '화로'가 걸리지 않게) */
+const PH_JOS="(?:이|가|을|를|은|는|의|에|에서|에게|께|께서|와|과|도|로|으로|만|까지|부터|처럼|같이|보다|들|이나|나|이요|요|이며|며|이라|이니|이다|야|아|여|이여|뿐|마다|조차|씩)";
+const PH_JRE=new RegExp("^"+PH_JOS+"+(?![가-힣])");
+/* w 끝에 ~ 가 있거나 띄어쓰기가 있으면 '앞 경계'만 봅니다(동사·구절의 앞부분) */
+function phHas(t,w){ if(!w) return false; const pre=/~$/.test(w)||/\s/.test(w); w=w.replace(/~$/,""); let i=t.indexOf(w);
+  while(i>=0){ if(!i||!/[가-힣]/.test(t[i-1])){ if(pre) return true; const r=t.slice(i+w.length); if(!/^[가-힣]/.test(r)||PH_JRE.test(r)) return true; } i=t.indexOf(w,i+1); } return false; }
+const PH_KW=[["광야 사막","desert"],["굴 동굴","cave"],["양 양떼 목자 염소 양털 어린양","sheep"],["밤 어둠","night_sky"],["새벽 아침","dawn"],["저녁","dusk"],["폭풍 광풍 우레 천둥 회오리바람","storm_sky"],["비 홍수 장마","rain"],["바다 파도 물결 해변 바닷가","sea"],["그물 어부 물고기 고깃배|배를 타|배에 오르|배에서 내","fishing_boat"],["강 요단 나일 유브라데 강가","river"],["우물 샘 생수|물을 길","well"],["추수 곡식 밀 보리 밀밭 거두어~|이삭을 줍","wheat_field"],["포도 포도원 포도나무 포도송이","vineyard"],["감람 감람나무 올리브 감람산","olive_tree"],["무화과 무화과나무","fig_tree"],["떡 빵 음식 양식","bread"],["항아리 그릇 토기 옹기 물병","clay_jar"],["등불 등잔 등","oil_lamp"],["불 번제 횃불 불꽃","fire"],["제단 돌무더기","stone_altar"],["돌판|두 돌판","stone_tablets"],["무덤","rock_tomb"],["두루마리 율법책 책","scroll"],["장막 천막 성막","tent"],["낙타","camel"],["나귀","donkey"],["군대 전쟁 싸움 군사 병거 마병 칼","army"],["성벽 성문 성읍 도성","city_wall"],["폐허 황폐","ruins"],["산 봉우리|시내 산|시온 산","mountain_peak"],["골짜기","valley"],["꽃 백합 들풀","flowers"],["씨 씨앗","seed"],["갈대","reeds"],["백향목 레바논","cedar"],["타작마당 타작","threshing_floor"],["길 여행","road"],["성전 지성소","temple_stones"],["하늘 구름","sky"],["번개","lightning"],["바람 동풍","wind"],["우박","hail"],["백설 헤르몬","snow"],["별 별들","stars"],["달 월삭","moon"],["무지개","rainbow"],["모래 티끌 먼지","sandstorm"],["샘 샘물 시냇물","spring_water"],["홍수","flood"],["지진","earthquake"],["흑암 캄캄 어둠","darkness"],["메뚜기 황충","locust"],["개구리","frog"],["비둘기","dove"],["까마귀","raven"],["독수리","eagle"],["젊은 사자|사자 굴|사자의 입|사자들의 입","lion"],["이리 떼|이리 가운데","wolf"],["염소","goat"],["송아지 황소 암소 소 멍에","cattle"],["물고기 생선","fish"],["종려","palm"],["가시 엉겅퀴 떨기나무","thorns"],["보리","barley"],["곡식 단|단을 묶","sheaves"],["쟁기|밭을 갈","plow"],["술틀|포도주 틀","wine_press"],["풀밭 초장 꼴","pasture"],["성문 문","gate"],["옥 감옥 옥중","prison"],["쇠사슬 결박 사슬","chains"],["칼 검","sword"],["보좌 왕좌","throne"],["은전 드라크마 데나리온","coins"],["겨자","mustard"],["소금","salt"]].map(([a,t])=>[a.split("|").flatMap((x,i)=>i===0?x.split(" "):[x]),t]);
 const PH_GENRE={narrative:["desert","road","valley","wilderness_path","dusk"],law:["desert","mountain_peak","tent","wilderness_path"],poetry:["sky","dawn","night_sky","flowers","sunrise_light_rays"],wisdom:["wheat_field","olive_tree","road","dawn"],prophecy:["ruins","storm_sky","city_wall","dusk"],letter:["ruins","road","sea","city_wall"],apocalypse:["night_sky","storm_sky","sky","sunrise_light_rays"]};
 const phHash=s=>{ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; };
-const STAGE_T={"배경":["desert","valley","mountain_peak","sea","city_wall","ruins","sky","clouds","wilderness_path","river","dawn","dusk","pasture","palm","goat","cattle"],"긴장":["storm_sky","dust","army","night_sky","cave","road","waves","rain","fire","lightning","wind","hail","sandstorm","flood","earthquake","darkness","locust","sword","chains","prison","thorns","lion","wolf"],"전환":["hands","bread","clay_jar","oil_lamp","scroll","ancient_text","stones","seed","stone_altar","sunrise_light_rays","fire"],"의미":["dawn","sunrise_light_rays","wheat_field","flowers","olive_tree","sky","dusk","harvest","rainbow","lily","sheaves","barley","pasture","spring_water","dove","stars"]};
+const STAGE_T_OLD={"배경":["desert","valley","mountain_peak","sea","city_wall","ruins","sky","clouds","wilderness_path","river","dawn","dusk","pasture","palm","goat","cattle"],"긴장":["storm_sky","dust","army","night_sky","cave","road","waves","rain","fire","lightning","wind","hail","sandstorm","flood","earthquake","darkness","locust","sword","chains","prison","thorns","lion","wolf"],"전환":["hands","bread","clay_jar","oil_lamp","scroll","ancient_text","stones","seed","stone_altar","sunrise_light_rays","fire"],"의미":["dawn","sunrise_light_rays","wheat_field","flowers","olive_tree","sky","dusk","harvest","rainbow","lily","sheaves","barley","pasture","spring_water","dove","stars"]};
+const STAGE_T={"배경":["desert","valley","mountain_peak","sea","sky","clouds","wilderness_path","river","dawn","dusk","pasture"],"긴장":["storm_sky","dust","night_sky","waves","darkness","clouds"],"전환":["sunrise_light_rays","dawn","clouds","sky"],"의미":["sunrise_light_rays","dawn","dusk","sky","pasture"]};
 /* 그림 묶음(set)과 시대: 1 자연·하늘(어디나) 2 족장 3 애굽·출애굽 4 광야·성막 5 정착·사사 6 왕국 7 분열·포로 8 시·지혜(구약 일상) 9 복음서 10 사도행전·서신 11 원역사(창 1–11) */
 function ERA_OK(b,c){ if(b===1) return c<=11?[1,11,8]:c>=37?[1,2,3,8]:[1,2,8]; if(b===2) return c<=15?[1,3,4,8]:[1,4,8]; if(b<=5) return [1,4,8]; if(b<=8) return [1,5,4,8]; if(b<=14) return [1,6,5,8]; if(b<=17) return [1,7,8]; if(b<=22) return [1,8,2,5,6]; if(b<=39) return [1,7,6,8]; if(b<=43) return [1,9,8]; return [1,10,9]; }
 /* 그림 고르기: 특정 장면 그림(scope "s")은 그날 읽는 장이 그 그림의 장(refs)에 들거나 카드 글에 그 장면의 낱말(kw)이 있을 때만 씁니다.
@@ -2301,16 +2308,26 @@ function ERA_OK(b,c){ if(b===1) return c<=11?[1,11,8]:c>=37?[1,2,3,8]:[1,2,8]; i
 const PH_TWIN=id=>/^g21_/.test(id)?"g11_"+id.slice(4):/^g11_/.test(id)?"g21_"+id.slice(4):"";
 function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt.era||null, CH=opt.ch||[]; const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
   if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f) return f; }
-  const want=new Set(), hs=new Set(); PH_KW.forEach(([re,t])=>{ if(re.test(text)) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
-  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9;
   const kt=opt.kwText||text, dayB=CH.length?CH[0][0]:0;
-  /* 카드가 장절을 밝혔으면(예: 22:3) 그 장으로 좁혀서 장면 그림을 고릅니다 */
-  const cited=new Set([...kt.matchAll(/(?:^|[^가-힣\d])(\d{1,3}):\d/g)].map(m=>+m[1])), CHc=CH.filter(x=>cited.has(x[1])), CH2=CHc.length?CHc:CH;
+  const want=new Set(), hs=new Set(); PH_KW.forEach(([ws,t])=>{ if(ws.some(w=>phHas(kt,w))) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
+  /* 카드가 밝힌 장절: 다른 책 이름이 붙은 인용(예: 요삼 1:5)은 오늘 책의 장으로 보지 않습니다 */
+  const cited=new Set(); for(const m of kt.matchAll(/([가-힣]{1,3})?\s?(\d{1,3}):\d/g)){ const ab=m[1]; if(ab&&typeof PLAN!=="undefined"&&PLAN.abbr.includes(ab)&&!CH.some(x=>PLAN.abbr[x[0]-1]===ab)) continue; cited.add(+m[2]); }
+  const CHc=CH.filter(x=>cited.has(x[1])), CH2=CHc.length?CHc:CH;
   const inRef=p=>(p.refs||[]).some(([b,a,z])=>CH2.some(x=>x[0]===b&&x[1]>=a&&x[1]<=z));
-  for(const p of P){ if(used.has(p.id)||used.has(PH_TWIN(p.id))) continue; let s=0; const sets=p.sets||(p.set?[p.set]:[]), eraOk=!eok||!sets.length||sets.some(x=>eok.includes(x));
-    if(p.scope==="s"){ const r=inRef(p), k=(p.kw||[]).some(w=>kt.includes(w)); if(!r&&!k) continue; if(!r&&!eraOk&&!(dayB>=40&&sets.every(x=>x<=8||x===11))) continue; s+=k?(r?14:9):3; }
-    else if(!eraOk) continue;
-    const pl=p.pl||[]; if(pl.some(n=>kt.includes(n))) s+=4; else if(pl.some(n=>ctxPl.some(c=>c.includes(n)||n.includes(c)))) s+=1; else if(pl.length&&p.scope!=="s") s-=2;
+  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9;
+  for(const p of P){ if(used.has(p.id)||used.has(PH_TWIN(p.id))) continue;
+    if((p.deny||[]).some(w=>kt.includes(w))) continue;
+    let s=0; const sets=p.sets||(p.set?[p.set]:[]), eraOk=!eok||!sets.length||sets.some(x=>eok.includes(x));
+    const tagHit=(p.tags||[]).some(t=>hs.has(t)||want.has(t)), plHit=(p.pl||[]).some(n=>phHas(kt,n));
+    if(p.scope==="s"){ const k=(p.kw||[]).some(w=>phHas(kt,w)), r=inRef(p);
+      /* 장면 그림: 카드 글에 그 장면의 말이 있어야 씁니다. 장만 맞는 경우는 표지 카드에서만 */
+      if(!k&&!(r&&opt.cover)) continue;
+      if(!r&&!eraOk&&!(dayB>=40&&sets.every(x=>x<=8||x===11))) continue;
+      s+=k?(r?14:9):3; }
+    else { if(!eraOk) continue;
+      /* 풍경이 아닌 배경(장소·소품)은 카드와 이어지는 태그나 장소가 있어야 씁니다 */
+      if(p.role&&p.role!=="landscape"&&!tagHit&&!plHit) continue; }
+    if(plHit) s+=4; else if((p.pl||[]).some(n=>ctxPl.some(c=>c===n))) s+=1; else if((p.pl||[]).length&&p.scope!=="s") s-=2;
     if(eok&&sets.includes(eok[1])) s+=1.2;
     (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=3; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; if(opt.stage&&(STAGE_T[opt.stage]||[]).includes(t)) s+=.9; });
     if(opt.mood&&p.mood){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
@@ -2364,7 +2381,7 @@ function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {
   /* 사진 붙이기: 장면 글 → 장소·주제어 → 책 장르 */
   const A=dayA(w,d), ctxPl=[...A.places.keys()], gen=GENRE_OF(p.ch[0][0]), used=new Set(); let cover=null;
   /* 2년차(B)는 1년차(A)가 쓴 사진을 피합니다 */
-  if(PV()==="B"&&!PV_FORCE){ PV_FORCE="A"; try{ storySlides(w,d).forEach(x=>{ if(x.ph) used.add(x.ph.id); }); } finally{ PV_FORCE=null; } }
+  /* 2028판도 맞는 그림이면 2027판과 같은 그림을 씁니다(목사님 결정 2026-10-28) */
   /* 장면 묶음: 같은 플롯 단계(배경·긴장·전환·의미)가 이어지는 카드는 같은 사진을 이어 쓰고 확대·위치만 바꿉니다. 하루는 표지와 같은 색감으로 맞춥니다 */
   const noPh=s=>s.qt||s.k==="map"||s.k==="table"||s.k==="fin"||s.k==="next"||s.k==="ask"||s.img==="none";
   const stageOf=s=>{ if(s.k==="cover") return "표지"; const h=(s.lab||"").split("·")[0].trim(); return /^(배경|긴장|전환|의미)$/.test(h)?h:""; };
@@ -2374,7 +2391,7 @@ function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {
 
     g={st,list:[i],hint:s.img}; groups.push(g); });
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
-    const ph=phPick(txt,ctxPl,gen,ck+":"+gi,used,G.hint,{stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
+    const ph=phPick(txt,ctxPl,gen,ck+":"+gi,used,G.hint,{stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
     G.list.forEach((i,k)=>{ out[i].ph=ph; out[i].phv=k; }); });
   out.forEach(s=>{ if(s.k==="fin"||s.k==="ask") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
   SV.cache[ck]=out; return out; }
