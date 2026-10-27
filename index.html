@@ -1220,7 +1220,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sx{border:0;background:none;color:#fff;font-size:20px;padding:4px 8px}.sps{font-size:14px;letter-spacing:-2px}
 .sph{position:absolute;inset:0;overflow:hidden}
 .sph img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(.92) contrast(1.04)}
-.sph.v1 img{transform:scale(1.14)}.sph.v2 img{transform:scale(1.24)}
+.sph.v1 img{transform:scale(1.14)}.sph.v2 img{transform:scale(1.16)}
 .sph img{transition:filter .9s ease}
 #storyRoot .sfr{z-index:1}#storyRoot .sfr.sfirst{animation:sfin .45s ease}@keyframes sfin{from{opacity:.4}to{opacity:1}}
 #storyRoot .sfr.snew{opacity:0;transition:opacity .75s ease}#storyRoot .sfr.snew.in{opacity:1}
@@ -7136,7 +7136,7 @@ function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {
   const stageOf=s=>{ if(s.k==="cover") return "표지"; const h=(s.lab||"").split("·")[0].trim(); return /^(배경|긴장|전환|의미)$/.test(h)?h:""; };
   const groups=[]; let g=null;
   out.forEach((s,i)=>{ if(noPh(s)){ g=null; return; } const st=stageOf(s), sameHint=true;
-    if(g&&st&&st===g.st&&st!=="표지"&&sameHint&&g.list.length<3){ g.list.push(i); return; }
+    if(g&&st&&st===g.st&&st!=="표지"&&sameHint&&g.list.length<2){ g.list.push(i); return; }
     if(g&&!st&&!g.st&&s.k==="line"&&g.list.length<2){ g.list.push(i); return; }
     g={st,list:[i],hint:s.img}; groups.push(g); });
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
@@ -7219,7 +7219,7 @@ function storyMapOff(){ if(SV.map){ try{ SV.map.remove(); }catch(e){} SV.map=nul
 function storyClose(){ clearTimeout(SV.t); clearInterval(SV.cd); if(SV.mode==="fin"&&window.CBSR_V2){ view.tab="today"; SV.mode=""; scrollTo({top:0}); } storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); }
 function curSlides(w,d){ if(SV.mode==="fin"){ const S=storySlides(w,d); return [{k:"fin",ph:S[0]&&S[0].ph},{k:"next"}]; } return storySlides(w,d); }
 function storyGo(i){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ return; } SV.i=i; storyShow(); }
-const SKB=[["scale(1.04) translate(0,0)","scale(1.14) translate(-2%,-1.5%)"],["scale(1.14) translate(-1%,0)","scale(1.22) translate(1.5%,-1%)"],["scale(1.24) translate(1%,-1%)","scale(1.32) translate(-1.5%,0)"]];
+const SKB=[["scale(1.06) translate(0,0)","scale(1.14) translate(-2%,-1%)"],["scale(1.14) translate(-2%,-1%)","scale(1.16) translate(3%,1%)"],["scale(1.16) translate(3%,1%)","scale(1.16) translate(-3%,0)"]];
 function sPreload(S,i){ for(let j=i+1;j<=i+2&&j<S.length;j++){ const ph=S[j]&&S[j].ph; if(ph&&!SPRE[ph.u]){ const im=new Image(); im.referrerPolicy="no-referrer"; im.src=ph.u; SPRE[ph.u]=im; } } }
 const SPRE={};
 function storyShow(){ clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return;
