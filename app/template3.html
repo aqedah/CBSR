@@ -1202,18 +1202,34 @@ body.tts-on .totop{display:none}
 const DAYN=["주일","월","화","수","목","금","토"];
 const TRY=!!window.CBSR_TRY; if(TRY) document.documentElement.classList.add("try");
 const MODE=window.CBSR_MODE||"rj", PI=PLAN_INFO[MODE];
-const DEFAULT_START=PI.start;
-const KEY=MODE==="y365"?"rjnote:y365":"rjnote:v2";
+/* 미리 보기 날짜(시험용): ?now=2027-01-01 로 오늘을 바꿔 보고, ?now=0 으로 되돌립니다(이 탭에서만) */
+const NOWOFF=(()=>{ try{ const u=new URLSearchParams(location.search).get("now"); if(u==="0") sessionStorage.removeItem("cbsr-now"); else if(u&&/^\d{4}-\d{2}-\d{2}$/.test(u)) sessionStorage.setItem("cbsr-now",u); const s=sessionStorage.getItem("cbsr-now"); if(!s) return 0; const [y,m,d]=s.split("-").map(Number), n=new Date(); return new Date(y,m-1,d,n.getHours(),n.getMinutes(),n.getSeconds())-n; }catch(e){ return 0; } })();
+const NOW=()=>new Date(Date.now()+NOWOFF);
+/* 365 통독의 회차(판): 해마다 1월 1일에 새 회차. 2026 = 첫 회차, 2027 = 2027판 */
+const ED_Y=Math.max(2026,NOW().getFullYear()), ED=MODE==="y365"?ED_Y:2026;
+const DEFAULT_START=MODE==="y365"?ED+"-01-01":PI.start;
+/* 새 회차가 되면 지난 회차의 기록(통독·QT·퀴즈)은 hist[해]에 옮겨 보관하고 새로 시작합니다 */
+function rollY(m){ if(!m) return m; const e=m.ed||2026; if(e>=ED_Y) { if(!m.ed) m.ed=ED_Y; return m; }
+  const has=Object.keys(m.done||{}).length||Object.keys(m.qt||{}).length||Object.keys(m.q||{}).length;
+  m.hist ||= {}; if(has&&!m.hist[e]) m.hist[e]={start:m.start,done:m.done||{},dT:m.dT||{},qt:m.qt||{},q:m.q||{},wq:m.wq||{}};
+  m.start=ED_Y+"-01-01"; m.done={}; m.dT={}; m.qt={}; m.q={}; m.wq={}; m.counted={}; m.ed=ED_Y; return m; }
+const KEY0=MODE==="y365"?"rjnote:y365":"rjnote:v2";
+/* 미리 보기 날짜일 때는 진짜 기록을 건드리지 않도록 복사본(…:now)에서 움직이고, 계정 연동도 멈춥니다 */
+const KEY=NOWOFF?KEY0+":now":KEY0;
+try{ if(NOWOFF&&localStorage.getItem(KEY)===null&&localStorage.getItem(KEY0)!==null) localStorage.setItem(KEY,localStorage.getItem(KEY0)); }catch(e){}
 /* 처음 온 사람은 '간단 보기'로 시작합니다 */
 try{ if(!localStorage.getItem("rjnote:v2")&&!localStorage.getItem("rjnote:y365")&&localStorage.getItem("cbsr-simple")===null) localStorage.setItem("cbsr-simple","1"); }catch(e){}
 const SIMPLE=()=>{ try{ return localStorage.getItem("cbsr-simple")==="1"; }catch(e){ return false; } };
 let mem={start:DEFAULT_START,q:{},wq:{},done:{},qt:{},size:17};
 try{const s=localStorage.getItem(KEY);if(s)mem=Object.assign(mem,JSON.parse(s));}catch(e){}
 mem.done ||= {}; mem.qt ||= {};
+if(MODE==="y365"){ const e0=mem.ed; mem=rollY(mem); if(e0!==mem.ed) try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
+/* 2027판 통독표: 경계가 바뀐 여섯 날(69·70·235·236·262·263)을 고치고, 예전 표에 맞춘 요약·안내·퀴즈는 비웁니다 */
+if(MODE==="y365"&&ED>=2027&&typeof P365_27!=="undefined"){ for(const no in P365_27){ const n=+no-1, w=Math.floor(n/7)+1, d=n%7, c=PLAN.plan[w-1]&&PLAN.plan[w-1][d]; if(!c) continue; Object.assign(c,P365_27[no]); if(SUMMARY[w-1]) SUMMARY[w-1][d]=""; delete GUIDE[w+"-"+d]; delete EYE[w+"-"+d]; delete CURATED[w+"-"+(d+1)]; } }
 /* 예전 '주일~금 읽기' 설정을 쓰던 분은 월요일 시작으로 되돌립니다 */
 if(MODE==="rj"){ const d0=new Date(DEFAULT_START+"T00:00:00"); d0.setDate(d0.getDate()-1); const p2=n=>String(n).padStart(2,"0"); if(mem.start===d0.getFullYear()+"-"+p2(d0.getMonth()+1)+"-"+p2(d0.getDate())) mem.start=DEFAULT_START; }
 /* 날짜는 모두 이 기기 시간(한국시간) 기준으로 셉니다 */
-const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+const todayStr=()=>{const d=NOW();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
 /* 합류한 날: 이 통독표를 처음 쓴 날. 기록이 있으면 가장 이른 기록 날짜를 씁니다(기기를 바꿔도 연동하면 가장 이른 날로 합쳐짐) */
 if(!mem.joinAt){ const ds=[...Object.values(mem.done||{}),...Object.values(mem.qt||{}).map(q=>q&&q.doneAt),...Object.values(mem.q||{}).map(r=>r&&r.first&&r.first.at)].filter(v=>/^\d{4}-\d{2}-\d{2}$/.test(v||"")).sort();
   mem.joinAt=ds[0]&&ds[0]<todayStr()?ds[0]:todayStr(); try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){} }
@@ -1225,7 +1241,7 @@ const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 
 /* 날짜 */
 const parseD=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
-const today0=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate());};
+const today0=()=>{const n=NOW();return new Date(n.getFullYear(),n.getMonth(),n.getDate());};
 const dayDiff=(a,b)=>Math.round((b-a)/86400000);
 const NW=PLAN.plan.length, READ_DAYS=PLAN.plan.flat().length, TOTAL_DAYS=MODE==="y365"?READ_DAYS:NW*7;
 const isRev=d=>MODE==="rj"&&d===6;
@@ -2194,12 +2210,14 @@ function storyPairCard(w,d){ const key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], txt=
 const QA_ON=true;
 /* 관점: A=1년차(2027), B=2년차(2028). 같은 본문이라도 해마다 다른 이야기와 QT */
 let PV_FORCE=null;
-function PV(){ if(PV_FORCE) return PV_FORCE; try{ const u=new URLSearchParams(location.search).get("pv"); if(u==="A"||u==="B") return u; const s=localStorage.getItem("cbsr-pv"); if(s==="A"||s==="B") return s; }catch(e){} return new Date().getFullYear()>=2028?"B":"A"; }
-function storyDay(no){ const C=(typeof STORYC!=="undefined"&&MODE==="y365")?STORYC[no]:null; if(!C) return null; if(C.A||C.B) return C[PV()]||null; return PV()==="A"?C:null; }
+function PV(){ if(PV_FORCE) return PV_FORCE; try{ const u=new URLSearchParams(location.search).get("pv"); if(u==="A"||u==="B") return u; const s=localStorage.getItem("cbsr-pv"); if(s==="A"||s==="B") return s; }catch(e){} return NOW().getFullYear()>=2028?"B":"A"; }
+/* 이야기 원고 묶음: 365일은 STORYC(날 번호), 리딩지저스 45주는 STORYC_RJ(주·요일로 만든 날 번호) */
+function SC_SRC(){ if(!window.CBSR_V2) return null; /* v1은 v2로 바꿀 때까지 그대로 */ return MODE==="y365"&&typeof STORYC!=="undefined"?STORYC:(MODE==="rj"&&typeof STORYC_RJ!=="undefined"?STORYC_RJ:null); }
+function storyDay(no){ const SC=SC_SRC(), C=SC?SC[no]:null; if(!C) return null; if(C.A||C.B) return C[PV()]||null; return PV()==="A"?C:null; }
 const PV_ORIG={EYE:{},DETAIL:{},GUIDE:{},KWQ:{}};
 const PVQ=new Set();
-function applyPV(){ if(typeof STORYC==="undefined"||MODE!=="y365") return;
-  for(const no in STORYC){ const n=+no-1, w=Math.floor(n/7)+1, d=n%7, k=w+"-"+d, k2=w+"-"+(d+1), S=storyDay(+no), Q=S&&S.qt;
+function applyPV(){ const SC=SC_SRC(); if(!SC) return;
+  for(const no in SC){ const n=+no-1, w=Math.floor(n/7)+1, d=n%7, k=w+"-"+d, k2=w+"-"+(d+1), S=storyDay(+no), Q=S&&S.qt;
     if(!(k in PV_ORIG.EYE)){ PV_ORIG.EYE[k]=EYE[k]; PV_ORIG.DETAIL[k2]=DETAIL[k2]; PV_ORIG.GUIDE[k]=GUIDE[k]; PV_ORIG.KWQ[no]=(typeof KWQ!=="undefined")?KWQ[no]:undefined; }
     const set=(o,key,v)=>{ if(v===undefined) delete o[key]; else o[key]=v; };
     set(EYE,k,Q&&Q.obs?Q.obs:PV_ORIG.EYE[k]);
@@ -2242,7 +2260,7 @@ function sDur(s){ if(s.qt||s.k==="table"||s.k==="echo"||s.k==="map"||s.k==="fin"
 function sKind(s){ return s.qt?"qt":s.k; }
 function nextWD(w,d){ let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } return PLAN.plan[nw-1]&&PLAN.plan[nw-1][nd2]?[nw,nd2]:null; }
 const isHere=(w,d)=>w===here.w&&d===here.d;
-function askQ(w,d){ const K=(typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null; if(K) return {q:K.q,r:K.r};
+function askQ(w,d){ const SK=storyDay(dayNo(w,d)); if(SK&&SK.kwq) return {q:SK.kwq.q,r:SK.kwq.r}; const K=(typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null; if(K) return {q:K.q,r:K.r};
   const det=DETAIL[w+"-"+(d+1)]; if(det&&det.apply) return {q:det.apply}; const X=storyQT(w,d); return {q:X.kv?verseQuestion(X.kv):APPLY_Q}; }
 function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
   if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">QT로 이어가기</button></div>${FB_ON?`<button class="sfbcopy" id="sFbCopy">검토 메모 모아 복사 (${Object.keys(fbAll()).length}개)</button>`:""}</div>`; }
@@ -2290,7 +2308,7 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
   else if(s.k==="pair"){ const txt=det&&det.christ?det.christ:(DAYC[key]||WEEKS[w-1].christ||""), pr=storyPair(w,d,txt);
     if(pr&&vtxt(pr[0])&&vtxt(pr[1])) c+=`<div class="spair"><div><small>${esc(rlab(pr[0]))}</small><q>${esc(vtxt(pr[0]))}</q></div><i aria-hidden="true">↕</i><div class="ot"><small>${esc(rlab(pr[1]))}</small><q>${esc(vtxt(pr[1]))}</q></div></div>`;
     const s1=txt.split(/(?<=\.)\s+/); c+=`<p class="sline">${esc(s1[0]||"")}</p>${s1.length>1?`<details class="smore"><summary>더 읽기</summary><p>${esc(s1.slice(1).join(" "))}</p></details>`:""}`; }
-  else if(s.k==="my"){ const K=(typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null;
+  else if(s.k==="my"){ const K=(storyDay(dayNo(w,d))||{}).kwq||((typeof KWQ!=="undefined"&&MODE==="y365")?KWQ[dayNo(w,d)]:null);
     c+=`<p class="sq">${esc(K?K.q:(PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q)))}</p>${K&&K.r?`<p class="shint">${esc(rlab(K.r))} · ${esc(vtxt(K.r))}</p>`:""}<textarea data-qt="med" rows="3" placeholder="한 줄로 적어 보세요 (적지 않아도 됩니다)">${esc(q.med||"")}</textarea>`; }
   else { if(q.done) c+=`<div class="sdonenote"><b>✓ 오늘 QT를 마쳤습니다</b>${kv?`<p>${esc(kv.t)} <small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></p>`:""}<button class="btn" data-sgo="1">오늘의 말씀 카드 ›</button><button class="linkbtn" id="qtDone">완료 취소</button></div>`;
     else { const pray=(det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
@@ -2552,6 +2570,7 @@ function makePrayer(key,vi,pv,label,v,traits){
 /* todayStr: 위로 옮김 */
 function mergeMem(a,b){
   if(!b) return a; const o=JSON.parse(JSON.stringify(a));
+  if(b.hist){ o.hist ||= {}; for(const y in b.hist) if(!o.hist[y]) o.hist[y]=b.hist[y]; } if(b.ed&&(!o.ed||b.ed>o.ed)) o.ed=b.ed;
   if(b.start) o.start=b.start;
   /* 통독 완료: 양쪽에 고친 시각이 있으면 나중에 고친 쪽(완료/취소)을 따르고, 없으면 예전처럼 합칩니다 */
   { const ad=a.done||{}, bd=b.done||{}, at=a.dT||{}, bt=b.dT||{}; o.done={}; o.dT=Object.assign({},bt,at);
@@ -2830,6 +2849,8 @@ function renderRecord(){
     const jt=MODE==="rj"&&W<=NW?`${W}-6`:`${L[0][0]}-${L[0][1]}`;
     rows+=`<button class="trow" data-jump="${jt}"><span class="d">${W}주차</span><span class="r">${esc(dispTitle(W).replace(/^\d+주차 · /,""))}${T.t?`<div class="meter"><i style="width:${pct(T.s,T.t)}%"></i></div>`:""}</span><span class="s ${T.t?"":"none"}">${T.t?`${T.s}/${T.t}`:"아직"}</span></button>`; }
   h+=`<details class="more"><summary>주차별 퀴즈 점수</summary><div class="tbl">${rows}</div><p class="lead">주차를 누르면 그 주로 갑니다.</p></details>`;
+  /* 지난 회차: 새해에 새 회차로 넘어가며 보관한 기록 */
+  if(MODE==="y365"&&mem.hist){ const ys=Object.keys(mem.hist).sort(); if(ys.length) h+=`<section class="sec"><span class="label">지난 회차 기록</span>${ys.map(y=>{ const H=mem.hist[y]; const dn=Object.keys(H.done||{}).length, qn=Object.values(H.qt||{}).filter(x=>x&&x.done).length; return `<p class="lead"><b>${esc(y)}년 회차</b> · 통독 ${dn}일 · QT ${qn}일</p>`; }).join("")}<p class="lead">새 회차에는 1일째부터 다시 시작합니다. 지난 기록은 이 기기와 연결된 계정에 그대로 보관됩니다.</p></section>`; }
   return h;
 }
 
@@ -3171,7 +3192,7 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   const q=qtOf(key), read=!!mem.done[key], S=storySlides(w,d), ph=S[0]&&S[0].ph, dt=dateOf(w,d), live=isHere(w,d), kv=q.done?storyQT(w,d).kv:null, g=GUIDE[key]||{}, mins=tdMins(w,d);
   const stage=q.done?2:read?1:0;
   let h=`<section class="tdh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin">
-    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
+    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2&&MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
     <div class="tdttl"><p class="tdk">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1></div></div>
     ${ph&&ph.link?`<a class="tdcr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}</section>
   <section class="tdsheet">`;
@@ -3538,11 +3559,12 @@ function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth
 applyPV();
 if(window.CBSR_V2) v2Nav();
 /* 검토용: v2.html?day=80 → 그날 이야기 바로 열기(통독 완료 여부와 상관없이) */
-if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=365&&MODE==="y365"){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const go=()=>{ if(BIBLE){ render(); storyOpen(0); } else setTimeout(go,300); }; setTimeout(go,300); } }
+if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=(MODE==="rj"?315:365)&&(MODE==="y365"||MODE==="rj")){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const go=()=>{ if(BIBLE){ render(); storyOpen(0); } else setTimeout(go,300); }; setTimeout(go,300); } }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.getElementById("sheetRoot").innerHTML=""; closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
 studyTabSync(); applySize(); render(); loadBible(); renderNews();
+if(NOWOFF){ try{ const s=sessionStorage.getItem("cbsr-now"); const bd=document.createElement("div"); bd.id="nowBadge"; bd.style.cssText="position:fixed;left:8px;bottom:72px;z-index:9999;background:#5a3d12;color:#fff;font:600 12px system-ui;padding:6px 10px;border-radius:14px;opacity:.9"; bd.textContent="미리 보기 날짜 "+s+" · 기록은 따로 보관 · 끄기"; bd.onclick=()=>{ location.search="?now=0"; }; document.body.appendChild(bd); }catch(e){} }
 (function(){ const el=document.getElementById("appBoot"); if(!el) return; const quick=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches; let done=false; const close=()=>{ if(done) return; done=true; el.classList.add("out"); setTimeout(()=>el.remove(),320); };
   el.onclick=close; setTimeout(close,quick?300:Math.max(700,1200-performance.now())); })();
 /* ===== 여러 기기 기록 잇기: 이름+숫자 4자리 열쇠 하나에 두 통독표·형광펜·프로필을 함께 저장 ===== */
@@ -3551,6 +3573,7 @@ function localBundle(){ const g=k=>{ try{ return JSON.parse(localStorage.getItem
   return {v:2,rj:MODE==="rj"?mem:g(LKEYS.rj),y365:MODE==="y365"?mem:g(LKEYS.y365),hl:HL,hld:HLDEL,prof:PROF}; }
 function mergeBundle(L,R){ if(!R||!Object.keys(R).length) return L; if(!R.v) R={v:2,rj:R};
   const o={v:2};
+  if(L.y365) L.y365=rollY(L.y365); if(R.y365) R.y365=rollY(R.y365);
   for(const k of ["rj","y365"]) o[k]=L[k]&&R[k]?mergeMem(L[k],R[k]):(L[k]||R[k]||null);
   /* 형광펜: 절마다 칠한 시각과 지운 시각 가운데 나중 것을 따릅니다 */
   { const a=L.hl||{}, b=R.hl||{}, da=L.hld||{}, db=R.hld||{}; o.hl={}; o.hld={};
@@ -3568,8 +3591,8 @@ function applyBundle(B){ const before=JSON.stringify([mem,HL,PROF]);
   try{ localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem("cbsr-hl-del",JSON.stringify(HLDEL)); localStorage.setItem(PROFKEY,JSON.stringify(PROF)); }catch(e){}
   return before!==JSON.stringify([mem,HL,PROF]); }
 let syncT=null, syncBusy=false;
-function syncSoon(ms){ if(!(window.SYNC&&SYNC.loggedIn())) return; clearTimeout(syncT); syncT=setTimeout(syncNow,ms==null?2500:ms); }
-async function syncNow(){ if(!(window.SYNC&&SYNC.loggedIn())||syncBusy) return; syncBusy=true;
+function syncSoon(ms){ if(NOWOFF||!(window.SYNC&&SYNC.loggedIn())) return; clearTimeout(syncT); syncT=setTimeout(syncNow,ms==null?2500:ms); }
+async function syncNow(){ if(NOWOFF||!(window.SYNC&&SYNC.loggedIn())||syncBusy) return; syncBusy=true;
   try{ const remote=await SYNC.pull(); const B=mergeBundle(localBundle(),remote||{}); const changed=applyBundle(B);
     SYNC.push(B,0);
     if(changed){ Object.assign(here,posOfToday()); const a=document.activeElement; if(!(a&&/INPUT|TEXTAREA/.test(a.tagName))&&!document.getElementById("sheetRoot").innerHTML) render(); }

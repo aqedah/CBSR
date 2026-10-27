@@ -47,6 +47,10 @@ for i in range(0,len(P365),7):
     WK.append({"t":tt,"story":"","christ":""})
 J=lambda o:json.dumps(o,ensure_ascii=False,separators=(',',':'))
 data+='const PLAN_INFO={rj:{name:"리딩지저스 45주",short:"45주",src:"리딩지저스 45주 성경통독표(웨스트민스터코리아)",start:"2026-02-23"},y365:{name:"365 성경통독",short:"365일",src:"2026 365일 성경통독표",start:"2026-01-01"}};\n'
+_P27=json.load(open('plan365_2027.json')); _D27={}
+for _i,(_x,_y) in enumerate(zip(P365,_P27)):
+    if _x['ch']!=_y['ch'] or _x['label']!=_y['label']: _D27[_i+1]={"spec":spec365(_y['ch']),"label":_y['label'],"ch":_y['ch'],"topic":_y.get('topic','')}
+data+='const P365_27='+J(_D27)+';\n'
 A365=json.load(open('s365b/all.json')); GD={};EY={};CQ={}
 for i,d in enumerate(P365):
     w,j=i//7+1,i%7; v=A365.get(str(d['n']))
@@ -101,6 +105,8 @@ data+='const KWQ='+open('ux/kwq.json').read()+';\nconst CARDNEWS='+open('ux/card
 _PH=json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else []
 _SC=json.load(open('ux/story_cards.json')) if os.path.exists('ux/story_cards.json') else {}
 data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','by','lic','link','pl','tags','fx','mood','set')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
+_SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
+data+='const STORYC_RJ='+J(_SRJ)+';\n'
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
 data+='if(window.CBSR_MODE==="y365"){const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
@@ -172,7 +178,7 @@ SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="
 shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
 open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
-VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]day=/.test(location.search)||S.getItem("cbsr-mode")==null)')
+VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search)||S.getItem("cbsr-mode")==null)')
 exec(open('review_build.py').read())
 open(f'{OUT}/v2.html','w').write(shead.replace(SSHIM,VSHIM).replace('story.html','v2.html')+body+'\n</body>\n</html>\n')
 V=h(html+bible)
