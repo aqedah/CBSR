@@ -451,3 +451,63 @@ g34_12|g||성전의 지대/기초를 놓|temple,foundation,crowd,light|예루살
 g34_13|g||학사/서기관/율법에 익숙한|scroll,ink,reed_pen,table||7|dark|50|두루마리와 먹물 통과 갈대 펜|||object
 g34_14|g||시내/골짜기 물|stream,canyon,mountain||1|bright|50|협곡을 흐르는 광야 시냇물|||landscape
 g34_15|g||추수/곡식 단을|harvest,grain,city_gate,men||5,6,8|warm|50|곡식 단을 지고 성으로 들어가는 사람들|||scene
+g35_01|s|2:25;2:26;2:40;3:16;58:9|언약궤/증거궤/지성소/그룹 사이/휘장|ark,cherubim,holy_of_holies,veil,light||4,5,6|dark|50|수놓은 휘장 앞 지성소의 언약궤|||object
+g35_02|s|3:16;58:9|속죄일/피를 속죄소/향연/뿌릴지며|ark,blood,incense,priest_hand||4|dark|50|향연 속 속죄소 위로 피를 뿌리는 손(레 16)|||scene
+g35_03|s|11:6;11:8;14:3;14:5|내소/금 그룹/언약궤를 그 처소|ark,cherubim,temple,gold||6|warm|50|성전 내소의 큰 금 그룹과 언약궤(왕상 6; 8)|||object
+g35_04|s|11:8;14:5|채가 길므로/채 끝이 보이|veil,ark,light,temple||6|dark|50|휘장 틈으로 보이는 언약궤와 채 끝(왕상 8:8)|||object
+g35_05|s|10:6;13:13|오벧에돔/그 집에 석 달|ark,house,children||6|warm|50|오벧에돔의 집 안 언약궤와 아이들(삼하 6)|||scene
+g35_06|s|10:6;13:16|장막 가운데/번제와 화목제|ark,tent,altar,smoke||6|warm|50|다윗이 친 장막 안의 언약궤와 번제 연기(삼하 6:17)|||scene
+g35_07|s|9:6|벧세메스/밀을 베다가/수레를 패고/큰 돌|ark,wheat_field,cart,fire||5|warm|50|벧세메스 밀밭 큰 돌 위의 언약궤와 불타는 수레(삼상 6)|||scene
+g35_08|s|9:7;10:6;13:13|아비나답의 집/기럇여아림/엘르아살|ark,house,man,window_light||5,6|dark|50|아비나답의 집에 놓인 언약궤 곁에 선 사람(삼상 7)|||scene
+g35_09|s|9:3|사무엘이 누웠더니/하나님의 등불/궤 있는 곳|ark,boy,lamp,night||5|dark|50|실로 성소의 밤, 언약궤 곁에 잠든 아이와 등불(삼상 3)|||scene
+g35_10|s|4:17;2:16;58:9|싹 난 지팡이/만나 항아리/증거궤 앞|ark,rod,almond_blossom,jar||4|warm|50|언약궤 앞의 싹 난 지팡이와 만나 항아리(히 9:4)|||object
+g35_11|s|6:3;6:4|요단/언약궤를 멘 제사장/물이 그치고|ark,river,stones,crowd||5|bright|50|물이 갈라진 요단 가운데의 언약궤(수 3–4, 널리 알려진 그림 방식)|||scene
+g35_12|s|6:6|여리고/성벽이 무너져/나팔을 불|ark,city_wall,trumpet,ruins|여리고|5|warm|50|무너지는 여리고 성벽 앞의 언약궤(수 6)|||scene
+g35_13|s|9:5|다곤/엎드러져/머리와 두 손목|ark,idol,temple,broken_statue|아스돗|5|dark|50|엎드러져 부서진 다곤 상 앞의 언약궤(삼상 5)|||scene
+g35_14|s|||ark,cave||5|dark|50|동굴 속 언약궤|뺌: 본문에 없는 장면(언약궤를 숨긴 동굴 전설)||object
+g35_15|s|||ark,jesus,light||9|bright|50|언약궤 뒤에 선 예수|뺌: 언약궤와 예수를 한 화면에 합침(해석을 그림으로 단정)||symbolic
+g36_01|s|4:2|진영/회막을 중심/사방에 진|camp,tents,tabernacle,banners||4|warm|50|회막을 가운데 둔 지파별 진영(민 2)|||landscape
+g36_02|s|4:4;4:7|레위인/메게 할지니/휘장과 덮개|levites,carry,curtains,cart||4|warm|50|덮개 짐을 어깨에 진 레위인들(민 4)|||scene
+g36_03|s|4:7|수레 여섯/소 열둘/헌물|carts,oxen,tabernacle_court||4|warm|50|회막 앞에 늘어선 덮개 수레와 소들(민 7)|||scene
+g36_04|s|4:6|나실인/머리를 밀고/화목제 밑에 있는 불|nazirite,hair,fire,tent||4|dark|50|회막 문에서 머리를 미는 나실인(민 6)|||scene
+g36_05|s|4:9;4:10|구름이 떠오르면/진을 걷/행진|cloud,tents,tabernacle,people||4|bright|50|구름이 떠오르자 장막을 걷는 사람들(민 9)|||scene
+g36_06|s|4:12|미리암/진 밖에 갇혀/이레 동안|woman,desert,camp_far||4|dark|50|진 밖에 홀로 앉은 미리암(민 12)|||scene
+g36_07|s|4:14|밤새도록 통곡/소리를 높여|tents,night,weeping,lamp||4|dark|50|밤새 장막 사이에서 우는 백성(민 14:1)|||scene
+g36_08|s|4:14|아침에 일찍이/산 꼭대기로 올라가|soldiers,mountain,dawn,swords||4|dark|50|동틀 녘 산꼭대기로 올라가는 사람들(민 14:40)|||scene
+g36_09|s|4:17;58:9|아론의 지팡이/싹이 나고 꽃이 피어/살구|rod,almond_blossom,staffs||4|warm|50|싹 나고 살구 열린 지팡이와 마른 지팡이들(민 17)|||object
+g36_10|s|4:19|붉은 암송아지/재/우슬초/홍색 실|ash,hyssop,scarlet_thread,rock||4|bright|50|진 밖에 모아 둔 재와 우슬초·홍색 실(민 19)|||object
+g36_11|s|4:20|에돔/왕의 큰길/지나가지 못하리라|canyon,army,road|에돔|4|dark|50|바위 협곡 길을 막아선 군대(민 20)|||landscape
+g36_12|s|4:22|발람/나귀/포도원 사이 좁은 길/여호와의 사자|donkey,man,stone_walls,staff,light||4|bright|50|포도원 담 사이에 주저앉은 나귀와 지팡이를 든 발람(민 22)|||scene
+g36_13|s|4:23;4:24|높은 곳/진 친 것을/장막이 어찌 그리 아름다운지|camp,tents,rocks,valley||4|warm|50|바위 꼭대기에서 내려다본 진영(민 23–24)|||landscape
+g36_14|s|4:27;4:36|슬로브핫의 딸들/회막 문 앞|women,tabernacle,curtains||4|warm|50|회막 문 앞에 선 다섯 여인(민 27)|||scene
+g36_15|s|||camp,river,oasis||4|bright|50|모압 평지 진영과 요단|뺌: 강이 형광 띠처럼 그려짐||landscape
+g37_01|s|13:15;13:16;13:25|노래하는 자/제금/비파/수금|musicians,cymbals,lyre,levites||6|warm|50|제금과 수금을 든 레위인 노래하는 자들(대상 15)|||scene
+g37_02|s|13:22;14:2|다듬은 돌/백향목/놋/준비하였더라|stones,cedar,bronze,building_materials||6|bright|50|쌓아 둔 다듬은 돌과 백향목과 놋(대상 22)|||object
+g37_03|s|14:7;11:18|불이 하늘에서 내려/엎드려 경배|fire,altar,bowing||6|warm|50|제단 위로 내린 불과 엎드린 사람들(대하 7)|||scene
+g37_04|s|14:20|노래하는 자들/군대 앞에서/찬송하게|singer,army,dust||6|warm|50|군대 앞에서 노래하며 나아가는 사람(대하 20)|||scene
+g37_05|s|14:26;12:15|웃시야/분향/이마에 나병|king,censer,leprosy,temple||6|dark|50|분향하다 이마에 나병이 생긴 왕(대하 26)|||scene
+g37_06|s|14:29;14:30|성전 문을 열고/그릇들을 정결하게|temple_doors,vessels,light||6,7|warm|50|다시 열린 성전 문과 닦은 그릇들(대하 29)|||object
+g37_07|s|15:1;14:36|고레스/조서/공포하여|clay_cylinder,hands,palace|바사|7|warm|50|페르시아 궁의 진흙 원통 조서(스 1)|||object
+g37_08|s|15:3|대성통곡/기뻐하여 즐거이 부르는/기초를 놓|old_man,young_man,weeping,joy,foundation|예루살렘|7|warm|50|성전 기초 앞에서 우는 노인과 외치는 젊은이(스 3:12)|||scene
+g37_09|s|15:9;15:10|엎드려/심히 통곡/에스라가 기도|bowing,crowd,weeping||7|dark|50|땅에 엎드린 학자와 둘러앉아 우는 무리(스 9–10)|||scene
+g37_10|s|16:2|밤에/성벽을 살펴보니/짐승을 탄|night,ruins,donkey,moon|예루살렘|7|dark|50|달빛 아래 무너진 성벽을 살피는 사람(느 2)|||scene
+g37_11|s|16:4|한 손으로 일을 하며/칼을 차고|hands,stone_wall,sword||7|warm|50|성벽 돌을 쌓는 손과 허리에 찬 칼(느 4)|||object
+g37_12|s|16:8|나무 강단/율법책을 펴/모든 백성이 일어서|scroll,pulpit,crowd|예루살렘|7|warm|50|나무 강단에서 율법책을 펴는 학자와 일어선 백성(느 8)|||scene
+g37_13|s|17:1|수산 궁/잔치/흰 휘장/은 고리/대리석 기둥|palace,curtains,pillars,gold_cups|수산|7|bright|50|흰 휘장과 대리석 기둥의 궁 잔치 자리(에 1)|||setting
+g37_14|s|17:5|금 규/내밀매/왕후 에스더|queen,scepter,king||7|dark|50|보좌의 왕이 내민 금 규 앞의 여인(에 5)|||scene
+g37_15|s|17:6|잠이 오지 아니하므로/역대 일기/읽히더니|scroll,lamp,night,king_bed||7|dark|50|잠 못 이룬 왕 앞에서 일기를 읽는 시종(에 6)|||scene
+g38_01|s|18:2|질그릇 조각/재 가운데|hand,potsherd,ash||8|dark|50|질그릇 조각을 쥔 손(욥 2:8)|||object
+g38_02|s|18:2|칠 일 칠 야/땅에 앉아/말하는 자가 없었으니|friends,sitting,silence||8|dark|50|말없이 땅에 앉은 세 사람의 뒷모습(욥 2:13)|||scene
+g38_03|g|18:38;18:40|폭풍/폭풍우 가운데서/회오리바람|whirlwind,desert,light||8,1|dark|50|광야 위로 몰려오는 회오리바람(욥 38)|||landscape
+g38_04|g|19:1;24:17|시냇가에 심은 나무/철을 따라 열매|tree,stream,light||8,1|bright|50|시냇가에 뿌리 내린 나무(시 1:3)|||landscape
+g38_05|g|19:1;19:35|바람에 나는 겨/타작|chaff,wind,pitchfork,threshing||8|warm|50|타작마당에서 흩날리는 겨(시 1:4)|||object
+g38_06|g|19:42|사슴이 시냇물을 찾기에 갈급함/목마른|deer,dry_ground,water||8,1|warm|50|마른 땅에서 물을 찾는 사슴(시 42:1)|||landscape
+g38_07|s|19:137|바벨론의 여러 강변/버드나무에 수금을 걸|willow,lyre,river|바벨론|7,8|dark|50|강가 버드나무에 걸어 둔 수금(시 137)|||object
+g38_08|s|20:1;20:8;20:9|지혜가 길거리에서/성문 어귀/외치며|woman_silhouette,city_gate,stairs,light||8|warm|50|성문 높은 곳에서 외치는 여인의 실루엣(잠 1; 8)|||symbolic
+g38_09|g|20:6;20:30|개미/먹을 것을 여름 동안|ant,grain,ground||8|warm|50|곡식 알을 나르는 개미(잠 6:6)|||object
+g38_10|s|20:9|일곱 기둥/상을 갖추고|pillars,table,bread,cup||8|warm|50|일곱 돌기둥 집에 차려진 상(잠 9)|||setting
+g38_11|g|20:4;19:1|의인의 길/악인의 길/돋는 햇살|path,sunrise,dark_canyon||8|warm|50|밝은 길과 어두운 골짜기로 갈라지는 길(잠 4:18–19)|||landscape
+g38_12|g|21:1|해는 뜨고 지되/바람은 돌고/강물은 바다로|sunset,river,wind,field||8|warm|50|돌아가는 바람과 굽이치는 강, 지는 해(전 1)|||landscape
+g38_13|g|21:3;48:6|심을 때/거둘 때/때가 있나니|sickle,seed,hands,wheat||8|warm|50|거두는 손과 씨 뿌리는 손(전 3:2)|||object
+g38_14|s|22:2|작은 여우/포도원을 허는|vineyard,fox,stone_wall,flowers||8|bright|50|꽃 핀 포도원 담 아래의 작은 여우(아 2:15)|||landscape
+g38_15|g|22:2;40:24|겨울도 지나고/무화과나무/꽃이 피고|fig_tree,poppies,spring,field||8,9|bright|50|푸른 열매 맺힌 무화과와 꽃 핀 들(아 2:11–13)|||landscape
