@@ -580,6 +580,12 @@ html.v2 .k-line .sph::after{background:linear-gradient(180deg,rgba(0,0,0,.55),rg
 html.v2 #storyRoot{--ssub:#EFE6D8}
 html.v2 .chap+.chap{margin-top:40px}html.v2 .chap h3{font-size:21px;font-weight:800;color:#1F4A41;margin-bottom:12px}html.v2 .chsub{margin-top:5px;font-weight:600}
 @media (prefers-color-scheme: dark){html.v2:not([data-theme="light"]) .chap h3{color:#A6D6C8}}html.v2[data-theme="dark"] .chap h3{color:#A6D6C8}
+.sptag{position:absolute;z-index:700;background:rgba(20,15,10,.92);color:#f6efe4;border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:10px 12px;box-shadow:0 6px 22px rgba(0,0,0,.5);animation:sptIn .18s ease}
+.sptag b{font-size:16px}.sptag small{margin-left:6px;font-size:12px;color:#e2b874}.sptag p{margin:6px 0 0;font-size:14px;line-height:1.6;word-break:keep-all}
+@keyframes sptIn{from{opacity:0;transform:translateY(4px) scale(.96)}to{opacity:1;transform:none}}
+.sphint{position:absolute;z-index:650;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 62px);background:rgba(0,0,0,.55);color:#fff;font-size:12.5px;padding:5px 12px 5px 28px;border-radius:999px;pointer-events:none;white-space:nowrap}
+.sphint:before{content:"";position:absolute;left:11px;top:50%;width:9px;height:9px;margin-top:-5px;border-radius:50%;background:#ff5b45;box-shadow:0 0 0 0 rgba(255,91,69,.7);animation:sphp 1.6s infinite}
+@keyframes sphp{0%{box-shadow:0 0 0 0 rgba(255,91,69,.7)}70%{box-shadow:0 0 0 8px rgba(255,91,69,0)}100%{box-shadow:0 0 0 0 rgba(255,91,69,0)}}
 #readRoot{position:fixed;inset:0;z-index:9500;background:#0d0b09;color:#f3ece0;animation:siIn .2s ease}
 #readRoot .rdfr{position:absolute;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:linear-gradient(170deg,#2b2219,#14100c)}
 #readRoot .rdhead{position:absolute;left:0;right:0;top:0;z-index:5;padding:10px 12px 6px;background:linear-gradient(#000a,#0000)}
@@ -678,7 +684,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .k-map .smap{position:absolute;inset:0;background:#2a2118;z-index:1}
 .k-map .smap .leaflet-control-attribution{font-size:9px;background:rgba(0,0,0,.45);color:#ccc}.k-map .smap .leaflet-control-attribution a{color:#ddd}
 .k-map .sbox{z-index:500}.k-map .sbox h2{font-size:21px}.k-map .sbox p{font-size:14.5px;margin-top:0}
-.spl{color:#fff;font:700 13px var(--f-ui);white-space:nowrap;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000;display:inline-block}
+.spl{color:#fff;font:700 13px var(--f-ui);white-space:nowrap;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000;display:inline-block;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.35);border-radius:9px;padding:1px 6px}
 .spl::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--sred);margin-right:5px;vertical-align:-1px;box-shadow:0 0 4px #000}
 .spl.alt::before{border-color:var(--sgold)}.spl.est{font-style:italic}
 .spl.lf{transform:translateX(calc(-100% + 12px))}.spl.lf::before{display:none}
@@ -2439,6 +2445,15 @@ function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||
   /* 너무 가까운 이름(예: 예루살렘과 유다)은 겹치므로 먼저 나온 것만 씁니다 */
   const put=[]; const near=p=>put.some(q=>Math.abs(q[1]-p[1])<.22&&Math.abs(q[2]-p[2])<.3); M.route.forEach(p=>{ lab(p,0); put.push(p); }); M.extra.forEach(p=>{ if(near(p)) return; lab(p,M.route.length>1||!!M.to); put.push(p); });
   const all=M.route.concat(M.extra).map(p=>[p[1],p[2]]); if(!all.length) return;
+  /* 지명 태그: 인스타 사람 태그처럼, 지명을 누르면 짧은 설명이 뜹니다. 지도 위 좌우 넘김 단추보다 먼저 받습니다 */
+  const B0=(dayPlan(w,d).ch[0]||[0])[0], fr=el.parentNode;
+  const tagText=n=>{ const I=typeof PLACEINFO!=="undefined"&&PLACEINFO[n]; if(!I) return null; const v=I.v.find(x=>x[0].includes(B0))||I.v[0]; return {k:I.k,t:v[1]}; };
+  const pop=(n,x,y)=>{ fr.querySelector(".sptag")?.remove(); const T=tagText(n); const b=document.createElement("div"); b.className="sptag"; b.innerHTML=`<b>${esc(n)}</b>${T?`<small>${esc(T.k)}</small><p>${esc(T.t)}</p>`:`<p>설명을 준비 중입니다.</p>`}`; fr.appendChild(b);
+    const W=fr.clientWidth, bw=Math.min(280,W-24); b.style.width=bw+"px"; b.style.left=Math.max(12,Math.min(W-bw-12,x-bw/2))+"px"; const h=b.offsetHeight; b.style.top=(y-h-14>70?y-h-14:y+18)+"px"; };
+  fr.querySelectorAll(".smnav").forEach(btn=>btn.addEventListener("click",e=>{ const open=fr.querySelector(".sptag"); const hit=[...fr.querySelectorAll(".spl")].map(l=>{ const r=l.getBoundingClientRect(); const ok=e.clientX>=r.left-8&&e.clientX<=r.right+8&&e.clientY>=r.top-8&&e.clientY<=r.bottom+8; return ok?[l,Math.hypot(e.clientX-(r.left+r.width/2),e.clientY-(r.top+r.height/2))]:null; }).filter(Boolean).sort((a,b)=>a[1]-b[1]).map(x=>x[0])[0];
+    if(hit){ e.stopImmediatePropagation(); e.preventDefault(); const fb=fr.getBoundingClientRect(), r=hit.getBoundingClientRect(); pop(hit.textContent,r.left+r.width/2-fb.left,r.top-fb.top); return; }
+    if(open){ e.stopImmediatePropagation(); e.preventDefault(); open.remove(); } },true));
+  if(!fr.querySelector(".sphint")) fr.insertAdjacentHTML("beforeend",`<span class="sphint">지명을 누르면 설명이 나옵니다</span>`);
   setTimeout(()=>{ try{ map.invalidateSize(); if(all.length===1) map.setView(all[0],9); else map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[40,80],paddingBottomRight:[80,250],maxZoom:11}); }catch(e){} },60); }
 function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,e,vs,kv}=X;
   if(s.k==="fin"||s.k==="next"||s.k==="ask") return storyEndHTML(s,w,d);
