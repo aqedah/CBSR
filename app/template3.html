@@ -2338,9 +2338,10 @@ const smk=t=>esc(t||"").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/__(.+?)__
 const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==="string"?x:(x.q||[])[0]),...(s.pair||[]).map(x=>x[0])].filter(Boolean).join(" ").replace(/\*\*|__/g,"");
 function storyMapPts(w,d,s){ const G=n=>{ const g=PLACE.get(n); return g?[n,g[1],g[2],g[4]?1:0,0]:null; };
   const one=x=>Array.isArray(x)?(x.length>=3?[x[0],x[1],x[2],x[3]?1:0,x[4]?1:0]:G(x[0])):G(x);
-  if(s&&s.route) return {route:s.route.map(one).filter(Boolean),extra:(s.extra||[]).map(one).filter(Boolean)};
+  if(s&&(s.route||s.gather)) return {route:(s.route||[]).map(one).filter(Boolean),extra:(s.extra||[]).map(one).filter(Boolean),to:s.gather?one(s.gather):null};
   const R=routesFor(w,d); if(R.length&&R[0].p.length>1) return {route:R[0].p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:R[0].n};
-  const A=dayA(w,d), pts=[...A.places.values()].filter(p=>PLACE.has(p.name)).sort((a,b)=>b.n-a.n).slice(0,8).map(p=>G(p.name)).filter(Boolean);
+  /* 이동 경로가 없는 날은 '본문의 무대'만: 두 번 이상 나오는 곳(목록에 한 번 지나가는 지명은 빼고). 없으면 가장 많이 나온 한 곳 */
+  const A=dayA(w,d), all=[...A.places.values()].filter(p=>PLACE.has(p.name)).sort((a,b)=>b.n-a.n), many=all.filter(p=>p.n>=2), pts=(many.length?many:all.slice(0,1)).slice(0,6).map(p=>G(p.name)).filter(Boolean);
   return {route:[],extra:pts}; }
 function storyPairCard(w,d){ const key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], txt=det&&det.christ?det.christ:(DAYC[key]||(WEEKS[w-1]||{}).christ||""); if(!txt) return null;
   const pr=storyPair(w,d,txt), s1=txt.split(/(?<=\.)\s+/);
@@ -2431,10 +2432,12 @@ function storyCardHTML(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</sp
 function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||!window.L) return;
   const M=storyMapPts(w,d,s); const map=L.map(el,{zoomControl:false,zoomSnap:.25,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,attributionControl:true}); SV.map=map; map.attributionControl.setPrefix(false);
   L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:15,attribution:"위성: Esri, Maxar, Earthstar Geographics"}).addTo(map);
+  /* 모여드는 길(예: 오순절에 여러 나라에서 예루살렘으로): 곳마다 목적지로 선을 긋습니다 */
+  if(M.to){ M.extra.forEach(p=>{ const ll=[[p[1],p[2]],[M.to[1],M.to[2]]]; L.polyline(ll,{color:"#ff5b45",weight:7,opacity:.15,interactive:false}).addTo(map); L.polyline(ll,{color:"#ff5b45",weight:2,opacity:.85,dashArray:"6 6",className:"sroute",interactive:false}).addTo(map); }); M.route=[M.to]; }
   if(M.route.length>1){ const ll=M.route.map(p=>[p[1],p[2]]); L.polyline(ll,{color:"#ff5b45",weight:9,opacity:.18,interactive:false}).addTo(map); L.polyline(ll,{color:"#ff5b45",weight:2.5,opacity:.95,className:"sroute",lineJoin:"round",interactive:false}).addTo(map); }
   const lab=(p,alt)=>L.marker([p[1],p[2]],{icon:L.divIcon({className:"",html:`<span class="spl${alt?" alt":""}${p[3]?" est":""}${p[4]?" lf":""}">${esc(p[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]}),interactive:false}).addTo(map);
   /* 너무 가까운 이름(예: 예루살렘과 유다)은 겹치므로 먼저 나온 것만 씁니다 */
-  const put=[]; const near=p=>put.some(q=>Math.abs(q[1]-p[1])<.22&&Math.abs(q[2]-p[2])<.3); M.route.forEach(p=>{ lab(p,0); put.push(p); }); M.extra.forEach(p=>{ if(near(p)) return; lab(p,M.route.length>1); put.push(p); });
+  const put=[]; const near=p=>put.some(q=>Math.abs(q[1]-p[1])<.22&&Math.abs(q[2]-p[2])<.3); M.route.forEach(p=>{ lab(p,0); put.push(p); }); M.extra.forEach(p=>{ if(near(p)) return; lab(p,M.route.length>1||!!M.to); put.push(p); });
   const all=M.route.concat(M.extra).map(p=>[p[1],p[2]]); if(!all.length) return;
   setTimeout(()=>{ try{ map.invalidateSize(); if(all.length===1) map.setView(all[0],9); else map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[40,80],paddingBottomRight:[80,250],maxZoom:11}); }catch(e){} },60); }
 function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,e,vs,kv}=X;
