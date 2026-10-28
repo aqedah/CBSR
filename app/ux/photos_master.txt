@@ -331,7 +331,6 @@ g25_02|g||성문/문을 열|city_gate,door,sunrise_light_rays||1,6,7|warm|50|아
 g25_03|g||이슬|dew,grass,dawn,field||1|bright|60|이슬 맺힌 아침 들풀|||landscape
 g25_04|g|||desert,canyon,noon||1|bright|50|하얗게 빛나는 한낮의 광야 협곡|||landscape
 g25_05|g||그늘|rock,shade,desert,plant||1|bright|60|큰 바위 그늘 아래 작은 풀|||landscape
-g25_06|g|||field,sunset,village,harvest||1,8|warm|50|추수 끝난 밭 너머 지는 해와 마을|뺌: 목사님이 빼서 보관||landscape
 g25_07|g||성벽 위/파수|city_wall,oil_lamp,dusk||1,6,7|dark|60|해 질 녘 성벽 위 등불|||setting
 g25_08|g||저녁별/별을|night_sky,star,hill||1|dark|70|초저녁 남빛 하늘의 별 하나|||landscape
 g25_09|g||달밤|moon,desert,night_sky,rock||1|dark|70|달빛 아래 은빛 모래 언덕|||landscape
@@ -376,7 +375,6 @@ g29_08|s|8:1|룻/나오미/어머니를 떠나|road,women,hills|베들레헴|5|w
 g29_09|s|8:3|타작마당/발치/곡식 단 더미|threshing_floor,night_sky,woman,man||5|dark|40|밤 타작마당 곡식 더미 곁(룻 3)|||scene
 g29_10|s|8:4|신을 벗어/신을 벗|sandal,hands,elders,city_gate||5|warm|50|성문 장로들 앞에서 건네는 신(룻 4)|||scene
 g29_11|s|9:3|등불이 아직 꺼지지/사무엘이 누웠더니|oil_lamp,boy,night_sky||6,5|dark|60|등불 곁에 누운 소년 사무엘(삼상 3)|||scene
-g29_12|s|9:4|엘리가 길 옆|elder,chair,city_gate||6,5|bright|70|성문 곁 의자의 엘리|뺌: 요즘 나무 의자처럼 보임||scene
 g29_13|s|9:5|다곤/엎드러져/손목이|idol,temple,stone||6,5|dark|50|엎어진 다곤 신상과 부서진 손(삼상 5)|||object
 g29_14|s|9:7|에벤에셀/돌을 취하여|stone,field,sunset||6,5|warm|50|들판에 홀로 세운 돌(삼상 7)|||object
 g29_15|s|9:10;9:16|기름을 부어/기름 병/기름 뿔|anointing,oil,elder,man||6,5|warm|50|무릎 꿇은 이에게 기름을 붓는 선지자|||scene
@@ -395,7 +393,6 @@ g30_12|s|12:5|나아만/일곱 번 몸을 잠그|river,man,water,chariot|요단|
 g30_13|s|12:9|이세벨/창에서 내려다/눈을 그리고|window,woman,palace,night_sky||6|dark|40|궁의 창에서 내려다보는 이세벨|||scene
 g30_14|s|12:22;14:34|율법책을 발견/율법책을 얻었|scroll,hands,temple,light|예루살렘|6,7|warm|50|성전에서 찾은 율법 두루마리|||object
 g30_15|s|12:25;14:36;24:39;24:52|성전을 불사르/예루살렘 성벽을 헐/불살랐으며|fire,city,temple,ruins|예루살렘|6,7|dark|50|불타는 예루살렘과 성전|||scene
-g31_01|s|23:6|숯불/부젓가락|coal,tongs,fire||7|dark|50|부젓가락에 집힌 숯불|뺌: 요즘 펜치처럼 보임||object
 g31_02|s|23:11|이새의 줄기/그루터기/한 싹|stump,sprout,field||7|warm|50|그루터기에서 돋은 새싹(사 11)|||object
 g31_03|s|23:43|물 가운데로 지날/바다에 길|sea,path,storm_sky,light||7|dark|50|거친 바다 가운데 바위길(사 43)|||landscape
 g31_04|s|24:18;23:64;45:9|토기장이/진흙이 토기장이|potter,clay,hands,wheel||7,8|warm|50|물레 위에서 빚어지는 그릇(렘 18)|||object
@@ -411,7 +408,6 @@ g31_13|s|32:4|박넝쿨/박 넝쿨/그늘에 앉아|vine,shade,man,city|니느�
 g31_14|s|35:2;26:3;26:33|파수하는 성루/성루에 서/파수꾼|tower,man,desert,sunrise_light_rays||7|warm|40|성루 위에서 지평선을 바라보는 사람|||scene
 g31_15|s|39:3;23:1;23:48;38:13|연단하는 자의 불/은을 연단/정금 같이/풀무|crucible,gold,fire||7|dark|50|도가니 속 녹은 금과 찌끼|||object
 g32_01|g||교회에서/집에 있는 교회/모인 교회/편지를 읽|house_church,oil_lamp,scroll,crowd||10|warm|40|집에 모여 편지를 듣는 교회|||setting
-g32_02|g|||river,baptism,men||10|bright|50|강가의 세례|뺌: 사람들이 요즘 티셔츠 차림||scene
 g32_03|g||회당에서/회당에 들어가|synagogue,bench,light||10,9|warm|50|빛이 드는 회당 안|||setting
 g32_04|g||장터에서/광장/시장에서|forum,temple,crowd,city||10|warm|50|신전과 기둥이 선 로마 도시의 광장|||setting
 g32_05|g||우상의 제물/시장에서 파는 것/제물로 드렸던|meat,market,altar||10|dark|40|신전 계단 아래 고기를 파는 상|||object
@@ -446,7 +442,7 @@ g34_03|g||감람유/기름을 짜/올리브|olive_press,oil||5,6,8|dark|40|기�
 g34_04|g||양 우리/우리에|sheepfold,shepherd,night_sky,moon||1,5,6,8|dark|70|밤 양 우리를 지키는 목자|||setting
 g34_05|g||우물/물을 길|well,women,clay_jar,sunset||1,5,6,8|warm|50|물동이를 이고 돌아가는 저녁 길|||scene
 g34_06|g||성문에서/성문 곁/재판|city_gate,elders||5,6,7|bright|50|성문 그늘의 장로들|||setting
-g34_07|g|||soldiers,palace,gate||6|bright|50|왕궁 문지기|뺌: 헬라 병사 같은 투구와 얼굴이 크게 보임||scene
+g34_07|g|||soldiers,palace,gate||6|bright|50|왕궁 문지기|||scene
 g34_08|g||파수꾼/성벽 위/에워싸|city_wall,fire,night_sky,camp||6,7|dark|50|밤 성벽과 멀리 적진의 모닥불|||setting
 g34_09|g||산당/아세라|high_place,altar,pillar,smoke||6,7|dark|50|언덕 위 산당의 돌 제단과 나무 기둥|||setting
 g34_10|g||돌아오/포로에서 돌아온/귀환|caravan,donkey,road,family||7|warm|50|짐 실은 나귀와 돌아오는 긴 행렬|||scene

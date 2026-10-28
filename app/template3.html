@@ -2458,7 +2458,7 @@ function sLinkRefs(h){ if(!window.CBSR_V2) return h; const p=dayPlan(view.w,view
   return h; }
 function sVerseSheet(id){ const [b,c,v,e]=id.split("-").map(Number); const C=(BIBLE&&BIBLE[b-1]&&BIBLE[b-1][c-1])||[]; if(!C.length) return; const was=!!SV.paused; storyPause(true);
   const a=Math.max(1,v-2), z=Math.min(C.length,Math.max(e,v)+2);
-  const body=`<p class="srtext">${Array.from({length:z-a+1},(_,i)=>a+i).map(n=>{ const on=n>=v&&n<=Math.max(e,v); return `<span class="${on?"svon":"svoff"}"><sup>${n}</sup>${esc(C[n-1]||"")}</span>`; }).join(" ")}</p><p class="svnote">진하게 보이는 절이 카드가 가리킨 곳이고, 흐린 절은 앞뒤 문맥입니다.</p>`;
+  const body=`<p class="srtext">${Array.from({length:z-a+1},(_,i)=>a+i).map(n=>{ const on=n>=v&&n<=Math.max(e,v); return `<span class="${on?"svon":"svoff"}"><sup>${n}</sup>${esc(C[n-1]||"")}</span>`; }).join(" ")}</p>`;
   sheet(`${PLAN.abbr[b-1]} ${c}:${v}${e>v?"–"+e:""}`,body,()=>{ if(!was) storyPause(false); }); }
 function storyCardHTML(s){ return sLinkRefs(storyCardHTML0(s)); }
 function storyCardHTML0(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</span>`:"", h2=s.h?`<h2>${smk(s.h)}</h2>`:"";
