@@ -348,3 +348,49 @@ g24_12|s|4:10;6:6|궤가 떠날/궤가 앞서/언약궤가 앞|ark,camp,crowd,de
 g24_13|s|44:27;32:1|밀을 바다에/배를 가볍게/바다에 던져|ship,sea,grain||10,7|bright|50|곡식 자루를 실은 배 위|||scene
 g24_14|s|8:2;29:3;66:14;43:4|낫을 대/낫을 쓰/곡식을 베/추수하는 자|sickle,wheat_field,harvest,hands||5,8,9|warm|50|낫으로 밀을 베는 손|||scene
 g24_15|s|||crowd,city_gate,door||5|dark|50|닫힌 성문 앞의 무리|뺌: 문틈의 붉은 빛이 무엇인지 알기 어려움||scene
+g25_01|g|||dawn,mountain_peak,night_sky||1|dark|60|새벽 첫빛이 걸린 능선|뺌: 능선의 빛이 산불처럼 보임||landscape
+g25_02|g||성문/문을 열|city_gate,door,sunrise_light_rays||1,6,7|warm|50|아침 햇살이 들어오는 열린 성문|||setting
+g25_03|g||이슬|dew,grass,dawn,field||1|bright|60|이슬 맺힌 아침 들풀|||landscape
+g25_04|g|||desert,canyon,noon||1|bright|50|하얗게 빛나는 한낮의 광야 협곡|||landscape
+g25_05|g||그늘|rock,shade,desert,plant||1|bright|60|큰 바위 그늘 아래 작은 풀|||landscape
+g25_06|g|||field,sunset,village,harvest||1,8|warm|50|추수 끝난 밭 너머 지는 해와 마을|||landscape
+g25_07|g||성벽 위/파수|city_wall,oil_lamp,dusk||1,6,7|dark|60|해 질 녘 성벽 위 등불|||setting
+g25_08|g||저녁별/별을|night_sky,star,hill||1|dark|70|초저녁 남빛 하늘의 별 하나|||landscape
+g25_09|g||달밤|moon,desert,night_sky,rock||1|dark|70|달빛 아래 은빛 모래 언덕|||landscape
+g25_10|g||등불/등잔|village,night_sky,oil_lamp,house||1,8|dark|40|깊은 밤 등불 하나 켜진 마을|||setting
+g25_11|g||폭풍/먹구름|storm_sky,light,field||1|dark|50|먹구름 아래 한 줄기 빛이 닿은 들|||landscape
+g25_12|g|||road,rain,city||1|bright|50|비 그친 돌길과 웅덩이|뺌: 전봇대와 요즘 건물이 보임||setting
+g25_13|g||안개|fog,valley,mountain_peak,dawn||1|bright|40|안개 낀 아침 골짜기|||landscape
+g25_14|g||무화과나무|fig_tree,stone_wall,winter,frost||1,8|bright|60|서리 앉은 돌담과 겨울 무화과나무|||landscape
+g25_15|g|||sunrise_light_rays,field,clouds||1|bright|50|구름 사이 빛과 푸른 들|뺌: 색이 과장되어 배경화면처럼 보임||landscape
+g26_01|g||갈림길/두 길|road,crossroads,cairn,desert||1|warm|50|돌무더기가 선 갈림길|||landscape
+g26_02|g||계단/올라가|stairs,olive_tree,city,road||1,6|warm|50|감람나무 사이 오르막 돌계단|||setting
+g26_03|g||골짜기 길/내려가|canyon,road,man||1|warm|50|협곡으로 구불구불 내려가는 길|||landscape
+g26_04|g||로마 길/길을 가|roman_road,milestone,hill||9,10|bright|40|이정 돌기둥이 선 로마 돌길|||setting
+g26_05|g|||footprints,sand||1|warm|50|모래 위 발자국|뺌: 발자국에 운동화 밑창 무늬가 보임||landscape
+g26_06|g||시내를 건너/개울|stream,stones,feet,water||1|bright|50|징검돌을 건너는 발|||scene
+g26_07|g||호수/바닷가|lake,boat,sunset,water||1,9|warm|50|노을 진 잔잔한 호수의 빈 배|||landscape
+g26_08|g||물결/큰 물|river,flood,rock,storm_sky||1|dark|50|바위 사이 흙탕 급류|||landscape
+g26_09|g||샘/물웅덩이|pool,cave,desert,light||1|bright|50|바위 동굴 속 물웅덩이와 초록|||landscape
+g26_10|g||마른 땅/가물|desert,dry_riverbed,man||1|bright|50|갈라진 마른 개울 바닥을 걷는 사람|||landscape
+g26_11|g||종려|palm,oasis,road,donkey||1|warm|50|종려나무 그늘 아래 오아시스 길|||landscape
+g26_12|g||포도원/망대|vineyard,stone_wall,tower||1,8|warm|60|돌담 포도원과 작은 망대|||setting
+g26_13|g||타작마당/키질|threshing_floor,grain,pitchfork||1,5,8|warm|40|언덕 위 둥근 타작마당|||setting
+g26_14|g||좁은 길/협곡|canyon,red_rock,man||1|dark|50|붉은 바위 사이 좁은 협곡 길|||landscape
+g26_15|g|||sea,harbor,village,feet||1,10|bright|50|언덕에서 내려다본 항구|뺌: 발을 내민 요즘 사진처럼 보임||landscape
+g27_01|g||두루마리/책을 펴|scroll,hands,oil_lamp||1,7,8|warm|50|등잔 곁에서 두루마리를 펼친 두 손|||object
+g27_02|g||문을 열/문 앞|door,house,sunrise_light_rays||1,8|warm|60|흙벽돌 집의 열린 문과 아침 햇살|||object
+g27_03|g||빗장/문을 닫/잠근|door,bolt,night_sky||1,8|dark|50|쇠 빗장 걸린 닫힌 나무 문|||object
+g27_04|g||떡과 잔/떡을 떼|bread,cup,table,hands||1,8,9,10|warm|50|식탁 위 떡과 토기 잔, 손들|||object
+g27_05|g||물 항아리/대야|clay_jar,basin,towel||1,8|dark|50|물 항아리와 대야와 수건|||object
+g27_06|g||기름을 붓/기름 부/기름병|oil,flask||1,6,8|warm|50|토기 병에서 흐르는 금빛 기름|||object
+g27_07|g||씨를/씨앗/밀알|seed,hands,wheat||1,8,9|warm|40|흙 묻은 손바닥 위 밀알|||object
+g27_08|g|||scales,market||1,8|warm|50|장터 상 위의 저울과 추|뺌: 저울이 요즘 금속 저울처럼 보임||object
+g27_09|g||엎드려/무릎을 꿇/엎드리어|prayer,man,mountain_peak,dawn||1,8|dark|60|바위 언덕에 엎드린 사람의 뒷모습|||scene
+g27_10|g||손을 잡/손을 맞잡/언약을 맺|hands,covenant||1,8|dark|50|굳게 맞잡은 두 손|||object
+g27_11|g|||hands,child,elder,road||1,8|warm|50|노인과 아이의 맞잡은 손|뺌: 아이 옷이 요즘 반바지처럼 보임||scene
+g27_12|g||성문에 앉/장로들|city_gate,stone_seat||1,5,6|bright|60|성문 곁 돌 의자들|||setting
+g27_13|g||망대/파수/파수꾼|tower,oil_lamp,night_sky||1,6,7|dark|50|밤 망대 위 등불|||setting
+g27_14|g||성벽을 쌓/중건/무너진 성벽|city_wall,stones,ruins||7,1|bright|60|무너진 돌 옆에 새로 쌓은 성벽|||object
+g27_15|g|||scroll,seal,hands||10|warm|50|두루마리에 인장을 누르는 손|뺌: 붉은 밀랍 인장과 반지가 중세처럼 보임||object
+g28_04|s|2:25;2:37;2:40;3:16;4:4;11:8;58:9|속죄소/그룹 사이/증거궤/언약궤/지성소/시은좌|ark,cherubim,holy_of_holies,light||4,5,6|dark|50|지성소의 언약궤(채 끝이 앞으로 나온 바른 모양)|||object

@@ -2,7 +2,7 @@ import json,glob,os,re
 from PIL import Image
 import numpy as np
 G='/home/claude/rj/site_src/img/g'
-SRC={'g14':'s12','g15':'s13','g12':'s14','g13':'s15','g21':'s16','g16':'s17','g17':'s18','g18':'s19','g19':'s20','g20':'raw4/t1','g22':'raw4/t2','g23':'raw4/t3','g24':'raw4/t4'}
+SRC={'g14':'s12','g15':'s13','g12':'s14','g13':'s15','g21':'s16','g16':'s17','g17':'s18','g18':'s19','g19':'s20','g20':'raw4/t1','g22':'raw4/t2','g23':'raw4/t3','g24':'raw4/t4','g25':'raw5/p3','g26':'raw5/p2','g27':'raw5/p1','g28':'raw5/a'}
 def parse_refs(s):
     out=[]
     for part in filter(None,s.split(';')):
