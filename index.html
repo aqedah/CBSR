@@ -9296,7 +9296,10 @@ function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`
   if(G.k==="look"){ const q=G.qs[G.i];
     if(!q) body=`<p class="gpq gllq" style="text-align:center!important;margin-top:30vh">질문 ${G.qs.length}개를 모두 본문에서 찾았습니다</p><p class="glhint" style="text-align:center">처음 누른 절이 답이었던 질문 ${G.first}개</p>`;
     else { const C=BIBLE[q.b-1][q.c-1], ok=G.found;
-      const mk=(t,v)=>{ if(!ok||v!==q.v||!q.t) return esc(t); const i=t.indexOf(q.t.replace(/…/g,"").trim()); return i<0?esc(t):esc(t.slice(0,i))+`<b>${esc(q.t)}</b>`+esc(t.slice(i+q.t.length)); };
+      const mk=(t,v)=>{ if(!ok||v!==q.v) return esc(t);
+        /* 굵게 할 말: 질문이 따옴표로 가리킨 말이 이 절에 있으면 그것, 없으면 관찰 항목의 핵심 말(t) */
+        const quoted=[...String(q.n).matchAll(/['‘“"]([^'’”"]{2,})['’”"]/g)].map(m=>m[1].trim()), cand=[...quoted,...String(q.t||"").split("…").map(x=>x.trim())].filter(x=>x.length>=2&&t.includes(x));
+        const k=cand[0]; if(!k) return esc(t); const i=t.indexOf(k); return esc(t.slice(0,i))+`<b>${esc(k)}</b>`+esc(t.slice(i+k.length)); };
       body=`<p class="gpq gllq">${esc(q.n)}</p><p class="glhint">${ok?`찾았습니다 · ${esc(PLAN.abbr[q.b-1])} ${q.c}:${q.v}`:"아래 본문을 읽고, 답이 되는 절을 누르세요"}</p><div class="glv"><p class="glch">${esc(PLAN.abbr[q.b-1])} ${q.c}장</p>`+
         Array.from({length:q.z-q.a+1},(_,j)=>q.a+j).map(v=>`<button class="glr${ok&&v===q.v?" ok":""}${G.bad.has(v)?" no":""}${ok&&v!==q.v?" dim":""}" data-glv="${v}"${ok?" disabled":""}><sup>${v}</sup>${mk(C[v-1]||"",v)}</button>`).join("")+`</div>`; } }
   else if(G.k==="find") body=gfBody(G);
