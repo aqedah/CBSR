@@ -288,3 +288,63 @@ g19_12|g|||harbor,ship,sea,rock|욥바|1,10|bright|50|바위 항구와 작은 �
 g19_13|g|||well,tree,clay_jar|브엘세바|2|dark|40|돌 우물과 나무|||setting
 g19_14|g|||river,valley,sunrise_light_rays|요단|1|warm|50|메마른 언덕 사이의 강|||landscape
 g19_15|g|||mountain_peak,sea,sunrise_light_rays|갈멜|1|warm|50|바다로 뻗은 산줄기|||landscape
+g20_01|s|42:2;40:1-2|구유/말구유/강보로 싸|manger,baby,mary,joseph,oil_lamp|베들레헴|9|warm|50|구유에 누인 아기와 마리아·요셉|||scene
+g20_02|s|42:2|목자들이/밤에 자기 양 떼/양 떼를 지키/천사가 목자|shepherd,sheep,night_sky,sunrise_light_rays|베들레헴|9|dark|50|밤 들판에서 빛을 올려다보는 목자들|||scene
+g20_03|s|40:2|동방 박사/동방박사/박사들이/황금과 유향|magi,gift,star,night_sky||9|dark|50|예물 상자를 든 동방 박사들|||scene
+g20_04|s|42:2|시므온/선지자 안나/아기를 안고|elder,baby,temple_stones|예루살렘|9|warm|50|성전에서 아기를 안은 시므온|||scene
+g20_05|s|40:13;41:6|목수의 아들/목수가 아니냐|carpenter,wood,tools,jesus|나사렛|9|warm|50|나무를 다듬는 목수 예수님|||scene
+g20_06|s|40:3;41:1;42:3;43:1|세례를 받으시/비둘기 같이/성령이 비둘기|river,dove,jesus,sunrise_light_rays|요단|9|bright|50|요단강의 세례와 내려오는 비둘기|||scene
+g20_07|s|40:4;41:1;42:4|마귀에게 시험/시험을 받으시/사십 일을 금식|desert,jesus,rock,sorrow||9|dark|50|광야의 바위에 앉은 예수님|||symbolic
+g20_08|s|40:4;41:1;42:5|사람을 낚/그물을 버려두고/그물을 버리고|fishermen,boat,net,sea,jesus|갈릴리|9|warm|50|배 곁에서 어부들을 부르시는 예수님|||scene
+g20_09|s|43:2|가나의 혼인/가나에서/물로 된 포도주/돌항아리/항아리에 물을/아귀까지|clay_jar,servants,water,jesus|가나|9|warm|50|돌 항아리에 맑은 물을 붓는 하인들(g17_13 대신)|||scene
+g20_10|s|43:3|니고데모/거듭나/밤에 예수께|rooftop,oil_lamp,night_sky,jesus|예루살렘|9|dark|50|밤 지붕 위의 니고데모와 예수님|||scene
+g20_11|s|43:4|사마리아 여자/사마리아 여인/야곱의 우물/수가라는/물 좀 달라|well,woman,clay_jar,jesus|수가|9|warm|50|우물가의 여인과 예수님|||scene
+g20_12|s|42:4;41:1;41:6;40:13|선지자 이사야의 글/안식일에 회당/회당에 들어가|scroll,synagogue,jesus,crowd|나사렛|9|warm|50|회당에서 두루마리를 펴 읽으심|||scene
+g20_13|s|40:9;41:2;42:5|세관에 앉/세리 마태/세리 레위|tax_booth,coins,man||9|warm|50|세관에 앉은 세리|||scene
+g20_14|s|40:5-7;42:6|산에 올라가 앉으/복이 있나니/평지에 서|crowd,hill,jesus,sunrise_light_rays|갈릴리|9|warm|50|언덕에서 무리를 가르치심|||scene
+g20_15|s|41:1;42:5;42:6;40:14|새벽 아직도 밝기 전/한적한 곳에 가사/따로 산에 올라 기도/밤이 새도록 하나님께 기도|prayer,dawn,hill,jesus||9|warm|50|새벽 언덕에서 기도하심|||scene
+g22_01|s|40:8;41:1;42:5|나병환자가/나병 들린/손을 내밀어 그에게 대/깨끗함을 받으라|hands,leper,healing,jesus||9|warm|50|나병 든 손을 만지시는 손|||scene
+g22_02|s|40:9;41:2;42:5|지붕을 뜯/지붕에 올라가/상을 달아 내리|roof,paralytic,crowd,jesus|가버나움|9|warm|50|지붕을 뜯고 중풍병자를 달아 내림||애니아|scene
+g22_03|s|40:9;41:5;42:8|혈루증/옷에 손을 대/옷 가에 손을|hands,garment,crowd||9|warm|50|옷술에 손을 대는 여인|||scene
+g22_04|s|40:9;41:5;42:8|달리다굼/야이로/소녀야 일어나/아이야 일어나|hands,girl,healing,jesus||9|warm|50|소녀의 손을 잡으심|||scene
+g22_05|s|40:14-15;41:6;41:8;42:9;43:6|오병이어/떡 다섯/보리떡/오천 명/사천 명|bread,crowd,jesus,basket|갈릴리|9|warm|50|떡을 들고 무리 앞에 서신 예수님|||scene
+g22_06|s|40:14;41:6;43:6|물 위로 걸/물 위를 걸/빠져 가는지라/믿음이 작은 자여|hands,waves,sea,storm_sky|갈릴리|9|dark|50|물결 속에서 내민 손|||scene
+g22_07|s|40:18-19;41:9-10;42:9;42:18|어린아이 하나를/어린아이들을 안고/어린아이와 같/어린아이를 영접|child,jesus,village||9|warm|50|어린아이를 품에 안으심|||scene
+g22_08|s|43:9|진흙을 이겨/눈에 바르/맹인으로 난|blind_man,hands,mud,jesus|예루살렘|9|warm|50|맹인의 눈에 진흙을 바르심|||scene
+g22_09|s|40:13;41:4;42:8|씨를 뿌리는 자/씨 뿌리는 자/씨를 뿌릴새/좋은 땅에|sower,field,seed||9,8|warm|50|씨 뿌리는 사람|||scene
+g22_10|s|40:18;42:15;43:10|잃은 양/양 백 마리/아흔아홉/어깨에 메고/선한 목자|shepherd,sheep,hill||9|warm|50|잃은 양을 어깨에 멘 목자|||scene
+g22_11|s|42:15|탕자/둘째 아들이/살진 송아지/목을 안고 입을 맞추|father,son,embrace,house||9|warm|50|돌아온 아들을 끌어안는 아버지|||scene
+g22_12|s|42:15|드라크마/등불을 켜고 집을 쓸|woman,house,oven,oil_lamp||9|dark|40|집 안에서 무릎 꿇고 찾는 여인|||scene
+g22_13|s|43:11|나사로/나오라/수족을 베로 동인||베다니|9|warm|50|무덤에서 나오는 나사로|뺌: 붕대 감은 미라처럼 보임||scene
+g22_14|s|40:17;41:9;42:9|변형되사/얼굴이 해 같이/모세와 엘리야/초막 셋|mountain_peak,light,jesus,disciples||9|bright|50|높은 산에서 변형되신 예수님|||scene
+g22_15|s|40:21;41:11;42:19;43:2|돈 바꾸는/환전/비둘기 파는/채찍을 만들/상을 엎으|temple_stones,dove,coins,table|예루살렘|9|warm|50|성전 뜰의 엎어진 상과 비둘기|||scene
+g23_01|s|40:21;41:11;42:19;43:12|나귀 새끼/새끼 나귀/어린 나귀를 타/호산나|donkey,palm,crowd,jesus|예루살렘|9|warm|50|나귀를 타고 들어오시는 예수님|||scene
+g23_02|s|43:13|발을 씻기/수건을 가져다가 허리에/대야에 물|basin,feet,towel,jesus|예루살렘|9|warm|50|제자의 발을 씻기심|||scene
+g23_03|s|40:26;41:14;42:22;43:13|마지막 만찬/유월절 음식/이것은 내 몸/이 잔은|bread,cup,table,disciples|예루살렘|9|warm|50|만찬 상의 떡과 잔|||scene
+g23_04|s|40:26;41:14;42:22|겟세마네/땀이 땅에 떨어지는 핏방울/이 잔을 내게서|prayer,olive_tree,night_sky,jesus|예루살렘|9|dark|50|겟세마네에서 엎드려 기도하심|||scene
+g23_05|s|40:26;41:14;42:22;43:18|입맞추어 넘기/입맞추는 자/검과 몽치/등과 횃불|torch,soldiers,kiss,night_sky|예루살렘|9|dark|50|횃불 아래 붙잡히심|||scene
+g23_06|s|40:26;41:14;42:22;43:18|불을 쬐/대제사장의 집 뜰/대제사장의 뜰|fire,courtyard,bound,night_sky|예루살렘|9|dark|50|뜰의 불 곁에 결박되신 예수님||아가보|scene
+g23_07|s|40:27;41:15;42:23;43:18-19|빌라도/재판석에 앉/총독이 물어|governor,soldiers,judgment_seat|예루살렘|9|warm|50|재판석의 빌라도와 로마 군인|||scene
+g23_08|s|40:27;41:15;43:19|가시관/자색 옷/홍포/유대인의 왕이여 평안|crown_of_thorns,robe,jesus|예루살렘|9|dark|50|가시관과 자색 옷|||scene
+g23_09|s|40:27;41:15;42:23;43:19|십자가를 지/구레네 사람 시몬|cross,road,jesus|예루살렘|9|warm|50|십자가 아래 쓰러지심|뺌: 십자가가 X자로 엇갈려 그려짐||scene
+g23_10|s|40:27;41:15;42:23;43:19|멀리서 바라보/십자가 곁에는/여자들이 멀리서|women,cross,sorrow|예루살렘|9|dark|50|십자가를 바라보는 여인들|||scene
+g23_11|s|40:27;41:15;42:23;43:19|세마포로 싸/아리마대 사람 요셉/아리마대 요셉/몰약과 침향|linen,burial,tomb|예루살렘|9|dark|50|세마포로 시신을 싸는 사람들|||scene
+g23_12|s|40:28;41:16;42:24;43:20|빈 무덤/세마포가 놓/머리를 쌌던 수건|rock_tomb,linen,sunrise_light_rays|예루살렘|9|bright|50|세마포만 놓인 빈 무덤(둘째 그림)|||scene
+g23_13|s|43:20;40:28|막달라 마리아/마리아야/랍오니/동산지기/나를 붙들지 말라|garden,woman,jesus,dawn|예루살렘|9|bright|50|동산에서 부활하신 예수님을 만난 마리아|||scene
+g23_14|s|42:24|엠마오/떡을 가지사 축사하시고 떼어/눈이 밝아져|bread,table,disciples,jesus|엠마오|9|warm|50|엠마오에서 떡을 떼심|||scene
+g23_15|s|43:21|숯불/디베랴 호수/조반을 먹으라/내 양을 먹이라/나를 사랑하느냐|charcoal_fire,fish,bread,sea,jesus|갈릴리|9|warm|50|바닷가 숯불 곁의 떡과 생선|||scene
+g24_01|s|43:2||clay_jar,man,feast||9|dark|60|잔칫자리에서 항아리를 붙든 사람|뺌: 무엇을 하는 장면인지 분명하지 않음||scene
+g24_02|s|43:2|항아리에 물을/아귀까지/물을 채우|clay_jar,water,servants|가나|9|warm|50|돌 항아리에 물을 붓는 손(가까이)|||scene
+g24_03|s|43:9|실로암/가서 씻으라/씻고 밝은 눈|pool,water,blind_man|예루살렘|9|warm|50|실로암 못에서 눈을 씻는 사람||망대|scene
+g24_04|s|43:11|나사로/나오라||베다니|9|warm|50|무덤에서 나오는 나사로(둘째 그림)|뺌: 붕대 감은 미라처럼 보임||scene
+g24_05|s|26:8;26:14;26:20;44:28;24:36|셋집에/장로들이 내 앞에 앉/책을 낭독/두루마리를 낭독|scroll,elder,house,crowd||7,10|warm|50|집 안에 앉은 사람들 앞에서 두루마리를 읽음|||scene
+g24_06|s|1:25;58:12|팥죽/장자의 명분|bread,bowl,hands,man||2|dark|35|떡과 팥죽 그릇으로 손을 뻗음|||scene
+g24_07|s|44:28;49:3-4;49:6;50:1;51:4;55:1-2;57:1|쇠사슬에 매/사슬에 매/갇힌 자 된 나/매인 것|chains,prison,scroll,soldier||10|dark|60|사슬에 매인 채 편지를 쓰는 바울||베드로|scene
+g24_08|s|42:15|맏아들은 밭에/노하여 들어가고자 아니하|man,house,feast,night_sky||9|dark|50|잔치 집 밖에 팔짱 낀 맏아들|뺌: 옷이 요즘 옷처럼 보임||scene
+g24_09|s|42:24|엠마오/길 가는 자들/동행하시|road,sunset,disciples,jesus|엠마오|9|warm|50|해 질 녘 길을 함께 걷는 세 사람|||scene
+g24_10|s|1:16;1:21|하갈/샘물 곁/물이 떨어진지라/브엘라해로이|woman,well,desert,sorrow||2|bright|60|광야 우물가에 웅크린 여인|||scene
+g24_11|s|6:3-4|요단을 건너/궤를 멘 제사장/물이 끊어지/마른 땅으로 건너|ark,priest,river,water_wall|요단|5|bright|50|물이 멈춘 요단을 건너는 언약궤||홍해|scene
+g24_12|s|4:10;6:6|궤가 떠날/궤가 앞서/언약궤가 앞|ark,camp,crowd,desert||4,5|warm|50|진 앞에서 나아가는 언약궤 행렬|||scene
+g24_13|s|44:27;32:1|밀을 바다에/배를 가볍게/바다에 던져|ship,sea,grain||10,7|bright|50|곡식 자루를 실은 배 위|||scene
+g24_14|s|8:2;29:3;66:14;43:4|낫을 대/낫을 쓰/곡식을 베/추수하는 자|sickle,wheat_field,harvest,hands||5,8,9|warm|50|낫으로 밀을 베는 손|||scene
+g24_15|s|||crowd,city_gate,door||5|dark|50|닫힌 성문 앞의 무리|뺌: 문틈의 붉은 빛이 무엇인지 알기 어려움||scene

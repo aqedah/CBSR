@@ -2,7 +2,7 @@ import json,glob,os,re
 from PIL import Image
 import numpy as np
 G='/home/claude/rj/site_src/img/g'
-SRC={'g14':'s12','g15':'s13','g12':'s14','g13':'s15','g21':'s16','g16':'s17','g17':'s18','g18':'s19','g19':'s20'}
+SRC={'g14':'s12','g15':'s13','g12':'s14','g13':'s15','g21':'s16','g16':'s17','g17':'s18','g18':'s19','g19':'s20','g20':'raw4/t1','g22':'raw4/t2','g23':'raw4/t3','g24':'raw4/t4'}
 def parse_refs(s):
     out=[]
     for part in filter(None,s.split(';')):
@@ -31,14 +31,14 @@ for r in rows:
             old='/home/claude/cbsr/img/g/'+r['id']+'.jpg'
             if os.path.exists(old): Image.open(old).save(gx,quality=80)
             elif r['id'][:3] in SRC:
-                s=SRC[r['id'][:3]]; n=int(r['id'][4:]); rgb=[p for p in sorted(glob.glob(f'raw3/{s}-*.png')) if Image.open(p).mode=='RGB']
+                s=SRC[r['id'][:3]]; n=int(r['id'][4:]); rgb=[p for p in sorted(glob.glob((s if '/' in s else 'raw3/'+s)+'-*.png')) if Image.open(p).mode=='RGB']
                 im=crop(Image.open(rgb[n-1]).convert('RGB')); im=im.resize((960,round(im.height*960/im.width))); im.save(gx,quality=75)
         continue
     if not os.path.exists(fp):
         if r['id']=='g11_04': Image.open('redo/g11_04.jpg').save(fp,quality=82)
         else:
             s=SRC[r['id'][:3]]; n=int(r['id'][4:])
-            rgb=[p for p in sorted(glob.glob(f'raw3/{s}-*.png')) if Image.open(p).mode=='RGB']
+            rgb=[p for p in sorted(glob.glob((s if '/' in s else 'raw3/'+s)+'-*.png')) if Image.open(p).mode=='RGB']
             im=crop(Image.open(rgb[n-1]).convert('RGB'))
             if im.width>1280: im=im.resize((1280,round(im.height*1280/im.width)),Image.LANCZOS)
             im.save(fp,quality=80,optimize=True); made+=1
