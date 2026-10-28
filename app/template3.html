@@ -3814,6 +3814,10 @@ function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth
   TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); else if(view.tab==="study"&&t!=="study"&&typeof studyOutro==="function") studyOutro(t); view.tab=t; HSEL.clear(); render();
   const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
 applyPV();
+/* 그림 목록(웹)에서 관리자가 뺀 그림은 다음 빌드 전이라도 바로 쓰지 않습니다 */
+function phHideApply(m){ if(typeof PHOTOS==="undefined"||!m) return 0; let n=0; for(let i=PHOTOS.length-1;i>=0;i--){ const a=m[PHOTOS[i].id]; if(a==="keep"||a==="del"){ PHOTOS.splice(i,1); n++; } } return n; }
+try{ phHideApply(JSON.parse(localStorage.getItem("cbsr-phhide")||"{}")); }catch(e){}
+if(window.SYNC&&SYNC.available&&SYNC.photos) setTimeout(()=>SYNC.photos.get().then(m=>{ const s=JSON.stringify(m||{}); let old=""; try{ old=localStorage.getItem("cbsr-phhide")||""; localStorage.setItem("cbsr-phhide",s); }catch(e){} if(s!==old&&phHideApply(m)){ SV.cache={}; if(!document.getElementById("storyRoot")) render(); } }).catch(()=>{}),1200);
 /* 탭을 열어 둔 채 해가 바뀌면(365 통독) 지금 기록을 저장하고 새 회차로 다시 엽니다 */
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&MODE==="y365"&&Math.max(2026,NOW().getFullYear())>ED_Y){ try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} location.reload(); } });
 /* 2027년부터 v2는 365 통독만 둡니다(목사님 결정 2026-10-28). 리딩지저스 마지막 주(2027-01-03)가 지나면 365로 옮기고 메뉴에서 감춥니다. 지난 기록은 ?p=rj 로 볼 수 있습니다 */
