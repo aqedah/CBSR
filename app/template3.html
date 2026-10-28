@@ -3243,7 +3243,7 @@ function renderGuide(){
   const rj=MODE==="rj";
   /* 메뉴 차례: 통독(통독표·번역·시작일) → 화면 → 설치 → 도움말 → 원문 연구 → 의견 → 기록 관리 */
   return `<section class="sec msec"><h3 class="mh">통독</h3><span class="label" style="margin-top:0px">통독표</span><div class="plans" role="radiogroup">
-   <button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다. 성경 이야기의 흐름을 따라 읽습니다.</span></button>
+   ${RJ_OFF()&&!rj?"":`<button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다. 성경 이야기의 흐름을 따라 읽습니다.</span></button>`}
    <button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다. 창세기부터 요한계시록까지 차례대로 읽습니다.</span></button></div>
    <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p><span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
    <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p><span class="label" style="margin-top:12px">시작일</span><p class="lead">${rj?"1주차 1일째가 시작된 날입니다. 그날부터 엿새는 1–6일째, 일곱째 날은 한 주 돌아보기로 계산합니다.":"1일째를 읽기 시작한 날입니다. 그날부터 하루에 하나씩 365일째까지 이어집니다."} 지금 설정: ${fmt(parseD(mem.start),{year:"numeric",month:"long",day:"numeric",weekday:"short"})}</p>
@@ -3729,6 +3729,9 @@ function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth
 applyPV();
 /* 탭을 열어 둔 채 해가 바뀌면(365 통독) 지금 기록을 저장하고 새 회차로 다시 엽니다 */
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&MODE==="y365"&&Math.max(2026,NOW().getFullYear())>ED_Y){ try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} location.reload(); } });
+/* 2027년부터 v2는 365 통독만 둡니다(목사님 결정 2026-10-28). 리딩지저스 마지막 주(2027-01-03)가 지나면 365로 옮기고 메뉴에서 감춥니다. 지난 기록은 ?p=rj 로 볼 수 있습니다 */
+const RJ_OFF=()=>!!window.CBSR_V2&&NOW()>=new Date("2027-01-04T00:00:00");
+if(RJ_OFF()&&MODE==="rj"&&new URLSearchParams(location.search).get("p")!=="rj"){ try{ localStorage.setItem("cbsr-mode","y365"); }catch(e){} const u=new URL(location.href); u.searchParams.set("p","365"); location.replace(u.toString()); }
 if(window.CBSR_V2) v2Nav();
 /* 검토용: v2.html?day=80 → 그날 이야기 바로 열기(통독 완료 여부와 상관없이) */
 if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=(MODE==="rj"?315:365)&&(MODE==="y365"||MODE==="rj")){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const ci=+(new URLSearchParams(location.search).get("card")||0); const go=()=>{ if(BIBLE){ render(); storyOpen(Math.max(0,ci)); } else setTimeout(go,300); }; setTimeout(go,300); } }
