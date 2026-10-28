@@ -1670,6 +1670,13 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 .fbbox{display:grid;gap:8px}
 .fbbox input{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
 .adminlink{text-align:center;margin-top:18px}
+html.v2 .grecw{margin:14px 0 4px}html.v2 .grec{position:relative;display:block;width:100%;text-align:left;border:0;border-radius:18px;padding:22px 18px 18px;min-height:190px;color:#fff;background:#24302c var(--gp) center/cover;overflow:hidden;cursor:pointer;font:inherit}
+html.v2 .grec::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.72))}html.v2 .grec>*{position:relative;display:block}
+html.v2 .grec small{font-size:12.5px;font-weight:700;color:#f3d9a4;letter-spacing:.02em}html.v2 .grec b{font-size:24px;margin:58px 0 4px}html.v2 .grec span{font-size:15px}html.v2 .grec em{font-style:normal;font-size:13px;opacity:.85;margin-top:2px}html.v2 .grec .gstars{position:absolute;top:18px;right:16px}
+html.v2 .gmore{margin:16px 0 -4px;font-size:13px;font-weight:700;color:var(--muted)}
+.gplay .gpref{display:block;width:100%;margin-top:10px;border:1px solid rgba(226,184,116,.5);background:rgba(226,184,116,.12);color:#f3e2bf;border-radius:12px;padding:10px 12px;font:600 14px var(--f-ui);text-align:left;cursor:pointer}.gplay .gpref small{display:block;font-size:12px;color:#e2b874;margin-bottom:3px}.gplay .gpref b{color:#fff}
+.gplay .gpspots{width:100%;max-width:520px}
+
 .admlinks{margin:6px 0 22px}.admlh{font-size:13px;font-weight:700;color:var(--muted);margin:14px 0 6px}.admlk{display:block;padding:10px 12px;border:1px solid var(--line,#ddd);border-radius:10px;margin-bottom:6px;text-decoration:none;color:inherit}.admlk b{display:block;font-size:15px}.admlk span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 .linkbtn{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px;justify-self:start}
 .uid{font-family:ui-monospace,monospace;font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;word-break:break-all;margin:0}
@@ -9043,11 +9050,22 @@ function gOrder(w,d,seed){ const A=dayA(w,d), V=A.verses.filter(v=>v.t.length>=1
   const r=rngOf(seed), n=4, seg=V.length/n, pick=[];
   for(let i=0;i<n;i++){ const pool=V.slice(Math.floor(i*seg),Math.floor((i+1)*seg)); const pr=pool.filter(v=>/[가-힣]+(이|가|께서)\s/.test(v.t)&&!/^(그|이|또)\s/.test(v.t)); const P=pr.length?pr:pool; pick.push(P[Math.floor(r()*P.length)]); }
   return {items:pick, shown:shuf([0,1,2,3],r)}; }
+/* (v2) 장면 순서: 이야기 본문인 날에만, 검토한 스토리 카드(배경·긴장·전환)가 가리키는 절을 장면으로 씁니다 */
+function gOrder2(w,d,seed){ const p=dayPlan(w,d); if(!p||p.ch.some(x=>GENRE_OF(x[0])!=="narrative")) return null;
+  const A=dayA(w,d); let S=[]; try{ S=storySlides(w,d); }catch(e){ return null; }
+  const idx=new Map(A.verses.map((v,i)=>[v.b+"-"+v.c+"-"+v.v,i])), seen=new Set(), sc=[];
+  for(const s of S){ if(s.qt||!/^(배경|긴장|전환)/.test(s.lab||"")) continue; const tx=(s.b||[]).map(x=>typeof x==="string"?x:"").join(" "), m=tx.match(/\((\d+):(\d+)/); if(!m) continue;
+    const c=+m[1], ch=p.ch.find(x=>x[1]===c); if(!ch) continue; const k=ch[0]+"-"+c+"-"+(+m[2]); if(!idx.has(k)||seen.has(k)) continue; seen.add(k);
+    const v=A.verses[idx.get(k)]; if(!v||v.t.length<12) continue; sc.push({v,i:idx.get(k),ph:s.ph||null}); }
+  if(sc.length<3) return null; const r=rngOf(seed); const pick=(sc.length>4?shuf(sc,r).slice(0,4):sc).sort((a,b)=>a.i-b.i);
+  return {items:pick.map(x=>x.v), sph:pick.map(x=>x.ph), shown:shuf(pick.map((_,i)=>i),r)}; }
 const GOD_N=/^(여호와|하나님|주|여호와 하나님|주 여호와|만군의 여호와)$/;
 function speechOnly(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")], R=S&&S[`${v.b}-${v.c}-${v.v}`]; if(!R||!R.length) return v.t; return R.map(([x,y])=>v.t.slice(x,y)).join(" … ").trim()||v.t; }
-function gWho(w,d,seed){ const A=dayA(w,d), r=rngOf(seed), by={};
+function gWho(w,d,seed,strict){ const A=dayA(w,d), r=rngOf(seed), by={};
   for(const v of A.verses){ let s=null; try{ s=speechInfo(v); }catch(e){} if(!s||!s.who) continue; let who=s.who.split(" ").pop(); if(GOD_N.test(who)) who="하나님(여호와)"; if(/^예수/.test(who)) who="예수님";
     if(/^(일|말씀|사람|사람들|자|자들|그|그들|무리|백성)$/.test(who)) continue;
+    /* (v2) 말한 사람이 그 절 안에 이름으로 분명히 나오는 말만 문제로 씁니다 */
+    if(strict){ const nm=who==="하나님(여호와)"?/(여호와|하나님|주께서)/:who==="예수님"?/예수/:null; if(nm?!nm.test(v.t):!v.t.includes(who)) continue; }
     /* 한 절에 말이 둘 이상이면(예: 요 20:15 예수님의 말과 마리아의 말) 말한 사람이 섞일 수 있어 문제로 쓰지 않습니다 */
     { const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")], R=S&&S[`${v.b}-${v.c}-${v.v}`]; if(R&&R.length>1) continue; }
     const t=speechOnly(v); if(t.length<8||t.length>130) continue; (by[who] ||= []).push({v,t}); }
@@ -9058,7 +9076,7 @@ const JOSA=/(에게서|으로부터|에게|께서|에서|으로|이라|이니|�
 const STOPW=new Set("그 이 저 나 너 내 네 우리 너희 그들 그녀 자기 또 이에 그러므로 그러나 하나님 여호와 주 주께서 당신 말 것 자 자들 사람 사람들 일 곳 날 모든 다 수 중 앞 뒤 안 밖 위 아래 이름 손 땅 집 해 년 명 때 무리 거기 여기 이것 그것 저희".split(" "));
 /* 성경 전체에서 '을·를·의·에게·과·와·께서·에서·으로' 가운데 두 가지 이상과 함께 쓰인 말만 낱말(명사)로 봅니다 */
 let NOUNS=null;
-function nounSet(){ if(NOUNS) return NOUNS; const M=new Map(); const re=/^([가-힣]{2,})(을|를|의|에게|과|와|께서|에서|으로)$/;
+function nounSet(){ if(NOUNS) return NOUNS; if(window.NOUNS_KRV&&(window.BIBLE_SRC||"krv")==="krv") return NOUNS=new Set(window.NOUNS_KRV); const M=new Map(); const re=/^([가-힣]{2,})(을|를|의|에게|과|와|께서|에서|으로)$/;
   try{ for(const B of BIBLE) for(const C of B) for(const V of C){ if(!V) continue; for(const tok of V.replace(/[^가-힣\s]/g," ").split(/\s+/)){ const m=tok.match(re); if(!m) continue; let st=M.get(m[1]); if(!st) M.set(m[1],st=new Set()); st.add(m[2]); } } }catch(e){}
   NOUNS=new Set([...M].filter(([k,v])=>v.size>=2).map(([k])=>k)); return NOUNS; }
 function gClue(w,d,seed){ const A=dayA(w,d), cnt=new Map(), at=new Map();
@@ -9071,7 +9089,7 @@ function gClue(w,d,seed){ const A=dayA(w,d), cnt=new Map(), at=new Map();
   const NS=nounSet(); for(const k of [...cnt.keys()]) if(!EI.map.has(k)&&(ssEnd(k)||!NS.has(k)||/(함|심|하심|기|같음|없음|있음|아님)$/.test(k)||/^(그대|무엇|누구|이들|하나|것들|그것들|이것들|이상|동안|가운데|여러분|너희들|자기들|그들|우리들)$/.test(k))) cnt.delete(k);
   const L=[...cnt.entries()].filter(x=>x[1]>=3?forms.get(x[0]).size>=2||EI.map.has(x[0]):true).sort((a,b)=>b[1]-a[1]); if(!L.length||L[0][1]<3) return null;
   const ans=L[0][0], low=L.filter(x=>x[1]===1&&x[0].length>=2&&/^(을|를|은|는|의|에|으로|로|과|와|이|가)$/.test([...forms.get(x[0])][0])&&!/[하되니지므려거며고여게리시겠었았던는]$/.test(x[0])).map(x=>x[0]); if(low.length<3) return null; const r=rngOf(seed);
-  const vs=at.get(ans); return {ans,n:L[0][1],opts:shuf([ans,...shuf(low,r).slice(0,3)],r),first:vs[0],last:vs[vs.length-1]}; }
+  const vs=at.get(ans); return {ans,n:L[0][1],opts:shuf([ans,...shuf(low,r).slice(0,3)],r),first:vs[0],last:vs[vs.length-1],all:vs}; }
 const vref2=v=>`${PLAN.abbr[v.b-1]} ${v.c}:${v.v}`;
 function chRec(key){ mem.ch ||= {}; return mem.ch[key] ||= {}; }
 function gameHTML(kind,w,d){ const key=keyOf(w,d), G=view.game&&view.game.kind===kind&&view.game.key===key?view.game:null, R=chRec(key)[kind];
@@ -9150,27 +9168,33 @@ function bindDayRing(){ document.querySelectorAll("[data-rg]").forEach(b=>b.oncl
   const td=document.getElementById("rgToday"); if(td) td.onclick=()=>{ const t=view.tab; view.pre=false; view.revW=null; view.w=here.w; view.d=here.d; view.game=null; view.tab=t; render(); scrollTo({top:0}); }; }
 
 /* ===== V2 도전: 놀이판 + 한 번에 한 놀이(전체 화면) ===== */
-const GSTAR=sc=>{ const m=String(sc||"").match(/^(\d+)\/(\d+)$/); if(!m) return sc==="찾음"?3:sc?1:0; const a=+m[1],b=+m[2]; return a>=b?3:a>=b-1?2:a>0?1:0; };
+const GSTAR=sc=>{ const m=String(sc||"").match(/^(\d+)\/(\d+)$/); if(!m) return sc==="찾음"?3:0; const a=+m[1],b=+m[2]; return a>=b?3:a>=b-1?2:a>0?1:0; };
 function gJourney(w,d,seed){ let M=null; try{ M=storyMapPts(w,d,null); }catch(e){} if(!M||!M.route||M.route.length<3) return null; const pts=M.route.slice(0,6).map(x=>({n:x[0],la:+x[1],lo:+x[2]})).filter(x=>!isNaN(x.la));
   const seen=new Set(), P=pts.filter(x=>!seen.has(x.n)&&seen.add(x.n)); if(P.length<3) return null; return {pts:P,pickd:[]}; }
+const GDESC={order:["장면 순서","이야기의 장면을 일어난 차례대로 놓아 봅니다","본문이 사건을 어떤 차례로 들려주는지 봅니다"],who:["누가 말했나","이 말을 누가 했는지 찾습니다","인물들의 말을 나누어 들어 봅니다"],trip:["여정 따라가기","이야기가 지나간 곳을 차례대로 짚습니다","장소가 바뀔 때 이야기도 바뀝니다"],clue:["되풀이되는 말","여러 번 나오는 말을 찾습니다","나오는 자리마다 무엇이 달라지는지 봅니다"]};
+function chSave(key,k,res){ const R=chRec(key), old=R[k]; if(!old||GSTAR(res)>=GSTAR(old)) R[k]=res; save(); }
+const chFuture=(w,d)=>dayDiff(today0(),dateOf(w,d))>0;
 function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=chRec(key); let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
-  const can={order:!!(BIBLE&&gOrder(w,d,key)),who:!!(BIBLE&&gWho(w,d,key)),clue:!!(BIBLE&&gClue(w,d,key)),trip:!!(BIBLE&&gJourney(w,d,key))};
-  const T=[["order","장면 순서","↕"],["who","누가 말했나","💬"],["clue","되풀이되는 말","🔁"],["trip","여정 따라가기","🧭"]].filter(t=>can[t[0]]);
-  const star=n=>`<span class="gstars" aria-label="별 ${n}개">${[0,1,2].map(i=>`<i class="${i<n?"on":""}">★</i>`).join("")}</span>`;
-  let h=dayRingHTML()+`<section class="ghub">`;
-  let PS=[]; try{ PS=[...new Set(storySlides(w,d).map(x=>x.ph).filter(Boolean))]; }catch(e){}
-  h+=T.map(([k,t,ic],i)=>{ const tp=PS[(i*2+1)%Math.max(1,PS.length)]||ph; return `<button class="gtile" data-gplay="${k}"${tp?` style="--gp:url('${esc(tp.u)}')"`:""}><span class="gic">${ic}</span><b>${t}</b>${star(GSTAR(R[k]))}</button>`; }).join("");
-  h+=`</section>`;
   const nq=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
-  h+=`<section class="gextra"><button class="gwide" data-gplay="card"><b>말씀 카드 빈칸</b><span>${nq?`모은 카드 ${nq}장`:"묵상 노트를 하루 마치면 열립니다"}</span></button><details class="gquiz"${view.quizOpen?" open":""} id="gQuiz"><summary><b>본문 퀴즈</b><span>O/X · 4지선다</span></summary>${p?renderQuiz(key,null,"day"):""}</details></section>`;
+  const cardBtn=`<button class="gwide" data-gplay="card"><b>말씀 카드 빈칸</b><span>${nq?`모은 카드 ${nq}장`:"묵상 노트를 하루 마치면 열립니다"}</span></button>`;
+  if(chFuture(w,d)){ const dt=dateOf(w,d); return dayRingHTML()+`<section class="sec glock"><span class="label">도전</span><p class="lead">이 날의 도전은 <b>${esc(fmt(dt,{month:"long",day:"numeric"}))}</b>에 열립니다. 같은 날 함께 읽고 풀어 봅니다.</p></section><section class="gextra">${cardBtn}</section>`; }
+  const can={order:!!(BIBLE&&gOrder2(w,d,key)),who:!!(BIBLE&&gWho(w,d,key,true)),trip:!!(BIBLE&&gJourney(w,d,key)),clue:!!(BIBLE&&gClue(w,d,key))};
+  const K=["order","who","trip","clue"].filter(k=>can[k]);
+  const star=n=>`<span class="gstars" aria-label="별 ${n}개">${[0,1,2].map(i=>`<i class="${i<n?"on":""}">★</i>`).join("")}</span>`;
+  let PS=[]; try{ PS=[...new Set(storySlides(w,d).map(x=>x.ph).filter(Boolean))]; }catch(e){}
+  let h=dayRingHTML();
+  if(K.length){ const k0=K[0], D0=GDESC[k0], tp0=PS[1]||ph;
+    h+=`<section class="grecw"><button class="grec" data-gplay="${k0}"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 추천 도전</small><b>${D0[0]}</b><span>${D0[1]}</span><em>${D0[2]}</em>${star(GSTAR(R[k0]))}</button></section>`;
+    const rest=K.slice(1); if(rest.length) h+=`<p class="gmore">다른 방식으로 살펴보기</p><section class="ghub">`+rest.map((k,i)=>{ const tp=PS[(i*2+3)%Math.max(1,PS.length)]||ph; return `<button class="gtile" data-gplay="${k}"${tp?` style="--gp:url('${esc(tp.u)}')"`:""}><b>${GDESC[k][0]}</b>${star(GSTAR(R[k]))}</button>`; }).join("")+`</section>`; }
+  h+=`<section class="gextra">${cardBtn}<details class="gquiz"${view.quizOpen?" open":""} id="gQuiz"><summary><b>본문 퀴즈</b><span>O/X · 4지선다</span></summary>${p?renderQuiz(key,null,"day"):""}</details></section>`;
   return h; }
 function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`<div class="gptop"><b>${esc({order:"장면 순서",who:"누가 말했나",clue:"되풀이되는 말",trip:"여정 따라가기",card:"말씀 카드 빈칸"}[G.k])}</b><span class="gpdots">${G.total?Array.from({length:G.total},(_,i)=>`<i class="${i<G.step?"on":""}"></i>`).join(""):""}</span><button class="gpx" data-gpx="1" aria-label="닫기">✕</button></div>`;
   let body="";
-  if(G.k==="order"){ const {items,shown,pickd,done}=G; G.used ||= new Set(); G.phs ||= {}; body=`<p class="gpq">${done?`${G.score}/4 맞혔습니다`:"먼저 일어난 장면부터 누르세요"}</p><div class="gpgrid">`+shown.map(i=>{ const v=items[i], pos=pickd.indexOf(i), ok=done?pos===i:null; let ph=G.phs[i]; if(ph===undefined){ try{ ph=phPick(v.t,[],GENRE_OF(v.b),"go"+v.b+v.c+v.v,G.used,null,{}); }catch(e){ ph=null; } if(ph) G.used.add(ph.id); G.phs[i]=ph; }
-      return `<button class="gpcard${pos>=0?" on":""}${done?(ok?" ok":" no"):""}" data-gpo="${i}"${done?" disabled":""}>${ph?`<img alt="" src="${esc(ph.u)}" referrerpolicy="no-referrer">`:""}<span>${esc(gcut(v.t,46))}</span>${pos>=0?`<em>${pos+1}</em>`:""}${done?`<small>${esc(vref2(v))}</small>`:""}</button>`; }).join("")+`</div>`; }
+  if(G.k==="order"){ const {items,shown,pickd,done}=G; G.used ||= new Set(); G.phs ||= {}; body=`<p class="gpq">${done?`${G.score}/${items.length} 맞혔습니다 · 장면을 누르면 본문으로 갑니다`:"먼저 일어난 장면부터 누르세요"}</p><div class="gpgrid">`+shown.map(i=>{ const v=items[i], pos=pickd.indexOf(i), ok=done?pos===i:null; let ph=G.phs[i]; if(ph===undefined&&G.sph&&G.sph[i]){ ph=G.phs[i]=G.sph[i]; } if(ph===undefined){ try{ ph=phPick(v.t,[],GENRE_OF(v.b),"go"+v.b+v.c+v.v,G.used,null,{}); }catch(e){ ph=null; } if(ph) G.used.add(ph.id); G.phs[i]=ph; }
+      return `<button class="gpcard${pos>=0?" on":""}${done?(ok?" ok":" no"):""}" ${done?`data-gpv="${v.b}-${v.c}-${v.v}"`:`data-gpo="${i}"`}>${ph?`<img alt="" src="${esc(ph.u)}" referrerpolicy="no-referrer">`:""}<span>${esc(gcut(v.t,46))}</span>${pos>=0?`<em>${pos+1}</em>`:""}${done?`<small>${esc(vref2(v))}${ok?"":` · ${i+1}번째`}</small>`:""}</button>`; }).join("")+`</div>`; }
   else if(G.k==="who"){ const q=G.qs[G.i]; if(!q) body=`<p class="gpbig">${G.score}/${G.qs.length}</p>`; else { const col=n=>`hsl(${phHash(n)%360} 45% 42%)`;
-      body=`<div class="gpbub">“${esc(gcut(q.t,110))}”<small>${G.a?esc(vref2(q.v)):""}</small></div><div class="gpwho">${q.opts.map(o=>`<button class="gpav${G.a?(o===q.ans?" ok":o===G.a?" no":""):""}" data-gpw="${esc(o)}"${G.a?" disabled":""}><span style="background:${col(o)}">${esc(o.replace(/\(.*\)/,"").slice(0,1))}</span><b>${esc(o)}</b></button>`).join("")}</div>`; } }
-  else if(G.k==="clue"){ const C=G.c; body=`<p class="gpq">${G.a?`<b>${esc(C.ans)}</b> · ${C.n}번`:"오늘 본문에 가장 여러 번 나오는 말은?"}</p><div class="gpbubs">${C.opts.map(o=>`<button class="gpb${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gpc="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>${G.a?`<p class="gpnote">처음 ${esc(vref2(C.first))} → 마지막 ${esc(vref2(C.last))}. 처음과 끝에서 무엇이 달라졌는지 본문에서 찾아보세요.</p>`:""}`; }
+      body=`<div class="gpbub">“${esc(gcut(q.t,110))}”${G.a?`<button class="gpref" data-gpv="${q.v.b}-${q.v.c}-${q.v.v}">${esc(vref2(q.v))} 본문에서 보기 ›</button>`:""}</div><div class="gpwho">${q.opts.map(o=>`<button class="gpav${G.a?(o===q.ans?" ok":o===G.a?" no":""):""}" data-gpw="${esc(o)}"${G.a?" disabled":""}><span style="background:${col(o)}">${esc(o.replace(/\(.*\)/,"").slice(0,1))}</span><b>${esc(o)}</b></button>`).join("")}</div>`; } }
+  else if(G.k==="clue"){ const C=G.c; body=`<p class="gpq">${G.a?`<b>${esc(C.ans)}</b> · ${C.n}번 나옵니다`:"오늘 본문에서 거듭 되풀이되는 말은?"}</p><div class="gpbubs">${C.opts.map(o=>`<button class="gpb${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gpc="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>${G.a?gClueSpots(C):""}`; }
   else if(G.k==="trip"){ const P=G.pts, la=P.map(x=>x.la), lo=P.map(x=>x.lo), a0=Math.min(...la), a1=Math.max(...la), o0=Math.min(...lo), o1=Math.max(...lo), sx=x=>12+76*((x-o0)/((o1-o0)||1)), sy=y=>12+76*(1-(y-a0)/((a1-a0)||1));
       const path=G.pickd.map(i=>`${sx(P[i].lo)},${sy(P[i].la)}`).join(" ");
       body=`<p class="gpq">${G.done?`${G.score}/${P.length}`:"이야기가 지나간 순서대로 지명을 누르세요"}</p><div class="gpmap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${path}" fill="none" stroke="#e2b874" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>${P.map((x,i)=>{ const pos=G.pickd.indexOf(i), ok=G.done?pos===i:null; return `<button class="gppt${pos>=0?" on":""}${G.done?(ok?" ok":" no"):""}" style="left:${sx(x.lo)}%;top:${sy(x.la)}%" data-gpt="${i}"${G.done?" disabled":""}><i>${pos>=0?pos+1:""}</i><span>${esc(x.n)}</span></button>`; }).join("")}</div>`; }
@@ -9178,9 +9202,13 @@ function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`
   const fin=G.done||(G.k==="who"&&G.i>=G.qs.length)||(G.k!=="order"&&G.k!=="trip"&&G.k!=="who"&&G.a);
   const nextBtn=G.k==="who"&&G.a&&G.i<G.qs.length?`<button class="gpbtn" data-gpn="1">${G.i<G.qs.length-1?"다음":"결과"}</button>`:"";
   return `<div class="gplay" id="gPlay">${top}<div class="gpbody">${body}</div><div class="gpfoot">${nextBtn}${fin?`<div class="gpres">${[0,1,2].map(i=>`<i class="${i<GSTAR(G.res)?"on":""}">★</i>`).join("")}</div><button class="gpbtn ghost" data-gpagain="1">다시</button><button class="gpbtn" data-gpx="1">닫기</button>`:""}</div></div>`; }
-function gpOpen(k){ const {w,d}=view, key=keyOf(w,d), seed=key+":"+Date.now();
-  if(k==="order"){ const o=gOrder(w,d,seed); view.gp={k,...o,pickd:[],total:4,step:0}; }
-  else if(k==="who"){ const o=gWho(w,d,seed); view.gp={k,qs:o.qs,i:0,score:0,total:o.qs.length,step:0}; }
+function gClueSpots(C){ const vs=C.all||[C.first,C.last], n=vs.length, sel=[...new Set(n<=3?vs:[vs[0],vs[Math.floor((n-1)/2)],vs[n-1]])];
+  const mk=v=>{ const t=v.t, i=t.indexOf(C.ans), a=Math.max(0,i-16); return esc((a?"…":"")+t.slice(a,i))+`<b>${esc(C.ans)}</b>`+esc(t.slice(i+C.ans.length,i+C.ans.length+18))+"…"; };
+  return `<p class="gpnote">나오는 자리마다 무엇이 달라지는지 보세요.</p><div class="gpspots">${sel.map(v=>`<button class="gpref" data-gpv="${v.b}-${v.c}-${v.v}"><small>${esc(vref2(v))}</small>${mk(v)}</button>`).join("")}</div>`; }
+function gpGoVerse(id){ gpClose(); view.tab="read"; view.open=true; view.v2shut=false; render(); setTimeout(()=>{ const el=document.getElementById("v-"+id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2600); } },60); }
+function gpOpen(k){ const {w,d}=view, key=keyOf(w,d), seed=key+":"+Date.now(); if(k!=="card"&&chFuture(w,d)) return;
+  if(k==="order"){ const o=gOrder2(w,d,seed); if(!o) return; view.gp={k,...o,pickd:[],total:o.items.length,step:0}; }
+  else if(k==="who"){ const o=gWho(w,d,seed,true); view.gp={k,qs:o.qs,i:0,score:0,total:o.qs.length,step:0}; }
   else if(k==="clue"){ view.gp={k,c:gClue(w,d,seed)}; }
   else if(k==="trip"){ const o=gJourney(w,d,seed); const sh=shuf(o.pts,rngOf(seed)); view.gp={k,pts:sh,ord:o.pts.map(x=>sh.indexOf(x)),pickd:[],total:sh.length,step:0}; }
   else if(k==="card"){ view.gp={k,c:gCard(seed)}; }
@@ -9188,14 +9216,15 @@ function gpOpen(k){ const {w,d}=view, key=keyOf(w,d), seed=key+":"+Date.now();
 function gpShow(){ document.getElementById("gPlay")?.remove(); if(!view.gp) return; ovOpen(gpClose); document.body.insertAdjacentHTML("beforeend",gplayHTML()); document.documentElement.classList.add("story-on"); gpBind(); }
 function gpClose(pop){ if(pop!==true) ovDone(gpClose); view.gp=null; document.getElementById("gPlay")?.remove(); document.documentElement.classList.remove("story-on"); render(); }
 function gpBind(){ const G=view.gp, key=keyOf(view.w,view.d), el=document.getElementById("gPlay"); if(!el) return;
+  el.querySelectorAll("[data-gpv]").forEach(b=>b.onclick=()=>gpGoVerse(b.dataset.gpv));
   el.querySelectorAll("[data-gpx]").forEach(b=>b.onclick=gpClose);
   el.querySelectorAll("[data-gpagain]").forEach(b=>b.onclick=()=>gpOpen(G.k));
-  el.querySelectorAll("[data-gpo]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.gpo, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i); G.step=G.pickd.length; if(G.pickd.length===4){ G.done=true; G.score=G.pickd.filter((x,k)=>x===k).length; G.res=`${G.score}/4`; chRec(key).order=G.res; save(); } gpShow(); });
+  el.querySelectorAll("[data-gpo]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.gpo, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i); G.step=G.pickd.length; if(G.pickd.length===G.items.length){ G.done=true; G.score=G.pickd.filter((x,k)=>x===k).length; G.res=`${G.score}/${G.items.length}`; chSave(key,"order",G.res); } gpShow(); });
   el.querySelectorAll("[data-gpw]").forEach(b=>b.onclick=()=>{ G.a=b.dataset.gpw; if(G.a===G.qs[G.i].ans) G.score++; G.step=G.i+1; gpShow(); });
-  el.querySelectorAll("[data-gpn]").forEach(b=>b.onclick=()=>{ G.i++; G.a=null; if(G.i>=G.qs.length){ G.res=`${G.score}/${G.qs.length}`; chRec(key).who=G.res; save(); } gpShow(); });
-  el.querySelectorAll("[data-gpc]").forEach(b=>b.onclick=()=>{ G.a=b.dataset.gpc; G.res=G.a===G.c.ans?"찾음":"다시"; chRec(key).clue=G.res; save(); gpShow(); });
+  el.querySelectorAll("[data-gpn]").forEach(b=>b.onclick=()=>{ G.i++; G.a=null; if(G.i>=G.qs.length){ G.res=`${G.score}/${G.qs.length}`; chSave(key,"who",G.res); } gpShow(); });
+  el.querySelectorAll("[data-gpc]").forEach(b=>b.onclick=()=>{ G.a=b.dataset.gpc; G.res=G.a===G.c.ans?"찾음":"다시"; chSave(key,"clue",G.res); gpShow(); });
   el.querySelectorAll("[data-gpk]").forEach(b=>b.onclick=()=>{ G.a=b.dataset.gpk; G.res=G.a===G.c.ans?"찾음":"다시"; gpShow(); });
-  el.querySelectorAll("[data-gpt]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.gpt, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i); G.step=G.pickd.length; if(G.pickd.length===G.pts.length){ G.done=true; G.score=G.pickd.filter((x,k)=>x===G.ord[k]).length; G.res=`${G.score}/${G.pts.length}`; chRec(key).trip=G.res; save(); } gpShow(); }); }
+  el.querySelectorAll("[data-gpt]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.gpt, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i); G.step=G.pickd.length; if(G.pickd.length===G.pts.length){ G.done=true; G.score=G.pickd.filter((x,k)=>x===G.ord[k]).length; G.res=`${G.score}/${G.pts.length}`; chSave(key,"trip",G.res); } gpShow(); }); }
 function v2Nav(){ const n=document.querySelector(".bnav-in"); if(!n) return; const I=(d)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
   n.innerHTML=[["today","오늘",I('<circle cx="12" cy="12" r="8.5"/><path d="M10 8.8v6.4l5.2-3.2z"/>')],["read","본문",I('<path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1V19c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1z"/><path d="M12 6.5V20"/>')],["qt","QT",I('<path d="M6 3.5h9l3 3V20.5H6z"/><path d="M9 9h6M9 13h6M9 17h4"/>')],["challenge","도전",I('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>')],["record","기록",I('<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>')]].map(([t,l,s])=>`<button class="tab" data-tab="${t}" aria-selected="${view.tab===t}">${s}<span>${l}</span></button>`).join("");
   n.style.gridTemplateColumns="repeat(5,1fr)"; document.documentElement.classList.add("v2"); storyFont();
