@@ -2353,6 +2353,7 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
     if(eok&&sets.includes(eok[1])) s+=1.2;
     (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=3; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; if(opt.stage&&(STAGE_T[opt.stage]||[]).includes(t)) s+=.9; });
     if(opt.mood&&p.mood){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
+    if(opt.avoid&&p.scope!=="s"&&opt.avoid.has(p.id)) s-=6;
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
   return best; }
 /* 이야기 카드 목록: 손으로 쓴 카드(STORYC)가 있으면 그것, 없으면 본문 자료로 자동 구성 → 뒤에 QT 네 단계 */
@@ -2388,7 +2389,13 @@ function applyPV(){ const SC=SC_SRC(); if(!SC) return;
     set(GUIDE,k,Q&&Q.guide?Object.assign({},PV_ORIG.GUIDE[k]||{},Q.guide):PV_ORIG.GUIDE[k]);
     if(typeof KWQ!=="undefined") set(KWQ,no,S&&S.kwq?S.kwq:PV_ORIG.KWQ[no]); }
   if(SV) SV.cache={}; }
-function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {}; if(SV.cache[ck]) return SV.cache[ck];
+/* 두루 쓰는 그림이 날마다 되풀이되지 않게: 앞 4일에 실제로 쓴 두루 배경은 점수를 크게 낮춥니다(목사님 결정 2026-10-28).
+   어느 날을 먼저 열어도 같은 그림이 나오도록 28일 묶음의 첫날부터 차례로 고릅니다(묶음 앞의 날은 기본 고르기로 봄) */
+const dayWD=m=>[Math.floor((m-1)/7)+1,(m-1)%7];
+function phDayOk(w,d){ try{ return !!dayPlan(w,d); }catch(e){ return false; } }
+function phRecent(n,s0){ const R=new Set(); for(let k=1;k<=4;k++){ const m=n-k; if(m<1) break; const [w,d]=dayWD(m); if(!phDayOk(w,d)) continue; try{ storySlides(w,d,m<s0).forEach(x=>{ if(x.ph&&x.ph.scope!=="s") R.add(x.ph.id); }); }catch(e){} } return R; }
+function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b":""); SV.cache ||= {}; if(SV.cache[ck]) return SV.cache[ck];
+  let avoid=null; if(!base){ const n=dayNo(w,d), s0=Math.floor((n-1)/28)*28+1; for(let m=s0;m<n;m++){ const [ww,dd]=dayWD(m); if(phDayOk(ww,dd)) try{ storySlides(ww,dd); }catch(e){} } avoid=phRecent(n,s0); }
   const no=dayNo(w,d), p=dayPlan(w,d), C=storyDay(no); let out=[];
   if(C){ out=C.cards.map(c=>Object.assign({},c));
     /* 손으로 쓴 원고에 지도 카드가 없으면, 그날 나오는 곳·이동 경로를 배경 카드 뒤에 자동으로 넣습니다 */
@@ -2414,7 +2421,7 @@ function storySlides(w,d){ const ck=MODE+":"+PV()+":"+keyOf(w,d); SV.cache ||= {
 
     g={st,list:[i],hint:s.img}; groups.push(g); });
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
-    const ph=phPick(txt,ctxPl,gen,ck+":"+gi,used,G.hint,{stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
+    const ph=phPick(txt,ctxPl,gen,ck.replace(/:b$/,"")+":"+gi,used,G.hint,{avoid,stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
     G.list.forEach((i,k)=>{ out[i].ph=ph; out[i].phv=k; }); });
   out.forEach(s=>{ if(s.k==="fin"||s.k==="ask") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
   SV.cache[ck]=out; return out; }
