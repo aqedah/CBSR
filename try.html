@@ -9258,7 +9258,7 @@ const chFuture=(w,d)=>dayDiff(today0(),dateOf(w,d))>0;
 function gWeekHTML(){ const hn=dayNo(here.w,here.d), items=[], notes=[]; let picks=0;
   for(let n=hn;n>=Math.max(1,hn-6);n--){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(!dayPlan(w,d)) continue; const key=keyOf(w,d), q=mem.qt[key], R=(mem.ch||{})[key]||{};
     if(q&&q.done&&q.kv) picks++; if(R.findNote) notes.push([w,d,R.findNote]);
-    if(n<hn&&mem.done[key]&&GSTAR(R.find)<3){ const F=gFind(w,d); if(F) items.push([w,d,F,GSTAR(R.find)]); } }
+    }
   if(!picks&&!items.length&&!notes.length) return "";
   const dl=(w,d)=>{ const dt=dateOf(w,d); return `${dt.getMonth()+1}/${dt.getDate()}(${DAYN[dt.getDay()]})`; };
   return `<p class="gmore">이번 주 다시 보기</p><section class="gextra gweek">`+
@@ -9269,7 +9269,7 @@ function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=
   const nq=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
   const cardBtn=`<button class="gwide" data-gplay="card"><b>말씀 카드 빈칸</b><span>${nq?`모은 카드 ${nq}장`:"묵상 노트를 하루 마치면 열립니다"}</span></button>`;
   if(chFuture(w,d)){ const dt=dateOf(w,d); return dayRingHTML()+`<section class="sec glock"><span class="label">도전</span><p class="lead">이 날의 도전은 <b>${esc(fmt(dt,{month:"long",day:"numeric"}))}</b>에 열립니다. 같은 날 함께 읽고 풀어 봅니다.</p></section><section class="gextra">${cardBtn}</section>`; }
-  const F=gFind(w,d); const can={find:!!F,order:!!(BIBLE&&gOrder2(w,d,key)),who:!!(BIBLE&&gWho(w,d,key,true)),trip:!!(BIBLE&&gJourney(w,d,key)),clue:!!(BIBLE&&gClue(w,d,key))};
+  const F=null; /* 오늘의 발견: 목사님 판정으로 내림(2026-10-29). 본문에서 절 찾기 방식으로 다시 설계 */ const can={find:!!F,order:!!(BIBLE&&gOrder2(w,d,key)),who:!!(BIBLE&&gWho(w,d,key,true)),trip:!!(BIBLE&&gJourney(w,d,key)),clue:!!(BIBLE&&gClue(w,d,key))};
   const K=["find","order","who","trip","clue"].filter(k=>can[k]);
   const star=n=>`<span class="gstars" aria-label="별 ${n}개">${[0,1,2].map(i=>`<i class="${i<n?"on":""}">★</i>`).join("")}</span>`;
   let PS=[]; try{ PS=[...new Set(storySlides(w,d).map(x=>x.ph).filter(Boolean))]; }catch(e){}
