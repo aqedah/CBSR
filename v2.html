@@ -9027,15 +9027,15 @@ function tdAid(w,d,p){ const key=keyOf(w,d), g=GUIDE[key]||{}, RD=MODE==="rj"&&t
   if(!prev&&!eq) return "";
   return `<details class="v2aid tdaid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>${RD?"교재 설명":"지난 이야기"} · 살펴볼 질문</small></summary>${prev}${eq}</details>`; }
 function bindToday(){ clearInterval(TD.cd);
-  const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
+  const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); if(window.CBSR_V2){ window.scrollTo({top:0}); requestAnimationFrame(()=>window.scrollTo({top:0})); return; } requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
   /* 화면에 보이는 단계(TD.stage)를 따릅니다: 0이면 본문 읽기, 그 뒤는 스토리 QT. 화면을 그린 뒤 기록이 바뀌어도(다른 기기 동기화 등) 버튼 이름과 동작이 어긋나지 않게 */
-  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!TD.stage){ if(window.CBSR_V2&&BIBLE) rdOpen(); else toText(); return; } storyOpen(0); };
+  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!TD.stage){ toText(); return; } storyOpen(0); };
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
   const tg=document.getElementById("tdGo"); if(tg) tg.onclick=go;
   const va2=document.getElementById("v2Aid"); if(va2) va2.ontoggle=()=>{ view.aidOpen=va2.open; };
   const rm2=document.getElementById("rjMore"); if(rm2&&!rm2.onclick) rm2.onclick=()=>{ view.rjOpen=!view.rjOpen; render(); };
   const tn=document.getElementById("tdNote"); if(tn) tn.onclick=()=>{ view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); };
-  const rr=document.getElementById("tdReread"); if(rr) rr.onclick=()=>{ if(window.CBSR_V2&&BIBLE) rdOpen(1); else toText(); };
+  const rr=document.getElementById("tdReread"); if(rr) rr.onclick=()=>toText();
   const pv=document.getElementById("pvSw"); if(pv) pv.onclick=e=>{ e.stopPropagation(); const nv=PV()==="B"?"A":"B"; try{ localStorage.setItem("cbsr-pv",nv); }catch(er){} try{ const u=new URL(location.href); if(u.searchParams.has("pv")){ u.searchParams.set("pv",nv); history.replaceState(null,"",u); } }catch(er){} applyPV(); render(); };
   const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
