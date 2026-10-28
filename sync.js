@@ -70,6 +70,12 @@
       async get(){ await init(); const d=await fs.doc("config/news").get(); return d.exists?(d.data().hidden||[]):[]; },
       async set(hidden){ await init(); await fs.doc("config/news").set({hidden,at:Date.now()}); }
     },
+    /* 그림 목록에서 관리자가 고른 그림 빼기(keep: 빼서 보관, del: 삭제, back: 되살리기) */
+    photos:{
+      async get(){ await init(); const d=await fs.doc("config/photos").get(); return d.exists?(d.data().map||{}):{}; },
+      async set(id,act){ await init(); const ref=fs.doc("config/photos"); const up={at:Date.now()}; up["map."+id]=act?act:firebase.firestore.FieldValue.delete();
+        try{ await ref.update(up); }catch(e){ if(/not-found/.test(e.code||"")){ const m={}; if(act) m[id]=act; await ref.set({map:m,at:Date.now()}); } else throw e; } }
+    },
     texts:{
       async get(){ await init(); const d=await fs.doc("config/texts").get(); return d.exists?(d.data().map||{}):{}; },
       async set(map){ await init(); await fs.doc("config/texts").set({map,at:Date.now()}); }
