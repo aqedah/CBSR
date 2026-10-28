@@ -990,7 +990,7 @@ html.v2 .grec small{font-size:12.5px;font-weight:700;color:#f3d9a4;letter-spacin
 .gfw{display:inline;border:0;background:rgba(255,255,255,.06);color:inherit;font:inherit;padding:2px 3px;margin:0 1px;border-radius:5px;cursor:pointer;line-height:1.5}.gfw.ok{background:#e2b874;color:#1b130b}.gfw.no{background:rgba(229,140,120,.5)}
 .gfcnt{display:inline-block;margin-left:6px;font:700 13px var(--f-ui);color:#e2b874}
 .gftb{display:grid;gap:5px;font-size:13px;line-height:1.45;margin-top:4px}.gfth{font:700 12px var(--f-ui);color:#e2b874;padding:2px 4px;align-self:end}.gfk{font:700 12px var(--f-ui);color:rgba(255,255,255,.7);padding:8px 2px}
-.gfc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:8px 6px;text-align:left;font:inherit;cursor:pointer}.gfc.ok{background:#e2b874;color:#1b130b;border-color:#e2b874}.gfc.no{background:rgba(229,140,120,.45)}.gfc:disabled{cursor:default}
+.gfc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:8px 6px;text-align:left;font:inherit;cursor:pointer}.gfc.ok{background:#e2b874;color:#1b130b;border-color:#e2b874}.gfc.no{background:rgba(229,140,120,.45)}.gfc:disabled{cursor:default}.gfc0{cursor:default}.gfq0{font:800 20px var(--f-ui);color:#e2b874;text-align:center;border-style:dashed}
 .gfrv{background:rgba(255,255,255,.07);border-left:3px solid #e2b874;border-radius:8px;padding:10px 12px;margin-top:8px}.gfrv p{margin:0 0 8px;line-height:1.65}.gfrv p:last-child{margin:0}
 .gpref.seen{border-color:#7fcb9c}.gfnote{width:100%;box-sizing:border-box;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;padding:12px;font:15px/1.6 var(--f-ui)}
 html.v2 .gfrec b{margin-top:30px}html.v2 .gfpre{margin:10px 0 2px;padding:0 0 0 18px;font-size:13.5px;line-height:1.7;opacity:.92}
@@ -3587,29 +3587,31 @@ function gFind(w,d){ let S=null; try{ S=storyDay(dayNo(w,d)); }catch(e){} if(!S|
   const c=C.find(c=>okE(c)&&mean(c))||C.find(c=>okT(c)&&mean(c))||[...C].reverse().find(okE)||[...C].reverse().find(okT); return c?{c}:null; }
 function gfRefs(txt,w,d){ const p=dayPlan(w,d), out=[]; String(txt||"").replace(/(?:([가-힣]{1,4})\s)?(\d{1,3}):(\d{1,3})(?:[–-](\d{1,3}))?/g,(m,a,c,v,e)=>{ let b=a?PLAN.abbr.indexOf(a)+1:0; if(!b){ const ch=p&&p.ch.find(x=>x[1]===+c); b=ch?ch[0]:(p&&p.ch[0]?p.ch[0][0]:0); } if(b) out.push(`${b}-${c}-${v}-${e||v}`); return m; }); return [...new Set(out)]; }
 const gfLab=id=>{ const [b,c,v,e]=id.split("-"); return `${PLAN.abbr[b-1]} ${c}:${v}${e!==v?"–"+e:""}`; };
-function gfChunks(q){ const out=[]; String(q).split(/(__.+?__)/).forEach(seg=>{ if(!seg) return; if(/^__.+__$/.test(seg)) out.push({t:seg.slice(2,-2),m:1}); else seg.split(/(\s+)/).forEach(t=>{ if(t) out.push({t,m:0,sp:/^\s+$/.test(t)}); }); }); return out; }
+function gfChunks(q){ /* 낱말(띄어쓰기) 단위로 자르고, __표시__가 들어 있는 낱말을 짝 낱말로 본다 */
+  const t=String(q).replace(/__(.+?)__/g,m=>m.replace(/ /g,"\u00a0")); return t.split(/(\s+)/).filter(Boolean).map(w=>/^\s+$/.test(w)&&!/\u00a0/.test(w)?{sp:1}:{m:/__/.test(w)?1:0,k:(w.match(/__(.+?)__/)||[,""])[1].replace(/\u00a0/g," "),t:w.replace(/__/g,"").replace(/\u00a0/g," "),h:esc(w.replace(/\u00a0/g," ")).replace(/__(.+?)__/g,"<u>$1</u>")}); }
 function gfInit(F,w,d){ const c=F.c, G={k:"find",c,st:0,miss:0,hit:new Set(),seen:new Set()};
   if(c.k==="echo"){ G.qs=c.pair.map(pr=>{ const m=String(pr[0]).match(/^([^:“"]{1,14}):\s*(.*)$/); return {who:pr[2]||(m?m[1].trim():""),q:(m?m[2]:pr[0]).replace(/^["“]|["”]$/g,""),ctx:pr[1]||""}; });
     G.qs.forEach((x,i)=>{ x.ch=gfChunks(x.q); });
     const mc=G.qs.reduce((a,x)=>a+x.ch.filter(z=>z.m).reduce((s,z)=>s+z.t.length,0),0), all=G.qs.reduce((a,x)=>a+x.q.replace(/__/g,"").length,0);
-    G.need=G.qs.reduce((a,x)=>a+x.ch.filter(z=>z.m).length,0); if(!G.need||mc>all*.55) G.st=1; /* 거의 다 표시된 말은 찾기 단계를 건너뛴다 */
+    G.need=G.qs[1].ch.filter(z=>z.m).length; if(!G.need||!G.qs[0].ch.some(z=>z.m)||mc>all*.55) G.st=1; /* 첫 말의 표시를 보여 주고 둘째 말에서 짝을 찾는다. 거의 다 표시된 말은 건너뛴다 */
     G.refs=gfRefs(c.pair.map(x=>x[1]).join(" ; "),w,d); }
   else { G.need=c.tbl.hl.length; G.hl=new Set(c.tbl.hl.map(x=>x.join(","))); G.refs=gfRefs(c.tbl.rows.flat().join(" ; ")+" ; "+(c.note||""),w,d).slice(0,5); }
   G.total=3; G.step=G.st; return G; }
 function gfBody(G){ const c=G.c, sm=t=>smk(t);
-  const steps=`<p class="gfsteps">${[c.k==="echo"?"같은 말 찾기":"눈여겨볼 칸 찾기","달라진 것 보기","본문에서 확인"].map((x,i)=>`<span class="${i===Math.min(G.st,2)?"on":i<G.st?"dn":""}">${i+1} ${x}</span>`).join("")}</p>`;
+  const steps=`<p class="gfsteps">${[c.k==="echo"?"짝이 되는 말 찾기":"빈칸 떠올리기","달라진 것 보기","본문에서 확인"].map((x,i)=>`<span class="${i===Math.min(G.st,2)?"on":i<G.st?"dn":""}">${i+1} ${x}</span>`).join("")}</p>`;
   const head=`<p class="gfkick">${c.k==="echo"?"오늘의 발견 · 반복과 대조":"오늘의 발견 · 나란히 보기"}</p><h3 class="gfh2">${sm(c.h||"")}</h3>${steps}`;
   if(G.st===3) return head+`<p class="gpq">오늘 새로 본 것을 한 문장으로 남겨 보세요. 쓰지 않아도 됩니다.</p><textarea class="gfnote" id="gfNote" rows="3" placeholder="예: 두 번 모두 다윗은 손을 거두었지만, 두 번째에는 이유를 직접 말했다">${esc(G.note||"")}</textarea>`;
   let body="";
-  if(c.k==="echo"){ const showAll=G.st>=1;
+  if(c.k==="echo"){ const play=G.st===0, rf=x=>String(x.ctx||"").split(" · ")[0], w0=G.qs[0].who===G.qs[1].who?`${G.qs[0].who||""} ${rf(G.qs[0])}`.trim():(G.qs[0].who||"첫 말"), w1=G.qs[0].who===G.qs[1].who?`${G.qs[1].who||""} ${rf(G.qs[1])}`.trim():(G.qs[1].who||"둘째 말"), m0=G.qs[0].ch.filter(z=>z.m).map(z=>z.k);
     body=G.qs.map((x,qi)=>`<div class="gpbub gfq">${x.who?`<small class="gfwho">${esc(x.who)}</small>`:""}${x.ch.map((z,zi)=>{ if(z.sp) return " "; const id=qi+"."+zi, hit=G.hit.has(id);
-        if(showAll) return z.m?`<u>${esc(z.t)}</u>`:esc(z.t);
-        return `<button class="gfw${hit?" ok":""}${G.bad===id?" no":""}" data-gfw="${id}">${esc(z.t)}</button>`; }).join("")}<small>${esc(x.ctx)}</small></div>`).join("");
-    if(G.st===0) body=`<p class="gpq">두 말에서 <b>서로 이어지는 말</b>을 찾아 누르세요 <span class="gfcnt">${G.hit.size}/${G.need}</span></p>`+body; }
-  else { const T=c.tbl, n=T.h.length;
+        if(!play||qi===0) return (qi===0||!play)&&z.m?z.h:esc(z.t);
+        return `<button class="gfw${hit?" ok":""}${G.bad===id?" no":""}" data-gfw="${id}">${hit?z.h:esc(z.t)}</button>`; }).join("")}<small>${esc(x.ctx)}</small></div>`).join("");
+    if(play) body=`<p class="gpq">${esc(w0)}의 말에 나온 <b>‘${esc(m0.join("’, ‘"))}’</b>.<br>${esc(w1)}의 말에서 이와 짝이 되는 말을 찾아 누르세요 <span class="gfcnt">${G.hit.size}/${G.need}</span></p>`+body; }
+  else { const T=c.tbl, n=T.h.length, play=G.st===0;
     let g=`<div></div>`+T.h.map(x=>`<div class="gfth">${esc(x)}</div>`).join("");
-    T.rows.forEach((row,ri)=>{ g+=`<div class="gfk">${esc(row[0])}</div>`+row.slice(1).map((x,j)=>{ const id=ri+","+j, hl=G.hl.has(id), hit=G.hit.has(id)||(G.st>=1&&hl); return `<button class="gfc${hit?" ok":""}${G.bad===id?" no":""}" data-gfc="${id}"${G.st>=1?" disabled":""}>${esc(x)}</button>`; }).join(""); });
-    body=(G.st===0?`<p class="gpq">표에서 <b>가장 눈여겨볼 칸</b>을 찾아 누르세요 <span class="gfcnt">${G.hit.size}/${G.need}</span></p>`:"")+`<div class="gftb" style="grid-template-columns:58px repeat(${n},1fr)">${g}</div>`; }
+    T.rows.forEach((row,ri)=>{ g+=`<div class="gfk">${esc(row[0])}</div>`+row.slice(1).map((x,j)=>{ const id=ri+","+j, hl=G.hl.has(id), open=!play||G.hit.has(id);
+      if(!hl) return `<div class="gfc gfc0">${esc(x)}</div>`; return open?`<div class="gfc ok">${esc(x)}</div>`:`<button class="gfc gfq0" data-gfc="${id}">?</button>`; }).join(""); });
+    body=(play?`<p class="gpq">물음표 칸에 무엇이 들어갈지 <b>먼저 떠올려 본 뒤</b> 눌러서 확인하세요 <span class="gfcnt">${G.hit.size}/${G.need}</span></p>`:"")+`<div class="gftb" style="grid-template-columns:58px repeat(${n},1fr)">${g}</div>`; }
   if(G.st===1){ const rv=G.rv; body+=`<p class="gpq">${c.k==="echo"?"두 말은 누가, 어떤 자리에서 했습니까? 무엇이 같고 무엇이 달라졌는지 먼저 생각해 보세요.":"줄마다 무엇이 같고 무엇이 달라졌는지 먼저 생각해 보세요."}</p>`+(rv?`<div class="gfrv">${(c.b||[]).filter(x=>typeof x==="string").map(x=>`<p>${sm(x)}</p>`).join("")}${c.note?`<p>${sm(c.note)}</p>`:""}</div>`:""); }
   if(G.st===2) body+=`<p class="gpq">근거 구절을 눌러 본문에서 확인하세요.</p><div class="gpspots">${G.refs.map(id=>`<button class="gpref${G.seen.has(id)?" seen":""}" data-gfv="${id}">${G.seen.has(id)?"✓ ":""}${esc(gfLab(id))} 읽기 ›</button>`).join("")}</div>`;
   return head+body; }
@@ -3638,7 +3640,7 @@ function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=
   let PS=[]; try{ PS=[...new Set(storySlides(w,d).map(x=>x.ph).filter(Boolean))]; }catch(e){}
   let h=dayRingHTML();
   if(K.length){ const k0=K[0], D0=GDESC[k0], tp0=PS[1]||ph;
-    if(k0==="find") h+=`<section class="grecw"><button class="grec gfrec" data-gplay="find"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 발견 · ${F.c.k==="echo"?"반복과 대조":"나란히 보기"}</small><b>${smk(F.c.h||"")}</b><span>${D0[1]}</span><ol class="gfpre"><li>${F.c.k==="echo"?"같은 말 찾기":"눈여겨볼 칸 찾기"}</li><li>달라진 것 보기</li><li>본문에서 확인</li></ol><em>${D0[2]}</em>${star(GSTAR(R.find))}</button></section>`;
+    if(k0==="find") h+=`<section class="grecw"><button class="grec gfrec" data-gplay="find"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 발견 · ${F.c.k==="echo"?"반복과 대조":"나란히 보기"}</small><b>${smk(F.c.h||"")}</b><span>${D0[1]}</span><ol class="gfpre"><li>${F.c.k==="echo"?"짝이 되는 말 찾기":"빈칸 떠올리기"}</li><li>달라진 것 보기</li><li>본문에서 확인</li></ol><em>${D0[2]}</em>${star(GSTAR(R.find))}</button></section>`;
     else h+=`<section class="grecw"><button class="grec" data-gplay="${k0}"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 추천 도전</small><b>${D0[0]}</b><span>${D0[1]}</span><em>${D0[2]}</em>${star(GSTAR(R[k0]))}</button></section>`;
     const rest=K.slice(1); if(rest.length) h+=`<p class="gmore">다른 방식으로 살펴보기</p><section class="ghub">`+rest.map((k,i)=>{ const tp=PS[(i*2+3)%Math.max(1,PS.length)]||ph; return `<button class="gtile" data-gplay="${k}"${tp?` style="--gp:url('${esc(tp.u)}')"`:""}><b>${GDESC[k][0]}</b>${star(GSTAR(R[k]))}</button>`; }).join("")+`</section>`; }
   h+=gWeekHTML();
@@ -3678,7 +3680,7 @@ function gpBind(){ const G=view.gp, key=keyOf(view.w,view.d), el=document.getEle
   el.querySelectorAll("[data-gpx]").forEach(b=>b.onclick=()=>{ if(G.k==="find"&&G.st===3){ const t=(document.getElementById("gfNote")||{}).value; if(t!==undefined){ const R=chRec(key); if(t.trim()) R.findNote=t.trim().slice(0,200); else delete R.findNote; save(); } } gpClose(); });
   if(G.k==="find"){ const re=()=>{ const y=el.querySelector(".gpbody")?.scrollTop||0; gpShow(); const b2=document.querySelector("#gPlay .gpbody"); if(b2) b2.scrollTop=y; };
     el.querySelectorAll("[data-gfw],[data-gfc]").forEach(b=>b.onclick=()=>{ const id=b.dataset.gfw||b.dataset.gfc; if(G.hit.has(id)) return;
-      let ok; if(G.c.k==="echo"){ const [qi,zi]=id.split(".").map(Number); ok=!!G.qs[qi].ch[zi].m; } else ok=G.hl.has(id);
+      let ok; if(G.c.k==="echo"){ const [qi,zi]=id.split(".").map(Number); ok=!!G.qs[qi].ch[zi].m; } else ok=true; /* 표는 떠올린 뒤 펼쳐 보기: 채점하지 않음 */
       if(ok){ G.hit.add(id); G.bad=null; } else { G.miss++; G.bad=id; }
       if(G.hit.size>=G.need){ G.st=1; G.step=1; } re(); });
     el.querySelectorAll("[data-gfrv]").forEach(b=>b.onclick=()=>{ G.rv=true; re(); });
