@@ -180,7 +180,17 @@ open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
 VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search)||S.getItem("cbsr-mode")==null)')
 exec(open('review_build.py').read())
-open(f'{OUT}/v2.html','w').write(shead.replace(SSHIM,VSHIM).replace('story.html','v2.html')+body+'\n</body>\n</html>\n')
+import base64 as _b64,gzip as _gz
+_BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())).decode()); _NM={}; _NR=_re.compile(r'^([가-힣]{2,})(을|를|의|에게|과|와|께서|에서|으로)$')
+for _bk in _BB:
+  for _ch in _bk:
+    for _v in _ch:
+      if not _v: continue
+      for _tk in _re.sub(r'[^가-힣\s]',' ',_v).split():
+        _m=_NR.match(_tk)
+        if _m: _NM.setdefault(_m.group(1),set()).add(_m.group(2))
+NOUNSHIM='<script>window.NOUNS_KRV='+json.dumps(sorted(k for k,v in _NM.items() if len(v)>=2),ensure_ascii=False,separators=(',',':'))+';</script>'
+open(f'{OUT}/v2.html','w').write(shead.replace(SSHIM,VSHIM+NOUNSHIM).replace('story.html','v2.html')+body+'\n</body>\n</html>\n')
 V=h(html+bible)
 sw=f'''/* 오프라인 지원: 앱 화면은 인터넷이 되면 늘 새로 받고(network first),
    성경 본문·지형도·아이콘·글꼴·라이브러리는 처음 받은 뒤 보관해 둡니다(cache first). 기록은 Firestore가 따로 보관합니다. */
