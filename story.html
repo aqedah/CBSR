@@ -8052,7 +8052,7 @@ function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b"
   /* 2028판도 맞는 그림이면 2027판과 같은 그림을 씁니다(목사님 결정 2026-10-28) */
   /* 장면 묶음: 같은 플롯 단계(배경·긴장·전환·의미)가 이어지는 카드는 같은 사진을 이어 쓰고 확대·위치만 바꿉니다. 하루는 표지와 같은 색감으로 맞춥니다 */
   const noPh=s=>s.qt||s.k==="map"||s.k==="table"||s.k==="fin"||s.k==="next"||s.k==="ask"||s.img==="none";
-  const stageOf=s=>{ if(s.k==="cover") return "표지"; const h=(s.lab||"").split("·")[0].trim(); return /^(배경|긴장|전환|의미|규정|이유|지시|목적|되풀이|예외|완성)$/.test(h)?h:""; };
+  const stageOf=s=>{ if(s.k==="cover") return "표지"; const h=(s.lab||"").split("·")[0].trim(); return /^(배경|긴장|전환|의미|규정|이유|지시|목적|되풀이|예외|완성|고발|판결|약속|호소|찬양|대구|주장|근거|권면|본 것|들은 것)$/.test(h)?h:""; };
   const groups=[]; let g=null;
   out.forEach((s,i)=>{ if(noPh(s)){ g=null; return; } const st=stageOf(s), sameHint=true;
     
