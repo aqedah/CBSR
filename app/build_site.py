@@ -104,8 +104,10 @@ data+=""" const M=window.CBSR_MODE==="y365"?"y365":"rj";
 data+='const KWQ='+open('ux/kwq.json').read()+';\nconst CARDNEWS='+open('ux/cardnews.json').read()+';\n'
 _PH=json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else []
 _SC=json.load(open('ux/story_cards.json')) if os.path.exists('ux/story_cards.json') else {}
+_SC={k:v for k,v in _SC.items() if not k.startswith('_')}  # 보관본(_backup)은 앱에 싣지 않음
 data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
 _SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
+_SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}
 data+='const STORYC_RJ='+J(_SRJ)+';\n'
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
