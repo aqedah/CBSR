@@ -45,6 +45,7 @@ for _fn,_lo,_hi,_mn in [('jan',1,31,'1월'),('feb',32,59,'2월'),('rest',301,365
 
 # 리딩지저스 이야기 카드 검토 페이지 (rj.html): story_rj.json, 날 번호 = (주-1)*7+요일+1
 _SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
+_SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}
 _RP=json.load(open('plan.json'))['plan']; _rr=[]
 for k in sorted(_SRJ,key=int):
     n=int(k)-1; w,d=n//7+1,n%7; lab=_RP[w-1][d]['label'] if w-1<len(_RP) and d<len(_RP[w-1]) else ''
