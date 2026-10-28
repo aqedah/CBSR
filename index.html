@@ -1678,6 +1678,17 @@ html.v2 .sasknote{font-size:14px;line-height:1.6;color:#e9dfcd;margin:14px 0 0}
 html.v2 .grecw{margin:14px 0 4px}html.v2 .grec{position:relative;display:block;width:100%;text-align:left;border:0;border-radius:18px;padding:22px 18px 18px;min-height:190px;color:#fff;background:#24302c var(--gp) center/cover;overflow:hidden;cursor:pointer;font:inherit}
 html.v2 .grec::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.72))}html.v2 .grec>*{position:relative;display:block}
 html.v2 .grec small{font-size:12.5px;font-weight:700;color:#f3d9a4;letter-spacing:.02em}html.v2 .grec b{font-size:24px;margin:58px 0 4px}html.v2 .grec span{font-size:15px}html.v2 .grec em{font-style:normal;font-size:13px;opacity:.85;margin-top:2px}html.v2 .grec .gstars{position:absolute;top:18px;right:16px}
+.gfsteps{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}.gfsteps span{font:700 12px var(--f-ui);padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)}.gfsteps span.on{background:#e2b874;color:#1b130b}.gfsteps span.dn{color:#e2b874}
+.gfkick{margin:0;font:700 12.5px var(--f-ui);color:#e2b874}.gfh2{margin:4px 0 0;font-size:22px;line-height:1.35;color:#fff}
+.gfq{line-height:2}.gfq small.gfwho{display:block;font:700 12px var(--f-ui);color:#e2b874;line-height:1.4;margin-bottom:2px}.gfq u{text-decoration:none;background:#e2b874;color:#1b130b;border-radius:4px;padding:0 3px}
+.gfw{display:inline;border:0;background:rgba(255,255,255,.06);color:inherit;font:inherit;padding:2px 3px;margin:0 1px;border-radius:5px;cursor:pointer;line-height:1.5}.gfw.ok{background:#e2b874;color:#1b130b}.gfw.no{background:rgba(229,140,120,.5)}
+.gfcnt{display:inline-block;margin-left:6px;font:700 13px var(--f-ui);color:#e2b874}
+.gftb{display:grid;gap:5px;font-size:13px;line-height:1.45;margin-top:4px}.gfth{font:700 12px var(--f-ui);color:#e2b874;padding:2px 4px;align-self:end}.gfk{font:700 12px var(--f-ui);color:rgba(255,255,255,.7);padding:8px 2px}
+.gfc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:8px 6px;text-align:left;font:inherit;cursor:pointer}.gfc.ok{background:#e2b874;color:#1b130b;border-color:#e2b874}.gfc.no{background:rgba(229,140,120,.45)}.gfc:disabled{cursor:default}
+.gfrv{background:rgba(255,255,255,.07);border-left:3px solid #e2b874;border-radius:8px;padding:10px 12px;margin-top:8px}.gfrv p{margin:0 0 8px;line-height:1.65}.gfrv p:last-child{margin:0}
+.gpref.seen{border-color:#7fcb9c}.gfnote{width:100%;box-sizing:border-box;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;padding:12px;font:15px/1.6 var(--f-ui)}
+html.v2 .gfrec b{margin-top:30px}html.v2 .gfpre{margin:10px 0 2px;padding:0 0 0 18px;font-size:13.5px;line-height:1.7;opacity:.92}
+.gwnote{margin:0;padding:12px 14px;border:1px dashed var(--line);border-radius:14px;color:var(--ink);font-size:15px;line-height:1.6}.gwnote small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
 html.v2 .gmore{margin:16px 0 -4px;font-size:13px;font-weight:700;color:var(--muted)}
 .gplay .gpref{display:block;width:100%;margin-top:10px;border:1px solid rgba(226,184,116,.5);background:rgba(226,184,116,.12);color:#f3e2bf;border-radius:12px;padding:10px 12px;font:600 14px var(--f-ui);text-align:left;cursor:pointer}.gplay .gpref small{display:block;font-size:12px;color:#e2b874;margin-bottom:3px}.gplay .gpref b{color:#fff}
 .gplay .gpspots{width:100%;max-width:520px}
@@ -8378,7 +8389,7 @@ function speechInfo(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(
   if(who&&!(TRUST_SP.test(last)||TRUST_SP.test(who)||isPerson(last)||SPK_NOUN.test(last))) who="";
   if(!who) return {who:"",trusted:null};
   return {who, trusted:TRUST_SP.test(who)||TRUST_SP.test(last)||TRUST_P.test(last)}; }
-try{ if(localStorage.getItem("cbsr-test")) window.__T={speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),plan:(w,d)=>dayPlan(w,d),pause:on=>storyPause(on)}}; }catch(e){}
+try{ if(localStorage.getItem("cbsr-test")) window.__T={view:()=>view,mem:()=>mem,keyOf:(w,d)=>keyOf(w,d),speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),plan:(w,d)=>dayPlan(w,d),pause:on=>storyPause(on)}}; }catch(e){}
 function verseQuestion(v){
   const K=verseKind(v), sp=speechInfo(v);
   if(sp&&sp.trusted===false&&K.k!=="prayer") return `이 말은 ${sp.who}의 말입니다. 누구에게, 무엇을 위해 한 말입니까? 앞뒤 이야기는 이 말을 믿을 만한 말로 보여 줍니까?`;
@@ -9206,26 +9217,75 @@ function bindDayRing(){ document.querySelectorAll("[data-rg]").forEach(b=>b.oncl
 const GSTAR=sc=>{ const m=String(sc||"").match(/^(\d+)\/(\d+)$/); if(!m) return sc==="찾음"?3:0; const a=+m[1],b=+m[2]; return a>=b?3:a>=b-1?2:a>0?1:0; };
 function gJourney(w,d,seed){ let M=null; try{ M=storyMapPts(w,d,null); }catch(e){} if(!M||!M.route||M.route.length<3) return null; const pts=M.route.slice(0,6).map(x=>({n:x[0],la:+x[1],lo:+x[2]})).filter(x=>!isNaN(x.la));
   const seen=new Set(), P=pts.filter(x=>!seen.has(x.n)&&seen.add(x.n)); if(P.length<3) return null; return {pts:P,pickd:[]}; }
-const GDESC={order:["장면 순서","이야기의 장면을 일어난 차례대로 놓아 봅니다","본문이 사건을 어떤 차례로 들려주는지 봅니다"],who:["누가 말했나","이 말을 누가 했는지 찾습니다","인물들의 말을 나누어 들어 봅니다"],trip:["여정 따라가기","이야기가 지나간 곳을 차례대로 짚습니다","장소가 바뀔 때 이야기도 바뀝니다"],clue:["되풀이되는 말","여러 번 나오는 말을 찾습니다","나오는 자리마다 무엇이 달라지는지 봅니다"]};
+const GDESC={find:["오늘의 발견","두 곳을 나란히 놓고, 같은 것과 달라진 것을 찾습니다","약 2분 · 본문 근거 찾기"],order:["장면 순서","이야기의 장면을 일어난 차례대로 놓아 봅니다","본문이 사건을 어떤 차례로 들려주는지 봅니다"],who:["누가 말했나","이 말을 누가 했는지 찾습니다","인물들의 말을 나누어 들어 봅니다"],trip:["여정 따라가기","이야기가 지나간 곳을 차례대로 짚습니다","장소가 바뀔 때 이야기도 바뀝니다"],clue:["되풀이되는 말","여러 번 나오는 말을 찾습니다","나오는 자리마다 무엇이 달라지는지 봅니다"]};
+/* 오늘의 발견: 그날 스토리 카드의 견주기(echo)·표(table) 카드로 만든다. 목사님이 검토한 카드라 정답 근거가 분명하다 */
+function gFind(w,d){ let S=null; try{ S=storyDay(dayNo(w,d)); }catch(e){} if(!S||!S.cards) return null;
+  const okE=c=>c.k==="echo"&&(c.pair||[]).length>=2&&c.pair.every(x=>/__/.test(x[0])), okT=c=>c.k==="table"&&c.tbl&&(c.tbl.hl||[]).length&&c.tbl.rows;
+  const C=S.cards, mean=c=>/^의미/.test(c.lab||"");
+  const c=C.find(c=>okE(c)&&mean(c))||C.find(c=>okT(c)&&mean(c))||[...C].reverse().find(okE)||[...C].reverse().find(okT); return c?{c}:null; }
+function gfRefs(txt,w,d){ const p=dayPlan(w,d), out=[]; String(txt||"").replace(/(?:([가-힣]{1,4})\s)?(\d{1,3}):(\d{1,3})(?:[–-](\d{1,3}))?/g,(m,a,c,v,e)=>{ let b=a?PLAN.abbr.indexOf(a)+1:0; if(!b){ const ch=p&&p.ch.find(x=>x[1]===+c); b=ch?ch[0]:(p&&p.ch[0]?p.ch[0][0]:0); } if(b) out.push(`${b}-${c}-${v}-${e||v}`); return m; }); return [...new Set(out)]; }
+const gfLab=id=>{ const [b,c,v,e]=id.split("-"); return `${PLAN.abbr[b-1]} ${c}:${v}${e!==v?"–"+e:""}`; };
+function gfChunks(q){ const out=[]; String(q).split(/(__.+?__)/).forEach(seg=>{ if(!seg) return; if(/^__.+__$/.test(seg)) out.push({t:seg.slice(2,-2),m:1}); else seg.split(/(\s+)/).forEach(t=>{ if(t) out.push({t,m:0,sp:/^\s+$/.test(t)}); }); }); return out; }
+function gfInit(F,w,d){ const c=F.c, G={k:"find",c,st:0,miss:0,hit:new Set(),seen:new Set()};
+  if(c.k==="echo"){ G.qs=c.pair.map(pr=>{ const m=String(pr[0]).match(/^([^:“"]{1,14}):\s*(.*)$/); return {who:pr[2]||(m?m[1].trim():""),q:(m?m[2]:pr[0]).replace(/^["“]|["”]$/g,""),ctx:pr[1]||""}; });
+    G.qs.forEach((x,i)=>{ x.ch=gfChunks(x.q); });
+    const mc=G.qs.reduce((a,x)=>a+x.ch.filter(z=>z.m).reduce((s,z)=>s+z.t.length,0),0), all=G.qs.reduce((a,x)=>a+x.q.replace(/__/g,"").length,0);
+    G.need=G.qs.reduce((a,x)=>a+x.ch.filter(z=>z.m).length,0); if(!G.need||mc>all*.55) G.st=1; /* 거의 다 표시된 말은 찾기 단계를 건너뛴다 */
+    G.refs=gfRefs(c.pair.map(x=>x[1]).join(" ; "),w,d); }
+  else { G.need=c.tbl.hl.length; G.hl=new Set(c.tbl.hl.map(x=>x.join(","))); G.refs=gfRefs(c.tbl.rows.flat().join(" ; ")+" ; "+(c.note||""),w,d).slice(0,5); }
+  G.total=3; G.step=G.st; return G; }
+function gfBody(G){ const c=G.c, sm=t=>smk(t);
+  const steps=`<p class="gfsteps">${[c.k==="echo"?"같은 말 찾기":"눈여겨볼 칸 찾기","달라진 것 보기","본문에서 확인"].map((x,i)=>`<span class="${i===Math.min(G.st,2)?"on":i<G.st?"dn":""}">${i+1} ${x}</span>`).join("")}</p>`;
+  const head=`<p class="gfkick">${c.k==="echo"?"오늘의 발견 · 반복과 대조":"오늘의 발견 · 나란히 보기"}</p><h3 class="gfh2">${sm(c.h||"")}</h3>${steps}`;
+  if(G.st===3) return head+`<p class="gpq">오늘 새로 본 것을 한 문장으로 남겨 보세요. 쓰지 않아도 됩니다.</p><textarea class="gfnote" id="gfNote" rows="3" placeholder="예: 두 번 모두 다윗은 손을 거두었지만, 두 번째에는 이유를 직접 말했다">${esc(G.note||"")}</textarea>`;
+  let body="";
+  if(c.k==="echo"){ const showAll=G.st>=1;
+    body=G.qs.map((x,qi)=>`<div class="gpbub gfq">${x.who?`<small class="gfwho">${esc(x.who)}</small>`:""}${x.ch.map((z,zi)=>{ if(z.sp) return " "; const id=qi+"."+zi, hit=G.hit.has(id);
+        if(showAll) return z.m?`<u>${esc(z.t)}</u>`:esc(z.t);
+        return `<button class="gfw${hit?" ok":""}${G.bad===id?" no":""}" data-gfw="${id}">${esc(z.t)}</button>`; }).join("")}<small>${esc(x.ctx)}</small></div>`).join("");
+    if(G.st===0) body=`<p class="gpq">두 말에서 <b>서로 이어지는 말</b>을 찾아 누르세요 <span class="gfcnt">${G.hit.size}/${G.need}</span></p>`+body; }
+  else { const T=c.tbl, n=T.h.length;
+    let g=`<div></div>`+T.h.map(x=>`<div class="gfth">${esc(x)}</div>`).join("");
+    T.rows.forEach((row,ri)=>{ g+=`<div class="gfk">${esc(row[0])}</div>`+row.slice(1).map((x,j)=>{ const id=ri+","+j, hl=G.hl.has(id), hit=G.hit.has(id)||(G.st>=1&&hl); return `<button class="gfc${hit?" ok":""}${G.bad===id?" no":""}" data-gfc="${id}"${G.st>=1?" disabled":""}>${esc(x)}</button>`; }).join(""); });
+    body=(G.st===0?`<p class="gpq">표에서 <b>가장 눈여겨볼 칸</b>을 찾아 누르세요 <span class="gfcnt">${G.hit.size}/${G.need}</span></p>`:"")+`<div class="gftb" style="grid-template-columns:58px repeat(${n},1fr)">${g}</div>`; }
+  if(G.st===1){ const rv=G.rv; body+=`<p class="gpq">${c.k==="echo"?"두 말은 누가, 어떤 자리에서 했습니까? 무엇이 같고 무엇이 달라졌는지 먼저 생각해 보세요.":"줄마다 무엇이 같고 무엇이 달라졌는지 먼저 생각해 보세요."}</p>`+(rv?`<div class="gfrv">${(c.b||[]).filter(x=>typeof x==="string").map(x=>`<p>${sm(x)}</p>`).join("")}${c.note?`<p>${sm(c.note)}</p>`:""}</div>`:""); }
+  if(G.st===2) body+=`<p class="gpq">근거 구절을 눌러 본문에서 확인하세요.</p><div class="gpspots">${G.refs.map(id=>`<button class="gpref${G.seen.has(id)?" seen":""}" data-gfv="${id}">${G.seen.has(id)?"✓ ":""}${esc(gfLab(id))} 읽기 ›</button>`).join("")}</div>`;
+  return head+body; }
+function gfFoot(G){ if(G.st===0) return ""; if(G.st===1) return G.rv?`<button class="gpbtn" data-gfn="2">본문에서 확인하기</button>`:`<button class="gpbtn" data-gfrv="1">생각해 보았습니다 · 보기</button>`;
+  if(G.st===2) return `<button class="gpbtn" data-gfn="3">${G.seen.size?"발견 마치기":"읽지 않고 마치기"}</button>`; return ""; }
 function chSave(key,k,res){ const R=chRec(key), old=R[k]; if(!old||GSTAR(res)>=GSTAR(old)) R[k]=res; save(); }
 const chFuture=(w,d)=>dayDiff(today0(),dateOf(w,d))>0;
+/* 이번 주 다시 보기: 지난 7일 동안 내가 고른 말씀, 덜 마친 발견, 남긴 한 줄 */
+function gWeekHTML(){ const hn=dayNo(here.w,here.d), items=[], notes=[]; let picks=0;
+  for(let n=hn;n>=Math.max(1,hn-6);n--){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(!dayPlan(w,d)) continue; const key=keyOf(w,d), q=mem.qt[key], R=(mem.ch||{})[key]||{};
+    if(q&&q.done&&q.kv) picks++; if(R.findNote) notes.push([w,d,R.findNote]);
+    if(n<hn&&mem.done[key]&&GSTAR(R.find)<3){ const F=gFind(w,d); if(F) items.push([w,d,F,GSTAR(R.find)]); } }
+  if(!picks&&!items.length&&!notes.length) return "";
+  const dl=(w,d)=>{ const dt=dateOf(w,d); return `${dt.getMonth()+1}/${dt.getDate()}(${DAYN[dt.getDay()]})`; };
+  return `<p class="gmore">이번 주 다시 보기</p><section class="gextra gweek">`+
+    (picks?`<button class="gwide" data-gplay="card"><b>내가 붙잡은 말씀</b><span>이번 주에 고른 구절 ${picks}개로 복습하기</span></button>`:"")+
+    items.slice(0,3).map(([w,d,F,st])=>`<button class="gwide" data-gfday="${w}-${d}"><b>${smk(F.c.h||"오늘의 발견")}</b><span>${dl(w,d)} · ${st?"★".repeat(st)+" 다시 해 보기":"아직 안 한 발견"}</span></button>`).join("")+
+    notes.slice(0,3).map(([w,d,t])=>`<p class="gwnote">“${esc(t)}”<small>${dl(w,d)} 내가 본 것</small></p>`).join("")+`</section>`; }
 function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=chRec(key); let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
   const nq=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
   const cardBtn=`<button class="gwide" data-gplay="card"><b>말씀 카드 빈칸</b><span>${nq?`모은 카드 ${nq}장`:"묵상 노트를 하루 마치면 열립니다"}</span></button>`;
   if(chFuture(w,d)){ const dt=dateOf(w,d); return dayRingHTML()+`<section class="sec glock"><span class="label">도전</span><p class="lead">이 날의 도전은 <b>${esc(fmt(dt,{month:"long",day:"numeric"}))}</b>에 열립니다. 같은 날 함께 읽고 풀어 봅니다.</p></section><section class="gextra">${cardBtn}</section>`; }
-  const can={order:!!(BIBLE&&gOrder2(w,d,key)),who:!!(BIBLE&&gWho(w,d,key,true)),trip:!!(BIBLE&&gJourney(w,d,key)),clue:!!(BIBLE&&gClue(w,d,key))};
-  const K=["order","who","trip","clue"].filter(k=>can[k]);
+  const F=gFind(w,d); const can={find:!!F,order:!!(BIBLE&&gOrder2(w,d,key)),who:!!(BIBLE&&gWho(w,d,key,true)),trip:!!(BIBLE&&gJourney(w,d,key)),clue:!!(BIBLE&&gClue(w,d,key))};
+  const K=["find","order","who","trip","clue"].filter(k=>can[k]);
   const star=n=>`<span class="gstars" aria-label="별 ${n}개">${[0,1,2].map(i=>`<i class="${i<n?"on":""}">★</i>`).join("")}</span>`;
   let PS=[]; try{ PS=[...new Set(storySlides(w,d).map(x=>x.ph).filter(Boolean))]; }catch(e){}
   let h=dayRingHTML();
   if(K.length){ const k0=K[0], D0=GDESC[k0], tp0=PS[1]||ph;
-    h+=`<section class="grecw"><button class="grec" data-gplay="${k0}"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 추천 도전</small><b>${D0[0]}</b><span>${D0[1]}</span><em>${D0[2]}</em>${star(GSTAR(R[k0]))}</button></section>`;
+    if(k0==="find") h+=`<section class="grecw"><button class="grec gfrec" data-gplay="find"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 발견 · ${F.c.k==="echo"?"반복과 대조":"나란히 보기"}</small><b>${smk(F.c.h||"")}</b><span>${D0[1]}</span><ol class="gfpre"><li>${F.c.k==="echo"?"같은 말 찾기":"눈여겨볼 칸 찾기"}</li><li>달라진 것 보기</li><li>본문에서 확인</li></ol><em>${D0[2]}</em>${star(GSTAR(R.find))}</button></section>`;
+    else h+=`<section class="grecw"><button class="grec" data-gplay="${k0}"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 추천 도전</small><b>${D0[0]}</b><span>${D0[1]}</span><em>${D0[2]}</em>${star(GSTAR(R[k0]))}</button></section>`;
     const rest=K.slice(1); if(rest.length) h+=`<p class="gmore">다른 방식으로 살펴보기</p><section class="ghub">`+rest.map((k,i)=>{ const tp=PS[(i*2+3)%Math.max(1,PS.length)]||ph; return `<button class="gtile" data-gplay="${k}"${tp?` style="--gp:url('${esc(tp.u)}')"`:""}><b>${GDESC[k][0]}</b>${star(GSTAR(R[k]))}</button>`; }).join("")+`</section>`; }
+  h+=gWeekHTML();
   h+=`<section class="gextra">${cardBtn}<details class="gquiz"${view.quizOpen?" open":""} id="gQuiz"><summary><b>본문 퀴즈</b><span>O/X · 4지선다</span></summary>${p?renderQuiz(key,null,"day"):""}</details></section>`;
   return h; }
-function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`<div class="gptop"><b>${esc({order:"장면 순서",who:"누가 말했나",clue:"되풀이되는 말",trip:"여정 따라가기",card:"말씀 카드 빈칸"}[G.k])}</b><span class="gpdots">${G.total?Array.from({length:G.total},(_,i)=>`<i class="${i<G.step?"on":""}"></i>`).join(""):""}</span><button class="gpx" data-gpx="1" aria-label="닫기">✕</button></div>`;
+function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`<div class="gptop"><b>${esc({find:"오늘의 발견",order:"장면 순서",who:"누가 말했나",clue:"되풀이되는 말",trip:"여정 따라가기",card:"말씀 카드 빈칸"}[G.k])}</b><span class="gpdots">${G.total?Array.from({length:G.total},(_,i)=>`<i class="${i<G.step?"on":""}"></i>`).join(""):""}</span><button class="gpx" data-gpx="1" aria-label="닫기">✕</button></div>`;
   let body="";
-  if(G.k==="order"){ const {items,shown,pickd,done}=G; G.used ||= new Set(); G.phs ||= {}; body=`<p class="gpq">${done?`${G.score}/${items.length} 맞혔습니다 · 장면을 누르면 본문으로 갑니다`:"먼저 일어난 장면부터 누르세요"}</p><div class="gpgrid">`+shown.map(i=>{ const v=items[i], pos=pickd.indexOf(i), ok=done?pos===i:null; let ph=G.phs[i]; if(ph===undefined&&G.sph&&G.sph[i]){ ph=G.phs[i]=G.sph[i]; } if(ph===undefined){ try{ ph=phPick(v.t,[],GENRE_OF(v.b),"go"+v.b+v.c+v.v,G.used,null,{}); }catch(e){ ph=null; } if(ph) G.used.add(ph.id); G.phs[i]=ph; }
+  if(G.k==="find") body=gfBody(G);
+  else if(G.k==="order"){ const {items,shown,pickd,done}=G; G.used ||= new Set(); G.phs ||= {}; body=`<p class="gpq">${done?`${G.score}/${items.length} 맞혔습니다 · 장면을 누르면 본문으로 갑니다`:"먼저 일어난 장면부터 누르세요"}</p><div class="gpgrid">`+shown.map(i=>{ const v=items[i], pos=pickd.indexOf(i), ok=done?pos===i:null; let ph=G.phs[i]; if(ph===undefined&&G.sph&&G.sph[i]){ ph=G.phs[i]=G.sph[i]; } if(ph===undefined){ try{ ph=phPick(v.t,[],GENRE_OF(v.b),"go"+v.b+v.c+v.v,G.used,null,{}); }catch(e){ ph=null; } if(ph) G.used.add(ph.id); G.phs[i]=ph; }
       return `<button class="gpcard${pos>=0?" on":""}${done?(ok?" ok":" no"):""}" ${done?`data-gpv="${v.b}-${v.c}-${v.v}"`:`data-gpo="${i}"`}>${ph?`<img alt="" src="${esc(ph.u)}" referrerpolicy="no-referrer">`:""}<span>${esc(gcut(v.t,46))}</span>${pos>=0?`<em>${pos+1}</em>`:""}${done?`<small>${esc(vref2(v))}${ok?"":` · ${i+1}번째`}</small>`:""}</button>`; }).join("")+`</div>`; }
   else if(G.k==="who"){ const q=G.qs[G.i]; if(!q) body=`<p class="gpbig">${G.score}/${G.qs.length}</p>`; else { const col=n=>`hsl(${phHash(n)%360} 45% 42%)`;
       body=`<div class="gpbub">“${esc(gcut(q.t,110))}”${G.a?`<button class="gpref" data-gpv="${q.v.b}-${q.v.c}-${q.v.v}">${esc(vref2(q.v))} 본문에서 보기 ›</button>`:""}</div><div class="gpwho">${q.opts.map(o=>`<button class="gpav${G.a?(o===q.ans?" ok":o===G.a?" no":""):""}" data-gpw="${esc(o)}"${G.a?" disabled":""}><span style="background:${col(o)}">${esc(o.replace(/\(.*\)/,"").slice(0,1))}</span><b>${esc(o)}</b></button>`).join("")}</div>`; } }
@@ -9234,15 +9294,16 @@ function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`
       const path=G.pickd.map(i=>`${sx(P[i].lo)},${sy(P[i].la)}`).join(" ");
       body=`<p class="gpq">${G.done?`${G.score}/${P.length}`:"이야기가 지나간 순서대로 지명을 누르세요"}</p><div class="gpmap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${path}" fill="none" stroke="#e2b874" stroke-width="1.2" stroke-dasharray="2 1.5"/></svg>${P.map((x,i)=>{ const pos=G.pickd.indexOf(i), ok=G.done?pos===i:null; return `<button class="gppt${pos>=0?" on":""}${G.done?(ok?" ok":" no"):""}" style="left:${sx(x.lo)}%;top:${sy(x.la)}%" data-gpt="${i}"${G.done?" disabled":""}><i>${pos>=0?pos+1:""}</i><span>${esc(x.n)}</span></button>`; }).join("")}</div>`; }
   else if(G.k==="card"){ const C=G.c; if(!C) body=`<p class="gpq">묵상 노트를 마치면 그날 고른 '붙잡을 한 구절'이 말씀 카드로 모입니다. 카드가 한 장 이상 모이면 그 구절의 빈칸 문제가 열립니다.</p>`; else body=`<div class="gpbub">${esc(C.text)}<small>${esc(C.ref)}</small></div><div class="gpbubs">${C.opts.map(o=>`<button class="gpb${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gpk="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`; }
-  const fin=G.done||(G.k==="who"&&G.i>=G.qs.length)||(G.k!=="order"&&G.k!=="trip"&&G.k!=="who"&&G.a);
-  const nextBtn=G.k==="who"&&G.a&&G.i<G.qs.length?`<button class="gpbtn" data-gpn="1">${G.i<G.qs.length-1?"다음":"결과"}</button>`:"";
+  const fin=G.k==="find"?G.st===3:(G.done||(G.k==="who"&&G.i>=G.qs.length)||(G.k!=="order"&&G.k!=="trip"&&G.k!=="who"&&G.a));
+  const nextBtn=G.k==="find"?gfFoot(G):G.k==="who"&&G.a&&G.i<G.qs.length?`<button class="gpbtn" data-gpn="1">${G.i<G.qs.length-1?"다음":"결과"}</button>`:"";
   return `<div class="gplay" id="gPlay">${top}<div class="gpbody">${body}</div><div class="gpfoot">${nextBtn}${fin?`<div class="gpres">${[0,1,2].map(i=>`<i class="${i<GSTAR(G.res)?"on":""}">★</i>`).join("")}</div><button class="gpbtn ghost" data-gpagain="1">다시</button><button class="gpbtn" data-gpx="1">닫기</button>`:""}</div></div>`; }
 function gClueSpots(C){ const vs=C.all||[C.first,C.last], n=vs.length, sel=[...new Set(n<=3?vs:[vs[0],vs[Math.floor((n-1)/2)],vs[n-1]])];
   const mk=v=>{ const t=v.t, i=t.indexOf(C.ans), a=Math.max(0,i-16); return esc((a?"…":"")+t.slice(a,i))+`<b>${esc(C.ans)}</b>`+esc(t.slice(i+C.ans.length,i+C.ans.length+18))+"…"; };
   return `<p class="gpnote">나오는 자리마다 무엇이 달라지는지 보세요.</p><div class="gpspots">${sel.map(v=>`<button class="gpref" data-gpv="${v.b}-${v.c}-${v.v}"><small>${esc(vref2(v))}</small>${mk(v)}</button>`).join("")}</div>`; }
 function gpGoVerse(id){ gpClose(); view.tab="read"; view.open=true; view.v2shut=false; render(); setTimeout(()=>{ const el=document.getElementById("v-"+id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2600); } },60); }
 function gpOpen(k){ const {w,d}=view, key=keyOf(w,d), seed=key+":"+Date.now(); if(k!=="card"&&chFuture(w,d)) return;
-  if(k==="order"){ const o=gOrder2(w,d,seed); if(!o) return; view.gp={k,...o,pickd:[],total:o.items.length,step:0}; }
+  if(k==="find"){ const F=gFind(w,d); if(!F) return; view.gp=gfInit(F,w,d); view.gp.note=(chRec(key).findNote||""); }
+  else if(k==="order"){ const o=gOrder2(w,d,seed); if(!o) return; view.gp={k,...o,pickd:[],total:o.items.length,step:0}; }
   else if(k==="who"){ const o=gWho(w,d,seed,true); view.gp={k,qs:o.qs,i:0,score:0,total:o.qs.length,step:0}; }
   else if(k==="clue"){ view.gp={k,c:gClue(w,d,seed)}; }
   else if(k==="trip"){ const o=gJourney(w,d,seed); const sh=shuf(o.pts,rngOf(seed)); view.gp={k,pts:sh,ord:o.pts.map(x=>sh.indexOf(x)),pickd:[],total:sh.length,step:0}; }
@@ -9252,7 +9313,16 @@ function gpShow(){ document.getElementById("gPlay")?.remove(); if(!view.gp) retu
 function gpClose(pop){ if(pop!==true) ovDone(gpClose); view.gp=null; document.getElementById("gPlay")?.remove(); document.documentElement.classList.remove("story-on"); render(); }
 function gpBind(){ const G=view.gp, key=keyOf(view.w,view.d), el=document.getElementById("gPlay"); if(!el) return;
   el.querySelectorAll("[data-gpv]").forEach(b=>b.onclick=()=>gpGoVerse(b.dataset.gpv));
-  el.querySelectorAll("[data-gpx]").forEach(b=>b.onclick=gpClose);
+  el.querySelectorAll("[data-gpx]").forEach(b=>b.onclick=()=>{ if(G.k==="find"&&G.st===3){ const t=(document.getElementById("gfNote")||{}).value; if(t!==undefined){ const R=chRec(key); if(t.trim()) R.findNote=t.trim().slice(0,200); else delete R.findNote; save(); } } gpClose(); });
+  if(G.k==="find"){ const re=()=>{ const y=el.querySelector(".gpbody")?.scrollTop||0; gpShow(); const b2=document.querySelector("#gPlay .gpbody"); if(b2) b2.scrollTop=y; };
+    el.querySelectorAll("[data-gfw],[data-gfc]").forEach(b=>b.onclick=()=>{ const id=b.dataset.gfw||b.dataset.gfc; if(G.hit.has(id)) return;
+      let ok; if(G.c.k==="echo"){ const [qi,zi]=id.split(".").map(Number); ok=!!G.qs[qi].ch[zi].m; } else ok=G.hl.has(id);
+      if(ok){ G.hit.add(id); G.bad=null; } else { G.miss++; G.bad=id; }
+      if(G.hit.size>=G.need){ G.st=1; G.step=1; } re(); });
+    el.querySelectorAll("[data-gfrv]").forEach(b=>b.onclick=()=>{ G.rv=true; re(); });
+    el.querySelectorAll("[data-gfv]").forEach(b=>b.onclick=()=>{ G.seen.add(b.dataset.gfv); sVerseSheet(b.dataset.gfv); re(); });
+    el.querySelectorAll("[data-gfn]").forEach(b=>b.onclick=()=>{ G.st=+b.dataset.gfn; G.step=Math.min(G.st,3);
+      if(G.st===3){ const st=G.miss===0?3:G.miss<=2?2:1; G.res=`${G.seen.size?st:Math.min(st,2)}/3`; chSave(key,"find",G.res); } re(); }); }
   el.querySelectorAll("[data-gpagain]").forEach(b=>b.onclick=()=>gpOpen(G.k));
   el.querySelectorAll("[data-gpo]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.gpo, p=G.pickd.indexOf(i); if(p>=0) G.pickd.splice(p); else G.pickd.push(i); G.step=G.pickd.length; if(G.pickd.length===G.items.length){ G.done=true; G.score=G.pickd.filter((x,k)=>x===k).length; G.res=`${G.score}/${G.items.length}`; chSave(key,"order",G.res); } gpShow(); });
   el.querySelectorAll("[data-gpw]").forEach(b=>b.onclick=()=>{ G.a=b.dataset.gpw; if(G.a===G.qs[G.i].ans) G.score++; G.step=G.i+1; gpShow(); });
@@ -9353,7 +9423,7 @@ function bind(){
   m.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>showClue(+b.dataset.clue));
   bindAccount(m); bindInstall(); if(view.tab==="read") churchCounts();
   { const ts=document.getElementById("toStory"); if(ts) ts.onclick=()=>storyOpen(0); }
-  if(window.CBSR_V2){ if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>gpOpen(x.dataset.gplay)); const gq=document.getElementById("gQuiz"); if(gq) gq.ontoggle=()=>{ view.quizOpen=gq.open; }; } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge") bindDayRing(); }
+  if(window.CBSR_V2){ if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>gpOpen(x.dataset.gplay)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const gq=document.getElementById("gQuiz"); if(gq) gq.ontoggle=()=>{ view.quizOpen=gq.open; }; } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge") bindDayRing(); }
   bindQT(m);
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
