@@ -1670,6 +1670,7 @@ details.mine summary{cursor:pointer;color:var(--accent);font-weight:600;padding:
 .fbbox{display:grid;gap:8px}
 .fbbox input{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
 .adminlink{text-align:center;margin-top:18px}
+.admlinks{margin:6px 0 22px}.admlh{font-size:13px;font-weight:700;color:var(--muted);margin:14px 0 6px}.admlk{display:block;padding:10px 12px;border:1px solid var(--line,#ddd);border-radius:10px;margin-bottom:6px;text-decoration:none;color:inherit}.admlk b{display:block;font-size:15px}.admlk span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 .linkbtn{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px;justify-self:start}
 .uid{font-family:ui-monospace,monospace;font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;word-break:break-all;margin:0}
 .admhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
@@ -8759,9 +8760,15 @@ function trackPos(){
 }
 window.addEventListener("scroll",trackPos,{passive:true});
 
+/* 관리자: 꼭 필요한 주소 모음 */
+function adminLinks(){
+  const G=[["지금 쓰는 앱",[["index.html","v1 · 교인들이 지금 쓰는 판","2027년 1월 1일에 v2로 바꿀 때까지 그대로"],["v2.html","v2 · 2027년부터 쓸 새 판","365 통독(2027판)"]]],
+    ["미리 보기",[["v2.html?now=2027-01-01","v2를 2027년 1월 1일로 열기","날짜를 바꿔 본 뒤에는 아래 '오늘 날짜로 되돌리기'"],["v2.html?pv=B","v2 · 2028판 카드","2028년에 쓸 B판"],["v2.html?p=rj","v2 · 리딩지저스","2027년에는 메뉴에서 숨김, 이 주소로만 열림"],["v2.html?now=0","오늘 날짜로 되돌리기",""]]],
+    ["검토할 것",[["rj.html","리딩지저스 카드 검토 (36–45주)","목사님 검토가 끝나면 첫 화면을 v2로 바꿉니다"],["review.html","365 카드 검토 (날마다 중심 한 줄·카드 흐름)",""],["gallery.html","그림 목록","그림마다 어느 카드에 쓰였는지"],["v2.html?review=1","카드 보면서 검토 메모 켜기","이 기기에서 계속 켜짐 · 끄기는 ?review=0"]]]];
+  return `<h2>주소 모음</h2><div class="admlinks">${G.map(([h,L])=>`<p class="admlh">${h}</p>`+L.map(([u,t,d])=>`<a class="admlk" href="${u}" target="_blank" rel="noopener"><b>${t}</b>${d?`<span>${d}</span>`:""}</a>`).join("")).join("")}</div>`; }
 /* 관리자 */
 function renderAdmin(){ setTimeout(loadAdmin,0);
-  return `<section class="sec"><button class="linkbtn" id="adminBack">‹ 돌아가기</button><span class="label">관리자</span><div id="devBox"></div><h2>피드백 모아 보기</h2><div id="adminBox"><p class="lead">확인하는 중…</p></div></section>`; }
+  return `<section class="sec"><button class="linkbtn" id="adminBack">‹ 돌아가기</button><span class="label">관리자</span><div id="devBox"></div>${adminLinks()}<h2>피드백 모아 보기</h2><div id="adminBox"><p class="lead">확인하는 중…</p></div></section>`; }
 const fmtAt=t=>{ const d=new Date(t); return `${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}. ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
 async function loadAdmin(){
   const box=document.getElementById("adminBox"); if(!box) return;
