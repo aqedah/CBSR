@@ -246,7 +246,7 @@ g16_15|g|||ruins,dawn,smoke,pasture||7|bright|50|전쟁이 끝난 들의 무너�
 g17_01|s|3:23;5:16;16:8;43:7;15:3|초막|booth,oil_lamp,dusk||4,7,9|dark|40|지붕 위의 초막과 등잔|||setting
 g17_02|s|5:26;3:23;2:23|첫 열매/맏물|basket,grapes,wheat_field,priest||4,5|warm|40|첫 열매 바구니|||object
 g17_03|s|3:23;44:2|칠칠절/오순절/떡 두 개|bread,wheat_field||4,10|warm|60|구운 떡 두 덩이와 밀|||object
-g17_04|s|10:6;13:15|궤 앞에서 춤/여호와 앞에서 춤/언약궤|ark,dance,priest,trumpet|예루살렘|6|warm|45|궤 앞에서 춤추는 사람||풍악/잔치|scene
+g17_04|s|10:6;13:15|궤 앞에서 춤/여호와 앞에서 춤/언약궤|ark,dance,priest,trumpet|예루살렘|6|warm|45|궤 앞에서 춤추는 사람|뺌: 춤추는 느낌이 없고 웃사가 궤를 놓치는 장면처럼 보임(목사님 2026-10-28)|풍악/잔치|scene
 g17_05|s|2:15;7:11;9:18|미리암/소고|timbrel,woman,dance,sea||3,6|bright|50|소고를 들고 춤추는 여인들|||scene
 g17_06|s|13:15-16;13:25;14:5;14:29;15:3;16:12|제금/비파/노래하는 자/찬양대|singers,lyre,priest,temple_stones||6,7|warm|50|성전 뜰의 레위인 찬양대|||scene
 g17_07|s|19:81;4:10;3:23;29:2|초하루/뿔나팔/양각 나팔|shofar,city_wall,night_sky,moon||4,6,7|dark|25|성벽 위의 양뿔 나팔과 초승달|||scene
@@ -343,8 +343,8 @@ g24_07|s|44:28;49:3-4;49:6;50:1;51:4;55:1-2;57:1|쇠사슬에 매/사슬에 매/
 g24_08|s|42:15|맏아들은 밭에/노하여 들어가고자 아니하|man,house,feast,night_sky||9|dark|50|잔치 집 밖에 팔짱 낀 맏아들|뺌: 옷이 요즘 옷처럼 보임||scene
 g24_09|s|42:24|엠마오/길 가는 자들/동행하시|road,sunset,disciples,jesus|엠마오|9|warm|50|해 질 녘 길을 함께 걷는 세 사람|||scene
 g24_10|s|1:16;1:21|하갈/샘물 곁/물이 떨어진지라/브엘라해로이|woman,well,desert,sorrow||2|bright|60|광야 우물가에 웅크린 여인|||scene
-g24_11|s|6:3-4|요단을 건너/궤를 멘 제사장/물이 끊어지/마른 땅으로 건너|ark,priest,river,water_wall|요단|5|bright|50|물이 멈춘 요단을 건너는 언약궤||홍해|scene
-g24_12|s|4:10;6:6|궤가 떠날/궤가 앞서/언약궤가 앞|ark,camp,crowd,desert||4,5|warm|50|진 앞에서 나아가는 언약궤 행렬|||scene
+g24_11|s|6:3-4|요단을 건너/궤를 멘 제사장/물이 끊어지/마른 땅으로 건너|ark,priest,river,water_wall|요단|5|bright|50|물이 멈춘 요단을 건너는 언약궤|뺌: 채가 사방으로 나 있음 — 고증 어긋남(목사님 2026-10-28)|홍해|scene
+g24_12|s|4:10;6:6|궤가 떠날/궤가 앞서/언약궤가 앞|ark,camp,crowd,desert||4,5|warm|50|진 앞에서 나아가는 언약궤 행렬|뺌: 행진하는데 장막이 쳐져 있음(목사님 2026-10-28)||scene
 g24_13|s|44:27;32:1|밀을 바다에/배를 가볍게/바다에 던져|ship,sea,grain||10,7|bright|50|곡식 자루를 실은 배 위|||scene
 g24_14|s|8:2;29:3;66:14;43:4|낫을 대/낫을 쓰/곡식을 베/추수하는 자|sickle,wheat_field,harvest,hands||5,8,9|warm|50|낫으로 밀을 베는 손|||scene
 g24_15|s|||crowd,city_gate,door||5|dark|50|닫힌 성문 앞의 무리|뺌: 문틈의 붉은 빛이 무엇인지 알기 어려움||scene
