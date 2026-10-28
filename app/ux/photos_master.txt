@@ -464,8 +464,6 @@ g35_10|s|4:17;2:16;58:9|싹 난 지팡이/만나 항아리/증거궤 앞|ark,rod
 g35_11|s|6:3;6:4|요단/언약궤를 멘 제사장/물이 그치고|ark,river,stones,crowd||5|bright|50|물이 갈라진 요단 가운데의 언약궤(수 3–4, 널리 알려진 그림 방식)|||scene
 g35_12|s|6:6|여리고/성벽이 무너져/나팔을 불|ark,city_wall,trumpet,ruins|여리고|5|warm|50|무너지는 여리고 성벽 앞의 언약궤(수 6)|||scene
 g35_13|s|9:5|다곤/엎드러져/머리와 두 손목|ark,idol,temple,broken_statue|아스돗|5|dark|50|엎드러져 부서진 다곤 상 앞의 언약궤(삼상 5)|||scene
-g35_14|s|||ark,cave||5|dark|50|동굴 속 언약궤|뺌: 본문에 없는 장면(언약궤를 숨긴 동굴 전설)||object
-g35_15|s|||ark,jesus,light||9|bright|50|언약궤 뒤에 선 예수|뺌: 언약궤와 예수를 한 화면에 합침(해석을 그림으로 단정)||symbolic
 g36_01|s|4:2|진영/회막을 중심/사방에 진|camp,tents,tabernacle,banners||4|warm|50|회막을 가운데 둔 지파별 진영(민 2)|||landscape
 g36_02|s|4:4;4:7|레위인/메게 할지니/휘장과 덮개|levites,carry,curtains,cart||4|warm|50|덮개 짐을 어깨에 진 레위인들(민 4)|||scene
 g36_03|s|4:7|수레 여섯/소 열둘/헌물|carts,oxen,tabernacle_court||4|warm|50|회막 앞에 늘어선 덮개 수레와 소들(민 7)|||scene
@@ -480,7 +478,6 @@ g36_11|s|4:20|에돔/왕의 큰길/지나가지 못하리라|canyon,army,road|�
 g36_12|s|4:22|발람/나귀/포도원 사이 좁은 길/여호와의 사자|donkey,man,stone_walls,staff,light||4|bright|50|포도원 담 사이에 주저앉은 나귀와 지팡이를 든 발람(민 22)|||scene
 g36_13|s|4:23;4:24|높은 곳/진 친 것을/장막이 어찌 그리 아름다운지|camp,tents,rocks,valley||4|warm|50|바위 꼭대기에서 내려다본 진영(민 23–24)|||landscape
 g36_14|s|4:27;4:36|슬로브핫의 딸들/회막 문 앞|women,tabernacle,curtains||4|warm|50|회막 문 앞에 선 다섯 여인(민 27)|||scene
-g36_15|s|||camp,river,oasis||4|bright|50|모압 평지 진영과 요단|뺌: 강이 형광 띠처럼 그려짐||landscape
 g37_01|s|13:15;13:16;13:25|노래하는 자/제금/비파/수금|musicians,cymbals,lyre,levites||6|warm|50|제금과 수금을 든 레위인 노래하는 자들(대상 15)|||scene
 g37_02|s|13:22;14:2|다듬은 돌/백향목/놋/준비하였더라|stones,cedar,bronze,building_materials||6|bright|50|쌓아 둔 다듬은 돌과 백향목과 놋(대상 22)|||object
 g37_03|s|14:7;11:18|불이 하늘에서 내려/엎드려 경배|fire,altar,bowing||6|warm|50|제단 위로 내린 불과 엎드린 사람들(대하 7)|||scene
