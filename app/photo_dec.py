@@ -49,3 +49,22 @@ for l in out:
 P=[{k:r[k] for k in ('id','u','w','h','tags','pl','mood','fx','set','sets','scope','refs','kw','memo','deny','role')} for r in rows if not r['out']]
 json.dump(P,open(R+'/ux/photos.json','w'),ensure_ascii=False,separators=(',',':'))
 json.dump(rows,open(R+'/ux/photos_master.json','w'),ensure_ascii=False)
+
+# 그림 정책(2026-10-30): 갤러리에서 관리자가 누른 '승인'(ok)·'보류'(hold)를 ux/photo_policy.json의 reviewStatus로 옮깁니다.
+# 갤러리에서 취소하면(결정이 사라지면) 갤러리가 적은 상태만 지웁니다. 사람이 파일에 직접 적은 값은 건드리지 않습니다.
+try:
+  import photo_policy as _pp, datetime as _dt
+  _P=_pp.load(); _A=_P.setdefault('assets',{}); _ch=[]
+  for i,a in dec.items():
+    if a in ('ok','hold'):
+      e=_A.setdefault(i,{}); want='approved' if a=='ok' else 'hold'
+      if e.get('reviewStatus')!=want:
+        e['reviewStatus']=want; e['review']=dict(e.get('review') or {},by='gallery-admin',at=_dt.date.today().isoformat()); _ch.append(i+' '+want)
+  if dec:  # 결정 목록을 읽은 때만 취소를 반영(인터넷이 안 되면 그대로 둠)
+    for i,e in list(_A.items()):
+      if (e.get('review') or {}).get('by')=='gallery-admin' and dec.get(i) not in ('ok','hold') and e.get('reviewStatus') in ('approved','hold'):
+        e.pop('reviewStatus',None); e['review'].pop('by',None); e['review'].pop('at',None); _ch.append(i+' 취소')
+        if not e['review']: e.pop('review')
+        if not e: _A.pop(i)
+  if _ch: _pp.save(_P); print('그림 정책 반영:',', '.join(_ch))
+except Exception as _e: print('그림 정책 반영 건너뜀:',_e)

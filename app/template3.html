@@ -2708,18 +2708,25 @@ function ERA_OK(b,c){ if(b===1) return c<=11?[1,11,8]:c>=37?[1,2,3,8]:[1,2,8]; i
    두루 쓰는 배경(scope "g")은 그 시대 묶음(sets)이 맞을 때만 씁니다. 같은 장면의 둘째 그림(g21 ↔ g11)은 하루에 한 번만 */
 const PH_TW2={g20_09:"g24_02",g24_02:"g20_09",g23_12:"g09_15",g09_15:"g23_12",g22_05:"g09_06",g09_06:"g22_05",g23_04:"g09_11",g09_11:"g23_04"};
 const PH_TWIN=id=>/^g21_/.test(id)?"g11_"+id.slice(4):/^g11_/.test(id)?"g21_"+id.slice(4):(PH_TW2[id]||"");
+/* 그림 정책(GPT 라이브러리 설계 2026-10-30): 보류·제외는 어느 길로도 쓰지 않음. 막는 곳(bu)에 오늘 장이 들면 쓰지 않음.
+   수동 전용·연구 자료·제한 승인은 관리자가 번호로 지정했을 때만(자동 선택에서 뺌) */
+function phGate(p,CH,manual){ if(!p||p.rs==="hold"||p.rs==="out") return false;
+  if(p.bu&&(CH||[]).some(([b,c])=>p.bu.some(([B,a,z])=>B===b&&c>=a&&c<=z))) return false;
+  if(!manual&&(p.ap==="manual-only"||p.ak==="ref"||p.rs==="restricted")) return false; return true; }
 function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt.era||null, CH=opt.ch||[]; const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
-  if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f) return f; }
+  if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f&&phGate(f,CH,true)) return f; }
   const kt=opt.kwText||text, dayB=CH.length?CH[0][0]:0;
   const want=new Set(), hs=new Set(); PH_KW.forEach(([ws,t])=>{ if(ws.some(w=>phHas(kt,w))) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
   /* 카드가 밝힌 장절: 다른 책 이름이 붙은 인용(예: 요삼 1:5)은 오늘 책의 장으로 보지 않습니다 */
   const cited=new Set(); for(const m of kt.matchAll(/([가-힣]{1,3})?\s?(\d{1,3}):\d/g)){ const ab=m[1]; if(ab&&typeof PLAN!=="undefined"&&PLAN.abbr.includes(ab)&&!CH.some(x=>PLAN.abbr[x[0]-1]===ab)) continue; cited.add(+m[2]); }
   const CHc=CH.filter(x=>cited.has(x[1])), CH2=CHc.length?CHc:CH;
   const inRef=p=>(p.refs||[]).some(([b,a,z])=>CH2.some(x=>x[0]===b&&x[1]>=a&&x[1]<=z));
-  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9;
+  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9; let vaBest=null;
   /* 때: 카드 글에 밤·저녁을 가리키는 말이 없으면 밤 사진을 피합니다(대부분의 장면은 낮) */
   const nightOK=/밤|저녁|어두|어둠|흑암|새벽|별|달빛|등불|등잔|촛대|해 질|해가 지|횃불/.test(kt)||[...hs].some(t=>/^(oil_lamp|night|night_sky|darkness|stars|moon|torch)$/.test(t));
   for(const p of P){ if(used.has(p.id)||used.has(PH_TWIN(p.id))) continue;
+    if(!phGate(p,CH,false)) continue;
+    if(opt.verse&&!vaBest&&p.va&&p.va.some(([b,c,f,t])=>b===opt.verse[0]&&c===opt.verse[1]&&opt.verse[2]>=f&&opt.verse[2]<=t)&&!(p.deny||[]).some(w=>kt.includes(w))){ vaBest=p; continue; }
     if((p.deny||[]).some(w=>kt.includes(w))) continue;
     let s=0; const sets=p.sets||(p.set?[p.set]:[]), eraOk=!eok||!sets.length||sets.some(x=>eok.includes(x));
     const tagHit=(p.tags||[]).some(t=>hs.has(t)||want.has(t)), plHit=(p.pl||[]).some(n=>phHas(kt,n));
@@ -2743,7 +2750,7 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
     if(opt.mood&&p.mood&&!(p.tm==="n"&&!nightOK)){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
     if(opt.avoid&&p.scope!=="s"&&opt.avoid.has(p.id)) s-=6;
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
-  return best; }
+  return vaBest||(opt.minScore!=null&&bs<opt.minScore?null:best); }
 /* 이야기 카드 목록: 손으로 쓴 카드(STORYC)가 있으면 그것, 없으면 본문 자료로 자동 구성 → 뒤에 QT 네 단계 */
 const smk=t=>esc(t||"").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/__(.+?)__/g,"<u>$1</u>").replace(/\n/g,"<br>");
 const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==="string"?x:(x.q||[])[0]),...(s.pair||[]).map(x=>x[0])].filter(Boolean).join(" ").replace(/\*\*|__/g,"");
@@ -3210,6 +3217,9 @@ async function mvJonah(map,M,Mt,still){ const fr=map.getContainer(), alive=()=>d
   await mvWait(still?0:1200); if(!alive()) return; const jn=mvMarker(map,"man",{at:B,w:44,name:"요나",z:700}); jn.getElement()?.querySelector(".chm")?.classList.add("popin"); mvBub(map,B,[32,3,3]); await mvWait(still?0:2600); if(alive()) mvBub(map,B,[32,3,4],false,"그 뒤"); }
 
 /* 시험·검수용: 경로 이름으로 그 연출만 재생(주소에 ?mapdemo=경로이름 또는 콘솔에서 CBSR_mapDemo("엠마오로 가는 길")) */
+/* 시험용: 말씀 카드 그림 확인 — CBSR_wc(주,요일,"책:장:절") */
+window.CBSR_wc=function(w,d,kv){ const ph=wordCardPh(w,d,{kv}), S=storySlides(w,d); return {pick:ph&&ph.id, memo:ph&&ph.tags, cover:S[0]&&S[0].ph&&S[0].ph.id, text:vtxt(kv.split(":").map(Number))}; };
+window.CBSR_dayCards=function(w,d){ return storySlides(w,d).map(x=>[x.k,(x.ph||{}).id,sTxt(x).slice(0,60)]); };
 window.CBSR_mapDemo=function(nm){ const r=ROUTES_B.find(x=>rmBase(x.n)===nm||x.n===nm); if(!r) return false; const el=document.createElement("div"); el.className="rgm"; el.innerHTML=`<div class="rgmtop"><b>${esc(r.n)}</b><button class="gpx">✕</button></div><div class="rgmmap" id="mdMap" style="height:70vh"></div>`; document.body.appendChild(el);
   el.querySelector(".gpx").onclick=()=>el.remove(); const mel=el.querySelector("#mdMap"); setTimeout(()=>{ const map=L.map(mel,{zoomControl:false,attributionControl:true,dragging:false,scrollWheelZoom:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,"cartoon"); map.fitBounds(L.latLngBounds(r.p.map(q=>[q[1],q[2]])),{padding:[40,40],maxZoom:10});
    const lab=L.layerGroup().addTo(map); r.p.forEach(q=>{ if(q[0]) L.marker([q[1],q[2]],{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl">${esc(q[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]})}).addTo(lab); });
@@ -4476,7 +4486,17 @@ function openMenu(){
 const V2=()=>!!window.CBSR_V2;
 const TD={cd:0};
 const phImg=(ph,cls)=>ph?`<img class="${cls||""}" src="${esc(ph.u)}" alt="" referrerpolicy="no-referrer" style="object-position:${esc(ph.fx||"50% 50%")}" onerror="this.remove()">`:"";
-function wordCardPh(w,d,q){ const id=q&&q.cph; if(id&&typeof PHOTOS!=="undefined"){ const f=PHOTOS.find(p=>p.id===id); if(f) return f; } const S=storySlides(w,d); return S[0]&&S[0].ph; }
+/* 말씀 카드 그림(2026-10-30): 표지 그림이 아니라 '붙잡은 구절'에 맞춘 그림.
+   ① 그 절을 근거(va)로 둔 그림 ② 그 절을 다룬 이야기 카드의 그림 ③ 그 절의 글로 고른 그림 ④ 그래도 없으면 표지 */
+function wordCardPh(w,d,q){ const v=String(q&&q.kv||"").split(":").map(Number), S=(()=>{ try{ return storySlides(w,d); }catch(e){ return []; } })(), cov=S[0]&&S[0].ph;
+  if(v.length===3&&v[0]&&typeof PHOTOS!=="undefined"){ const [b,c,n]=v, CH=[[b,c]];
+    const anc=PHOTOS.find(p=>p.va&&p.va.some(([B,C,f,t])=>B===b&&C===c&&n>=f&&n<=t)&&phGate(p,CH,false)); if(anc) return anc;
+    const t=vtxt(v)||"", head=t.replace(/\s/g,"").slice(0,10), refRe=new RegExp("(^|[^0-9:])"+c+":"+n+"(?![0-9])");
+    const sl=S.find((x,i)=>i>0&&x.ph&&(()=>{ const tx=sTxt(x); return refRe.test(tx)||(head.length>=8&&tx.replace(/\s/g,"").includes(head)); })()); if(sl) return sl.ph;
+    try{ const ph=phPick(t,[],GENRE_OF(b),"wc"+w+"-"+d,new Set(),null,{ch:CH,verse:v,era:ERA_OK(b,c),kwText:t,avoid:new Set(cov?[cov.id]:[]),minScore:5}); if(ph) return ph; }catch(e){}
+    /* 글로 고를 그림이 마땅치 않으면: 같은 장에서 가장 가까운 절을 다룬 이야기 카드의 그림 */
+    let nb=null,nd=1e9; S.forEach((x,i)=>{ if(!i||!x.ph) return; for(const m of sTxt(x).matchAll(/(?:^|[^0-9:])(\d{1,3}):(\d{1,3})/g)){ if(+m[1]!==c) continue; const dd=Math.abs(+m[2]-n); if(dd<nd&&dd<=8){ nd=dd; nb=x.ph; } } }); if(nb) return nb; }
+  return cov; }
 function wordCard(w,d,q,kv,ph,big){ const dt=dateOf(w,d);
   return `<div class="wcard${big?" big":""}">${phImg(ph,"wcbg")}<div class="wcin"><q>${esc(kv.t)}</q><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v} · ${esc(fmt(dt,{month:"long",day:"numeric"}))}</small>${big&&q.med?`<p>${esc(q.med)}</p>`:""}</div></div>`; }
 function tdMins(w,d){ try{ return Math.max(5,Math.round(dayA(w,d).text.length/450)); }catch(e){ return 0; } }

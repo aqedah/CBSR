@@ -1,0 +1,24 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "title":"CBSR 그림 정책 (ux/photo_policy.json)",
+ "type":"object","required":["schemaVersion","assets"],
+ "properties":{
+  "schemaVersion":{"const":1},
+  "mode":{"enum":["observe","enforce"]},
+  "notes":{"type":"string"},
+  "assets":{"type":"object","propertyNames":{"pattern":"^g\\d\\d_\\d\\d$"},"additionalProperties":{
+   "type":"object","additionalProperties":false,
+   "properties":{
+    "assetKind":{"enum":["scene","background","object","symbolic","reference"]},
+    "directness":{"enum":["D1","D2","D3","D4",null]},
+    "assignmentPolicy":{"enum":["strict","narrow","broad","free-bg","manual-only"]},
+    "reviewStatus":{"enum":["draft","reviewed","approved","restricted","hold","out"]},
+    "verseAnchors":{"type":"array","items":{"type":"object","required":["book","chapter","fromVerse","toVerse"],"properties":{"book":{"type":"integer","minimum":1,"maximum":66},"chapter":{"type":"integer","minimum":1},"fromVerse":{"type":"integer","minimum":1},"toVerse":{"type":"integer","minimum":1},"basis":{"enum":["explicit","illustrative","interpretive"]}}}},
+    "blockedUses":{"type":"array","items":{"type":"object","required":["book"],"properties":{"book":{"type":"integer"},"chapterFrom":{"type":"integer"},"chapterTo":{"type":"integer"},"reason":{"type":"string"}}}},
+    "approvedUses":{"type":"array"},
+    "fidelity":{"type":"object"},
+    "provenance":{"type":"object"},
+    "review":{"type":"object"}
+   }}}
+ }
+}
