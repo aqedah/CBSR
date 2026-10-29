@@ -660,4 +660,4 @@ g48_16|s|66:1|발은 풀무/발 앞에|candlestand,light,feet||10|dark|50|촛대
 g48_17|s|66:4|무지개/보좌에 앉으신/유리 바다|rainbow,sea,old_man,light||10|bright|50|밧모 섬에서 바라본 바다 위 둥근 무지개와 흰빛(계 4:2–6)|||scene
 g48_18|s|66:4|면류관을/관을 보좌 앞에/엎드려|elders,crown,bowing||10|dark|50|엎드려 금관을 내려놓는 노인들(계 4:10)|||scene
 g48_19|s|66:5|어린 양/한 어린 양|lamb,field,rock,morning||10|warm|50|아침 들판 바위 위에 선 어린 양(계 5:6)|||scene
-g48_20|s|66:6|여섯째 인/굴과 바위/누가 능히 서리요|cave,men,king,dark||10|dark|50|굴로 숨어 드는 왕과 사람들(계 6:15–16)|||scene
+g48_20|s|66:6|여섯째 인/굴과 바위/누가 능히 서리요|cave,men,king,dark||10|dark|50|굴로 숨어 드는 왕과 사람들(계 6:15–16)||인을 떼시는|scene
