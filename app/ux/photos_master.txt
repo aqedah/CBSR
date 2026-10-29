@@ -64,7 +64,6 @@ g05_11|s|8:2;3:19;3:23;5:24|이삭을 줍/이삭 줍|wheat_field,harvest,woman|�
 g05_12|g|||harvest,wheat_field,sheaves||2,5,8|warm|50|묶은 곡식 단|||object
 g05_13|s|8:3|타작마당|threshing_floor,night_sky,sleep|베들레헴|5|dark|50|밤의 타작마당|||scene
 g05_14|s|9:1-4;6:18;24:7|실로|tent,tabernacle,dusk|실로|5|dark|50|실로의 성소||실로암|setting
-g05_15|s|9:1|한나/통곡하며 기도|woman,prayer,temple_stones|실로|5|dark|45|기도하는 여인|||scene
 g06_01|s|9:10;9:16;11:1;12:9;2:29-30;3:8|기름을 붓/기름을 부어/기름 뿔|oil,horn,anointing,sunrise_light_rays||5,6|warm|50|기름 뿔|||object
 g06_02|s|9:16-17|목동/양을 지키|shepherd,pasture,dawn,boy|베들레헴|6|warm|50|소년 목자|||scene
 g06_03|s|9:17|물매|hands,stones,sling|엘라|6|warm|50|물매와 돌|||object
