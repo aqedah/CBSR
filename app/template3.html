@@ -2292,7 +2292,7 @@ function rgStory(w,d){ const L=rgDays(); let i=L.findIndex(([a,b])=>a===w&&b===d
       <button class="rgsnav l" data-rgs="prev" aria-label="앞날"></button><button class="rgsnav r" data-rgs="next" aria-label="뒷날"></button>
       <div class="rgsbody">${(p.topic||cov||(RD&&RD.title))?`<p class="rgsk">${esc(p.label)}</p><h2>${esc(p.topic||cov||RD.title).replace(/\n/g,"<br>")}</h2>`:`<h2>${esc(p.label)}</h2>`}${line?`<p class="rgsline">${esc(line)}</p>`:""}
         <button class="rgsgo" data-rgs="read">본문 읽기<small>${p.ch.length}${p.ch[0][0]===19?"편":"장"} · 약 ${mins}분</small></button>
-        ${fut?`<p class="rgsfut">스토리 QT는 ${esc(futMsg(ww,dd))}</p>`:`<button class="rgsgo2" data-rgs="qt">스토리 QT 보기</button>`}</div>`;
+        ${!fut&&mem.qt[key]&&mem.qt[key].done?`<button class="rgsgo2" data-rgs="qt">스토리 QT 다시 보기</button>`:""}</div>`;
     pg.querySelectorAll("[data-rgs]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const a=b.dataset.rgs;
       if(a==="x") close(); else if(a==="prev") turn(-1); else if(a==="next") turn(1);
       else if(a==="read"){ close(); view.open=true; view.v2shut=false; rgGoDay(ww,dd,"read"); }
