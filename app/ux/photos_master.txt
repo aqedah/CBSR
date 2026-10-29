@@ -691,3 +691,33 @@ g50_12|s|66:21|새 예루살렘/높은 산/거룩한 성|city,gold,mountain,old_
 g50_13|s|66:21;66:7|눈물을 씻/모든 눈물|tears,hand,face,light||10|warm|50|눈물을 닦아 주는 손(계 21:4)|||scene
 g50_14|s|66:21;66:22|성문들을/닫지 아니하리니/만국|city_gate,crowd,light||10|bright|50|열린 성문으로 들어가는 사람들(계 21:25–26)|||scene
 g50_15|s|66:22;66:21|목마른 자/생명수/값없이|spring_water,hands,rock||10|bright|50|샘물을 두 손으로 떠 마시는 사람(계 22:17)|||scene
+g51_01|s|66:8|반 시간쯤 고요/고요하더니|field,grass,still,dawn||10|dark|50|바람 없는 새벽 들판(계 8:1) (둘째 그림)|||landscape
+g51_02|s|66:8|향연/성도의 기도/금 향로/금 제단|censer,incense,altar,light||10|dark|50|금 제단 위 향로에서 오르는 향연(계 8:3–4) (둘째 그림)|||object
+g51_03|s|66:8|땅에 쏟으매/불을 담아|fire,lightning,earth||10|dark|50|땅에 던져지는 불덩이와 번개(계 8:5) (둘째 그림)|운석처럼 과장||scene
+g51_04|s|66:8|불붙는 큰 산|sea,fire,ships||10|dark|50|바다에 떨어진 불덩이(계 8:8) (둘째 그림)|화산 폭발처럼 과장||scene
+g51_05|s|66:9|무저갱/연기/황충|smoke,storm,darkness||10|dark|50|하늘을 덮는 연기 기둥(계 9:2) (둘째 그림)|||landscape
+g51_06|s|66:9|우상에게|idols,bowing||10|dark|50|우상 앞에 엎드린 사람들(계 9:20) (둘째 그림)|||scene
+g51_07|s|66:10|무지개/바다를 밟고/작은 두루마리|rainbow,sea,light,scroll||10|dark|50|바닷가 빛기둥과 무지개, 바위 위 두루마리(계 10:1–2) (둘째 그림)|||scene
+g51_08|s|66:10|두루마리를 먹/작은 두루마리를|old_man,scroll,hands||10|dark|50|작은 두루마리를 든 노인(계 10:9–10) (둘째 그림)|||scene
+g51_09|s|66:11|두 증인/두 감람나무/굵은 베옷|olive_tree,two_men,torch,night||10|dark|50|감람나무와 불 사이에 선 두 사람(계 11:3–4) (둘째 그림)|||scene
+g51_10|s|66:12|해를 옷 입은/열두 별|woman,light,stars,moon||10|bright|50|해와 별에 둘러싸인 여인(계 12:1) (둘째 그림)|빛나는 성모상처럼 보임||scene
+g51_11|s|66:12|붉은 용|dragon,storm||10|dark|50|폭풍 구름 속 용(계 12:3) (둘째 그림)|만화 같은 용||scene
+g51_12|s|66:12|독수리의 두 날개/광야로/광야에서|eagle,desert,woman,canyon||10|warm|50|광야 협곡으로 피하는 여인과 독수리 그림자(계 12:14) (둘째 그림)||붉은 빛 짐승|scene
+g51_13|s|66:13|바다에서 한 짐승|sea,storm,beast||10|dark|50|폭풍 바다의 짐승 그림자(계 13:1) (둘째 그림)|만화 같은 괴물||scene
+g51_14|s|66:15|유리 바다/거문고/모세의 노래|harps,white_robe,fire,sea||10|warm|50|불 섞인 유리 바다 가의 수금 든 사람들(계 15:2–3) (둘째 그림)|||scene
+g51_15|s|66:16|대접을/대접|bowl,red,light||10|dark|50|쏟아지는 붉은 대접(계 16:1) (둘째 그림)|형광 붉은빛, 과장||object
+g52_01|s|66:17|음녀/자주 빛과 붉은 빛/금잔|cloth,gold_cup,pearls,rock||10|dark|50|바위 위의 자색 천과 금잔과 진주(계 17:4) (둘째 그림)|||object
+g52_02|s|66:17;66:18|큰 성/일곱 산|city,hills,temples,storm||10|dark|50|언덕 위 신전이 빽빽한 큰 성(계 17:9, 18) (둘째 그림)|||setting
+g52_03|s|66:18|멀리 서서/선장과/티끌을 자기 머리에|ship,sailors,smoke,fire||10|dark|50|배 위에서 불타는 성을 보며 우는 선원들(계 18:17–19) (둘째 그림)|||scene
+g52_04|s|66:18|상품/사람의 영혼|storehouse,goods,chains,jars||10|dark|50|항구 창고의 상품과 쇠사슬 그림자(계 18:12–13) (둘째 그림)|||object
+g52_05|s|66:18|맷돌 같은 돌|millstone,sea,splash||10|dark|50|바다에 던져진 큰 맷돌(계 18:21) (둘째 그림)|||object
+g52_06|s|66:18|맷돌 소리/등불 빛/결코 다시|millstone,lamp,empty_street||10|dark|50|꺼진 등잔과 멈춘 맷돌이 놓인 빈 거리(계 18:22–23) (둘째 그림)|||setting
+g52_07|s|66:19|할렐루야/많은 물 소리|waterfall,crowd,white_robe,praise||10|bright|50|폭포 앞에서 손 들고 찬송하는 흰 옷의 무리(계 19:1, 6) (둘째 그림)|||scene
+g52_08|s|66:19|혼인 잔치/혼인 기약/세마포|bride,feast,table,white_robe||10|warm|50|흰 세마포 신부와 잔칫상(계 19:7–9) (둘째 그림)|||scene
+g52_09|s|66:19|백마/흰 말|white_horse,rider,storm,light||10|dark|50|열린 하늘 아래 흰 말 탄 이와 뒤따르는 무리(계 19:11–14) (둘째 그림)|||scene
+g52_10|s|66:20|무저갱의 열쇠/큰 쇠사슬/결박|chains,key,pit,rock||10|dark|50|구덩이 어귀 바위의 쇠사슬과 열쇠(계 20:1–2) (둘째 그림)|||object
+g52_11|s|66:20|크고 흰 보좌/책들이 펴/생명책|scrolls,people,light||10|bright|50|흰빛 앞에 펼친 두루마리와 선 사람들(계 20:11–12) (둘째 그림)|||scene
+g52_12|s|66:21|새 예루살렘/높은 산/거룩한 성|city,gold,mountain,old_man||10|warm|50|높은 산에서 내려다본 금빛 성(계 21:10–11) (둘째 그림)|||scene
+g52_13|s|66:21;66:7|눈물을 씻/모든 눈물|tears,hand,face,light||10|warm|50|눈물을 닦아 주는 손(계 21:4) (둘째 그림)|||scene
+g52_14|s|66:21;66:22|성문들을/닫지 아니하리니/만국|city_gate,crowd,light||10|bright|50|열린 성문으로 들어가는 사람들(계 21:25–26) (둘째 그림)|||scene
+g52_15|s|66:22;66:21|목마른 자/생명수/값없이|spring_water,hands,rock||10|bright|50|샘물을 두 손으로 떠 마시는 사람(계 22:17) (둘째 그림)|||scene
