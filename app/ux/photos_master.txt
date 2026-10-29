@@ -656,3 +656,8 @@ g48_12|s|66:6|흰 말/붉은 말/검은 말/청황색 말|horses,dust,riders||10
 g48_13|s|66:6;66:7|흰 두루마기/흰 옷을/제단 아래|crowd,white_robe,light,hands||10|dark|50|빛 속에서 흰 옷을 받으려 손 뻗는 사람들(계 6:9–11)|||scene
 g48_14|s|66:6|여섯째 인/굴과 바위|eclipse,cave,crowd||10|dark|50|굴로 숨는 왕과 사람들(계 6:12–16)|요즘 군복, 공포 영화 같은 표정||scene
 g48_15|s|66:7|바람을 붙잡/땅의 네 모퉁이|sea,calm,tree,still||10|bright|50|잎 하나 흔들리지 않는 잔잔한 바다(계 7:1)|||landscape
+g48_16|s|66:1|발은 풀무/발 앞에|candlestand,light,feet||10|dark|50|촛대 사이 빛 속의 청동빛 발(계 1:13–15)|||scene
+g48_17|s|66:4|무지개/보좌에 앉으신/유리 바다|rainbow,sea,old_man,light||10|bright|50|밧모 섬에서 바라본 바다 위 둥근 무지개와 흰빛(계 4:2–6)|||scene
+g48_18|s|66:4|면류관을/관을 보좌 앞에/엎드려|elders,crown,bowing||10|dark|50|엎드려 금관을 내려놓는 노인들(계 4:10)|||scene
+g48_19|s|66:5|어린 양/한 어린 양|lamb,field,rock,morning||10|warm|50|아침 들판 바위 위에 선 어린 양(계 5:6)|||scene
+g48_20|s|66:6|여섯째 인/굴과 바위/누가 능히 서리요|cave,men,king,dark||10|dark|50|굴로 숨어 드는 왕과 사람들(계 6:15–16)|||scene
