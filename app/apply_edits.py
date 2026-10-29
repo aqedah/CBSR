@@ -36,7 +36,28 @@ def walk_replace(o,old,new):
             if v==old: o[i]=new; n+=1
             else: n+=walk_replace(v,old,new)
     return n
+ST='edits/status.json'
+status=json.load(open(ST,encoding='utf-8')) if os.path.exists(ST) else {}
+def apply_img(e):
+    # 카드 그림 바꾸기: 그날 원고의 cards[ci].img 를 그림 번호로
+    for f,k in (e.get('keys') or {}).items():
+        if f not in FMT or f not in raw: continue
+        o=json.loads(raw[f]); ent=o.get(str(k))
+        if ent is None: continue
+        if e.get('pv') and isinstance(ent,dict) and e['pv'] in ent: ent=ent[e['pv']]
+        cards=ent.get('cards') if isinstance(ent,dict) else None
+        ci=e.get('ci')
+        if not isinstance(cards,list) or not isinstance(ci,int) or not (0<=ci<len(cards)): return '못 찾음(카드 번호)'
+        cards[ci]['img']=e['img']; raw[f]=json.dumps(o,ensure_ascii=False,**FMT[f]); dirty.add(f); return f'반영: {f} 카드 {ci+1} 그림 {e["img"]}'
+    return '못 찾음(그날 원고 없음)'
+def apply_status(e):
+    pl=e.get('plan') or 'rj'; d=str(e.get('day'))
+    if e.get('st'): status.setdefault(pl,{})[d]={'st':e['st'],'memo':e.get('memo',''),'at':time.strftime('%Y-%m-%d')}
+    else: status.get(pl,{}).pop(d,None)
+    return '반영: 상태 '+(e.get('st') or '지움')
 def apply(e):
+    if e.get('type')=='img': return apply_img(e)
+    if e.get('type')=='status': return apply_status(e)
     old,new=e.get('old',''),e.get('new','')
     if not old or old==new: return '바꿀 것 없음'
     c=count(old); tot=sum(c.values())
@@ -61,10 +82,11 @@ for p in IN:
     try: e=json.load(open(p,encoding='utf-8'))
     except Exception as x: e={'old':'','new':''}; res='읽지 못함: '+str(x)
     else: res=apply(e)
-    log.append({**{k:e.get(k) for k in ('at','plan','day','where','old','new')},'id':os.path.basename(p)[:-5],'res':res,'done':time.strftime('%Y-%m-%d %H:%M')})
+    log.append({**{k:e.get(k) for k in ('at','plan','day','where','old','new','type','img','st')},'id':os.path.basename(p)[:-5],'res':res,'done':time.strftime('%Y-%m-%d %H:%M')})
     os.remove(p); print(os.path.basename(p),res)
 for f in dirty:
     s=raw[f]
     if NL[f] and not s.endswith('\n'): s+='\n'
     open(f,'w',encoding='utf-8').write(s)
 json.dump(log[-300:],open(LOG,'w',encoding='utf-8'),ensure_ascii=False,indent=1)
+json.dump(status,open(ST,'w',encoding='utf-8'),ensure_ascii=False,indent=1)

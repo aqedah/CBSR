@@ -114,6 +114,7 @@ data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags'
 _SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
 _SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}
 data+='const STORYC_RJ='+J(_SRJ)+';\n'
+data+='const DSTATUS='+(open('edits/status.json',encoding='utf-8').read() if os.path.exists('edits/status.json') else '{}')+';\n'  # 날짜별 승인 상태(관리자 상태판)
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
 data+='if(window.CBSR_MODE==="y365"){const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
