@@ -1181,6 +1181,7 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .mys-top{position:absolute;left:12px;right:8px;top:calc(env(safe-area-inset-top,0px) + 22px);display:flex;align-items:center;gap:8px;z-index:4}.mys-av{width:34px;height:34px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--accent);font-weight:700}.mys-av img{width:100%;height:100%;object-fit:cover}.mys-top b{flex:1;font-size:14px}.mys-x{border:0;background:none;color:#fff;font-size:22px;padding:6px 10px;cursor:pointer}
 .mys-box{position:absolute;left:22px;right:22px;top:50%;transform:translateY(-50%);z-index:6;pointer-events:none;text-align:center}.mys-k{font-size:13px;letter-spacing:.08em;color:#e2b874;margin-bottom:16px;font-weight:700}.mys-q{font:600 22px/1.65 var(--f-disp,serif);word-break:keep-all}.mys-r{margin-top:14px;font-size:14px;color:#e8dcc8}.mys-s{margin-top:18px;font-size:12.5px;color:rgba(246,239,228,.7)}.mys-btn{pointer-events:auto;margin-top:20px;border:1px solid #e2b874;background:rgba(0,0,0,.25);color:#f6efe4;border-radius:999px;padding:9px 18px;font:inherit;font-size:14px;cursor:pointer}
 .mys-tap{position:absolute;top:70px;bottom:0;width:35%;border:0;background:none;z-index:5;cursor:pointer}.mys-tap.l{left:0}.mys-tap.r{right:0;width:65%}
+html.v2 .brand{letter-spacing:0;align-items:center}#brandL{display:flex;align-items:baseline;gap:8px;min-width:0}.v2d{font:700 20px var(--f-disp,serif);color:var(--ink);white-space:nowrap}.v2p{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#hdx{display:inline-flex;align-items:center;gap:6px}html.v2 .topbtns{display:inline-flex;align-items:center;gap:4px}
 .rgmiss{border:0;background:#f4e3d3;color:#8a4b1f;border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:700;white-space:nowrap;align-self:center;cursor:pointer}.rg.miss .rgi::before{content:"";position:absolute;right:4%;top:4%;width:12px;height:12px;border-radius:50%;background:#d9643a;border:2px solid var(--paper);z-index:1}
 .rgd,.rgq{position:absolute;right:0;bottom:0;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;border:2px solid var(--paper)}
 .rgd{background:var(--card);color:var(--accent)}.rgq{background:var(--accent);color:#fff}
@@ -1956,7 +1957,7 @@ body.tts-on .totop{display:none}
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><span>이야기 통독 노트(시험판) · <span id="planName"></span></span><span class="topbtns"><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
+    <div class="brand"><span id="brandL">이야기 통독 노트(시험판) · <span id="planName"></span></span><span class="topbtns"><span id="hdx"></span><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
     <div id="newsBar"></div>
     <div class="date" id="dateLine"></div>
     <div class="where" id="whereLine"></div>
@@ -7347,7 +7348,10 @@ function renderHead(){
     else rr.innerHTML=""; }
   document.getElementById("prevW").disabled=W<=1;
   document.getElementById("nextW").disabled=W>=NDWv;
-  document.getElementById("planName").textContent=PI.name+(TR!=="krv"?" · "+TR_INFO[TR].name:""); document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
+  document.getElementById("planName").textContent=PI.name+(TR!=="krv"?" · "+TR_INFO[TR].name:"");
+  if(window.CBSR_V2){ const bl=document.getElementById("brandL"), hx=document.getElementById("hdx"); const isT=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d, MISS=TRY?[]:missedDays();
+    if(bl) bl.innerHTML=`<b class="v2d">${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><small class="v2p">${esc(PI.name)}</small><span id="planName" hidden></span>`;
+    if(hx) hx.innerHTML=`${MISS.length?`<button class="rgmiss" id="rgMiss" aria-label="읽지 않은 날 ${MISS.length}일 보기">안 읽은 날 ${MISS.length}</button>`:""}${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
   document.querySelectorAll(".bnav .tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
 }
 
@@ -9247,8 +9251,7 @@ function dayRingHTML(){ const here0=today0(), selN=dayNo(view.w,view.d), N=READ_
   const dt=dateOf(view.w,view.d), p=dayPlan(view.w,view.d), isT=view.w===here.w&&view.d===here.d;
   const MY=myStoryItems(), myOn=MY.some(x=>x.mine), av=PROF.photo?`<img alt="" src="${PROF.photo}">`:`<em class="rgme-i">${esc(PROF.nick?[...PROF.nick][0]:"나")}</em>`;
   const me=`<button class="rg rgme${myOn?"":" empty"}" id="rgMe" aria-label="나의 통독: 오늘 내게 주시는 말씀과 아멘한 말씀"><span class="rgi">${av}${myOn?"":`<i class="rgplus">+</i>`}</span><b>나의 통독</b></button>`;
-  return `<section class="rgwrap"><div class="rghead"><b>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><span>${esc(p?p.label:"")}</span>${MISS.length?`<button class="rgmiss" id="rgMiss" aria-label="읽지 않은 날 ${MISS.length}일 보기">안 읽은 날 ${MISS.length}</button>`:""}${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button></div>
-    <div class="rgline">${me}<div class="rgs" id="rgScroll">${r}</div></div></section>`; }
+  return `<section class="rgwrap"><div class="rgline">${me}<div class="rgs" id="rgScroll">${r}</div></div></section>`; }
 /* 나의 통독: 오늘 내게 주시는 말씀 → 아멘한 말씀 → 지난날 고른 말씀 */
 function myStoryItems(){ return withKRV(myStoryItems0); }
 function myStoryItems0(){ const out=[]; if(!BIBLE) return out; const tk=keyOf(here.w,here.d), seen=new Set();
