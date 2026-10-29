@@ -85,6 +85,13 @@
       const t=String(o.text||"").slice(0,3000); if(!t) return false;
       const w=fs.collection("feedback").add({text:t,name:String(o.name||"").slice(0,20),plan:String(o.plan||"").slice(0,10),day:String(o.day||"").slice(0,60),ua:String(o.ua||"").slice(0,200),at:Date.now()});
       await Promise.race([w,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),12000))]); return true; }catch(e){ console.warn("feedback",e); return false; } },
+    /* 함께 읽기(이름 공개를 켠 사람만): together/{날}/p/{공개 번호} 에 별명·작은 사진·아멘한 성품·붙잡은 구절 */
+    together:{
+      async who(){ if(!login) return null; if(login.pub) return login.pub; const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("together|"+login.key)); login.pub=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("").slice(0,24); ls.set(LOGIN,login); return login.pub; },
+      async put(day,doc){ const w=await this.who(); if(!w) return false; await init(); await fs.doc(`together/${day}/p/${w}`).set(doc); return true; },
+      async del(day){ const w=await this.who(); if(!w) return; await init(); await fs.doc(`together/${day}/p/${w}`).delete(); },
+      async list(day){ await init(); const q=await fs.collection(`together/${day}/p`).limit(300).get(); return q.docs.map(d=>({who:d.id,...d.data()})); }
+    },
     /* 함께 읽기: 통독을 처음 마친 날에만 한 번 더합니다 */
     async markDone(dayKey,dateStr){ try{ await init();
       await Promise.all([fs.doc(`days/${dayKey}`).set({done:inc(1)},{merge:true}),fs.doc(`dates/${dateStr}`).set({done:inc(1)},{merge:true})]); }catch(e){ console.warn("count",e); } },
