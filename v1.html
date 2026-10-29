@@ -8232,7 +8232,11 @@ function rgStory(w,d){ const L=rgDays(); let i=L.findIndex(([a,b])=>a===w&&b===d
     el.querySelector("#rgsNext").onclick=()=>{ if(i<L.length-1){ i++; draw(); } else close(); };
     el.querySelector("#rgsRead").onclick=()=>{ close(); view.open=true; view.v2shut=false; rgGoDay(ww,dd,"read"); };
     const q=el.querySelector("#rgsQT"); if(q) q.onclick=()=>{ close(); rgGoDay(ww,dd,"today"); storyOpen(0); };
-    const sv=el.querySelector(".rgsv"); let y0=null; sv.addEventListener("touchstart",e=>{ y0=e.touches[0].clientY; },{passive:true}); sv.addEventListener("touchend",e=>{ if(y0!=null&&e.changedTouches[0].clientY-y0>90) close(); y0=null; },{passive:true}); };
+    /* 손가락으로 밀기: 왼쪽으로 밀면 다음 날, 오른쪽으로 밀면 앞날, 아래로 밀면 닫기 */
+    const sv=el.querySelector(".rgsv"); let x0=null,y0=null; sv.addEventListener("touchstart",e=>{ x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
+    sv.addEventListener("touchend",e=>{ if(y0==null) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=y0=null;
+      if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.2){ e.preventDefault(); if(dx<0){ if(i<L.length-1){ i++; draw(); } else close(); } else { if(i>0){ i--; draw(); } else close(); } return; }
+      if(dy>90&&dy>Math.abs(dx)) close(); },{passive:false}); };
   draw(); }
 function renderQT(){
   const {w,d}=view;
