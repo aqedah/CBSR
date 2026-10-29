@@ -20,5 +20,19 @@
   "id": "test2",
   "res": "반영: ux/story_cards.json",
   "done": "2026-10-29 17:51"
+ },
+ {
+  "at": "x",
+  "plan": "rj",
+  "day": 302,
+  "where": "시험: 상태",
+  "old": null,
+  "new": null,
+  "type": "status",
+  "img": null,
+  "st": "승인",
+  "id": "t3",
+  "res": "반영: 상태 승인",
+  "done": "2026-10-29 18:00"
  }
 ]
