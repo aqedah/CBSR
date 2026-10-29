@@ -1649,7 +1649,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .dhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:8px}
 .dhead .dtl{min-width:0}
 .dhead h2{margin:0;font-size:27px;line-height:1.25}
-.dmeta{margin:6px 0 0;font-size:14px;color:var(--muted)}.dmeta span+span::before{content:" · "}html.v2 .daycard{position:relative}html.v2 .daycard .dtag{display:none}html.v2 .dmeta .dmtag{font-weight:700}html.v2 .dmeta .dmtag.today{background:var(--accent);color:var(--accent-ink)}html.v2 .dmeta .dmtag.past{background:var(--accent-soft);color:var(--accent)}html.v2 .dmeta .dmtag.next{background:var(--gold-soft);color:var(--gold)}html.v2 .daycard>.dhead{position:static}html.v2 .daycard>.dhead .dicons{position:absolute;top:var(--dit,22px);right:16px}html.v2 .daycard .dtl h2{padding-right:100px}html.v2 .daycard>.dhead .dtl{min-width:0}html.v2 .daycard .cbtn{width:40px;height:40px}html.v2 .dmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}html.v2 .dmeta span::before{content:none}html.v2 .dmeta span{font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--bg2,#e9efe9);color:var(--ink);white-space:nowrap}html.v2 .dmeta span b{font-weight:700}html.v2 .dmeta .okc{background:#e1f0e6;color:var(--ok,#2c7a4b);font-weight:700}
+.dmeta{margin:6px 0 0;font-size:14px;color:var(--muted)}.dmeta span+span::before{content:" · "}html.v2 .daycard{position:relative}html.v2 .daycard .dtag{display:none}.qthl{display:flex;align-items:center;justify-content:space-between;gap:8px}.qthelp{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;flex:none}.qtsl,.qtlnk{display:inline-block;background:none;border:0;padding:6px 0;margin:2px 0;color:var(--accent);font-weight:600;font-size:14px;cursor:pointer;text-align:left}.qthd .trnote{margin:4px 0 0}.lookmore{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}.lookmore>summary{cursor:pointer;color:var(--muted);font-size:14px;font-weight:600;padding:4px 0}.lookmore .looks{margin-top:8px}.kvsel{margin:8px 0 2px;padding:12px 14px;border-radius:12px;background:var(--accent-soft)}.kvsel small{display:block;color:var(--accent);font-weight:700;font-size:12.5px;margin-bottom:4px}.kvsel q{quotes:none;font-size:15.5px;line-height:1.6;color:var(--ink)}.oneline.med{margin-top:12px}html.v2 .oneline.med label{color:var(--ink);font-size:15px;line-height:1.6}html.v2 .dmeta .dmtag{font-weight:700}html.v2 .dmeta .dmtag.today{background:var(--accent);color:var(--accent-ink)}html.v2 .dmeta .dmtag.past{background:var(--accent-soft);color:var(--accent)}html.v2 .dmeta .dmtag.next{background:var(--gold-soft);color:var(--gold)}html.v2 .daycard>.dhead{position:static}html.v2 .daycard>.dhead .dicons{position:absolute;top:var(--dit,22px);right:16px}html.v2 .daycard .dtl h2{padding-right:100px}html.v2 .daycard>.dhead .dtl{min-width:0}html.v2 .daycard .cbtn{width:40px;height:40px}html.v2 .dmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}html.v2 .dmeta span::before{content:none}html.v2 .dmeta span{font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--bg2,#e9efe9);color:var(--ink);white-space:nowrap}html.v2 .dmeta span b{font-weight:700}html.v2 .dmeta .okc{background:#e1f0e6;color:var(--ok,#2c7a4b);font-weight:700}
 .dmeta .okc{color:var(--ok)}
 .dicons{display:flex;gap:8px;flex:none;margin-top:2px}
 .cbtn{width:42px;height:42px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;cursor:pointer}
@@ -7813,7 +7813,7 @@ const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 
 function eyeFor(w,d,L){
   const k=keyOf(w,d), e=EYE[k];
   const TX=PVQ.has(k)?(e&&e.tools?{q:[],look:e.tools}:null):dayTools(w,d);
-  if(e) return {q:e.q,tools:TX?TX.q:[],looks:e.look.map((l,i)=>`<button class="lookbtn" data-look="${i}"><span>${esc(l.t)}${window.CBSR_V2&&l.r?`<small class="lref">${esc(fullRef(l.r))} · 눌러서 본문 보기</small>`:""}</span>${TX&&TX.look&&TX.look[i]?`<i class="ltool">${TX.look[i]}</i>`:""}</button>`)};
+  if(e) return {q:e.q,tools:TX?TX.q:[],looks:e.look.map((l,i)=>`<button class="lookbtn" data-look="${i}"><span>${esc(window.CBSR_V2&&l.n?l.n:l.t)}${window.CBSR_V2&&l.r?`<small class="lref">${esc(fullRef(l.r))} ›</small>`:""}</span>${TX&&TX.look&&TX.look[i]?`<i class="ltool">${TX.look[i]}</i>`:""}</button>`)};
   const C=(CLUES[w+"-"+(d+1)]||[]).filter(c=>c.t!=="scene"||c.prev.length).slice(0,3);
   return {q:L[0].q,tools:[],looks:C.map(c=>`<button class="lookbtn" data-clue="${CLUES[w+"-"+(d+1)].indexOf(c)}"><span>${esc(CLUE_LAB[c.t]||"살펴보기")} · ${esc(c.t==="pair"?c.a+" ↔ "+c.b:c.t==="scene"?c.g:fullRef(c.r))}</span>${CLUE_TOOL[c.t]?`<i class="ltool">${CLUE_TOOL[c.t]}</i>`:""}</button>`),skip0:true};
 }
@@ -7886,10 +7886,10 @@ function renderQT(){
   const ST=sceneTraits(w,d,A,godTraits(A)), traits=ST.list, R=ST.R;
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
   const V2Q=!!window.CBSR_V2;
-  let h=V2Q?`<section class="sec"><span class="label">묵상 노트 · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">스토리 QT와 묵상 노트의 말씀은 개역개정입니다. 본문 읽기는 ${esc(TR_INFO[TR].name)}으로 보입니다.</p>`:""}${STORY()&&storySlides(w,d).length?`<button class="qtstory2" id="qtStory"><b>스토리 QT</b><span>카드를 넘기며 오늘 이야기를 먼저 따라갑니다 ›</span></button>`:""}<div class="qtguide">${(()=>{ const hc=PVQ.has(key)?!!(det&&det.christ):true, st=["본문 관찰","하나님의 성품",...(hc?["성경 전체로"]:[]),"적용","기도"]; return `<p><b>묵상 노트</b>는 ${st.length===5?"다섯":"네"} 걸음입니다. <span>${st.join(" → ")}</span></p>`; })()}<p>정답을 고르는 문제가 아닙니다. 본문을 다시 보고 <b>내 말로 적습니다</b>. 적는 칸은 비워 두어도 마칠 수 있습니다.</p></div></section>`
+  let h=V2Q?`<section class="sec qthd"><div class="qthl"><span class="label">묵상 노트 · ${dayName(w,d)}</span><button class="qthelp" id="qtHelp" aria-label="묵상 노트 안내">?</button></div><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">묵상 노트의 말씀은 개역개정입니다.</p>`:""}${STORY()&&storySlides(w,d).length?`<button class="qtsl" id="qtStory">스토리 QT 다시 보기 ›</button>`:""}</section>`
     :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${STORY()?`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`:""}</section>`;
   // 1 본문 관찰
-  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${eye.looks.length?`${V2Q?`<p class="lookhint">답의 실마리가 있는 구절 ${eye.looks.length}곳 · 눌러서 그 구절과 작은 질문을 보세요</p>`:""}<div class="looks${V2Q?" v2l":""}">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?(()=>{ const e0=(EYE[key]||{}).look||[], ex=e0[0]?`예) ${e0[0].t} (${fullRef(e0[0].r)}) — 이 말씀에서 본 것을 한두 줄로`:"위 질문의 답을 본문에서 찾아 한두 줄로 적어 보세요"; return `<div class="oneline obs"><label for="qt-obs">위 질문에 대한 나의 답</label><p class="fieldhint">본문에서 찾은 말과 장절을 그대로 옮겨도 좋습니다. 적은 답은 '기록 → 관찰 기록'에 모입니다.</p><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="${esc(ex)}">${esc(q.obs||"")}</textarea></div>`; })():`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
+  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${V2Q?(R?`<button class="qtlnk" id="scopeRead">본문 열기 · ${esc(sceneLabel(R))} ›</button>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
@@ -7901,9 +7901,8 @@ function renderQT(){
   dp+=`</details>`;
   if(!PVQ.has(key)) h+=`<section class="sec deepsec">${dp}</section>`;
   // 2 하나님은 어떤 분
-  h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span><small>이 본문에서 하나님은 어떤 분인가</small></div>`;
+  h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span>${V2Q?"":"<small>이 본문에서 하나님은 어떤 분인가</small>"}</div>`;
   if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
-  if(V2Q&&traits.length) h+=`<p class="fieldhint">아래 말씀의 고백에 마음으로 동의하면 '아멘'을 누르세요.</p>`;
   if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); h+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div></div>`;});
   else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=moreTraits+`</section>`;
@@ -7911,23 +7910,29 @@ function renderQT(){
   { const SDQ=(typeof dayNo==="function")?storyDay(dayNo(w,d)):null; if(QA_ON&&SDQ&&SDQ.qa&&SDQ.qa.length) h+=`<section class="sec"><details class="qa"><summary>읽다가 궁금한 점</summary>${SDQ.qa.map(x=>`<p class="qaq">${esc(x.q)}</p><p class="qaa">${esc(x.a)}</p>`).join("")}</details></section>`; }
   // 3 그리스도께로
   const PVK=PVQ.has(key), PCK={quote:"성경 인용",mention:"성경 사건·말씀 언급",repeat:"표현의 되풀이",phrase:"표현의 되풀이",self:"본문 스스로의 지시"};
-  if(PVK){ if(det&&det.christ) h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${det.ck&&PCK[det.ck]?`<span class="ckind">${PCK[det.ck]}</span>`:""}<div class="qcard"><p>${esc(det.christ)}</p></div></section>`; }
-  else h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span><small>성경 전체와 그리스도 안에서 보기</small></div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div>${echoBox(w,d)}</section>`;
+  if(PVK){ if(det&&det.christ) h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span>${V2Q?"":"<small>성경 전체와 그리스도 안에서 보기</small>"}</div>${!V2Q&&det.ck&&PCK[det.ck]?`<span class="ckind">${PCK[det.ck]}</span>`:""}<div class="qcard"><p>${esc(det.christ)}</p></div></section>`; }
+  else h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span>${V2Q?"":"<small>성경 전체와 그리스도 안에서 보기</small>"}</div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck&&!V2Q?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div>${echoBox(w,d)}</section>`;
   // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
   const vs=qtCands(A,traits,R,w+"-"+(d+1));
   const kv=qtKV(q,A,vs,w+"-"+(d+1));
   const opts=kv&&!vs.includes(kv)?[kv,...vs]:vs; view.kvShown=vId(kv);
+  const medQ=PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q);
+  if(V2Q){
+    h+=`<section class="sec"><div class="stage"><b>${PVK&&!(det&&det.christ)?3:4}</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${kv?`<div class="kvsel"><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small><q>${esc(kv.t)}</q></div>`:""}<button class="qtlnk" id="qtSwapV">구절 바꾸기 ›</button><div class="oneline med"><label for="qt-med">${esc(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.med||"")}</textarea></div></section>`;
+    view.kvOpts=opts; view.kvCur=kv;
+  } else {
   h+=`<section class="sec"><div class="stage"><b>${PVK&&!(det&&det.christ)?3:4}</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${V2Q?`<p class="fieldhint">하나를 고르세요. 고른 구절은 오늘의 말씀 카드에 들어갑니다.</p>`:""}`;
-  if(opts.length) h+=`<div class="vpick" role="radiogroup" aria-label="붙잡을 구절">${opts.map(v=>{const on=v===kv; return `<button class="vopt${on?" on":""}" role="radio" aria-checked="${on}" data-kv="${vId(v)}"><small>${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</small><span>${esc(v.t)}</span></button>`;}).join("")}</div>`;
-  h+=`<div class="row"><button class="btn ghost small" id="qtPickV">본문에서 직접 고르기</button></div>`;
-  h+=`</section>`;
+    if(opts.length) h+=`<div class="vpick" role="radiogroup" aria-label="붙잡을 구절">${opts.map(v=>{const on=v===kv; return `<button class="vopt${on?" on":""}" role="radio" aria-checked="${on}" data-kv="${vId(v)}"><small>${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</small><span>${esc(v.t)}</span></button>`;}).join("")}</div>`;
+    h+=`<div class="row"><button class="btn ghost small" id="qtPickV">본문에서 직접 고르기</button></div>`;
+    h+=`</section>`;
+  }
   /* 나의 자리: 예전 '더 깊이'의 '내 자리' 질문을 적용 단계로(저장 칸은 그대로 l0~l2) */
   { const li=L.findIndex(l=>l.k==="내 자리"); if(li>=0&&!PVQ.has(key)) h+=`<section class="sec"><details class="mine"${q["l"+li]?" open":""}><summary>나의 자리</summary><p class="lead" style="margin:6px 0">${esc(L[li].q)}</p><textarea data-qt="l${li}" rows="2" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+li]||"")}</textarea></details></section>`; }
   // 5 한 줄 묵상
-  h+=`<section class="sec"><span class="label">${V2Q?"한 줄 묵상 · 나의 답":"한 줄 묵상"}</span><div class="oneline"><label for="qt-med">${esc(PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q))}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="${V2Q?"위 물음에 대한 나의 답을 한 줄로 적어 보세요":"오늘 말씀 앞에서 내가 기억할 한 가지"}">${esc(q.med||"")}</textarea></div></section>`;
+  if(!V2Q) h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
   // 6 기도
   const pray=prayEnd((det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits));
-  h+=`<section class="sec"><span class="label">오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>${V2Q?"내 말로 기도 한 줄 더하기":"내 기도 한 줄 더하기"}</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
+  h+=`<section class="sec"><span class="label">오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>${V2Q?"내 기도 더하기":"내 기도 한 줄 더하기"}</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
   { const SDE=storyDay(dayNo(w,d)); if(SDE&&SDE.endnote) h+=`<section class="sec"><p class="lead" style="text-align:center">${esc(SDE.endnote)}</p></section>`; }
   // QT 완료: 맨 마지막에만
   if(FB_ON){ const fr=fbAll()[fbKey("qt")]; h+=`<section class="sec qtfb"><span class="label">검토 메모 · 이 날 QT</span><p class="lead">관찰 질문, 성품, 성경 전체로, 묵상, 기도에 대해 고칠 점을 적습니다.</p>${fr?`<p class="qtfbn">${esc(fr.n)}</p>`:""}<div class="row"><button class="btn ghost small" id="qtFb">${fr?"메모 고치기":"메모 쓰기"}</button><button class="btn ghost small" id="qtFbCopy">검토 메모 모아 복사 (${Object.keys(fbAll()).length}개)</button></div></section>`; }
@@ -8344,6 +8349,14 @@ function bindQT(m){
   m.querySelectorAll("[data-qt]").forEach(t=>t.oninput=()=>{const q=cur(); q[t.dataset.qt]=t.value; touchQ(q,t.dataset.qt); clearTimeout(qtT); qtT=setTimeout(()=>{save(); const s=document.getElementById("qtSaved"); if(s) s.textContent="저장됨";},400);});
   m.querySelectorAll(".vopt[data-kv]").forEach(b=>b.onclick=()=>{const q=cur(); q.kv=b.dataset.kv; touchQ(q,"kv"); save(); const y=window.scrollY; render(); window.scrollTo({top:y});});
   const pk=document.getElementById("qtPickV"); if(pk) pk.onclick=()=>pickVerseSheet(key,cur);
+  const sw=document.getElementById("qtSwapV"); if(sw) sw.onclick=()=>{ const O=view.kvOpts||[], K=view.kvCur;
+    sheet("붙잡을 구절 바꾸기",`<p class="lead">오늘 본문에서 고른 구절입니다. 하나를 누르세요. 고른 구절은 오늘의 말씀 카드에 들어갑니다.</p><div class="vpick">${O.map(v=>{const on=v===K; return `<button class="vopt${on?" on":""}" data-kvs="${vId(v)}"><small>${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</small><span>${esc(v.t)}</span></button>`;}).join("")}</div><div class="row"><button class="btn ghost small" id="kvsAll">본문에서 직접 고르기</button></div>`);
+    const SR=document.getElementById("sheetRoot");
+    SR.querySelectorAll("[data-kvs]").forEach(b=>b.onclick=()=>{ const q=cur(); q.kv=b.dataset.kvs; touchQ(q,"kv"); save(); document.getElementById("sheetClose").click(); const y=window.scrollY; render(); window.scrollTo({top:y}); });
+    const al=document.getElementById("kvsAll"); if(al) al.onclick=()=>pickVerseSheet(key,cur); };
+  const lm=document.getElementById("lookMore"); if(lm) lm.ontoggle=()=>{view.lookOpen=lm.open;};
+  const hp=document.getElementById("qtHelp"); if(hp) hp.onclick=()=>{ const det=DETAIL[view.w+"-"+(view.d+1)], hc=PVQ.has(key)?!!(det&&det.christ):true, st=["본문 관찰","하나님의 성품",...(hc?["성경 전체로"]:[]),"적용"];
+    sheet("묵상 노트는 이렇게",`<p><b>${st.join(" → ")}</b> 순서로 갑니다. 마지막에 기도로 마칩니다.</p><p>정답을 고르는 문제가 아닙니다. 질문을 읽고 본문을 다시 본 뒤 <b>내 말로 한 줄</b> 적습니다.</p><p>막히면 '본문 열기'로 그 장면을 다시 읽거나, '다른 부분도 살펴보기'에서 작은 질문을 따라가 보세요.</p><p>적는 칸은 비워 두어도 마칠 수 있습니다. 적은 답은 '기록 → 관찰 기록'에 모입니다.</p><p>스토리 QT와 묵상 노트의 말씀은 개역개정입니다.</p>`); };
   const np=document.getElementById("qtNextP"); if(np) np.onclick=()=>{const q=cur(); q.pv=(q.pv||0)+1; touchQ(q,"pv"); save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
   m.querySelectorAll("[data-amen]").forEach(b=>b.onclick=()=>{ const k=keyOf(view.w,view.d); const q=(mem.qt[k] ||= {}); q.amen ||= {}; const n=b.dataset.amen;
     if(q.amen[n]) delete q.amen[n]; else q.amen[n]=todayStr(); touchQ(q,"amen"); save();
