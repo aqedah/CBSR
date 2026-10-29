@@ -7234,8 +7234,8 @@ function initMap(A){
   const arrows=[];
   R.forEach((r,ri)=>{
     const col=RC[ri%RC.length], ll=r.p.map(q=>[q[1],q[2]]);
-    L.polyline(ll,{color:"#fff",weight:6,opacity:.7,interactive:false}).addTo(map);
-    L.polyline(ll,{color:col,weight:3,dashArray:"8 6",interactive:false}).addTo(map);
+    L.polyline(ll,{color:"#fff",weight:9,opacity:.95,interactive:false}).addTo(map);
+    L.polyline(ll,{color:col,weight:5,opacity:1,dashArray:"12 7",lineCap:"round",interactive:false}).addTo(map);
     for(let k=0;k<ll.length-1;k++){ const a=ll[k],b=ll[k+1]; if(a[0]===b[0]&&a[1]===b[1]) continue;
       const mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
       const mk=L.marker(mid,{icon:L.divIcon({className:"",html:`<span class="rarrow" style="border-left-color:${col}"></span>`,iconSize:null}),interactive:false,keyboard:false}).addTo(map);
@@ -8133,8 +8133,8 @@ function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||
   const M=storyMapPts(w,d,s); const map=L.map(el,{zoomControl:false,zoomSnap:.25,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,attributionControl:true}); SV.map=map; map.attributionControl.setPrefix(false);
   L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:15,attribution:"위성: Esri, Maxar, Earthstar Geographics"}).addTo(map);
   /* 모여드는 길(예: 오순절에 여러 나라에서 예루살렘으로): 곳마다 목적지로 선을 긋습니다 */
-  if(M.to){ M.extra.forEach(p=>{ const ll=[[p[1],p[2]],[M.to[1],M.to[2]]]; L.polyline(ll,{color:"#ff5b45",weight:7,opacity:.15,interactive:false}).addTo(map); L.polyline(ll,{color:"#ff5b45",weight:2,opacity:.85,dashArray:"6 6",className:"sroute",interactive:false}).addTo(map); }); M.route=[M.to]; }
-  if(M.route.length>1){ const ll=M.route.map(p=>[p[1],p[2]]); L.polyline(ll,{color:"#ff5b45",weight:9,opacity:.18,interactive:false}).addTo(map); L.polyline(ll,{color:"#ff5b45",weight:2.5,opacity:.95,className:"sroute",lineJoin:"round",interactive:false}).addTo(map); }
+  if(M.to){ M.extra.forEach(p=>{ const ll=[[p[1],p[2]],[M.to[1],M.to[2]]]; L.polyline(ll,{color:"#1a0d08",weight:8,opacity:.6,interactive:false}).addTo(map); L.polyline(ll,{color:"#ffd23f",weight:4,opacity:1,dashArray:"9 7",lineCap:"round",interactive:false}).addTo(map); }); M.route=[M.to]; }
+  if(M.route.length>1){ const ll=M.route.map(p=>[p[1],p[2]]); L.polyline(ll,{color:"#1a0d08",weight:10,opacity:.65,lineJoin:"round",interactive:false}).addTo(map); L.polyline(ll,{color:"#ffd23f",weight:5,opacity:1,className:"sroute",lineJoin:"round",lineCap:"round",interactive:false}).addTo(map); }
   const lab=(p,alt)=>L.marker([p[1],p[2]],{icon:L.divIcon({className:"",html:`<span class="spl${alt?" alt":""}${p[3]?" est":""}${p[4]?" lf":""}">${esc(p[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]}),interactive:false}).addTo(map);
   /* 너무 가까운 이름(예: 예루살렘과 유다)은 겹치므로 먼저 나온 것만 씁니다 */
   const put=[]; const near=p=>put.some(q=>Math.abs(q[1]-p[1])<.22&&Math.abs(q[2]-p[2])<.3); M.route.forEach(p=>{ lab(p,0); put.push(p); }); M.extra.forEach(p=>{ if(near(p)) return; lab(p,M.route.length>1||!!M.to); put.push(p); });
