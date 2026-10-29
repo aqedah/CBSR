@@ -24,7 +24,7 @@ RULES=[
  ('자연 › 식물 › 나무',['tree','trees','olive_tree','fig_tree','palm','cedar','willow','broom_tree','stump','sprout','almond_blossom'],['나무','감람','무화과','종려','백향목','버드나무']),
  ('자연 › 식물 › 꽃·풀',['flowers','grass','poppies','plant','thorns'],['꽃','들풀','풀']),
  ('자연 › 동물 › 양·목자',['sheep','shepherd','lamb','sheepfold','ram','goat'],['양','목자']),
- ('자연 › 동물 › 새',['dove','birds','ravens'],['비둘기','까마귀','새']),
+ ('자연 › 동물 › 새',['dove','birds','ravens','eagle','sparrows'],['비둘기','까마귀','새']),
  ('자연 › 동물 › 짐승',['deer','donkey','camel','lion','fox','ant','horse','cattle','oxen','fish','frogs','locusts'],['사슴','나귀','낙타','사자','여우','개미','말','소','물고기']),
 ]
 OBJ=[
@@ -76,8 +76,8 @@ def classify(r):
         if r.get('refs'): f+=' › '+FULL[r['refs'][0][0]-1]
     elif role=='symbolic': f='상징·환상'
     elif role=='landscape': f=first(r,RULES) or '자연 › 기타'
-    elif role=='setting': f=first(r,PLACE) or first(r,RULES) or '장소 › 기타'
-    elif role=='object': f=first(r,OBJ) or first(r,PEOPLE) or first(r,PLACE) or first(r,RULES) or '물건 › 기타'
+    elif role=='setting': f=first(r,PLACE) or first(r,OBJ) or first(r,RULES) or '장소 › 기타'
+    elif role=='object': f=first(r,RULES[-3:]) or first(r,OBJ) or first(r,PEOPLE) or first(r,PLACE) or first(r,RULES) or '물건 › 기타'
     else: f=first(r,PEOPLE) or first(r,PLACE) or first(r,OBJ) or first(r,RULES) or '사람 › 기타'
     t=next((n for n,tg,w in TIME if _m(r,tg,w)),'')
     s=next((n for n,tg,w in SEASON if _m(r,tg,w)),'')

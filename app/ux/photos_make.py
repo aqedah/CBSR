@@ -2,7 +2,7 @@ import json,glob,os,re
 from PIL import Image
 import numpy as np
 G='/home/claude/rj/site_src/img/g'
-SRC={'g14':'s12','g15':'s13','g12':'s14','g13':'s15','g21':'s16','g16':'s17','g17':'s18','g18':'s19','g19':'s20','g20':'raw4/t1','g22':'raw4/t2','g23':'raw4/t3','g24':'raw4/t4','g25':'raw5/p3','g26':'raw5/p2','g27':'raw5/p1','g28':'raw5/a','g29':'raw6/q1','g34':'raw6/q2','g31':'raw6/q3','g32':'raw6/q4','g33':'raw6/q5','g30':'raw6/q6','g35':'raw7/w3','g36':'raw7/w1','g37':'raw7/w2','g38':'raw7/w4'}
+SRC={'g14':'s12','g15':'s13','g12':'s14','g13':'s15','g21':'s16','g16':'s17','g17':'s18','g18':'s19','g19':'s20','g20':'raw4/t1','g22':'raw4/t2','g23':'raw4/t3','g24':'raw4/t4','g25':'raw5/p3','g26':'raw5/p2','g27':'raw5/p1','g28':'raw5/a','g29':'raw6/q1','g34':'raw6/q2','g31':'raw6/q3','g32':'raw6/q4','g33':'raw6/q5','g30':'raw6/q6','g35':'raw7/w3','g36':'raw7/w1','g37':'raw7/w2','g38':'raw7/w4','g39':'raw8/v1','g40':'raw8/v2','g41':'raw8/v5','g42':'raw8/v3','g43':'raw8/v4','g44':'raw8/v6'}
 def parse_refs(s):
     out=[]
     for part in filter(None,s.split(';')):
