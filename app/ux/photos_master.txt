@@ -640,3 +640,19 @@ g47_12|g||진을 치/밤/진영|camp,tents,night,fire||2,4,5,6|dark|50|달빛 �
 g47_13|g||무덤/묘실/장사|tomb,rock_tomb,light||2,6,7,9|dark|50|바위를 판 가족 무덤 굴 안|||setting
 g47_14|g||돌무더기/비석/기둥을 세웠|cairn,pillar,desert,sunset||2,6|warm|50|언덕 위 돌무더기와 기념 돌기둥|||landscape
 g47_15|g||화덕/떡을 굽|oven,bread,fire||2,5,6,8|warm|50|흙 화덕 벽에 붙여 굽는 납작한 떡|||object
+
+g48_01|s|66:1|돌이켜/음성을 알아 보려고/뒤에서 들으니/밧모|old_man,sea,rock,light||10|dark|50|밧모 섬 바위에서 빛 쪽으로 돌아보는 요한(계 1:9–12)|||scene
+g48_02|s|66:1|발은 풀무|candlestand,light,feet||10|dark|50|촛대 사이 빛 속의 발(계 1:13–15)|발이 불꽃처럼 타오르게 과장됨||scene
+g48_03|s|66:1|발 앞에 엎드/오른손을/죽은 자 같이|old_man,bowing,hand,light||10|dark|50|빛 앞에 엎드린 요한의 어깨에 얹힌 손(계 1:17)|||scene
+g48_04|s|66:1-3|일곱 교회에 편지/일곱 교회|road,travelers,city,dust||10|warm|50|소아시아 돌길을 걷는 두 전령(계 1:11)|||scene
+g48_05|s|66:2|에베소/처음 사랑|ruins,city,oil_lamp,columns|에베소|10|dark|50|기둥 길 도시 앞의 등잔 하나(계 2:1–5)|||scene
+g48_06|s|66:2|서머나/생명의 관/죽도록 충성|prison,chains,wreath,light|서머나|10|dark|50|감옥 바닥의 쇠사슬과 푸른 잎 관(계 2:10)|||object
+g48_07|s|66:3|문 밖에 서서/문을 두드/두드리노니|door,hand,light,house||10|dark|50|닫힌 문을 두드리는 손과 문틈의 빛(계 3:20)|||scene
+g48_08|s|66:4|열린 문/이리로 올라오라|sky,clouds,light,man||10|dark|50|먹구름 사이 열린 빛의 문과 작은 사람(계 4:1)|||scene
+g48_09|s|66:4|무지개/유리 바다|throne,rainbow,fire||10|bright|50|녹빛 보좌와 불꽃(계 4:2–5)|형광 녹색, 게임 화면 같음||scene
+g48_10|s|66:4|면류관을/관을 보좌 앞에|elders,crown||10|bright|50|관을 내려놓는 장로들(계 4:10)|요즘 아랍 옷(흰 토브·머리띠), 유리 바닥||scene
+g48_11|s|66:5|어린 양|lamb,incense,light||10|bright|50|흰빛 속 어린 양(계 5:6)|목의 붉은 상처가 과장됨||scene
+g48_12|s|66:6|흰 말/붉은 말/검은 말/청황색 말|horses,dust,riders||10|dark|50|먼지 속을 달려오는 네 말(계 6:1–8)|||scene
+g48_13|s|66:6;66:7|흰 두루마기/흰 옷을/제단 아래|crowd,white_robe,light,hands||10|dark|50|빛 속에서 흰 옷을 받으려 손 뻗는 사람들(계 6:9–11)|||scene
+g48_14|s|66:6|여섯째 인/굴과 바위|eclipse,cave,crowd||10|dark|50|굴로 숨는 왕과 사람들(계 6:12–16)|요즘 군복, 공포 영화 같은 표정||scene
+g48_15|s|66:7|바람을 붙잡/땅의 네 모퉁이|sea,calm,tree,still||10|bright|50|잎 하나 흔들리지 않는 잔잔한 바다(계 7:1)|||landscape
