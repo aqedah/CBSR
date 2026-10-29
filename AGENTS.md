@@ -8,7 +8,8 @@
    - 화면: `app/template3.html`
    - 지도 지명: `app/gaz.json` (`{"places":[[이름, 위도, 경도, 종류(, 추정 0/1, 확실성 0–1000)]], "people":[…]}`)
    - 빌드: `app/build_site.py` → `site/` 를 main에 복사
-3. 원본을 바꾼 대화가 직접 빌드할 수 없으면 `source` 가지에만 커밋하고 끝냅니다. CBSR을 맡은 대화가 다음 배포 때 source 가지의 바뀐 파일을 받아 함께 빌드합니다.
+3. `source` 가지의 `app/`에 커밋하면 GitHub Actions(`.github/workflows/build.yml`)가 2–3분 안에 빌드해서 main에 올립니다. 직접 빌드하지 않아도 됩니다.
+   - 목사님이 앱 관리자 화면에서 고친 내용은 `app/edits/inbox/`로 들어오고, 이 빌드가 원본 파일에 반영한 뒤 inbox를 비웁니다.
 4. 커밋 작성자는 aqedah입니다. 공개 파일 안에 이메일을 쓰지 않습니다.
 
 ## MILALWV와의 관계
