@@ -1649,7 +1649,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .dhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:8px}
 .dhead .dtl{min-width:0}
 .dhead h2{margin:0;font-size:27px;line-height:1.25}
-.dmeta{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.dmeta{margin:6px 0 0;font-size:14px;color:var(--muted)}.dmeta span+span::before{content:" · "}html.v2 .daycard{position:relative}html.v2 .daycard>.dhead .dicons{position:absolute;top:14px;right:16px}html.v2 .daycard .cbtn{width:40px;height:40px}html.v2 .dmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}html.v2 .dmeta span::before{content:none}html.v2 .dmeta span{font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--bg2,#e9efe9);color:var(--ink);white-space:nowrap}html.v2 .dmeta span b{font-weight:700}html.v2 .dmeta .okc{background:#e1f0e6;color:var(--ok,#2c7a4b);font-weight:700}
 .dmeta .okc{color:var(--ok)}
 .dicons{display:flex;gap:8px;flex:none;margin-top:2px}
 .cbtn{width:42px;height:42px;border-radius:50%;border:0;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;cursor:pointer}
@@ -7581,7 +7581,7 @@ function renderRead(){
   if(!TRY&&!window.CBSR_V2&&view.w===here.w&&view.d===here.d){ const M=missedDays(); if(M.length) h+=`<details class="missed"${view.missOpen?" open":""} id="missBox"><summary>읽지 않은 날 ${M.length}일 <span aria-hidden="true">›</span></summary><div class="qtstart-list">${M.map(([a,b])=>dayBtn(a,b)).join("")}</div></details>`; }
   // 오늘 본문: 제목 → 분량·시간 → 본문 펼치기 → (접힌) 읽기 전 30초 도움
   const dtv=dateOf(w,d), dd0=dayDiff(today0(),dtv), tag=TRY?["today","시험 본문"]:dd0===0?["today","오늘 읽을 본문"]:dd0<0?["past","지난 본문"]:["next","미리 보기"];
-  h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl"><h2>${esc(p.label)}</h2><p class="dmeta">${p.ch.length}${b0===19?"편":"장"} · 약 ${mins}분${(()=>{ const R=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key]; return R&&R.core?` · 핵심 읽기 <b class="rjc">${esc(R.core)}</b>`:""; })()}${done?` · <b class="okc">✓ 통독 완료</b>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
+  h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl"><h2>${esc(p.label)}</h2><p class="dmeta"><span>${p.ch.length}${b0===19?"편":"장"}</span><span>약 ${mins}분</span>${(()=>{ const R=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key]; return R&&R.core?`<span>핵심 읽기 <b class="rjc">${esc(R.core)}</b></span>`:""; })()}${done?`<span class="okc">✓ 통독 완료</span>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
   const TXd=PVQ.has(key)?null:dayTools(w,d), tl=TXd?TXd.q:[];
