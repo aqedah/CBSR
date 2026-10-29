@@ -1364,6 +1364,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .spanel{background:rgba(22,17,12,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--sline);border-radius:14px;padding:16px 16px 14px}
 .k-cover .sbox{bottom:auto;top:50%;transform:translateY(-50%);text-align:center}
 .k-book .sbox{bottom:auto;top:50%;transform:translateY(-50%);text-align:center}.k-book .skick{font-size:13px;letter-spacing:.2em;color:var(--sgold);margin-bottom:12px}.k-book h1{font-size:40px}.k-book .ssubt{font-size:15.5px;color:var(--ssub);margin-top:14px;line-height:1.6;white-space:pre-line}.k-book .sph img{filter:brightness(.42) saturate(.8)}
+.trnote{font-size:12.5px;color:var(--muted);margin:4px 0 0}.strnote{margin-top:18px;font-size:11.5px;color:rgba(255,255,255,.6);letter-spacing:.04em}
 .k-cover .skick{font-size:13px;letter-spacing:.2em;color:var(--sgold);margin-bottom:12px}
 .k-cover .ssubt{font-size:15.5px;color:var(--ssub);margin-top:14px;line-height:1.6;white-space:pre-line}
 .k-cover .sph::after{background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,.7) 100%)}
@@ -7039,13 +7040,19 @@ async function loadBible(){
     if(TR!=="krv"){ try{ B64=await loadTrScript(TR); window.BIBLE_SRC=TR; }catch(e){ bibleErr=null; console.warn("번역본을 불러오지 못해 개역개정으로 엽니다",e); } }
     const bin=Uint8Array.from(atob(B64),c=>c.charCodeAt(0));
     const ds=new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip"));
-    BIBLE=JSON.parse(await new Response(ds).text());
+    BIBLE=JSON.parse(await new Response(ds).text()); BIBLE_SEL=BIBLE; BIBLE_K=BIBLE;
+    if(window.BIBLE_SRC!=="krv"&&window.CBSR_V2){ try{ const bk=Uint8Array.from(atob(BIBLE_B64),c=>c.charCodeAt(0)); BIBLE_K=JSON.parse(await new Response(new Blob([bk]).stream().pipeThrough(new DecompressionStream("gzip"))).text()); }catch(e){ BIBLE_K=BIBLE; } }
   }catch(e){bibleErr="이 브라우저에서는 본문을 열 수 없습니다. 최신 크롬이나 사파리에서 열어 주세요.";}
   render();
 }
-const dayCache={}, bookCache={};
-function dayA(w,d){const k=w+"-"+d; return dayCache[k] ||= analyzeDay(PLAN.plan[w-1][d].ch,BIBLE,EI);}
-function bookA(b){return bookCache[b] ||= analyzeDay(BIBLE[b-1].map((_,i)=>[b,i+1]),BIBLE,EI);}
+/* 번역: 본문 읽기는 고른 번역, 스토리 QT·묵상 노트·도전은 늘 개역개정(원고가 개역개정 낱말로 쓰여 있음) */
+let BIBLE_SEL=null, BIBLE_K=null; const DC={sel:{},k:{}}, BC={sel:{},k:{}};
+const dayCacheOf=()=>BIBLE===BIBLE_K&&BIBLE_K!==BIBLE_SEL?DC.k:DC.sel, bookCacheOf=()=>BIBLE===BIBLE_K&&BIBLE_K!==BIBLE_SEL?BC.k:BC.sel;
+function useKRV(on){ if(!BIBLE_SEL) return; const want=on&&BIBLE_K?BIBLE_K:BIBLE_SEL; if(BIBLE!==want){ BIBLE=want; if(typeof SV!=="undefined"&&SV) SV.cache={}; } }
+function withKRV(fn){ const prev=BIBLE; useKRV(true); try{ return fn(); } finally{ BIBLE=prev; } }
+const qtTabKRV=()=>!!window.CBSR_V2&&(view.tab==="qt"||view.tab==="challenge"||!!document.getElementById("storyRoot"));
+function dayA(w,d){const k=w+"-"+d, C=dayCacheOf(); return C[k] ||= analyzeDay(PLAN.plan[w-1][d].ch,BIBLE,EI);}
+function bookA(b){const C=bookCacheOf(); return C[b] ||= analyzeDay(BIBLE[b-1].map((_,i)=>[b,i+1]),BIBLE,EI);}
 const CTX={abbr:PLAN.abbr,
   bookPeople:b=>[...bookA(b).people.values()].sort((x,y)=>y.n-x.n).slice(0,30).map(x=>x.name),
   bookPlaces:b=>[...bookA(b).places.values()].sort((x,y)=>y.n-x.n).slice(0,30).map(x=>x.name)};
@@ -7864,7 +7871,7 @@ function renderQT(){
   const ST=sceneTraits(w,d,A,godTraits(A)), traits=ST.list, R=ST.R;
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
   const V2Q=!!window.CBSR_V2;
-  let h=V2Q?`<section class="sec"><span class="label">묵상 노트 · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${STORY()&&storySlides(w,d).length?`<button class="qtstory2" id="qtStory"><b>스토리 QT</b><span>카드를 넘기며 오늘 이야기를 먼저 따라갑니다 ›</span></button>`:""}<div class="qtguide">${(()=>{ const hc=PVQ.has(key)?!!(det&&det.christ):true, st=["본문 관찰","하나님의 성품",...(hc?["성경 전체로"]:[]),"적용","기도"]; return `<p><b>묵상 노트</b>는 ${st.length===5?"다섯":"네"} 걸음입니다. <span>${st.join(" → ")}</span></p>`; })()}<p>정답을 고르는 문제가 아닙니다. 본문을 다시 보고 <b>내 말로 적습니다</b>. 적는 칸은 비워 두어도 마칠 수 있습니다.</p></div></section>`
+  let h=V2Q?`<section class="sec"><span class="label">묵상 노트 · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">스토리 QT와 묵상 노트의 말씀은 개역개정입니다. 본문 읽기는 ${esc(TR_INFO[TR].name)}으로 보입니다.</p>`:""}${STORY()&&storySlides(w,d).length?`<button class="qtstory2" id="qtStory"><b>스토리 QT</b><span>카드를 넘기며 오늘 이야기를 먼저 따라갑니다 ›</span></button>`:""}<div class="qtguide">${(()=>{ const hc=PVQ.has(key)?!!(det&&det.christ):true, st=["본문 관찰","하나님의 성품",...(hc?["성경 전체로"]:[]),"적용","기도"]; return `<p><b>묵상 노트</b>는 ${st.length===5?"다섯":"네"} 걸음입니다. <span>${st.join(" → ")}</span></p>`; })()}<p>정답을 고르는 문제가 아닙니다. 본문을 다시 보고 <b>내 말로 적습니다</b>. 적는 칸은 비워 두어도 마칠 수 있습니다.</p></div></section>`
     :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${STORY()?`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`:""}</section>`;
   // 1 본문 관찰
   h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${eye.looks.length?`${V2Q?`<p class="lookhint">답의 실마리가 있는 구절 ${eye.looks.length}곳 · 눌러서 그 구절과 작은 질문을 보세요</p>`:""}<div class="looks${V2Q?" v2l":""}">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?(()=>{ const e0=(EYE[key]||{}).look||[], ex=e0[0]?`예) ${e0[0].t} (${fullRef(e0[0].r)}) — 이 말씀에서 본 것을 한두 줄로`:"위 질문의 답을 본문에서 찾아 한두 줄로 적어 보세요"; return `<div class="oneline obs"><label for="qt-obs">위 질문에 대한 나의 답</label><p class="fieldhint">본문에서 찾은 말과 장절을 그대로 옮겨도 좋습니다. 적은 답은 '기록 → 관찰 기록'에 모입니다.</p><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="${esc(ex)}">${esc(q.obs||"")}</textarea></div>`; })():`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
@@ -8136,7 +8143,7 @@ function sVerseSheet(id){ const [b,c,v,e]=id.split("-").map(Number); const C=(BI
 function storyCardHTML(s){ return sLinkRefs(storyCardHTML0(s)); }
 function storyCardHTML0(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</span>`:"", h2=s.h?`<h2>${smk(s.h)}</h2>`:"";
   const B=(s.b||[]).map(x=>typeof x==="string"?`<p>${smk(x)}</p>`:`<div class="sq2">${sWho(x.q)}${smk(x.q[0])}<small>${esc(x.q[1]||"")}</small></div>`).join("");
-  if(s.k==="cover") return `<div class="sbox"><div class="skick">${esc(s.kick||"")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
+  if(s.k==="cover") return `<div class="sbox"><div class="skick">${esc(s.kick||"")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}${TR!=="krv"?`<div class="strnote">말씀 인용: 개역개정</div>`:""}</div>`;
   if(s.k==="book") return `<div class="sbox"><div class="skick">${esc(s.kick||"이제 다른 책")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
   if(s.k==="quote") return `<div class="sbox">${lab}${B}<div class="sbigq" style="margin-top:14px">${smk(s.big)}</div><div class="sref">${esc(s.ref||"")}</div></div>`;
   if(s.k==="echo"){ const rv=!!s.reveal; return `<div class="sbox">${lab}${h2}<div class="spair2${rv?" hide-u":""}">${(s.pair||[]).map(x=>`<div>${x[2]&&window.CBSR_V2?`<span class="swho">${esc(x[2])}</span>`:""}${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 같은 말과 달라진 말 보기</button><div class="rvhide">${B}${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`:B}</div>`; }
@@ -8209,7 +8216,7 @@ function fbOpen(i,lab,host,after){ const o=fbAll(), k=fbKey(i), r=o[k]||{}; cons
   ov.querySelector("[data-s]").onclick=()=>{ const O=fbAll(); const v=ta.value.trim(); if(v) O[k]={n:v,lab:lab||"",t:Date.now()}; else delete O[k]; fbSave(O); close(); };
   ov.querySelector("[data-del]").onclick=()=>{ const O=fbAll(); delete O[k]; fbSave(O); close(); };
   ov.addEventListener("pointerup",e=>e.stopPropagation()); ov.addEventListener("pointerdown",e=>e.stopPropagation()); }
-function storyOpen(i,mode){ const {w,d}=view; if(futLock(w,d)&&!view.allowFut){ toast("이 날의 스토리 QT는 "+futMsg(w,d)+"."); return; } view.allowFut=false; const k=keyOf(w,d); try{ localStorage.setItem("cbsr-story-seen",MODE+":"+k); }catch(e){}
+function storyOpen(i,mode){ useKRV(true); const {w,d}=view; if(futLock(w,d)&&!view.allowFut){ toast("이 날의 스토리 QT는 "+futMsg(w,d)+"."); return; } view.allowFut=false; const k=keyOf(w,d); try{ localStorage.setItem("cbsr-story-seen",MODE+":"+k); }catch(e){}
   if(view.scKey!==k){ view.scKey=k; view.sRev=false; } storyFont();
   let r=document.getElementById("storyRoot"); if(!r){ r=document.createElement("div"); r.id="storyRoot"; document.body.appendChild(r); ovOpen(storyClose); }
   SV.mode=mode||""; SV.i=i||0; SV.hinted=!!mode; document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); storyShow(); }
@@ -9238,7 +9245,8 @@ function dayRingHTML(){ const here0=today0(), selN=dayNo(view.w,view.d), N=READ_
   return `<section class="rgwrap"><div class="rghead"><b>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><span>${esc(p?p.label:"")}</span>${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button></div>
     <div class="rgline">${me}<div class="rgs" id="rgScroll">${r}</div></div></section>`; }
 /* 내 스토리: 오늘 내게 주시는 말씀 → 아멘한 말씀 → 지난날 고른 말씀 */
-function myStoryItems(){ const out=[]; if(!BIBLE) return out; const tk=keyOf(here.w,here.d), seen=new Set();
+function myStoryItems(){ return withKRV(myStoryItems0); }
+function myStoryItems0(){ const out=[]; if(!BIBLE) return out; const tk=keyOf(here.w,here.d), seen=new Set();
   const dayOf=k=>{ const [w,d]=k.split("-").map(Number); return {w,d}; };
   const coverPh=(w,d)=>{ try{ const S=storySlides(w,d); return S[0]&&S[0].ph; }catch(e){ return null; } };
   const lab=(w,d)=>{ const p=dayPlan(w,d); return p?p.label:""; };
@@ -9429,6 +9437,7 @@ function v2Nav(){ const n=document.querySelector(".bnav-in"); if(!n) return; con
   n.style.gridTemplateColumns="repeat(5,1fr)"; document.documentElement.classList.add("v2"); storyFont();
   const dl=document.getElementById("dateLine"), tp=document.querySelector("header.top"); if(dl&&tp&&!dl._v2){ dl._v2=1; dl.setAttribute("role","button"); dl.tabIndex=0; const t=()=>tp.classList.toggle("wkopen"); dl.onclick=t; dl.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); t(); } }; } }
 function render(){
+  useKRV(qtTabKRV());
   renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today");
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
