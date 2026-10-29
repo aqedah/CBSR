@@ -48,6 +48,18 @@ service cloud.firestore {
       allow read: if signedIn();
       allow write: if isAdmin();
     }
+    // 함께 읽기(이름 공개를 켠 사람만): 별명·작은 사진·아멘한 성품·붙잡은 구절. 문서 이름은 열쇠에서 만든 공개 번호(24자)
+    match /together/{day}/p/{who} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && who.size() == 24 && day.size() <= 20
+        && request.resource.data.keys().hasOnly(['nick', 'ph', 'amen', 'kv', 'read', 'at'])
+        && request.resource.data.nick is string && request.resource.data.nick.size() > 0 && request.resource.data.nick.size() <= 20
+        && (request.resource.data.ph == null || (request.resource.data.ph is string && request.resource.data.ph.size() < 20000))
+        && request.resource.data.amen is list && request.resource.data.amen.size() <= 20
+        && request.resource.data.kv is string && request.resource.data.kv.size() <= 20
+        && request.resource.data.read is bool && request.resource.data.at is number;
+      allow delete: if signedIn() && who.size() == 24;
+    }
     match /stats/church {
       allow read: if signedIn();
       allow create: if signedIn() && request.resource.data.keys().hasOnly(['readers']) && request.resource.data.readers == 1;
