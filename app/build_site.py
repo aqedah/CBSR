@@ -172,7 +172,8 @@ head=f'''<!doctype html>
 <div id="appBoot" role="status"><div><div class="k">이야기 통독 노트</div><div class="t">오늘 통독</div><div class="s">이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div>
 '''
 html=head+body+'\n</body>\n</html>\n'
-open(f'{OUT}/index.html','w').write(html)
+# 2026-10-29 v2가 첫 화면(index.html)이 됨. v1은 v1.html로 남겨 둠(이전 화면)
+open(f'{OUT}/v1.html','w').write(html.replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/v1.html"'))
 # 시험 페이지(요 1-4장 하루): 연동 없음, 기록은 'try:' 앞머리를 붙여 앱 기록과 분리
 SHIM='<script>window.CBSR_TRY=1;(function(){try{var L=window.localStorage,P="try:",S={getItem:function(k){return L.getItem(P+k)},setItem:function(k,v){L.setItem(P+k,String(v))},removeItem:function(k){L.removeItem(P+k)},clear:function(){}};Object.defineProperty(window,"localStorage",{value:S,configurable:true});}catch(e){}})();</script>\n'
 btag=f'<script src="bible.js?v={h(bible[:5000]+str(len(bible)))}"></script>\n'
@@ -185,7 +186,7 @@ SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="
 shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
 open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
-VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('Object.defineProperty(window,"localStorage"','/* v1 기록 가져오기: v2를 처음 열 때 한 번, v1(앞머리 없는 기록)을 v2: 쪽에 복사(이미 있는 v2 기록은 그대로) */if(!L.getItem("v2:cbsr-v1import")){var K=[];for(var i=0;i<L.length;i++){var k=L.key(i);if(k&&!/^(v2|try|story|now):/.test(k))K.push(k);}K.forEach(function(k){if(L.getItem("v2:"+k)==null)L.setItem("v2:"+k,L.getItem(k));});L.setItem("v2:cbsr-v1import",new Date().toISOString()+" "+K.length);}Object.defineProperty(window,"localStorage"',1).replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search)||S.getItem("cbsr-mode")==null)')
+VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('Object.defineProperty(window,"localStorage"','/* v1 기록 가져오기: v2를 처음 열 때 한 번, v1(앞머리 없는 기록)을 v2: 쪽에 복사(이미 있는 v2 기록은 그대로) */if(!L.getItem("v2:cbsr-v1import")){var K=[];for(var i=0;i<L.length;i++){var k=L.key(i);if(k&&/^(cbsr-|rjnote:)/.test(k))K.push(k);}K.forEach(function(k){if(L.getItem("v2:"+k)==null)L.setItem("v2:"+k,L.getItem(k));});L.setItem("v2:cbsr-v1import",new Date().toISOString()+" "+K.length);}try{for(var j=0;j<L.length;j++){var kk=L.key(j);if(kk&&/^(cbsr-|rjnote:)/.test(kk)&&kk!=="cbsr-login-v1"){window.CBSR_HADV1=1;break;}}}catch(e){}Object.defineProperty(window,"localStorage"',1).replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search))S.setItem("cbsr-mode","y365");else if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","rj");if(0)')
 exec(open('review_build.py').read())
 import base64 as _b64,gzip as _gz
 _BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())).decode()); _NM={}; _NR=_re.compile(r'^([가-힣]{2,})(을|를|의|에게|과|와|께서|에서|으로)$')
@@ -197,18 +198,21 @@ for _bk in _BB:
         _m=_NR.match(_tk)
         if _m: _NM.setdefault(_m.group(1),set()).add(_m.group(2))
 NOUNSHIM='<script>window.NOUNS_KRV='+json.dumps(sorted(k for k,v in _NM.items() if len(v)>=2),ensure_ascii=False,separators=(',',':'))+';</script>'
-open(f'{OUT}/v2.html','w').write(shead.replace(SSHIM,VSHIM+NOUNSHIM).replace('story.html','v2.html')+body+'\n</body>\n</html>\n')
-V=h(html+bible)
+v2html=shead.replace(SSHIM,VSHIM+NOUNSHIM).replace('story.html','v2.html')+body+'\n</body>\n</html>\n'
+open(f'{OUT}/v2.html','w').write(v2html)
+ihead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+VSHIM+NOUNSHIM)
+open(f'{OUT}/index.html','w').write(ihead+body+'\n</body>\n</html>\n')
+V=h(html+v2html+bible)
 sw=f'''/* 오프라인 지원: 앱 화면은 인터넷이 되면 늘 새로 받고(network first),
    성경 본문·지형도·아이콘·글꼴·라이브러리는 처음 받은 뒤 보관해 둡니다(cache first). 기록은 Firestore가 따로 보관합니다. */
 const V="cbsr-{V}";
-const SHELL=["./","index.html","config.js","sync.js","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png"];
+const SHELL=["./","index.html","v2.html","v1.html","config.js","sync.js","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png"];
 self.addEventListener("install",e=>{{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));}});
-self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));}});
+self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>/^cbsr-/.test(k)&&k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));}});
 self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(/firestore\\.googleapis\\.com|identitytoolkit|securetoken|firebaseinstallations/.test(u.hostname))return;
   const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/icons\\/|\\/img\\//.test(u.pathname);
-  if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match(/v2\\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}}
+  if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match(/v1\\.html$/.test(u.pathname)?"v1.html":/v2\\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}}
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''
 open(f'{OUT}/sw.js','w').write(sw)

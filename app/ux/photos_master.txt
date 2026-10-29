@@ -552,7 +552,7 @@ g41_14|g||노인/아이|elder,child,city_gate,stone_seat||5,6,7,8|warm|50|성문
 g41_15|g||짐을 서로 지라/짐을 지|carry,men,road,sunset||5,6,8,10|warm|50|해 질 녘 짐을 함께 메고 가는 두 사람|||scene
 g42_01|g||성막/회막|tabernacle,tabernacle_court,camp,smoke||4|warm|50|진영 가운데 흰 휘장을 두른 성막 뜰|||setting
 g42_02|g||번제단/제단 뿔/번제|altar,fire,smoke,bronze||4,5,6|warm|50|뿔 달린 놋 제단 위의 불|||object
-g42_03|g||성전|temple_stones,pilgrim||9|bright|50|크게 다듬은 흰 돌벽과 계단을 오르는 사람들|피라미드처럼 그려짐||setting
+g42_03|g||성전|temple_stones,pilgrim||9|bright|50|크게 다듬은 흰 돌벽과 계단을 오르는 사람들|||setting
 g42_04|g||행각/회랑|pillars,colonnade,light,temple||6,9,10|warm|50|빛이 비껴 드는 돌기둥 회랑|||setting
 g42_05|g||보좌/왕위|throne,palace,cedar,stairs||6,7|warm|50|백향목 들보 아래 비어 있는 보좌|||setting
 g42_06|g||장막/진영|tents,camp,desert,smoke||2,4|warm|50|광야에 펼쳐진 검은 장막들과 화덕 연기|||setting
