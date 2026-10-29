@@ -55,7 +55,7 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['nick', 'ph', 'amen', 'kv', 'read', 'at'])
         && request.resource.data.nick is string && request.resource.data.nick.size() > 0 && request.resource.data.nick.size() <= 20
         && (request.resource.data.ph == null || (request.resource.data.ph is string && request.resource.data.ph.size() < 20000))
-        && request.resource.data.amen is list && request.resource.data.amen.size() <= 20
+        && request.resource.data.amen is list && request.resource.data.amen.size() <= 60
         && request.resource.data.kv is string && request.resource.data.kv.size() <= 20
         && request.resource.data.read is bool && request.resource.data.at is number;
       allow delete: if signedIn() && who.size() == 24;
