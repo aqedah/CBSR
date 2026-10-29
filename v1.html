@@ -9983,7 +9983,10 @@ function bindDayRing(){ const me=document.getElementById("rgMe"); if(me) me.oncl
   const sc=document.getElementById("rgScroll"), se=document.getElementById("rgSel")||[...document.querySelectorAll("#rgScroll .rg:not(.fut)")].pop();
   /* 손을 떼면 가장 가까운 동그라미를 나의 통독 옆에 붙입니다(스냅을 따르지 않는 브라우저용) */
   if(sc&&!sc._snap){ sc._snap=1; let t=0; const snap=()=>{ const L=[...sc.querySelectorAll(".rg")]; if(!L.length) return; const x0=sc.getBoundingClientRect().left; let bd=1e9, dl=0; for(const b of L){ const dd=b.getBoundingClientRect().left-x0; if(Math.abs(dd)<Math.abs(bd)){ bd=dd; } } if(Math.abs(bd)>1&&sc.scrollLeft+bd<=sc.scrollWidth-sc.clientWidth+1) sc.scrollTo({left:sc.scrollLeft+bd,behavior:"smooth"}); };
-    sc.addEventListener("scroll",()=>{ clearTimeout(t); t=setTimeout(snap,140); },{passive:true}); } if(sc&&se){ const a=sc.getBoundingClientRect(), b=se.getBoundingClientRect(); sc.scrollLeft+=b.left-a.left-a.width/2+b.width/2; }
+    sc.addEventListener("scroll",()=>{ clearTimeout(t); t=setTimeout(snap,140); },{passive:true}); } /* 오늘(또는 고른 날)을 '나의 통독' 바로 옆, 줄 맨 앞에 붙입니다. 지난 날은 왼쪽으로 넘겨 봅니다(목사님 2026-10-29) */
+  if(sc&&se){ const need=()=>{ const a=sc.getBoundingClientRect(), b=se.getBoundingClientRect(); return sc.scrollLeft+b.left-a.left; }; let x=need();
+    if(x>sc.scrollWidth-sc.clientWidth){ let sp=sc.querySelector(".rgpad"); if(!sp){ sp=document.createElement("span"); sp.className="rgpad"; sp.style.cssText="flex:none;height:1px"; sc.appendChild(sp); } sp.style.width=Math.ceil(x-(sc.scrollWidth-sc.clientWidth))+"px"; }
+    sc.scrollLeft=x; }
   const cl=document.getElementById("rgCal"); if(cl) cl.onclick=openWeekPicker;
   const td=document.getElementById("rgToday"); if(td) td.onclick=()=>{ const t=view.tab; view.pre=false; view.revW=null; view.w=here.w; view.d=here.d; view.game=null; view.tab=t; render(); scrollTo({top:0}); }; }
 
