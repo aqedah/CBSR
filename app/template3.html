@@ -3619,6 +3619,9 @@ function myStoryItems0(){ const out=[]; if(!BIBLE) return out; const tk=keyOf(he
   try{ const p=dayPlan(here.w,here.d); if(p&&!isRev(here.d)){ const A=dayA(here.w,here.d), q=mem.qt[tk]||{}; let v=q.kv?vById(A,q.kv):null, mine=!!v;
       if(!v){ const c=qtVerses(A,godTraits(A),tk); v=c[0]; }
       if(v){ seen.add(vId(v)); out.push({k:"today",mine,kick:mine?"오늘 내게 주시는 말씀":"오늘 본문에서 받는 말씀",t:v.t,ref:`${PLAN.abbr[v.b-1]} ${v.c}:${v.v}`,sub:mine?fmt(dateOf(here.w,here.d),{month:"long",day:"numeric"})+" · "+lab(here.w,here.d):"묵상 노트에서 오늘의 말씀을 고르면 이 자리에 남습니다",ph:coverPh(here.w,here.d)}); } } }catch(e){}
+  /* 주일(리딩지저스 쉬는 날): 부활하신 주님의 평강 */
+  if(isRev(here.d)||(today0().getDay()===0&&!dayPlan(here.w,here.d))){ const ph=(typeof PHOTOS!=="undefined"?PHOTOS:[]).find(p=>p.id==="g23_12")||(typeof PHOTOS!=="undefined"?PHOTOS:[]).find(p=>p.id==="g23_13");
+    out.push({k:"sunday",mine:true,kick:"오늘은 주일입니다",t:"이 날 곧 안식 후 첫날 … 예수께서 오사 가운데 서서 이르시되 너희에게 평강이 있을지어다",ref:"요 20:19",sub:"부활하신 예수님과 함께 평안한 하루 되시기 바랍니다.",ph}); }
   /* 아멘한 말씀 */
   const AM=[]; for(const k in mem.qt){ const am=(mem.qt[k]||{}).amen||{}; for(const n in am) AM.push([am[n],k,n]); }
   AM.sort((a,b)=>String(b[0]).localeCompare(String(a[0])));
@@ -3646,7 +3649,7 @@ function myStoryOpen(){ const L=myStoryItems(); if(!L.length){ toast("아직 보
     T=setTimeout(()=>go(i+1),7000); }
   document.addEventListener("keydown",key); show(); }
 function bindDayRing(){ const me=document.getElementById("rgMe"); if(me) me.onclick=()=>myStoryOpen(); document.querySelectorAll("[data-rg]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.rg.split("-").map(Number); const t=view.tab; view.pre=false; view.revW=null; view.w=w; view.d=d; view.open=false; view.game=null; view.tab=t; render(); scrollTo({top:0}); });
-  const sc=document.getElementById("rgScroll"), se=document.getElementById("rgSel"); if(sc&&se){ const a=sc.getBoundingClientRect(), b=se.getBoundingClientRect(); sc.scrollLeft+=b.left-a.left-a.width/2+b.width/2; }
+  const sc=document.getElementById("rgScroll"), se=document.getElementById("rgSel")||[...document.querySelectorAll("#rgScroll .rg:not(.fut)")].pop(); if(sc&&se){ const a=sc.getBoundingClientRect(), b=se.getBoundingClientRect(); sc.scrollLeft+=b.left-a.left-a.width/2+b.width/2; }
   const cl=document.getElementById("rgCal"); if(cl) cl.onclick=openWeekPicker;
   const td=document.getElementById("rgToday"); if(td) td.onclick=()=>{ const t=view.tab; view.pre=false; view.revW=null; view.w=here.w; view.d=here.d; view.game=null; view.tab=t; render(); scrollTo({top:0}); }; }
 
