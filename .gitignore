@@ -1,0 +1,4 @@
+app/site/
+app/npm/node_modules/
+app/.fb_refresh
+__pycache__/

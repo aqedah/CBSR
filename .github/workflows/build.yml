@@ -1,0 +1,60 @@
+# source 가지에 원본이 올라오면 앱을 빌드해서 main(공개 사이트)에 올립니다.
+# 목사님이 앱에서 고친 내용(app/edits/inbox)도 여기서 원본 파일에 반영합니다.
+name: 빌드해서 올리기
+on:
+  push:
+    branches: [source]
+    paths: ['app/**', '.github/workflows/build.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: cbsr-build
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: source, path: src }
+      - uses: actions/checkout@v4
+        with: { ref: main, path: pub }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: pip install pillow
+      - name: 라이브러리
+        working-directory: src/app/npm
+        run: npm ci --no-audit --no-fund
+      - name: 고친 내용 반영과 빌드
+        working-directory: src/app
+        run: |
+          if [ -f apply_edits.py ]; then python3 apply_edits.py; fi
+          python3 photo_dec.py || echo "그림 결정 읽기 건너뜀"
+          python3 build_site.py
+      - name: 원본에 바뀐 것 보관
+        working-directory: src
+        run: |
+          git config user.name aqedah
+          git config user.email aqedah@users.noreply.github.com
+          git add -A app
+          if ! git diff --cached --quiet; then
+            git commit -q -m "빌드가 원본에 반영 [skip ci]"
+            git pull -q --rebase origin source && git push -q origin HEAD:source
+          fi
+      - name: 공개 사이트(main)에 올리기
+        working-directory: pub
+        env:
+          MSG: ${{ github.event.head_commit.message }}
+        run: |
+          rm -rf img/g img/gx
+          cp -r ../src/app/site/. .
+          git add -A
+          if git diff --cached --quiet; then echo "바뀐 것 없음"; exit 0; fi
+          git config user.name aqedah
+          git config user.email aqedah@users.noreply.github.com
+          M="${MSG:-수동 빌드}"; M="${M#원본 보관: }"
+          git commit -q -m "${M%%$'\n'*}"
+          git push -q origin HEAD:main
