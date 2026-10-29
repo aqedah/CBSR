@@ -1127,7 +1127,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 /* ===== V2 리뉴얼: 오늘(사진 + 종이 한 장) · 본문 먼저 ===== */
 details.qa summary{cursor:pointer;font-weight:700;color:var(--muted)}details.qa .qaq{font-weight:700;margin:10px 0 4px}details.qa .qaa{margin:0;line-height:1.7}
 html.v2{--night:#16120E;--ember:#E2B874;--f-disp:"Noto Serif KR","Gowun Batang",serif}
-html.v2 .tdh{min-height:min(46vh,420px);cursor:pointer}
+html.v2 .tdh{min-height:min(46vh,420px);cursor:pointer}html.v2 .rgwrap+.tdh{margin-top:4px}
 html.v2 .tdin{align-items:stretch;text-align:left;padding:16px 20px 48px}
 html.v2 .tdttl{margin-top:auto}
 html.v2 .tdk{margin:0 0 6px;letter-spacing:0;font-size:13.5px;font-weight:600;color:var(--ember)}
@@ -1163,7 +1163,7 @@ html.v2 .bnav .tab[aria-selected="true"]::before{content:"";position:absolute;to
 
 /* V2: 요일 고리 + 놀이판 */
 html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,html.v2 #revRow{display:none!important}
-.rgwrap{margin:4px -16px 6px;padding:0 0 10px;border-bottom:1px solid var(--line);min-width:0;max-width:100vw;overflow:hidden}
+.rgwrap{margin:0 -16px -14px;padding:0 0 4px;border-bottom:0;min-width:0;max-width:100vw;overflow:hidden}
 .rghead{display:flex;align-items:baseline;gap:8px;padding:0 16px 8px}.rghead b{font:700 20px var(--f-disp,serif);white-space:nowrap}.rghead span{color:var(--muted);font-size:14px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rgtoday{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font-size:12.5px;color:var(--accent)}
 .rgcal{border:0;background:none;color:var(--muted);padding:4px;align-self:center}
