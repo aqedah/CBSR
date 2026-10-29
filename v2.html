@@ -9262,11 +9262,13 @@ function myStoryItems0(){ const out=[]; if(!BIBLE) return out; const tk=keyOf(he
   /* 아멘한 말씀 */
   const AM=[]; for(const k in mem.qt){ const am=(mem.qt[k]||{}).amen||{}; for(const n in am) AM.push([am[n],k,n]); }
   AM.sort((a,b)=>String(b[0]).localeCompare(String(a[0])));
-  for(const [dt,k,n] of AM.slice(0,12)){ try{ const {w,d}=dayOf(k); if(!dayPlan(w,d)) continue; const A=dayA(w,d), G=godTraits(A), ST=sceneTraits(w,d,A,G), t=[...(ST.list||[]),...G].find(x=>x.at&&x.at.n===n); if(!t||!t.verse) continue; const v=t.verse; if(seen.has(vId(v)+n)) continue; seen.add(vId(v)+n);
+  /* 최근 일주일만: 아멘한 날짜(없으면 그 본문 날짜)가 오늘부터 6일 전까지 */
+  const wk0=new Date(today0().getTime()-6*864e5), inWeek=(dt,w,d)=>{ const t=/^\d{4}-\d{2}-\d{2}$/.test(dt)?new Date(dt+"T00:00:00"):dateOf(w,d); return t>=wk0&&t<=today0(); };
+  for(const [dt,k,n] of AM){ try{ const {w,d}=dayOf(k); if(!dayPlan(w,d)||!inWeek(String(dt),w,d)) continue; const A=dayA(w,d), G=godTraits(A), ST=sceneTraits(w,d,A,G), t=[...(ST.list||[]),...G].find(x=>x.at&&x.at.n===n); if(!t||!t.verse) continue; const v=t.verse; if(seen.has(vId(v)+n)) continue; seen.add(vId(v)+n);
       out.push({k:"amen",mine:true,kick:"아멘한 말씀 · "+n,t:v.t,ref:`${PLAN.abbr[v.b-1]} ${v.c}:${v.v}`,sub:(/^\d{4}-/.test(dt)?dt.slice(5).replace("-","/")+" · ":"")+lab(w,d),ph:coverPh(w,d)}); }catch(e){} }
   /* 지난날 고른 말씀 */
   const KV=Object.keys(mem.qt).filter(k=>k!==tk&&(mem.qt[k]||{}).kv).map(k=>[mem.qt[k].doneAt||"",k]).sort((a,b)=>b[0].localeCompare(a[0])||b[1].localeCompare(a[1],undefined,{numeric:true}));
-  for(const [dt,k] of KV.slice(0,8)){ try{ const {w,d}=dayOf(k); if(!dayPlan(w,d)) continue; const A=dayA(w,d), v=vById(A,mem.qt[k].kv); if(!v||seen.has(vId(v))) continue; seen.add(vId(v));
+  for(const [dt,k] of KV){ try{ const {w,d}=dayOf(k); if(!dayPlan(w,d)||!inWeek("",w,d)) continue; const A=dayA(w,d), v=vById(A,mem.qt[k].kv); if(!v||seen.has(vId(v))) continue; seen.add(vId(v));
       out.push({k:"kv",mine:true,kick:"내가 고른 오늘의 말씀",t:v.t,ref:`${PLAN.abbr[v.b-1]} ${v.c}:${v.v}`,sub:fmt(dateOf(w,d),{month:"long",day:"numeric"})+" · "+lab(w,d),ph:coverPh(w,d)}); }catch(e){} }
   return out; }
 function myStoryOpen(){ const L=myStoryItems(); if(!L.length){ toast("아직 보여 드릴 말씀이 없습니다."); return; }
