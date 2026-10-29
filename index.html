@@ -1168,15 +1168,15 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .rgtoday{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font-size:12.5px;color:var(--accent)}
 .rgcal{border:0;background:none;color:var(--muted);padding:4px;align-self:center}
 .rgrow{display:flex;align-items:center}.rgnav{flex:none;width:26px;height:56px;border:0;background:none;color:var(--muted);font-size:22px}
-.rgs{display:flex;gap:6px;overflow-x:auto;width:100%;max-width:100vw;box-sizing:border-box;padding:4px 16px 2px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.rgs::-webkit-scrollbar{display:none}.rg{flex:none;width:54px;scroll-snap-align:center}
+.rgs{display:flex;gap:4px;overflow-x:auto;width:100%;max-width:100vw;box-sizing:border-box;padding:4px 16px 2px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.rgs::-webkit-scrollbar{display:none}.rg{flex:none;width:min(22vw,100px);scroll-snap-align:center}
 .rg{border:0;background:none;padding:0;display:grid;justify-items:center;gap:3px;color:var(--ink);cursor:pointer}.rg-x{visibility:hidden}
-.rgi{position:relative;width:46px;height:46px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#e2b874,#c0563f);display:block}
+.rgi{position:relative;width:min(19vw,84px);height:min(19vw,84px);border-radius:50%;padding:3px;background:linear-gradient(135deg,#e2b874,#c0563f);display:block}
 .rgi img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:2px solid var(--paper);display:block;background:#3a2c1f}
 .rg.done .rgi{background:var(--line)}.rg.fut .rgi{background:var(--line);opacity:.55}.rg.fut b,.rg.fut small{opacity:.6}
-.rg.sel .rgi{width:52px;height:52px;margin-top:-3px;background:var(--accent)}.rg.sel b{color:var(--accent)}
-.rgd,.rgq{position:absolute;right:-2px;bottom:-2px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;border:2px solid var(--paper)}
+.rg.sel .rgi{background:var(--accent);box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--accent)}.rg.sel b{color:var(--accent)}
+.rgd,.rgq{position:absolute;right:0;bottom:0;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;border:2px solid var(--paper)}
 .rgd{background:var(--card);color:var(--accent)}.rgq{background:var(--accent);color:#fff}
-.rg b{font-size:12px;font-weight:700}.rg small{font-size:10.5px;color:var(--muted)}
+.rg b{font-size:12.5px;font-weight:600;white-space:nowrap;margin-top:2px}.rg b em{font-style:normal;color:var(--muted);font-weight:500;margin-left:3px}.rg.tod b em{color:var(--accent);font-weight:700}
 .ghub{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .gtile{position:relative;aspect-ratio:1/1;border:0;border-radius:18px;overflow:hidden;color:#fff;text-align:left;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;background:#2a2118 var(--gp) center/cover;cursor:pointer}
 .gtile::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(10,7,4,.78))}
@@ -9222,7 +9222,7 @@ function dayRingHTML(){ const here0=today0(), selN=dayNo(view.w,view.d), N=READ_
   for(let n=from;n<=to;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(!dayPlan(w,d)) continue; const dt=dateOf(w,d), key=keyOf(w,d), done=!!mem.done[key], qtd=!!(mem.qt[key]&&mem.qt[key].done), sel=n===selN&&!view.pre&&!view.revW, dd=dayDiff(here0,dt), tod=dd===0, fut=dd>0;
     let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
     const p=dayPlan(w,d);
-    r+=`<button class="rg${sel?" sel":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${w}-${d}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p.label)}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}</span><b>${tod?"오늘":DAYN[dt.getDay()]}</b><small>${dt.getMonth()+1}/${dt.getDate()}</small></button>`; }
+    r+=`<button class="rg${sel?" sel":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${w}-${d}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p.label)}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}</span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":DAYN[dt.getDay()]}</em></b></button>`; }
   const dt=dateOf(view.w,view.d), p=dayPlan(view.w,view.d), isT=view.w===here.w&&view.d===here.d;
   return `<section class="rgwrap"><div class="rghead"><b>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><span>${esc(p?p.label:"")}</span>${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button></div>
     <div class="rgs" id="rgScroll">${r}</div></section>`; }
