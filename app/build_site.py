@@ -185,7 +185,7 @@ SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="
 shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
 open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
-VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search)||S.getItem("cbsr-mode")==null)')
+VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('Object.defineProperty(window,"localStorage"','/* v1 기록 가져오기: v2를 처음 열 때 한 번, v1(앞머리 없는 기록)을 v2: 쪽에 복사(이미 있는 v2 기록은 그대로) */if(!L.getItem("v2:cbsr-v1import")){var K=[];for(var i=0;i<L.length;i++){var k=L.key(i);if(k&&!/^(v2|try|story|now):/.test(k))K.push(k);}K.forEach(function(k){if(L.getItem("v2:"+k)==null)L.setItem("v2:"+k,L.getItem(k));});L.setItem("v2:cbsr-v1import",new Date().toISOString()+" "+K.length);}Object.defineProperty(window,"localStorage"',1).replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search)||S.getItem("cbsr-mode")==null)')
 exec(open('review_build.py').read())
 import base64 as _b64,gzip as _gz
 _BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())).decode()); _NM={}; _NR=_re.compile(r'^([가-힣]{2,})(을|를|의|에게|과|와|께서|에서|으로)$')
@@ -208,7 +208,7 @@ self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise
 self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(/firestore\\.googleapis\\.com|identitytoolkit|securetoken|firebaseinstallations/.test(u.hostname))return;
   const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/icons\\/|\\/img\\//.test(u.pathname);
-  if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r).then(m=>m||caches.match("index.html"))));return;}}
+  if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match(/v2\\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}}
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''
 open(f'{OUT}/sw.js','w').write(sw)
