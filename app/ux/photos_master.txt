@@ -153,7 +153,6 @@ g14_01|s|2:10|흑암이 애굽/흑암이 있|night_sky,darkness,house,oil_lamp|�
 g14_03|s|2:12-13;3:23;5:16|무교병/누룩 없는|bread,oven,fire||3,4|warm|45|화덕 위의 무교병과 싸 둔 반죽 그릇|||object
 g14_04|s|2:12-13|애굽에서 나오/애굽 땅에서 나오/라암셋|crowd,sheep,dust,sunrise_light_rays|애굽|3|bright|50|가축을 이끌고 떠나는 무리|||scene
 g14_05|s|2:14|바닷가에 장막/뒤를 따르|crowd,sea,army,dust|홍해|3|dark|50|앞은 바다, 뒤는 병거의 먼지|||scene
-g14_06|s|2:14|손을 바다 위로/바다 위로 내밀/동풍|hands,staff,sea,storm_sky|홍해|3|dark|40|바다 위로 내민 지팡이|||scene
 g14_07|s|2:17|아말렉/아론과 훌|hill,army,elder,stones|르비딤|4|warm|50|두 사람이 받쳐 든 노인의 팔|||scene
 g14_08|s|2:16;4:11|만나를/만나가/만나와/메추라기/하늘에서 양식/남겨 둔 만나|manna,birds,hands,dawn||4|warm|50|만나와 메추라기를 거두는 손|||symbolic
 g14_09|s|2:17;4:20|반석을 치/반석에서 물|rock,water,staff||4|warm|50|갈라진 바위에서 솟는 물|||scene
@@ -173,7 +172,6 @@ g15_08|s|2:31;2:35-39|브살렐/금을 쳐서|hands,gold,labor||4|dark|50|금판
 g15_09|s|2:28;2:39|금방울/석류/제사장의 옷|robe,priest||4|warm|50|겉옷 단의 석류와 금방울|||object
 g15_10|s|2:28;2:39|흉패|gems,priest||4|warm|50|흉패의 보석|||object
 g15_11|s|2:28;2:39|호마노/에봇|gems,priest,robe||4|warm|50|어깨받이의 보석|||object
-g15_12|s|2:29;3:8;19:133|머리에 붓/머리에 부어/기름을 부어/기름을 붓|oil,anointing,priest||4,6|warm|50|머리에 흐르는 기름|||scene
 g15_13|s|3:1-9;9:2|번제|fire,stone_altar,priest||4|warm|45|불 위의 제물과 갈고리|||scene
 g15_14|s|3:16|아사셀/속죄일|goat,desert,man||4|warm|60|염소를 끌고 광야로 가는 사람|||scene
 g12_01|s|1:2-3;26:28;26:31;23:51|에덴|garden,river,trees,sunrise_light_rays|에덴|11|warm|50|빛이 드는 동산과 강|||landscape
@@ -225,7 +223,7 @@ g16_05|s|9:17;9:4;7:20;10:10;13:19;14:13|진을 치/두 진영|army,valley,sunri
 g16_06|s|9:31;10:1|길보아|spear,shield,dusk||6|dark|50|버려진 창과 방패|||setting
 g16_07|g|||fire,city_wall,watchman,night_sky||6,7|dark|45|성벽 위의 봉화|||scene
 g16_08|s|12:18-19;23:36-37;14:32|라기스/포위하~|army,archers,siege,city_wall|라기스|7|warm|40|성 앞의 궁수들|||scene
-g16_09|s|6:8;6:10;7:7-8;9:14;10:10;14:13-14|성문에서 싸우/성문 앞에서|army,shield,city_gate,dust||5,6|warm|50|성문 앞의 싸움|||scene
+g16_09|s|6:8;6:10;7:7-8;9:14;10:10;14:13-14|성문에서 싸우/성문 앞에서|army,shield,city_gate,dust||5,6|warm|50|성문 앞의 싸움|뺌: 목사님이 빼서 보관||scene
 g16_10|s|14:20|노래하는 자들을 군대/찬송하는 자/여호사밧|singers,army,sunrise_light_rays||6|bright|50|군대 앞에서 노래하는 사람들|||scene
 g16_11|s|12:25;14:36;24:39;24:52;25:1-5|불사르~/불태우~/함락|ruins,fire,city,night_sky|예루살렘|7|dark|50|불타는 성|||setting
 g16_12|s|12:2;12:6|불말/불병거|horse,chariot,fire,clouds||6|warm|60|하늘의 불말과 불병거|||symbolic
@@ -256,7 +254,6 @@ g18_09|s|40:4;41:1;43:21|그물을 깁/그물을 씻/그물을 던지|net,hands,
 g18_10|s|40:13;41:6|목수|tools,wood,labor||9|warm|50|목수의 연장|||object
 g18_11|s||아이들이/어린아이들/어린 아이들|child,village,dust||8,9|warm|50|골목에서 뛰노는 아이들|||scene
 g18_12|s|3:13-14;4:5;4:12;42:5;42:17|진 밖/나병|tent,desert,man,sorrow||4,9|bright|50|진 밖에 홀로 앉은 사람|||scene
-g18_13|s|41:10;42:18;43:9;44:3|구걸/걸인/거지/맹인이/못 걷는|beggar,hands,road||9,10|dark|20|길가에서 손을 내민 사람|||scene
 g18_14|s||등불/등잔/등을 켜|oil_lamp,hands,darkness||8,9|dark|55|두 손에 든 등잔|||object
 g18_15|s|3:19;3:23;5:24;8:2|밭 모퉁이/이삭을 줍|wheat_field,hands,harvest||5,8|warm|65|밭 모퉁이의 이삭|||scene
 g19_01|g|||city_wall,jerusalem,valley,men|예루살렘|6,7,9|warm|30|언덕에서 바라본 예루살렘|||setting
