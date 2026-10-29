@@ -8881,7 +8881,7 @@ function mvWalker(map,id,path,dur,o){ o=o||{}; const w=o.w||40, boat=id==="boat"
   const P=path.map(p=>map.latLngToLayerPoint(p)), seg=[]; let tot=0; for(let i=1;i<P.length;i++){ const d=P[i].distanceTo(P[i-1]); seg.push(d); tot+=d; }
   return new Promise(res=>{ if(o.still||!tot){ mk.setLatLng(path[path.length-1]); mk.getElement()?.querySelector(".chm")?.classList.remove("walk","sail"); return res(mk); }
     const t0=performance.now()+(o.delay||0); const step=now=>{ if(!map._loaded||!document.body.contains(map.getContainer())) return res(mk); const k=Math.min(1,Math.max(0,(now-t0)/dur)), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2; let dd=e*tot, i=0; while(i<seg.length-1&&dd>seg[i]){ dd-=seg[i]; i++; }
-      const a=P[i], b=P[i+1]||P[i], f=seg[i]?dd/seg[i]:0, pt=L.point(a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f), cur=map.layerPointToLatLng(pt); mk.setLatLng(cur); if(o.trail) o.trail.setLatLngs((o.trailBase||[]).concat(path.slice(0,i+1),[cur]));
+      const a=P[i], b=P[i+1]||P[i], f=seg[i]?dd/seg[i]:0; let pt=L.point(a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f); if(o.form){ const L2=Math.hypot(b.x-a.x,b.y-a.y)||1, ux=(b.x-a.x)/L2, uy=(b.y-a.y)/L2, bk=o.form[0]*Math.min(1,k*8), sd=o.form[1]; pt=L.point(pt.x-ux*bk-uy*sd,pt.y-uy*bk+ux*sd); } const cur=map.layerPointToLatLng(pt); mk.setLatLng(cur); if(o.trail) o.trail.setLatLngs((o.trailBase||[]).concat(path.slice(0,i+1),[cur]));
       const ch=mk.getElement()&&mk.getElement().querySelector(".chm"); if(ch) ch.classList.toggle("flip",b.x<a.x-1);
       if(k<1) requestAnimationFrame(step); else { if(ch) ch.classList.remove("walk","sail"); res(mk); } }; requestAnimationFrame(step); }); }
 /* 지도 연출표(2026-10-30): 이동 경로 이름(또는 원고 지도 카드 제목) → 누가 가는지, 함께 가는 사람, 지나가며 뜨는 말씀, 도착 말씀, 특별 연출.
@@ -9058,13 +9058,14 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
   const crowd=[]; if(Mt.with) Mt.with.forEach(x=>crowd.push(x)); if(Mt.kind==="무리") ppl.concat(["man","woman2"]).forEach(x=>crowd.push(["",x])); if(Mt.kind==="포로"){ ["man","woman","elder","youth","woman2","man"].forEach(x=>crowd.push(["",x])); crowd.push(["","soldier"],["","soldier"]); } if(Mt.kind==="군대"){ if(!Mt.who){ id="soldier"; name=""; } ["soldier","soldier","soldier","soldier","soldier"].forEach(x=>crowd.push(["",x])); }
   /* 예수님이 걸으시는 길에는 열두 제자가 뒤따릅니다 */
   if(id==="jesus"&&!Mt.with) TWELVE.forEach(x=>crowd.push(x));
-  if(!still&&!legs.some(l=>l.sea)){ const n=path.length, pre=path[n-2], end=path[n-1]; crowd.forEach(([nm,cid,lk],j)=>{ const f=crowd.length>6?.05+j*.03:.06+j*.045, back=[end[0]+(pre[0]-end[0])*f+(j%2?.01:-.01),end[1]+(pre[1]-end[1])*f];
-    mvWalker(map,cid,path.slice(0,-1).concat([back]),D,{w:Mt.kind||crowd.length>6?24:30,delay:T0+300+j*(crowd.length>6?170:240),name:nm,look:lk}); }); }
+  /* 동행은 주인공과 같은 걸음으로 함께 걷습니다: 같은 길·같은 시간, 뒤쪽 자리만 다름(목사님 2026-10-30) */
+  if(!still&&!legs.some(l=>l.sea)){ const big=crowd.length>6; crowd.forEach(([nm,cid,lk],j)=>{ const row=Math.floor(j/2)+1, form=[big?row*13+6:row*16+4,(j%2?1:-1)*(big?9:12)];
+    mvWalker(map,cid,path,D,{w:Mt.kind||big?24:30,delay:T0+j*60,name:nm,look:lk,form}); }); }
   (async()=>{ await new Promise(r=>setTimeout(r,T0)); let mk=null, wk=Date.now();
     if(id){ for(const lg of legs){ if(mk) map.removeLayer(mk); if(lg.sea&&Mt.fx==="storm") fr.classList.add("mvstorm");
-        if((Mt.fx==="ascend"||Mt.fx==="emmaus")&&lg===legs[0]&&!still){ /* 엠마오: 함께 걷다가 엠마오에서 사라지심(눅 24:31) · 승천: 베다니에서 하늘로(눅 24:51) */
-          const at1=names.indexOf(Mt.fx==="ascend"?"베다니":"엠마오"); if(at1>0){ const pp=path.slice(0,at1+1); pp[pp.length-1]=[pp[pp.length-1][0]+.004,pp[pp.length-1][1]+.004];
-            mvWalker(map,"jesus",pp,at[at1]||D/2,{w:40,delay:80,name:Mt.fx==="ascend"?"예수님":""}).then(m=>{ const e=m.getElement()&&m.getElement().querySelector(".chm"); if(!e) return; if(Mt.fx==="ascend") e.classList.add("rise"); else { e.style.transition="opacity 1.4s,filter 1.4s"; e.style.filter="brightness(1.8)"; e.style.opacity="0"; } setTimeout(()=>map.removeLayer(m),2600); }); } }
+        if((Mt.fx==="ascend"||Mt.fx==="emmaus")&&lg===legs[0]&&!still){ /* 엠마오: 두 제자와 같은 걸음으로 걷다가 엠마오에서 사라지심(눅 24:31) · 승천: 베다니에서 하늘로(눅 24:51) */
+          const at1=names.indexOf(Mt.fx==="ascend"?"베다니":"엠마오"); if(at1>0){ const jw=mvWalker(map,"jesus",lg.p,D*lp(lg.p)/tot,{w:40,name:Mt.fx==="ascend"?"예수님":"",form:[0,-16]});
+            setTimeout(()=>{ jw; const el=[...fr.querySelectorAll(".chm.jesus")].pop(); if(!el) return; const mkEl=el.closest(".leaflet-marker-icon"); if(Mt.fx==="ascend") el.classList.add("rise"); else { el.style.transition="opacity 1.4s,filter 1.4s"; el.style.filter="brightness(1.8)"; el.style.opacity="0"; } setTimeout(()=>{ if(mkEl) mkEl.style.display="none"; },2400); },at[at1]||D/2); } }
         mk=await mvWalker(map,lg.sea?"boat":id,lg.p,still?0:D*lp(lg.p)/tot,{name:lg.sea?"":name,w:lg.sea?40:44,z:700,still,look:Mt.look,trail,trailBase:path.slice(0,lg.i0+1)}); fr.classList.remove("mvstorm"); }
       if(legs[legs.length-1].sea){ map.removeLayer(mk); mk=await mvWalker(map,id,[path[path.length-1]],0,{name,w:44,still:true,look:Mt.look}); } }
     else { await new Promise(r=>setTimeout(r,D)); if(trail) trail.setLatLngs(path); }
