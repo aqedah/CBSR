@@ -7933,6 +7933,7 @@ function renderRead(){
   h+=`</div>`;
   // 5 퀴즈
   if(!window.CBSR_V2) h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
+  else if(!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
   }
   if(simple) h+=`</details>`;
   // 완료
@@ -10040,6 +10041,7 @@ function bind(){
   const tqt=document.getElementById("toQT"); if(tqt) tqt.onclick=toQT;
   m.querySelectorAll("[data-toqt]").forEach(b=>b.onclick=toQT);
   const trv=document.getElementById("toRev"); if(trv) trv.onclick=()=>{ view.revW=dispW(); view.quiz=null; view.wquiz=null; render(); window.scrollTo({top:0}); };
+  const tc=document.getElementById("toChal"); if(tc) tc.onclick=()=>{ view.tab="challenge"; render(); window.scrollTo({top:0}); };
   const ko=document.getElementById("kakaoOut"); if(ko) ko.onclick=()=>{ location.href="kakaotalk://web/openExternal?url="+encodeURIComponent(location.href); };
   const mo=document.getElementById("mapOpen"); if(mo) mo.onclick=()=>{ view.mapOpen=true; const y=window.scrollY; render(); window.scrollTo({top:y}); };
   const mc=document.getElementById("mapClose"); if(mc) mc.onclick=()=>{ view.mapOpen=false; const y=window.scrollY; render(); window.scrollTo({top:y}); };
