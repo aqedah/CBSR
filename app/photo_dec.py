@@ -1,6 +1,6 @@
 # 그림 목록(웹)에서 관리자가 정한 보관·삭제·되살리기를 원본(ux/photos_master.txt)과 그림 파일에 반영하고 photos.json을 다시 만듭니다.
 # deploy.sh가 빌드 전에 부릅니다. 인터넷이 안 되면 그냥 넘어갑니다.
-import json,os,sys
+import json,os,sys,hashlib
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from PIL import Image
 R=os.path.dirname(os.path.abspath(__file__)); M=R+'/ux/photos_master.txt'; G=R+'/site_src/img/'
@@ -44,7 +44,7 @@ for l in out:
     fp=G+'g/'+id_+'.jpg'
     if not os.path.exists(fp): r['out']='그림 파일 없음'
     else:
-      w,h=Image.open(fp).size; r.update(u=f'img/g/{id_}.jpg',w=w,h=h,set=r['sets'][0])
+      w,h=Image.open(fp).size; v=hashlib.md5(open(fp,'rb').read()).hexdigest()[:6]; r.update(u=f'img/g/{id_}.jpg?v={v}',w=w,h=h,set=r['sets'][0])  # 그림을 바꾸면 주소가 바뀌어 기기에 남은 옛 그림 대신 새 그림을 받음
   rows.append(r)
 P=[{k:r[k] for k in ('id','u','w','h','tags','pl','mood','fx','set','sets','scope','refs','kw','memo','deny','role')} for r in rows if not r['out']]
 json.dump(P,open(R+'/ux/photos.json','w'),ensure_ascii=False,separators=(',',':'))

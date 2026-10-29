@@ -18,7 +18,7 @@ g02_03|g|||sheep,shepherd,wilderness_path,dust||2,3,4,8|warm|45|양 떼와 목�
 g02_04|g|||stone_altar,fire,stones||2,4,5,6|warm|45|돌 제단|||object
 g02_05|s|1:24;1:29;2:2|우물가/물을 길으러/물 긷|well,clay_jar,woman||2,8|warm|45|우물가의 여인|||scene
 g02_06|s|1:15;1:22;1:26|별을 셀/하늘의 별/별과 같|night_sky,stars,elder||2|dark|55|별을 바라보는 사람||떨어지/떨어져|scene
-g02_07|s|1:22|모리아/번제할 나무/이삭을 데리고|road,mountain_peak,wilderness_path,boy|모리아|2|warm|50|나무를 진 아들과 산을 오르는 아버지|||scene
+g02_07|s|1:22|모리아/번제할 나무/이삭을 데리고|road,mountain_peak,wilderness_path,boy|모리아|2|warm|50|나무를 진 아들과 산을 오르는 아버지 · 다시 그림 2026-10-29(옛 그림 복식이 요즘 옷 같아서)|||scene
 g02_08|s|1:22|숫양|thorns,ram,sunrise_light_rays|모리아|2|dark|50|덤불에 걸린 숫양|||scene
 g02_09|s|1:28|돌베개/돌을 베개/사닥다리|stones,night_sky,sleep|벧엘|2|dark|60|돌을 베고 자는 사람|||scene
 g02_10|s|1:32|얍복/씨름|river,night_sky,darkness|얍복|2|dark|50|밤의 얍복 강가|||setting
@@ -717,7 +717,7 @@ g52_08|s|66:19|혼인 잔치/혼인 기약/세마포|bride,feast,table,white_rob
 g52_09|s|66:19|백마/흰 말|white_horse,rider,storm,light||10|dark|50|열린 하늘 아래 흰 말 탄 이와 뒤따르는 무리(계 19:11–14) (둘째 그림)|||scene
 g52_10|s|66:20|무저갱의 열쇠/큰 쇠사슬/결박|chains,key,pit,rock||10|dark|50|구덩이 어귀 바위의 쇠사슬과 열쇠(계 20:1–2) (둘째 그림)|||object
 g52_11|s|66:20|크고 흰 보좌/책들이 펴/생명책|scrolls,people,light||10|bright|50|흰빛 앞에 펼친 두루마리와 선 사람들(계 20:11–12) (둘째 그림)|||scene
-g52_12|s|66:21|새 예루살렘/높은 산/거룩한 성|city,gold,mountain,old_man||10|warm|50|높은 산에서 내려다본 금빛 성(계 21:10–11) (둘째 그림)|||scene
+g52_12|s|66:21|새 예루살렘/높은 산/거룩한 성|city,gold,mountain,old_man||10|warm|50|높은 산에서 내려다본 금빛 성(계 21:10–11) (둘째 그림) · 다시 그림 2026-10-29(옛 그림에 성전 같은 큰 건물)|||scene
 g52_13|s|66:21;66:7|눈물을 씻/모든 눈물|tears,hand,face,light||10|warm|50|눈물을 닦아 주는 손(계 21:4) (둘째 그림)|||scene
 g52_14|s|66:21;66:22|성문들을/닫지 아니하리니/만국|city_gate,crowd,light||10|bright|50|열린 성문으로 들어가는 사람들(계 21:25–26) (둘째 그림)|||scene
 g52_15|s|66:22;66:21|목마른 자/생명수/값없이|spring_water,hands,rock||10|bright|50|샘물을 두 손으로 떠 마시는 사람(계 22:17) (둘째 그림)|||scene
