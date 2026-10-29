@@ -2787,8 +2787,9 @@ function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b"
   const no=dayNo(w,d), p=dayPlan(w,d), C=storyDay(no); let out=[];
   if(C){ out=C.cards.map((c,i)=>Object.assign({_ci:i},c));
     /* 손으로 쓴 원고에 지도 카드가 없으면, 그날 나오는 곳·이동 경로를 배경 카드 뒤에 자동으로 넣습니다 */
-    if(!out.some(c=>c.k==="map")&&!C.nomap){ const M=storyMapPts(w,d,null), gn=GENRE_OF(p.ch[0][0]);
-      if(M.route.length>1||(M.extra.length&&!/^(law|poetry|wisdom)$/.test(gn))){ let at=-1; out.forEach((c,i)=>{ if(/^배경/.test(c.lab||"")) at=i; }); if(at<0) at=Math.min(1,out.length-1); if(typeof C.mapAt==="number") at=C.mapAt; /* 원고가 지도 자리를 정할 수 있음(카드 번호 뒤) */
+    if(!out.some(c=>c.k==="map")){ const M=storyMapPts(w,d,null), gn=GENRE_OF(p.ch[0][0]);
+      /* nomap인 날(서신서 등)도 편지·인물이 움직이는 경로가 있으면 지도를 넣습니다(목사님 2026-10-30) */
+      if(M.route.length>1||(!C.nomap&&M.extra.length&&!/^(law|poetry|wisdom)$/.test(gn))){ let at=-1; out.forEach((c,i)=>{ if(/^배경/.test(c.lab||"")) at=i; }); if(at<0) at=Math.min(1,out.length-1); if(typeof C.mapAt==="number") at=C.mapAt; /* 원고가 지도 자리를 정할 수 있음(카드 번호 뒤) */
         out.splice(at+1,0,{k:"map",auto:1,lab:M.route.length>1?"이동":"오늘 나오는 곳",h:M.route.length>1?`${M.route[0][0]}에서 ${M.route[M.route.length-1][0]}까지`:"오늘 본문의 무대",b:[(M.route.length>1?M.route:M.extra).map(x=>x[0]).join(" · ")]}); } } }
   else { const N=(typeof CARDNEWS!=="undefined"&&MODE==="y365"&&CARDNEWS[no])||null;
     out.push({k:"cover",kick:p.label,h:p.topic||p.label});
@@ -2927,6 +2928,7 @@ function BOAT(o){ o=o||{}; return `<svg class="chsvg boat" viewBox="0 0 70 70" a
 /* ===== 지도 위 인물(2026-10-30 목사님 승인): 길을 따라 주인공이 걷고, 모이는 지도에서는 여러 사람이 모여듭니다 =====
    원고 지도 카드에 mover(인물 이름)·mkind(혼자/모임/흩어짐)·mbub(도착 말풍선 [글, 장절])를 적으면 그대로 따르고, 없으면 카드 글에서 인물을 찾아 씁니다 */
 const MV_NAME=[["예수","jesus","예수님"],["사울","saul","사울"],["바울","paul","바울"],["베드로","peter","베드로"],["아브라함","abraham","아브라함"],["아브람","abraham","아브람"],["모세","moses","모세"],["다윗","david","다윗"],["엘리야","elijah","엘리야"],["엘리사","elder","엘리사"],["빌립","youth","빌립"],["바나바","man","바나바"],["요나","man","요나"],["야곱","elder","야곱"],["요셉","youth","요셉"],["여호수아","soldier","여호수아"],["룻","woman","룻"],["나오미","woman2","나오미"],["에스더","woman","에스더"],["느헤미야","man","느헤미야"],["에스라","elder","에스라"],["이삭","youth","이삭"],["사무엘","elder","사무엘"],["사울 왕","king","사울 왕"],["글로바","man","글로바"],["실라","man","실라"],["디모데","youth","디모데"],["스룹바벨","man","스룹바벨"],["다니엘","youth","다니엘"],["아브람","abraham","아브람"]];
+const TWELVE=[["","peter"],["","man",{robe:"#4f7a5a"}],["","youth",{robe:"#c97b3a"}],["","man",{robe:"#7a4f6e",head:"short",hair:"#3b2616"}],["","elder",{robe:"#6e6a4f"}],["","youth",{robe:"#3f6f8f"}],["","man",{robe:"#9a5b3a",cloth:"#e8dcc0"}],["","youth",{robe:"#5d7a8a",hair:"#5a3a1e"}],["","man",{robe:"#8a7a3b",head:"short",hair:"#2a1a10"}],["","elder",{robe:"#7a5a3a"}],["","youth",{robe:"#a0566a"}],["","man",{robe:"#556b2f"}]];
 function mvWho(s,w,d){ if(s.mover){ const f=MV_NAME.find(x=>x[2]===s.mover||x[0]===s.mover); return f?[f[1],f[2]]:["man",s.mover]; }
   let S=[]; try{ S=storySlides(w,d); }catch(e){} const i=S.indexOf(s); const txt=[s,S[i-1],S[i+1]].filter(Boolean).map(x=>sTxt(x)).join(" ");
   let best=null; for(const m of MV_NAME){ const k=txt.indexOf(m[0]); if(k>=0&&(!best||k<best[0])) best=[k,m]; } return best?[best[1][1],best[1][2]]:["man",""]; }
@@ -3054,7 +3056,14 @@ const RM2={
  "로마로 가는 항해":{who:"바울",fx:"storm",mid:[["가우다",[44,27,25]],["멜리데",[44,28,5]]],end:[44,28,31]},
  "드로아에서 마게도냐로":{who:"바울",mid:[["드로아",[47,2,13]]],end:[47,7,6]},
  "회심 후 바울의 행적":{who:"바울",mid:[["아라비아",[48,1,17]],["예루살렘",[48,1,18]]],end:[48,1,24]},
- "십사 년 후 다시 예루살렘으로":{who:"바울",with:[["바나바","man"],["디도","youth"]],end:[48,2,20]}
+ "십사 년 후 다시 예루살렘으로":{who:"바울",with:[["바나바","man"],["디도","youth"]],end:[48,2,20]},
+ "뵈뵈가 로마서를 들고 로마로":{who:"뵈뵈",as:"woman",look:{prop:"scroll"},mid:[["겐그레아",[45,16,1]]],end:[45,1,16]},
+ "에베소에서 고린도로 보낸 편지":{who:"고린도 교회에 보내는 편지",as:"man",look:{prop:"scroll"},mid:[["에베소",[46,16,8]]],end:[46,13,13]},
+ "두기고가 에베소서를 들고 감":{who:"두기고",as:"man",look:{prop:"scroll"},mid:[["로마",[49,6,20]]],end:[49,6,22]},
+ "에바브로디도가 빌립보로 돌아감":{who:"에바브로디도",as:"man",look:{prop:"scroll"},mid:[["로마",[50,4,22]]],end:[50,4,4]},
+ "두기고와 오네시모가 골로새로":{who:"두기고",as:"man",look:{prop:"scroll"},with:[["오네시모","youth"]],mid:[["로마",[51,4,18]]],end:[51,4,9]},
+ "실루아노가 베드로전서를 들고 다섯 지방으로":{who:"실루아노",as:"man",look:{prop:"scroll"},mid:[["바벨론(로마)",[60,5,12]],["본도",[60,1,1]]],end:[60,1,3]},
+ "밧모에서 일곱 교회로":{who:"일곱 교회에 보내는 편지",as:"youth",look:{prop:"scroll"},mid:[["밧모",[66,1,11]],["에베소",[66,2,4]],["서머나",[66,2,10]],["빌라델비아",[66,3,8]]],end:[66,3,20]}
 };
 const rmBase=n=>String(n||"").replace(/\s*\([^)]*\)\s*$/,"").trim();
 const RMB={}; for(const k in ROUTE_META) RMB[rmBase(k)]=ROUTE_META[k]; for(const k in RM2) RMB[k]=RM2[k];
@@ -3066,8 +3075,17 @@ function mvChar(name,as){ if(as) return as; const f=MV_NAME.find(x=>x[2]===name|
 function mvFx(map,kind,ll){ const fr=map.getContainer(), p=map.latLngToContainerPoint(ll);
   if(kind==="light"){ const f=document.createElement("div"); f.className="mvflash"; f.style.left=p.x+"px"; f.style.top=(p.y-30)+"px"; fr.appendChild(f); requestAnimationFrame(()=>f.classList.add("on")); setTimeout(()=>f.remove(),1800); }
   if(kind==="part"){ const f=document.createElement("div"); f.className="mvpart"; f.style.left=p.x+"px"; f.style.top=p.y+"px"; f.innerHTML="<i></i><i></i>"; fr.appendChild(f); requestAnimationFrame(()=>f.classList.add("on")); setTimeout(()=>f.classList.add("off"),3000); setTimeout(()=>f.remove(),3800); } }
-function mvBub(map,ll,ref,small){ const t=vRef(ref); if(!t) return null; const fr=map.getContainer(), p=map.latLngToContainerPoint(ll), W=fr.clientWidth, b=document.createElement("div"); b.className="mvbub"+(small?" sm":"");
-  b.innerHTML=`${esc(t.length>90?t.slice(0,88)+"…":t)}<small>${esc(vLab(ref))}</small>`; fr.appendChild(b); const bw=small?200:240; b.style.left=Math.max(10,Math.min(W-bw-10,p.x-bw/2))+"px"; b.style.top=Math.max(70,p.y-(small?96:128))+"px";
+/* 말씀 풍선은 인물·길·지명을 가리지 않는 빈 곳에(목사님 2026-10-30) */
+function mvBub(map,ll,ref,small){ const t=vRef(ref); if(!t) return null; const fr=map.getContainer(), p=map.latLngToContainerPoint(ll), W=fr.clientWidth, H=fr.clientHeight, b=document.createElement("div"); b.className="mvbub"+(small?" sm":"");
+  b.innerHTML=`${esc(t.length>90?t.slice(0,88)+"…":t)}<small>${esc(vLab(ref))}</small>`; b.style.visibility="hidden"; b.style.left="0"; b.style.top="0"; fr.appendChild(b); const bw=b.offsetWidth, bh=b.offsetHeight;
+  const F=fr.getBoundingClientRect(), panel=fr.parentNode&&fr.parentNode.querySelector(".spanel"), bot=panel?Math.min(H,panel.getBoundingClientRect().top-F.top-8):H-10, top=70;
+  const obs=[...fr.querySelectorAll(".chm,.spl,.mvbub.on")].map(e=>{ const r=e.getBoundingClientRect(); return [r.left-F.left,r.top-F.top,r.right-F.left,r.bottom-F.top]; });
+  const pts=[]; fr.querySelectorAll("path.leaflet-interactive,svg path").forEach(e=>{ if(!e.getTotalLength||e.getAttribute("fill")!=="none") return; try{ const n=e.getTotalLength(); for(let k=0;k<=n;k+=18){ const q=e.getPointAtLength(k), m=e.getScreenCTM(); if(m) pts.push([q.x*m.a+m.e-F.left,q.y*m.d+m.f-F.top]); } }catch(x){} });
+  const cand=[]; for(const dx of [-bw-18,-bw/2,18]) for(const dy of [-bh-30,24,-bh/2]) cand.push([p.x+dx,p.y+dy]); [[12,top],[W-bw-12,top],[12,bot-bh],[W-bw-12,bot-bh],[W/2-bw/2,top]].forEach(c=>cand.push(c));
+  let best=null; for(let [x,y] of cand){ x=Math.max(10,Math.min(W-bw-10,x)); y=Math.max(top,Math.min(bot-bh,y)); const r=[x-6,y-6,x+bw+6,y+bh+6]; let sc=0;
+    obs.forEach(o=>{ const ix=Math.max(0,Math.min(r[2],o[2])-Math.max(r[0],o[0])), iy=Math.max(0,Math.min(r[3],o[3])-Math.max(r[1],o[1])); sc+=ix*iy*3; });
+    pts.forEach(q=>{ if(q[0]>r[0]&&q[0]<r[2]&&q[1]>r[1]&&q[1]<r[3]) sc+=120; }); sc+=Math.hypot(x+bw/2-p.x,y+bh/2-p.y)*.6; if(!best||sc<best[0]) best=[sc,x,y]; }
+  b.style.left=best[1]+"px"; b.style.top=best[2]+"px"; b.style.visibility="";
   requestAnimationFrame(()=>b.classList.add("on")); b.onclick=e=>{ e.stopPropagation(); b.remove(); }; if(small) setTimeout(()=>{ b.classList.remove("on"); setTimeout(()=>b.remove(),400); },1900); return b; }
 function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") return; const still=!!(matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
   const bk=M.b||(dayPlan(w,d).ch[0]||[0])[0], X=(s.mkey&&routeMeta(s.mkey,bk))||routeMeta(M.name,bk)||routeMeta(s.h,bk)||{}; const Mt=Object.assign({},X,s.mover?{who:s.mover}:{},s.mkind?{kind:s.mkind}:{},s.mbub?{end:s.mbub}:{});
@@ -3096,13 +3114,15 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
   if(!still) (Mt.mid||[]).forEach(([pl,ref])=>{ const i=names.indexOf(pl); if(i<0) return; setTimeout(()=>{ if(!document.body.contains(fr)) return; if(Mt.fx==="part"&&Mt.fxAt===pl) mvFx(map,"part",path[i]); mvBub(map,path[i],ref,true); },T0+(at[i]||0)); });
   /* 함께 가는 사람·무리 */
   const crowd=[]; if(Mt.with) Mt.with.forEach(x=>crowd.push(x)); if(Mt.kind==="무리") ppl.concat(["man","woman2"]).forEach(x=>crowd.push(["",x])); if(Mt.kind==="포로"){ ["man","woman","elder","youth","woman2","man"].forEach(x=>crowd.push(["",x])); crowd.push(["","soldier"],["","soldier"]); } if(Mt.kind==="군대"){ if(!Mt.who){ id="soldier"; name=""; } ["soldier","soldier","soldier","soldier","soldier"].forEach(x=>crowd.push(["",x])); }
-  if(id==="jesus"&&!Mt.with) crowd.push(["","peter"],["","youth"]);
-  if(!still&&!legs.some(l=>l.sea)){ const n=path.length, pre=path[n-2], end=path[n-1]; crowd.forEach(([nm,cid],j)=>{ const f=.06+j*.045, back=[end[0]+(pre[0]-end[0])*f+(j%2?.01:-.01),end[1]+(pre[1]-end[1])*f];
-    mvWalker(map,cid,path.slice(0,-1).concat([back]),D,{w:Mt.kind?24:30,delay:T0+300+j*240,name:nm}); }); }
+  /* 예수님이 걸으시는 길에는 열두 제자가 뒤따릅니다 */
+  if(id==="jesus"&&!Mt.with) TWELVE.forEach(x=>crowd.push(x));
+  if(!still&&!legs.some(l=>l.sea)){ const n=path.length, pre=path[n-2], end=path[n-1]; crowd.forEach(([nm,cid,lk],j)=>{ const f=crowd.length>6?.05+j*.03:.06+j*.045, back=[end[0]+(pre[0]-end[0])*f+(j%2?.01:-.01),end[1]+(pre[1]-end[1])*f];
+    mvWalker(map,cid,path.slice(0,-1).concat([back]),D,{w:Mt.kind||crowd.length>6?24:30,delay:T0+300+j*(crowd.length>6?170:240),name:nm,look:lk}); }); }
   (async()=>{ await new Promise(r=>setTimeout(r,T0)); let mk=null, wk=Date.now();
     if(id){ for(const lg of legs){ if(mk) map.removeLayer(mk); if(lg.sea&&Mt.fx==="storm") fr.classList.add("mvstorm");
-        if(Mt.fx==="ascend"&&lg===legs[0]&&!still){ const end1=names.indexOf("베다니"); const pp=end1>0?path.slice(0,end1+1):lg.p; mvWalker(map,"jesus",pp.slice(0,-1).concat([[pp[pp.length-1][0]+.003,pp[pp.length-1][1]+.003]]),D*lp(pp)/tot,{w:42,delay:120,name:"예수님"}).then(m=>{ const e=m.getElement()&&m.getElement().querySelector(".chm"); if(e){ e.classList.add("rise"); setTimeout(()=>map.removeLayer(m),2600); } }); }
-        if(Mt.fx==="emmaus"&&lg===legs[0]&&!still){ const jm=mvWalker(map,"jesus",lg.p.slice(0,-1).concat([[lg.p[lg.p.length-1][0]+.004,lg.p[lg.p.length-1][1]+.004]]),D*lp(lg.p)/tot,{w:40,delay:150}); jm.then(m=>{ const e=m.getElement(); if(e){ e.style.transition="opacity 1.2s"; setTimeout(()=>e.style.opacity="0",900); setTimeout(()=>map.removeLayer(m),2300); } }); }
+        if((Mt.fx==="ascend"||Mt.fx==="emmaus")&&lg===legs[0]&&!still){ /* 엠마오: 함께 걷다가 엠마오에서 사라지심(눅 24:31) · 승천: 베다니에서 하늘로(눅 24:51) */
+          const at1=names.indexOf(Mt.fx==="ascend"?"베다니":"엠마오"); if(at1>0){ const pp=path.slice(0,at1+1); pp[pp.length-1]=[pp[pp.length-1][0]+.004,pp[pp.length-1][1]+.004];
+            mvWalker(map,"jesus",pp,at[at1]||D/2,{w:40,delay:80,name:Mt.fx==="ascend"?"예수님":""}).then(m=>{ const e=m.getElement()&&m.getElement().querySelector(".chm"); if(!e) return; if(Mt.fx==="ascend") e.classList.add("rise"); else { e.style.transition="opacity 1.4s,filter 1.4s"; e.style.filter="brightness(1.8)"; e.style.opacity="0"; } setTimeout(()=>map.removeLayer(m),2600); }); } }
         mk=await mvWalker(map,lg.sea?"boat":id,lg.p,still?0:D*lp(lg.p)/tot,{name:lg.sea?"":name,w:lg.sea?40:44,z:700,still,look:Mt.look,trail,trailBase:path.slice(0,lg.i0+1)}); fr.classList.remove("mvstorm"); }
       if(legs[legs.length-1].sea){ map.removeLayer(mk); mk=await mvWalker(map,id,[path[path.length-1]],0,{name,w:44,still:true,look:Mt.look}); } }
     else { await new Promise(r=>setTimeout(r,D)); if(trail) trail.setLatLngs(path); }
@@ -3135,7 +3155,7 @@ function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||
   fr.querySelectorAll(".smnav").forEach(btn=>btn.addEventListener("click",e=>{ const open=fr.querySelector(".sptag"); const hit=[...fr.querySelectorAll(".spl")].map(l=>{ const r=l.getBoundingClientRect(); const ok=e.clientX>=r.left-8&&e.clientX<=r.right+8&&e.clientY>=r.top-8&&e.clientY<=r.bottom+8; return ok?[l,Math.hypot(e.clientX-(r.left+r.width/2),e.clientY-(r.top+r.height/2))]:null; }).filter(Boolean).sort((a,b)=>a[1]-b[1]).map(x=>x[0])[0];
     if(hit){ e.stopImmediatePropagation(); e.preventDefault(); const fb=fr.getBoundingClientRect(), r=hit.getBoundingClientRect(); pop(hit.textContent,r.left+r.width/2-fb.left,r.top-fb.top); return; }
     if(open){ e.stopImmediatePropagation(); e.preventDefault(); open.remove(); } },true));
-  if(!fr.querySelector(".sphint")) fr.insertAdjacentHTML("beforeend",`<span class="sphint">지명을 누르면 설명이 나옵니다</span>`);
+  /* "지명을 누르면 설명이 나옵니다" 안내는 인물·말씀을 가려서 뺌(목사님 2026-10-30) */
   setTimeout(()=>{ try{ map.invalidateSize(); if(all.length===1) map.setView(all[0],9); else map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[40,80],paddingBottomRight:[80,250],maxZoom:11}); }catch(e){} setTimeout(()=>{ try{ mapActors(map,M,s,w,d); }catch(e){ console.warn("actors",e); } },120); },60); }
 function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,e,vs,kv}=X;
   if(s.k==="fin"||s.k==="next"||s.k==="ask") return storyEndHTML(s,w,d);
