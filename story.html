@@ -8900,7 +8900,7 @@ window.addEventListener("scroll",trackPos,{passive:true});
 function adminLinks(){
   const G=[["지금 쓰는 앱",[["./","v2 · 첫 화면(2026-10-29부터)","리딩지저스 2026 → 2027년 1월 4일부터 365 통독"],["v1.html","v1 · 이전 화면","옛 기록 확인용으로 남겨 둠"]]],
     ["미리 보기",[["v2.html?now=2027-01-01","v2를 2027년 1월 1일로 열기","날짜를 바꿔 본 뒤에는 아래 '오늘 날짜로 되돌리기'"],["v2.html?pv=B","v2 · 2028판 카드","2028년에 쓸 B판"],["v2.html?p=rj","v2 · 리딩지저스","2027년에는 메뉴에서 숨김, 이 주소로만 열림"],["v2.html?now=0","오늘 날짜로 되돌리기",""]]],
-    ["검토할 것",[["rj.html","리딩지저스 카드 검토 (36–45주)","목사님 검토가 끝나면 첫 화면을 v2로 바꿉니다"],["review.html","365 카드 검토 (날마다 중심 한 줄·카드 흐름)",""],["gallery.html","그림 목록","그림마다 어느 카드에 쓰였는지"],["v2.html?review=1","카드 보면서 검토 메모 켜기","이 기기에서 계속 켜짐 · 끄기는 ?review=0"]]]];
+    ["검토할 것",[["rj.html","리딩지저스 카드 (36–45주)","2026-10-29 남은 본문까지 모두 승인"],["review.html","365 카드 검토 (날마다 중심 한 줄·카드 흐름)",""],["gallery.html","그림 목록","그림마다 어느 카드에 쓰였는지"]]]];
   return `<h2>주소 모음</h2><div class="admlinks">${G.map(([h,L])=>`<p class="admlh">${h}</p>`+L.map(([u,t,d])=>`<a class="admlk" href="${u}" target="_blank" rel="noopener"><b>${t}</b>${d?`<span>${d}</span>`:""}</a>`).join("")).join("")}</div>`; }
 /* 관리자 */
 function renderAdmin(){ setTimeout(loadAdmin,0);
