@@ -11,7 +11,6 @@ g01_10|g|||sea,dawn,lake|갈릴리|1,9|bright|50|새벽 호수|||landscape
 g01_11|g|||wheat_field,harvest||1|warm|50|밀밭|||object
 g01_12|g|||fig_tree,vineyard,stones||1|warm|55|무화과·포도덩굴|||setting
 g01_13|g|||mountain_peak,flowers,pasture|헤르몬|1|bright|50|눈 덮인 산과 들|||landscape
-g01_14|g|||dust,sandstorm,desert,wind||1|warm|50|먼지 바람|||landscape
 g01_15|g|||clouds,sunrise_light_rays,sky||1|dark|50|구름 사이 빛|||landscape
 g02_01|g|||tent,fire,dusk,night_sky,camp||2,4|warm|45|장막 진영의 모닥불|||setting
 g02_02|g|||hands,tent,elder,staff||2,4,8|dark|45|지팡이 쥔 노인의 손|||object
@@ -505,6 +504,5 @@ g38_09|g|20:6;20:30|개미/먹을 것을 여름 동안|ant,grain,ground||8|warm|
 g38_10|s|20:9|일곱 기둥/상을 갖추고|pillars,table,bread,cup||8|warm|50|일곱 돌기둥 집에 차려진 상(잠 9)|||setting
 g38_11|g|20:4;19:1|의인의 길/악인의 길/돋는 햇살|path,sunrise,dark_canyon||8|warm|50|밝은 길과 어두운 골짜기로 갈라지는 길(잠 4:18–19)|||landscape
 g38_12|g|21:1|해는 뜨고 지되/바람은 돌고/강물은 바다로|sunset,river,wind,field||8|warm|50|돌아가는 바람과 굽이치는 강, 지는 해(전 1)|||landscape
-g38_13|g|21:3;48:6|심을 때/거둘 때/때가 있나니|sickle,seed,hands,wheat||8|warm|50|거두는 손과 씨 뿌리는 손(전 3:2)|||object
 g38_14|s|22:2|작은 여우/포도원을 허는|vineyard,fox,stone_wall,flowers||8|bright|50|꽃 핀 포도원 담 아래의 작은 여우(아 2:15)|||landscape
 g38_15|g|22:2;40:24|겨울도 지나고/무화과나무/꽃이 피고|fig_tree,poppies,spring,field||8,9|bright|50|푸른 열매 맺힌 무화과와 꽃 핀 들(아 2:11–13)|||landscape
