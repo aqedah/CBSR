@@ -1182,6 +1182,10 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .mys-box{position:absolute;left:22px;right:22px;top:50%;transform:translateY(-50%);z-index:6;pointer-events:none;text-align:center}.mys-k{font-size:13px;letter-spacing:.08em;color:#e2b874;margin-bottom:16px;font-weight:700}.mys-q{font:600 22px/1.65 var(--f-disp,serif);word-break:keep-all}.mys-r{margin-top:14px;font-size:14px;color:#e8dcc8}.mys-s{margin-top:18px;font-size:12.5px;color:rgba(246,239,228,.7)}.mys-btn{pointer-events:auto;margin-top:20px;border:1px solid #e2b874;background:rgba(0,0,0,.25);color:#f6efe4;border-radius:999px;padding:9px 18px;font:inherit;font-size:14px;cursor:pointer}
 .mys-tap{position:absolute;top:70px;bottom:0;width:35%;border:0;background:none;z-index:5;cursor:pointer}.mys-tap.l{left:0}.mys-tap.r{right:0;width:65%}
 html.v2 .brand{letter-spacing:0;align-items:center}#brandL{display:flex;align-items:baseline;gap:8px;min-width:0}.v2d{font:700 20px var(--f-disp,serif);color:var(--ink);white-space:nowrap}.v2p{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#hdx{display:inline-flex;align-items:center;gap:6px}html.v2 .topbtns{display:inline-flex;align-items:center;gap:4px}
+.mgh{margin:16px 4px 6px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em}.mtop .mgh:first-child{margin-top:4px}
+.mgrp{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.mrow{display:flex;align-items:center;gap:10px;width:100%;border:0;border-top:1px solid var(--line);background:none;padding:13px 14px;font:inherit;font-size:15px;color:var(--ink);text-align:left;cursor:pointer}.mgrp>.mrow:first-child{border-top:0}.mrow>span{flex:1}.mrow em{font-style:normal;color:var(--muted);font-size:13.5px}.mrow>i{color:var(--muted);font-style:normal;font-size:18px}.mrow.mseg{cursor:default}.mrow.mseg .seg{margin:0}
+.mbans{display:grid;gap:8px}.mban{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none}.mban b{display:block;font-size:15px}.mban small{color:var(--muted);font-size:12.5px}.mban>span:nth-child(2){flex:1}.mban>i{color:var(--muted);font-style:normal}.mbi{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:700;background:var(--accent);color:#fff;flex:none}.mban.yt .mbi{background:#d33a2c}.mban.mwv .mbi{background:#3b2f5c;font-family:serif;font-size:20px}
+.mfoot{margin:18px 4px 6px;font-size:12px;color:var(--muted)}.mfoot .linkbtn{font-size:12px}.mback{border:0;background:none;color:var(--accent);font:inherit;font-size:15px;padding:4px 0;cursor:pointer}.mpt{margin:8px 0 12px;font:700 20px var(--f-disp,serif)}.mhow{padding-left:20px;display:grid;gap:8px;line-height:1.6}.mpage .fbbox{display:grid;gap:8px}
 .rgmiss{border:0;background:#f4e3d3;color:#8a4b1f;border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:700;white-space:nowrap;align-self:center;cursor:pointer}.rg.miss .rgi::before{content:"";position:absolute;right:4%;top:4%;width:12px;height:12px;border-radius:50%;background:#d9643a;border:2px solid var(--paper);z-index:1}
 .rgd,.rgq{position:absolute;right:0;bottom:0;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;border:2px solid var(--paper)}
 .rgd{background:var(--card);color:var(--accent)}.rgq{background:var(--accent);color:#fff}
@@ -8937,7 +8941,7 @@ let NEWS_ADMIN=false;
 if(window.SYNC&&SYNC.available&&SYNC.news) SYNC.news.get().then(h=>{ if(JSON.stringify(h)!==JSON.stringify(NEWS_HID)){ NEWS_HID=h; try{ localStorage.setItem("cbsr-news-hidden",JSON.stringify(h)); }catch(e){} buildNews(); renderNews(); } }).catch(()=>{});
 /* 새 소식: 메뉴 단추의 점으로 알리고, 메뉴 맨 위에 보여 줍니다 */
 function freshNews(){ let seen=""; try{ seen=localStorage.getItem(NEWS_KEY)||""; }catch(e){} return NEWS.filter(n=>n[0]>seen); }
-function renderNews(){ const el=document.getElementById("newsBar"); if(el) el.innerHTML=""; const mb=document.getElementById("menuBtn"); if(mb) mb.classList.toggle("has-news",freshNews().length>0); }
+function renderNews(){ const el=document.getElementById("newsBar"); if(el) el.innerHTML=""; if(window.CBSR_V2) return; const mb=document.getElementById("menuBtn"); if(mb) mb.classList.toggle("has-news",freshNews().length>0); }
 /* 메뉴 안 전광판: 최근 소식을 한 줄씩 넘깁니다. 누르면 전체 소식. 관리자에게만 닫기(✕) */
 function newsBlock(){ const R=NEWS.slice(0,8); if(!R.length) return "";
   return `<div class="news inmenu" id="menuNews"><button class="news-tag" id="newsOpen">새 소식</button><div class="news-track" id="newsTrack">${R.map((n,i)=>`<span class="ni${i?"":" on"}">${esc(n[1])}</span>`).join("")}</div></div>`; }
@@ -9027,11 +9031,40 @@ function renderGuide(){
   <section class="sec msec"><h3 class="mh">기록 관리</h3><p class="lead">이 통독표의 퀴즈, 진행률, QT 기록을 지웁니다. 되돌릴 수 없습니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div></section>
   ${window.SYNC&&SYNC.available?`<div class="adminlink"><button class="linkbtn" id="adminGo">관리자</button></div>`:""}`;
 }
+/* v2 메뉴: 한 화면 목록 → 누르면 안쪽 화면(설정 앱처럼). 안쪽 화면의 단추는 v1 메뉴와 같은 id를 써서 같은 동작 */
+const CHURCH_URL="https://www.centralbible.net/", CHURCH_YT="https://www.youtube.com/results?search_query=%EC%A4%91%EC%95%99%EC%84%B1%EC%84%9C%EA%B5%90%ED%9A%8C";
+function renderGuideV2(){ const rj=MODE==="rj", sd=parseD(mem.start);
+  const row=(pg,t,v)=>`<button class="mrow" data-mgo="${pg}"><span>${t}</span><em>${v||""}</em><i aria-hidden="true">›</i></button>`;
+  const pg=(id,t,body)=>`<section class="mpage" data-pg="${id}" hidden><button class="mback" data-mback="1">‹ 메뉴</button><h3 class="mpt">${t}</h3>${body}</section>`;
+  const top=`<div class="mtop">
+    <p class="mgh">통독</p><div class="mgrp">${row("plan","통독표",esc(PI.name))}${row("tr","성경 번역",esc(TR_INFO[TR].name))}${row("start","시작일",esc(fmt(sd,{month:"long",day:"numeric"})))}</div>
+    <p class="mgh">화면</p><div class="mgrp"><div class="mrow mseg"><span>화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기"],["light","주간"],["dark","야간"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div></div>${row("view","본문 보기","")}</div>
+    <p class="mgh">도움말</p><div class="mgrp"><button class="mrow" id="tourAgain"><span>둘러보기</span><i aria-hidden="true">›</i></button>${row("howto","쓰는 방법","")}${row("install","홈 화면에 추가","")}</div>
+    <p class="mgh">바로 가기</p><div class="mbans">
+      <a class="mban" href="${CHURCH_URL}" target="_blank" rel="noopener"><span class="mbi">✝</span><span><b>중앙성서교회</b><small>교회 홈페이지</small></span><i aria-hidden="true">↗</i></a>
+      <a class="mban yt" href="${CHURCH_YT}" target="_blank" rel="noopener"><span class="mbi">▶</span><span><b>교회 유튜브</b><small>예배와 말씀 영상</small></span><i aria-hidden="true">↗</i></a>
+      <a class="mban mwv" href="https://aqedah.github.io/MILALWV/" target="_blank" rel="noopener"><span class="mbi">א</span><span><b>MILALWV</b><small>히브리어 원문 연구</small></span><i aria-hidden="true">↗</i></a></div>
+    <p class="mgh">기타</p><div class="mgrp">${window.SYNC&&SYNC.available?row("fb","의견 보내기",""):""}${row("data","기록 관리","")}</div>
+    <p class="mfoot">이야기 통독 노트 · 시험판${window.SYNC&&SYNC.available?` · <button class="linkbtn" id="adminGo">관리자</button>`:""}</p></div>`;
+  const pages=
+   pg("plan","통독표",`<div class="plans" role="radiogroup">${RJ_OFF()&&!rj?"":`<button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다.</span></button>`}<button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">날마다 읽어 1년에 성경을 한 번 읽습니다.</span></button></div><p class="lead">통독표마다 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다.</p>`)+
+   pg("tr","성경 번역",`<div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${esc(v.name)}</b></button>`).join("")}</div><p class="lead">본문 읽기가 이 번역으로 보입니다. 스토리 QT·묵상 노트·도전은 원고가 개역개정으로 쓰여 늘 개역개정입니다.</p>`)+
+   pg("start","시작일",`<p class="lead">${rj?"1주차 1일째가 시작된 날입니다.":"1일째가 시작된 날입니다."}</p><div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>`)+
+   pg("view","본문 보기",`<div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div><span class="label" style="margin-top:14px">본문 듣기 목소리</span><div id="voiceList"></div>`)+
+   pg("howto","쓰는 방법",`<ol class="mhow"><li><b>오늘</b>: 오늘의 그림과 이야기 한 줄. 위의 동그라미로 다른 날을 고릅니다.</li><li><b>본문</b>: 오늘 본문을 읽고 '오늘 통독 완료'를 누릅니다. 절을 누르면 형광펜·책갈피·듣기.</li><li><b>QT</b>: 스토리 QT로 이야기를 따라가고, 묵상 노트에 관찰·하나님·나의 생각·기도를 적습니다.</li><li><b>도전</b>: 본문에서 찾기로 답이 되는 절을 직접 찾습니다.</li><li><b>기록</b>: 진행률, 모은 말씀 카드, 형광펜. 이름과 숫자 4자리로 기기를 잇습니다.</li><li><b>나의 통독</b>: 날짜 줄 맨 왼쪽. 오늘 내게 주시는 말씀과 이번 주 아멘한 말씀.</li></ol>`)+
+   pg("install","홈 화면에 추가",installCard("guide"))+
+   (window.SYNC&&SYNC.available?pg("fb","의견 보내기",`<p class="lead">불편한 점, 틀린 내용, 있었으면 하는 기능을 적어 주세요.</p><button class="btn" id="fbOpen" hidden>피드백 남기기</button><div class="fbbox" id="fbBox"><textarea id="fbText" rows="5" maxlength="3000" placeholder="어느 날짜·화면인지 적어 주시면 더 좋습니다."></textarea><input id="fbName" type="text" maxlength="20" placeholder="이름(적지 않아도 됩니다)"><div class="row"><button class="btn small" id="fbSend">보내기</button><button class="btn ghost small" id="fbCancel">지우기</button></div><p class="lead" id="fbMsg"></p></div>`):"")+
+   pg("data","기록 관리",`<span class="label">중간부터 쓰기 시작했다면</span><p class="lead">오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞춥니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div><span class="label" style="margin-top:16px">기록 지우기</span><p class="lead">이 통독표의 퀴즈, 진행률, QT 기록을 지웁니다. 되돌릴 수 없습니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div>`);
+  return top+pages; }
+function bindMenuV2(r){ const top=r.querySelector(".mtop"); if(!top) return;
+  const show=id=>{ top.hidden=!!id; r.querySelectorAll(".mpage").forEach(p=>p.hidden=p.dataset.pg!==id); r.querySelector(".drawer").scrollTop=0; const h=r.querySelector(".drawer-head b"); if(h) h.textContent="메뉴"; };
+  r.querySelectorAll("[data-mgo]").forEach(b=>b.onclick=()=>show(b.dataset.mgo)); r.querySelectorAll("[data-mback]").forEach(b=>b.onclick=()=>show(""));
+  const fc=r.querySelector("#fbCancel"); if(fc) fc.onclick=()=>{ const t=r.querySelector("#fbText"); if(t) t.value=""; }; }
 function closeMenu(){ const r=document.getElementById("drawerRoot"); if(r&&r.innerHTML){ r.innerHTML=""; document.body.style.overflow=""; } }
 function openMenu(){
   const r=document.getElementById("drawerRoot");
-  r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="메뉴"><div class="drawer-head"><b>메뉴</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${newsBlock()}${renderGuide()}</aside></div>`;
-  bindMenuNews(); try{ if(NEWS.length) localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} renderNews();
+  r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="메뉴"><div class="drawer-head"><b>메뉴</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${window.CBSR_V2?renderGuideV2():newsBlock()+renderGuide()}</aside></div>`;
+  if(window.CBSR_V2) bindMenuV2(r); else { bindMenuNews(); try{ if(NEWS.length) localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} renderNews(); }
   document.body.style.overflow="hidden";
   document.getElementById("drawerX").onclick=closeMenu;
   /* 메뉴를 오른쪽으로 밀면 닫힙니다 */
@@ -9046,7 +9079,7 @@ function openMenu(){
   const ag=document.getElementById("adminGo"); if(ag) ag.onclick=()=>{ closeMenu(); view.tab="admin"; render(); window.scrollTo({top:0}); };
   const fo=document.getElementById("fbOpen"), fb=document.getElementById("fbBox");
   if(fo) fo.onclick=()=>{ fo.hidden=true; fb.hidden=false; document.getElementById("fbText").focus(); };
-  const fc=document.getElementById("fbCancel"); if(fc) fc.onclick=()=>{ fb.hidden=true; fo.hidden=false; };
+  const fc=document.getElementById("fbCancel"); if(fc&&!window.CBSR_V2) fc.onclick=()=>{ fb.hidden=true; fo.hidden=false; };
   const fs2=document.getElementById("fbSend"); if(fs2) fs2.onclick=async()=>{
     const t=document.getElementById("fbText").value.trim(), msg=document.getElementById("fbMsg");
     if(!t){ msg.textContent="내용을 적어 주세요."; return; }
