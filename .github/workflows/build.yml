@@ -11,6 +11,8 @@ permissions:
 concurrency:
   group: cbsr-build
   cancel-in-progress: false
+env:
+  TZ: Asia/Seoul
 jobs:
   build:
     runs-on: ubuntu-latest
