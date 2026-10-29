@@ -9029,7 +9029,7 @@ function renderGuide(){
   ${window.SYNC&&SYNC.available?`<div class="adminlink"><button class="linkbtn" id="adminGo">관리자</button></div>`:""}`;
 }
 /* v2 메뉴: 한 화면 목록 → 누르면 안쪽 화면(설정 앱처럼). 안쪽 화면의 단추는 v1 메뉴와 같은 id를 써서 같은 동작 */
-const CHURCH_URL="https://www.centralbible.net/", CHURCH_YT="https://www.youtube.com/results?search_query=%EC%A4%91%EC%95%99%EC%84%B1%EC%84%9C%EA%B5%90%ED%9A%8C";
+const CHURCH_URL="https://www.centralbible.net/", CHURCH_YT="https://www.youtube.com/@%EC%A4%91%EC%95%99%EC%84%B1%EC%84%9C%EA%B5%90%ED%9A%8C";
 function renderGuideV2(){ const rj=MODE==="rj", sd=parseD(mem.start);
   const row=(pg,t,v)=>`<button class="mrow" data-mgo="${pg}"><span>${t}</span><em>${v||""}</em><i aria-hidden="true">›</i></button>`;
   const pg=(id,t,body)=>`<section class="mpage" data-pg="${id}" hidden><button class="mback" data-mback="1">‹ 메뉴</button><h3 class="mpt">${t}</h3>${body}</section>`;
