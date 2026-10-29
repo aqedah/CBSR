@@ -652,6 +652,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sq2 small{display:block;font:400 12px var(--f-ui);color:var(--sgold);margin-top:4px}
 .spanel{background:rgba(22,17,12,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--sline);border-radius:14px;padding:16px 16px 14px}
 .k-cover .sbox{bottom:auto;top:50%;transform:translateY(-50%);text-align:center}
+.k-book .sbox{bottom:auto;top:50%;transform:translateY(-50%);text-align:center}.k-book .skick{font-size:13px;letter-spacing:.2em;color:var(--sgold);margin-bottom:12px}.k-book h1{font-size:40px}.k-book .ssubt{font-size:15.5px;color:var(--ssub);margin-top:14px;line-height:1.6;white-space:pre-line}.k-book .sph img{filter:brightness(.42) saturate(.8)}
 .k-cover .skick{font-size:13px;letter-spacing:.2em;color:var(--sgold);margin-bottom:12px}
 .k-cover .ssubt{font-size:15.5px;color:var(--ssub);margin-top:14px;line-height:1.6;white-space:pre-line}
 .k-cover .sph::after{background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,.7) 100%)}
@@ -2481,6 +2482,7 @@ function storyCardHTML(s){ return sLinkRefs(storyCardHTML0(s)); }
 function storyCardHTML0(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</span>`:"", h2=s.h?`<h2>${smk(s.h)}</h2>`:"";
   const B=(s.b||[]).map(x=>typeof x==="string"?`<p>${smk(x)}</p>`:`<div class="sq2">${sWho(x.q)}${smk(x.q[0])}<small>${esc(x.q[1]||"")}</small></div>`).join("");
   if(s.k==="cover") return `<div class="sbox"><div class="skick">${esc(s.kick||"")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
+  if(s.k==="book") return `<div class="sbox"><div class="skick">${esc(s.kick||"이제 다른 책")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
   if(s.k==="quote") return `<div class="sbox">${lab}${B}<div class="sbigq" style="margin-top:14px">${smk(s.big)}</div><div class="sref">${esc(s.ref||"")}</div></div>`;
   if(s.k==="echo"){ const rv=!!s.reveal; return `<div class="sbox">${lab}${h2}<div class="spair2${rv?" hide-u":""}">${(s.pair||[]).map(x=>`<div>${x[2]&&window.CBSR_V2?`<span class="swho">${esc(x[2])}</span>`:""}${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 같은 말과 달라진 말 보기</button><div class="rvhide">${B}${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`:B}</div>`; }
   if(s.k==="line"){ const one=s.r&&!s.r[3]?vtxt(s.r):""; return `<div class="sbox">${lab}<p class="sline2">${smk(s.t)}</p>${s.r?(one&&one.length<=90?`<div class="sq2">${esc(one)}<small>${esc(rlab2(s.r))}</small></div>`:`<div class="sref">${esc(rlab2(s.r))}</div>`):""}</div>`; }
