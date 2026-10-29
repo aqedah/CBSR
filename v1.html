@@ -9031,7 +9031,7 @@ function mvBub(map,ll,ref,small){ const t=vRef(ref); if(!t) return null; const f
   requestAnimationFrame(()=>b.classList.add("on")); b.onclick=e=>{ e.stopPropagation(); b.remove(); }; if(small) setTimeout(()=>{ b.classList.remove("on"); setTimeout(()=>b.remove(),400); },1900); return b; }
 /* 바다 구간 판정: 해안선을 단순하게 그려서, 해안을 따라 걷는 짧은 길(욥바→가이사랴, 행 10:23–24)이 바다로 잘못 잡히지 않게 합니다.
    본문이 걸어갔다고 한 길과 배로 갔다고 한 길은 이름 짝으로 정해 둡니다 */
-const LANDPAIR=new Set(["룻다|욥바","욥바|가이사랴","돌레마이|가이사랴","가이사랴|예루살렘","겐그레아|고린도","드로아|앗소","안디바드리|가이사랴"]);
+const LANDPAIR=new Set(["안디옥|다소","룻다|욥바","욥바|가이사랴","돌레마이|가이사랴","가이사랴|예루살렘","겐그레아|고린도","드로아|앗소","안디바드리|가이사랴"]);
 const SEAPAIR=new Set(["두로|돌레마이","가이사랴|다소","실루기아|살라미","바보|버가","앗달리아|안디옥","드로아|사모드라게","사모드라게|네압볼리","앗소|미둘레네","겐그레아|에베소","에베소|가이사랴"]);
 function isSeaLeg(a,b,na,nb){ const k1=(na||"")+"|"+(nb||""), k2=(nb||"")+"|"+(na||""); if(na&&nb){ if(LANDPAIR.has(k1)||LANDPAIR.has(k2)) return false; if(SEAPAIR.has(k1)||SEAPAIR.has(k2)) return true; }
   const pt=f=>[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f], nearLand=q=>inLand(q)||[[.06,0],[-.06,0],[0,.06],[0,-.06]].some(([dy,dx])=>inLand([q[0]+dy,q[1]+dx]));
