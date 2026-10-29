@@ -2364,6 +2364,8 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
   const CHc=CH.filter(x=>cited.has(x[1])), CH2=CHc.length?CHc:CH;
   const inRef=p=>(p.refs||[]).some(([b,a,z])=>CH2.some(x=>x[0]===b&&x[1]>=a&&x[1]<=z));
   const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9;
+  /* 때: 카드 글에 밤·저녁을 가리키는 말이 없으면 밤 사진을 피합니다(대부분의 장면은 낮) */
+  const nightOK=/밤|저녁|어두|어둠|흑암|새벽|별|달빛|등불|등잔|촛대|해 질|해가 지|횃불/.test(kt);
   for(const p of P){ if(used.has(p.id)||used.has(PH_TWIN(p.id))) continue;
     if((p.deny||[]).some(w=>kt.includes(w))) continue;
     let s=0; const sets=p.sets||(p.set?[p.set]:[]), eraOk=!eok||!sets.length||sets.some(x=>eok.includes(x));
@@ -2380,7 +2382,8 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
     if(plHit) s+=4; else if((p.pl||[]).some(n=>ctxPl.some(c=>c===n))) s+=1; else if((p.pl||[]).length&&p.scope!=="s") s-=2;
     if(eok&&sets.includes(eok[1])) s+=1.2;
     (p.tags||[]).forEach(t=>{ if(hs.has(t)) s+=3; if(want.has(t)) s+=2; if(gen.includes(t)) s+=.6; if(opt.stage&&(STAGE_T[opt.stage]||[]).includes(t)) s+=.9; });
-    if(opt.mood&&p.mood){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
+    if(p.tm==="n"&&!nightOK) s-=4; else if(p.tm==="e"&&!nightOK) s-=1.5; else if(p.tm==="n"&&nightOK) s+=.8;
+    if(opt.mood&&p.mood&&!(p.tm==="n"&&!nightOK)){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
     if(opt.avoid&&p.scope!=="s"&&opt.avoid.has(p.id)) s-=6;
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
   return best; }

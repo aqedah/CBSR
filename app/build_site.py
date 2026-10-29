@@ -105,7 +105,12 @@ data+='const KWQ='+open('ux/kwq.json').read()+';\nconst CARDNEWS='+open('ux/card
 _PH=json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else []
 _SC=json.load(open('ux/story_cards.json')) if os.path.exists('ux/story_cards.json') else {}
 _SC={k:v for k,v in _SC.items() if not k.startswith('_')}  # 보관본(_backup)은 앱에 싣지 않음
-data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
+_PCAT=json.load(open('ux/photo_cats.json')) if os.path.exists('ux/photo_cats.json') else {}
+_TM={'밤':'n','저녁·노을':'e','새벽·아침':'d','한낮':'m'}
+for _p in _PH:
+    _t=_TM.get((_PCAT.get(_p['id']) or {}).get('t',''))
+    if _t: _p['tm']=_t
+data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role','tm')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
 _SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
 _SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}
 data+='const STORYC_RJ='+J(_SRJ)+';\n'
