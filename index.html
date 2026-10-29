@@ -8619,7 +8619,7 @@ function sAmUI(nf,s,w,d){ const bx=nf.querySelector(".sbox"); if(!bx) return; co
   bx.insertAdjacentHTML("beforeend",`<button class="samen${on?" on":""}" data-samen="1"${on?"":" hidden"}>아멘 ✓</button><button class="tgam" data-tga="${esc(k)}" data-tgs="${esc(sAmTxt(s))}" hidden></button>`);
   bx.querySelector("[data-samen]").onclick=e=>{ e.stopPropagation(); sAmSet(nf,s,false); }; }
 function sAmSet(root,s,on){ const key=keyOf(view.w,view.d), q=(mem.qt[key] ||= {}); q.samen ||= {}; const k=sAmKey(s);
-  if(on) q.samen[k]={d:todayStr(),t:sAmTxt(s)}; else delete q.samen[k]; if(!Object.keys(q.samen).length) delete q.samen; touchQ(q,"samen"); save();
+  if(on) q.samen[k]={d:todayStr(),t:sAmTxt(s)}; else delete q.samen[k]; if(!Object.keys(q.samen).length) delete q.samen; touchQ(q,"samen"); save(); if(typeof tgFill==="function") tgFill(root,view.w,view.d);
   const b=root.querySelector("[data-samen]"); if(b){ b.hidden=!on; b.classList.toggle("on",on); if(on){ b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); } } }
 function sAmen(r,s,x,y){ const fr=r.querySelector(".sfr:not(.sghost)")||r; sAmSet(fr,s,true); try{ navigator.vibrate&&navigator.vibrate(12); }catch(e){}
   const B=r.getBoundingClientRect(), el=document.createElement("div"); el.className="samenpop"; el.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-7.5-10.4A4.3 4.3 0 0 1 12 7.7a4.3 4.3 0 0 1 7.5 2.9C19.5 16.4 12 21 12 21z"/></svg><b>아멘</b>`;
@@ -8769,7 +8769,7 @@ function bindQT(m){
     sheet("묵상 노트는 이렇게",`<p><b>${st.join(" → ")}</b> 순서로 갑니다. 마지막에 기도로 마칩니다.</p><p>정답을 고르는 문제가 아닙니다. 질문을 읽고 본문을 다시 본 뒤 <b>내 말로 한 줄</b> 적습니다.</p><p>막히면 '본문 열기'로 그 장면을 다시 읽거나, '다른 부분도 살펴보기'에서 작은 질문을 따라가 보세요.</p><p>적는 칸은 비워 두어도 마칠 수 있습니다. 적은 답은 '기록 → 관찰 기록'에 모입니다.</p><p>스토리 QT와 묵상 노트의 말씀은 개역개정입니다.</p>`); };
   const np=document.getElementById("qtNextP"); if(np) np.onclick=()=>{const q=cur(); q.pv=(q.pv||0)+1; touchQ(q,"pv"); save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
   m.querySelectorAll("[data-amen]").forEach(b=>b.onclick=()=>{ const k=keyOf(view.w,view.d); const q=(mem.qt[k] ||= {}); q.amen ||= {}; const n=b.dataset.amen;
-    if(q.amen[n]) delete q.amen[n]; else q.amen[n]=todayStr(); touchQ(q,"amen"); save();
+    if(q.amen[n]) delete q.amen[n]; else q.amen[n]=todayStr(); touchQ(q,"amen"); save(); if(typeof tgFill==="function") tgFill(m,view.w,view.d);
     const on=!!q.amen[n]; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); b.textContent=on?"아멘 ✓":"아멘"; if(on){ b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); } });
   const db=document.getElementById("deepBox"); if(db) db.ontoggle=()=>{view.deepOpen=db.open;};
   const dn=document.getElementById("qtDone"); if(dn) dn.onclick=()=>{const q=cur(); q.done=!q.done; touchQ(q,"done"); if(q.done){ if(!q.doneAt) q.doneAt=todayStr(); if(!q.kv&&view.kvShown) q.kv=view.kvShown; view.qtJust=true;} save(); const y=window.scrollY; render(); window.scrollTo({top:y});
@@ -9237,7 +9237,11 @@ async function tgFill(root,w,d){ if(!TG_OK()) return; const GA=[...root.querySel
   const key=keyOf(w,d), day=syncKey(key); let me=null; try{ me=SYNC.loggedIn()?await SYNC.together.who():null; }catch(e){}
   const L=(await tgList(day)).filter(p=>p.who!==me);
   for(const ga of GA){ if(!document.body.contains(ga)) continue; const t=ga.dataset.tga, A=L.filter(p=>(p.amen||[]).includes(t)).sort((a,b)=>(a.at||0)-(b.at||0));
-    if(A.length){ ga.innerHTML=`<span class="tgstack">${A.slice(0,3).map(p=>tgAv(p,"tga")).join("")}</span><span class="tgtx"><b>${esc(A[0].nick)}</b>님${A.length>1?` 외 <b>${A.length-1}명</b>`:""}이<br>아멘했습니다</span>`; ga.hidden=false; ga.onclick=e=>{ e.stopPropagation(); tgSheet(`함께 아멘한 교우 ${A.length}명`,ga.dataset.tgs||t,A,0); }; } }
+    /* 내가 아멘했으면 '나와 ○○님 외 n명'. 나만 했으면 아멘 ✓ 단추로 충분하므로 줄을 띄우지 않습니다 */
+    const Q=mem.qt[key]||{}, mine=t[0]==="§"?!!(Q.samen||{})[t]:!!(Q.amen||{})[t];
+    if(!A.length){ ga.hidden=true; continue; }
+    if(A.length){ const meAv=mine?(PROF.ph64?`<img class="tga" src="${PROF.ph64}" alt="">`:`<span class="tga" style="background:${tgCol(PROF.nick||"나")}">나</span>`):"";
+      ga.innerHTML=`<span class="tgstack">${meAv}${A.slice(0,mine?2:3).map(p=>tgAv(p,"tga")).join("")}</span><span class="tgtx">${mine?"<b>나</b>와 ":""}<b>${esc(A[0].nick)}</b>님${A.length>1?` 외 <b>${A.length-1}명</b>`:""}이<br>아멘했습니다</span>`; ga.hidden=false; ga.onclick=e=>{ e.stopPropagation(); tgSheet(`함께 아멘한 교우 ${A.length}명`,ga.dataset.tgs||t,A,0); }; } }
   if(gr&&document.body.contains(gr)){ const Rd=L.filter(p=>p.read).sort((a,b)=>(a.at||0)-(b.at||0)); let n=Rd.length;
     try{ const c=await SYNC.counts(day,syncKey(todayStr())); if(c) n=Math.max(n,(c.day||0)-(mem.counted&&mem.counted[key]?1:0)); }catch(e){}
     const AC={}; L.forEach(p=>(p.amen||[]).forEach(t=>{ if(t[0]!=="§") AC[t]=(AC[t]||0)+1; })); const top=Object.entries(AC).sort((a,b)=>b[1]-a[1]).slice(0,2);
