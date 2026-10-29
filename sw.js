@@ -7,5 +7,5 @@ self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.
 self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(/firestore\.googleapis\.com|identitytoolkit|securetoken|firebaseinstallations/.test(u.hostname))return;
   const shell=u.origin===location.origin&&!/bible\.js|\/terrain\/|\/icons\/|\/img\//.test(u.pathname);
-  if(shell){e.respondWith(fetch(r).then(res=>{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}).catch(()=>caches.match(r).then(m=>m||caches.match("index.html"))));return;}
+  if(shell){e.respondWith(fetch(r).then(res=>{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}).catch(()=>caches.match(r,{ignoreSearch:true}).then(m=>m||caches.match(/v2\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{if(res.ok||res.type==="opaque"){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}return res;})));});
