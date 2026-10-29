@@ -8217,7 +8217,7 @@ function rgStory(w,d){ const L=rgDays(); let i=L.findIndex(([a,b])=>a===w&&b===d
     const g=GUIDE[key]||{}, RD=MODE==="rj"&&typeof RJDESC!=="undefined"&&RJDESC[key], line=g.today||(RD&&RD.text?RD.text.split(/(?<=[다요]\.)\s+/)[0]:"")||"", done=!!mem.done[key], fut=futLock(ww,dd), mins=tdMins(ww,dd);
     const tag=dd0===0?"오늘":dd0<0?(done?"읽음 ✓":"지난 본문"):"미리 보기";
     const pg=document.createElement("div"); pg.className="rgsv"; pg.dataset.k=k;
-    pg.innerHTML=`<div class="rgsbars">${L.map((x,m)=>[x,m]).filter(([x])=>x[0]===ww).map(([x,m])=>`<i class="${m<k?"done":m===k?"on":""}"></i>`).join("")}</div>
+    pg.innerHTML=`<div class="rgsbars"><i class="on"></i></div>
       <div class="rgsph">${phImg(ph,"")}</div><div class="rgsgrad"></div><div class="rgsshade"></div>
       <div class="rgstop"><span class="sdot"><img alt="" src="icons/icon-192.png"></span><b>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><em>${esc(tag)}</em><button class="rgsx" data-rgs="x" aria-label="닫기">✕</button></div>
       <button class="rgsnav l" data-rgs="prev" aria-label="앞날"></button><button class="rgsnav r" data-rgs="next" aria-label="뒷날"></button>
