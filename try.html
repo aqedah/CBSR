@@ -9241,10 +9241,10 @@ function dayRingHTML(){ const here0=today0(), selN=dayNo(view.w,view.d), N=READ_
     r+=`<button class="rg${sel?" sel":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${w}-${d}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p.label)}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}</span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":DAYN[dt.getDay()]}</em></b></button>`; }
   const dt=dateOf(view.w,view.d), p=dayPlan(view.w,view.d), isT=view.w===here.w&&view.d===here.d;
   const MY=myStoryItems(), myOn=MY.some(x=>x.mine), av=PROF.photo?`<img alt="" src="${PROF.photo}">`:`<em class="rgme-i">${esc(PROF.nick?[...PROF.nick][0]:"나")}</em>`;
-  const me=`<button class="rg rgme${myOn?"":" empty"}" id="rgMe" aria-label="내 스토리: 오늘 내게 주시는 말씀과 아멘한 말씀"><span class="rgi">${av}${myOn?"":`<i class="rgplus">+</i>`}</span><b>내 스토리</b></button>`;
+  const me=`<button class="rg rgme${myOn?"":" empty"}" id="rgMe" aria-label="나의 통독: 오늘 내게 주시는 말씀과 아멘한 말씀"><span class="rgi">${av}${myOn?"":`<i class="rgplus">+</i>`}</span><b>나의 통독</b></button>`;
   return `<section class="rgwrap"><div class="rghead"><b>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><span>${esc(p?p.label:"")}</span>${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button></div>
     <div class="rgline">${me}<div class="rgs" id="rgScroll">${r}</div></div></section>`; }
-/* 내 스토리: 오늘 내게 주시는 말씀 → 아멘한 말씀 → 지난날 고른 말씀 */
+/* 나의 통독: 오늘 내게 주시는 말씀 → 아멘한 말씀 → 지난날 고른 말씀 */
 function myStoryItems(){ return withKRV(myStoryItems0); }
 function myStoryItems0(){ const out=[]; if(!BIBLE) return out; const tk=keyOf(here.w,here.d), seen=new Set();
   const dayOf=k=>{ const [w,d]=k.split("-").map(Number); return {w,d}; };
@@ -9267,13 +9267,13 @@ function myStoryItems0(){ const out=[]; if(!BIBLE) return out; const tk=keyOf(he
       out.push({k:"kv",mine:true,kick:"내가 고른 오늘의 말씀",t:v.t,ref:`${PLAN.abbr[v.b-1]} ${v.c}:${v.v}`,sub:fmt(dateOf(w,d),{month:"long",day:"numeric"})+" · "+lab(w,d),ph:coverPh(w,d)}); }catch(e){} }
   return out; }
 function myStoryOpen(){ const L=myStoryItems(); if(!L.length){ toast("아직 보여 드릴 말씀이 없습니다."); return; }
-  let i=0, T=0; const root=document.createElement("div"); root.className="mys"; root.setAttribute("role","dialog"); root.setAttribute("aria-label","내 스토리"); document.body.appendChild(root); document.documentElement.style.overflow="hidden";
+  let i=0, T=0; const root=document.createElement("div"); root.className="mys"; root.setAttribute("role","dialog"); root.setAttribute("aria-label","나의 통독"); document.body.appendChild(root); document.documentElement.style.overflow="hidden";
   const close=()=>{ clearTimeout(T); root.remove(); document.documentElement.style.overflow=""; document.removeEventListener("keydown",key); };
   const go=n=>{ if(n<0) n=0; if(n>=L.length){ close(); return; } i=n; show(); };
   const key=e=>{ if(e.key==="Escape") close(); if(e.key==="ArrowRight") go(i+1); if(e.key==="ArrowLeft") go(i-1); };
   function show(){ clearTimeout(T); const x=L[i];
     root.innerHTML=`<div class="mys-bg">${x.ph?`<img alt="" src="${esc(x.ph.u)}">`:""}</div><div class="mys-bars">${L.map((_,j)=>`<i class="${j<i?"on":j===i?"cur":""}"><b></b></i>`).join("")}</div>
-      <div class="mys-top"><span class="mys-av">${PROF.photo?`<img alt="" src="${PROF.photo}">`:esc(PROF.nick?[...PROF.nick][0]:"나")}</span><b>내 스토리</b><button class="mys-x" aria-label="닫기">✕</button></div>
+      <div class="mys-top"><span class="mys-av">${PROF.photo?`<img alt="" src="${PROF.photo}">`:esc(PROF.nick?[...PROF.nick][0]:"나")}</span><b>나의 통독</b><button class="mys-x" aria-label="닫기">✕</button></div>
       <div class="mys-box"><div class="mys-k">${esc(x.kick)}</div><div class="mys-q">${esc(x.t)}</div><div class="mys-r">${esc(x.ref)}</div><div class="mys-s">${esc(x.sub)}</div>${x.k==="today"&&!x.mine?`<button class="mys-btn" id="mysQT">묵상 노트에서 고르기</button>`:""}</div>
       <button class="mys-tap l" aria-label="앞"></button><button class="mys-tap r" aria-label="다음"></button>`;
     root.querySelector(".mys-x").onclick=close; root.querySelector(".mys-tap.l").onclick=()=>go(i-1); root.querySelector(".mys-tap.r").onclick=()=>go(i+1);
@@ -9586,7 +9586,7 @@ const TOUR_KEY="cbsr-tour-done";
 const tourDone=()=>{ try{ return !!localStorage.getItem(TOUR_KEY); }catch(e){ return true; } };
 function tourBtnShow(){ const b=document.getElementById("tourBtn"); if(b) b.hidden=tourDone(); }
 const TOUR=window.CBSR_V2?[
- {sel:"#rgMe",t:"내 스토리",d:"오늘 내게 주시는 말씀과, 아멘한 말씀, 지난날 고른 말씀이 스토리로 이어집니다."},
+ {sel:"#rgMe",t:"나의 통독",d:"오늘 내게 주시는 말씀과, 아멘한 말씀, 지난날 고른 말씀이 스토리로 이어집니다."},
  {sel:".rgs",t:"날짜",d:"동그라미를 누르면 그날로 갑니다. 옆으로 밀면 지난날과 앞날이 나옵니다. 앞날은 본문만 미리 읽을 수 있습니다."},
  {sel:"#textSec",t:"오늘 본문",d:"오늘 읽을 본문입니다. 절을 누르면 형광펜·책갈피·듣기를 고를 수 있고, 점선 밑줄 친 말을 누르면 풀이가 나옵니다."},
  {sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 '오늘 통독 완료'를 누릅니다. 그다음 스토리 QT로 이어집니다."},
