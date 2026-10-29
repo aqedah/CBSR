@@ -66,7 +66,7 @@ data+='window.TR_VER="'+TRV+'";\n'
 data+='const BOOKINFO='+open('books/all.json').read()+';\n'
 data+='const RJ_PLAN=PLAN.plan, RJ_WEEKS=WEEKS.slice(), GUIDE={}, EYE={};\n'
 data+='/* 시편은 "편" */ PLAN.plan.forEach(w=>w.forEach(d=>{ d.label=d.label.replace(/시편 ([0-9–\\-]+)장/g,"시편 $1편"); }));\n'
-data+='window.STUDY_V="'+hashlib.sha1(open('study/meta.json','rb').read()+open('study/words.json','rb').read()+(open('study/strong.json','rb').read() if os.path.exists('study/strong.json') else b'')).hexdigest()[:8]+'";\n'
+data+='window.STUDY_V="0";\n'  # 원문 연구는 MILALWV로 옮김(2026-10-23)
 data+='window.CBSR_MODE=(()=>{try{const u=new URLSearchParams(location.search).get("p"); if(u==="rj"||u==="365"){const m=u==="rj"?"rj":"y365"; localStorage.setItem("cbsr-mode",m); return m;} return localStorage.getItem("cbsr-mode")==="y365"?"y365":"rj";}catch(e){return "rj";}})();\nconst DAYC={};\n'
 data+='if(window.CBSR_MODE==="y365"){const R=(o,n)=>{for(const k in o)delete o[k];Object.assign(o,n);};\n'
 data+=f'PLAN.plan={J(W365)};SUMMARY.length=0;SUMMARY.push(...{J(SW)});WEEKS.length=0;WEEKS.push(...{J(WK)});\n'
