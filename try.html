@@ -7593,7 +7593,8 @@ function renderRead(){
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
-  if(done){
+  if(futLock(w,d)&&!done){ h+=`<p class="lead" style="text-align:center">본문은 미리 읽어 볼 수 있습니다.<br>통독 완료와 스토리 QT는 <b>${esc(futMsg(w,d))}</b>.</p>`; }
+  else if(done){
     h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.<br>${n>=TOTAL_CH?"성경 일독을 마치셨습니다!":`남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?`<p class="readcnt" id="churchDay" aria-live="polite"></p>`:""}<div class="row" style="justify-content:center"><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
     if(window.CBSR_V2) h+=`<button class="btn" id="toStory" style="width:100%;padding:15px;margin-top:10px">스토리 QT 시작 ›</button>`;
   } else {
@@ -7842,6 +7843,7 @@ function renderQT(){
   if(view.pre) return renderPreview();
   if(view.revW) return renderQTWeek(weekDays(view.revW),dispTitle(view.revW));
   if(isRev(d)) return renderQTWeek();
+  if(futLock(w,d)) return `<section class="sec glock"><span class="label">QT</span><p class="lead">이 날의 스토리 QT와 묵상 노트는 <b>${esc(futMsg(w,d))}</b>. 본문은 읽기 탭에서 미리 읽어 볼 수 있습니다.</p></section>`;
   if(window.CBSR_V2) view.qtDeep=true;
   if(STORY()&&!view.qtDeep) return renderQTStory();
   const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], A=dayA(w,d), q=qtOf(key);
@@ -7927,7 +7929,7 @@ function rdShow(){ const r=document.getElementById("readRoot"); if(!r) return; c
   const head=`<div class="rdhead">${bar}<div class="rdtop"><span class="rdav">통</span><b>${esc(p.label)}</b><span class="rdpg">${i>0&&i<N-1?`${i}/${N-2}`:""}</span><button class="rdbtn" id="rdFm" aria-label="글자 작게">가−</button><button class="rdbtn" id="rdFp" aria-label="글자 크게">가+</button><button class="rdbtn rdx" id="rdX" aria-label="닫기">✕</button></div></div>`;
   let body="";
   if(i===0) body=`<div class="rdcover"${cph?` style="background-image:url('${esc(cph.u)}');background-position:${esc(cph.fx||"50% 50%")}"`:""}><div class="rdcov"><span class="rdk">오늘 읽을 본문</span><h1>${esc(p.label)}</h1><p>${p.ch.length}${p.ch[0][0]===19?"편":"장"} · 약 ${mins}분 · ${RV.pages.length}쪽</p>${(GUIDE[k]&&GUIDE[k].find)?`<p class="rdfind"><span>읽으면서 찾아보세요</span>${esc(GUIDE[k].find)}</p>`:""}<p class="rdhint">화면 오른쪽을 누르면 다음 쪽, 왼쪽은 앞 쪽입니다</p></div></div>`;
-  else if(i===N-1){ const done=!!mem.done[k]; body=`<div class="rdend"><span class="rdk">${esc(p.label)}</span><h2>${done?"오늘 본문을 다 읽었습니다":"여기까지가 오늘 본문입니다"}</h2>${done?"":`<button class="btn rdbig" id="rdDone">다 읽었어요</button>`}${done?`<button class="btn rdbig" id="rdStory">스토리 QT 시작</button><button class="btn ghost rdbig" id="rdNote">묵상 노트 바로 쓰기</button>`:""}<button class="linkbtn" id="rdAgain">처음부터 다시 읽기</button></div>`; }
+  else if(i===N-1){ const done=!!mem.done[k]; body=`<div class="rdend"><span class="rdk">${esc(p.label)}</span><h2>${done?"오늘 본문을 다 읽었습니다":"여기까지가 오늘 본문입니다"}</h2>${done?"":futLock(view.w,view.d)?`<p class="lead">통독 완료와 스토리 QT는 ${esc(futMsg(view.w,view.d))}.</p>`:`<button class="btn rdbig" id="rdDone">다 읽었어요</button>`}${done?`<button class="btn rdbig" id="rdStory">스토리 QT 시작</button><button class="btn ghost rdbig" id="rdNote">묵상 노트 바로 쓰기</button>`:""}<button class="linkbtn" id="rdAgain">처음부터 다시 읽기</button></div>`; }
   else { const pg=RV.pages[i-1]; body=`<div class="rdpage"><div class="rdtext" style="font-size:${rdFontPx()}px">${pg.html}</div><span class="rdref">${esc(PLAN.abbr[pg.b-1])} ${pg.c}:${pg.v1}${pg.v2!==pg.v1?"–"+pg.v2:""}</span></div>`; }
   r.innerHTML=`<div class="rdfr">${head}${body}<div class="rdtap rdl" id="rdL"></div><div class="rdtap rdr" id="rdR"></div></div>`;
   if(i===0||i===N-1) r.querySelectorAll(".rdtap").forEach(t=>t.style.pointerEvents=i===N-1?"none":"");
@@ -8188,7 +8190,7 @@ function fbOpen(i,lab,host,after){ const o=fbAll(), k=fbKey(i), r=o[k]||{}; cons
   ov.querySelector("[data-s]").onclick=()=>{ const O=fbAll(); const v=ta.value.trim(); if(v) O[k]={n:v,lab:lab||"",t:Date.now()}; else delete O[k]; fbSave(O); close(); };
   ov.querySelector("[data-del]").onclick=()=>{ const O=fbAll(); delete O[k]; fbSave(O); close(); };
   ov.addEventListener("pointerup",e=>e.stopPropagation()); ov.addEventListener("pointerdown",e=>e.stopPropagation()); }
-function storyOpen(i,mode){ const {w,d}=view; const k=keyOf(w,d); try{ localStorage.setItem("cbsr-story-seen",MODE+":"+k); }catch(e){}
+function storyOpen(i,mode){ const {w,d}=view; if(futLock(w,d)&&!view.allowFut){ toast("이 날의 스토리 QT는 "+futMsg(w,d)+"."); return; } view.allowFut=false; const k=keyOf(w,d); try{ localStorage.setItem("cbsr-story-seen",MODE+":"+k); }catch(e){}
   if(view.scKey!==k){ view.scKey=k; view.sRev=false; } storyFont();
   let r=document.getElementById("storyRoot"); if(!r){ r=document.createElement("div"); r.id="storyRoot"; document.body.appendChild(r); ovOpen(storyClose); }
   SV.mode=mode||""; SV.i=i||0; SV.hinted=!!mode; document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); storyShow(); }
@@ -8395,7 +8397,7 @@ function speechInfo(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(
   if(who&&!(TRUST_SP.test(last)||TRUST_SP.test(who)||isPerson(last)||SPK_NOUN.test(last))) who="";
   if(!who) return {who:"",trusted:null};
   return {who, trusted:TRUST_SP.test(who)||TRUST_SP.test(last)||TRUST_P.test(last)}; }
-try{ if(localStorage.getItem("cbsr-test")) window.__T={view:()=>view,mem:()=>mem,keyOf:(w,d)=>keyOf(w,d),speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),plan:(w,d)=>dayPlan(w,d),pause:on=>storyPause(on)}}; }catch(e){}
+try{ if(localStorage.getItem("cbsr-test")) window.__T={view:()=>view,mem:()=>mem,keyOf:(w,d)=>keyOf(w,d),speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;view.allowFut=true;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),plan:(w,d)=>dayPlan(w,d),pause:on=>storyPause(on)}}; }catch(e){}
 function verseQuestion(v){
   const K=verseKind(v), sp=speechInfo(v);
   if(sp&&sp.trusted===false&&K.k!=="prayer") return `이 말은 ${sp.who}의 말입니다. 누구에게, 무엇을 위해 한 말입니까? 앞뒤 이야기는 이 말을 믿을 만한 말로 보여 줍니까?`;
@@ -9263,6 +9265,10 @@ function gfFoot(G){ if(G.st===0) return ""; if(G.st===1) return G.rv?`<button cl
   if(G.st===2) return `<button class="gpbtn" data-gfn="3">${G.seen.size?"발견 마치기":"읽지 않고 마치기"}</button>`; return ""; }
 function chSave(key,k,res){ const R=chRec(key), old=R[k]; if(!old||GSTAR(res)>=GSTAR(old)) R[k]=res; save(); }
 const chFuture=(w,d)=>dayDiff(today0(),dateOf(w,d))>0;
+/* 앞날: 본문은 미리 읽을 수 있고, 통독 완료·스토리 QT·QT·도전은 그날 열립니다(목사님 결정 2026-10-29). 검토 링크(?day=, ?review=)는 예외 */
+const FUT_OK=(()=>{ try{ const q=new URLSearchParams(location.search); return q.has("day")||q.has("review"); }catch(e){ return false; } })();
+const futLock=(w,d)=>!!window.CBSR_V2&&!TRY&&!FUT_OK&&chFuture(w,d);
+const futMsg=(w,d)=>`${fmt(dateOf(w,d),{month:"long",day:"numeric"})}에 열립니다`;
 /* 이번 주 다시 보기: 지난 7일 동안 내가 고른 말씀, 덜 마친 발견, 남긴 한 줄 */
 function gWeekHTML(){ const hn=dayNo(here.w,here.d), items=[], notes=[]; let picks=0;
   for(let n=hn;n>=Math.max(1,hn-6);n--){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(!dayPlan(w,d)) continue; const key=keyOf(w,d), q=mem.qt[key], R=(mem.ch||{})[key]||{};
