@@ -626,7 +626,7 @@ g46_13|g||떡/볶은 곡식/점심|bread,grain,labor,hands,harvest||5,8|warm|50|
 g46_14|g||우물/물 긷/아이|well,child,mother,clay_jar||2,5,6,8|warm|50|돌 우물에서 물을 긷는 어머니와 아이|||scene
 g46_15|g||안수/머리에 손을 얹/축복|blessing,hands,father,son||2,5,6,8|warm|50|무릎 꿇은 아들의 머리에 손을 얹은 아버지|||scene
 g47_01|g||칼/창/방패|sword,spear,shield,armor||5,6,7|dark|50|돌벽에 기댄 청동 칼과 창과 가죽 방패|||object
-g47_02|g||로마 군사/투구/방패|roman,helmet,shield,armor,tent||9,10|dark|50|막사 안의 로마식 방패와 투구|||object
+g47_02|g||로마 군사/투구/방패|roman,helmet,shield,armor,tent||9,10|dark|50|막사 안의 로마식 방패와 투구||하나님의 장막|object
 g47_03|g||활/화살|bow,arrows,quiver,sunset||5,6,7|warm|50|해 질 녘 바위 위의 활과 화살통|||object
 g47_04|g||구덩이/웅덩이|pit,well,stones,light||2,6,7|dark|50|위에서 빛이 드는 깊은 돌 구덩이|||setting
 g47_05|g||차꼬/옥/족쇄|stocks,chains,prison,light||7,9,10|dark|50|감옥 바닥의 나무 차꼬와 쇠고랑|||object
@@ -672,7 +672,7 @@ g49_08|s|66:10|두루마리를 먹/작은 두루마리를|old_man,scroll,hands||
 g49_09|s|66:11|두 증인/두 감람나무/굵은 베옷|olive_tree,two_men,torch,night||10|dark|50|감람나무와 불 사이에 선 두 사람(계 11:3–4)|||scene
 g49_10|s|66:12|해를 옷 입은/열두 별|woman,light,stars,moon||10|bright|50|해와 별에 둘러싸인 여인(계 12:1)|빛나는 성모상처럼 보임||scene
 g49_11|s|66:12|붉은 용|dragon,storm||10|dark|50|폭풍 구름 속 용(계 12:3)|만화 같은 용||scene
-g49_12|s|66:12|독수리의 두 날개/광야로/광야에서|eagle,desert,woman,canyon||10|warm|50|광야 협곡으로 피하는 여인과 독수리 그림자(계 12:14)|||scene
+g49_12|s|66:12|독수리의 두 날개/광야로/광야에서|eagle,desert,woman,canyon||10|warm|50|광야 협곡으로 피하는 여인과 독수리 그림자(계 12:14)||붉은 빛 짐승|scene
 g49_13|s|66:13|바다에서 한 짐승|sea,storm,beast||10|dark|50|폭풍 바다의 짐승 그림자(계 13:1)|만화 같은 괴물||scene
 g49_14|s|66:15|유리 바다/거문고/모세의 노래|harps,white_robe,fire,sea||10|warm|50|불 섞인 유리 바다 가의 수금 든 사람들(계 15:2–3)|||scene
 g49_15|s|66:16|대접을/대접|bowl,red,light||10|dark|50|쏟아지는 붉은 대접(계 16:1)|형광 붉은빛, 과장||object
