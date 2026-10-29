@@ -22,7 +22,7 @@ g02_07|s|1:22|모리아/번제할 나무/이삭을 데리고|road,mountain_peak,
 g02_08|s|1:22|숫양|thorns,ram,sunrise_light_rays|모리아|2|dark|50|덤불에 걸린 숫양|||scene
 g02_09|s|1:28|돌베개/돌을 베개/사닥다리|stones,night_sky,sleep|벧엘|2|dark|60|돌을 베고 자는 사람|||scene
 g02_10|s|1:32|얍복/씨름|river,night_sky,darkness|얍복|2|dark|50|밤의 얍복 강가|||setting
-g02_11|s|1:33;1:45;1:46|목을 안고/서로 안고/안고 입맞추|hands,embrace,brothers||2,9|warm|50|형제의 포옹||아버지/아들/맏아들|scene
+g02_11|s|1:33;1:45;1:46|목을 안고/서로 안고/안고 입맞추/달려와 안는/달려온 형/자기를 알리|hands,embrace,brothers||2,9|warm|50|형제의 포옹||아버지/아들/맏아들|scene
 g02_13|s|1:37|구덩이|cave,pit,sunrise_light_rays|도단|2|dark|50|마른 구덩이|||setting
 g02_14|g|||camel,desert,road,caravan||2|bright|50|멀리 가는 낙타 대상|||scene
 g02_15|s|1:44|은잔/자루|grain,silver_cup||2|warm|50|곡식 자루 속 은잔|||object
@@ -33,10 +33,10 @@ g03_04|s|1:41;1:47;2:5-12|바로 앞에/바로의 궁|palace,egypt,throne|애굽
 g03_05|g|||desert,shepherd,wilderness_path|미디안|3,4|bright|55|광야의 양치기|||scene
 g03_06|s|2:3|떨기나무|fire,thorns,mountain_peak|호렙|3|warm|55|불붙은 떨기나무|||scene
 g03_07|s|2:12|문설주/인방|blood,doorpost,night_sky|애굽|3|dark|45|문설주의 피|||object
-g03_08|s|2:12-13|밤에 나오/밤중에 애굽|night_sky,crowd,donkey,fire||3|warm|50|밤에 떠나는 행렬|||scene
-g03_09|s|2:14;6:2|홍해/바다가 갈라/마른 땅으로|sea,waves,path|홍해|3|dark|50|갈라진 바다|||scene
+g03_08|s|2:12-13|밤에 나오/밤중에 애굽/밤중에 일어난|night_sky,crowd,donkey,fire||3|warm|50|밤에 떠나는 행렬|||scene
+g03_09|s|2:14;6:2|홍해/바다가 갈라/마른 땅으로/바다 앞의 백성/바닷가에 장막|sea,waves,path|홍해|3|dark|50|갈라진 바다|||scene
 g03_10|s|2:14|병거/마병|army,chariot,dust,horse|애굽|3|warm|50|애굽 병거|||scene
-g03_11|s|2:15;7:11|소고|timbrel,sea,hands,festival|홍해|3|bright|55|바닷가의 소고|||object
+g03_11|s|2:15;7:11|소고/바다를 건넌 뒤|timbrel,sea,hands,festival|홍해|3|bright|55|바닷가의 소고|||object
 g03_12|s|2:15|마라/쓴 물|water,desert,well|마라|3|warm|55|광야의 웅덩이||한 구멍|setting
 g03_13|s|2:16;4:11;5:8;43:6|만나를/만나가/만나와/만나라/만나는 깟씨|manna,dawn,desert||3,4|warm|50|아침의 만나|||object
 g04_01|s|2:25-40;3:1-27;4:1-10|성막/회막|tent,desert,tabernacle,camp||4|warm|40|광야 진영과 성막|||setting
@@ -46,10 +46,10 @@ g04_04|s|2:30;2:38;2:40|물두멍|hands,water,laver,priest||4|warm|45|놋 물두
 g04_05|g|||oil_lamp,darkness||2,3,4,5,6,7,8,9,10|dark|50|토기 등잔|||object
 g04_06|s|2:19-20;2:24;2:31-34;5:4-5;5:9-10|돌판/십계명/두 판|stone_tablets,mountain_peak,sunrise_light_rays|시내|4|warm|50|두 돌판|||object
 g04_07|s|2:32;5:9;11:12|금송아지/송아지 형상/송아지를 만들|idol,crowd,golden_calf,dust||4,6|warm|50|금송아지||살진 송아지/송아지의 피/수송아지/송아지와 염소|scene
-g04_08|s|2:32;5:9|돌판을 깨/판을 깨뜨|stones,broken,stone_tablets||4|dark|50|깨진 돌판|||object
+g04_08|s|2:32;5:9|돌판을 깨/판을 깨뜨/돌판을 던지/판들을 던져|stones,broken,stone_tablets||4|dark|50|깨진 돌판|||object
 g04_09|s|2:17;4:20;19:78|반석을 치/반석에게/반석에서 물|stones,water,spring||4|warm|50|바위에서 나는 물|||scene
 g04_10|s|4:21;12:18|놋뱀|bronze_serpent,pole,desert||4|bright|50|놋뱀 장대|||object
-g04_11|s|2:16;4:11;19:78|메추라기|birds,tent,dust||4|warm|50|메추라기 떼|||scene
+g04_11|s|2:16;4:11;19:78|메추라기/고기 가마|birds,tent,dust||4|warm|50|메추라기 떼|||scene
 g04_12|s|4:13-14;5:1|정탐/포도송이|grapes,vineyard,men|가나안|4|warm|50|정탐꾼의 포도송이|||scene
 g04_13|s|4:11;4:14;4:16;4:26;5:2|광야에서 죽|stones,graves,dusk||4|warm|50|광야의 돌무더기 무덤|||setting
 g04_14|s|5:3;5:32;5:34|느보/비스가|valley,mountain_peak,sunrise_light_rays,land|느보|4|warm|50|산에서 내려다본 땅|||landscape
@@ -60,7 +60,7 @@ g05_05|s|8:4;5:21-22;5:25|성문에 앉/성문에서 재판/성읍 장로/성문
 g05_06|g|||threshing_floor,harvest,wheat_field,winnowing||5,8|warm|50|키질하는 사람|||scene
 g05_07|s|7:6|포도주 틀 속/포도주 틀에서|wheat_field,winepress,cave,hiding|오브라|5|dark|55|포도주 틀 속 타작||진노의 포도주 틀/낫|scene
 g05_10|s|7:16|삼손/다곤|pillars,strength,temple_stones|가사|5|dark|50|돌기둥 사이의 장사||진리의 기둥/기둥과 터|scene
-g05_11|s|8:2;3:19;3:23;5:24|이삭을 줍/이삭 줍|wheat_field,harvest,woman|베들레헴|5,8|warm|50|이삭 줍는 여인|||scene
+g05_11|s|8:2;3:19;3:23;5:24|이삭을 줍/이삭 줍/밭 모퉁이/떨어진 것을 남기|wheat_field,harvest,woman|베들레헴|5,8|warm|50|이삭 줍는 여인|||scene
 g05_12|g|||harvest,wheat_field,sheaves||2,5,8|warm|50|묶은 곡식 단|||object
 g05_13|s|8:3|타작마당|threshing_floor,night_sky,sleep|베들레헴|5|dark|50|밤의 타작마당|||scene
 g05_14|s|9:1-4;6:18;24:7|실로|tent,tabernacle,dusk|실로|5|dark|50|실로의 성소||실로암|setting
@@ -70,7 +70,7 @@ g06_03|s|9:17|물매|hands,stones,sling|엘라|6|warm|50|물매와 돌|||object
 g06_04|s|9:17|골리앗|army,armor,valley|엘라|6|warm|50|갑옷 입은 큰 병사|||scene
 g06_05|s|9:22;9:24;19:57;19:142|아둘람/엔게디|cave,darkness,men|엔게디|6|dark|60|굴 안의 사람들|||scene
 g06_06|s|9:24|옷자락|hands,robe,cave|엔게디|6|dark|50|잘린 옷자락|||object
-g06_07|s|9:26|창과 물병/물병|spear,clay_jar,night_sky,camp||6|dark|55|창과 물병|||object
+g06_07|s|9:26|창과 물병/물병/땅에 꽂힌 창/창이 꽂혀|spear,clay_jar,night_sky,camp||6|dark|55|창과 물병|||object
 g06_08|g|||city_wall,jerusalem,fortress|예루살렘|6,7|warm|50|언덕 위 성읍|||setting
 g06_09|s|10:11|지붕 위를 거닐/밧세바|roof,dusk,palace,city|예루살렘|6|dark|60|왕궁 지붕||베드로/욥바/중풍병자|scene
 g06_10|s|11:5-7;14:2;15:3|백향목|cedar,men,labor|레바논|6|warm|50|백향목 들보|||scene
@@ -112,14 +112,14 @@ g09_02|g|||fishing_boat,net,sea|갈릴리|9|dark|60|배 위의 그물|||object
 g09_03|s|42:5;43:21|그물이 찢/물고기가 많|net,fish,hands|갈릴리|9|bright|50|가득 찬 그물|||scene
 g09_04|s|40:8;40:14;41:4;41:6;42:8;43:6;32:1|풍랑/광풍|fishing_boat,storm_sky,waves|갈릴리|9|dark|40|풍랑 속의 배|||scene
 g09_05|g|||crowd,pasture,hill|갈릴리|9|warm|50|언덕 위의 무리|||setting
-g09_06|s|40:14;41:6;42:9;43:6|오병이어/떡 다섯/물고기 두|bread,fish,basket||9|warm|50|떡과 물고기 바구니||떡 일곱/일곱 개/일곱 광주리|object
+g09_06|s|40:14;41:6;42:9;43:6|오병이어/떡 다섯/물고기 두/보리떡 다섯|bread,fish,basket||9|warm|50|떡과 물고기 바구니||떡 일곱/일곱 개/일곱 광주리|object
 g09_07|g|||scroll,synagogue,sunrise_light_rays|가버나움|9,10|dark|50|회당의 두루마리|||object
 g09_08|s|43:4|우물곁/물동이|well,clay_jar|수가|9|warm|50|우물가의 물동이|||object
 g09_09|s|42:7;43:12|향유/옥합|oil,feet,alabaster||9|dark|50|향유 옥합||머리에 부|scene
 g09_10|s|42:19|삭개오/뽕나무|tree,man,road|여리고|9|warm|50|나무 위의 사람|||scene
 g09_11|s|40:26;41:14;42:22;43:18|겟세마네|olive_tree,prayer,night_sky|겟세마네|9|dark|50|겟세마네의 기도|||scene
 g09_13|s|40:26;41:14;42:22;43:18|닭이 울/불을 쬐|fire,courtyard,night_sky,rooster|예루살렘|9|dark|45|모닥불과 닭|||scene
-g09_14|s|40:27;41:15;42:23;43:19|십자가|cross,storm_sky,hill|골고다|9,10|dark|55|언덕 위 세 개의 십자가|||scene
+g09_14|s|40:27;41:15;42:23;43:19|십자가/해골이라 하는/못 박히|cross,storm_sky,hill|골고다|9,10|dark|55|언덕 위 세 개의 십자가|||scene
 g09_15|s|40:28;41:16;42:24;43:20|빈 무덤/무덤이 비/돌이 굴려/세마포가 놓|rock_tomb,sunrise_light_rays,dawn||9,10|dark|50|빈 무덤||나사로/야이로|scene
 g10_01|s|44:1-2;44:12;44:20|다락방/다락에|oil_lamp,room,prayer|예루살렘|10|dark|50|다락방|||setting
 g10_02|s|44:3-4|미문/못 걷는|temple_stones,gate,beggar,sunrise_light_rays|예루살렘|10|dark|50|성전 문 앞의 사람|||scene
@@ -147,7 +147,7 @@ g11_10|g|||scroll,hands,oil_lamp,letter||10|warm|60|편지를 쓰는 손|||objec
 g11_11|s|44:8|에디오피아 내시/내시가 수레|road,chariot,scroll,desert|가사|10|bright|55|수레에서 두루마리를 읽는 사람|||scene
 g11_12|s|1:11|바벨탑/바벨이라/탑을 쌓/역청으로|tower,bricks,city,labor|바벨|11|warm|50|탑과 역청 벽돌|||scene
 g11_13|s|1:6-8|홍수/방주|ark_noah,rain,flood,sea,storm_sky||11|dark|50|홍수 속의 방주|||scene
-g11_14|s|1:8|비둘기가 감람/감람나무 잎|dove,olive_leaf,mountain_peak,sunrise_light_rays|아라랏|11|warm|30|감람나무 잎을 문 비둘기|||scene
+g11_14|s|1:8|비둘기가 감람/감람나무 잎/물이 점점 물러/물이 줄어|dove,olive_leaf,mountain_peak,sunrise_light_rays|아라랏|11|warm|30|감람나무 잎을 문 비둘기|||scene
 g11_15|s|1:8-9|무지개|rainbow,clouds,stone_altar,smoke,pasture||11|bright|60|무지개와 제단|||symbolic
 g14_01|s|2:10|흑암이 애굽/흑암이 있|night_sky,darkness,house,oil_lamp|애굽|3|dark|45|캄캄한 마을의 한 집 불빛|||setting
 g14_03|s|2:12-13;3:23;5:16|무교병/누룩 없는|bread,oven,fire||3,4|warm|45|화덕 위의 무교병과 싸 둔 반죽 그릇|||object
@@ -155,7 +155,7 @@ g14_04|s|2:12-13|애굽에서 나오/애굽 땅에서 나오/라암셋|crowd,she
 g14_05|s|2:14|바닷가에 장막/뒤를 따르|crowd,sea,army,dust|홍해|3|dark|50|앞은 바다, 뒤는 병거의 먼지|||scene
 g14_06|s|2:14|손을 바다 위로/바다 위로 내밀/동풍|hands,staff,sea,storm_sky|홍해|3|dark|40|바다 위로 내민 지팡이|||scene
 g14_07|s|2:17|아말렉/아론과 훌|hill,army,elder,stones|르비딤|4|warm|50|두 사람이 받쳐 든 노인의 팔|||scene
-g14_08|s|2:16;4:11|만나를/만나가/만나와/메추라기|manna,birds,hands,dawn||4|warm|50|만나와 메추라기를 거두는 손|||symbolic
+g14_08|s|2:16;4:11|만나를/만나가/만나와/메추라기/하늘에서 양식/남겨 둔 만나|manna,birds,hands,dawn||4|warm|50|만나와 메추라기를 거두는 손|||symbolic
 g14_09|s|2:17;4:20|반석을 치/반석에서 물|rock,water,staff||4|warm|50|갈라진 바위에서 솟는 물|||scene
 g14_10|s|2:18|이드로|embrace,elder,tent,camel||4|warm|35|장막 앞에서 안은 두 노인|||scene
 g14_11|s|2:18;5:1|백성을 재판/아침부터 저녁까지|tent,crowd,elder,sorrow||4|warm|40|줄 선 백성 앞의 지친 사람|||scene
@@ -165,21 +165,21 @@ g14_15|s|2:24;2:34|구름 속으로|mountain_peak,clouds,man,staff|시내|4|dark
 g15_01|s|2:25;2:37;2:40;3:16;6:3;9:4-6|언약궤/속죄소/지성소/법궤|ark,darkness,sunrise_light_rays||4,5,6|dark|50|지성소의 언약궤|||object
 g15_02|s|2:25;2:37;3:24;9:21;40:12|진설병/떡상|bread,table,tabernacle||4,6|warm|50|떡상 위의 떡|||object
 g15_03|s|2:25;2:37;4:8;38:4|등잔대|oil_lamp,menorah,darkness||4,6|dark|55|일곱 가지 금 등잔대|||object
-g15_04|s|2:30;2:37|분향단/분향하~/향단|smoke,altar,curtain,tabernacle||4,6|warm|40|휘장 앞 분향단의 연기|||object
+g15_04|s|2:30;2:37|분향단/분향하~/향단/분향 제단/향단에서|smoke,altar,curtain,tabernacle||4,6|warm|40|휘장 앞 분향단의 연기|||object
 g15_05|s|2:26;2:36|널판/덮개|tabernacle,tent,curtain||4|bright|50|성막 널판과 덮개|||object
 g15_06|s|2:25;2:35-36|자원하는/예물을 가져|crowd,gold,yarn||4|warm|55|쌓이는 예물|||scene
 g15_07|s|6:3-4|요단을 건너|ark,priest,river,dust|요단|5|bright|50|마른 강바닥을 건너는 궤||홍해|scene
 g15_08|s|2:31;2:35-39|브살렐/금을 쳐서|hands,gold,labor||4|dark|50|금판을 두드리는 손|||scene
-g15_09|s|2:28;2:39|금방울/석류|robe,priest||4|warm|50|겉옷 단의 석류와 금방울|||object
+g15_09|s|2:28;2:39|금방울/석류/제사장의 옷|robe,priest||4|warm|50|겉옷 단의 석류와 금방울|||object
 g15_10|s|2:28;2:39|흉패|gems,priest||4|warm|50|흉패의 보석|||object
 g15_11|s|2:28;2:39|호마노/에봇|gems,priest,robe||4|warm|50|어깨받이의 보석|||object
-g15_12|s|2:29;3:8;19:133|머리에 붓/머리에 부어|oil,anointing,priest||4,6|warm|50|머리에 흐르는 기름|||scene
+g15_12|s|2:29;3:8;19:133|머리에 붓/머리에 부어/기름을 부어/기름을 붓|oil,anointing,priest||4,6|warm|50|머리에 흐르는 기름|||scene
 g15_13|s|3:1-9;9:2|번제|fire,stone_altar,priest||4|warm|45|불 위의 제물과 갈고리|||scene
 g15_14|s|3:16|아사셀/속죄일|goat,desert,man||4|warm|60|염소를 끌고 광야로 가는 사람|||scene
 g12_01|s|1:2-3;26:28;26:31;23:51|에덴|garden,river,trees,sunrise_light_rays|에덴|11|warm|50|빛이 드는 동산과 강|||landscape
 g12_02|s|1:2-3|선악을 알게/동산 중앙|tree,pasture,sunrise_light_rays||11|warm|50|들 가운데 선 나무|||landscape
 g12_03|s|1:4|가인/아벨|stone_altar,smoke,wheat_field,lamb||11|warm|60|두 제단|||symbolic
-g12_04|s|1:4|가인이 여호와 앞을 떠나/놋 땅|man,desert,dusk||11|warm|50|해 질 녘 홀로 떠나는 사람|||setting
+g12_04|s|1:4|가인이 여호와 앞을 떠나/놋 땅/칠 배/가인에게 벌|man,desert,dusk||11|warm|50|해 질 녘 홀로 떠나는 사람|||setting
 g12_05|s|1:6|방주/역청|labor,wood,tools||11|warm|50|방주의 나무 뼈대와 역청|||scene
 g12_06|s|1:11-12|갈대아 우르|city,river,ziggurat|우르|2,11|bright|65|강가의 흙벽돌 성과 지구라트|||setting
 g12_07|s|1:18|마므레/세 사람이 맞은편/장막 문에 앉|tent,tree,men,elder|마므레|2|bright|40|상수리나무 아래 장막과 세 나그네|||scene
@@ -190,18 +190,18 @@ g12_12|s|1:30-31|얼룩/아롱진/껍질을 벗겨/물구유|sheep,water,staff||
 g12_13|s|1:28;1:35|기둥으로 세우/기둥 위에 기름|stones,oil,dawn|벧엘|2|bright|60|돌기둥에 붓는 기름|||scene
 g12_14|s|1:48|므낫세와 에브라임/두 아들을 축복|elder,child,hands||2|dark|50|노인이 손을 얹어 축복함|||scene
 g12_15|s|1:23;1:25;1:35;1:49-50|막벨라|cave,crowd,graves||2|warm|40|굴로 향하는 장례 행렬|||setting
-g13_01|s|1:37|곡식 단/단이 일어|wheat_field,sheaves||2|warm|50|가운데 선 단과 둘레의 단들|||symbolic
+g13_01|s|1:37|곡식 단/단이 일어/첫 꿈/두 번의 꿈|wheat_field,sheaves||2|warm|50|가운데 선 단과 둘레의 단들|||symbolic
 g13_02|s|1:39|보디발|house,egypt,curtain|애굽|3|warm|55|애굽 귀족의 집 안뜰|||setting
 g13_03|s|1:39-41|옥에 가/옥에 갇/옥중/감옥|prison,chains,darkness|애굽|3|dark|60|빛이 드는 감옥||바울/베드로/사도|object
 g13_04|s|1:40|술 맡은|cup,grapes,hands||3|dark|45|포도를 짜 넣는 잔|||scene
-g13_05|s|1:41|일곱 암소/살진 소/파리한 소|cattle,river,reeds|나일|3|dark|55|강가의 살진 소와 파리한 소|||symbolic
-g13_06|s|1:41-47|곡식을 저장/곡물을 쌓/창고|grain,labor,egypt|애굽|3|warm|50|곡식 창고와 일꾼들|||scene
+g13_05|s|1:41|일곱 암소/살진 소/파리한 소/바로가 두 꿈/아무도 풀지 못한|cattle,river,reeds|나일|3|dark|55|강가의 살진 소와 파리한 소|||symbolic
+g13_06|s|1:41-47|곡식을 저장/곡물을 쌓/창고/일곱 해 동안 풍년|grain,labor,egypt|애굽|3|warm|50|곡식 창고와 일꾼들|||scene
 g13_07|s|1:41|인장 반지/금 사슬/총리|hands,egypt,ring||3|bright|50|인장 반지와 금 목걸이|||object
-g13_08|s|1:42-44;1:50|땅에 엎드려 절|men,bowing,egypt|애굽|3|dark|50|땅에 엎드린 형제들|||scene
-g13_09|s|1:45-46|수레를 보내/수레들|cart,donkey,crowd,dust||2,3|warm|50|수레와 나귀 행렬|||scene
+g13_08|s|1:42-44;1:50|땅에 엎드려 절/요셉 앞에 섭/요셉 앞에 서|men,bowing,egypt|애굽|3|dark|50|땅에 엎드린 형제들|||scene
+g13_09|s|1:45-46|수레를 보내/수레들/고센 땅으로 데려|cart,donkey,crowd,dust||2,3|warm|50|수레와 나귀 행렬|||scene
 g13_10|s|1:46-47;2:8-9|고센|pasture,river,sheep,village|고센|3|bright|50|강가의 목초지와 마을|||landscape
 g13_11|s|2:1-2;8:4;9:1|산파|hands,baby,darkness||3,5|dark|50|강보에 싼 아기를 안은 손|||scene
-g13_12|s|2:2|바로의 딸|woman,river,reeds|나일|3|bright|40|물가로 가는 여인들|||scene
+g13_12|s|2:2|바로의 딸/갈대 상자|woman,river,reeds|나일|3|bright|40|물가로 가는 여인들|||scene
 g13_13|s|2:8;19:78;19:105|개구리|frogs,house,oven|애굽|3|dark|50|화덕과 문턱의 개구리|||scene
 g13_15|s|2:10;29:1-2|메뚜기|locusts,storm_sky,wheat_field||3|dark|50|하늘을 덮은 메뚜기|||scene
 g21_01|s|2:13-14;2:40;4:9-10|구름 기둥/구름기둥|clouds,pillar,desert,tent||3,4|warm|50|광야의 구름기둥(둘째 그림)|||symbolic
@@ -218,7 +218,7 @@ g21_11|s|44:8|에디오피아 내시/내시가 수레|road,chariot,scroll,desert
 g21_12|s|1:11|바벨탑/바벨이라/탑을 쌓/역청으로|tower,bricks,city,labor|바벨|11|warm|50|역청 바른 벽돌과 탑(둘째 그림)|||scene
 g21_13|s|1:6-8|홍수/방주|ark_noah,rain,flood,sea,storm_sky||11|dark|40|홍수 속 방주(둘째 그림)|||scene
 g21_14|s|1:8|비둘기가 감람/감람나무 잎|dove,olive_leaf,mountain_peak|아라랏|11|dark|60|비둘기와 방주(둘째 그림)|||scene
-g21_15|s|1:8-9|무지개|rainbow,clouds,stone_altar,smoke||11|bright|50|무지개와 제단(둘째 그림)|||symbolic
+g21_15|s|1:8-9|무지개/노아가 제단|rainbow,clouds,stone_altar,smoke||11|bright|50|무지개와 제단(둘째 그림)|||symbolic
 g16_03|s|7:4-5|병거/기손|chariot,mud,river|기손|5|warm|55|진흙에 빠진 병거|||object
 g16_04|s|7:7|기드온/항아리와 횃불|trumpet,clay_jar,night_sky,army||5|dark|60|밤 언덕의 나팔과 항아리||은 나팔|scene
 g16_05|s|9:17;9:4;7:20;10:10;13:19;14:13|진을 치/두 진영|army,valley,sunrise_light_rays||5,6|dark|50|골짜기 양쪽의 두 군대|||scene
@@ -232,27 +232,27 @@ g16_12|s|12:2;12:6|불말/불병거|horse,chariot,fire,clouds||6|warm|60|하늘�
 g16_13|s|9:13;23:2;33:4;29:3|대장장이/보습|fire,labor,hands||6,8|dark|40|대장간의 장인|||scene
 g16_14|s|44:21-28|로마 군대/군대가/병사들이/군사들이|army,roman,road||9,10|bright|60|돌길을 행군하는 로마 군대||배를 타/배에|scene
 g16_15|g|||ruins,dawn,smoke,pasture||7|bright|50|전쟁이 끝난 들의 무너진 담|||setting
-g17_01|s|3:23;5:16;16:8;43:7;15:3|초막|booth,oil_lamp,dusk||4,7,9|dark|40|지붕 위의 초막과 등잔|||setting
-g17_02|s|5:26;3:23;2:23|첫 열매/맏물|basket,grapes,wheat_field,priest||4,5|warm|40|첫 열매 바구니|||object
+g17_01|s|3:23;5:16;16:8;43:7;15:3|초막/초막절|booth,oil_lamp,dusk||4,7,9|dark|40|지붕 위의 초막과 등잔|||setting
+g17_02|s|5:26;3:23;2:23|첫 열매/맏물/첫 이삭 한 단|basket,grapes,wheat_field,priest||4,5|warm|40|첫 열매 바구니|||object
 g17_03|s|3:23;44:2|칠칠절/오순절/떡 두 개|bread,wheat_field||4,10|warm|60|구운 떡 두 덩이와 밀|||object
-g17_05|s|2:15;7:11;9:18|미리암/소고|timbrel,woman,dance,sea||3,6|bright|50|소고를 들고 춤추는 여인들|||scene
+g17_05|s|2:15;7:11;9:18|미리암/소고/구원하신 여호와를 노래|timbrel,woman,dance,sea||3,6|bright|50|소고를 들고 춤추는 여인들|||scene
 g17_06|s|13:15-16;13:25;14:5;14:29;15:3;16:12|제금/비파/노래하는 자/찬양대|singers,lyre,priest,temple_stones||6,7|warm|50|성전 뜰의 레위인 찬양대|||scene
 g17_07|s|19:81;4:10;3:23;29:2|초하루/뿔나팔/양각 나팔|shofar,city_wall,night_sky,moon||4,6,7|dark|25|성벽 위의 양뿔 나팔과 초승달|||scene
 g17_08|s|19:120-134;42:2;5:16;9:1|순례/올라가는 노래/절기에 올라|crowd,road,mountain_peak,family||6,8,9|warm|60|노래하며 언덕길을 오르는 가족들|||scene
 g17_09|s|16:8;12:22-23;14:34;5:31|율법책/낭독/율법을 읽|scroll,crowd,sunrise_light_rays||7|dark|60|강단에서 두루마리를 펼친 사람|||scene
 g17_10|s|16:12|성벽을 봉헌/성벽 위로|singers,city_wall,lyre|예루살렘|7|warm|30|성벽 위를 걷는 찬양대|||scene
-g17_11|s|14:30;14:35;12:23;15:6;2:12|유월절|lamb,crowd,stone_altar,priest|예루살렘|6,7|warm|60|성전 뜰의 무리와 어린양|||scene
+g17_11|s|14:30;14:35;12:23;15:6;2:12|유월절/어린 양을 잡|lamb,crowd,stone_altar,priest|예루살렘|6,7|warm|60|성전 뜰의 무리와 어린양|||scene
 g17_12|s|17:9|부림절|table,feast,palace||7|warm|50|잔칫상에서 음식을 나눔|||scene
-g17_14|s|40:21;41:11;42:19;43:12|종려/호산나|palm,robe,road||9|warm|50|길에 편 겉옷과 종려 가지|||scene
-g18_01|s||맷돌|millstone,hands,grain||5,8,9|warm|50|맷돌질하는 손||맷돌 같은 돌/큰 맷돌|scene
-g18_02|s||화덕/떡을 굽/떡을 만들|bread,oven,fire||5,8,9|dark|50|흙 화덕 벽의 떡|||object
-g18_03|s||베틀/실을 뽑|loom,hands,yarn||8|dark|65|베틀 앞의 손|||scene
-g18_04|s||물을 길/물 길으|woman,clay_jar,city_wall,dawn||5,6,8|warm|60|새벽에 물 길으러 가는 여인들|||scene
-g18_05|s|5:6;5:11;20:1-7|자녀에게 가르/네 자녀/아들아 내|child,elder,house||8|warm|45|문간에서 아이를 가르치는 아버지|||scene
+g17_14|s|40:21;41:11;42:19;43:12|종려/호산나/환호하는 무리|palm,robe,road||9|warm|50|길에 편 겉옷과 종려 가지|||scene
+g18_01|s|2:11;7:16;40:24;66:18|맷돌|millstone,hands,grain||5,8,9|warm|50|맷돌질하는 손||맷돌 같은 돌/큰 맷돌|scene
+g18_02|s|3:2;28:7;40:6|화덕/떡을 굽/떡을 만들|bread,oven,fire||5,8,9|dark|50|흙 화덕 벽의 떡|||object
+g18_03|s|7:16;20:31|베틀/실을 뽑/물레|loom,hands,yarn||8|dark|65|베틀 앞의 손|||scene
+g18_04|s|1:24;43:4|물을 길/물 길으/물 길으러|woman,clay_jar,city_wall,dawn||5,6,8|warm|60|새벽에 물 길으러 가는 여인들|||scene
+g18_05|s|5:6;5:11;20:1-7|자녀에게 가르/네 자녀/아들아 내/아들이 물을/무슨 뜻이냐|child,elder,house||8|warm|45|문간에서 아이를 가르치는 아버지|||scene
 g18_06|s||시장/저울/장터|market,city_gate,donkey,grain||6,8,9|warm|50|성문 시장|||setting
-g18_07|s||베옷/재를 무릅/재에 앉/재를 뒤집|sackcloth,ashes,sorrow||7,8|dark|50|재를 뒤집어쓴 사람|||scene
+g18_07|s|17:4;18:2;32:3;40:11|베옷/재를 무릅/재에 앉/재를 뒤집/재를 뒤집어/굵은 베/재 가운데|sackcloth,ashes,sorrow||7,8|dark|50|재를 뒤집어쓴 사람|||scene
 g18_08|s|40:27-28;41:15-16;42:23-24;43:11;43:19-20|돌을 굴려/무덤 문|rock_tomb,stone||9|dark|45|둥근 돌로 막은 무덤|||object
-g18_09|s||그물을 깁/그물을 씻|net,hands,sea||9|bright|55|그물을 깁는 손|||scene
+g18_09|s|40:4;41:1;43:21|그물을 깁/그물을 씻/그물을 던지|net,hands,sea||9|bright|55|그물을 깁는 손|||scene
 g18_10|s|40:13;41:6|목수|tools,wood,labor||9|warm|50|목수의 연장|||object
 g18_11|s||아이들이/어린아이들/어린 아이들|child,village,dust||8,9|warm|50|골목에서 뛰노는 아이들|||scene
 g18_12|s|3:13-14;4:5;4:12;42:5;42:17|진 밖/나병|tent,desert,man,sorrow||4,9|bright|50|진 밖에 홀로 앉은 사람|||scene
@@ -295,22 +295,22 @@ g22_04|s|40:9;41:5;42:8|달리다굼/야이로/소녀야 일어나/아이야 일
 g22_05|s|40:14-15;41:6;41:8;42:9;43:6|오병이어/떡 다섯/보리떡/오천 명/사천 명|bread,crowd,jesus,basket|갈릴리|9|warm|50|떡을 들고 무리 앞에 서신 예수님|||scene
 g22_06|s|40:14;41:6;43:6|물 위로 걸/물 위를 걸/빠져 가는지라/믿음이 작은 자여|hands,waves,sea,storm_sky|갈릴리|9|dark|50|물결 속에서 내민 손|||scene
 g22_07|s|40:18-19;41:9-10;42:9;42:18|어린아이 하나를/어린아이들을 안고/어린아이와 같/어린아이를 영접|child,jesus,village||9|warm|50|어린아이를 품에 안으심|||scene
-g22_08|s|43:9|진흙을 이겨/눈에 바르/맹인으로 난|blind_man,hands,mud,jesus|예루살렘|9|warm|50|맹인의 눈에 진흙을 바르심|||scene
+g22_08|s|43:9|진흙을 이겨/눈에 바르/맹인으로 난/날 때부터 맹인|blind_man,hands,mud,jesus|예루살렘|9|warm|50|맹인의 눈에 진흙을 바르심|||scene
 g22_09|s|40:13;41:4;42:8|씨를 뿌리는 자/씨 뿌리는 자/씨를 뿌릴새/좋은 땅에|sower,field,seed||9,8|warm|50|씨 뿌리는 사람|||scene
 g22_10|s|40:18;42:15;43:10|잃은 양/양 백 마리/아흔아홉/어깨에 메고/선한 목자|shepherd,sheep,hill||9|warm|50|잃은 양을 어깨에 멘 목자|||scene
 g22_11|s|42:15|탕자/둘째 아들이/살진 송아지/목을 안고 입을 맞추|father,son,embrace,house||9|warm|50|돌아온 아들을 끌어안는 아버지|||scene
 g22_12|s|42:15|드라크마/등불을 켜고 집을 쓸|woman,house,oven,oil_lamp||9|dark|40|집 안에서 무릎 꿇고 찾는 여인|||scene
 g22_14|s|40:17;41:9;42:9|변형되사/얼굴이 해 같이/모세와 엘리야/초막 셋|mountain_peak,light,jesus,disciples||9|bright|50|높은 산에서 변형되신 예수님|||scene
 g22_15|s|40:21;41:11;42:19;43:2|돈 바꾸는/환전/비둘기 파는/채찍을 만들/상을 엎으|temple_stones,dove,coins,table|예루살렘|9|warm|50|성전 뜰의 엎어진 상과 비둘기|||scene
-g23_01|s|40:21;41:11;42:19;43:12|나귀 새끼/새끼 나귀/어린 나귀를 타/호산나|donkey,palm,crowd,jesus|예루살렘|9|warm|50|나귀를 타고 들어오시는 예수님|||scene
-g23_02|s|43:13|발을 씻기/수건을 가져다가 허리에/대야에 물|basin,feet,towel,jesus|예루살렘|9|warm|50|제자의 발을 씻기심|||scene
-g23_03|s|40:26;41:14;42:22;43:13|마지막 만찬/유월절 음식/이것은 내 몸/이 잔은|bread,cup,table,disciples|예루살렘|9|warm|50|만찬 상의 떡과 잔|||scene
+g23_01|s|40:21;41:11;42:19;43:12|나귀 새끼/새끼 나귀/어린 나귀를 타/호산나/감람 산 내리막|donkey,palm,crowd,jesus|예루살렘|9|warm|50|나귀를 타고 들어오시는 예수님|||scene
+g23_02|s|43:13|발을 씻기/수건을 가져다가 허리에/대야에 물/발을 씻으|basin,feet,towel,jesus|예루살렘|9|warm|50|제자의 발을 씻기심|||scene
+g23_03|s|40:26;41:14;42:22;43:13|마지막 만찬/유월절 음식/이것은 내 몸/이 잔은/유월절 식탁/떡을 떼어 주시|bread,cup,table,disciples|예루살렘|9|warm|50|만찬 상의 떡과 잔|||scene
 g23_04|s|40:26;41:14;42:22|겟세마네/땀이 땅에 떨어지는 핏방울/이 잔을 내게서|prayer,olive_tree,night_sky,jesus|예루살렘|9|dark|50|겟세마네에서 엎드려 기도하심|||scene
-g23_05|s|40:26;41:14;42:22;43:18|입맞추어 넘기/입맞추는 자/검과 몽치/등과 횃불|torch,soldiers,kiss,night_sky|예루살렘|9|dark|50|횃불 아래 붙잡히심|||scene
+g23_05|s|40:26;41:14;42:22;43:18|입맞추어 넘기/입맞추는 자/검과 몽치/등과 횃불/예수님이 잡히/칼을 칼집에|torch,soldiers,kiss,night_sky|예루살렘|9|dark|50|횃불 아래 붙잡히심|||scene
 g23_06|s|40:26;41:14;42:22;43:18|불을 쬐/대제사장의 집 뜰/대제사장의 뜰|fire,courtyard,bound,night_sky|예루살렘|9|dark|50|뜰의 불 곁에 결박되신 예수님||아가보|scene
 g23_07|s|40:27;41:15;42:23;43:18-19|빌라도/재판석에 앉/총독이 물어|governor,soldiers,judgment_seat|예루살렘|9|warm|50|재판석의 빌라도와 로마 군인|||scene
 g23_08|s|40:27;41:15;43:19|가시관/자색 옷/홍포/유대인의 왕이여 평안|crown_of_thorns,robe,jesus|예루살렘|9|dark|50|가시관과 자색 옷|||scene
-g23_10|s|40:27;41:15;42:23;43:19|멀리서 바라보/십자가 곁에는/여자들이 멀리서|women,cross,sorrow|예루살렘|9|dark|50|십자가를 바라보는 여인들|||scene
+g23_10|s|40:27;41:15;42:23;43:19|멀리서 바라보/십자가 곁에는/여자들이 멀리서/멀리 서서 이 일을|women,cross,sorrow|예루살렘|9|dark|50|십자가를 바라보는 여인들|||scene
 g23_11|s|40:27;41:15;42:23;43:19|세마포로 싸/아리마대 사람 요셉/아리마대 요셉/몰약과 침향|linen,burial,tomb|예루살렘|9|dark|50|세마포로 시신을 싸는 사람들|||scene
 g23_12|s|40:28;41:16;42:24;43:20|빈 무덤/세마포가 놓/머리를 쌌던 수건|rock_tomb,linen,sunrise_light_rays|예루살렘|9|bright|50|세마포만 놓인 빈 무덤(둘째 그림)|||scene
 g23_13|s|43:20;40:28|막달라 마리아/마리아야/랍오니/동산지기/나를 붙들지 말라|garden,woman,jesus,dawn|예루살렘|9|bright|50|동산에서 부활하신 예수님을 만난 마리아|||scene
@@ -323,7 +323,7 @@ g24_06|s|1:25;58:12|팥죽/장자의 명분|bread,bowl,hands,man||2|dark|35|떡�
 g24_07|s|44:28;49:3-4;49:6;50:1;51:4;55:1-2;57:1|쇠사슬에 매/사슬에 매/갇힌 자 된 나/매인 것|chains,prison,scroll,soldier||10|dark|60|사슬에 매인 채 편지를 쓰는 바울||베드로|scene
 g24_09|s|42:24|엠마오/길 가는 자들/동행하시|road,sunset,disciples,jesus|엠마오|9|warm|50|해 질 녘 길을 함께 걷는 세 사람|||scene
 g24_10|s|1:16;1:21|하갈/샘물 곁/물이 떨어진지라/브엘라해로이|woman,well,desert,sorrow||2|bright|60|광야 우물가에 웅크린 여인|||scene
-g24_13|s|44:27;32:1|밀을 바다에/배를 가볍게/바다에 던져|ship,sea,grain||10,7|bright|50|곡식 자루를 실은 배 위|||scene
+g24_13|s|44:27;32:1|밀을 바다에/배를 가볍게/바다에 던져/바다에 버리|ship,sea,grain||10,7|bright|50|곡식 자루를 실은 배 위|||scene
 g24_14|s|8:2;29:3;66:14;43:4|낫을 대/낫을 쓰/곡식을 베/추수하는 자|sickle,wheat_field,harvest,hands||5,8,9|warm|50|낫으로 밀을 베는 손|||scene
 g25_02|g||성문/문을 열|city_gate,door,sunrise_light_rays||1,6,7|warm|50|아침 햇살이 들어오는 열린 성문|||setting
 g25_03|g||이슬|dew,grass,dawn,field||1|bright|60|이슬 맺힌 아침 들풀|||landscape
@@ -414,7 +414,7 @@ g32_07|g||면류관/썩지 아니할 관|wreath,stone||10|dark|60|돌 위의 승
 g32_08|g||전신 갑주/믿음의 방패/구원의 투구/의의 호심경|armor,shield,helmet,sword||10|dark|50|의자 위에 놓인 갑주와 방패|||object
 g32_09|g||접붙임/돌감람나무/참감람나무|olive_tree,graft||10|warm|50|감람나무에 묶어 접붙인 가지|||object
 g32_10|g||천막을 만드/천막 만드는|hands,cloth,needle||10|warm|50|천을 꿰매는 손(행 18)|||object
-g32_11|g||거울로 보는 것/거울로/희미하나|mirror,bronze||10|dark|50|희미하게 비치는 청동 거울|||object
+g32_11|g||거울로 보는 것/거울로/희미하나|mirror,bronze||10|dark|50|희미하게 비치는 청동 거울||거울이 되었|object
 g32_12|g||닻 같아서/닻|anchor,sea,rope||10|dark|50|바닷속 바위에 박힌 닻|||object
 g32_13|g||질그릇에|clay_jar,light,crack||10|dark|50|금 간 질그릇 틈으로 새는 빛|||object
 g32_14|g||안수/손을 얹|hands,prayer,man||10|warm|50|무릎 꿇은 사람 위에 얹은 손들|||scene
@@ -430,8 +430,8 @@ g33_08|s|66:10|작은 두루마리/먹어 버리라|scroll,hands,light||10|dark|
 g33_09|s|66:14|포도주 틀/예리한 낫|winepress,grapes,sickle||10|dark|40|돌 포도주 틀 속 포도와 낫|||object
 g33_10|s|66:18|불타는 연기/큰 성 바벨론/선장과 선객|city,fire,ships,sea||10,7|dark|50|바다에서 바라본 불타는 큰 성|||scene
 g33_11|s|66:19;66:6|백마|white_horse,clouds,light||10|bright|60|구름 위 흰 말|||symbolic
-g33_12|s|66:21|진주 문/열두 진주/정금 길|gate,pearl,gold||10|bright|50|진주로 된 성문과 정금 길|||symbolic
-g33_13|s|66:21|기초석/벽옥/각색 보석|wall,jewels,stones||10|bright|50|보석으로 꾸민 성벽 기초석|||object
+g33_12|s|66:21|진주 문/열두 진주/정금 길/신부의 성|gate,pearl,gold||10|bright|50|진주로 된 성문과 정금 길|||symbolic
+g33_13|s|66:21|기초석/벽옥/각색 보석/새 예루살렘이 내려|wall,jewels,stones||10|bright|50|보석으로 꾸민 성벽 기초석|||object
 g33_14|s|66:22|생명수의 강/생명나무/강 좌우에|river,trees,light||10|bright|50|생명수 강 양쪽의 나무들|||landscape
 g33_15|s|66:22;66:2|새벽 별/광명한 새벽 별|morning_star,dawn,night_sky||10|dark|60|새벽 하늘의 밝은 별 하나|||landscape
 g34_01|g||산지/마을|village,hills,terraces,smoke||5,6|warm|50|계단식 밭 사이 언덕 마을|||setting
@@ -595,3 +595,48 @@ g44_12|s|37:1|판벽한 집/황폐하였거늘|house,ruins,temple||7|bright|50|�
 g44_13|s|37:2;15:3|이 성전의 이전 영광/기초/작은 일의 날|builders,stones,elder,temple|예루살렘|7|warm|50|옛 터 위에 돌을 올리는 사람들과 지켜보는 노인(학 2:3)|||scene
 g44_14|s|38:8|소년과 소녀들이 거리에서 뛰놀/노인과 노파|children,elders,street,joy|예루살렘|7|warm|50|노인들이 앉은 거리에서 뛰노는 아이들(슥 8:4–5)|||scene
 g44_15|s|38:4;30:7|다림줄|plumb_line,hand,stone_wall||7|bright|50|돌벽 앞에 드리운 다림줄(슥 4:10; 암 7:7)|||object
+g45_01|s|49:2|막힌 담/허시고/둘로 하나를|wall,ruins,crowd,light||10|warm|50|무너진 담 틈으로 오가는 사람들(엡 2:14)|||scene
+g45_02|s|49:2;60:2|모퉁잇돌/터 위에 세우심/함께 지어져|cornerstone,stones,hands,builder||10|warm|50|모퉁잇돌에 손을 얹은 일꾼(엡 2:20)|||object
+g45_03|s|49:6|전신 갑주/진리로 허리 띠|belt,armor,soldier||10|warm|50|허리띠를 매는 군사|허리띠에 현대식 쇠버클||object
+g45_04|s|51:3|옛 사람/새 사람을 입었으니|robe,man,clothes||10|dark|50|옛 옷을 벗고 새 옷을 입는 사람|화면이 반으로 갈라져 아래가 비어 있음||scene
+g45_05|s|51:2|법조문으로 쓴 증서/지우시고/십자가에 못 박으시고|scroll,nail,debt,wall||10|dark|50|못에 박힌 채 줄이 그어진 빚 문서(골 2:14)|||object
+g45_06|s|52:5;61:3|밤에 도둑/깨어 정신을 차릴지라|night,door,oil_lamp,thief||10|dark|50|밤 문간에서 등잔을 들고 깨어 있는 사람(살전 5:2–6)|||scene
+g45_07|s|53:3;52:4|일하기 싫어하거든/수고하고 애써/자기 손으로 일하고|hands,sewing,bread,labor||10|warm|50|천막 천을 깁는 손과 떡 한 덩이(살후 3:8–10)|||object
+g45_08|s|54:2|거룩한 손을 들어/기도하기를|prayer,hands,crowd,night||10|dark|50|손을 들고 기도하는 사람들의 뒷모습(딤전 2:8)|||scene
+g45_09|s|54:6|가지고 온 것이 없으매/먹을 것과 입을 것/족한 줄로|elder,empty_hands,bread,house||10|warm|50|빈손을 펼친 노인과 떡 한 덩이(딤전 6:7–8)|||scene
+g45_10|s|56:1|그레데/남겨 둔 이유|island,sea,ship,man,sunset|그레데|10|warm|50|그레데 섬 바위 해안에서 배를 바라보는 사람(딛 1:5)|||landscape
+g45_11|s|61:1|어두운 데 비치는 등불/샛별이/날이 새어|oil_lamp,window,morning_star,night||10|dark|50|밤 창가의 등불과 새벽별(벧후 1:19)|||object
+g45_12|s|61:2|돼지는 씻었다가/더러운 구덩이/개가 그 토하였던|pig,mud,dry_ground||10|dark|50|진흙 구덩이에 다시 누운 돼지(벧후 2:22)|||landscape
+g45_13|s|62:1;62:2|빛 가운데 행하면/어둠에 행하면|light,alley,man,door||10|dark|50|어두운 골목에서 빛 속으로 걸어 나오는 사람(요일 1:7)|||scene
+g45_14|s|63:1;64:1|진리를 행하는 자/내 자녀들이 진리 안에서 행한다|elder,children,road,city_gate||10|warm|50|성문 곁에서 걸어오는 자녀들을 바라보는 노인(요이 1:4; 요삼 1:4)|||scene
+g45_15|s|64:1;58:13|나그네 된 자들에게/신실한 일/손님 대접|feet,basin,water,table,hospitality||10|warm|50|손님의 발을 씻기는 집주인(요삼 1:5–8)|||scene
+g46_01|g||해 뜰 때/갈릴리|sunrise,lake,fog,mountain_peak||1,9|warm|50|해 뜨는 갈릴리 호수와 물안개|||landscape
+g46_02|g||동틀|dawn,desert,mountain_peak,red_rock||1,4|warm|50|첫 햇빛이 능선만 붉게 비춘 유대 광야|||landscape
+g46_03|g||빛|clouds,light,storm_sky,desert||1,8|dark|50|먹구름 사이로 들판에 내리는 빛줄기|||landscape
+g46_04|g||눈/겨울|snow,village,winter,smoke||1,6,7,8|bright|50|눈이 얇게 쌓인 흙벽돌 마을과 화덕 연기|||landscape
+g46_05|g||바람/모래|sandstorm,dust,donkey,desert||1,4|warm|50|모래바람 속에 웅크린 나귀|||landscape
+g46_06|g||마른/가뭄|drought,dry_riverbed,thorns||1,7,8|warm|50|거북등처럼 갈라진 땅과 시든 떨기|||landscape
+g46_07|g||포도/거두|grapes,harvest,basket,hands,vineyard||5,6,8|warm|50|계단밭에서 포도를 따 담는 손|||object
+g46_08|g||포도즙 틀/밟|winepress,grapes,feet||5,6,7,8|warm|50|돌 포도즙 틀에서 포도를 밟는 맨발|||object
+g46_09|g||백합화/꽃|flowers,poppies,field,hills||1,8,9|bright|50|붉은 아네모네가 덮인 봄 언덕|||landscape
+g46_10|g||풀은 마르고/꽃은 시드|grass,flowers,drought,wind||1,7,8|warm|50|뜨거운 바람에 시든 꽃과 마른 풀|||landscape
+g46_11|g||애곡/엎드려 울|weeping,sorrow,bowing,women||5,6,7,8|dark|50|흙바닥에 엎드려 우는 사람들|||scene
+g46_12|g||춤/잔치|dance,joy,feast,torch,crowd||5,6,8,9|warm|50|횃불 아래 손잡고 둥글게 춤추는 사람들|||scene
+g46_13|g||떡/볶은 곡식/점심|bread,grain,labor,hands,harvest||5,8|warm|50|추수꾼들이 떡과 볶은 곡식을 나누는 손|||scene
+g46_14|g||우물/물 긷/아이|well,child,mother,clay_jar||2,5,6,8|warm|50|돌 우물에서 물을 긷는 어머니와 아이|||scene
+g46_15|g||안수/머리에 손을 얹/축복|blessing,hands,father,son||2,5,6,8|warm|50|무릎 꿇은 아들의 머리에 손을 얹은 아버지|||scene
+g47_01|g||칼/창/방패|sword,spear,shield,armor||5,6,7|dark|50|돌벽에 기댄 청동 칼과 창과 가죽 방패|||object
+g47_02|g||로마 군사/투구/방패|roman,helmet,shield,armor,tent||9,10|dark|50|막사 안의 로마식 방패와 투구|||object
+g47_03|g||활/화살|bow,arrows,quiver,sunset||5,6,7|warm|50|해 질 녘 바위 위의 활과 화살통|||object
+g47_04|g||구덩이/웅덩이|pit,well,stones,light||2,6,7|dark|50|위에서 빛이 드는 깊은 돌 구덩이|||setting
+g47_05|g||차꼬/옥/족쇄|stocks,chains,prison,light||7,9,10|dark|50|감옥 바닥의 나무 차꼬와 쇠고랑|||object
+g47_06|g||나팔|trumpet,camp||4|warm|50|진영의 나팔|현대식 금속 트럼펫으로 그려짐||object
+g47_07|g||수금/타/비파|lyre,hands,oil_lamp||5,6,8|warm|50|등불 곁에서 수금을 뜯는 손|||object
+g47_08|g||나팔을 불/양각 나팔|shofar,city_wall,watchman,sunset||5,6,7|warm|50|성벽 위에서 양각 나팔을 부는 사람|||scene
+g47_09|g||왕궁/기둥/보좌|palace,pillars,throne,light||6,7|warm|50|기둥이 늘어선 왕궁 홀 끝의 보좌|||setting
+g47_10|g||왕의 상/잔치/금 잔|table,gold_cups,fruit,palace||6,7|dark|50|금잔과 과일이 차려진 왕의 식탁|||object
+g47_11|g||장막 안/가죽 부대|tent,jar,wineskin,light||2,4|warm|50|염소털 장막 안의 항아리와 물 부대|||setting
+g47_12|g||진을 치/밤/진영|camp,tents,night,fire||2,4,5,6|dark|50|달빛 아래 장막 진영과 모닥불들|||setting
+g47_13|g||무덤/묘실/장사|tomb,rock_tomb,light||2,6,7,9|dark|50|바위를 판 가족 무덤 굴 안|||setting
+g47_14|g||돌무더기/비석/기둥을 세웠|cairn,pillar,desert,sunset||2,6|warm|50|언덕 위 돌무더기와 기념 돌기둥|||landscape
+g47_15|g||화덕/떡을 굽|oven,bread,fire||2,5,6,8|warm|50|흙 화덕 벽에 붙여 굽는 납작한 떡|||object
