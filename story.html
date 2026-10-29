@@ -8204,6 +8204,11 @@ function welcomeTour(){ try{ if(!window.CBSR_V2||window.CBSR_HADV1||window.CBSR_
   const t=document.getElementById("wcTour"); if(t) t.onclick=()=>{ document.getElementById("sheetClose").click(); setTimeout(startTour,250); };
   const c=document.getElementById("sheetClose"); if(c) c.textContent="나중에";
 }
+/* 이전 화면(v1) 기록: 앞머리 없는 cbsr-·rjnote: 기록. v2는 localStorage를 'v2:' 앞머리로 감싸 두었으므로 진짜 저장소를 따로 꺼냄 */
+function rawLS(){ return window.__rawLS||null; }
+function v1Keys(){ const L=rawLS(); if(!L||!window.CBSR_V2) return []; const K=[]; try{ for(let i=0;i<L.length;i++){ const k=L.key(i); if(k&&/^(cbsr-|rjnote:)/.test(k)) K.push(k); } }catch(e){} return K; }
+const v1Count=()=>v1Keys().length;
+function v1Wipe(){ const L=rawLS(), K=v1Keys(); K.forEach(k=>{ try{ L.removeItem(k); }catch(e){} }); return K.length; }
 function renderQT(){
   const {w,d}=view;
   if(!BIBLE) return `<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
@@ -9521,7 +9526,7 @@ function renderGuideV2(){ const rj=MODE==="rj", sd=parseD(mem.start);
    pg("howto","쓰는 방법",`<ol class="mhow"><li><b>오늘</b>: 오늘의 그림과 이야기 한 줄. 위의 동그라미로 다른 날을 고릅니다.</li><li><b>본문</b>: 오늘 본문을 읽고 '오늘 통독 완료'를 누릅니다. 절을 누르면 형광펜·책갈피·듣기.</li><li><b>QT</b>: 스토리 QT로 이야기를 따라가고, 묵상 노트에 관찰·하나님·나의 생각·기도를 적습니다.</li><li><b>도전</b>: 본문에서 찾기로 답이 되는 절을 직접 찾습니다.</li><li><b>기록</b>: 진행률, 모은 말씀 카드, 형광펜. 이름과 숫자 4자리로 기기를 잇습니다.</li><li><b>나의 통독</b>: 날짜 줄 맨 왼쪽. 오늘 내게 주시는 말씀과 이번 주 아멘한 말씀.</li></ol>`)+
    pg("install","홈 화면에 추가",installCard("guide"))+
    (window.SYNC&&SYNC.available?pg("fb","의견 보내기",`<p class="lead">불편한 점, 틀린 내용, 있었으면 하는 기능을 적어 주세요.</p><button class="btn" id="fbOpen" hidden>피드백 남기기</button><div class="fbbox" id="fbBox"><textarea id="fbText" rows="5" maxlength="3000" placeholder="어느 날짜·화면인지 적어 주시면 더 좋습니다."></textarea><input id="fbName" type="text" maxlength="20" placeholder="이름(적지 않아도 됩니다)"><div class="row"><button class="btn small" id="fbSend">보내기</button><button class="btn ghost small" id="fbCancel">지우기</button></div><p class="lead" id="fbMsg"></p></div>`):"")+
-   pg("data","기록 관리",`<span class="label">중간부터 쓰기 시작했다면</span><p class="lead">오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞춥니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div><span class="label" style="margin-top:16px">기록 지우기</span><p class="lead">이 통독표의 퀴즈, 진행률, QT 기록을 지웁니다. 되돌릴 수 없습니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div>`);
+   pg("data","기록 관리",`<span class="label">중간부터 쓰기 시작했다면</span><p class="lead">오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞춥니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div><span class="label" style="margin-top:16px">기록 지우기</span><p class="lead">이 통독표의 퀴즈, 진행률, QT 기록을 지웁니다. 되돌릴 수 없습니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div>${v1Count()?`<span class="label" style="margin-top:16px">이전 화면(v1) 기록</span><p class="lead">개편 전 화면에서 남긴 기록이 이 기기에 ${v1Count()}가지 남아 있습니다. 새 화면의 기록에는 영향이 없습니다.</p><div id="v1Box"><button class="btn ghost small" id="v1Ask">이전 화면 기록 모두 지우기</button></div>`:""}`);
   return top+pages; }
 function bindMenuV2(r){ const top=r.querySelector(".mtop"); if(!top) return;
   const show=id=>{ top.hidden=!!id; r.querySelectorAll(".mpage").forEach(p=>p.hidden=p.dataset.pg!==id); r.querySelector(".drawer").scrollTop=0; const h=r.querySelector(".drawer-head b"); if(h) h.textContent="메뉴"; };
@@ -9570,6 +9575,10 @@ function openMenu(){
     mem.start=s0.getFullYear()+"-"+String(s0.getMonth()+1).padStart(2,"0")+"-"+String(s0.getDate()).padStart(2,"0"); save(); Object.assign(here,posOfToday()); closeMenu(); go(here.w,here.d); });
   document.getElementById("startSave").onclick=()=>{const v=document.getElementById("startIn").value; if(!v) return; mem.start=v; save(); Object.assign(here,posOfToday()); closeMenu(); go(here.w,here.d);};
   document.getElementById("markPast").onclick=()=>{ for(let w=1;w<=here.w;w++) for(let d=0;d<nd(w);d++){ if(w===here.w&&d>=here.d) break; const k=keyOf(w,d); if(!mem.done[k]) mem.done[k]="past"; } save(); closeMenu(); view.tab="record"; render(); window.scrollTo({top:0}); };
+  const v1a=document.getElementById("v1Ask"); if(v1a) v1a.onclick=()=>{
+    document.getElementById("v1Box").innerHTML=`<div class="confirm"><span>이전 화면(v1)에서 남긴 통독·QT·형광펜·설정 기록을 이 기기에서 모두 지울까요? 새 화면 기록은 그대로입니다. 되돌릴 수 없습니다.</span><div class="row"><button class="btn small" id="v1Yes">지우기</button><button class="btn ghost small" id="v1No">취소</button></div></div>`;
+    document.getElementById("v1Yes").onclick=()=>{ const n=v1Wipe(); document.getElementById("v1Box").innerHTML=`<p class="lead">이전 화면 기록 ${n}가지를 지웠습니다.</p>`; };
+    document.getElementById("v1No").onclick=()=>{closeMenu();openMenu();}; };
   document.getElementById("resetAsk").onclick=()=>{
     document.getElementById("resetBox").innerHTML=`<div class="confirm"><span>이 통독표의 퀴즈, 진행률, QT 기록을 모두 지울까요? 되돌릴 수 없습니다.</span><div class="row"><button class="btn small" id="resetYes">지우기</button><button class="btn ghost small" id="resetNo">취소</button></div></div>`;
     document.getElementById("resetYes").onclick=()=>{mem.q={};mem.wq={};mem.done={};mem.qt={};save();closeMenu();render();};
