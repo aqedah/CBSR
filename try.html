@@ -8237,7 +8237,8 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
 const SV={i:0,t:0,start:0,left:0,hold:0,paused:false,map:null,ck:"",cs:null,dur:0};
 function storyFont(){ if(document.getElementById("sfont")) return; const l=document.createElement("link"); l.id="sfont"; l.rel="stylesheet"; l.href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap"; document.head.appendChild(l); }
 /* ===== 검토 메모: 카드를 보다가 바로 적기 (주소에 ?review=1 → 이 기기에서 계속 켜짐, ?review=0 → 끔) ===== */
-const FB_ON=(()=>{ try{ const u=new URLSearchParams(location.search).get("review"); if(u==="1") localStorage.setItem("cbsr-review-mode","1"); if(u==="0") localStorage.removeItem("cbsr-review-mode"); return localStorage.getItem("cbsr-review-mode")==="1"; }catch(e){ return false; } })();
+/* 2026-10-29 목사님 요청으로 검토 메모를 끔(GPT 작업으로 다 해결됨). 다시 켜려면 아래 false를 지우세요 */
+const FB_ON=false&&(()=>{ try{ const u=new URLSearchParams(location.search).get("review"); if(u==="1") localStorage.setItem("cbsr-review-mode","1"); if(u==="0") localStorage.removeItem("cbsr-review-mode"); return localStorage.getItem("cbsr-review-mode")==="1"; }catch(e){ return false; } })();
 function fbAll(){ try{ return JSON.parse(localStorage.getItem("cbsr-cardfb")||"{}"); }catch(e){ return {}; } }
 function fbSave(o){ try{ localStorage.setItem("cbsr-cardfb",JSON.stringify(o)); }catch(e){} }
 function fbKey(i){ return (MODE==="rj"?"rj:":"")+dayNo(view.w,view.d)+(MODE!=="rj"&&storyDay(dayNo(view.w,view.d))?PV():"")+"#"+i; }
