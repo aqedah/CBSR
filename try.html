@@ -1194,7 +1194,7 @@ html.v2 .brand{letter-spacing:0;align-items:center}#brandL{display:flex;align-it
 .gtile>*{position:relative}.gtile b{font:800 19px var(--f-disp,serif)}.gic{font-size:30px;line-height:1;margin-bottom:auto}
 .gtile:last-child:nth-child(odd){grid-column:1/-1;aspect-ratio:2/1}
 .gstars i{font-style:normal;color:rgba(255,255,255,.35);font-size:15px}.gstars i.on{color:#e2b874}
-.gextra{display:grid;gap:10px;margin-bottom:16px}.gwide,.gquiz>summary{display:flex;align-items:baseline;gap:10px;width:100%;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px;color:var(--ink);text-align:left;cursor:pointer;list-style:none}
+.gextra{display:grid;gap:10px;margin-bottom:0}.gextra .gmore{margin:0 0 -2px}.gweek+.gextra{margin-top:-12px}.gwide,.gquiz>summary{display:flex;align-items:baseline;gap:10px;width:100%;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px;color:var(--ink);text-align:left;cursor:pointer;list-style:none}
 .gquiz>summary::-webkit-details-marker{display:none}.gwide b,.gquiz>summary b{font-size:16px}.gwide span,.gquiz>summary span{color:var(--muted);font-size:13px}
 .gquiz[open]>summary{border-radius:14px 14px 0 0}.gquiz>*:not(summary){border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:12px;background:var(--card)}
 .flipc{display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0 6px;flex-wrap:wrap}.flipc .fg{display:flex;gap:3px}.flipc .fs{font:700 26px/1 system-ui;color:var(--gold);margin:0 1px;opacity:.8}.flipc .fdays{font:700 15px/1 system-ui;color:var(--muted);margin-right:6px}
@@ -9364,7 +9364,7 @@ function gWeekHTML(){ const hn=dayNo(here.w,here.d), items=[], notes=[]; let pic
     }
   if(!picks&&!items.length&&!notes.length) return "";
   const dl=(w,d)=>{ const dt=dateOf(w,d); return `${dt.getMonth()+1}/${dt.getDate()}(${DAYN[dt.getDay()]})`; };
-  return `<p class="gmore">이번 주 다시 보기</p><section class="gextra gweek">`+
+  return `<section class="gextra gweek"><p class="gmore">이번 주 다시 보기</p>`+
     (picks?`<button class="gwide" data-gplay="card"><b>내가 붙잡은 말씀</b><span>이번 주에 고른 구절 ${picks}개로 복습하기</span></button>`:"")+
     items.slice(0,3).map(([w,d,F,st])=>`<button class="gwide" data-gfday="${w}-${d}"><b>${smk(F.c.h||"오늘의 발견")}</b><span>${dl(w,d)} · ${st?"★".repeat(st)+" 다시 해 보기":"아직 안 한 발견"}</span></button>`).join("")+
     notes.slice(0,3).map(([w,d,t])=>`<p class="gwnote">“${esc(t)}”<small>${dl(w,d)} 내가 본 것</small></p>`).join("")+`</section>`; }
