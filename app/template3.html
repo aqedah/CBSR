@@ -492,6 +492,7 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .gextra{display:grid;gap:10px;margin-bottom:16px}.gwide,.gquiz>summary{display:flex;align-items:baseline;gap:10px;width:100%;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px;color:var(--ink);text-align:left;cursor:pointer;list-style:none}
 .gquiz>summary::-webkit-details-marker{display:none}.gwide b,.gquiz>summary b{font-size:16px}.gwide span,.gquiz>summary span{color:var(--muted);font-size:13px}
 .gquiz[open]>summary{border-radius:14px 14px 0 0}.gquiz>*:not(summary){border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:12px;background:var(--card)}
+.gplay,.gplay *,.sheet,.sheet *{scrollbar-width:thin;scrollbar-color:rgba(226,184,116,.45) transparent}.gplay ::-webkit-scrollbar,.gplay::-webkit-scrollbar,.sheet ::-webkit-scrollbar{width:6px;height:6px}.gplay ::-webkit-scrollbar-track,.gplay::-webkit-scrollbar-track,.sheet ::-webkit-scrollbar-track{background:transparent}.gplay ::-webkit-scrollbar-thumb,.gplay::-webkit-scrollbar-thumb,.sheet ::-webkit-scrollbar-thumb{background:rgba(226,184,116,.45);border-radius:3px}
 .gplay{position:fixed;inset:0;z-index:9600;background:radial-gradient(ellipse at 30% 0%,#3a2c1f,#120e0a 75%);color:#f6efe4;display:flex;flex-direction:column;max-width:520px;margin:0 auto}
 .gptop{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px 10px}.gptop b{font:700 17px var(--f-disp,serif)}
 .gpdots{flex:1;display:flex;gap:4px}.gpdots i{width:18px;height:4px;border-radius:2px;background:rgba(255,255,255,.2)}.gpdots i.on{background:#e2b874}
@@ -3725,7 +3726,7 @@ function render(){
   renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today");
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
-  try{ m.innerHTML=view.tab==="today"?renderToday():view.tab==="challenge"?(window.CBSR_V2?v2ChallengeHTML():renderChallenge()):view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():renderRecord(); }
+  try{ m.innerHTML=view.tab==="today"?renderToday():view.tab==="challenge"?(window.CBSR_V2?v2ChallengeHTML():renderChallenge()):view.tab==="read"?renderRead():view.tab==="qt"?((window.CBSR_V2&&BIBLE&&!view.pre&&!view.revW?dayRingHTML():"")+renderQT()):view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():renderRecord(); }
   catch(e){ console.error(e); m.innerHTML=`<section class="sec"><h2>화면을 그리다 문제가 생겼습니다</h2><p class="lead">다른 탭으로 갔다가 다시 와 보세요. 계속되면 이 문구를 제작자에게 알려 주세요: ${esc(String(e&&e.message||e))}</p></section>`; }
   document.body.classList.toggle("tab-study",view.tab==="study");
   if(window.CBSR_V2&&view.tab==="record"){ const f=m.querySelector(".sec"); if(f) f.insertAdjacentHTML("afterend",recordCardsHTML()); }
@@ -3810,7 +3811,7 @@ function bind(){
   m.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>showClue(+b.dataset.clue));
   bindAccount(m); bindInstall(); if(view.tab==="read") churchCounts();
   { const ts=document.getElementById("toStory"); if(ts) ts.onclick=()=>storyOpen(0); }
-  if(window.CBSR_V2){ if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>gpOpen(x.dataset.gplay)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const gq=document.getElementById("gQuiz"); if(gq) gq.ontoggle=()=>{ view.quizOpen=gq.open; }; } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge") bindDayRing(); }
+  if(window.CBSR_V2){ if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>gpOpen(x.dataset.gplay)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const gq=document.getElementById("gQuiz"); if(gq) gq.ontoggle=()=>{ view.quizOpen=gq.open; }; } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge"||view.tab==="qt") bindDayRing(); }
   bindQT(m);
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
