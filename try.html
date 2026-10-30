@@ -9495,8 +9495,8 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:8,maxZoom:13,zIndex:1,keepBuffer:map.options.keepBuf||2,attribution:"지도: Esri, US National Park Service · 지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"}).addTo(map);
     /* 가까이 볼 때(9배율 이상)는 자연색 지도의 원본이 거칠어서, 이스라엘 땅은 앱에 든 자세한 지형 그림을 겹칩니다 */
     /* 지형 그림은 늘 켜 둡니다(목사님 2026-10-30: 확대·축소 때 켜졌다 꺼졌다 하면 지도가 깨져 보임). 타일 위·선 아래 자리(hipane) */
-    if(!map.getPane("hipane")){ map.createPane("hipane").style.zIndex=250; map.getPane("hipane").style.pointerEvents="none"; }
-    ["levant","sinai","israel","israelhi"].forEach(k=>{ if(TERRAIN[k]) L.imageOverlay(TERRAIN[k].url,TERRAIN[k].bounds,{interactive:false,className:"nathi",pane:"hipane"}).addTo(map); });
+    /* 지형 그림은 타일과 같은 층(tilePane)에 둠: 다른 층에 두면 확대 중 한 프레임씩 어긋나 번쩍임(목사님 녹화 2026-10-31) */
+    ["levant","sinai","israel","israelhi"].forEach(k=>{ if(TERRAIN[k]) L.imageOverlay(TERRAIN[k].url,TERRAIN[k].bounds,{interactive:false,className:"nathi",pane:"tilePane",zIndex:5}).addTo(map); });
     /* 강줄기(요단·나일·유브라데·힛데겔 등, Natural Earth): 강을 건너는 장면이 보이도록 */
     if(typeof RIVERS!=="undefined"){ const rw=()=>map.getZoom()>=8?3.6:map.getZoom()>=6?2.4:1.6, RL=RIVERS.map(([n,p])=>L.polyline(p,{color:"#3d8fcf",weight:rw(),opacity:.9,interactive:false,className:"river"}).addTo(map)); map.on("zoomend",()=>{ const w=rw(); RL.forEach(l=>l.setStyle({weight:w})); }); }
     return; }
@@ -10365,7 +10365,8 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
   /* 말씀 풍선: 위 왼쪽 → 아래 오른쪽 → 위 오른쪽 → 아래 왼쪽으로 돌아가며 뜨고, 두 장까지 함께 보임(인물이 있는 가운데는 비움) */
   function showVerse(r,at){ if(!r||!map) return; const t=vRef(r); if(!t) return;
     while(VB.length>=2){ const o=VB.shift(); o.classList.add("old"); setTimeout(()=>o.remove(),900); }
-    const d=document.createElement("div"); d.className="tvb"; d.dataset.slot=String(vbN++%4); d.innerHTML=`${esc(t.length>110?t.slice(0,108)+"…":t)}<small>${esc(vLab(r))}</small>`; el.appendChild(d); VB.push(d); vbPlace(d); }
+    const d=document.createElement("div"); d.className="tvb"; d.dataset.slot=String(vbN++%4); d.innerHTML=`${esc(t.length>110?t.slice(0,108)+"…":t)}<small>${esc(vLab(r))}</small>`; el.appendChild(d); VB.push(d); vbPlace(d);
+    const life=Math.max(5000,Math.min(9000,2500+t.length*55)); setTimeout(()=>{ if(!VB.includes(d)) return; VB=VB.filter(x=>x!==d); d.classList.add("old"); setTimeout(()=>d.remove(),900); },life); }
   function vbPlace(one){ if(!VB.length||!map) return; const W=el.clientWidth, H=el.clientHeight, top0=66, bot=H*.74;
     (one?[one]:VB).forEach(d=>{ const w=d.offsetWidth, h=d.offsetHeight, s2=+d.dataset.slot, left=s2===0||s2===3, up=s2===0||s2===2; const x=left?10:W-w-10, y=up?top0:Math.max(top0+90,bot-h-6); d.style.transform=`translate(${Math.round(x)}px,${Math.round(y)}px)`; }); }
   function cap(i){ const st=S[i]; $(".bmtk").textContent=`${i+1} / ${S.length}${st.s?" · "+st.s:""}`; $(".bmth").textContent=st.t; $(".bmtn").textContent=st.n||""; $(".bmtend").hidden=true; }
