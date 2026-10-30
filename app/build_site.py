@@ -25,6 +25,7 @@ tj=json.load(open('terrain.json')); terr={}
 for k,v in tj.items():
     shutil.copy(f'terrain_{k}.jpg',f'{OUT}/terrain/{k}.jpg'); terr[k]={"bounds":v["bounds"],"url":f"terrain/{k}.jpg"}
 data+="const TERRAIN="+json.dumps(terr)+";\n"
+data+="const PLX="+(open("ux/place_extra.json").read() if os.path.exists("ux/place_extra.json") else "{}")+";\n"
 data+="const NEARLAND="+open("ux/nearland.json").read()+";\n"
 # ── 365 통독표 ──
 P365=json.load(open('plan365.json')); AB=plan['abbr']
