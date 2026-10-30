@@ -2793,7 +2793,7 @@ const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==="string
 function storyMapPts(w,d,s){ const G=n=>{ const g=PLACE.get(n); return g?[n,g[1],g[2],g[4]?1:0,0]:null; };
   const one=x=>Array.isArray(x)?(x.length>=3?[x[0],x[1],x[2],x[3]?1:0,x[4]?1:0]:G(x[0])):G(x);
   if(s&&(s.route||s.gather)) return {route:(s.route||[]).map(one).filter(Boolean),extra:(s.extra||[]).map(one).filter(Boolean),to:s.gather?one(s.gather):null};
-  const R=routesFor(w,d); if(R.length&&R[0].p.length>1) return {route:R[0].p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:R[0].n,b:R[0].b||(dayPlan(w,d).ch[0]||[0])[0]};
+  const R=routesFor(w,d), RI=s&&s.ri!=null&&R[s.ri]?s.ri:0; if(R.length&&R[RI].p.length>1) return {route:R[RI].p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:R[RI].n,b:R[RI].b||(dayPlan(w,d).ch[0]||[0])[0]};
   /* 이동 경로가 없는 날은 '본문의 무대'만: 두 번 이상 나오는 곳(목록에 한 번 지나가는 지명은 빼고). 없으면 가장 많이 나온 한 곳 */
   const A=dayA(w,d), all=[...A.places.values()].filter(p=>PLACE.has(p.name)).sort((a,b)=>b.n-a.n), many=all.filter(p=>p.n>=2), pts=(many.length?many:all.slice(0,1)).slice(0,6).map(p=>G(p.name)).filter(Boolean);
   return {route:[],extra:pts}; }
@@ -2833,7 +2833,12 @@ function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b"
     if(!out.some(c=>c.k==="map")){ const M=storyMapPts(w,d,null), gn=GENRE_OF(p.ch[0][0]);
       /* nomap인 날(서신서 등)도 편지·인물이 움직이는 경로가 있으면 지도를 넣습니다(목사님 2026-10-30) */
       if(M.route.length>1||(!C.nomap&&M.extra.length&&!/^(law|poetry|wisdom)$/.test(gn))){ let at=-1; out.forEach((c,i)=>{ if(/^배경/.test(c.lab||"")) at=i; }); if(at<0) at=Math.min(1,out.length-1); if(typeof C.mapAt==="number") at=C.mapAt; /* 원고가 지도 자리를 정할 수 있음(카드 번호 뒤) */
-        out.splice(at+1,0,{k:"map",auto:1,lab:M.route.length>1?"이동":"오늘 나오는 곳",h:M.route.length>1?`${M.route[0][0]}에서 ${M.route[M.route.length-1][0]}까지`:"오늘 본문의 무대",b:[(M.route.length>1?M.route:M.extra).map(x=>x[0]).join(" · ")]}); } } }
+        out.splice(at+1,0,{k:"map",auto:1,lab:M.route.length>1?"이동":"오늘 나오는 곳",h:M.route.length>1?`${M.route[0][0]}에서 ${M.route[M.route.length-1][0]}까지`:"오늘 본문의 무대",b:[(M.route.length>1?M.route:M.extra).map(x=>x[0]).join(" · ")]});
+        /* 이동이 여럿인 날(2026-10-30): 다른 이동의 도착지가 처음 나오는 카드 앞에 그 이동의 지도를 하나 더(최대 2개) */
+        if(M.route.length>1&&!C.nomap){ const R=routesFor(w,d), seen=new Set(M.route.map(x=>x[0])); let extra=0; for(let ri=1;ri<R.length&&extra<2;ri++){ const P=R[ri].p; if(P.length<2) continue; const rc=R[ri].c||[0,0], pb=R[ri].b||p.ch[0][0]; if(!p.ch.some(x=>x[0]===pb&&x[1]===rc[1])) continue; /* 오늘 본문 뒤까지 이어지는 이동은 그날로 미룸 */ const last=P[P.length-1][0];
+            /* 그 이동만의 지명(앞서 나온 지도에 없는 곳) 가운데 처음 것이 카드에 처음 나오는 자리 */ const key=(P.find(x=>!seen.has(x[0]))||[])[0]; if(!key) continue;
+            const j=out.findIndex((c,i)=>i>at+1&&c.k!=="map"&&!c.qt&&sTxt(c).includes(key)); if(j<0||out[j-1].k==="map") continue; P.forEach(x=>seen.add(x[0]));
+            const who=(typeof routeMeta==="function"&&(routeMeta(R[ri].n,R[ri].b)||{}).who)||""; out.splice(j,0,{k:"map",auto:1,ri,lab:"이동",h:`${P[0][0]}에서 ${last}까지`,b:[(who?who+" · ":"")+P.map(x=>x[0]).join(" · ")]}); extra++; } } } } }
   else { const N=(typeof CARDNEWS!=="undefined"&&MODE==="y365"&&CARDNEWS[no])||null;
     out.push({k:"cover",kick:p.label,h:p.topic||p.label});
     if(N) N.forEach(([t,r])=>out.push({k:"line",t,r}));
