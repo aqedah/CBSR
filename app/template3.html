@@ -986,6 +986,9 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .bmtend{display:flex;gap:8px;margin-top:12px}.bmtend .btn{flex:1}.bmthint{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:999;margin:0;text-align:center;font-size:11.5px;color:#1d2622;text-shadow:0 0 4px #fff;animation:bmthint 5s forwards;pointer-events:none}@keyframes bmthint{0%,70%{opacity:1}100%{opacity:0}}
 .bmt2.paused .bmtbars{opacity:.6}.bmt2 .leaflet-control-attribution{display:none}
 .map2f{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:1200;background:rgba(0,0,0,.7);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}.map2f.on{opacity:1}
+.mvemo{position:absolute;left:50%;bottom:80px;transform:translateX(-50%);font-size:21px;line-height:1;background:#fff;border-radius:14px;padding:4px 6px;box-shadow:0 1px 4px rgba(0,0,0,.3);animation:mvemo 1.7s ease-out forwards;pointer-events:none;z-index:5}.mvemo::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#fff;border-bottom:0}
+@keyframes mvemo{0%{opacity:0;transform:translate(-50%,8px) scale(.6)}15%{opacity:1;transform:translate(-50%,0) scale(1)}75%{opacity:1;transform:translate(-50%,-10px)}100%{opacity:0;transform:translate(-50%,-18px)}}
+.chm.stretch .arm.r{animation:none!important;transform-origin:46px 40px;transform:rotate(-65deg);transition:transform .6s ease-out}
 .bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
 .bmbig{display:flex;flex-direction:column;gap:6px}.bmbr{background:var(--card);border:1px solid var(--line);border-radius:14px}.bmbr.on{border-color:var(--acc)}.bmbh,.bmrh{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}.bmbh b,.bmrh b{display:block;font-size:15px}.bmbh small,.bmrh small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
@@ -4408,11 +4411,11 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
   function drawDone(i){ trails.clearLayers(); labs.clearLayers(); shown=new Set(); label(T.start);
     for(let k=0;k<i;k++){ const st=S[k], g=[starts[k],...legs(st)]; if(g.length>1) L.polyline(g.map(LL),{color:"#c0392b",weight:4,opacity:.85,dashArray:st.dash?"6 8":null,interactive:false}).addTo(trails); legs(st).forEach(label); }
     cur=L.polyline([],{color:"#c0392b",weight:5,dashArray:S[i]&&S[i].dash?"6 8":null,interactive:false}).addTo(trails); }
-  const fly=(pts,z)=>new Promise(res=>{ let d=false; const f=()=>{ if(!d){ d=true; res(); } }; map.once("moveend",f); const pad={paddingTopLeft:[40,90],paddingBottomRight:[50,Math.round(el.clientHeight*.38)],maxZoom:z,duration:1.4};
-    if(pts.length<2){ const c=map.project(pts[0],z); c.y+=el.clientHeight*.16; map.flyTo(map.unproject(c,z),z,{duration:1.3}); } else map.flyToBounds(L.latLngBounds(pts),pad); setTimeout(f,2300); });
-  const walkMs=(pts,dash)=>{ let t=0; for(let k=1;k<pts.length;k++) t+=map.latLngToLayerPoint(pts[k]).distanceTo(map.latLngToLayerPoint(pts[k-1])); return Math.max(1700,Math.min(8000,t*11))*(dash?1.35:1); };
+  const fly=(pts,z)=>new Promise(res=>{ let d=false; const f=()=>{ if(!d){ d=true; res(); } }; map.once("moveend",f); const pad={paddingTopLeft:[40,90],paddingBottomRight:[50,Math.round(el.clientHeight*.38)],maxZoom:z,duration:.9};
+    if(pts.length<2){ const c=map.project(pts[0],z); c.y+=el.clientHeight*.16; map.flyTo(map.unproject(c,z),z,{duration:.9}); } else map.flyToBounds(L.latLngBounds(pts),pad); setTimeout(f,1400); });
+  const walkMs=(pts,dash)=>{ let t=0; for(let k=1;k<pts.length;k++) t+=map.latLngToLayerPoint(pts[k]).distanceTo(map.latLngToLayerPoint(pts[k-1])); return Math.max(1000,Math.min(4800,t*6))*(dash?1.3:1); };
   function walk(pts,my,dur){ return new Promise(res=>{ const P=pts.map(p=>map.latLngToLayerPoint(p)), seg=[]; let tot=0; for(let k=1;k<P.length;k++){ const l=P[k].distanceTo(P[k-1]); seg.push(l); tot+=l; }
-      if(!tot) return res(); const t0=performance.now(), base=cur.getLatLngs().slice(); let panning=false;
+      if(!tot) return res(); const t0=performance.now(), base=cur.getLatLngs().slice(); let panning=false, nextEmo=t0+500; const E=EMO(S[idx]||{}), who2=[main,...fol.map(f=>f.m)];
       const at=dd=>{ dd=Math.max(0,dd); let i=0; while(i<seg.length-1&&dd>seg[i]){ dd-=seg[i]; i++; } const a=P[i], b=P[i+1]||P[i], f=seg[i]?Math.min(1,dd/seg[i]):0; return [L.point(a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f),i,b.x<a.x-.5]; };
       const ch=m=>m.getElement()&&m.getElement().querySelector(".chm"); [main,...fol.map(f=>f.m)].forEach(m=>{ const c=ch(m); if(c) c.classList.add("walk"); });
       const step=now=>{ if(my!==tok||!alive()) return res(); const k=Math.min(1,(now-t0)/dur), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2, d=e*tot, [pt,i,lf]=at(d), here=map.layerPointToLatLng(pt);
@@ -4420,27 +4423,41 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
         fol.forEach((f,j)=>{ const [q,,l2]=at(d-(j+1)*15); f.m.setLatLng(map.layerPointToLatLng(q)); const c2=ch(f.m); if(c2) c2.classList.toggle("flip",l2); });
         cur.setLatLngs(base.concat(pts.slice(0,i+1),[here])); for(let j=1;j<=i;j++) label(pts[j]._q||[]);
         const cp=map.latLngToContainerPoint(here), sz=map.getSize(); if(!panning&&(cp.x<sz.x*.15||cp.x>sz.x*.85||cp.y<sz.y*.14||cp.y>sz.y*.58)){ panning=true; const c0=map.project(here); c0.y+=sz.y*.16; map.panTo(map.unproject(c0),{animate:true,duration:.9,easeLinearity:.4}); setTimeout(()=>panning=false,950); }
+        if(now>nextEmo&&E.length){ nextEmo=now+520+Math.random()*480; emo(who2[Math.floor(Math.random()*who2.length)],E[Math.floor(Math.random()*E.length)]); }
         if(k<1) requestAnimationFrame(step); else { cur.setLatLngs(base.concat(pts.slice(1))); [main,...fol.map(f=>f.m)].forEach(m=>{ const c3=ch(m); if(c3) c3.classList.remove("walk"); }); res(); } };
       requestAnimationFrame(step); }); }
   const tag=arr=>arr.map(q=>{ const p=LL(q); p._q=q; return p; });
-  const readMs=st=>{ const len=(vRef(st.r)||"").length+(st.n||"").length*.6; return Math.max(4200,Math.min(12000,2600+len*55)); };
+  /* 말씀을 읽을 만한 시간: 이 시간 동안 움직임(날아가기·걷기)이 이어지도록 걷는 시간을 늘리고, 모자라면 도착 뒤 잠깐만 머묾 */
+  const needMs=st=>{ const len=(vRef(st.r)||"").length+(st.n||"").length*.5; return Math.max(3000,Math.min(8500,1600+len*38)); };
+  const readMs=needMs;
+  /* 반응 말풍선: 걷는 동안 사람들 머리 위에 표정이 떠오름 */
+  const EMO=st=>[...(st.mood||"🙏😊❤️")].filter(c=>c.trim()&&c!=="\uFE0F");
+  function emo(m,e){ const x=m&&m.getElement&&m.getElement(); if(!x||!e) return; const b=document.createElement("span"); b.className="mvemo"; b.textContent=e; x.appendChild(b); setTimeout(()=>b.remove(),1700); }
   function next(){ clearTimeout(timer); if(idx+1>=S.length) finish(); else run(idx+1); }
   function prev(){ clearTimeout(timer); run(Math.max(0,idx<S.length?idx-1:S.length-1)); }
   function arm(ms){ clearTimeout(timer); due=Date.now()+ms; left=ms; if(!paused){ const my=tok; timer=setTimeout(()=>{ if(my===tok) next(); },ms); } }
-  async function run(i){ const my=++tok; clearTimeout(timer); idx=i; const st=S[i], fr=map.getContainer(); panel(i,st.pre?"pre":"go"); barsAt(i); setPause(false);
+  async function run(i){ const my=++tok; clearTimeout(timer); idx=i; const st=S[i], fr=map.getContainer(); panel(i,st.pre?"pre":"arr"); barsAt(i); setPause(false);
     drawDone(i); actors(i,LL(starts[i]),!!(st.sea&&!st.land0)); fr.classList.toggle("mvstorm",!!st.storm);
     const all=[starts[i],...legs(st)].map(LL); await fly(st.stay?[LL(starts[i])]:all,st.z||7.5); if(my!==tok||!alive()) return;
     const groups=st.stay?[]:[[st.land0||[],false],[st.p||[],!!st.sea],[st.then||[],false]].filter(g=>g[0].length);
-    let from=starts[i]; const durs=groups.map(([g])=>{ const d=walkMs(tag([from,...g]),st.dash); from=g[g.length-1]; return d; });
-    const pre=st.pre?4200:0, fx=st.fx==="part"?1200:0, total=pre+fx+durs.reduce((a,b)=>a+b,0)+readMs(st); barRun(i,total); if(paused) barFreeze(i);
-    if(st.pre){ await wait(pre); if(my!==tok) return; }
+    let from=starts[i]; let durs=groups.map(([g])=>{ const d=walkMs(tag([from,...g]),st.dash); from=g[g.length-1]; return d; });
+    const pre=st.pre?2600:0, fx=st.fx==="part"?1300:0, need=needMs(st), mv=durs.reduce((a,b)=>a+b,0);
+    if(mv&&mv<need-pre-fx-500){ const f=Math.min(1.7,(need-pre-fx-500)/mv); durs=durs.map(d=>d*f); }
+    const dwell=st.stay?need:Math.max(500,Math.min(2200,need-pre-fx-durs.reduce((a,b)=>a+b,0)));
+    const total=pre+fx+durs.reduce((a,b)=>a+b,0)+dwell; barRun(i,total); if(paused) barFreeze(i);
+    const isMoses=()=>who(i)[0]==="moses", staff=on=>{ const c=main&&main.getElement()&&main.getElement().querySelector(".chm"); if(c) c.classList.toggle("stretch",on); };
+    if(st.pre){ if(st.fx==="part"&&isMoses()) staff(true); const E2=EMO(st); for(let k=0;k<4;k++) setTimeout(()=>{ if(my===tok) emo((fol[k%Math.max(1,fol.length)]||{}).m||main,E2[k%E2.length]); },300+k*550);
+      await wait(pre); if(my!==tok) return; panel(i,"arr"); }
     if(st.fx==="jordan") mvFx(map,"jordan",[(all[0][0]+all[all.length-1][0])/2,(all[0][1]+all[all.length-1][1])/2]);
     from=starts[i]; for(let gi=0;gi<groups.length;gi++){ const [g,sea]=groups[gi]; actors(i,LL(from),sea); const pts=tag([from,...g]);
-      if(st.fx==="part"&&g===st.p){ const a=map.latLngToContainerPoint(pts[0]), b=map.latLngToContainerPoint(pts[pts.length-1]); mvFx(map,"part",[(pts[0][0]+pts[pts.length-1][0])/2,(pts[0][1]+pts[pts.length-1][1])/2],Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI-90,Math.hypot(b.x-a.x,b.y-a.y)); await wait(fx); if(my!==tok) return; }
+      if(st.fx==="part"&&g===st.p){ if(isMoses()) staff(true); const a=map.latLngToContainerPoint(pts[0]), b=map.latLngToContainerPoint(pts[pts.length-1]); mvFx(map,"part",[(pts[0][0]+pts[pts.length-1][0])/2,(pts[0][1]+pts[pts.length-1][1])/2],Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI-90,Math.hypot(b.x-a.x,b.y-a.y)); await wait(fx); if(my!==tok) return; }
       await walk(pts,my,durs[gi]); if(my!==tok||!alive()) return; from=g[g.length-1]; }
+    staff(false);
     if(st.sea&&!(st.then||[]).length&&groups.length) actors(i,LL(from),true);
-    if(st.stay){ const c=main.getElement()&&main.getElement().querySelector(".chm"); if(c) c.classList.add("popin"); }
-    panel(i,"arr"); arm(readMs(st)); }
+    if(st.stay){ const c=main.getElement()&&main.getElement().querySelector(".chm"); if(c) c.classList.add("popin");
+      /* 머무는 장면도 멈춰 있지 않게: 그 자리로 천천히 다가가며 반응이 떠오름 */
+      const z=map.getZoom(); map.flyTo(main.getLatLng(),Math.min(12,z+.9),{duration:dwell/1000,easeLinearity:1}); const E3=EMO(st), A=[main,...fol.map(f=>f.m)]; for(let k=0;k*700<dwell-600;k++) setTimeout(()=>{ if(my===tok&&!paused) emo(A[k%A.length],E3[k%E3.length]); },400+k*700); }
+    arm(dwell); }
   function finish(){ tok++; clearTimeout(timer); idx=S.length; map.getContainer().classList.remove("mvstorm"); drawDone(S.length); legs(S[S.length-1]).forEach(label); bars().forEach(b=>{ b.style.transition="none"; b.style.width="100%"; });
     const pts=[T.start,...S.flatMap(legs)].map(LL); map.flyToBounds(L.latLngBounds(pts),{paddingTopLeft:[30,90],paddingBottomRight:[30,Math.round(el.clientHeight*.36)],duration:1.4});
     $(".bmtk").textContent=T.sub||""; $(".bmth").textContent="여정을 마쳤습니다"; $(".bmtn").textContent=T.end||""; $(".bmtv").hidden=true; $(".bmtend").hidden=false; }
