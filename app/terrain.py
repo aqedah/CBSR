@@ -7,7 +7,11 @@ frames={
  "asia":dict(lon=(21.3,31.0),lat=(36.2,41.6),z=7),
  "med":dict(lon=(11,37.8),lat=(30.3,42.6),z=6),
  "neareast":dict(lon=(24,50),lat=(21.5,40.5),z=6),
+ "levant":dict(lon=(34.0,39.0),lat=(33.0,37.6),z=9),
+ "sinai":dict(lon=(32.0,35.6),lat=(27.4,31.2),z=9),
 }
+ONLY=[x for x in os.environ.get("ONLY","").split(",") if x]
+if ONLY: frames={k:v for k,v in frames.items() if k in ONLY}
 def lon2x(lon,z): return (lon+180)/360*256*2**z
 def lat2y(lat,z):
     r=math.radians(lat); return (1-math.log(math.tan(r)+1/math.cos(r))/math.pi)/2*256*2**z
@@ -34,7 +38,7 @@ for fid,f in frames.items():
     E=mosaic[oy:oy+ch,ox:ox+cw]
     # land mask
     mask=Image.new('L',(cw,ch),0); d=ImageDraw.Draw(mask)
-    src=land10 if fid in('israel','asia','israelhi') else land
+    src=land10 if fid in('israel','asia','israelhi','levant','sinai') else land
     for poly in src:
         for ring in poly:
             pts=[(lon2x(lo,z)-x0,lat2y(la,z)-y0) for lo,la in ring]
@@ -45,7 +49,7 @@ for fid,f in frames.items():
     # hillshade
     cell=40075016*math.cos(math.radians(sum(f['lat'])/2))/(256*2**z)
     gy,gx=np.gradient(E,cell)
-    ex=3.0 if fid.startswith('israel') else 6.0
+    ex=3.0 if fid in('israel','israelhi','levant','sinai') else 6.0
     slope=np.arctan(ex*np.hypot(gx,gy)); asp=np.arctan2(-gx,gy)
     az,alt=math.radians(315),math.radians(45)
     hs=np.sin(alt)*np.cos(slope)+np.cos(alt)*np.sin(slope)*np.cos(az-asp)
@@ -62,10 +66,11 @@ for fid,f in frames.items():
     sea=np.array((168,198,214),np.float32)
     rgb[~M]=sea
     img=Image.fromarray(rgb.astype(np.uint8))
-    maxw={'israel':1100,'israelhi':1500}.get(fid,1600)
+    maxw={'israel':1100,'israelhi':1500,'levant':1500,'sinai':1100}.get(fid,1600)
     if img.width>maxw: img=img.resize((maxw,round(img.height*maxw/img.width)),Image.LANCZOS)
     buf=io.BytesIO(); img.save(buf,'JPEG',quality=72,optimize=True,progressive=True)
     open(f'terrain_{fid}.jpg','wb').write(buf.getvalue())
     out[fid]=dict(bounds=[[f['lat'][0],f['lon'][0]],[f['lat'][1],f['lon'][1]]],size=len(buf.getvalue()),wh=img.size)
     print(fid,img.size,len(buf.getvalue())//1024,'KB')
-json.dump(out,open('terrain.json','w'))
+old=json.load(open('terrain.json')) if os.path.exists('terrain.json') else {}
+old.update(out); json.dump(old,open('terrain.json','w'))
