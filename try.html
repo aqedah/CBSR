@@ -9495,8 +9495,8 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:8,maxZoom:13,zIndex:1,keepBuffer:map.options.keepBuf||2,attribution:"지도: Esri, US National Park Service · 지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"}).addTo(map);
     /* 가까이 볼 때(9배율 이상)는 자연색 지도의 원본이 거칠어서, 이스라엘 땅은 앱에 든 자세한 지형 그림을 겹칩니다 */
     /* 지형 그림은 늘 켜 둡니다(목사님 2026-10-30: 확대·축소 때 켜졌다 꺼졌다 하면 지도가 깨져 보임). 타일 위·선 아래 자리(hipane) */
-    /* 지형 그림은 타일과 같은 층(tilePane)에 둠: 다른 층에 두면 확대 중 한 프레임씩 어긋나 번쩍임(목사님 녹화 2026-10-31) */
-    ["levant","sinai","israel","israelhi"].forEach(k=>{ if(TERRAIN[k]) L.imageOverlay(TERRAIN[k].url,TERRAIN[k].bounds,{interactive:false,className:"nathi",pane:"tilePane",zIndex:5}).addTo(map); });
+    /* 자세한 지형(강줄기·능선)은 큰 그림 한 장이 아니라 작은 타일로(목사님 2026-10-31: 큰 그림은 휴대폰에서 확대할 때 다시 그리는 동안 흰 바탕이 비침). 바탕 타일과 같은 방식이라 함께 움직임 */
+    L.tileLayer("terrain/t/{z}/{x}/{y}.webp",{minNativeZoom:7,maxNativeZoom:9,minZoom:6,maxZoom:13,zIndex:5,keepBuffer:map.options.keepBuf||3,bounds:[[27.4,32],[37.6,39]],errorTileUrl:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",className:"nathi"}).addTo(map);
     /* 강줄기(요단·나일·유브라데·힛데겔 등, Natural Earth): 강을 건너는 장면이 보이도록 */
     if(typeof RIVERS!=="undefined"){ const rw=()=>map.getZoom()>=8?3.6:map.getZoom()>=6?2.4:1.6, RL=RIVERS.map(([n,p])=>L.polyline(p,{color:"#3d8fcf",weight:rw(),opacity:.9,interactive:false,className:"river"}).addTo(map)); map.on("zoomend",()=>{ const w=rw(); RL.forEach(l=>l.setStyle({weight:w})); }); }
     return; }
