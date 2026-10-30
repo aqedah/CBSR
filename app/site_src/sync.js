@@ -92,12 +92,14 @@
       async del(day){ const w=await this.who(); if(!w) return; await init(); await fs.doc(`together/${day}/p/${w}`).delete(); },
       async list(day){ await init(); const q=await fs.collection(`together/${day}/p`).limit(300).get(); return q.docs.map(d=>({who:d.id,...d.data()})); }
     },
-    /* 함께 읽기: 통독을 처음 마친 날에만 한 번 더합니다 */
-    async markDone(dayKey,dateStr){ try{ await init();
-      await Promise.all([fs.doc(`days/${dayKey}`).set({done:inc(1)},{merge:true}),fs.doc(`dates/${dateStr}`).set({done:inc(1)},{merge:true})]); }catch(e){ console.warn("count",e); } },
-    async counts(dayKey,dateStr){ try{ await init();
-      const [a,b,c]=await Promise.all([fs.doc(`days/${dayKey}`).get(),fs.doc(`dates/${dateStr}`).get(),fs.doc("stats/church").get()]);
-      return {day:a.exists?(a.data().done||0):0,date:b.exists?(b.data().done||0):0,readers:c.exists?(c.data().readers||0):0}; }catch(e){ return null; } }
+    /* 함께 읽기 숫자(2026-10-30 고침): 예전에는 숫자를 1씩 더해서, 한 기기가 여러 번 더하면 숫자가 부풀었습니다(누가복음 14–16장 하루에 194).
+       이제는 그 날 문서에 '읽은 사람 표시(기기 번호)'를 하나씩 남기고 그 개수를 셉니다. 같은 기기는 몇 번을 눌러도 한 번입니다. */
+    async markDone(dayKey,dateStr){ try{ await init(); const u=firebase.auth().currentUser; if(!u) return; const m={u:{[u.uid]:true}};
+      await Promise.all([fs.doc(`days2/${dayKey}`).set(m,{merge:true}),fs.doc(`dates2/${dateStr}`).set(m,{merge:true})]); }catch(e){ console.warn("count",e); } },
+    async counts(dayKey,dateStr){ try{ await init(); const me=(firebase.auth().currentUser||{}).uid;
+      const [a,b,c]=await Promise.all([fs.doc(`days2/${dayKey}`).get(),fs.doc(`dates2/${dateStr}`).get(),fs.doc("stats/church").get()]);
+      const n=x=>x.exists?Object.keys(x.data().u||{}).length:0;
+      return {day:n(a),date:n(b),mine:!!(a.exists&&me&&(a.data().u||{})[me]),readers:c.exists?(c.data().readers||0):0}; }catch(e){ return null; } }
   };
   if(window.SYNC.available) init().catch(e=>console.warn("firebase",e));
   if("serviceWorker" in navigator&&location.protocol==="https:") window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));

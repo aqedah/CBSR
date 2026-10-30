@@ -4511,7 +4511,7 @@ async function tgFill(root,w,d){ if(!TG_OK()) return; const GA=[...root.querySel
     if(A.length){ const meAv=mine?(PROF.ph64?`<img class="tga" src="${PROF.ph64}" alt="">`:`<span class="tga" style="background:${tgCol(PROF.nick||"나")}">나</span>`):"";
       ga.innerHTML=`<span class="tgstack">${meAv}${A.slice(0,mine?2:3).map(p=>tgAv(p,"tga")).join("")}</span><span class="tgtx">${mine?"<b>나</b>와 ":""}<b>${esc(A[0].nick)}</b>님${A.length>1?` 외 <b>${A.length-1}명</b>`:""}이<br>아멘했습니다</span>`; ga.hidden=false; ga.onclick=e=>{ e.stopPropagation(); tgSheet(`함께 아멘한 교우 ${A.length}명`,ga.dataset.tgs||t,A,0); }; } }
   if(gr&&document.body.contains(gr)){ const Rd=L.filter(p=>p.read).sort((a,b)=>(a.at||0)-(b.at||0)); let n=Rd.length;
-    try{ const c=await SYNC.counts(day,syncKey(todayStr())); if(c) n=Math.max(n,(c.day||0)-(mem.counted&&mem.counted[key]?1:0)); }catch(e){}
+    try{ const c=await SYNC.counts(day,syncKey(todayStr())); if(c) n=Math.max(n,(c.day||0)-(c.mine?1:0)); }catch(e){}
     const AC={}; L.forEach(p=>(p.amen||[]).forEach(t=>{ if(t[0]!=="§") AC[t]=(AC[t]||0)+1; })); const top=Object.entries(AC).sort((a,b)=>b[1]-a[1]).slice(0,2);
     if(n>0){ const sh=Rd.slice(0,6); /* 한 줄로(2026-10-29 목사님: 높이가 커서 스토리 카드가 위로 밀려 깨짐) */
       const sh4=Rd.slice(0,3), rest=n-sh4.length; gr.innerHTML=`<span class="tgrow"><span class="tgstack">${sh4.map(p=>tgAv(p,"tga")).join("")}${rest>0?`<span class="tga more">+${rest}</span>`:""}</span><span class="tgtx"><b>함께 읽은 교우 ${n}명</b>${top.length?`<small>아멘한 성품: ${top.map(([t,c])=>`${esc(t)} ${c}`).join(" · ")}</small>`:""}</span><i aria-hidden="true">›</i></span>`; gr.hidden=false; gr.onclick=e=>{ e.stopPropagation(); tgSheet(`함께 읽은 교우 ${n}명`,"",Rd,n-Rd.length); }; } } }
