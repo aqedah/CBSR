@@ -1665,6 +1665,11 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .bmtv{margin:8px 0 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--card);border-radius:0 10px 10px 0;font-family:var(--f-serif,serif);font-size:14.5px;line-height:1.6;max-height:7.5em;overflow:auto}.bmtv small{display:block;margin-top:2px;color:var(--accent);font:700 12px var(--f-ui)}
 .bmtc{display:flex;gap:8px;justify-content:space-between;margin-top:10px}.bmtc .btn{flex:1}
 .bmtlh{margin:18px 0 0;font:700 17px var(--f-serif,serif)}.bmtl{display:grid;gap:8px;margin:10px 0 4px}.bmtl button{display:flex;align-items:center;gap:12px;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}.bmtl i{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-style:normal;font-size:14px}.bmtl b{display:block;font-size:15px}.bmtl small{display:block;color:var(--muted);font-size:12.5px}
+.rgsun .rgi{background:repeating-conic-gradient(from 0deg,#d8c89e 0 12deg,#efe6cc 12deg 24deg)}.rgsun .rgi img{opacity:.8}.rgsunm{position:absolute;right:-2px;bottom:-2px;width:26px;height:26px;border-radius:50%;background:#9a6417;color:#fff;font:700 12px/26px var(--f-ui);font-style:normal;text-align:center;border:2px solid var(--paper)}
+.sunstat{margin:6px 0 14px;font-size:14px;color:var(--muted)}.sunstat b{color:var(--ink)}.suncard{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:14px 16px;margin:0 0 12px}.sunk{display:block;font-size:12.5px;font-weight:700;color:#9a6417;margin-bottom:8px}
+.sunmap{height:200px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}.sunt{margin:8px 0 0;font-size:14px;color:var(--muted);line-height:1.55}.sunp{margin:0 0 8px;font-family:var(--f-serif,serif);font-size:16px;line-height:1.7}.sunc{margin:10px 0 0;padding:10px 12px;background:var(--accent-soft);border-radius:12px;font-size:14.5px;line-height:1.6}.sunc b{display:block;font-size:12.5px;color:var(--accent);margin-bottom:2px}
+.sunchips{display:flex;flex-wrap:wrap;gap:6px;margin:0}.sunchips span{background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:5px 12px;font-weight:700;font-size:14px}.sunchips small{opacity:.7}
+.sunkv{display:grid;gap:8px;margin-top:8px}.sunkv button{text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 12px;font:inherit;color:var(--ink);cursor:pointer}.sunkv button.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset;background:var(--accent-soft)}.sunkv q{display:block;font-family:var(--f-serif,serif);font-size:15px;line-height:1.6;quotes:none}.sunkv small{display:block;margin-top:4px;color:var(--accent);font-weight:700;font-size:12.5px}.sunh3{margin:0 0 6px;font:700 17px var(--f-serif,serif)}
 .bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
 .bmbig{display:flex;flex-direction:column;gap:6px}.bmbr{background:var(--card);border:1px solid var(--line);border-radius:14px}.bmbr.on{border-color:var(--acc)}.bmbh,.bmrh{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}.bmbh b,.bmrh b{display:block;font-size:15px}.bmbh small,.bmrh small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
@@ -10987,6 +10992,7 @@ function wordCard(w,d,q,kv,ph,big){ const dt=dateOf(w,d);
   return `<div class="wcard${big?" big":""}">${phImg(ph,"wcbg")}<div class="wcin"><q>${esc(kv.t)}</q><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v} · ${esc(fmt(dt,{month:"long",day:"numeric"}))}</small>${big&&q.med?`<p>${esc(q.med)}</p>`:""}</div></div>`; }
 function tdMins(w,d){ try{ return Math.max(5,Math.round(dayA(w,d).text.length/450)); }catch(e){ return 0; } }
 function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
+  if(isRev(d)&&BIBLE&&WEEKS[w-1]) return renderSunday(w);
   if(!p) return `<section class="sec"><p class="lead">오늘 본문이 없습니다.</p></section>`;
   if(!BIBLE) return `<section class="tdh"><div class="tdin"><p class="tdk" style="margin-top:auto">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1><p class="tdsub">본문을 불러오는 중입니다…</p></div></section>`;
   const q=qtOf(key), read=!!mem.done[key], S=storySlides(w,d), ph=S[0]&&S[0].ph, dt=dateOf(w,d), live=isHere(w,d), kv=q.done?storyQT(w,d).kv:null, g=GUIDE[key]||{}, mins=tdMins(w,d);
@@ -11017,7 +11023,47 @@ function tdAid(w,d,p){ const key=keyOf(w,d), g=GUIDE[key]||{}, RD=MODE==="rj"&&t
   const eq=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p></div>`:"";
   if(!prev&&!eq) return "";
   return `<details class="v2aid tdaid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>${RD?"교재 설명":"지난 이야기"} · 살펴볼 질문</small></summary>${prev}${eq}</details>`; }
-function bindToday(){ clearInterval(TD.cd);
+/* ===== 주일: 쉼과 잇기(리딩지저스, 목사님 2026-10-30). 새 본문 없이 그 주에 읽은 것을 모아 보고 예배로 잇습니다 =====
+   ① 이번 주 지나온 길(지도) ② 이번 주 이야기 ③ 이번 주 하나님은 어떤 분이셨나(아멘한 성품) ④ 내가 붙잡은 말씀 → 이번 주 말씀 하나 ⑤ 다음 주 미리 보기 ⑥ 못 읽은 날 */
+const SUN_DAYS=w=>[0,1,2,3,4,5].filter(d=>PLAN.plan[w-1]&&PLAN.plan[w-1][d]).map(d=>[w,d]);
+function sunCover(w){ for(const d of [5,4,3,2,1,0]){ try{ if(!dayPlan(w,d)) continue; const S=storySlides(w,d); if(S[0]&&S[0].ph) return S[0].ph; }catch(e){} } return null; }
+function sunPlaces(w){ const seen=new Map(); SUN_DAYS(w).forEach(([ww,d])=>{ try{ const RP=new Set(); try{ routesFor(ww,d).forEach(r=>r.p.forEach(q=>q[0]&&RP.add(q[0]))); }catch(e){}
+    /* 지나가듯 한 번 나오는 지명(스데반의 설교에 나오는 하란 등)은 빼고, 두 번 이상 나오거나 이동 경로에 있는 곳만 */
+    for(const p of dayA(ww,d).places.values()){ const g=PLACE.get(p.name); if(g&&g[3]!=="r"&&(p.n>=2||RP.has(p.name))) seen.set(p.name,{g,n:(seen.get(p.name)||{n:0}).n+p.n}); } }catch(e){} }); return seen; }
+function renderSunday(w){ const W=WEEKS[w-1]||{}, ph=sunCover(w), dt=dateOf(w,6), L=SUN_DAYS(w), read=L.filter(([a,b])=>mem.done[keyOf(a,b)]).length;
+  mem.sun ||= {}; if(!mem.sun[w]){ mem.sun[w]=todayStr(); save(); }
+  const sent=t=>String(t||"").split(/(?<=[다요]\.)\s+/).filter(Boolean);
+  let h=`<section class="tdh sunh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin"><div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span></div>
+    <div class="tdttl"><p class="tdk">주일 · 쉼과 잇기</p><h1>${w}주차 돌아보기</h1><p class="tdsub">${esc(W.t||"")}</p></div></div></section><section class="tdsheet sun">`;
+  h+=`<p class="tdstory">오늘은 새 본문을 읽지 않는 날입니다. 이번 주에 읽은 이야기를 모아 보고, 예배로 이어 가세요.</p><p class="sunstat">이번 주 <b>${read}</b> / ${L.length}일 읽음</p>`;
+  /* ① 지도 */
+  const P=sunPlaces(w);
+  h+=`<div class="suncard"><span class="sunk">1 · 이번 주 지나온 길</span>${P.size?`<div class="sunmap" id="sunMap"></div><p class="sunt">${[...P.keys()].slice(0,8).map(esc).join(" · ")}${P.size>8?` 외 ${P.size-8}곳`:""}</p><button class="linkbtn" id="sunBm">성경 지도에서 보기 ›</button>`:`<p class="sunt">이번 주 본문에는 지도에 표시할 곳이 많지 않습니다.</p>`}</div>`;
+  /* ② 이야기 */
+  const st=sent(W.story).slice(0,4);
+  if(st.length) h+=`<div class="suncard"><span class="sunk">2 · 이번 주 이야기</span>${st.map(t=>`<p class="sunp">${esc(t)}</p>`).join("")}${W.christ?`<p class="sunc"><b>예수 그리스도로 잇기</b>${esc(W.christ)}</p>`:""}</div>`;
+  /* ③ 성품 */
+  const AC={}; L.forEach(([a,b])=>{ const q=mem.qt[keyOf(a,b)]||{}; Object.keys(q.amen||{}).forEach(t=>{ if(t[0]!=="§") AC[t]=(AC[t]||0)+1; }); });
+  const top=Object.entries(AC).sort((x,y)=>y[1]-x[1]);
+  h+=`<div class="suncard"><span class="sunk">3 · 이번 주 하나님은 어떤 분이셨나</span>${top.length?`<p class="sunchips">${top.slice(0,8).map(([t,c])=>`<span>${esc(t)}${c>1?` <small>${c}</small>`:""}</span>`).join("")}</p><p class="sunt">이번 주 묵상 노트에서 아멘한 하나님의 성품입니다.</p>`:`<p class="sunt">이번 주 묵상 노트에서 하나님의 성품에 아멘하면 여기에 모입니다.</p>`}</div>`;
+  /* ④ 말씀 */
+  const KV=L.map(([a,b])=>{ const q=mem.qt[keyOf(a,b)]||{}; return q.kv?{k:q.kv,w:a,d:b}:null; }).filter(Boolean), pick=(mem.sunkv||{})[w];
+  h+=`<div class="suncard"><span class="sunk">4 · 내가 붙잡은 말씀</span>${KV.length?`<p class="sunt">예배에 품고 갈 '이번 주 말씀'을 하나 고르세요.</p><div class="sunkv">${KV.map(x=>{ const r=x.k.split(":").map(Number), on=pick===x.k; return `<button class="${on?"on":""}" data-sunkv="${esc(x.k)}"><q>${esc(vtxt(r))}</q><small>${esc(rlab(r))}${on?" · 이번 주 말씀":""}</small></button>`; }).join("")}</div>`:`<p class="sunt">이번 주 묵상 노트에서 고른 말씀이 아직 없습니다. 묵상 노트를 마치면 그날의 말씀이 여기에 모입니다.</p>`}</div>`;
+  /* ⑤ 다음 주 */
+  const NW2=WEEKS[w]; if(NW2) h+=`<div class="suncard"><span class="sunk">5 · 다음 주 미리 보기</span><h3 class="sunh3">${w+1}주차 · ${esc(NW2.t||"")}</h3>${sent(NW2.story)[0]?`<p class="sunp">${esc(sent(NW2.story)[0])}</p>`:""}</div>`;
+  /* ⑥ 못 읽은 날 */
+  const U=L.filter(([a,b])=>!mem.done[keyOf(a,b)]&&dateOf(a,b)<=today0());
+  if(U.length) h+=`<div class="suncard"><span class="sunk">6 · 이번 주에 못 읽은 날 ${U.length}일</span><p class="sunt">주일 오후에 이어 읽어도 좋습니다.</p><div class="qtstart-list">${U.map(([a,b])=>dayBtn(a,b)).join("")}</div></div>`;
+  return h+`</section>`; }
+function bindSunday(){ const w=view.w; const m=document.getElementById("sunMap");
+  if(m&&window.L){ setTimeout(()=>{ if(!document.body.contains(m)) return; const map=L.map(m,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,zoomSnap:.25}); mapBase(map,"natural");
+    const P=sunPlaces(w), pts=[]; SUN_DAYS(w).forEach(([a,b])=>{ try{ routesFor(a,b).forEach(r=>{ const ll=r.p.map(q=>[q[1],q[2]]); L.polyline(ll,{color:"#fff",weight:6,opacity:.8,interactive:false}).addTo(map); L.polyline(ll,{color:"#c0392b",weight:3,interactive:false}).addTo(map); pts.push(...ll); }); }catch(e){} });
+    let k=0; P.forEach((x,nm)=>{ const ll=[x.g[1],x.g[2]]; pts.push(ll); L.circleMarker(ll,{radius:5,color:"#fff",weight:1.5,fillColor:"#e0a526",fillOpacity:1,interactive:false}).addTo(map); if(k++<6) L.marker(ll,{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl bml key">${esc(nm)}</span>`,iconSize:[0,0],iconAnchor:[-6,8]})}).addTo(map); });
+    if(pts.length>1) map.fitBounds(L.latLngBounds(pts),{padding:[24,24],maxZoom:8.5}); else if(pts.length) map.setView(pts[0],8); },60); }
+  const bm=document.getElementById("sunBm"); if(bm) bm.onclick=()=>bmOpen("land");
+  document.querySelectorAll("[data-sunkv]").forEach(b=>b.onclick=()=>{ mem.sunkv ||= {}; mem.sunkv[w]=mem.sunkv[w]===b.dataset.sunkv?null:b.dataset.sunkv; save(); const y=scrollY; render(); scrollTo({top:y}); });
+  document.querySelectorAll(".tdsheet.sun [data-jump]").forEach(b=>b.onclick=()=>{ const [a,c]=b.dataset.jump.split("-").map(Number); go(a,c); }); }
+function bindToday(){ clearInterval(TD.cd); if(isRev(view.d)) bindSunday();
   const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); if(window.CBSR_V2){ window.scrollTo({top:0}); requestAnimationFrame(()=>window.scrollTo({top:0})); return; } requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
   /* 화면에 보이는 단계(TD.stage)를 따릅니다: 0이면 본문 읽기, 그 뒤는 스토리 QT. 화면을 그린 뒤 기록이 바뀌어도(다른 기기 동기화 등) 버튼 이름과 동작이 어긋나지 않게 */
   const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!TD.stage){ toText(); return; } storyOpen(0); };
@@ -11145,7 +11191,10 @@ function bindRecordCards(){ document.querySelectorAll("[data-wck]").forEach(b=>b
 /* ===== V2: 인스타그램식 요일 고리(본문·도전 탭 위) ===== */
 function dayRingHTML(){ const here0=today0(), selN=dayNo(view.w,view.d), N=READ_DAYS; let r=""; const MISS=TRY?[]:missedDays(), MS=new Set(MISS.map(([a,b])=>keyOf(a,b)));
   const from=Math.max(1,selN-28), to=Math.min(N,selN+28);
-  for(let n=from;n<=to;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(!dayPlan(w,d)) continue; const dt=dateOf(w,d), key=keyOf(w,d), done=!!mem.done[key], qtd=!!(mem.qt[key]&&mem.qt[key].done), sel=n===selN&&!view.pre&&!view.revW, dd=dayDiff(here0,dt), tod=dd===0, fut=dd>0;
+  for(let n=from;n<=to;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7;
+    if(isRev(d)&&PLAN.plan[w-1]&&WEEKS[w-1]){ const dt=dateOf(w,d), dd=dayDiff(here0,dt), tod=dd===0, sel=n===selN&&!view.pre&&!view.revW, ph=sunCover(w), seen=!!(mem.sun&&mem.sun[w]);
+      r+=`<button class="rg rgsun${sel?" sel":""}${tod?" tod":""}${dd>0?" fut":""}${seen?" done":""}" data-rgsun="${w}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} 주일, 한 주 돌아보기"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}<i class="rgsunm">쉼</i></span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":"주일"}</em></b></button>`; continue; }
+    if(!dayPlan(w,d)) continue; const dt=dateOf(w,d), key=keyOf(w,d), done=!!mem.done[key], qtd=!!(mem.qt[key]&&mem.qt[key].done), sel=n===selN&&!view.pre&&!view.revW, dd=dayDiff(here0,dt), tod=dd===0, fut=dd>0;
     let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
     const p=dayPlan(w,d);
     r+=`<button class="rg${sel?" sel":""}${MS.has(key)?" miss":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${w}-${d}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p.label)}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}</span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":DAYN[dt.getDay()]}</em></b></button>`; }
@@ -11195,6 +11244,7 @@ function myStoryOpen(){ const L=myStoryItems(); if(!L.length){ toast("아직 보
 function bindDayRing(){ const me=document.getElementById("rgMe"); if(me) me.onclick=()=>myStoryOpen();
   const mi=document.getElementById("rgMiss"); if(mi) mi.onclick=()=>{ const M=missedDays(); sheet("읽지 않은 날",`<p class="lead">지난 2주 가운데 아직 통독 완료를 누르지 않은 날입니다.</p><div class="qtstart-list">${M.map(([a,b])=>dayBtn(a,b)).join("")}</div>`); document.querySelectorAll("#sheetRoot [data-jump]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.jump.split("-").map(Number); document.getElementById("sheetRoot").innerHTML=""; view.w=w; view.d=d; view.pre=false; view.revW=null; view.tab="read"; render(); scrollTo({top:0}); }); };
   /* 동그라미를 누르면 인스타 스토리처럼 그날 표지를 먼저 띄우고, 거기서 본문으로(목사님 2026-10-29) */
+  document.querySelectorAll("[data-rgsun]").forEach(b=>b.onclick=()=>rgGoDay(+b.dataset.rgsun,6,"today"));
   document.querySelectorAll("[data-rg]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.rg.split("-").map(Number); if(window.CBSR_V2) rgStory(w,d); else rgGoDay(w,d); });
   const sc=document.getElementById("rgScroll"), se=document.getElementById("rgSel")||[...document.querySelectorAll("#rgScroll .rg:not(.fut)")].pop();
   /* 손을 떼면 가장 가까운 동그라미를 나의 통독 옆에 붙입니다(스냅을 따르지 않는 브라우저용) */
