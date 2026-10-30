@@ -6,6 +6,7 @@ R=os.path.dirname(os.path.abspath(__file__)); PF=R+'/ux/photo_policy.json'
 KINDS=('scene','background','object','symbolic','reference')
 DIRS=('D1','D2','D3','D4',None)
 POLS=('strict','narrow','broad','free-bg','manual-only')
+RELS=('event','object-place','figurative','illustrative','ambient')
 STATS=('draft','reviewed','approved','restricted','hold','out')
 KIND_KO={'scene':'본문 장면','background':'풍경·장소','object':'물건·소품','symbolic':'상징·환상','reference':'연구·설명 자료'}
 STAT_KO={'draft':'초안','reviewed':'검토함','approved':'승인','restricted':'제한 승인','hold':'보류','out':'제외','legacy-unclassified':'미분류'}
@@ -30,7 +31,7 @@ def effective(r,P):
   st=a.get('reviewStatus')
   if r.get('out'): st=st if st in ('hold','out') else ('hold' if str(r['out']).startswith('보류') else 'out')
   e['reviewStatus']=st or 'legacy-unclassified'
-  for k in ('verseAnchors','blockedUses','approvedUses'):
+  for k in ('verseAnchors','blockedUses','approvedUses','relation','eraLock'):
     if a.get(k): e[k]=a[k]
   return e
 def validate(P,ids):
@@ -40,6 +41,7 @@ def validate(P,ids):
     if 'assetKind' in a and a['assetKind'] not in KINDS: err.append(f'{i}: assetKind {a["assetKind"]}')
     if 'directness' in a and a['directness'] not in DIRS: err.append(f'{i}: directness {a["directness"]}')
     if 'assignmentPolicy' in a and a['assignmentPolicy'] not in POLS: err.append(f'{i}: assignmentPolicy {a["assignmentPolicy"]}')
+    if 'relation' in a and a['relation'] not in RELS: err.append(f'{i}: relation {a["relation"]}')
     if 'reviewStatus' in a and a['reviewStatus'] not in STATS: err.append(f'{i}: reviewStatus {a["reviewStatus"]}')
     for v in a.get('verseAnchors') or []:
       if not all(isinstance(v.get(k),int) for k in ('book','chapter','fromVerse','toVerse')): err.append(f'{i}: verseAnchors 숫자 아님')
@@ -50,4 +52,6 @@ def app_fields(e):
   if e.get('verseAnchors'): o['va']=[[v['book'],v['chapter'],v['fromVerse'],v['toVerse']] for v in e['verseAnchors']]
   if e.get('blockedUses'): o['bu']=[[b['book'],b.get('chapterFrom',1),b.get('chapterTo',999)] for b in e['blockedUses']]
   if e.get('approvedUses'): o['au']=e['approvedUses']
+  if e.get('relation'): o['rl']=e['relation']
+  if e.get('eraLock'): o['er']=e['eraLock']
   return o

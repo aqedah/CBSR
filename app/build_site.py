@@ -118,7 +118,7 @@ _perr=_pp.validate(_POL,set(_PMR));
 if _perr: print('그림 정책 오류:',_perr[:5])
 for _p in _PH: _p.update(_pp.app_fields(_pp.effective(_PMR.get(_p['id'],_p),_POL)))
 _PH=[_p for _p in _PH if _p['rs'] not in ('hold','out')]  # 보류·제외는 자동·지정·고정 어느 길로도 앱에 나오지 않음
-data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role','tm','ak','ap','rs','va','bu','au')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
+data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role','tm','ak','ap','rs','va','bu','au','rl','er')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
 _SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
 _SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}
 data+='const STORYC_RJ='+J(_SRJ)+';\n'

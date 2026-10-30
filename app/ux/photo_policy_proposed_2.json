@@ -1,0 +1,307 @@
+{
+ "schemaVersion": 1,
+ "status": "proposal-not-applied",
+ "note": "Claude 제안(그림을 직접 보고 작성). GPT·목사님 검토 뒤 photo_policy.json으로 옮김. scope_s=True는 photos_master의 scope를 s로 바꾸자는 제안",
+ "assets": {
+  "g38_03": {
+   "scope_s": true,
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "욥 38:1 '폭풍우 가운데서' 여호와의 말씀(신현). 다른 본문의 배경으로 쓰지 않음",
+   "refs": "욥 38–40"
+  },
+  "g38_04": {
+   "scope_s": true,
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "시 1:3·렘 17:8 직유",
+   "refs": "시 1, 렘 17"
+  },
+  "g38_06": {
+   "scope_s": true,
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "시 42:1 직유",
+   "refs": "시 42"
+  },
+  "g38_11": {
+   "scope_s": true,
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D3",
+   "assignmentPolicy": "narrow",
+   "note": "잠 4·시 1의 두 길 비유",
+   "refs": "잠 4, 시 1"
+  },
+  "g38_12": {
+   "scope_s": true,
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "전 1:5–7",
+   "refs": "전 1"
+  },
+  "g38_15": {
+   "scope_s": true,
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "아 2:11–13, 마 24:32",
+   "refs": "아 2"
+  },
+  "g46_01": {
+   "assetKind": "background",
+   "relation": "object-place",
+   "directness": "D3",
+   "assignmentPolicy": "broad",
+   "eraLock": [
+    9
+   ],
+   "note": "갈릴리 호수라는 특정 장소. 복음서 시대·'갈릴리/바다/호수' 낱말이 있을 때만"
+  },
+  "g27_14": {
+   "assetKind": "object",
+   "relation": "object-place",
+   "directness": "D3",
+   "assignmentPolicy": "narrow",
+   "note": "성벽 재건(느 2–6·스). '성벽/중건' 낱말이 있을 때만"
+  },
+  "g02_03": {
+   "assetKind": "background",
+   "relation": "ambient",
+   "directness": "D3",
+   "assignmentPolicy": "broad",
+   "note": "목자·양 떼가 실제로 나오거나 목자 비유가 있는 카드에서만(낱말: 양, 목자, 양 떼)"
+  },
+  "g21_10": {
+   "assetKind": "object",
+   "relation": "ambient",
+   "directness": "D3",
+   "assignmentPolicy": "broad",
+   "note": "'기록/편지/쓰' 낱말이 있을 때만. 서신서라는 이유만으로 쓰지 않음"
+  },
+  "g19_09": {
+   "assetKind": "background",
+   "relation": "ambient",
+   "directness": "D4",
+   "assignmentPolicy": "free-bg",
+   "note": "그림 속 사람·양이 아주 작아 풍경으로 봄"
+  },
+  "g34_12": {
+   "scope_s": true,
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "새 성전 기초 앞에서 우는 노인과 기뻐하는 무리(스 3:10–13)로 보임. 범용이면 안 됨",
+   "refs": "스 3"
+  },
+  "g34_07": {
+   "assetKind": "scene",
+   "relation": "ambient",
+   "directness": "D3",
+   "assignmentPolicy": "broad",
+   "eraLock": [
+    10
+   ],
+   "note": "그리스·로마식 투구로 보임. 구약 왕궁 문지기로 쓰면 시대 어긋남"
+  },
+  "g07_04": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D3",
+   "assignmentPolicy": "narrow",
+   "note": "사슬에 묶인 포로 행렬. 포로·사로잡힘 본문에서만"
+  },
+  "g32_06": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "고전 9:24·빌 3:14·히 12:1의 경주 비유. 계 13 '땅에서 올라온 짐승' 카드에 쓰인 것은 오배정"
+  },
+  "g32_14": {
+   "assetKind": "scene",
+   "relation": "ambient",
+   "directness": "D3",
+   "assignmentPolicy": "narrow",
+   "note": "안수(행 6:6, 13:3, 딤전 4:14). '안수' 낱말이 있을 때만"
+  },
+  "g46_15": {
+   "assetKind": "scene",
+   "relation": "ambient",
+   "directness": "D3",
+   "assignmentPolicy": "narrow",
+   "note": "아들 머리에 손을 얹는 축복(창 27, 48). '축복' 낱말이 있을 때만"
+  },
+  "g47_08": {
+   "assetKind": "scene",
+   "relation": "ambient",
+   "directness": "D3",
+   "assignmentPolicy": "narrow",
+   "note": "성벽 위 양각 나팔. '나팔' 낱말이 있을 때만"
+  },
+  "g16_07": {
+   "assetKind": "scene",
+   "relation": "ambient",
+   "directness": "D3",
+   "assignmentPolicy": "narrow",
+   "note": "성벽 위 봉화. '봉화/불을 들' 낱말이 있을 때만"
+  },
+  "g14_08": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "출 16 만나 사건. 상징이 아니라 사건"
+  },
+  "g21_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "출 13:21 구름 기둥. 사건"
+  },
+  "g20_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "마 4·막 1·눅 4 광야 시험. 사건"
+  },
+  "g12_03": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "창 4 가인과 아벨의 제물"
+  },
+  "g11_15": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "창 8:20–9:17 제단과 무지개"
+  },
+  "g21_15": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "창 8–9 (둘째 그림)"
+  },
+  "g21_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "출 19:18 연기 덮인 시내 산"
+  },
+  "g13_05": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "창 41 바로의 꿈 속 소(꿈의 내용)"
+  },
+  "g13_01": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "창 37:7 요셉의 꿈(곡식 단)"
+  },
+  "g16_12": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "왕하 2:11 불말과 불병거(엘리야 승천). 왕하 6:17은 열린 눈으로 본 것"
+  },
+  "g08_06": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "시 42:1 직유(g38_06과 같은 계열)"
+  },
+  "g08_08": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "시 23:4 은유. 요 10 선한 목자 비유에도 가능"
+  },
+  "g08_12": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "마 7:24–27 비유"
+  },
+  "g10_15": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "겔 47·계 22 환상의 강가 나무"
+  },
+  "g33_04": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "계 4:6·15:2 환상"
+  },
+  "g33_11": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "계 6:2·19:11 환상"
+  },
+  "g33_12": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "계 21:21 환상"
+  },
+  "g38_08": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "note": "잠 1:20–21 지혜의 의인화"
+  },
+  "g43_05": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "고후 2:14 개선 행렬 은유. 바울이 행렬에 있었던 사건 아님"
+  },
+  "g45_01": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "strict",
+   "note": "엡 2:14 막힌 담 은유"
+  },
+  "g48_04": {
+   "assetKind": "scene",
+   "relation": "illustrative",
+   "directness": "D3",
+   "assignmentPolicy": "manual-only",
+   "note": "계 1:11. 전령은 본문에 없는 연출 → 관리자가 고를 때만"
+  }
+ }
+}
