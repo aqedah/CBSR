@@ -472,7 +472,7 @@ html.v2 #dateLine,html.v2 #whereLine,html.v2 .top .weeknav,html.v2 .top .strip,h
 .rgwrap{margin:0 -16px -14px;padding:0 0 4px;border-bottom:0;min-width:0;max-width:100vw;overflow:hidden}
 .rghead{display:flex;align-items:baseline;gap:8px;padding:0 16px 8px}.rghead b{font:700 20px var(--f-disp,serif);white-space:nowrap}.rghead span{color:var(--muted);font-size:14px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rgtoday{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font-size:12.5px;color:var(--accent)}
-.rgcal{border:0;background:none;color:var(--muted);padding:4px;align-self:center}
+.rgcal{border:0;background:none;color:var(--muted);padding:4px;align-self:center}@media (max-width:380px){.rgtoday{padding:0 8px}.rgmiss .mt{display:none}#hdx .rgcal{padding:3px}}
 .rgrow{display:flex;align-items:center}.rgnav{flex:none;width:26px;height:56px;border:0;background:none;color:var(--muted);font-size:22px}
 .rgs{display:flex;gap:4px;overflow-x:auto;width:100%;max-width:100vw;box-sizing:border-box;padding:4px 16px 2px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.rgs::-webkit-scrollbar{display:none}.rg{flex:none;width:min(22vw,100px);scroll-snap-align:center}
 .rg{border:0;background:none;padding:0;display:grid;justify-items:center;gap:3px;color:var(--ink);cursor:pointer}.rg-x{visibility:hidden}
@@ -977,6 +977,15 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .sunchips{display:flex;flex-wrap:wrap;gap:6px;margin:0}.sunchips span{background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:5px 12px;font-weight:700;font-size:14px}.sunchips small{opacity:.7}
 .sunkv{display:grid;gap:8px;margin-top:8px}.sunkv button{text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 12px;font:inherit;color:var(--ink);cursor:pointer}.sunkv button.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset;background:var(--accent-soft)}.sunkv q{display:block;font-family:var(--f-serif,serif);font-size:15px;line-height:1.6;quotes:none}.sunkv small{display:block;margin-top:4px;color:var(--accent);font-weight:700;font-size:12.5px}.sunh3{margin:0 0 6px;font:700 17px var(--f-serif,serif)}
 .snudge{position:absolute;left:12px;right:12px;top:calc(54px + env(safe-area-inset-top,0px));z-index:30;border:0;border-radius:12px;background:rgba(255,255,255,.92);color:#1d2622;font:13px var(--f-ui);padding:8px 12px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}.snudge b{color:var(--accent,#2c5c52)}
+.bmt2{position:fixed;inset:0;z-index:9960;background:#1b1f1d;overflow:hidden;color:#fff}.bmt2 .bmtmap{position:absolute;inset:0}
+.bmtbars{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;right:10px;display:flex;gap:3px;z-index:1000}.bmtbars span{flex:1;height:3px;border-radius:2px;background:rgba(0,0,0,.25);overflow:hidden}.bmtbars i{display:block;height:100%;width:0;background:#fff;box-shadow:0 0 2px rgba(0,0,0,.5)}
+.bmttop{position:absolute;top:calc(env(safe-area-inset-top,0px) + 18px);left:12px;right:6px;display:flex;align-items:center;gap:6px;z-index:1000}.bmttop b{flex:1;font-size:15px;color:#1d2622;background:rgba(255,255,255,.88);border-radius:99px;padding:5px 12px;justify-self:start;max-width:max-content;box-shadow:0 1px 4px rgba(0,0,0,.2)}.bmtic{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#1d2622;font-size:15px;box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer}
+.bmt2 .bmtp{position:absolute;left:0;right:0;bottom:0;z-index:1000;padding:46px 18px calc(18px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,rgba(16,20,18,.92) 62%,rgba(16,20,18,0));pointer-events:none}.bmt2 .bmtp button{pointer-events:auto}
+.bmt2 .bmtk{margin:0;font-size:12.5px;color:#e8d6a8}.bmt2 .bmth{margin:3px 0 5px;font:700 21px var(--f-serif,serif);color:#fff}.bmt2 .bmtn{margin:0;font-size:14.5px;line-height:1.55;color:#eef0ec}
+.bmt2 .bmtv{margin:9px 0 0;padding:8px 12px;border-left:3px solid #e0a526;background:rgba(255,255,255,.1);border-radius:0 10px 10px 0;font-family:var(--f-serif,serif);font-size:15px;line-height:1.6;color:#fff;max-height:8em;overflow:auto}.bmt2 .bmtv small{display:block;margin-top:2px;color:#e8d6a8;font:700 12px var(--f-ui)}
+.bmtend{display:flex;gap:8px;margin-top:12px}.bmtend .btn{flex:1}.bmthint{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:999;margin:0;text-align:center;font-size:11.5px;color:#1d2622;text-shadow:0 0 4px #fff;animation:bmthint 5s forwards;pointer-events:none}@keyframes bmthint{0%,70%{opacity:1}100%{opacity:0}}
+.bmt2.paused .bmtbars{opacity:.6}.bmt2 .leaflet-control-attribution{display:none}
+.map2f{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:1200;background:rgba(0,0,0,.7);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}.map2f.on{opacity:1}
 .bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
 .bmbig{display:flex;flex-direction:column;gap:6px}.bmbr{background:var(--card);border:1px solid var(--line);border-radius:14px}.bmbr.on{border-color:var(--acc)}.bmbh,.bmrh{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}.bmbh b,.bmrh b{display:block;font-size:15px}.bmbh small,.bmrh small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
@@ -2018,7 +2027,7 @@ function renderHead(){
   document.getElementById("planName").textContent=PI.name+(TR!=="krv"?" · "+TR_INFO[TR].name:"");
   if(window.CBSR_V2){ const bl=document.getElementById("brandL"), hx=document.getElementById("hdx"); const isT=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d, MISS=TRY?[]:missedDays();
     if(bl) bl.innerHTML=`<b class="v2d">${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><small class="v2p">${esc(PI.name)}</small><span id="planName" hidden></span>`;
-    if(hx) hx.innerHTML=`${MISS.length?`<button class="rgmiss" id="rgMiss" aria-label="읽지 않은 날 ${MISS.length}일 보기"><span class="mt">안 읽은 날 </span>${MISS.length}</button>`:""}${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
+    if(hx) hx.innerHTML=`${MISS.length?`<button class="rgmiss" id="rgMiss" aria-label="읽지 않은 날 ${MISS.length}일 보기"><span class="mt">안 읽은 날 </span>${MISS.length}</button>`:""}${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgMap" aria-label="성경 지도"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3.5 6.5 9 4l6 2.5 5.5-2.5v13.5L15 20l-6-2.5-5.5 2.5z"/><path d="M9 4v13.5M15 6.5V20"/></svg></button><button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
   document.querySelectorAll(".bnav .tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
 }
 
@@ -4233,13 +4242,15 @@ function recAlbum(){ const L=Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q
   return {n:L.length,html:tabs+`<div class="ralb">${cards}</div>`}; }
 /* 기록 탭 v4(GPT 간소화 지시 2026-10-30): 첫 화면은 '얼마나 읽었나 · 무슨 말씀을 붙잡았나'만.
    책장·돌·월별 앨범·날짜별 기록·교회·설정은 한 줄 진입점 → 상세 화면(view.recD). 데이터·저장 구조는 그대로 */
-function recBack(){ if(!view.recD) return; view.recD=null; render(); window.scrollTo({top:0}); }
-const recBackOv=fromPop=>{ if(fromPop===true){ view.recD=null; render(); window.scrollTo({top:0}); } };
+function recBack(){ if(!view.recD) return; if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); }
+/* 성경 지도를 다른 탭에서 열었으면(위쪽 지도 단추·오늘의 여정·지도 도전) 닫을 때 그 자리로 돌아감 */
+function bmReturn(){ const f=view.bmFrom; if(!f) return false; view.bmFrom=null; view.recD=f.recD||null; view.tab=f.tab; render(); const y=f.y||0; [60,250,500].forEach(t=>setTimeout(()=>{ if(Math.abs(window.scrollY-y)>40) window.scrollTo({top:y}); },t)); return true; }
+const recBackOv=fromPop=>{ if(fromPop===true){ if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); } };
 function recGo(d){ view.recD=d; if(window.CBSR_V2) ovOpen(recBackOv); render(); window.scrollTo({top:0}); }
 function recCards(){ return Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q.kv).map(([k,q])=>{ const [w,d]=k.split("-").map(Number); if(!dayPlan(w,d)) return null; const v=String(q.kv).split(":").map(Number); if(v.length!==3) return null; const t=vtxt(v); if(!t) return null; return {k,w,d,q,v,t,dt:dateOf(w,d),at:String(q.doneAt||"")}; }).filter(Boolean).sort((a,b)=>b.at.localeCompare(a.at)||b.dt-a.dt); }
 function lastReadBook(){ /* 일정에서 가장 앞선 읽은 날의 책(뒤늦게 완료한 지난 날이 '지금 읽는 책'이 되지 않게) */ let best=null; for(const k in mem.done){ const [w,d]=k.split("-").map(Number); const p=dayPlan(w,d); if(!p) continue; const o=dayNo(w,d); if(!best||o>best.o) best={o,b:p.ch[p.ch.length-1][0]}; } return best?PLAN.full[best.b-1]:""; }
 const recRow=(go,t,sub)=>`<button class="rrow" data-recgo="${go}"><span><b>${t}</b><small>${sub}</small></span><i aria-hidden="true">›</i></button>`;
-function recDetail(D,secs,byLab,n,sch){ const head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="기록으로 돌아가기">‹ 기록</button><h2>${t}</h2></div>`;
+function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">‹ ${back?"돌아가기":"기록"}</button><h2>${t}</h2></div>`;
   if(D==="road"){ const {tot,got}=bookProgress(); return head("통독의 길")+`<section class="sec rsec">${recRoad(n,null)}<div class="rstat"><div><b>${n.toLocaleString()}</b><span>읽은 장</span></div><div><b>${Object.keys(mem.done).length}</b><span>읽은 날</span></div><div><b>${readStreak()}일</b><span>이어 읽기</span></div></div><p class="lead rnote">읽은 장은 성경 1,189장 가운데 '오늘 통독 완료'를 누른 날의 본문 장 수입니다. 같은 날을 다시 눌러도 한 번만 셉니다.</p></section>`+recRow("shelf","성경 책장","책마다 읽은 장 보기"); }
   if(D==="shelf"){ const {tot,got}=bookProgress(), SH=recShelf();
     const grp=[["율법",1,5],["역사",6,17],["시가",18,22],["선지서",23,39],["복음서·행전",40,44],["서신·계시",45,66]];
@@ -4316,7 +4327,7 @@ function bmDetailHTML(){ const seg=view.bmSeg||"land"; let h=`<div class="rseg b
       return `<div class="bmr${on?" on":""}${done?" done":""}" id="bmr${i}"><button class="bmrh" data-bmr="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${done?"✓ 읽음":""}</em></button>${on?`<div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${D?`<button class="btn small ghost" data-bmday="${D[0]}-${D[1]}">그날 본문 ›</button>`:""}</div>`:""}</div>`; }).join("")}</div>`; }
   return h+`</div>`; }
 function bmInit(){ const el=document.getElementById("bmMap"); if(BM_MAP){ try{ BM_MAP.remove(); }catch(e){} BM_MAP=null; } if(!el||!window.L) return; const seg=view.bmSeg||"land";
-  const map=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); BM_MAP=map;
+  const map=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false,zoomSnap:.25,dragging:!mapTouch()}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); BM_MAP=map; mapTwoFinger(map);
   L.control.zoom({position:"topright",zoomInTitle:"확대",zoomOutTitle:"축소"}).addTo(map); /* PC에서는 손가락으로 넓힐 수 없으므로 +·− 단추 */
   const lab=(ll,t,cls)=>L.marker(ll,{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl bml${cls?" "+cls:""}">${esc(t)}</span>`,iconSize:[0,0],iconAnchor:[-7,9]})}).addTo(map);
   if(seg==="land"){ const B=bmLit()||{first:new Map(),fresh:[]}, fresh=new Set(B.fresh), pts=[];
@@ -4350,7 +4361,7 @@ function bmPlace(nm){ const B=bmLit(), k=B&&B.first.get(nm), g=PLACE.get(nm); le
   const info=typeof PLACEINFO!=="undefined"&&PLACEINFO[nm]?PLACEINFO[nm]:null; let desc=""; try{ if(info) desc=placeEntry(nm,0)[1]; }catch(e){}
   sheet(nm,`${h}${desc?`<p class="src" style="margin-top:12px">${esc(desc)}</p>`:""}${g&&g[4]?`<p class="src plest">위치는 추정입니다.</p>`:""}`);
   const b=document.getElementById("bmGoDay"); if(b) b.onclick=()=>{ const [w,d]=k.split("-").map(Number); const x=document.getElementById("sheetClose"); if(x) x.click(); setTimeout(()=>{ bmLeave(); go(w,d); },60); }; }
-function bmLeave(){ if(view.recD){ ovDone(recBackOv); view.recD=null; } }
+function bmLeave(){ view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } }
 function bmBigSel(i){ view.bmBig=view.bmBig===i?null:i; render(); }
 function bmRouteSel(i){ view.bmSel=view.bmSel===i?null:i; render(); const r=document.getElementById("bmr"+i); if(r&&view.bmSel===i) r.scrollIntoView({block:"nearest"}); }
 /* 걷기 재생: 스토리 지도와 같은 연출을 한 화면에 */
@@ -4362,28 +4373,34 @@ function bmPlay(i){ const r=ROUTES_B[i]; if(!r) return; const el=document.create
     const M={route:r.p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:r.n,b:r.b}; M.ul=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#fff",weight:10,opacity:.85,interactive:false}).addTo(map); M.rl=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#e2603f",weight:5,interactive:false}).addTo(map);
     const D=bmRouteDay(r)||[1,0]; try{ mapActors(map,M,{h:""},D[0],D[1]); }catch(e){ console.warn(e); } },60); }
 /* 다른 탭에서 성경 지도 열기: 오늘 탭 '오늘의 여정', 도전 '이 여정 전체 보기' */
-function bmOpen(seg,o){ o=o||{}; view.bmSeg=seg; if(o.era!=null) view.bmEra=o.era; view.bmSel=o.sel!=null?o.sel:null; if(o.fly) view.bmFly=o.fly; if(view.tab!=="record"){ view.tab="record"; } view.recD=null; recGo("map"); }
+function bmOpen(seg,o){ o=o||{}; if(view.recD!=="map") view.bmFrom={tab:view.tab,recD:view.recD||null,y:window.scrollY}; view.bmSeg=seg; if(o.era!=null) view.bmEra=o.era; view.bmSel=o.sel!=null?o.sel:null; if(o.fly) view.bmFly=o.fly; if(view.tab!=="record"){ view.tab="record"; } view.recD=null; recGo("map"); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.
    데이터: ux/big_tours.py → BM_TOURS. 단계(step): t 제목, s 때·곳, n 설명, p 지점들(배면 sea), land0/then 배 앞뒤의 뭍길, pre 움직이기 전 말씀, r 도착 말씀, z 확대, fx part|jordan, storm, stay(머묾), dash(방황), who/as_ 주인공 바뀜, add 동행 합류 ===== */
 function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if(!T||!window.L) return;
-  const el=document.createElement("div"); el.className="rgm bmt";
-  el.innerHTML=`<div class="rgmtop"><b>${esc(T.n)}</b><button class="gpx" aria-label="닫기">✕</button></div><div class="bmtmap"></div>
-   <div class="bmtp"><div class="bmtbar"><i></i></div><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><blockquote class="bmtv"></blockquote>
-   <div class="bmtc"><button class="btn small ghost" data-t="prev" aria-label="이전 단계">‹ 이전</button><button class="btn small" data-t="play">▶ 시작</button><button class="btn small ghost" data-t="next" aria-label="다음 단계">다음 ›</button></div></div>`;
+  /* 스토리 QT처럼(목사님 2026-10-30): 열면 바로 시작, 위의 막대가 차오르면 다음 장면으로. 왼쪽을 누르면 이전 · 오른쪽은 다음 · 길게 누르면 멈춤. 지도는 두 손가락으로 */
+  const el=document.createElement("div"); el.className="bmt2"; const S=T.steps;
+  el.innerHTML=`<div class="bmtmap"></div><div class="bmtbars">${S.map(()=>`<span><i></i></span>`).join("")}</div>
+   <div class="bmttop"><b>${esc(T.n)}</b><button class="bmtic" data-t="pause" aria-label="멈춤">❚❚</button><button class="bmtic" data-t="x" aria-label="닫기">✕</button></div>
+   <div class="bmtp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><blockquote class="bmtv"></blockquote><div class="bmtend" hidden><button class="btn" data-t="again">↺ 처음부터</button><button class="btn ghost" data-t="x">닫기</button></div></div>
+   <p class="bmthint">왼쪽을 누르면 이전 · 오른쪽은 다음 · 길게 누르면 멈춤 · 지도는 두 손가락으로</p>`;
   document.body.appendChild(el); document.body.style.overflow="hidden";
-  const S=T.steps, LL=q=>[q[1],q[2]], legs=st=>[...(st.land0||[]),...(st.p||[]),...(st.then||[])];
+  const LL=q=>[q[1],q[2]], legs=st=>[...(st.land0||[]),...(st.p||[]),...(st.then||[])];
   const starts=[]; { let c=T.start; S.forEach(st=>{ starts.push(c); const g=legs(st); if(g.length) c=g[g.length-1]; }); }
-  let map=null, idx=-1, playing=false, timer=null, tok=0, busy=false, main=null, fol=[], trails=null, cur=null, labs=null, shown=new Set();
+  let map=null, idx=-1, paused=false, timer=null, tok=0, main=null, fol=[], trails=null, cur=null, labs=null, shown=new Set(), due=0, left=0;
   const $=s=>el.querySelector(s), wait=ms=>new Promise(r=>setTimeout(r,ms)), alive=()=>document.body.contains(el);
   const close=pop=>{ tok++; clearTimeout(timer); if(pop!==true) ovDone(close); try{ map&&map.remove(); }catch(e){} el.remove(); document.body.style.overflow=""; };
-  ovOpen(close); $(".gpx").onclick=()=>close();
+  ovOpen(close);
   const verse=r=>{ const t=r&&vRef(r); return t?`${esc(t)}<small>${esc(vLab(r))}</small>`:""; };
   const who=i=>{ let id=T.as_||"man", nm=T.who; for(let k=0;k<=i&&k<S.length;k++){ if(S[k].who){ nm=S[k].who; id=S[k].as_||id; } } return [id,nm]; };
   const comps=i=>{ const C=(T.wth||[]).slice(); for(let k=0;k<=i&&k<S.length;k++) if(S[k].add) C.push(S[k].add); return C; };
-  const playBtn=()=>{ const b=$('[data-t="play"]'); b.textContent=idx<0?"▶ 시작":idx>=S.length?"↺ 처음부터":playing?"❚❚ 멈춤":"▶ 계속"; };
-  function panel(i,ph){ const st=S[i]; $(".bmtbar i").style.width=((i+1)/S.length*100).toFixed(1)+"%"; $(".bmtk").textContent=`${i+1} / ${S.length}${st.s?" · "+st.s:""}`;
-    $(".bmth").textContent=st.t; $(".bmtn").textContent=st.n||""; const v=verse(ph==="pre"?st.pre:st.r); $(".bmtv").innerHTML=v; $(".bmtv").hidden=!v; playBtn(); }
+  /* 막대: 지난 장면은 가득, 지금 장면은 ms 동안 차오름 */
+  const bars=()=>[...el.querySelectorAll(".bmtbars i")];
+  function barsAt(i){ bars().forEach((b,k)=>{ b.style.transition="none"; b.style.width=k<i?"100%":"0%"; }); }
+  function barRun(i,ms){ const b=bars()[i]; if(!b) return; b.style.transition="none"; b.style.width="0%"; void b.offsetWidth; b.style.transition=`width ${ms}ms linear`; b.style.width="100%"; }
+  function barFreeze(i){ const b=bars()[i]; if(!b) return; const w=getComputedStyle(b).width; b.style.transition="none"; b.style.width=w; }
+  function barGo(i,ms){ const b=bars()[i]; if(!b) return; void b.offsetWidth; b.style.transition=`width ${ms}ms linear`; b.style.width="100%"; }
+  function panel(i,ph){ const st=S[i]; $(".bmtk").textContent=`${i+1} / ${S.length}${st.s?" · "+st.s:""}`; $(".bmth").textContent=st.t; $(".bmtn").textContent=st.n||""; const v=verse(ph==="pre"?st.pre:st.r); $(".bmtv").innerHTML=v; $(".bmtv").hidden=!v; $(".bmtend").hidden=true; }
   function actors(i,at,sea){ if(main) map.removeLayer(main); fol.forEach(f=>map.removeLayer(f.m)); fol=[]; const [id,nm]=who(i);
     main=mvMarker(map,sea?"boat":id,{at,w:sea?40:44,name:sea?"":nm,z:id==="jesus"?3000:2000});
     if(!sea){ comps(i).forEach(c=>fol.push({m:mvMarker(map,c[1],{at,w:30,name:c[0],z:400})})); if(T.grp) ["man","woman","youth","woman2","elder"].forEach((a,k)=>fol.push({m:mvMarker(map,a,{at,w:22,name:k===0?T.grp:"",z:300})})); } }
@@ -4391,47 +4408,66 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
   function drawDone(i){ trails.clearLayers(); labs.clearLayers(); shown=new Set(); label(T.start);
     for(let k=0;k<i;k++){ const st=S[k], g=[starts[k],...legs(st)]; if(g.length>1) L.polyline(g.map(LL),{color:"#c0392b",weight:4,opacity:.85,dashArray:st.dash?"6 8":null,interactive:false}).addTo(trails); legs(st).forEach(label); }
     cur=L.polyline([],{color:"#c0392b",weight:5,dashArray:S[i]&&S[i].dash?"6 8":null,interactive:false}).addTo(trails); }
-  const fly=(pts,z,my)=>new Promise(res=>{ let d=false; const f=()=>{ if(!d){ d=true; res(); } }; map.once("moveend",f);
-    if(pts.length<2) map.flyTo(pts[0],z,{duration:1.3}); else map.flyToBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[60,40],maxZoom:z,duration:1.4}); setTimeout(f,2300); });
-  /* 걷기(또는 배): 길을 따라 움직이고, 화면 밖으로 나가려 하면 카메라가 따라감 */
-  function walk(pts,my,dash){ return new Promise(res=>{ const P=pts.map(p=>map.latLngToLayerPoint(p)), seg=[]; let tot=0; for(let k=1;k<P.length;k++){ const l=P[k].distanceTo(P[k-1]); seg.push(l); tot+=l; }
-      if(!tot) return res(); const dur=Math.max(1700,Math.min(8000,tot*11))*(dash?1.35:1), t0=performance.now(), base=cur.getLatLngs().slice(); let panning=false;
+  const fly=(pts,z)=>new Promise(res=>{ let d=false; const f=()=>{ if(!d){ d=true; res(); } }; map.once("moveend",f); const pad={paddingTopLeft:[40,90],paddingBottomRight:[50,Math.round(el.clientHeight*.38)],maxZoom:z,duration:1.4};
+    if(pts.length<2){ const c=map.project(pts[0],z); c.y+=el.clientHeight*.16; map.flyTo(map.unproject(c,z),z,{duration:1.3}); } else map.flyToBounds(L.latLngBounds(pts),pad); setTimeout(f,2300); });
+  const walkMs=(pts,dash)=>{ let t=0; for(let k=1;k<pts.length;k++) t+=map.latLngToLayerPoint(pts[k]).distanceTo(map.latLngToLayerPoint(pts[k-1])); return Math.max(1700,Math.min(8000,t*11))*(dash?1.35:1); };
+  function walk(pts,my,dur){ return new Promise(res=>{ const P=pts.map(p=>map.latLngToLayerPoint(p)), seg=[]; let tot=0; for(let k=1;k<P.length;k++){ const l=P[k].distanceTo(P[k-1]); seg.push(l); tot+=l; }
+      if(!tot) return res(); const t0=performance.now(), base=cur.getLatLngs().slice(); let panning=false;
       const at=dd=>{ dd=Math.max(0,dd); let i=0; while(i<seg.length-1&&dd>seg[i]){ dd-=seg[i]; i++; } const a=P[i], b=P[i+1]||P[i], f=seg[i]?Math.min(1,dd/seg[i]):0; return [L.point(a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f),i,b.x<a.x-.5]; };
       const ch=m=>m.getElement()&&m.getElement().querySelector(".chm"); [main,...fol.map(f=>f.m)].forEach(m=>{ const c=ch(m); if(c) c.classList.add("walk"); });
-      const step=now=>{ if(my!==tok||!alive()) return res(); const k=Math.min(1,(now-t0)/dur), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2, d=e*tot, [pt,i,left]=at(d), here=map.layerPointToLatLng(pt);
-        main.setLatLng(here); const c=ch(main); if(c) c.classList.toggle("flip",left);
-        fol.forEach((f,j)=>{ const [q,,lf]=at(d-(j+1)*15); f.m.setLatLng(map.layerPointToLatLng(q)); const c2=ch(f.m); if(c2) c2.classList.toggle("flip",lf); });
+      const step=now=>{ if(my!==tok||!alive()) return res(); const k=Math.min(1,(now-t0)/dur), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2, d=e*tot, [pt,i,lf]=at(d), here=map.layerPointToLatLng(pt);
+        main.setLatLng(here); const c=ch(main); if(c) c.classList.toggle("flip",lf);
+        fol.forEach((f,j)=>{ const [q,,l2]=at(d-(j+1)*15); f.m.setLatLng(map.layerPointToLatLng(q)); const c2=ch(f.m); if(c2) c2.classList.toggle("flip",l2); });
         cur.setLatLngs(base.concat(pts.slice(0,i+1),[here])); for(let j=1;j<=i;j++) label(pts[j]._q||[]);
-        const cp=map.latLngToContainerPoint(here), sz=map.getSize(); if(!panning&&(cp.x<sz.x*.18||cp.x>sz.x*.82||cp.y<sz.y*.18||cp.y>sz.y*.82)){ panning=true; map.panTo(here,{animate:true,duration:.9,easeLinearity:.4}); setTimeout(()=>panning=false,950); }
+        const cp=map.latLngToContainerPoint(here), sz=map.getSize(); if(!panning&&(cp.x<sz.x*.15||cp.x>sz.x*.85||cp.y<sz.y*.14||cp.y>sz.y*.58)){ panning=true; const c0=map.project(here); c0.y+=sz.y*.16; map.panTo(map.unproject(c0),{animate:true,duration:.9,easeLinearity:.4}); setTimeout(()=>panning=false,950); }
         if(k<1) requestAnimationFrame(step); else { cur.setLatLngs(base.concat(pts.slice(1))); [main,...fol.map(f=>f.m)].forEach(m=>{ const c3=ch(m); if(c3) c3.classList.remove("walk"); }); res(); } };
       requestAnimationFrame(step); }); }
-  const tag=(arr)=>arr.map(q=>{ const p=LL(q); p._q=q; return p; });
-  async function run(i){ const my=++tok; clearTimeout(timer); idx=i; busy=true; const st=S[i], fr=map.getContainer(); panel(i,st.pre?"pre":"go");
+  const tag=arr=>arr.map(q=>{ const p=LL(q); p._q=q; return p; });
+  const readMs=st=>{ const len=(vRef(st.r)||"").length+(st.n||"").length*.6; return Math.max(4200,Math.min(12000,2600+len*55)); };
+  function next(){ clearTimeout(timer); if(idx+1>=S.length) finish(); else run(idx+1); }
+  function prev(){ clearTimeout(timer); run(Math.max(0,idx<S.length?idx-1:S.length-1)); }
+  function arm(ms){ clearTimeout(timer); due=Date.now()+ms; left=ms; if(!paused){ const my=tok; timer=setTimeout(()=>{ if(my===tok) next(); },ms); } }
+  async function run(i){ const my=++tok; clearTimeout(timer); idx=i; const st=S[i], fr=map.getContainer(); panel(i,st.pre?"pre":"go"); barsAt(i); setPause(false);
     drawDone(i); actors(i,LL(starts[i]),!!(st.sea&&!st.land0)); fr.classList.toggle("mvstorm",!!st.storm);
-    const all=[starts[i],...legs(st)].map(LL); await fly(st.stay?[LL(starts[i])]:all,st.z||7.5,my); if(my!==tok||!alive()) return;
-    if(st.pre){ await wait(4200); if(my!==tok) return; }
+    const all=[starts[i],...legs(st)].map(LL); await fly(st.stay?[LL(starts[i])]:all,st.z||7.5); if(my!==tok||!alive()) return;
+    const groups=st.stay?[]:[[st.land0||[],false],[st.p||[],!!st.sea],[st.then||[],false]].filter(g=>g[0].length);
+    let from=starts[i]; const durs=groups.map(([g])=>{ const d=walkMs(tag([from,...g]),st.dash); from=g[g.length-1]; return d; });
+    const pre=st.pre?4200:0, fx=st.fx==="part"?1200:0, total=pre+fx+durs.reduce((a,b)=>a+b,0)+readMs(st); barRun(i,total); if(paused) barFreeze(i);
+    if(st.pre){ await wait(pre); if(my!==tok) return; }
     if(st.fx==="jordan") mvFx(map,"jordan",[(all[0][0]+all[all.length-1][0])/2,(all[0][1]+all[all.length-1][1])/2]);
-    if(!st.stay){ let from=starts[i]; const groups=[[st.land0||[],false],[st.p||[],!!st.sea],[st.then||[],false]];
-      for(const [g,sea] of groups){ if(!g.length) continue; actors(i,LL(from),sea); const pts=tag([from,...g]);
-        if(st.fx==="part"&&g===st.p){ const a=map.latLngToContainerPoint(pts[0]), b=map.latLngToContainerPoint(pts[pts.length-1]); mvFx(map,"part",[(pts[0][0]+pts[pts.length-1][0])/2,(pts[0][1]+pts[pts.length-1][1])/2],Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI-90,Math.hypot(b.x-a.x,b.y-a.y)); await wait(1200); if(my!==tok) return; }
-        await walk(pts,my,st.dash); if(my!==tok||!alive()) return; from=g[g.length-1]; }
-      if(st.sea&&!(st.then||[]).length) actors(i,LL(from),true); }
-    else if(st.fx!=="jordan"){ const c=main.getElement()&&main.getElement().querySelector(".chm"); if(c){ c.classList.add("popin"); } }
-    panel(i,"arr"); busy=false;
-    if(playing){ const len=(vRef(st.r)||"").length+(st.n||"").length*.6; timer=setTimeout(()=>{ if(my===tok) go(i+1); },Math.max(4200,Math.min(12000,2600+len*55))); } }
-  function finish(){ tok++; clearTimeout(timer); idx=S.length; playing=false; busy=false; map.getContainer().classList.remove("mvstorm"); drawDone(S.length); legs(S[S.length-1]).forEach(label);
-    const pts=[T.start,...S.flatMap(legs)].map(LL); map.flyToBounds(L.latLngBounds(pts),{padding:[30,30],duration:1.4});
-    $(".bmtbar i").style.width="100%"; $(".bmtk").textContent=T.sub||""; $(".bmth").textContent="여정을 마쳤습니다"; $(".bmtn").textContent=T.end||""; $(".bmtv").hidden=true; playBtn(); }
-  function go(i){ if(i>=S.length) return finish(); run(Math.max(0,i)); }
-  $('[data-t="play"]').onclick=()=>{ if(idx<0||idx>=S.length){ playing=true; go(0); return; } playing=!playing; playBtn(); if(playing&&!busy){ clearTimeout(timer); timer=setTimeout(()=>go(idx+1),500); } if(!playing) clearTimeout(timer); };
-  $('[data-t="next"]').onclick=()=>go(idx<0?0:idx+1);
-  $('[data-t="prev"]').onclick=()=>{ if(idx>0) go(idx>=S.length?S.length-1:idx-1); else if(idx===0) go(0); };
-  setTimeout(()=>{ if(!alive()) return; map=L.map($(".bmtmap"),{zoomControl:false,attributionControl:true,zoomSnap:.25,scrollWheelZoom:false}); map.attributionControl.setPrefix(false); mapBase(map,"natural");
-    L.control.zoom({position:"topright",zoomInTitle:"확대",zoomOutTitle:"축소"}).addTo(map);
+    from=starts[i]; for(let gi=0;gi<groups.length;gi++){ const [g,sea]=groups[gi]; actors(i,LL(from),sea); const pts=tag([from,...g]);
+      if(st.fx==="part"&&g===st.p){ const a=map.latLngToContainerPoint(pts[0]), b=map.latLngToContainerPoint(pts[pts.length-1]); mvFx(map,"part",[(pts[0][0]+pts[pts.length-1][0])/2,(pts[0][1]+pts[pts.length-1][1])/2],Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI-90,Math.hypot(b.x-a.x,b.y-a.y)); await wait(fx); if(my!==tok) return; }
+      await walk(pts,my,durs[gi]); if(my!==tok||!alive()) return; from=g[g.length-1]; }
+    if(st.sea&&!(st.then||[]).length&&groups.length) actors(i,LL(from),true);
+    if(st.stay){ const c=main.getElement()&&main.getElement().querySelector(".chm"); if(c) c.classList.add("popin"); }
+    panel(i,"arr"); arm(readMs(st)); }
+  function finish(){ tok++; clearTimeout(timer); idx=S.length; map.getContainer().classList.remove("mvstorm"); drawDone(S.length); legs(S[S.length-1]).forEach(label); bars().forEach(b=>{ b.style.transition="none"; b.style.width="100%"; });
+    const pts=[T.start,...S.flatMap(legs)].map(LL); map.flyToBounds(L.latLngBounds(pts),{paddingTopLeft:[30,90],paddingBottomRight:[30,Math.round(el.clientHeight*.36)],duration:1.4});
+    $(".bmtk").textContent=T.sub||""; $(".bmth").textContent="여정을 마쳤습니다"; $(".bmtn").textContent=T.end||""; $(".bmtv").hidden=true; $(".bmtend").hidden=false; }
+  function setPause(p){ paused=p; const b=$('[data-t="pause"]'); b.textContent=p?"▶":"❚❚"; b.setAttribute("aria-label",p?"계속":"멈춤"); el.classList.toggle("paused",p); }
+  function togglePause(){ if(idx<0||idx>=S.length) return; if(!paused){ setPause(true); clearTimeout(timer); left=Math.max(0,due-Date.now()); barFreeze(idx); }
+    else { setPause(false); if(due&&left>=0&&idx<S.length){ const my=tok; due=Date.now()+left; barGo(idx,left); timer=setTimeout(()=>{ if(my===tok) next(); },left); } } }
+  el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; e.stopPropagation(); const a=t.dataset.t; if(a==="x") close(); else if(a==="pause") togglePause(); else if(a==="again") run(0); });
+  setTimeout(()=>{ if(!alive()) return; const mapEl=$(".bmtmap"); map=L.map(mapEl,{zoomControl:false,attributionControl:true,zoomSnap:.25,scrollWheelZoom:false,dragging:!mapTouch(),tap:false}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); mapTwoFinger(map);
     const pts=[T.start,...S.flatMap(legs)].map(LL); L.polyline(pts,{color:"#5b5346",weight:2.5,opacity:.55,dashArray:"4 7",interactive:false}).addTo(map);
     trails=L.layerGroup().addTo(map); labs=L.layerGroup().addTo(map); cur=L.polyline([]).addTo(trails); label(T.start);
-    map.fitBounds(L.latLngBounds(pts),{padding:[30,30]}); actors(0,LL(T.start),false);
-    $(".bmtk").textContent=T.sub||""; $(".bmth").textContent=T.n; $(".bmtn").textContent=T.d||""; $(".bmtv").hidden=true; $(".bmtbar i").style.width="0"; playBtn(); },60); }
+    map.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[30,90],paddingBottomRight:[30,Math.round(el.clientHeight*.36)]}); actors(0,LL(T.start),false);
+    $(".bmtk").textContent=T.sub||""; $(".bmth").textContent=T.n; $(".bmtn").textContent=T.d||""; $(".bmtv").hidden=true;
+    /* 누르기: 왼쪽 30%는 이전, 나머지는 다음. 길게 누르면 멈춤(떼면 계속) */
+    let hold=null, held=false, x0=0, y0=0;
+    mapEl.addEventListener("pointerdown",e=>{ if(e.target.closest(".leaflet-control")) return; held=false; x0=e.clientX; y0=e.clientY; clearTimeout(hold); hold=setTimeout(()=>{ held=true; if(!paused) togglePause(); },420); });
+    mapEl.addEventListener("pointerup",e=>{ clearTimeout(hold); if(held){ held=false; if(paused) togglePause(); return; } if(Math.hypot(e.clientX-x0,e.clientY-y0)>10||mapEl.dataset.multi==="1") return; if(idx<0) return; if(e.clientX<el.clientWidth*.3) prev(); else if(idx<S.length) next(); });
+    mapEl.addEventListener("pointercancel",()=>clearTimeout(hold));
+    /* 여는 장면: 전체 길을 잠깐 보여 주고 바로 시작 */
+    barRun(0,0); const my=tok; setTimeout(()=>{ if(my===tok&&idx<0&&alive()) run(0); },3200); },60); }
+/* 휴대폰에서는 지도를 한 손가락으로 끌지 않고(화면 넘김·누르기와 겹치지 않게) 두 손가락으로 움직이고 키움 */
+const mapTouch=()=>!!(window.matchMedia&&matchMedia("(pointer:coarse)").matches);
+function mapTwoFinger(map){ if(!mapTouch()) return; const c=map.getContainer(); map.dragging&&map.dragging.disable(); map.touchZoom&&map.touchZoom.enable();
+  let tip=null; const show=()=>{ if(!tip){ tip=document.createElement("div"); tip.className="map2f"; tip.textContent="지도는 두 손가락으로 움직입니다"; c.appendChild(tip); } tip.classList.add("on"); clearTimeout(tip._t); tip._t=setTimeout(()=>tip.classList.remove("on"),1300); };
+  let n=0, moved=false, sx=0, sy=0;
+  c.addEventListener("touchstart",e=>{ n=e.touches.length; c.dataset.multi=n>1?"1":"0"; moved=false; if(n===1){ sx=e.touches[0].clientX; sy=e.touches[0].clientY; } },{passive:true});
+  c.addEventListener("touchmove",e=>{ if(e.touches.length===1&&!moved&&Math.hypot(e.touches[0].clientX-sx,e.touches[0].clientY-sy)>18){ moved=true; if(c.closest(".bmt2")) show(); } if(e.touches.length>1) c.dataset.multi="1"; },{passive:true});
+  c.addEventListener("touchend",e=>{ if(!e.touches.length) setTimeout(()=>{ c.dataset.multi="0"; },60); },{passive:true}); }
 window.CBSR_tour=bmTour;
 const BMT=()=>typeof BM_TOURS!=="undefined"?BM_TOURS:[];
 function bmTourBtns(bi){ return BMT().map((t,i)=>t.big===bi?`<button class="btn small" data-bmtour="${i}">▶ ${esc(t.n)} 따라가기</button>`:"").join(" "); }
@@ -5317,6 +5353,7 @@ function bindDayRing(){ const me=document.getElementById("rgMe"); if(me) me.oncl
     if(x>sc.scrollWidth-sc.clientWidth){ let sp=sc.querySelector(".rgpad"); if(!sp){ sp=document.createElement("span"); sp.className="rgpad"; sp.style.cssText="flex:none;height:1px"; sc.appendChild(sp); } sp.style.width=Math.ceil(x-(sc.scrollWidth-sc.clientWidth))+"px"; }
     sc.scrollLeft=x; }
   const cl=document.getElementById("rgCal"); if(cl) cl.onclick=openWeekPicker;
+  const mp=document.getElementById("rgMap"); if(mp) mp.onclick=()=>{ if(view.tab==="record"&&view.recD==="map"){ recBack(); return; } bmOpen(view.bmSeg||"land"); };
   const td=document.getElementById("rgToday"); if(td) td.onclick=()=>{ const t=view.tab; view.pre=false; view.revW=null; view.w=here.w; view.d=here.d; view.game=null; view.tab=t; render(); scrollTo({top:0}); }; }
 
 /* ===== V2 도전: 놀이판 + 한 번에 한 놀이(전체 화면) ===== */
