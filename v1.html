@@ -9110,7 +9110,9 @@ function routeMeta(name,b){ const k=rmBase(name); if((k==="빌립보 가이사�
 const vRef=r=>{ if(!r) return ""; let t=[]; for(let v=r[2];v<=(r[3]||r[2]);v++) t.push(vtxt([r[0],r[1],v])); return t.join(" "); };
 const vLab=r=>`${PLAN.abbr[r[0]-1]} ${r[1]}:${r[2]}${r[3]&&r[3]>r[2]?"–"+r[3]:""}`;
 function mvChar(name,as){ if(as) return as; const f=MV_NAME.find(x=>x[2]===name||x[0]===name); return f?f[1]:"man"; }
-function mvFx(map,kind,ll,rot,len){ const fr=map.getContainer(), p=map.latLngToContainerPoint(ll);
+function mvFx(map,kind,ll,rot,len){ let fr=map.getContainer(), p=map.latLngToContainerPoint(ll);
+  /* 갈라진 물(홍해)·멈춘 물(요단)은 지도 길 위, 인물 아래에 그립니다(목사님 2026-10-30: 물벽이 모세와 백성을 가림) */
+  if(kind==="part"||kind==="jordan"){ fr=map.getPane("mvfx")||map.createPane("mvfx"); fr.style.zIndex=450; fr.style.pointerEvents="none"; p=map.latLngToLayerPoint(ll); }
   if(kind==="light"){ const f=document.createElement("div"); f.className="mvflash"; f.style.left=p.x+"px"; f.style.top=(p.y-30)+"px"; fr.appendChild(f); requestAnimationFrame(()=>f.classList.add("on")); setTimeout(()=>f.remove(),1800); }
   if(kind==="jordan"){ /* 수 3:16: 위쪽에서 물이 멈춰 한 곳에 쌓이고, 아래로 흐르던 물은 끊어져 마른 바닥이 됨 */ const f=document.createElement("div"); f.className="mvjor"; f.style.left=p.x+"px"; f.style.top=p.y+"px"; f.innerHTML="<i></i><b></b>"; fr.appendChild(f); requestAnimationFrame(()=>f.classList.add("on")); setTimeout(()=>f.classList.add("off"),3400); setTimeout(()=>f.remove(),4200); }
   if(kind==="part"){ const f=document.createElement("div"); f.className="mvpart"; f.style.left=p.x+"px"; f.style.top=p.y+"px"; if(rot) f.style.transform=`rotate(${rot}deg)`; if(len) f.classList.add("long"), f.style.setProperty("--pl",Math.round(len*.8)+"px"); f.innerHTML="<i></i><i></i>"; fr.appendChild(f); requestAnimationFrame(()=>f.classList.add("on")); const T=len?6200:3000; setTimeout(()=>f.classList.add("off"),T); setTimeout(()=>f.remove(),T+800); } }
@@ -10054,7 +10056,7 @@ const BM_GOLD="#e0a526", BM_RED="#c0392b";
 function bmCardHTML(){ const B=bmLit(()=>{ if(view.tab==="record"&&!view.recD){ const y=scrollY; render(); scrollTo({top:y}); } });
   const n=B?B.first.size:0, fr=B?B.fresh.slice(0,2):[];
   const sub=!B?`읽은 본문의 지명을 모으는 중입니다…`:n?`지금까지 <b>${n}곳</b>을 지났습니다${fr.length?` · 최근 <b>${fr.map(esc).join("·")}</b>${B.fresh.length>2?` 등 ${B.fresh.length}곳`:""}이 새로 켜졌습니다`:""}`:`본문을 읽으면 그 날 나온 곳이 지도에 하나씩 켜집니다.`;
-  return `<section class="sec rcard"><div class="rhd"><b>내가 지나온 성경의 땅</b><button class="rmorelink" data-recgo="map">지도 열기 ›</button></div><button class="bmcard" data-recgo="map" aria-label="성경 지도 열기"><div class="bmmini" id="bmMini"></div></button><p class="rsub bmsub">${sub}</p></section>`; }
+  return `<section class="sec rcard"><div class="rhd"><b>성경 지도</b><button class="rmorelink" data-recgo="map">지도 열기 ›</button></div><button class="bmcard" data-recgo="map" aria-label="성경 지도 열기"><div class="bmmini" id="bmMini"></div></button><p class="rsub bmsub">${sub}</p></section>`; }
 function bmCardInit(){ const el=document.getElementById("bmMini"); if(!el||!window.L) return; const B=bmLit(); setTimeout(()=>{ if(!document.body.contains(el)) return;
   const map=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,zoomSnap:.25}); mapBase(map,"natural");
   map.fitBounds([[29.0,29.5],[38.8,41.5]]); const fresh=new Set(B?B.fresh:[]);
