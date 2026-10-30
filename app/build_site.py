@@ -9,6 +9,7 @@ data="\n".join(open(f).read() for f in ['engine.js','glossary.js','summaries.js'
 data=data.replace('if(typeof module!=="undefined") module.exports={buildEntityIndex,buildGlossIndex,inScope,analyzeDay,makeQuiz,rng};','')
 data+="\nconst PLACEINFO="+open('places/all.json').read()+";"
 data+="\nconst ROUTES_B="+open('routes/all.json').read()+";"
+data+="\nconst BM_TOURS="+open('ux/big_tours.json').read()+";"
 data+="\nconst PEOPLEINFO="+open('people/all.json').read()+";"
 data+="""
 (function(){ const MOVE=["벧엘","브니엘","브엘세바","여호와 이레","마라","맛사","므리바","여호와 닛시","길갈","아골","여호와 샬롬","에벤에셀","골고다","겟세마네","실로암"];
