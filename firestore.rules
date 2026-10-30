@@ -21,17 +21,30 @@ service cloud.firestore {
         && request.resource.data.data is string && request.resource.data.data.size() < 800000;
     }
 
-    // 함께 읽기 숫자: 한 번에 1씩만 올릴 수 있습니다.
-    match /days/{id} {
+    // 함께 읽기 숫자(예전 방식): 2026-10-30부터 쓰지 않습니다. 읽기만 남겨 둡니다.
+    match /days/{id} { allow read: if signedIn(); allow write: if false; }
+    match /dates/{id} { allow read: if signedIn(); allow write: if false; }
+    // 함께 읽기 숫자(새 방식): 문서 안 u 지도에 '내 기기 번호: true' 하나만 더할 수 있습니다. 남의 표시는 바꾸거나 지울 수 없습니다.
+    function myNewMark() {
+      return request.resource.data.keys().hasOnly(['u'])
+        && request.resource.data.u.keys().hasOnly([request.auth.uid])
+        && request.resource.data.u[request.auth.uid] == true;
+    }
+    function myAddedMark() {
+      return request.resource.data.keys().hasOnly(['u'])
+        && request.resource.data.u.diff(resource.data.u).affectedKeys().hasOnly([request.auth.uid])
+        && request.resource.data.u[request.auth.uid] == true;
+    }
+    match /days2/{id} {
       allow read: if signedIn();
-      allow create: if signedIn() && request.resource.data.keys().hasOnly(['done']) && request.resource.data.done == 1;
-      allow update: if signedIn() && request.resource.data.keys().hasOnly(['done']) && request.resource.data.done == resource.data.done + 1;
+      allow create: if signedIn() && myNewMark();
+      allow update: if signedIn() && myAddedMark();
       allow delete: if false;
     }
-    match /dates/{id} {
+    match /dates2/{id} {
       allow read: if signedIn();
-      allow create: if signedIn() && request.resource.data.keys().hasOnly(['done']) && request.resource.data.done == 1;
-      allow update: if signedIn() && request.resource.data.keys().hasOnly(['done']) && request.resource.data.done == resource.data.done + 1;
+      allow create: if signedIn() && myNewMark();
+      allow update: if signedIn() && myAddedMark();
       allow delete: if false;
     }
     // 피드백: 누구나 쓰기만, 읽기·지우기는 관리자만.
