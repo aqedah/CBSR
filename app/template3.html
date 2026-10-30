@@ -976,6 +976,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .sunmap{height:200px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}.sunt{margin:8px 0 0;font-size:14px;color:var(--muted);line-height:1.55}.sunp{margin:0 0 8px;font-family:var(--f-serif,serif);font-size:16px;line-height:1.7}.sunc{margin:10px 0 0;padding:10px 12px;background:var(--accent-soft);border-radius:12px;font-size:14.5px;line-height:1.6}.sunc b{display:block;font-size:12.5px;color:var(--accent);margin-bottom:2px}
 .sunchips{display:flex;flex-wrap:wrap;gap:6px;margin:0}.sunchips span{background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:5px 12px;font-weight:700;font-size:14px}.sunchips small{opacity:.7}
 .sunkv{display:grid;gap:8px;margin-top:8px}.sunkv button{text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 12px;font:inherit;color:var(--ink);cursor:pointer}.sunkv button.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset;background:var(--accent-soft)}.sunkv q{display:block;font-family:var(--f-serif,serif);font-size:15px;line-height:1.6;quotes:none}.sunkv small{display:block;margin-top:4px;color:var(--accent);font-weight:700;font-size:12.5px}.sunh3{margin:0 0 6px;font:700 17px var(--f-serif,serif)}
+.snudge{position:absolute;left:12px;right:12px;top:calc(54px + env(safe-area-inset-top,0px));z-index:30;border:0;border-radius:12px;background:rgba(255,255,255,.92);color:#1d2622;font:13px var(--f-ui);padding:8px 12px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}.snudge b{color:var(--accent,#2c5c52)}
 .bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
 .bmbig{display:flex;flex-direction:column;gap:6px}.bmbr{background:var(--card);border:1px solid var(--line);border-radius:14px}.bmbr.on{border-color:var(--acc)}.bmbh,.bmrh{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}.bmbh b,.bmrh b{display:block;font-size:15px}.bmbh small,.bmrh small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
@@ -3638,6 +3639,8 @@ function storyGo(i){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.leng
 const SKB=[["scale(1.06) translate(0,0)","scale(1.14) translate(-2%,-1%)"],["scale(1.14) translate(-2%,-1%)","scale(1.16) translate(3%,1%)"],["scale(1.16) translate(3%,1%)","scale(1.16) translate(-3%,0)"]];
 function sPreload(S,i){ for(let j=i+1;j<=i+2&&j<S.length;j++){ const ph=S[j]&&S[j].ph; if(ph&&!SPRE[ph.u]){ const im=new Image(); im.referrerPolicy="no-referrer"; im.src=ph.u; SPRE[ph.u]=im; } } }
 const SPRE={};
+/* 스토리 첫 장의 '본문 읽기 ›' 권유: 이야기를 닫고 본문으로 */
+document.addEventListener("click",e=>{ if(!e.target.closest||!e.target.closest("#sNudge")) return; e.stopPropagation(); e.preventDefault(); storyClose(); view.open=true; view.v2shut=false; switchTab("read"); scrollTo({top:0}); },true);
 function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return;
   const quick=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches, dur=quick||sAutoOff()?0:sDur(s), auto=dur>0, kind=sKind(s), p=dayPlan(w,d); let ph=s.ph;
   if(s.k==="next"){ const N=nextWD(w,d); if(N){ const S2=storySlides(N[0],N[1]); ph=S2[0]&&S2[0].ph; } }
@@ -3654,6 +3657,7 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
    ${kind==="split"?`<div class="sbase"></div>`:""}
    <div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${dur}ms"`:""}></i></span>`).join("")}</div>
    <div class="stop"><span class="sdot"><img alt="" src="icons/icon-192.png"></span><b>${esc(p.label)}</b><span></span>${FB_ON?`<button class="sx sfb${fbAll()[fbKey(SV.i)]?" has":""}" id="sFb" aria-label="이 카드에 검토 메모">✎</button>`:""}${EDON&&s._ci!=null&&ph&&kind!=="map"&&kind!=="table"?`<button class="sx edui" id="sPh">그림 바꾸기</button>`:""}${window.CBSR_V2&&!s.qt?`<button class="sx sauto${sAutoOff()?"":" on"}" id="sAuto" aria-pressed="${!sAutoOff()}" title="자동 넘김">${sAutoOff()?"손으로":"자동"}</button>`:""}${auto?`<button class="sx sps" id="sPause" aria-label="멈춤">❚❚</button>`:""}<button class="sx" id="sClose" aria-label="닫기">✕</button></div>
+   ${SV.i===0&&!mem.done[keyOf(w,d)]&&dayDiff(today0(),dateOf(w,d))===0?`<button class="snudge" id="sNudge">본문을 먼저 읽으면 이야기가 더 잘 보입니다 · <b>본문 읽기 ›</b></button>`:""}
    <div class="sstage" id="sStage">${s.qt?`${storySlideHTML(s,w,d)}<div class="snav2"><button class="btn ghost" id="sPrev2">‹ 이전</button>${SV.i<S.length-1?`<button class="btn" id="sNext2">다음 ›</button>`:`<button class="btn" id="sEnd">닫기</button>`}</div>`:storySlideHTML(s,w,d)}</div>
    ${showPh&&kind!=="qt"&&ph.link?`<a class="scr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}
    ${hint?`<p class="stapnote">왼쪽을 누르면 이전 · 오른쪽은 다음 · 길게 누르면 멈춤${sAmOK(s)?"<br>두 번 톡톡 아멘 · 웃는 얼굴 단추로 다른 반응":""}</p>`:""}</div>`;
@@ -5061,7 +5065,10 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
     if(g.today) h+=`<p class="tdstory">${esc(g.today)}</p>`;
     if(g.find) h+=`<p class="tdfind"><span>읽으면서 찾아보세요</span>${esc(g.find)}</p>`;
     h+=tdAid(w,d,p);
-    h+=`<button class="tdmain" id="tdGo">본문 읽기<small>${p.ch.length}${p.ch[0][0]===19?"편":"장"} · 약 ${mins}분</small></button>`;
+    /* 보기와 기록을 나눔(목사님 2026-10-30): 스토리 QT를 보려고 통독 완료를 누르지 않아도 됩니다. 지난 날은 바로, 오늘은 본문을 먼저 권하되 막지 않음 */
+    const past=dayDiff(today0(),dt)<0, rd=`${p.ch.length}${p.ch[0][0]===19?"편":"장"} · 약 ${mins}분`; TD.past=past;
+    if(past) h+=`<button class="tdmain" id="tdStory0">스토리 QT 보기<small>지난 본문 · 통독 완료를 누르지 않아도 됩니다</small></button><button class="tdmain ghost" id="tdGo">본문 읽기<small>${rd}</small></button>`;
+    else h+=`<button class="tdmain" id="tdGo">본문 읽기<small>${rd}</small></button>${futLock(w,d)?"":`<button class="tdsub2" id="tdStory0">이야기 먼저 보기 ›</button>`}`;
   } else if(stage===1){
     h+=`<p class="tdstate">✓ 본문을 읽었습니다</p>${g.find?`<p class="tdfind"><span>읽으면서 찾은 것을 이야기로 따라가 보세요</span>${esc(g.find)}</p>`:""}${tdAid(w,d,p)}<button class="tdmain" id="tdGo">스토리 QT 시작</button><button class="tdsub2" id="tdNote">묵상 노트 바로 쓰기</button><button class="tdsub2" id="tdReread">본문 다시 읽기</button>`;
   } else {
@@ -5121,9 +5128,10 @@ function bindSunday(){ const w=view.w; const m=document.getElementById("sunMap")
 function bindToday(){ clearInterval(TD.cd); if(isRev(view.d)) bindSunday();
   const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); if(window.CBSR_V2){ window.scrollTo({top:0}); requestAnimationFrame(()=>window.scrollTo({top:0})); return; } requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
   /* 화면에 보이는 단계(TD.stage)를 따릅니다: 0이면 본문 읽기, 그 뒤는 스토리 QT. 화면을 그린 뒤 기록이 바뀌어도(다른 기기 동기화 등) 버튼 이름과 동작이 어긋나지 않게 */
-  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!TD.stage){ toText(); return; } storyOpen(0); };
+  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(!TD.stage&&!TD.past){ toText(); return; } storyOpen(0); };
+  const s0=document.getElementById("tdStory0"); if(s0) s0.onclick=e=>{ e.stopPropagation(); storyOpen(0); };
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
-  const tg=document.getElementById("tdGo"); if(tg) tg.onclick=go;
+  const tg=document.getElementById("tdGo"); if(tg) tg.onclick=(!TD.stage&&TD.past)?(e=>{ e.stopPropagation(); toText(); }):go;
   const va2=document.getElementById("v2Aid"); if(va2) va2.ontoggle=()=>{ view.aidOpen=va2.open; };
   const rm2=document.getElementById("rjMore"); if(rm2&&!rm2.onclick) rm2.onclick=()=>{ view.rjOpen=!view.rjOpen; render(); };
   const tn=document.getElementById("tdNote"); if(tn) tn.onclick=()=>{ view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); };
