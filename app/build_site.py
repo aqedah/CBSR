@@ -1,3 +1,4 @@
+import subprocess,sys
 import json,base64,hashlib,os,shutil,re
 OUT='site'; shutil.rmtree(OUT,ignore_errors=True); os.makedirs(OUT+'/terrain')
 t=open('template3.html').read()
@@ -39,6 +40,7 @@ for k,v in tj.items():
             A=(np.minimum.outer(ay,ax)*0.92*255).astype('uint8'); im.putalpha(Image.fromarray(A)); im.save(cache,'WEBP',quality=82)
         shutil.copy(cache,dst); terr[k]["url"]=f"terrain/{k}.webp"
 data+="const TERRAIN="+json.dumps(terr)+";\n"
+subprocess.run([sys.executable,'terrain_tiles.py',OUT+'/terrain/t'],check=True)
 data+="const PLX="+(open("ux/place_extra.json").read() if os.path.exists("ux/place_extra.json") else "{}")+";\n"
 data+="const NEARLAND="+open("ux/nearland.json").read()+";\n"
 # ── 365 통독표 ──
