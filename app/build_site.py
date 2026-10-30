@@ -115,10 +115,11 @@ for _p in _PH:
 import photo_policy as _pp
 _POL=_pp.load(); _PMR={r['id']:r for r in json.load(open('ux/photos_master.json'))} if os.path.exists('ux/photos_master.json') else {}
 _perr=_pp.validate(_POL,set(_PMR)); 
-if _perr: print('그림 정책 오류:',_perr[:5])
+if _perr:
+    print('그림 정책 오류 — 빌드를 멈춥니다:'); [print('  -',x) for x in _perr[:30]]; raise SystemExit(2)
 for _p in _PH: _p.update(_pp.app_fields(_pp.effective(_PMR.get(_p['id'],_p),_POL)))
 _PH=[_p for _p in _PH if _p['rs'] not in ('hold','out')]  # 보류·제외는 자동·지정·고정 어느 길로도 앱에 나오지 않음
-data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role','tm','ak','ap','rs','va','bu','au','rl','er')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
+data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role','tm','ak','ap','rs','va','bu','au','rl','er','rq','ac','gp')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
 _SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
 _SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}
 data+='const STORYC_RJ='+J(_SRJ)+';\n'
@@ -138,7 +139,7 @@ for tk in ('snb','shg'):
     open(f'{OUT}/bible_{tk}.js','w').write('window.BIBLE_TR=window.BIBLE_TR||{};BIBLE_TR.'+tk+'="'+open(f'bible_{tk}.b64').read()+'";\nwindow.SPEECH_'+tk+'='+open(f'speech/bible_{tk}.json').read()+';\n')
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
-for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html']: shutil.copy('site_src/'+f,OUT+'/'+f)
+for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html']: shutil.copy('site_src/'+f,OUT+'/'+f)
 shutil.copytree('site_src/icons',OUT+'/icons')
 shutil.copytree('site_src/img',OUT+'/img')
 FB="https://www.gstatic.com/firebasejs/10.14.1/"

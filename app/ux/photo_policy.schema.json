@@ -1,24 +1,210 @@
 {
- "$schema":"https://json-schema.org/draft/2020-12/schema",
- "title":"CBSR 그림 정책 (ux/photo_policy.json)",
- "type":"object","required":["schemaVersion","assets"],
- "properties":{
-  "schemaVersion":{"const":1},
-  "mode":{"enum":["observe","enforce"]},
-  "notes":{"type":"string"},
-  "assets":{"type":"object","propertyNames":{"pattern":"^g\\d\\d_\\d\\d$"},"additionalProperties":{
-   "type":"object","additionalProperties":false,
-   "properties":{
-    "assetKind":{"enum":["scene","background","object","symbolic","reference"]},
-    "directness":{"enum":["D1","D2","D3","D4",null]},
-    "assignmentPolicy":{"enum":["strict","narrow","broad","free-bg","manual-only"]},
-    "reviewStatus":{"enum":["draft","reviewed","approved","restricted","hold","out"]},
-    "verseAnchors":{"type":"array","items":{"type":"object","required":["book","chapter","fromVerse","toVerse"],"properties":{"book":{"type":"integer","minimum":1,"maximum":66},"chapter":{"type":"integer","minimum":1},"fromVerse":{"type":"integer","minimum":1},"toVerse":{"type":"integer","minimum":1},"basis":{"enum":["explicit","illustrative","interpretive"]}}}},
-    "blockedUses":{"type":"array","items":{"type":"object","required":["book"],"properties":{"book":{"type":"integer"},"chapterFrom":{"type":"integer"},"chapterTo":{"type":"integer"},"reason":{"type":"string"}}}},
-    "approvedUses":{"type":"array"},
-    "fidelity":{"type":"object"},
-    "provenance":{"type":"object"},
-    "review":{"type":"object"}
-   }}}
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "CBSR 그림 정책 (ux/photo_policy.json) — photo_policy.py validate()와 같은 규칙",
+ "type": "object",
+ "required": [
+  "schemaVersion",
+  "assets"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "schemaVersion": {
+   "const": 1
+  },
+  "mode": {
+   "enum": [
+    "observe",
+    "enforce"
+   ]
+  },
+  "notes": {
+   "type": "string"
+  },
+  "groups": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+     "label": {
+      "type": "string"
+     },
+     "note": {
+      "type": "string"
+     },
+     "requireAny": {
+      "$ref": "#/$defs/words"
+     }
+    }
+   }
+  },
+  "assets": {
+   "type": "object",
+   "propertyNames": {
+    "pattern": "^g\\d\\d_\\d\\d$"
+   },
+   "additionalProperties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+     "assetKind": {
+      "enum": [
+       "scene",
+       "background",
+       "object",
+       "symbolic",
+       "reference"
+      ]
+     },
+     "directness": {
+      "enum": [
+       "D1",
+       "D2",
+       "D3",
+       "D4",
+       null
+      ]
+     },
+     "assignmentPolicy": {
+      "enum": [
+       "strict",
+       "narrow",
+       "broad",
+       "free-bg",
+       "manual-only"
+      ]
+     },
+     "reviewStatus": {
+      "enum": [
+       "draft",
+       "reviewed",
+       "approved",
+       "restricted",
+       "hold",
+       "out"
+      ]
+     },
+     "relation": {
+      "enum": [
+       "event",
+       "object-place",
+       "figurative",
+       "illustrative",
+       "ambient"
+      ],
+      "description": "그림의 기본 성격. 카드마다 관계가 다를 수 있음(서열이 아님)"
+     },
+     "eraLock": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 11
+      },
+      "description": "허용 시대 묶음 번호: 1 자연·하늘, 2 족장, 3 애굽·출애굽, 4 광야·성막, 5 정착·사사, 6 왕국, 7 분열·포로, 8 시·지혜·일상, 9 복음서, 10 사도행전·서신, 11 원역사(창 1–11)"
+     },
+     "group": {
+      "type": "string",
+      "description": "groups에 있는 묶음 이름. 묶음의 requireAny가 합쳐짐"
+     },
+     "requireAny": {
+      "$ref": "#/$defs/words",
+      "description": "카드 글에 이 가운데 하나가 낱말로 있어야 후보가 됨(시험 규칙 v2)"
+     },
+     "allowChapters": {
+      "type": "array",
+      "items": {
+       "type": "array",
+       "prefixItems": [
+        {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 66
+        },
+        {
+         "type": "integer",
+         "minimum": 1
+        },
+        {
+         "type": "integer",
+         "minimum": 1
+        }
+       ],
+       "minItems": 3,
+       "maxItems": 3
+      },
+      "description": "이 장을 다루는 카드에서 가산(허용 근거 아님, 낱말 조건은 그대로)"
+     },
+     "verseAnchors": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "book",
+        "chapter",
+        "fromVerse",
+        "toVerse"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "book": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 66
+        },
+        "chapter": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "fromVerse": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "toVerse": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "basis": {
+         "enum": [
+          "explicit",
+          "illustrative",
+          "interpretive"
+         ]
+        }
+       }
+      }
+     },
+     "blockedUses": {
+      "type": "array"
+     },
+     "approvedUses": {
+      "type": "array"
+     },
+     "fidelity": {
+      "type": "object"
+     },
+     "provenance": {
+      "type": "object"
+     },
+     "review": {
+      "type": "object"
+     },
+     "note": {
+      "type": "string"
+     }
+    }
+   }
+  }
+ },
+ "$defs": {
+  "words": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "string",
+    "minLength": 2
+   }
+  }
  }
 }
