@@ -1661,7 +1661,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .bmseg{margin:0 0 6px}.bmeras{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px}.bmeras::-webkit-scrollbar{display:none}.bmeras button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:99px;padding:7px 12px;font:600 13.5px var(--f-ui)}.bmeras button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .bmstat{margin:2px 2px 8px;font-size:14px;color:var(--muted)}.bmstat b{color:var(--ink)}.bmstat small{font-size:12px}.bmk{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 2px;border:1.5px solid #fff;box-shadow:0 0 0 1px #0002}.bmk.g{background:#e0a526}.bmk.n{background:#8c8c84;margin-left:10px}
 .bmfr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 8px}.bmfr span{font-size:13px;color:var(--muted);margin-right:2px}.bmfr button{border:1px solid #e9c3bd;background:#fdf1ef;color:#a5332a;border-radius:99px;padding:4px 10px;font:600 13px var(--f-ui)}
-.bml.new{background:#c0392b;color:#fff;border-color:#c0392b}
+.bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
 .bmbig{display:flex;flex-direction:column;gap:6px}.bmbr{background:var(--card);border:1px solid var(--line);border-radius:14px}.bmbr.on{border-color:var(--acc)}.bmbh,.bmrh{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}.bmbh b,.bmrh b{display:block;font-size:15px}.bmbh small,.bmrh small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
 .bmbd{padding:0 12px 12px 48px}.bmbd p{margin:0 0 10px;font-size:14.5px;line-height:1.6}
@@ -8988,6 +8988,143 @@ const rmBase=n=>String(n||"").replace(/\s*\([^)]*\)\s*$/,"").trim();
    letter: 확실성 문구(편지 지도: 점선·두루마리) · lit: 문학적 여정(점선) · seaBub: 바다 구간 가운데 말씀 · script: jonah · land: 바다 판정 안 함 · noTwelve: 열두 제자 자동 동행 끔 */
 const D12={n:"",as:"twelve"};
 const MAPMETA={
+ /* 목사님 2026-10-30: 연출표가 없는 경로는 그날 이야기에서 가장 먼저 나오는 이름이 주인공이 되어 어긋났음(형들의 곡식 길에 요셉 등) → 모든 경로에 주인공을 적음 */
+ "롯이 소돔으로 옮김":{who:"롯",as:"man",with:[{n:"롯의 아내",as:"woman"}],group:"롯의 가축과 목자들"},
+ "아브람이 롯을 구하러 쫓아감":{who:"아브람",as:"abraham",kind:"군대",group:"집에서 길리고 훈련된 자 318명"},
+ "롯이 소돔에서 소알로 피함":{who:"롯",as:"man",with:[{n:"롯의 아내",as:"woman2",to:"소알",out:"vanish"},{n:"",as:"woman"},{n:"",as:"woman"}],group:"두 딸",land:1},
+ "아브라함이 그랄로 옮김":{who:"아브라함",as:"abraham",with:[{n:"사라",as:"woman"}]},
+ "하갈과 이스마엘이 바란 광야로 감":{who:"하갈",as:"woman2",with:[{n:"이스마엘",as:"youth"}]},
+ "아브라함이 모리아 땅에 다녀옴":{who:"아브라함",as:"abraham",with:[{n:"이삭",as:"youth"},{n:"",as:"youth"},{n:"",as:"youth"}],group:"두 종"},
+ "아브라함의 종이 리브가를 데려옴":{who:"아브라함의 종",as:"elder",with:[{n:"리브가",as:"woman"},{n:"",as:"woman2"},{n:"",as:"youth"}],group:"리브가의 유모와 여종들"},
+ "이삭이 그랄에서 브엘세바로":{who:"이삭",as:"man",with:[{n:"리브가",as:"woman"}],group:"이삭의 종들"},
+ "에서가 세일 산으로 옮김":{who:"에서",as:"man",look:{robe:"#9a3b2b"},with:[{n:"",as:"woman"},{n:"",as:"youth"}],group:"에서의 가족"},
+ "형들이 곡식을 사러 애굽에 내려감":{who:"요셉의 형들",as:"man",with:[{n:"",as:"man"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"man"}],group:""},
+ "야곱의 장례 행렬":{who:"요셉",as:"youth",look:{robe:"#6a2c70",sash:"#d4a72c"},with:[{n:"야곱의 관",as:"coffin"},{n:"",as:"man"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"soldier"}],group:"형제들과 애굽 신하들"},
+ "명령을 어기고 올라갔다가 호르마까지 쫓김":{who:"이스라엘 사람들",as:"soldier",kind:"군대",group:""},
+ "바산 에드레이로 갔다가 모압 평지에 진 침":{who:"모세",kind:"무리",group:"이스라엘 백성"},
+ "발람이 브돌에서 모압으로 옴":{who:"발람",as:"elder",with:[{n:"",as:"youth"},{n:"",as:"youth"},{n:"",as:"man"}],group:"두 종과 모압 고관들"},
+ "호렙 산에서 가데스 바네아까지":{who:"모세",kind:"무리",group:"이스라엘 백성"},
+ "세일을 돌아 세렛 시내와 아르논을 건넘":{who:"모세",kind:"무리",group:"이스라엘 백성"},
+ "바산으로 올라가 에드레이에서 옥을 침":{who:"모세",kind:"군대",group:"이스라엘 군사"},
+ "정탐꾼이 여리고를 엿봄":{who:"두 정탐꾼",as:"man",with:[{n:"",as:"youth"}]},
+ "이스라엘이 기브온 성읍들에 이름":{who:"여호수아",as:"soldier",kind:"무리",group:"이스라엘 백성"},
+ "남쪽 성읍들을 정복함":{who:"여호수아",as:"soldier",kind:"군대",group:"군사"},
+ "메롬 물가 전투와 하솔":{who:"여호수아",as:"soldier",kind:"군대",group:"군사"},
+ "갈렙과 옷니엘의 정복":{who:"갈렙",as:"elder",with:[{n:"옷니엘",as:"soldier"}],kind:"군대",group:"유다 자손"},
+ "동쪽 지파들의 귀향":{who:"르우벤·갓·므낫세 반 지파",as:"soldier",kind:"군대",group:""},
+ "유다와 시므온의 정복":{who:"유다 지파",as:"soldier",with:[{n:"시므온 지파",as:"soldier"}],kind:"군대",group:""},
+ "바락이 다볼 산으로 올라감":{who:"바락",as:"soldier",with:[{n:"드보라",as:"woman2"}],kind:"군대",group:"만 명"},
+ "기드온의 미디안 추격":{who:"기드온",as:"soldier",kind:"군대",group:"삼백 명"},
+ "아비멜렉의 세겜·데베스 공격":{who:"아비멜렉",as:"soldier",kind:"군대",group:"아비멜렉의 군사"},
+ "입다가 암몬과 싸우러 감":{who:"입다",as:"soldier",kind:"군대",group:"길르앗 사람들"},
+ "삼손이 딤나 여인을 얻음":{who:"삼손",as:"youth",look:{hair:"#2a1a0e"},with:[{n:"",as:"elder"},{n:"",as:"woman2"}],group:"부모"},
+ "삼손이 가사 성문을 메고 감":{who:"삼손",as:"youth",look:{hair:"#2a1a0e"}},
+ "삼손이 가사로 끌려감":{who:"삼손",as:"youth",look:{hair:"#2a1a0e"},with:[{n:"",as:"soldier"},{n:"",as:"soldier"},{n:"",as:"soldier"}],group:"블레셋 사람들"},
+ "단 지파가 라이스로 옮김":{who:"단 지파",as:"soldier",kind:"군대",group:"무장한 육백 명"},
+ "레위인과 첩의 여정":{who:"레위인",as:"man",with:[{n:"첩",as:"woman"},{n:"",as:"youth"}],group:"종"},
+ "이스라엘이 기브아를 침":{who:"이스라엘 자손",as:"soldier",kind:"군대",group:""},
+ "야베스 길르앗 처녀들을 실로로 데려옴":{who:"이스라엘 회중",as:"soldier",with:[{n:"",as:"woman"},{n:"",as:"woman2"},{n:"",as:"woman"},{n:"",as:"woman2"}],group:"야베스 길르앗 처녀 사백 명"},
+ "나오미가 모압에 갔다가 돌아옴":{who:"나오미",as:"woman2",with:[{n:"엘리멜렉",as:"elder",to:"모압",out:"fade"},{n:"",as:"youth",to:"모압",out:"fade"},{n:"",as:"youth",to:"모압",out:"fade"},{n:"룻",as:"woman",from:"모압"}],group:""},
+ "한나가 실로에 올라가 사무엘을 바침":{who:"한나",as:"woman",with:[{n:"엘가나",as:"man"},{n:"사무엘",as:"youth",to:"실로",out:"stay"}]},
+ "언약궤를 전쟁터로 메고 감":{who:"언약궤",as:"ark",with:[{n:"홉니",as:"man"},{n:"비느하스",as:"man"}],kind:"군대",group:"이스라엘 군대"},
+ "빼앗긴 언약궤가 블레셋 성읍들을 돎":{who:"언약궤",as:"ark",with:[{n:"",as:"soldier"},{n:"",as:"soldier"}],group:"블레셋 사람들"},
+ "언약궤가 이스라엘로 돌아옴":{who:"언약궤",as:"ark",with:[{n:"",as:"man",from:"벧세메스"},{n:"",as:"man",from:"벧세메스"}],group:"이스라엘 사람들"},
+ "사무엘의 해마다 순회":{who:"사무엘",as:"elder"},
+ "미스바에서 왕으로 뽑힌 사울이 집으로":{who:"사울",as:"king",with:[{n:"",as:"soldier"},{n:"",as:"man"}],group:"마음이 감동된 유력한 자들"},
+ "사울이 야베스를 구하고 길갈에서 왕이 됨":{who:"사울",as:"king",kind:"군대",group:"이스라엘 군사"},
+ "사울이 길갈에서 기다리다 게바로":{who:"사울",as:"king",kind:"군대",group:"떨며 따르는 백성"},
+ "요나단의 믹마스 습격과 추격":{who:"요나단",as:"soldier",with:[{n:"",as:"youth"}],group:"무기를 든 소년"},
+ "사무엘이 베들레헴에서 다윗에게 기름 부음":{who:"사무엘",as:"elder"},
+ "다윗이 엘라 골짜기로 가서 골리앗을 침":{who:"다윗",as:"david"},
+ "다윗이 블레셋 땅 시글락으로 감":{who:"다윗",as:"david",kind:"무리",group:"다윗과 육백 명"},
+ "사울이 엔돌의 신접한 여인을 찾아감":{who:"사울",as:"king",with:[{n:"",as:"man"},{n:"",as:"man"}],group:"변장하고 함께 간 두 사람"},
+ "블레셋 군대가 아벡에서 이스르엘로":{who:"블레셋 군대",as:"soldier",kind:"군대",group:""},
+ "돌려보내진 다윗이 아말렉을 쫓음":{who:"다윗",as:"david",kind:"군대",group:"다윗과 사백 명"},
+ "사울의 시신을 야베스 사람들이 거둠":{who:"야베스 사람들",as:"man",with:[{n:"사울의 시신",as:"coffin"},{n:"",as:"soldier"},{n:"",as:"man"}],group:"용사들"},
+ "아말렉 청년이 사울의 죽음을 알림":{who:"아말렉 청년",as:"youth"},
+ "다윗이 헤브론으로 올라감":{who:"다윗",as:"david",kind:"무리",group:"다윗의 사람들과 가족"},
+ "기브온 싸움과 아브넬의 퇴각":{who:"아브넬",as:"soldier",kind:"군대",group:"이스보셋의 군사"},
+ "요압이 아사헬을 장사하고 헤브론으로":{who:"요압",as:"soldier",kind:"군대",group:"다윗의 군사"},
+ "다윗이 예루살렘을 차지함":{who:"다윗",as:"david",kind:"군대",group:"다윗의 군사"},
+ "블레셋을 쳐서 게셀까지":{who:"다윗",as:"david",kind:"군대",group:"다윗의 군사"},
+ "하나님의 궤를 다윗 성으로":{who:"언약궤",as:"ark",with:[{n:"다윗",as:"david"}],kind:"무리",group:"온 이스라엘"},
+ "우리아가 랍바에서 불려 옴":{who:"우리아",as:"soldier"},
+ "다윗이 랍바를 점령함":{who:"다윗",as:"david",kind:"군대",group:"다윗의 군사"},
+ "압살롬이 암논을 죽이고 그술로 도망":{who:"압살롬",as:"youth",look:{hair:"#2a1a0e"}},
+ "요압이 압살롬을 데려옴":{who:"요압",as:"soldier",with:[{n:"압살롬",as:"youth",from:"그술",look:{hair:"#2a1a0e"}}]},
+ "압살롬이 헤브론에서 반역함":{who:"압살롬",as:"youth",look:{hair:"#2a1a0e"},kind:"무리",group:"압살롬을 따르는 사람들"},
+ "다윗이 예루살렘으로 돌아옴":{who:"다윗",as:"david",kind:"무리",group:"다윗과 함께한 백성"},
+ "요압이 세바를 쫓음":{who:"요압",as:"soldier",kind:"군대",group:"다윗의 군사"},
+ "요압의 인구 조사":{who:"요압",as:"soldier",with:[{n:"",as:"soldier"},{n:"",as:"soldier"}],group:"군대 장관들"},
+ "아비아달이 아나돗으로 쫓겨남":{who:"아비아달",as:"elder"},
+ "시므이가 종을 찾으러 가드로":{who:"시므이",as:"man"},
+ "솔로몬이 기브온에서 일천 번제":{who:"솔로몬",as:"king",kind:"무리",group:"온 이스라엘"},
+ "에돔 사람 하닷이 애굽으로 피함":{who:"하닷",as:"youth",with:[{n:"",as:"man"},{n:"",as:"man"}],group:"에돔 신하들"},
+ "여로보암이 애굽으로 도망":{who:"여로보암",as:"man"},
+ "르호보암이 세겜에서 예루살렘으로 도망":{who:"르호보암",as:"king"},
+ "여로보암이 돌아와 왕이 됨":{who:"여로보암",as:"man"},
+ "여로보암의 아내가 실로에 다녀옴":{who:"여로보암의 아내",as:"woman"},
+ "애굽 왕 시삭이 예루살렘을 침":{who:"시삭",as:"king",kind:"군대",group:"애굽 군대"},
+ "벤하닷이 이스라엘 북쪽을 침":{who:"벤하닷",as:"king",kind:"군대",group:"아람 군대"},
+ "오므리가 디르사를 치고 사마리아를 세움":{who:"오므리",as:"king",kind:"군대",group:"이스라엘 군사"},
+ "엘리야가 그릿 시내와 사르밧으로":{who:"엘리야",as:"elijah"},
+ "엘리야와 갈멜 산 대결":{who:"엘리야",as:"elijah"},
+ "엘리야가 엘리사를 부름":{who:"엘리야",as:"elijah",with:[{n:"엘리사",as:"elder",from:"아벨므홀라"}]},
+ "아벡 싸움":{who:"아합",as:"king",kind:"군대",group:"이스라엘 군사"},
+ "아합이 나봇의 포도원으로":{who:"아합",as:"king"},
+ "아합이 길르앗 라못에서 죽음":{who:"아합",as:"king",with:[{n:"여호사밧",as:"king"}],kind:"군대",group:"이스라엘·유다 군사"},
+ "엘리야와 엘리사가 길갈에서 요단으로":{who:"엘리야",as:"elijah",with:[{n:"엘리사",as:"elder"}]},
+ "엘리사가 여리고에서 사마리아로":{who:"엘리사",as:"elder"},
+ "이스라엘·유다·에돔 연합군의 모압 원정":{who:"여호람",as:"king",with:[{n:"여호사밧",as:"king"},{n:"에돔 왕",as:"king"}],kind:"군대",group:"연합군"},
+ "수넴 여인이 갈멜 산의 엘리사를 찾아감":{who:"수넴 여인",as:"woman",with:[{n:"",as:"youth"}],group:"사환"},
+ "나아만이 다메섹에서 요단으로":{who:"나아만",as:"soldier",with:[{n:"",as:"man"},{n:"",as:"youth"}],group:"나아만의 종들"},
+ "아람 군대가 도단에서 사마리아로 끌려감":{who:"엘리사",as:"elder",kind:"군대",group:"눈이 어두워진 아람 군대"},
+ "아람 군대가 사마리아에서 요단까지 도망":{who:"아람 군대",as:"soldier",kind:"군대",group:""},
+ "예후가 길르앗 라못에서 이스르엘로":{who:"예후",as:"soldier",kind:"군대",group:"예후의 군사"},
+ "아하시야가 이스르엘에서 므깃도로 도망":{who:"아하시야",as:"king"},
+ "예후가 이스르엘에서 사마리아로":{who:"예후",as:"soldier",kind:"군대",group:"예후의 군사"},
+ "하사엘이 가드를 치고 예루살렘으로":{who:"하사엘",as:"king",kind:"군대",group:"아람 군대"},
+ "요아스가 벧세메스에서 예루살렘을 치고 사마리아로":{who:"요아스",as:"king",with:[{n:"아마샤",as:"king",from:"벧세메스"}],kind:"군대",group:"이스라엘 군사"},
+ "아마샤가 라기스로 도망":{who:"아마샤",as:"king"},
+ "아하스가 다메섹에 가서 제단을 봄":{who:"아하스",as:"king"},
+ "이방 사람들이 사마리아로 옮겨짐":{who:"이방 사람들",as:"man",kind:"무리",group:""},
+ "랍사게가 라기스에서 예루살렘으로":{who:"랍사게",as:"soldier",kind:"군대",group:"앗수르 군대"},
+ "앗수르 군대가 물러감":{who:"산헤립",as:"king",kind:"군대",group:"앗수르 군대"},
+ "요시야가 벧엘과 사마리아를 정결하게 함":{who:"요시야",as:"king"},
+ "요시야가 므깃도에서 죽음":{who:"요시야",as:"king",kind:"군대",group:"유다 군사"},
+ "여호아하스가 애굽으로 끌려감":{who:"여호아하스",as:"king",kind:"포로",group:""},
+ "여호야긴이 바벨론으로 끌려감":{who:"여호야긴",as:"king",kind:"포로",group:"사로잡힌 사람들"},
+ "시드기야가 도망하다 잡혀 바벨론으로":{who:"시드기야",as:"king",kind:"포로",group:""},
+ "남은 백성이 미스바에서 애굽으로":{who:"요하난",as:"soldier",kind:"무리",group:"남은 백성"},
+ "사울의 시신을 야베스로 옮김":{who:"야베스 사람들",as:"man",with:[{n:"사울의 시신",as:"coffin"},{n:"",as:"soldier"}],group:"용사들"},
+ "다윗이 헤브론에서 예루살렘으로":{who:"다윗",as:"david",kind:"군대",group:"온 이스라엘"},
+ "언약궤를 기럇여아림에서 예루살렘으로":{who:"언약궤",as:"ark",with:[{n:"다윗",as:"david"}],kind:"무리",group:"온 이스라엘"},
+ "다윗이 블레셋을 기브온에서 게셀까지 침":{who:"다윗",as:"david",kind:"군대",group:"다윗의 군사"},
+ "요압이 랍바를 치고 예루살렘으로":{who:"요압",as:"soldier",kind:"군대",group:"다윗의 군사"},
+ "솔로몬이 기브온 산당에 다녀옴":{who:"솔로몬",as:"king",kind:"무리",group:"온 회중"},
+ "레바논 나무를 욥바로 실어 예루살렘으로":{who:"백향목",as:"man",with:[{n:"",as:"man"},{n:"",as:"youth"}],group:"두로 일꾼들"},
+ "솔로몬이 에시온게벨로":{who:"솔로몬",as:"king"},
+ "여로보암이 애굽에서 세겜으로":{who:"여로보암",as:"man"},
+ "시삭이 애굽에서 예루살렘으로 쳐들어옴":{who:"시삭",as:"king",kind:"군대",group:"애굽 군대"},
+ "아사가 구스 군대를 마레사에서 그랄까지 쫓음":{who:"아사",as:"king",kind:"군대",group:"유다 군사"},
+ "아사가 라마의 돌을 게바와 미스바로 옮김":{who:"아사",as:"king",kind:"무리",group:"온 유다"},
+ "여호사밧이 아합과 길르앗 라못에 갔다 돌아옴":{who:"여호사밧",as:"king",with:[{n:"아합",as:"king",to:"길르앗 라못",out:"fade"}],kind:"군대",group:"유다 군사"},
+ "모압·암몬 연합군이 엔게디로":{who:"모압·암몬 연합군",as:"soldier",kind:"군대",group:""},
+ "여호사밧이 드고아 들로 나갔다 돌아옴":{who:"여호사밧",as:"king",kind:"무리",group:"노래하는 사람들과 유다 백성"},
+ "아람 군대가 예루살렘을 치고 다메섹으로":{who:"아람 군대",as:"soldier",kind:"군대",group:""},
+ "유다 포로들이 사마리아에서 여리고로 돌아옴":{who:"유다 포로들",as:"man",kind:"무리",group:""},
+ "산헤립의 신하들이 라기스에서 예루살렘으로":{who:"산헤립의 신하들",as:"soldier",kind:"군대",group:"앗수르 군대"},
+ "므낫세가 바벨론에 끌려갔다 돌아옴":{who:"므낫세",as:"king",with:[{n:"",as:"soldier",to:"바벨론",out:"fade"},{n:"",as:"soldier",to:"바벨론",out:"fade"}],group:"앗수르 군대"},
+ "느고가 므깃도를 지나 갈그미스로":{who:"느고",as:"king",kind:"군대",group:"애굽 군대"},
+ "레바논 백향목을 욥바로":{who:"백향목",as:"man",with:[{n:"",as:"man"},{n:"",as:"youth"}],group:"시돈·두로 사람들"},
+ "느헤미야가 바벨론 왕에게 갔다 돌아옴":{who:"느헤미야",as:"man"},
+ "우리야가 애굽으로 도망했다 끌려옴":{who:"우리야",as:"man",with:[{n:"엘라단",as:"soldier",from:"애굽"}],group:""},
+ "예레미야가 라마에서 풀려나 미스바로":{who:"예레미야",as:"elder"},
+ "순례자 팔십 명이 미스바로 옴":{who:"순례자들",as:"man",kind:"무리",group:"수염을 깎고 옷을 찢은 팔십 명"},
+ "이스마엘이 포로를 끌고 암몬으로":{who:"이스마엘",as:"soldier",kind:"포로",group:"미스바에 남은 백성"},
+ "요하난 무리가 예레미야를 데리고 애굽으로":{who:"요하난",as:"soldier",with:[{n:"예레미야",as:"elder"},{n:"바룩",as:"man"}],kind:"무리",group:"남은 유다 사람들"},
+ "스라야가 시드기야와 함께 바벨론으로":{who:"스라야",as:"man",with:[{n:"시드기야",as:"king"}]},
+
  /* 족장 */
  "아브람의 여정":{who:"아브람",as:"abraham",with:[{n:"사래",as:"woman"},{n:"롯",as:"youth"}],mid:[["하란",[1,11,31]],["세겜",[1,12,7]]],end:[1,12,10]},
  "아브람이 애굽에서 돌아옴":{who:"아브람",as:"abraham",with:[{n:"사래",as:"woman"},{n:"롯",as:"youth",to:"벧엘",out:"fade"}],mid:[["벧엘",[1,13,11]]],end:[1,13,18]},
@@ -9144,8 +9281,11 @@ function isSeaLeg(a,b,na,nb){ const k1=(na||"")+"|"+(nb||""), k2=(nb||"")+"|"+(n
    · 바다 구간에서는 배만 보이고 동행은 배에 탄 것으로 봅니다(sea 표시한 사람만 따로 보임: 물 위를 걸으신 예수님)
    · 멈춤 장면(pause), 사라졌다 나타남(jump), 요단과 홍해 연출 구분, 편지 지도(두루마리·점선), 출신·수신지 핀 */
 function mvIdx(names,pl){ if(!pl) return -1; const m=String(pl).match(/^(.*)#(\d+)$/); if(!m) return names.indexOf(pl); let c=0; for(let i=0;i<names.length;i++){ if(names[i]===m[1]&&++c===+m[2]) return i; } return -1; }
-function mvMarker(map,id,o){ o=o||{}; const w=o.w||40, ic=id==="boat"?BOAT(o):id==="letter"?LETTER():C(id,o.look);
+function mvMarker(map,id,o){ o=o||{}; const w=o.w||40, ic=id==="boat"?BOAT(o):id==="letter"?LETTER():(id==="coffin"||id==="ark")?OBJ(id):C(id,o.look);
   return L.marker(o.at,{interactive:false,zIndexOffset:o.z||500,icon:L.divIcon({className:"",html:`<div class="chm ${id}${id==="boat"||id==="letter"?" sail":""}" style="--w:${w}px">${o.name?`<span class="nm">${esc(o.name)}</span>`:""}<div class="fig">${ic}</div></div>`,iconSize:[0,0]})}).addTo(map); }
+/* 사물 그림(목사님 2026-10-30): 야곱의 관, 언약궤 — 사람처럼 걷지 않고 메고 가는 물건 */
+function OBJ(id){ if(id==="coffin") return `<svg class="chsvg obj" viewBox="0 0 60 60" aria-hidden="true"><ellipse cx="30" cy="54" rx="22" ry="3" fill="rgba(60,40,20,.22)"/><g class="body"><line x1="3" y1="40" x2="57" y2="40" stroke="#6b4423" stroke-width="3" stroke-linecap="round"/><rect x="10" y="22" width="40" height="17" rx="3" fill="#8a5a2b" stroke="#5a3a1a" stroke-width="1.6"/><path d="M10 25 Q30 15 50 25" fill="#a06a35" stroke="#5a3a1a" stroke-width="1.4"/><rect x="26" y="26" width="8" height="10" rx="1" fill="#d4a72c"/></g></svg>`;
+  return `<svg class="chsvg obj" viewBox="0 0 60 60" aria-hidden="true"><ellipse cx="30" cy="54" rx="22" ry="3" fill="rgba(60,40,20,.22)"/><g class="body"><line x1="2" y1="40" x2="58" y2="40" stroke="#8a6a1a" stroke-width="3" stroke-linecap="round"/><rect x="12" y="26" width="36" height="16" rx="2" fill="#e0b22e" stroke="#9a7414" stroke-width="1.6"/><rect x="11" y="23" width="38" height="4" rx="1.5" fill="#f1c84a" stroke="#9a7414" stroke-width="1"/><path d="M16 23 Q14 12 24 10 Q22 16 27 22 Z M44 23 Q46 12 36 10 Q38 16 33 22 Z" fill="#f1c84a" stroke="#9a7414" stroke-width="1"/></g></svg>`; }
 function LETTER(){ return `<svg class="chsvg letter" viewBox="0 0 60 60" aria-hidden="true"><ellipse cx="30" cy="55" rx="16" ry="3" fill="rgba(60,40,20,.2)"/><g class="body"><rect x="12" y="14" width="36" height="30" rx="4" fill="#f6ead0" stroke="#b08a4a" stroke-width="2"/><rect x="9" y="11" width="42" height="7" rx="3.5" fill="#c9a36a"/><rect x="9" y="40" width="42" height="7" rx="3.5" fill="#c9a36a"/><path d="M18 24h24M18 30h20M18 36h16" stroke="#b08a4a" stroke-width="2" stroke-linecap="round"/><circle cx="40" cy="36" r="5" fill="#b4432f"/></g></svg>`; }
 const mvWait=ms=>new Promise(r=>setTimeout(r,ms));
 function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") return; const still=!!(matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -9189,7 +9329,7 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
   if(Mt.letter) crowd.length=0;
   const big=crowd.length>6; let gl=false;
   const F=crowd.map((x,j)=>{ const row=Math.floor(j/2)+1, nm=x.n||(!gl&&Mt.group&&!x.from?(gl=true,Mt.group):""); return {x,j,state:(x.from||x.joinFrac)?"wait":"on",fromI:x.from?mvIdx(names,x.from):-1,toI:x.to?mvIdx(names,x.to):-1,
-    form:x.sea?[-6,(j%2?1:-1)*34]:[big?row*13+6:row*16+4,(j%2?1:-1)*(big?9:12)],m:mvMarker(map,x.as,{at:path[0],w:x.as==="jesus"?40:big||Mt.kind?24:30,name:nm,look:x.look,z:x.as==="jesus"?3000:400})}; });
+    form:x.sea?[-6,(j%2?1:-1)*34]:[big?row*13+6:row*16+4,(j%2?1:-1)*(big?9:12)],m:mvMarker(map,x.as,{at:path[0],w:x.as==="jesus"?40:(x.as==="coffin"||x.as==="ark")?38:big||Mt.kind?24:30,name:nm,look:x.look,z:x.as==="jesus"?3000:400})}; });
   const fEl=f=>f.m.getElement()&&f.m.getElement().querySelector(".chm");
   F.forEach(f=>{ if(f.state==="wait"){ const e=f.m.getElement(); if(e) e.style.display="none"; } });
   let main=null, mainPt=null, mainU=[0,1], onSea=false;
@@ -10077,7 +10217,7 @@ function bmDetailHTML(){ const seg=view.bmSeg||"land"; let h=`<div class="rseg b
     if(!B) h+=`<p class="lead">읽은 본문의 지명을 모으는 중입니다…</p>`;
     else { h+=`<p class="bmstat"><span class="bmk g"></span>켜진 곳 <b>${B.first.size}</b> <span class="bmk n"></span>아직 지나지 않은 곳 ${tot-B.first.size}</p>`;
       if(B.fresh.length) h+=`<p class="bmfr"><span>최근 새로 켜진 곳</span>${B.fresh.slice(0,12).map(n=>`<button data-bmpl="${esc(n)}">${esc(n)}</button>`).join("")}</p>`;
-      h+=`<p class="lead rnote">점을 누르면 그곳이 처음 나온 날과 본문을 볼 수 있습니다. 두 손가락으로 지도를 넓혀 보세요.</p>`; } }
+      h+=`<p class="lead rnote">점을 누르면 그곳이 처음 나온 날과 본문을 볼 수 있습니다. 두 손가락으로 넓히거나 오른쪽 위 + − 단추로 확대해 보세요.</p>`; } }
   if(seg==="big"){ const s=view.bmBig;
     h+=`<p class="lead rnote">성경 이야기 전체를 일곱 걸음으로 그렸습니다. 번호를 누르면 그 시대의 이야기와 여정을 볼 수 있습니다.</p><div class="bmbig">${BM_BIG.map((x,i)=>`<div class="bmbr${s===i?" on":""}"><button class="bmbh" data-bmbig="${i}"><span class="bmno" style="background:${x.c}">${i+1}</span><span><b>${esc(x.n)}</b><small>${esc(x.t)} · ${esc(x.ref)}</small></span></button>${s===i?`<div class="bmbd"><p>${esc(x.d)}</p><button class="btn small" data-bmgo="${x.e}">${esc(BM_ERA[x.e][0])} 여정 보기 ›</button>${x.e2!=null?` <button class="btn small ghost" data-bmgo="${x.e2}">${esc(BM_ERA[x.e2][0])} 여정 보기 ›</button>`:""}</div>`:""}</div>`).join("")}</div>`; }
   if(seg==="trip"){ const e=view.bmEra==null?0:view.bmEra, R=ROUTES_B.map((r,i)=>[r,i]).filter(([r])=>bmEra(r.b,r.c[0])===e), sel=view.bmSel;
@@ -10087,10 +10227,18 @@ function bmDetailHTML(){ const seg=view.bmSeg||"land"; let h=`<div class="rseg b
   return h+`</div>`; }
 function bmInit(){ const el=document.getElementById("bmMap"); if(BM_MAP){ try{ BM_MAP.remove(); }catch(e){} BM_MAP=null; } if(!el||!window.L) return; const seg=view.bmSeg||"land";
   const map=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); BM_MAP=map;
+  L.control.zoom({position:"topright",zoomInTitle:"확대",zoomOutTitle:"축소"}).addTo(map); /* PC에서는 손가락으로 넓힐 수 없으므로 +·− 단추 */
   const lab=(ll,t,cls)=>L.marker(ll,{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl bml${cls?" "+cls:""}">${esc(t)}</span>`,iconSize:[0,0],iconAnchor:[-7,9]})}).addTo(map);
   if(seg==="land"){ const B=bmLit()||{first:new Map(),fresh:[]}, fresh=new Set(B.fresh), pts=[];
     PLACE.forEach((g,nm)=>{ if(g[3]==="r"||B.first.has(nm)) return; L.circleMarker([g[1],g[2]],{radius:4,color:"#fff",weight:1,fillColor:"#8c8c84",fillOpacity:.75}).addTo(map).on("click",()=>bmPlace(nm)); });
     B.first.forEach((k,nm)=>{ const g=PLACE.get(nm); pts.push([g[1],g[2]]); L.circleMarker([g[1],g[2]],{radius:fresh.has(nm)?8:6,color:"#fff",weight:fresh.has(nm)?2.5:1.5,fillColor:fresh.has(nm)?BM_RED:BM_GOLD,fillOpacity:1}).addTo(map).on("click",()=>bmPlace(nm)); });
+    /* 핵심 도시 이름표(목사님 2026-10-30): 큰 곳은 늘, 작은 곳은 가까이 볼 때 */
+    const kl=L.layerGroup().addTo(map), fr4=new Set(B.fresh.slice(0,4)), KEY1=["예루살렘","다메섹","두로","시돈","사마리아","가버나움","나사렛","베들레헴","헤브론","브엘세바","욥바","가이사랴","여리고","세겜","벧엘","단","애굽","바벨론","니느웨","안디옥","에베소","고린도","로마","아덴","빌립보","다소","하란","우르"], KEY2=["실로","가사","아스글론","므깃도","이스르엘","벳새다","가나","길갈","기브온","라마","미스바","아벨므홀라","엠마오","베다니","갈멜 산","다볼 산","헤르몬 산","시내 산","가데스 바네아","아스돗","에그론","가드","라기스","벧세메스","기럇여아림","길르앗 라못","랍바","디베랴"];
+    const kdraw=()=>{ kl.clearLayers(); const z=map.getZoom(), list=z>=8?KEY1.concat(KEY2):KEY1, box=[], sz=map.getSize();
+      B.fresh.slice(0,4).forEach(nm=>{ const g=PLACE.get(nm); if(g){ const p=map.latLngToContainerPoint([g[1],g[2]]); box.push([p.x+4,p.y-10,p.x+10+nm.length*13,p.y+10]); } });
+      list.forEach(nm=>{ const g=PLACE.get(nm); if(!g||fr4.has(nm)) return; const p=map.latLngToContainerPoint([g[1],g[2]]); if(p.x<0||p.y<0||p.x>sz.x||p.y>sz.y) return;
+        const r=[p.x+4,p.y-10,p.x+12+nm.length*12.5,p.y+10]; if(box.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])) return; box.push(r); L.marker([g[1],g[2]],{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl bml key${B.first.has(nm)?" lit":""}">${esc(nm)}</span>`,iconSize:[0,0],iconAnchor:[-6,8]})}).addTo(kl); }); };
+    map.on("moveend",kdraw); /* 처음 위치를 잡은 뒤(moveend)에 그림 */
     B.fresh.slice(0,4).forEach(nm=>{ const g=PLACE.get(nm); lab([g[1],g[2]],nm,"new"); });
     if(view.bmFly){ const g=PLACE.get(view.bmFly); view.bmFly=null; if(g) map.setView([g[1],g[2]],8.5); } else map.setView([31.9,35.25],7.25); }
   if(seg==="big"){ const s=view.bmBig;
