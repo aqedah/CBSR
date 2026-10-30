@@ -10126,7 +10126,7 @@ function recRoad(n,sch){ /* 목사님 2026-10-30: 한 줄에 모든 묶음 이�
     return `<p class="rrt"><b>${nm}</b> ${first}–${last} · ${tot.toLocaleString()}장 중 ${Math.round(Math.max(0,Math.min(tot,read))).toLocaleString()}장</p><div class="rroad${me?"":" nome"}"><svg viewBox="0 0 360 64" preserveAspectRatio="none" aria-hidden="true">${segs}${p>0?`<path d="${pts(p)}" class="rr1"/>`:""}${sc==null||sc<=0||sc>=tot&&!me?"":`<circle cx="${sx.toFixed(1)}" cy="${RD_Y(sx).toFixed(1)}" r="4" class="rrs"/>`}</svg>
     ${marks}${me&&cur?`<span class="rrcur" style="left:${Math.max(9,Math.min(91,mx/360*100)).toFixed(2)}%;top:${(my-34).toFixed(1)}px">${esc(cur)}</span>`:""}${me?`<span class="rrme" style="left:${(mx/360*100).toFixed(2)}%;top:${my.toFixed(1)}px">${av}</span>`:""}</div>`; };
   return one("구약",1,OT,[[1,"모세오경"],[6,"역사서"],[18,"시가서"],[23,"선지서"]],Math.min(n,OT),sch==null?null:Math.min(sch,OT),!onNT,"창세기","말라기")
-    +one("신약",40,NT,[[40,"복음서와 사도행전"],[45,"서신서"],[66,"계시록"]],Math.max(0,n-OT),sch==null?null:sch-OT,onNT,"마태복음","요한계시록")
+    +one("신약",40,NT,[[40,"복음서"],[44,"사도행전"],[45,"바울서신"],[58,"일반서신"],[66,"계시록"]],Math.max(0,n-OT),sch==null?null:sch-OT,onNT,"마태복음","요한계시록")
     +(sch==null?"":`<div class="rrl"><span></span><span><i class="rrsd"></i>교회 일정 ${pct1(sch,TOTAL_CH)}%까지</span><span></span></div>`); }
 function recShelf(){ const {tot,got}=bookProgress(); let done=0;
   const bk=b=>{ const T=tot[b]||0, G=got[b]||0, p=T?Math.min(1,G/T):0, full=T&&G>=T; if(full) done++; const nch=BIBLE&&BIBLE[b-1]?BIBLE[b-1].length:10;
