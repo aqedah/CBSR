@@ -9182,7 +9182,7 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
   if(Mt.letter) crowd.length=0;
   const big=crowd.length>6; let gl=false;
   const F=crowd.map((x,j)=>{ const row=Math.floor(j/2)+1, nm=x.n||(!gl&&Mt.group&&!x.from?(gl=true,Mt.group):""); return {x,j,state:(x.from||x.joinFrac)?"wait":"on",fromI:x.from?mvIdx(names,x.from):-1,toI:x.to?mvIdx(names,x.to):-1,
-    form:x.sea?[-6,(j%2?1:-1)*34]:[big?row*13+6:row*16+4,(j%2?1:-1)*(big?9:12)],m:mvMarker(map,x.as,{at:path[0],w:big||Mt.kind?24:30,name:nm,look:x.look,z:400})}; });
+    form:x.sea?[-6,(j%2?1:-1)*34]:[big?row*13+6:row*16+4,(j%2?1:-1)*(big?9:12)],m:mvMarker(map,x.as,{at:path[0],w:x.as==="jesus"?40:big||Mt.kind?24:30,name:nm,look:x.look,z:x.as==="jesus"?3000:400})}; });
   const fEl=f=>f.m.getElement()&&f.m.getElement().querySelector(".chm");
   F.forEach(f=>{ if(f.state==="wait"){ const e=f.m.getElement(); if(e) e.style.display="none"; } });
   let main=null, mainPt=null, mainU=[0,1], onSea=false;
@@ -9206,23 +9206,23 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
       if(lg.t==="sea"&&!seaMid&&k>.45){ seaMid=true; F.forEach(fx=>{ if(fx.state==="wait"&&fx.x.joinFrac) join(fx); }); if(Mt.seaBub) mvBub(map,cur,Mt.seaBub,true); }
       if(k<1) requestAnimationFrame(step); else { tparts[tparts.length-1]=base.concat(lg.p.slice(1)); setTrail(); arrive(lg.i1); follow(pt,ux,uy,false); if(c2) c2.classList.remove("walk","sail"); res(); } };
     requestAnimationFrame(step); });
-  (async()=>{ await mvWait(still?0:600); if(!alive()) return; main=mvMarker(map,legs[0].t==="sea"?"boat":id,{at:path[0],w:44,name:legs[0].t==="sea"?"":rn,look:Mt.look,z:700}); arrive(0); { const P0=map.latLngToLayerPoint(path[0]), P1=map.latLngToLayerPoint(path[1]), L2=P0.distanceTo(P1)||1; follow(P0,(P1.x-P0.x)/L2,(P1.y-P0.y)/L2,false); }
+  (async()=>{ await mvWait(still?0:600); if(!alive()) return; main=mvMarker(map,legs[0].t==="sea"?"boat":id,{at:path[0],w:44,name:legs[0].t==="sea"?"":rn,look:Mt.look,z:id==="jesus"?3000:2000}); arrive(0); { const P0=map.latLngToLayerPoint(path[0]), P1=map.latLngToLayerPoint(path[1]), L2=P0.distanceTo(P1)||1; follow(P0,(P1.x-P0.x)/L2,(P1.y-P0.y)/L2,false); }
     for(let li=0;li<legs.length;li++){ const lg=legs[li]; if(!alive()) return;
       if(lg.t==="jump"){ /* 행 8:39–40: 걸어간 길이 아니라 사라졌다가 아소도에 나타남 */ if(Mt.jump[2]&&!still){ mvBub(map,lg.p[0],Mt.jump[2],true); await mvWait(1400); }
         const c=main.getElement()&&main.getElement().querySelector(".chm"); if(c&&!still){ c.classList.add("vanish"); await mvWait(1100); } main.setLatLng(lg.p[1]); tparts.push([lg.p[1]]); setTrail(); if(c){ c.classList.remove("vanish"); c.classList.add("popin"); } arrive(lg.i1); await mvWait(still?0:500); continue; }
       const want=lg.t==="sea"?"boat":id, have=main.getElement()&&main.getElement().querySelector(".chm"); onSea=lg.t==="sea";
-      if(have&&!have.classList.contains(want)){ const at=main.getLatLng(); map.removeLayer(main); main=mvMarker(map,want,{at,w:want==="boat"?40:44,name:want==="boat"?"":rn,look:Mt.look,z:700}); }
+      if(have&&!have.classList.contains(want)){ const at=main.getLatLng(); map.removeLayer(main); main=mvMarker(map,want,{at,w:want==="boat"?40:44,name:want==="boat"?"":rn,look:Mt.look,z:id==="jesus"?3000:2000}); }
       if(onSea&&Mt.fx==="storm") fr.classList.add("mvstorm");
       if(lg.t==="cross"&&!still){ /* 홍해: 바다를 가로질러 건너는 장면이 보이도록 건너는 곳으로 크게 확대한 뒤, 길 양옆으로 물벽이 갈라지고 백성이 건넘 */
         await new Promise(r=>{ map.once("moveend",r); map.flyToBounds(L.latLngBounds(lg.p),{paddingTopLeft:[50,110],paddingBottomRight:[120,270],maxZoom:10,duration:1.6}); setTimeout(r,2400); }); if(!alive()) return;
         const a=map.latLngToContainerPoint(lg.p[0]), b=map.latLngToContainerPoint(lg.p[1]); mvFx(map,"part",[(lg.p[0][0]+lg.p[1][0])/2,(lg.p[0][1]+lg.p[1][1])/2],Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI-90,Math.hypot(b.x-a.x,b.y-a.y)); await mvWait(1100); if(mainPt){ const P=map.latLngToLayerPoint(main.getLatLng()); follow(P,mainU[0],mainU[1],false); } }
       await walkLeg(lg,still?0:lg.t==="cross"?4200:D*lp(lg.p)/tot); fr.classList.remove("mvstorm"); onSea=false;
-      if(lg.t==="sea"&&(li===legs.length-1||legs[li+1].t!=="sea")){ const at=main.getLatLng(); map.removeLayer(main); main=mvMarker(map,id,{at,w:44,name:rn,look:Mt.look,z:700}); if(mainPt) follow(mainPt,mainU[0],mainU[1],false); }
+      if(lg.t==="sea"&&(li===legs.length-1||legs[li+1].t!=="sea")){ const at=main.getLatLng(); map.removeLayer(main); main=mvMarker(map,id,{at,w:44,name:rn,look:Mt.look,z:id==="jesus"?3000:2000}); if(mainPt) follow(mainPt,mainU[0],mainU[1],false); }
       if(lg.i1===pIdx&&Mt.pause){ for(const st of Mt.pause.seq){ if(!alive()) return; const c=main.getElement()&&main.getElement().querySelector(".chm");
           if(st[0]==="bub"){ if(!still){ mvBub(map,path[pIdx],st[1],true); await mvWait(st[2]||2200); } }
           else if(st[0]==="vanish"){ F.filter(f=>f.x.as===st[1]&&f.state!=="gone").forEach(f=>{ f.state="gone"; const c2=fEl(f); if(c2) c2.classList.add("vanish"); }); await mvWait(still?0:900); }
           else if(st[0]==="rise"){ if(c) c.classList.add("rise"); await mvWait(still?0:2000); }
-          else if(st[0]==="swap"){ const at=main.getLatLng(); map.removeLayer(main); id=st[1]; rn=st[2]; main=mvMarker(map,id,{at,w:44,name:rn,z:700}); }
+          else if(st[0]==="swap"){ const at=main.getLatLng(); map.removeLayer(main); id=st[1]; rn=st[2]; main=mvMarker(map,id,{at,w:44,name:rn,z:id==="jesus"?3000:2000}); }
           else if(st[0]==="light"){ if(!still) mvFx(map,"light",path[pIdx]); await mvWait(still?0:450); }
           else if(st[0]==="fall"){ if(c) c.classList.add("fall"); await mvWait(still?0:500); }
           else if(st[0]==="stand"){ if(c) c.classList.remove("fall"); await mvWait(still?0:400); } } }
