@@ -8669,6 +8669,12 @@ const PH_TW2={g20_09:"g24_02",g24_02:"g20_09",g23_12:"g09_15",g09_15:"g23_12",g2
 const PH_TWIN=id=>/^g21_/.test(id)?"g11_"+id.slice(4):/^g11_/.test(id)?"g21_"+id.slice(4):(PH_TW2[id]||"");
 /* 그림 정책(GPT 라이브러리 설계 2026-10-30): 보류·제외는 어느 길로도 쓰지 않음. 막는 곳(bu)에 오늘 장이 들면 쓰지 않음.
    수동 전용·연구 자료·제한 승인은 관리자가 번호로 지정했을 때만(자동 선택에서 뺌) */
+/* 그림 배정 규칙 2판(GPT 2단계 지시 2026-10-30): 아직 시험(관측)용. ?phrule=v2 또는 CBSR_phSim("v2")로만 켜짐
+   ① 낱말(kw)이 붙은 범용 그림은 카드에 그 낱말이 있거나 오늘 장이 그 그림의 장일 때만 ② 사람 장면 범용 그림은 태그가 둘 이상 맞을 때만
+   ③ 정책의 시대 제한(er) ④ 점수가 낮으면 억지로 넣지 않음(그림 없는 카드) */
+let PHR2=(()=>{ try{ return new URLSearchParams(location.search).get("phrule")==="v2"; }catch(e){ return false; } })(), PH_MIN=null; const PH_LAST={};
+/* 절 근거 그림이 여럿이면: 실제 사건 → 물건·장소 → 비유·환상 → 설명용 연출 */
+const PH_RLR=p=>({event:0,"object-place":1,figurative:2,illustrative:3}[p&&p.rl]??1.5);
 function phGate(p,CH,manual){ if(!p||p.rs==="hold"||p.rs==="out") return false;
   if(p.bu&&(CH||[]).some(([b,c])=>p.bu.some(([B,a,z])=>B===b&&c>=a&&c<=z))) return false;
   if(!manual&&(p.ap==="manual-only"||p.ak==="ref"||p.rs==="restricted")) return false; return true; }
@@ -8680,12 +8686,18 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
   const cited=new Set(); for(const m of kt.matchAll(/([가-힣]{1,3})?\s?(\d{1,3}):\d/g)){ const ab=m[1]; if(ab&&typeof PLAN!=="undefined"&&PLAN.abbr.includes(ab)&&!CH.some(x=>PLAN.abbr[x[0]-1]===ab)) continue; cited.add(+m[2]); }
   const CHc=CH.filter(x=>cited.has(x[1])), CH2=CHc.length?CHc:CH;
   const inRef=p=>(p.refs||[]).some(([b,a,z])=>CH2.some(x=>x[0]===b&&x[1]>=a&&x[1]<=z));
-  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9; let vaBest=null;
+  const gen=PH_GENRE[genre]||PH_GENRE.narrative; let best=null,bs=-1e9; let vaBest=null; const REJ=PH_LAST.rej=[]; PH_LAST.s=null; PH_LAST.why="";
   /* 때: 카드 글에 밤·저녁을 가리키는 말이 없으면 밤 사진을 피합니다(대부분의 장면은 낮) */
   const nightOK=/밤|저녁|어두|어둠|흑암|새벽|별|달빛|등불|등잔|촛대|해 질|해가 지|횃불/.test(kt)||[...hs].some(t=>/^(oil_lamp|night|night_sky|darkness|stars|moon|torch)$/.test(t));
   for(const p of P){ if(used.has(p.id)||used.has(PH_TWIN(p.id))) continue;
     if(!phGate(p,CH,false)) continue;
-    if(opt.verse&&!vaBest&&p.va&&p.va.some(([b,c,f,t])=>b===opt.verse[0]&&c===opt.verse[1]&&opt.verse[2]>=f&&opt.verse[2]<=t)&&!(p.deny||[]).some(w=>kt.includes(w))){ vaBest=p; continue; }
+    if(PHR2){ const kwHit=(p.kw||[]).some(w=>phHas(kt,w));
+      if(p.er&&eok&&!p.er.some(x=>eok.includes(x))){ REJ.push([p.id,"시대 제한"]); continue; }
+      if(p.scope!=="s"&&(p.kw||[]).length&&!kwHit&&!((p.refs||[]).length&&inRef(p))){ const anch=(p.refs||[]).length||(p.kw||[]).some(w=>PLACE.has(w)||(typeof PLX!=="undefined"&&PLX[w]));
+        const th=(p.tags||[]).filter(t=>hs.has(t)||want.has(t)).length;
+        if(anch||p.role==="scene"||((p.role==="object"||p.role==="setting")&&th<2)){ if(th) REJ.push([p.id,anch?"특정 본문·장소에 묶인 범용 그림":p.role==="scene"?"범용 사람 장면인데 카드에 그 낱말 없음":"범용 소품·장소인데 낱말 없고 맞는 태그 1개 이하"]); continue; } p._soft=1; }
+      if(p.scope!=="s"&&p.role==="scene"&&!(p.kw||[]).length&&(p.tags||[]).filter(t=>hs.has(t)||want.has(t)).length<2){ if((p.tags||[]).some(t=>hs.has(t)||want.has(t))) REJ.push([p.id,"사람 장면인데 맞는 태그 1개 이하"]); continue; } }
+    if(opt.verse&&(!vaBest||PH_RLR(p)<PH_RLR(vaBest))&&p.rl!=="ambient"&&p.va&&p.va.some(([b,c,f,t])=>b===opt.verse[0]&&c===opt.verse[1]&&opt.verse[2]>=f&&opt.verse[2]<=t)&&!(p.deny||[]).some(w=>kt.includes(w))){ vaBest=p; continue; }
     if((p.deny||[]).some(w=>kt.includes(w))) continue;
     let s=0; const sets=p.sets||(p.set?[p.set]:[]), eraOk=!eok||!sets.length||sets.some(x=>eok.includes(x));
     const tagHit=(p.tags||[]).some(t=>hs.has(t)||want.has(t)), plHit=(p.pl||[]).some(n=>phHas(kt,n));
@@ -8708,7 +8720,10 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
     if(p.tm==="n"&&!nightOK) s-=4; else if(p.tm==="e"&&!nightOK) s-=1.5; else if(p.tm==="n"&&nightOK) s+=.8;
     if(opt.mood&&p.mood&&!(p.tm==="n"&&!nightOK)){ if(p.mood===opt.mood) s+=1.4; else if((opt.mood==='dark')!==(p.mood==='dark')&&(p.mood==='bright'||opt.mood==='bright')) s-=.8; }
     if(opt.avoid&&p.scope!=="s"&&opt.avoid.has(p.id)) s-=6;
+    if(PHR2&&p._soft){ s-=2; delete p._soft; }
     s+=(phHash(seed+"|"+p.id)%1000)/2000; if(s>bs){ bs=s; best=p; } }
+  PH_LAST.s=vaBest?99:bs; PH_LAST.why=vaBest?"절 근거":(best?(best.scope==="s"?"장면 낱말·장":"태그·장소·분위기"):"");
+  if(!vaBest&&PHR2&&PH_MIN!=null&&!opt.cover&&bs<PH_MIN){ PH_LAST.why="점수 낮아 비움"; return null; }
   return vaBest||(opt.minScore!=null&&bs<opt.minScore?null:best); }
 /* 이야기 카드 목록: 손으로 쓴 카드(STORYC)가 있으면 그것, 없으면 본문 자료로 자동 구성 → 뒤에 QT 네 단계 */
 const smk=t=>esc(t||"").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/__(.+?)__/g,"<u>$1</u>").replace(/\n/g,"<br>");
@@ -8776,7 +8791,7 @@ function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b"
 
     g={st,list:[i],hint:s.img}; groups.push(g); });
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
-    const ph=phPick(txt,ctxPl,gen,ck.replace(/:b$/,"")+":"+gi,used,G.hint,{avoid,stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
+    const ph=phPick(txt,ctxPl,gen,ck.replace(/:b$/,"")+":"+gi,used,G.hint,{avoid,stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); G.list.forEach(i=>{ out[i]._phs=PH_LAST.s; out[i]._phw=PH_LAST.why; out[i]._rej=(PH_LAST.rej||[]).slice(0,4); }); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
     G.list.forEach((i,k)=>{ out[i].ph=ph; out[i].phv=k; }); });
   out.forEach(s=>{ if(s.k==="fin"||s.k==="ask") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
   SV.cache[ck]=out; return out; }
@@ -9184,6 +9199,7 @@ window.CBSR_seed=function(N){ if(!NOWOFF) return false; const iso=x=>`${x.getFul
     if(i%3!==2){ mem.qt[k]={done:true,doneAt:ds,kv:`${b}:${c}:${1+(i*7)%9}`}; if(i%4===0) mem.qt[k].med="오늘 본문에서 하나님이 먼저 부르신다는 것을 보았다."; if(i%5===1) mem.qt[k].amen={"신실하신 분":ds}; if(i%6===0) mem.qt[k].samen={"§2":{d:ds,t:"생명과 사망을 네 앞에 두었나니",r:"wow"}}; }
     if(i%7===3){ HL[`${b}-${c}-${2+i%5}`]=["y",dateOf(w,d).getTime()]; } }
   save(); saveHL(); render(); return i; };
+window.CBSR_phSim=function(rule,min){ PHR2=rule==="v2"; PH_MIN=min==null?null:min; SV.cache={}; return PHR2; };
 window.CBSR_dayCards=function(w,d){ return storySlides(w,d).map(x=>[x.k,(x.ph||{}).id,sTxt(x).slice(0,60)]); };
 window.CBSR_mapDemo=function(nm){ const r=ROUTES_B.find(x=>rmBase(x.n)===nm||x.n===nm); if(!r) return false; const el=document.createElement("div"); el.className="rgm"; el.innerHTML=`<div class="rgmtop"><b>${esc(r.n)}</b><button class="gpx">✕</button></div><div class="rgmmap" id="mdMap" style="height:70vh"></div>`; document.body.appendChild(el);
   el.querySelector(".gpx").onclick=()=>el.remove(); const mel=el.querySelector("#mdMap"); setTimeout(()=>{ const map=L.map(mel,{zoomControl:false,attributionControl:true,dragging:false,scrollWheelZoom:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); map.fitBounds(L.latLngBounds(r.p.map(q=>[q[1],q[2]])),{padding:[40,40],maxZoom:10});
@@ -10523,7 +10539,7 @@ const phImg=(ph,cls)=>ph?`<img class="${cls||""}" src="${esc(ph.u)}" alt="" refe
    ① 그 절을 근거(va)로 둔 그림 ② 그 절을 다룬 이야기 카드의 그림 ③ 그 절의 글로 고른 그림 ④ 그래도 없으면 표지 */
 function wordCardPh(w,d,q){ const v=String(q&&q.kv||"").split(":").map(Number), S=(()=>{ try{ return storySlides(w,d); }catch(e){ return []; } })(), cov=S[0]&&S[0].ph;
   if(v.length===3&&v[0]&&typeof PHOTOS!=="undefined"){ const [b,c,n]=v, CH=[[b,c]];
-    const anc=PHOTOS.find(p=>p.va&&p.va.some(([B,C,f,t])=>B===b&&C===c&&n>=f&&n<=t)&&phGate(p,CH,false)); if(anc) return anc;
+    const anc=PHOTOS.filter(p=>p.rl!=="ambient"&&p.va&&p.va.some(([B,C,f,t])=>B===b&&C===c&&n>=f&&n<=t)&&phGate(p,CH,false)).sort((x,y)=>PH_RLR(x)-PH_RLR(y))[0]; if(anc) return anc;
     const t=vtxt(v)||"", head=t.replace(/\s/g,"").slice(0,10), refRe=new RegExp("(^|[^0-9:])"+c+":"+n+"(?![0-9])");
     const sl=S.find((x,i)=>i>0&&x.ph&&(()=>{ const tx=sTxt(x); return refRe.test(tx)||(head.length>=8&&tx.replace(/\s/g,"").includes(head)); })()); if(sl) return sl.ph;
     try{ const ph=phPick(t,[],GENRE_OF(b),"wc"+w+"-"+d,new Set(),null,{ch:CH,verse:v,era:ERA_OK(b,c),kwText:t,avoid:new Set(cov?[cov.id]:[]),minScore:5}); if(ph) return ph; }catch(e){}
