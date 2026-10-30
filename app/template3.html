@@ -2734,7 +2734,8 @@ const PH_TWIN=id=>/^g21_/.test(id)?"g11_"+id.slice(4):/^g11_/.test(id)?"g21_"+id
 /* 그림 배정 규칙 2판(GPT 2단계 지시 2026-10-30): 아직 시험(관측)용. ?phrule=v2 또는 CBSR_phSim("v2")로만 켜짐
    ① 낱말(kw)이 붙은 범용 그림은 카드에 그 낱말이 있거나 오늘 장이 그 그림의 장일 때만 ② 사람 장면 범용 그림은 태그가 둘 이상 맞을 때만
    ③ 정책의 시대 제한(er) ④ 점수가 낮으면 억지로 넣지 않음(그림 없는 카드) */
-let PH_NOAVOID=false; let PHR2=(()=>{ try{ return new URLSearchParams(location.search).get("phrule")==="v2"; }catch(e){ return false; } })(), PH_MIN=null; const PH_LAST={};
+let PH_NOAVOID=false; /* 2026-10-30 목사님 결정: 전체 분류(692장)를 마친 뒤 v2를 기본으로 켬. 옛 규칙은 ?phrule=v1로 비교 */
+let PHR2=(()=>{ try{ return new URLSearchParams(location.search).get("phrule")!=="v1"; }catch(e){ return true; } })(), PH_MIN=null; const PH_LAST={};
 /* 절 근거 그림이 여럿이면: 실제 사건 → 물건·장소 → 비유·환상 → 설명용 연출 */
 const PH_WEAKT=new Set(['light','darkness','sorrow','joy','prayer','weeping','judgment','strength','healing','still','embrace','hands','hand','man','men','people','crowd','dust','sky','land','sunrise_light_rays','dawn','dusk','night','night_sky','sunset','tears','face','road']);
 /* 절 근거가 여럿이면 관계 서열이 아니라 그 절에 더 좁게 맞는 그림(GPT 2.1 4.3) */

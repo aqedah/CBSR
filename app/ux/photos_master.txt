@@ -116,7 +116,7 @@ g09_06|s|40:14;41:6;42:9;43:6|오병이어/떡 다섯/물고기 두/보리떡 �
 g09_07|g|||scroll,synagogue,sunrise_light_rays|가버나움|9,10|dark|50|회당의 두루마리|||object
 g09_08|s|43:4|우물곁/물동이|well,clay_jar|수가|9|warm|50|우물가의 물동이|||object
 g09_09|s|42:7;43:12|향유/옥합|oil,feet,alabaster||9|dark|50|향유 옥합||머리에 부|scene
-g09_10|s|42:19|삭개오/뽕나무|tree,man,road|여리고|9|warm|50|나무 위의 사람|||scene
+g09_10|s|42:19|삭개오/돌무화과나무|tree,man,road|여리고|9|warm|50|나무 위의 사람|||scene
 g09_11|s|40:26;41:14;42:22;43:18|겟세마네|olive_tree,prayer,night_sky|겟세마네|9|dark|50|겟세마네의 기도|||scene
 g09_13|s|40:26;41:14;42:22;43:18|닭이 울/불을 쬐|fire,courtyard,night_sky,rooster|예루살렘|9|dark|45|모닥불과 닭|||scene
 g09_14|s|40:27;41:15;42:23;43:19|십자가/해골이라 하는/못 박히|cross,storm_sky,hill|골고다|9,10|dark|55|언덕 위 세 개의 십자가|||scene
@@ -577,7 +577,7 @@ g43_12|s|59:3|작은 불이/많은 나무를/혀는 곧 불|fire,forest,smoke,th
 g43_13|s|60:2|산 돌/신령한 집/돌같이|stones,wall,light||10|warm|50|빛이 새는 틈으로 맞물려 쌓인 돌들(벧전 2:5)|||object
 g43_14|s|60:5|우는 사자/삼킬 자/두루 다니며|lion,night,rock,moon||10|dark|50|밤 바위 위에서 두리번거리는 사자(벧전 5:8)|||landscape
 g43_15|s|65:1|물 없는 구름/뿌리까지 뽑힌/열매 없는|tree,drought,clouds,dry_ground||10|dark|50|마른 땅에 뿌리째 뽑혀 쓰러진 나무(유 1:12)|||landscape
-g44_01|s|25:1|홀로 앉았는고/성읍이/과부 같이|ruins,city_gate,woman,ashes|예루살렘|7|dark|50|무너진 성문 곁 잿더미에 홀로 앉은 여인(애 1:1)|||scene
+g44_01|s|25:1|적막하게 앉았는고/성읍이/과부 같이|ruins,city_gate,woman,ashes|예루살렘|7|dark|50|무너진 성문 곁 잿더미에 홀로 앉은 여인(애 1:1)|||scene
 g44_02|s|25:3|아침마다 새로우니/긍휼이 무궁|ruins,sprout,sunrise,stone|예루살렘|7|warm|50|무너진 돌 틈에서 돋아난 새싹과 아침 해(애 3:23)|||object
 g44_03|s|28:3|은 열다섯 개/보리/샀더니|silver,barley,hands,woman||7|warm|50|은 조각과 보리 자루를 건네는 손(호 3:2)|||scene
 g44_04|s|28:14|이슬과 같으리니/백합화/뿌리가 박히|lily,dew,roots,cedar||7|dark|50|이슬 맺힌 백합과 굵은 나무뿌리(호 14:5)|||object
