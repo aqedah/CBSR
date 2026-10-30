@@ -994,6 +994,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .mvwindl{position:absolute;inset:0;z-index:900;pointer-events:none;opacity:0;transition:opacity .6s;background:repeating-linear-gradient(176deg,rgba(255,255,255,0) 0 22px,rgba(255,255,255,.45) 22px 24px,rgba(255,255,255,0) 24px 58px);background-size:240px 100%;animation:mvwind .5s linear infinite}.mvwindl.on{opacity:.75}@keyframes mvwind{from{background-position:0 0}to{background-position:-240px 0}}
 .mvsplash .leaflet-pane.leaflet-mvfx-pane::after{content:""}.mvpart.close i{transition:transform .9s ease-in,opacity .9s;transform:translateX(0)!important}
 .mvsplash::after{content:"";position:absolute;inset:0;z-index:950;pointer-events:none;background:radial-gradient(circle at 50% 40%,rgba(90,167,199,.55),rgba(90,167,199,0) 60%);animation:mvsplash 1.2s ease-out forwards}@keyframes mvsplash{from{opacity:1}to{opacity:0}}
+.tvb{position:absolute;left:0;top:0;z-index:1001;width:min(64vw,250px);background:#fffdf6;color:#2a2318;border-radius:14px;padding:9px 12px 8px;font:500 14.5px/1.55 var(--f-serif,serif);box-shadow:0 4px 14px rgba(0,0,0,.28);transition:opacity .8s;pointer-events:none;animation:tvbin .45s ease-out}.tvb small{display:block;margin-top:3px;color:#9a6417;font:700 11.5px var(--f-ui)}.tvb.old{opacity:0}@keyframes tvbin{from{opacity:0}to{opacity:1}}
 .bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
 .bmbig{display:flex;flex-direction:column;gap:6px}.bmbr{background:var(--card);border:1px solid var(--line);border-radius:14px}.bmbr.on{border-color:var(--acc)}.bmbh,.bmrh{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:10px 12px;font:inherit;color:inherit;cursor:pointer}.bmbh b,.bmrh b{display:block;font-size:15px}.bmbh small,.bmrh small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
@@ -3544,8 +3545,12 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
   if(st==="natural"){ /* 타일을 못 받으면(오프라인) 아래의 단순한 땅 모양이 보입니다 */ if(!map.getPane("nlbase")){ map.createPane("nlbase").style.zIndex=150; } NEARLAND.forEach(r=>L.polygon(r,{pane:"nlbase",className:"nl nlfb",interactive:false}).addTo(map));
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:8,maxZoom:13,keepBuffer:map.options.keepBuf||2,attribution:"지도: Esri, US National Park Service · 지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"}).addTo(map);
     /* 가까이 볼 때(9배율 이상)는 자연색 지도의 원본이 거칠어서, 이스라엘 땅은 앱에 든 자세한 지형 그림을 겹칩니다 */
-    const HI=map.options.noHi?[]:["levant","sinai","israel","israelhi"].map(k=>TERRAIN[k]&&L.imageOverlay(TERRAIN[k].url,TERRAIN[k].bounds,{interactive:false,className:"nathi"})).filter(Boolean);
-    const zf=()=>{ const on=map.getZoom()>=8.2; HI.forEach(o=>{ if(on&&!map.hasLayer(o)) o.addTo(map); else if(!on&&map.hasLayer(o)) map.removeLayer(o); }); }; map.on("zoomend",zf); map.whenReady(zf); return; }
+    /* 지형 그림은 늘 켜 둡니다(목사님 2026-10-30: 확대·축소 때 켜졌다 꺼졌다 하면 지도가 깨져 보임). 타일 위·선 아래 자리(hipane) */
+    if(!map.getPane("hipane")){ map.createPane("hipane").style.zIndex=250; map.getPane("hipane").style.pointerEvents="none"; }
+    ["levant","sinai","israel","israelhi"].forEach(k=>{ if(TERRAIN[k]) L.imageOverlay(TERRAIN[k].url,TERRAIN[k].bounds,{interactive:false,className:"nathi",pane:"hipane"}).addTo(map); });
+    /* 강줄기(요단·나일·유브라데·힛데겔 등, Natural Earth): 강을 건너는 장면이 보이도록 */
+    if(typeof RIVERS!=="undefined"){ const rw=()=>map.getZoom()>=8?3.6:map.getZoom()>=6?2.4:1.6, RL=RIVERS.map(([n,p])=>L.polyline(p,{color:"#3d8fcf",weight:rw(),opacity:.9,interactive:false,className:"river"}).addTo(map)); map.on("zoomend",()=>{ const w=rw(); RL.forEach(l=>l.setStyle({weight:w})); }); }
+    return; }
   if(st==="terrain"){ ["neareast","med","asia","israel","israelhi"].forEach(k=>{ const T=TERRAIN[k]; if(T) L.imageOverlay(T.url,T.bounds,{interactive:false}).addTo(map); }); map.attributionControl.addAttribution("지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"); }
   else { if(st==="water"&&!document.getElementById("wcDefs")) document.body.insertAdjacentHTML("beforeend",`<svg id="wcDefs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="wcF"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="3"/><feDisplacementMap in="SourceGraphic" scale="9"/><feGaussianBlur stdDeviation="1.2"/></filter></defs></svg>`);
     NEARLAND.forEach(r=>L.polygon(r,{className:"nl lo",interactive:false}).addTo(map)); NEARLAND.forEach(r=>L.polygon(r,{className:"nl li",interactive:false}).addTo(map)); map.attributionControl.addAttribution("해안선: Natural Earth"); }
@@ -4398,14 +4403,21 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
   const LL=q=>L.latLng(q[1],q[2]), legs=st=>[...(st.land0||[]),...(st.p||[]),...(st.then||[])];
   const starts=[]; { let c=T.start; S.forEach(st=>{ starts.push(c); const g=legs(st); if(g.length) c=g[g.length-1]; }); }
   const $=s=>el.querySelector(s), alive=()=>document.body.contains(el), CRS=L.CRS.EPSG3857;
-  let map=null, tok=0, idx=-1, paused=false, main=null, mainKey="", fol=[], trails=null, cur=null, labs=null, shown=new Set(), zT=6, camOn=true, camFrom=null, follow=null, side=[];
+  let lead=null; let map=null, tok=0, idx=-1, paused=false, main=null, mainKey="", fol=[], trails=null, cur=null, labs=null, shown=new Set(), zT=6, camOn=true, camFrom=null, follow=null, side=[];
   const close=pop=>{ tok++; if(pop!==true) ovDone(close); try{ map&&map.remove(); }catch(e){} el.remove(); document.body.style.overflow=""; };
   ovOpen(close);
   /* 멈출 수 있는 시계: 멈춘 동안은 시간이 흐르지 않음 */
   let clk=0, last=performance.now(); const tick=now=>{ if(!paused) clk+=Math.min(60,now-last); last=now; };
   const sleep=(ms,my)=>new Promise(res=>{ const end=clk+ms; const f=now=>{ tick(now); if(my!==tok||!alive()) return res(false); if(clk>=end) return res(true); requestAnimationFrame(f); }; requestAnimationFrame(f); });
   const verse=r=>{ const t=r&&vRef(r); return t?`<q>${esc(t)}</q><small>${esc(vLab(r))}</small>`:""; };
-  function showVerse(r){ const v=$(".bmtverse"), h=verse(r); if(!h){ v.hidden=true; return; } v.classList.remove("on"); v.innerHTML=h; v.hidden=false; void v.offsetWidth; v.classList.add("on"); }
+  /* 말씀은 스토리 QT의 지도처럼 그 자리에 말풍선으로 뜸. 새 풍선이 뜨면 앞 풍선은 흐려졌다 사라짐 */
+  /* 말풍선은 화면 위 한 장(.tvb): 말씀이 나온 자리 옆에 붙어 따라다니되 화면 밖으로 나가지 않게 */
+  let VB=[], vbAt=null;
+  function showVerse(r,at){ if(!r||!map) return; const t=vRef(r); if(!t) return; const ll=at||(main?main.getLatLng():null); if(!ll) return;
+    VB.forEach(v=>{ v.classList.add("old"); setTimeout(()=>v.remove(),900); }); VB=[];
+    const d=document.createElement("div"); d.className="tvb"; d.innerHTML=`${esc(t.length>110?t.slice(0,108)+"…":t)}<small>${esc(vLab(r))}</small>`; el.appendChild(d); VB.push(d); vbAt=ll; vbPlace(); }
+  function vbPlace(){ const d=VB[0]; if(!d||!vbAt||!map) return; const p=map.latLngToContainerPoint(vbAt), W=el.clientWidth, H=el.clientHeight, w=d.offsetWidth, h=d.offsetHeight, top0=70, bot=H*.62;
+    /* 인물(화면 가운데)을 가리지 않게 위쪽 띠에, 말씀이 나온 자리 쪽으로 */ let x=p.x-w/2, y=top0; x=Math.max(10,Math.min(W-w-10,x)); if(p.y<top0+h+30) y=Math.min(bot-h,p.y+46); d.style.transform=`translate(${Math.round(x)}px,${Math.round(y)}px)`; }
   function cap(i){ const st=S[i]; $(".bmtk").textContent=`${i+1} / ${S.length}${st.s?" · "+st.s:""}`; $(".bmth").textContent=st.t; $(".bmtn").textContent=st.n||""; $(".bmtend").hidden=true; }
   const who=i=>{ let id=T.as_||"man", nm=T.who; for(let k=0;k<=i&&k<S.length;k++){ if(S[k].who){ nm=S[k].who; id=S[k].as_||id; } } return [id,nm]; };
   const comps=i=>{ let C=(T.wth||[]).slice(); for(let k=0;k<=i&&k<S.length;k++){ if(S[k].add) C.push(S[k].add); if(k<i&&S[k].drop) C=C.filter(c=>c[0]!==S[k].drop); } return C; };
@@ -4423,20 +4435,22 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
     cur=L.polyline([],{color:"#c0392b",weight:5,interactive:false}).addTo(trails); }
   const capZ=z=>Math.min(9,z||7.5);
   /* 카메라: 따라갈 대상(follow)을 화면 가운데 조금 위에 두도록 매 순간 조금씩 다가감, 확대는 천천히 */
-  function camStep(){ if(!camOn||!map) return; const tgt=follow?follow():null; if(!tgt) return; const sz=map.getSize(), z=map.getZoom(), want=L.point(sz.x/2,sz.y*.4);
+  function camStep(){ if(!camOn||!map) return; const tgt=follow?follow():null; if(!tgt) return; const sz=map.getSize(), z=map.getZoom(), want=L.point(sz.x/2,sz.y*.5);
     const dz=zT-z; if(Math.abs(dz)>.01){ const nz=z+dz*.035, c=map.latLngToContainerPoint(tgt), off=c.subtract(want).multiplyBy(.08), center=map.containerPointToLatLng(L.point(sz.x/2,sz.y/2).add(off));
       map.setView(center,nz,{animate:false}); return; }
     const c=map.latLngToContainerPoint(tgt), d=c.subtract(want); if(Math.abs(d.x)+Math.abs(d.y)>1) map.panBy(d.multiplyBy(.07),{animate:false}); }
-  (function loop(){ if(!alive()) return; tick(performance.now()); camStep(); requestAnimationFrame(loop); })();
+  (function loop(){ if(!alive()) return; tick(performance.now()); camStep(); vbPlace(); requestAnimationFrame(loop); })();
   /* 걷기: 위경도 대신 메르카토르 미터로 보간(확대가 바뀌어도 어긋나지 않음) */
   function lineM(pts){ const P=pts.map(p=>CRS.project(p)), seg=[]; let tot=0; for(let k=1;k<P.length;k++){ const l=P[k].distanceTo(P[k-1]); seg.push(l); tot+=l; } return {P,seg,tot}; }
   function atM(Lm,dd){ dd=Math.max(0,Math.min(Lm.tot,dd)); let i=0; while(i<Lm.seg.length-1&&dd>Lm.seg[i]){ dd-=Lm.seg[i]; i++; } const a=Lm.P[i], b=Lm.P[i+1]||a, f=Lm.seg[i]?dd/Lm.seg[i]:0; return [CRS.unproject(L.point(a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f)),i,b.x<a.x]; }
   const msFor=(pts,z,dash)=>{ const m=lineM(pts).tot; const scale=256*Math.pow(2,z)/40075016.68, p=m*scale; return Math.max(1100,Math.min(5200,p*6.5))*(dash?2.2:1); };
-  function walk(pts,ms,my,gap){ return new Promise(res=>{ const Lm=lineM(pts); if(!Lm.tot) return res(true); const t0=clk, base=cur.getLatLngs().slice(); let nextE=clk+400; const E=EMO(S[idx]||{}), A=[main,...fol.map(f=>f.m)];
+  function walk(pts,ms,my,gap,mid,ease){ return new Promise(res=>{ const Lm=lineM(pts); if(!Lm.tot) return res(true); const t0=clk, base=cur.getLatLngs().slice(); let nextE=clk+400; const E=EMO(S[idx]||{}), A=[main,...fol.map(f=>f.m)];
       A.forEach(m=>{ const c=chm(m); if(c) c.classList.add("walk"); }); follow=()=>main.getLatLng();
-      const f=now=>{ tick(now); if(my!==tok||!alive()) return res(false); const k=Math.min(1,(clk-t0)/ms), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2, dd=e*Lm.tot, [here,i,lf]=atM(Lm,dd);
+      const f=now=>{ tick(now); if(my!==tok||!alive()) return res(false); const k=Math.min(1,(clk-t0)/ms), e=ease==="in"?k*k:ease==="out"?1-(1-k)*(1-k):ease==="both"?(k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2):k, dd=e*Lm.tot, [here,i,lf]=atM(Lm,dd);
+        if(mid&&k>=.5){ const m2=mid; mid=null; m2(); }
         main.setLatLng(here); const c=chm(main); if(c) c.classList.toggle("flip",lf); const mpp=40075016.68/(256*Math.pow(2,map.getZoom()));
         fol.forEach((fo,j)=>{ const [q,,l2]=atM(Lm,dd-(j+1)*(gap||15)*mpp); fo.m.setLatLng(q); const c2=chm(fo.m); if(c2) c2.classList.toggle("flip",l2); });
+        if(lead&&!lead.stop){ const [q]=atM(Lm,dd+34*mpp); lead.m.setLatLng(q); }
         cur.setLatLngs(base.concat(pts.slice(1,i+1),[here])); for(let j=1;j<=i;j++) label(pts[j]._q);
         barSet(idx,(clk-stepT0)/stepMs);
         if(clk>nextE&&E.length&&!paused){ nextE=clk+500+Math.random()*450; emo(A[Math.floor(Math.random()*A.length)],E[Math.floor(Math.random()*E.length)]); }
@@ -4450,16 +4464,28 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
   async function hold(ms,my,zoomIn){ const t0=clk, z0=zT; if(zoomIn) zT=Math.min(9.6,z0+.7); while(clk-t0<ms){ if(!(await sleep(80,my))) return false; barSet(idx,(clk-stepT0)/stepMs); } return true; }
   /* 홍해: 지팡이 → 동풍 → 물벽 → 건넘 → 뒤쫓는 애굽 군대 → 물이 다시 덮음(출 14:21–28) */
   async function redSea(st,pts,ms,my){ const c=chm(main); zT=capZ(st.z); follow=()=>L.latLng((pts[0].lat+pts[pts.length-1].lat)/2,(pts[0].lng+pts[pts.length-1].lng)/2);
-    if(!(await sleep(1400,my))) return false; zT=map.getZoom(); if(c) c.classList.add("stretch"); const wl=$(".mvwindl"); wl.classList.add("on"); E2(["😮","😨","🙏"],4);
+    showVerse(st.pre,pts[0]); if(!(await sleep(1400,my))) return false; zT=map.getZoom(); if(c) c.classList.add("stretch"); const wl=$(".mvwindl"); wl.classList.add("on"); E2(["😮","😨","🙏"],4);
     if(!(await sleep(1700,my))) return false; const a=map.latLngToContainerPoint(pts[0]), b=map.latLngToContainerPoint(pts[pts.length-1]);
     mvFx(map,"part",[(pts[0].lat+pts[pts.length-1].lat)/2,(pts[0].lng+pts[pts.length-1].lng)/2],Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI-90,Math.hypot(b.x-a.x,b.y-a.y));
-    if(!(await sleep(1000,my))) return false; showVerse(st.r); camOn=false;
-    if(!(await walk(pts,Math.max(ms,4200),my,13))) return false; wl.classList.remove("on");
+    if(!(await sleep(1000,my))) return false; showVerse(st.r,pts[pts.length-1]); camOn=false;
+    if(!(await walk(pts,Math.min(5200,Math.max(ms,4200)),my,13))) return false; wl.classList.remove("on");
     const sol=[0,1,2,3].map(k=>mvMarker(map,"soldier",{at:pts[0],w:26,z:500})); const t0=clk; E2(["😨","😮"],2);
     while(clk-t0<1300){ if(!(await sleep(40,my))) return false; const f=(clk-t0)/1300; sol.forEach((m,k)=>{ const g=Math.max(0,f-k*.08)*.45; m.setLatLng(L.latLng(pts[0].lat+(pts[pts.length-1].lat-pts[0].lat)*g,pts[0].lng+(pts[pts.length-1].lng-pts[0].lng)*g)); }); }
-    showVerse([2,14,28]); const fx=map.getPane("mvfx"); if(fx) fx.querySelectorAll(".mvpart").forEach(p=>p.classList.add("off","close")); el.querySelector(".bmtmap").classList.add("mvsplash");
+    showVerse([2,14,28],pts[0]); const fx=map.getPane("mvfx"); if(fx) fx.querySelectorAll(".mvpart").forEach(p=>p.classList.add("off","close")); el.querySelector(".bmtmap").classList.add("mvsplash");
     sol.forEach(m=>{ const cc=chm(m); if(cc) cc.classList.add("vanish"); }); if(c) c.classList.remove("stretch");
     if(!(await sleep(1300,my))) return false; sol.forEach(m=>map.removeLayer(m)); el.querySelector(".bmtmap").classList.remove("mvsplash"); E2(["🎉","🙌","🎵","❤️"],6); camOn=true; return true; }
+  async function jordanX(st,pts,ms,my){ const A=pts[0], B=pts[pts.length-1]; let R=null, best=1e9;
+    (typeof RIVERS!=="undefined"?RIVERS:[]).forEach(([n,p])=>{ if(n!=="Jordan") return; p.forEach(q=>{ const d=Math.abs(q[0]-(A.lat+B.lat)/2)*3+Math.abs(q[1]-(A.lng+B.lng)/2); if(d<best){ best=d; R=L.latLng(q[0],q[1]); } }); });
+    if(!R) R=L.latLng((A.lat+B.lat)/2,(A.lng+B.lng)/2);
+    zT=capZ(st.z); follow=()=>R; if(!lead) lead={m:mvMarker(map,"ark",{at:A,w:40,name:"언약궤",z:2500})};
+    /* 1) 언약궤가 먼저 강으로 */ const t0=clk, la=lead.m.getLatLng(); lead.stop=true; showVerse([6,3,15],A);
+    while(clk-t0<1800){ if(!(await sleep(30,my))) return false; const f=(clk-t0)/1800; lead.m.setLatLng(L.latLng(la.lat+(R.lat-la.lat)*f,la.lng+(R.lng-la.lng)*f)); }
+    /* 2) 위에서 물이 그침: 아담 성읍(위)부터 염해까지 강이 마름 */ const ADAM=L.latLng(32.1,35.55); mvFx(map,"jordan",[ADAM.lat,ADAM.lng]);
+    const dry=[]; (RIVERS||[]).forEach(([n,p])=>{ if(n!=="Jordan") return; const seg=p.filter(q=>q[0]<=32.1&&q[0]>=31.75); if(seg.length>1) dry.push(L.polyline(seg,{color:"#b8915a",weight:8,opacity:0,dashArray:"2 5",lineCap:"round",interactive:false,className:"dryb"}).addTo(trails)); });
+    for(let q=0;q<=10;q++){ if(!(await sleep(70,my))) return false; dry.forEach(d=>d.setStyle({opacity:q/10})); } E2(["😮","🙏"],4); showVerse(st.r,R);
+    /* 3) 백성이 마른 땅으로 건넘(언약궤는 강 가운데 서 있음) */ if(!(await walk(pts,Math.min(5200,Math.max(ms,4200)),my,14))) return false;
+    /* 4) 언약궤도 올라오고 물이 다시 흐름(수 4:18) */ const t1=clk, lb=lead.m.getLatLng(); while(clk-t1<1400){ if(!(await sleep(30,my))) return false; const f=(clk-t1)/1400; lead.m.setLatLng(L.latLng(lb.lat+(B.lat-lb.lat)*f,lb.lng+(B.lng-lb.lng)*f)); }
+    lead.stop=false; for(let q=10;q>=0;q--){ if(!(await sleep(70,my))) return false; dry.forEach(d=>d.setStyle({opacity:q/10})); } dry.forEach(d=>trails.removeLayer(d)); E2(["🎉","🙌","🙏"],5); return true; }
   function E2(L2,n){ const A=[main,...fol.map(f=>f.m)]; for(let k=0;k<n;k++) setTimeout(()=>emo(A[k%A.length],L2[k%L2.length]),k*260); }
   /* 정탐꾼처럼 무리 일부가 다녀오는 길 */
   async function sideTrip(sd,ms,my){ const pts=tag([[0,main.getLatLng().lat,main.getLatLng().lng],...sd.p]); const Lm=lineM(pts); const sp=Array.from({length:12},(_,k)=>mvMarker(map,["man","youth","elder","man"][k%4],{at:pts[0],w:20,name:k===0?sd.n:"",z:700}));
@@ -4469,31 +4495,35 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
       barSet(idx,(clk-stepT0)/stepMs); if(clk>nextE){ nextE=clk+600; emo(sp[Math.floor(Math.random()*4)],k<.55?["😮","🍇","👀"][Math.floor(Math.random()*3)]:["😨","🍇","😢"][Math.floor(Math.random()*3)]); } }
     sp.forEach(m=>{ const c=chm(m); if(c) c.classList.add("vanish"); }); setTimeout(()=>sp.forEach(m=>map.removeLayer(m)),900); follow=()=>main.getLatLng(); return true; }
   async function play(i){ const my=++tok; for(let s=i;s<S.length;s++){ if(!(await step(s,my))) return; } finish(my); }
-  async function step(i,my){ idx=i; const st=S[i]; cap(i); showVerse(st.pre||st.r); map.getContainer().classList.toggle("mvstorm",!!st.storm);
+  async function step(i,my){ idx=i; const st=S[i]; cap(i); map.getContainer().classList.toggle("mvstorm",!!st.storm);
+    if(lead&&!st.lead){ map.removeLayer(lead.m); lead=null; } if(st.lead&&!lead){ lead={m:mvMarker(map,st.lead[1],{at:main?main.getLatLng():LL(starts[i]),w:40,name:st.lead[0],z:2500})}; }
     const groups=st.stay?[]:[[st.land0||[],false],[st.p||[],!!st.sea],[st.then||[],false]].filter(g=>g[0].length);
     zT=capZ(st.z); let from=starts[i]; const durs=groups.map(([g])=>{ const d=msFor(tag([from,...g]),zT,st.dash); from=g[g.length-1]; return d; });
-    let mv=durs.reduce((a,b)=>a+b,0)+(st.side?9000:0)+(st.fx==="part"?8000:0); const need=needMs(st); let k=1; if(mv&&mv<need-600) { k=Math.min(1.8,(need-600)/mv); }
-    const dw=st.stay?need:Math.max(500,Math.min(1800,need-mv*k)); stepT0=clk; stepMs=mv*k+dw; follow=()=>main?main.getLatLng():LL(starts[i]);
-    if(st.pre&&st.fx!=="part"){ if(!(await hold(2400,my))) return false; showVerse(st.r); }
-    if(st.fx==="jordan"){ const a=LL(starts[i]), b=LL(legs(st)[legs(st).length-1]); mvFx(map,"jordan",[(a.lat+b.lat)/2,(a.lng+b.lng)/2]); }
-    from=starts[i]; for(let gi=0;gi<groups.length;gi++){ const [g,sea]=groups[gi]; actors(i,LL(from),sea); const pts=tag([from,...g]);
+    /* 장면 사이에서 멈추지 않음(목사님 2026-10-30): 말씀을 읽을 시간만큼 걸음을 늦추고, 도착하면 곧바로 다음 장면을 걷기 시작 */
+    let mv=durs.reduce((a,b)=>a+b,0)+(st.side?9000:0)+(st.fx==="part"?8000:0)+(st.fx==="jordan"?7000:0); const need=needMs(st); let k=1; if(mv&&mv<need) k=Math.min(3,need/mv);
+    const dw=st.stay?need:0; stepT0=clk; stepMs=Math.max(1,mv*k+dw); follow=()=>main?main.getLatLng():LL(starts[i]);
+    if(st.fx!=="part"&&st.fx!=="jordan") showVerse(st.pre||st.r);
+    from=starts[i]; const first=i===0, lastS=i===S.length-1;
+    for(let gi=0;gi<groups.length;gi++){ const [g,sea]=groups[gi]; actors(i,LL(from),sea); const pts=tag([from,...g]);
       if(st.fx==="part"&&g===st.p){ if(!(await redSea(st,pts,durs[gi]*k,my))) return false; }
-      else if(!(await walk(pts,durs[gi]*k,my))) return false; from=g[g.length-1]; }
+      else if(st.fx==="jordan"&&g===st.p){ if(!(await jordanX(st,pts,durs[gi]*k,my))) return false; }
+      else if(!(await walk(pts,durs[gi]*k,my,0,st.pre&&gi===0?()=>showVerse(st.r):null,first&&gi===0?"in":lastS&&gi===groups.length-1?"out":"lin"))) return false; from=g[g.length-1]; }
     if(!groups.length) actors(i,LL(starts[i]),false); else if(st.sea&&!(st.then||[]).length) actors(i,LL(from),true);
     if(st.side&&!(await sideTrip(st.side,9000*k,my))) return false;
     if(st.drop){ const f=fol.find(x=>x.n===st.drop); if(f){ E2(["😢","🙏"],4); await sleep(500,my); const c=chm(f.m); if(c) c.classList.add("vanish"); await sleep(900,my); map.removeLayer(f.m); fol=fol.filter(x=>x!==f); mainKey=""; } }
+    if(st.stay&&st.pre){ setTimeout(()=>{ if(my===tok) showVerse(st.r); },Math.min(3000,dw*.45)); }
     if(st.stay){ const E3=EMO(st), A=[main,...fol.map(f=>f.m)]; for(let q=0;q*650<dw-500;q++) setTimeout(()=>{ if(my===tok&&!paused) emo(A[q%A.length],E3[q%E3.length]); },300+q*650); }
-    if(!(await hold(dw,my,!!st.stay))) return false; barSet(i,1); return true; }
+    if(dw&&!(await hold(dw,my,!!st.stay))) return false; barSet(i,1); return true; }
   function finish(my){ if(my!==tok) return; idx=S.length; map.getContainer().classList.remove("mvstorm"); drawUpTo(S.length); legs(S[S.length-1]).forEach(label); barSet(S.length,1);
     const B=L.latLngBounds([T.start,...S.flatMap(legs)].map(LL)), sz=map.getSize(); zT=Math.max(3,map.getBoundsZoom(B,false,L.point(60,Math.round(sz.y*.5)))-.2); const c=B.getCenter(); follow=()=>c;
-    $(".bmtk").textContent=T.sub||""; $(".bmth").textContent="여정을 마쳤습니다"; $(".bmtn").textContent=T.end||""; $(".bmtverse").hidden=true; $(".bmtend").hidden=false; }
+    $(".bmtk").textContent=T.sub||""; $(".bmth").textContent="여정을 마쳤습니다"; $(".bmtn").textContent=T.end||""; $(".bmtend").hidden=false; }
   /* 건너뛰기: 그 장면의 시작 자리로 바로 옮겨 놓고 이어서 재생 */
-  function jump(i){ i=Math.max(0,Math.min(S.length-1,i)); tok++; setPause(false); el.querySelector(".bmtmap").classList.remove("mvsplash"); $(".mvwindl").classList.remove("on"); camOn=true; const fx=map.getPane("mvfx"); if(fx) fx.innerHTML="";
+  function jump(i){ i=Math.max(0,Math.min(S.length-1,i)); tok++; VB.forEach(v=>v.remove()); VB=[]; if(lead){ map.removeLayer(lead.m); lead=null; } setPause(false); el.querySelector(".bmtmap").classList.remove("mvsplash"); $(".mvwindl").classList.remove("on"); camOn=true; const fx=map.getPane("mvfx"); if(fx) fx.innerHTML="";
     drawUpTo(i); mainKey=""; if(main){ map.removeLayer(main); main=null; } actors(i,LL(starts[i]),!!(S[i].sea&&!S[i].land0)); if(main) main.setLatLng(LL(starts[i])); fol.forEach(f=>f.m.setLatLng(LL(starts[i])));
     zT=capZ(S[i].z); map.setView(LL(starts[i]),Math.min(zT,map.getZoom()+1.5),{animate:false}); play(i); }
   function setPause(p){ paused=p; const b=$('[data-t="pause"]'); b.textContent=p?"▶":"❚❚"; b.setAttribute("aria-label",p?"계속":"멈춤"); el.classList.toggle("paused",p); }
   el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; e.stopPropagation(); const a=t.dataset.t; if(a==="x") close(); else if(a==="pause") setPause(!paused); else if(a==="again") jump(0); });
-  setTimeout(()=>{ if(!alive()) return; const mapEl=$(".bmtmap"); map=L.map(mapEl,{zoomControl:false,attributionControl:true,zoomSnap:0,zoomAnimation:false,fadeAnimation:false,scrollWheelZoom:false,dragging:!mapTouch(),tap:false,noHi:true,keepBuf:6}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); mapTwoFinger(map);
+  setTimeout(()=>{ if(!alive()) return; const mapEl=$(".bmtmap"); map=L.map(mapEl,{zoomControl:false,attributionControl:true,zoomSnap:0,zoomAnimation:false,fadeAnimation:false,scrollWheelZoom:false,dragging:!mapTouch(),tap:false,keepBuf:6}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); mapTwoFinger(map);
     const all=[T.start,...S.flatMap(legs)].map(LL); L.polyline(all,{color:"#5b5346",weight:2.5,opacity:.5,dashArray:"4 7",interactive:false}).addTo(map);
     trails=L.layerGroup().addTo(map); labs=L.layerGroup().addTo(map); drawUpTo(0);
     const sz=map.getSize(); map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[30,90],paddingBottomRight:[30,Math.round(sz.y*.4)],animate:false}); zT=map.getZoom(); actors(0,LL(T.start),false); follow=null;
