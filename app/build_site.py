@@ -197,6 +197,7 @@ open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
 VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('Object.defineProperty(window,"localStorage"','/* v1 기록 가져오기: v2를 처음 열 때 한 번, v1(앞머리 없는 기록)을 v2: 쪽에 복사(이미 있는 v2 기록은 그대로) */if(!L.getItem("v2:cbsr-v1import")){var K=[];for(var i=0;i<L.length;i++){var k=L.key(i);if(k&&/^(cbsr-|rjnote:)/.test(k))K.push(k);}K.forEach(function(k){if(L.getItem("v2:"+k)==null)L.setItem("v2:"+k,L.getItem(k));});L.setItem("v2:cbsr-v1import",new Date().toISOString()+" "+K.length);}try{for(var j=0;j<L.length;j++){var kk=L.key(j);if(kk&&/^(cbsr-|rjnote:)/.test(kk)&&kk!=="cbsr-login-v1"){window.CBSR_HADV1=1;break;}}}catch(e){}window.__rawLS=L;Object.defineProperty(window,"localStorage"',1).replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search))S.setItem("cbsr-mode","y365");else if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","rj");if(0)')
 exec(open('review_build.py').read())
+open(OUT+'/demo.html','w').write(open('site_src/demo.html').read().replace('<!--FB-->',_GFB))  # 스토리 QT 체험판(2026-10-30)
 import base64 as _b64,gzip as _gz
 _BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())).decode()); _NM={}; _NR=_re.compile(r'^([가-힣]{2,})(을|를|의|에게|과|와|께서|에서|으로)$')
 for _bk in _BB:
