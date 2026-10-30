@@ -17,12 +17,14 @@ def my(lat): s=math.sin(math.radians(lat)); return (0.5-math.log((1+s)/(1-s))/(4
 def inv_my(y): n=math.pi-2*math.pi*y/W; return math.degrees(math.atan(math.sinh(n)))
 lat0=min(T[k]['bounds'][0][0] for k in KEYS); lat1=max(T[k]['bounds'][1][0] for k in KEYS)
 lng0=min(T[k]['bounds'][0][1] for k in KEYS); lng1=max(T[k]['bounds'][1][1] for k in KEYS)
-x0,x1=int(mx(lng0))//256*256,(int(mx(lng1))//256+1)*256; y0,y1=int(my(lat1))//256*256,(int(my(lat0))//256+1)*256
+# 시작점을 1024px(=7배율 타일 한 장) 단위로 맞춤: 256 단위면 8·7배율에서 타일 번호가 반 칸씩 밀려 지도가 틀어짐(2026-10-31)
+B=1024; x0,x1=int(mx(lng0))//B*B,(int(mx(lng1))//B+1)*B; y0,y1=int(my(lat1))//B*B,(int(my(lat0))//B+1)*B
 H,Wd=y1-y0,x1-x0; acc=np.zeros((H,Wd,3),np.float32); wsum=np.zeros((H,Wd),np.float32)
 ys=np.array([inv_my(y0+i+.5) for i in range(H)]); xs=(np.arange(Wd)+x0+.5)/W*360-180
 for k in KEYS:
   im=cv2.imread(f'{R}/terrain_{k}.jpg'); h,w=im.shape[:2]; (a0,o0),(a1,o1)=T[k]['bounds']
-  col=(xs-o0)/(o1-o0)*w-.5; row=(a1-ys)/(a1-a0)*h-.5
+  # 원본 그림은 메르카토르 타일로 만든 것이므로 세로는 위도가 아니라 메르카토르 y에 비례(위도에 비례로 보면 지도가 틀어짐, 2026-10-31)
+  Y0,Y1=my(a1),my(a0); col=(xs-o0)/(o1-o0)*w-.5; row=((np.arange(H)+y0+.5)-Y0)/(Y1-Y0)*h-.5
   mapx=np.tile(col.astype(np.float32),(H,1)); mapy=np.tile(row.astype(np.float32)[:,None],(1,Wd))
   warped=cv2.remap(im,mapx,mapy,cv2.INTER_LINEAR,borderMode=cv2.BORDER_CONSTANT,borderValue=(0,0,0)).astype(np.float32)
   fx=np.clip(np.minimum((col+.5)/(w*.08),(w-.5-col)/(w*.08)),0,1); fy=np.clip(np.minimum((row+.5)/(h*.08),(h-.5-row)/(h*.08)),0,1)
