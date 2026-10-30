@@ -4551,7 +4551,7 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
   function setPause(p){ paused=p; const b=$('[data-t="pause"]'); b.textContent=p?"▶":"❚❚"; b.setAttribute("aria-label",p?"계속":"멈춤"); el.classList.toggle("paused",p); }
   el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; e.stopPropagation(); const a=t.dataset.t; if(a==="x") close(); else if(a==="pause") setPause(!paused); else if(a==="again") jump(0); });
   setTimeout(()=>{ if(!alive()) return; const mapEl=$(".bmtmap"); el.style.height=innerHeight+"px"; el.style.bottom="auto"; map=L.map(mapEl,{trackResize:false,zoomControl:false,attributionControl:true,zoomSnap:.25,renderer:L.svg({padding:1.5}),scrollWheelZoom:false,dragging:!mapTouch(),tap:false,keepBuf:6}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); mapTwoFinger(map);
-    const all=[T.start,...S.flatMap(legs)].map(LL); L.polyline(all,{color:"#5b5346",weight:2.5,opacity:.5,dashArray:"4 7",interactive:false}).addTo(map);
+    const all=[T.start,...S.flatMap(legs)].map(LL); /* 앞으로 갈 길은 그리지 않음(목사님 2026-10-31): 밟은 길만 남김 */
     trails=L.layerGroup().addTo(map); labs=L.layerGroup().addTo(map); drawUpTo(0);
     const sz=map.getSize(); map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[30,90],paddingBottomRight:[30,Math.round(sz.y*.4)],animate:false}); zT=map.getZoom(); actors(0,LL(T.start),false); follow=null;
     $(".bmtk").textContent=T.sub||""; $(".bmth").textContent=T.n; $(".bmtn").textContent=T.d||"";
