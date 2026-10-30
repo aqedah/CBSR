@@ -26,6 +26,18 @@ data+="\nconst LEITWORT="+open('leitwort.json').read()+";\nconst EMPH="+open('em
 tj=json.load(open('terrain.json')); terr={}
 for k,v in tj.items():
     shutil.copy(f'terrain_{k}.jpg',f'{OUT}/terrain/{k}.jpg'); terr[k]={"bounds":v["bounds"],"url":f"terrain/{k}.jpg"}
+    if k in ('levant','sinai','israel','israelhi'):
+        # 가장자리 흐림을 그림 자체(알파)에 구움: CSS mask는 휴대폰에서 다시 그릴 때마다 한 프레임씩 번쩍임(목사님 녹화 2026-10-30)
+        import os
+        src=f'terrain_{k}.jpg'; dst=f'{OUT}/terrain/{k}.webp'; cache=f'terrain_{k}_a.webp'
+        if not os.path.exists(cache) or os.path.getmtime(cache)<os.path.getmtime(src):
+            from PIL import Image
+            im=Image.open(src).convert('RGBA'); w,h=im.size; fx,fy=int(w*.07),int(h*.07)
+            import numpy as np
+            ax=np.ones(w); ax[:fx]=np.linspace(0,1,fx); ax[-fx:]=np.linspace(1,0,fx)
+            ay=np.ones(h); ay[:fy]=np.linspace(0,1,fy); ay[-fy:]=np.linspace(1,0,fy)
+            A=(np.minimum.outer(ay,ax)*0.92*255).astype('uint8'); im.putalpha(Image.fromarray(A)); im.save(cache,'WEBP',quality=82)
+        shutil.copy(cache,dst); terr[k]["url"]=f"terrain/{k}.webp"
 data+="const TERRAIN="+json.dumps(terr)+";\n"
 data+="const PLX="+(open("ux/place_extra.json").read() if os.path.exists("ux/place_extra.json") else "{}")+";\n"
 data+="const NEARLAND="+open("ux/nearland.json").read()+";\n"
