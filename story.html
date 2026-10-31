@@ -1695,6 +1695,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .tvb{position:absolute;left:0;top:0;z-index:1001;will-change:transform,opacity;backface-visibility:hidden;width:min(64vw,250px);background:#fffdf6;color:#2a2318;border-radius:14px;padding:9px 12px 8px;font:500 14.5px/1.55 var(--f-serif,serif);box-shadow:0 4px 14px rgba(0,0,0,.28);transition:opacity .8s;pointer-events:none;animation:tvbin .45s ease-out}.tvb small{display:block;margin-top:3px;color:#9a6417;font:700 11.5px var(--f-ui)}.tvb.old{opacity:0}@keyframes tvbin{from{opacity:0}to{opacity:1}}
 .mvpil{position:absolute;left:-14px;bottom:30px;width:28px;height:110px;pointer-events:none;transition:opacity .8s}.mvpil i{position:absolute;inset:0;border-radius:14px 14px 10px 10px;background:linear-gradient(to top,rgba(255,255,255,.95),rgba(255,255,255,.75) 60%,rgba(255,255,255,.2));box-shadow:0 0 18px 8px rgba(255,255,255,.7);animation:mvpil 2.4s ease-in-out infinite alternate;transition:background 1.2s,box-shadow 1.2s}.mvpil b{position:absolute;left:-10px;right:-10px;top:-14px;height:36px;border-radius:50%;background:radial-gradient(rgba(255,255,255,.95),rgba(255,255,255,0) 70%)}
 .mvpil.fire i{background:linear-gradient(to top,#fff3b0,#ffb43a 35%,#ff6a1a 70%,rgba(255,80,20,.15));box-shadow:0 0 26px 12px rgba(255,140,40,.75)}.mvpil.fire b{background:radial-gradient(rgba(255,190,80,.95),rgba(255,120,30,0) 70%)}@keyframes mvpil{from{transform:scaleX(.9) skewX(-2deg)}to{transform:scaleX(1.08) skewX(2deg)}}.mvpilout .mvpil{opacity:0}
+.glend{margin:34px auto 0;max-width:340px;display:grid;gap:10px;text-align:center;padding:18px 18px 16px;border-radius:16px;border:1px solid rgba(243,215,154,.35);background:rgba(255,255,255,.05);animation:glend .9s ease both .3s}.glend b{font-size:16.5px;color:#fff;line-height:1.5;word-break:keep-all}.glend q{quotes:none;font:500 15px/1.7 var(--f-text);color:#f3e6c4;word-break:keep-all}.glend small{color:#e0b974;font-weight:700}@keyframes glend{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.glend{animation:none}}
 .bmlibmap{position:relative;margin:4px 0 0}.bmlibmap .bmmap{position:relative!important;top:auto!important;height:min(40vh,340px)!important;margin:0!important;box-shadow:none}.bmbigbtn{position:absolute;left:10px;top:10px;z-index:900;font:inherit;font-size:13px;font-weight:700;border:1px solid rgba(0,0,0,.2);background:rgba(255,255,255,.92);color:#222;border-radius:10px;padding:6px 10px;cursor:pointer}
 .bmmapbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 14px;font-size:13.5px}.bmmapbar .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}.dot.red{background:#c0392b}
 .bmland{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 12px;margin:0 0 14px;cursor:pointer}
@@ -11784,7 +11785,8 @@ function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=
 function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`<div class="gptop"><b>${esc({look:"본문에서 찾기",find:"오늘의 발견",order:"장면 순서",who:"누가 말했나",clue:"되풀이되는 말",trip:"여정 따라가기",card:"말씀 카드 빈칸"}[G.k])}</b><span class="gpdots">${G.total?Array.from({length:G.total},(_,i)=>`<i class="${i<G.step?"on":""}"></i>`).join(""):""}</span><button class="gpx" data-gpx="1" aria-label="닫기">✕</button></div>`;
   let body="";
   if(G.k==="look"){ const q=G.qs[G.i];
-    if(!q) body=`<p class="gpq gllq" style="text-align:center!important;margin-top:30vh">오늘 찾은 말씀 ${G.qs.length-G.rev}곳</p><p class="glhint" style="text-align:center">${G.rev?`근거를 보고 확인한 질문 ${G.rev}개`:"질문마다 본문에서 답이 되는 절을 찾았습니다"}</p>`;
+    if(!q){ const E=GL_END[Math.floor(Math.random()*GL_END.length)];
+      body=`<p class="gpq gllq" style="text-align:center!important;margin-top:22vh">오늘 찾은 말씀 ${G.qs.length-G.rev}곳</p><p class="glhint" style="text-align:center">${G.rev?`근거를 보고 확인한 질문 ${G.rev}개`:"질문마다 본문에서 답이 되는 절을 찾았습니다"}</p><div class="glend"><b>${esc(E[0])}</b><q>${esc(E[1])}</q><small>${esc(E[2])}</small></div>`; }
     else { const C=BIBLE[q.b-1][q.c-1], ok=G.found;
       const mk=(t,v)=>{ if(!ok||v!==q.v) return esc(t);
         /* 굵게 할 말: 질문이 따옴표로 가리킨 말이 이 절에 있으면 그것, 없으면 관찰 항목의 핵심 말(t) */
@@ -11980,6 +11982,17 @@ function findChapter(q){
   for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++) if(dayPlan(w,d).ch.some(x=>x[0]===b&&x[1]===c)) return {label,day:[w,d]};
   return {label,day:null};
 }
+/* 본문에서 찾기를 마친 뒤 한 장(목사님 2026-11-01: 밋밋하다 → 소망·도전의 말 한 줄과 말씀, 열 가지 가운데 하나씩) · 인용은 개역개정 대조함 */
+const GL_END=[["찾은 말씀을 오늘 하루 붙잡고 걸어가세요","주의 말씀은 내 발에 등이요 내 길에 빛이니이다","시 119:105"],
+ ["내일도 말씀이 새로운 것을 보여 줄 것입니다","내 눈을 열어서 주의 율법에서 놀라운 것을 보게 하소서","시 119:18"],
+ ["온 마음으로 찾는 사람에게 하나님은 숨지 않으십니다","너희가 온 마음으로 나를 구하면 나를 찾을 것이요 나를 만나리라","렘 29:13"],
+ ["날마다 찾는 사람이 결국 깊이 알게 됩니다","간절한 마음으로 말씀을 받고 이것이 그러한가 하여 날마다 성경을 상고하므로","행 17:11"],
+ ["오늘 찾은 말씀을 한 가지 행동으로 옮겨 보세요","너희는 말씀을 행하는 자가 되고 듣기만 하여 자신을 속이는 자가 되지 말라","약 1:22"],
+ ["말씀은 멀리 있지 않습니다","오직 그 말씀이 네게 매우 가까워서 네 입에 있으며 네 마음에 있은즉 네가 이를 행할 수 있느니라","신 30:14"],
+ ["시드는 것들 사이에서 끝까지 남는 것을 붙잡았습니다","풀은 마르고 꽃은 시드나 우리 하나님의 말씀은 영원히 서리라","사 40:8"],
+ ["오늘 마음이 뜨거워진 곳이 있었나요?","길에서 우리에게 말씀하시고 우리에게 성경을 풀어 주실 때에 우리 속에서 마음이 뜨겁지 아니하더냐","눅 24:32"],
+ ["찾는 기쁨은 금보다 귀합니다","금 곧 많은 순금보다 더 사모할 것이며 꿀과 송이꿀보다 더 달도다","시 19:10"],
+ ["작은 발견이 쌓이면 길이 됩니다","구하라 그리하면 너희에게 주실 것이요 찾으라 그리하면 찾아낼 것이요","마 7:7"]];
 document.addEventListener("click",e=>{ const c=e.target.closest&&e.target.closest("#rgCal"); if(c&&!c.onclick) openWeekPicker(); });
 function openWeekPicker(){
   const N=NDW(), cur=dispW(), td=today0(); let h=`<div class="wklist" id="wkList">`;
