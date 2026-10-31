@@ -7434,7 +7434,7 @@ function posOfToday(){
   if(diff>=TOTAL_DAYS){ const L=TOTAL_DAYS-1; return {w:Math.floor(L/7)+1,d:L%7,state:"after",diff}; }
   return {w:Math.floor(diff/7)+1,d:diff%7,state:"in",diff};
 }
-const fmt=(dt,o)=>dt.toLocaleDateString("ko-KR",o);
+const fmt=(dt,o)=>{ const t=dt.toLocaleDateString("ko-KR",o); return window.CBSR_V2&&o&&o.weekday?t.replace("(일)","(주일)").replace("일요일","주일"):t; }; /* v2: 일요일은 주일로(목사님 2026-11-01) */
 
 /* 데이터 준비 */
 const EI=buildEntityIndex(GAZ.places,GAZ.people);
@@ -11475,7 +11475,7 @@ function renderSunday(w){ const W=WEEKS[w-1]||{}, ph=sunCover(w), dt=dateOf(w,6)
   const sent=t=>String(t||"").split(/(?<=[다요]\.)\s+/).filter(Boolean);
   let h=`<section class="tdh sunh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin"><div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span></div>
     <div class="tdttl"><p class="tdk">주일 · 쉼과 잇기</p><h1>${w}주차 돌아보기</h1><p class="tdsub">${esc(W.t||"")}</p></div></div></section><section class="tdsheet sun">`;
-  h+=`<p class="tdstory">오늘은 새 본문을 읽지 않는 날입니다. 이번 주에 읽은 이야기를 모아 보고, 예배로 이어 가세요.</p><p class="sunstat">이번 주 <b>${read}</b> / ${L.length}일 읽음</p>`;
+  h+=`<p class="tdstory">오늘은 주일입니다. 이번 주에 읽은 이야기를 모아 보고, 예배로 이어 가세요.</p><p class="sunstat">이번 주 <b>${read}</b> / ${L.length}일 읽음</p>`;
   /* ① 지도 */
   const P=sunPlaces(w);
   h+=`<div class="suncard"><span class="sunk">1 · 이번 주 지나온 길</span>${P.size?`<div class="sunmap" id="sunMap"></div><p class="sunt">${[...P.keys()].slice(0,8).map(esc).join(" · ")}${P.size>8?` 외 ${P.size-8}곳`:""}</p><button class="linkbtn" id="sunBm">성경 지도에서 보기 ›</button>`:`<p class="sunt">이번 주 본문에는 지도에 표시할 곳이 많지 않습니다.</p>`}</div>`;
@@ -11634,7 +11634,7 @@ function dayRingHTML(){ const here0=today0(), selN=dayNo(view.w,view.d), N=READ_
   const from=Math.max(1,selN-28), to=Math.min(N,selN+28);
   for(let n=from;n<=to;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7;
     if(isRev(d)&&PLAN.plan[w-1]&&WEEKS[w-1]){ const dt=dateOf(w,d), dd=dayDiff(here0,dt), tod=dd===0, sel=n===selN&&!view.pre&&!view.revW, ph=sunCover(w), seen=!!(mem.sun&&mem.sun[w]);
-      r+=`<button class="rg rgsun${sel?" sel":""}${tod?" tod":""}${dd>0?" fut":""}${seen?" done":""}" data-rgsun="${w}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} 주일, 한 주 돌아보기"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}<i class="rgsunm">쉼</i></span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":"주일"}</em></b></button>`; continue; }
+      r+=`<button class="rg rgsun${sel?" sel":""}${tod?" tod":""}${dd>0?" fut":""}${seen?" done":""}" data-rgsun="${w}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2?"":" 주일"}, 한 주 돌아보기"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}<i class="rgsunm">쉼</i></span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":"주일"}</em></b></button>`; continue; }
     if(!dayPlan(w,d)) continue; const dt=dateOf(w,d), key=keyOf(w,d), done=!!mem.done[key], qtd=!!(mem.qt[key]&&mem.qt[key].done), sel=n===selN&&!view.pre&&!view.revW, dd=dayDiff(here0,dt), tod=dd===0, fut=dd>0;
     let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
     const p=dayPlan(w,d);
