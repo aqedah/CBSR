@@ -10384,7 +10384,7 @@ function bmRouteRef(r){ const names=r.p.map(q=>q[0]).filter(Boolean); const orde
   return [r.b,r.c[0],1,1]; }
 function bmCardHTML(){ const B=bmLit(()=>{ if(view.tab==="record"&&!view.recD){ const y=scrollY; render(); scrollTo({top:y}); } });
   const n=B?B.first.size:0, fr=B?B.fresh.slice(0,2):[];
-  const sub=!B?`읽은 본문의 지명을 모으는 중입니다…`:n?`지금까지 <b>${n}곳</b>을 지났습니다${fr.length?` · 최근 <b>${fr.map(esc).join("·")}</b>${B.fresh.length>2?` 등 ${B.fresh.length}곳`:""}이 새로 켜졌습니다`:""}`:`본문을 읽으면 그 날 나온 곳이 지도에 하나씩 켜집니다.`;
+  const sub=!B?`읽은 본문의 지명을 모으는 중입니다…`:n?`지금까지 <b>${n}곳</b>을 지났습니다${fr.length?` · 최근 <b>${fr.map(esc).join("·")}</b>${B.fresh.length>2?` 등 ${B.fresh.length}곳이`:(()=>{ const c=(fr[fr.length-1]||"").slice(-1).charCodeAt(0); return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28===0?"가":"이"; })()} 새로 켜졌습니다`:""}`:`본문을 읽으면 그 날 나온 곳이 지도에 하나씩 켜집니다.`;
   return `<section class="sec rcard"><div class="rhd"><b>성경 지도</b><button class="rmorelink" data-recgo="map">지도 열기 ›</button></div><button class="bmcard" data-recgo="map" aria-label="성경 지도 열기"><div class="bmmini" id="bmMini"></div></button><p class="rsub bmsub">${sub}</p></section>`; }
 function bmCardInit(){ const el=document.getElementById("bmMini"); if(!el||!window.L) return; const B=bmLit(); setTimeout(()=>{ if(!document.body.contains(el)) return;
   const map=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,zoomSnap:.25}); mapBase(map,"natural");
