@@ -2924,6 +2924,8 @@ function applyPV(){ const SC=SC_SRC(); if(!SC) return;
 const dayWD=m=>[Math.floor((m-1)/7)+1,(m-1)%7];
 function phDayOk(w,d){ try{ return !!dayPlan(w,d); }catch(e){ return false; } }
 function phRecent(n,s0){ const R=new Set(); for(let k=1;k<=4;k++){ const m=n-k; if(m<1) break; const [w,d]=dayWD(m); if(!phDayOk(w,d)) continue; try{ storySlides(w,d,m<s0).forEach(x=>{ if(x.ph&&x.ph.scope!=="s") R.add(x.ph.id); }); }catch(e){} } return R; }
+/* 목사님이 카드별로 정한 그림(ux/photo_pin.json). 카드 글 일부로 찾음. 보류·제외는 phPick의 phGate가 그대로 막음 */
+function phPinOf(s){ try{ if(typeof PHOTO_PIN==="undefined") return ""; const t=sTxt(s), pl=MODE==="y365"?"365":"rj", pv=PV(); const P=PHOTO_PIN.find(x=>(!x.pl||x.pl===pl)&&(!x.pv||pl!=="365"||x.pv===pv)&&t.includes(x.t)); return P?P.id:""; }catch(e){ return ""; } }
 function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b":""); SV.cache ||= {}; if(SV.cache[ck]) return SV.cache[ck];
   let avoid=null; if(!base&&!PH_NOAVOID){ const n=dayNo(w,d), s0=Math.floor((n-1)/28)*28+1; for(let m=s0;m<n;m++){ const [ww,dd]=dayWD(m); if(phDayOk(ww,dd)) try{ storySlides(ww,dd); }catch(e){} } avoid=phRecent(n,s0); }
   const no=dayNo(w,d), p=dayPlan(w,d), C=storyDay(no); let out=[];
@@ -2955,7 +2957,7 @@ function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b"
   out.forEach((s,i)=>{ if(noPh(s)){ g=null; return; } const st=stageOf(s), sameHint=true;
     
 
-    g={st,list:[i],hint:s.img}; groups.push(g); });
+    g={st,list:[i],hint:(/^gx?\d+_\d+$/.test(s.img||"")?s.img:"")||phPinOf(s)||s.img}; groups.push(g); });
   /* 표지는 장만 맞아도 장면 그림을 쓸 수 있어서, 뒤 카드가 낱말로 부르는 바로 그 장면 그림을 먼저 가져가던 문제(민 17 싹 난 지팡이 → 꽃밭, GPT 전수검수 T08).
      뒤 카드 글에 장면 낱말이 있는 장면 그림은 표지 후보에서 뺌 */
   const reserve=new Set(); try{ const PP=(typeof PHOTOS!=="undefined")?PHOTOS:[]; groups.forEach((G,gi)=>{ if(G.list[0]===0) return; const t=phNoBook(G.list.map(i=>sTxt(out[i])).join(" "));
