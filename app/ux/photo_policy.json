@@ -138,48 +138,6 @@
    "relation": "event",
    "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 광장 돌 위에서 두루마리 조서를 읽는 전령과 둘러선 사람들(기존 판단 유지) · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)"
   },
-  "g16_09": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "목사님이 빼서 보관",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g44_12": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "현대 목조 주택과 유리창으로 그려짐",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g45_03": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "허리띠에 현대식 쇠버클",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g45_04": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "화면이 반으로 갈라져 아래가 비어 있음",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g47_06": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "현대식 금속 트럼펫으로 그려짐",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g48_02": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "발이 불꽃처럼 타오르게 과장됨",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
   "g48_05": {
    "reviewStatus": "hold",
    "review": {
@@ -194,27 +152,6 @@
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
-  "g48_09": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "형광 녹색, 게임 화면 같음",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g48_10": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "요즘 아랍 옷(흰 토브·머리띠), 유리 바닥",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g48_11": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "목의 붉은 상처가 과장됨",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
   "g48_13": {
    "reviewStatus": "hold",
    "review": {
@@ -222,38 +159,10 @@
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
-  "g48_14": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "요즘 군복, 공포 영화 같은 표정",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
   "g48_18": {
    "reviewStatus": "hold",
    "review": {
     "reason": "보류: 금관이 그릇처럼 보여 관을 드리는 행위가 분명하지 않음(GPT 감사 2026-10-29)",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g49_03": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "운석 같은 과장",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g49_04": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "폭탄 폭발처럼 과장",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g49_06": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "힌두 신상(가네샤)이 들어감",
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
@@ -278,13 +187,6 @@
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
-  "g49_15": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "형광 붉은빛, 과장",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
   "g50_02": {
    "reviewStatus": "hold",
    "review": {
@@ -306,45 +208,10 @@
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
-  "g51_03": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "운석처럼 과장",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g51_04": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "화산 폭발처럼 과장",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g51_10": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "빛나는 성모상처럼 보임",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g51_11": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "만화 같은 용",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
   "g51_13": {
    "reviewStatus": "out",
    "review": {
     "reason": "만화 같은 괴물",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g51_15": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "형광 붉은빛, 과장",
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
@@ -366,13 +233,6 @@
    "reviewStatus": "hold",
    "review": {
     "reason": "보류: 엎질러진 포도주가 피처럼 보여 처형을 미리 보이는 듯함",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
-  "g53_08": {
-   "reviewStatus": "hold",
-   "review": {
-    "reason": "보류: 나무판과 창틀이 요즘 붙박이장·창문처럼 보임",
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
@@ -14267,7 +14127,6 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "requireAny": [
-    "로마",
     "군사",
     "군인",
     "백부장",
@@ -14279,7 +14138,7 @@
     10
    ],
    "reviewStatus": "reviewed",
-   "note": "막사 안의 로마식 투구와 곡면 방패 → 로마 시대로 고정",
+   "note": "막사 안의 로마식 투구와 곡면 방패 → 로마 시대로 고정 · 2026-10-31: 조건 낱말에서 '로마'를 뺌(로마 성도·로마서처럼 군사와 무관한 로마 언급에 군장 그림이 뜨던 것, GPT 전수검수 T10)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",

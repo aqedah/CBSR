@@ -2794,13 +2794,31 @@ const PH_TWIN=id=>/^g21_/.test(id)?"g11_"+id.slice(4):/^g11_/.test(id)?"g21_"+id
    ① 낱말(kw)이 붙은 범용 그림은 카드에 그 낱말이 있거나 오늘 장이 그 그림의 장일 때만 ② 사람 장면 범용 그림은 태그가 둘 이상 맞을 때만
    ③ 정책의 시대 제한(er) ④ 점수가 낮으면 억지로 넣지 않음(그림 없는 카드) */
 let PH_NOAVOID=false; /* 2026-10-30 목사님 결정: 전체 분류(692장)를 마친 뒤 v2를 기본으로 켬. 옛 규칙은 ?phrule=v1로 비교 */
+/* 본문별 사용 관계(GPT 전수 시각검수 2026-10-31, 149건 제안): 아직 시험 모드. ?phuse=1 또는 CBSR_phSim(규칙,최소,반복끔,true)로만 켜짐.
+   [그림, 번호, 책, 장, 시작절, 끝절, prefer|allow|block-specific|review-only, 관계, 개념 낱말]. 오늘 장에 그 장이 들고 카드가 그 절을 밝히거나 개념 낱말이 있으면 적용.
+   prefer: 그 카드의 우선 후보 · allow: 허용(시대·조건 낱말 문턱을 넘음) · block-specific: 그 카드에서 뺌 · review-only: 쓰지 않음(목사님 승인 전). 보류·제외는 어느 경우도 그대로 막음 */
+let PHUSE=(()=>{ try{ return new URLSearchParams(location.search).get("phuse")==="1"; }catch(e){ return false; } })();
+const PHUSE_BY=(()=>{ const M={}; (typeof PHOTO_USE!=="undefined"?PHOTO_USE:[]).forEach(u=>{ (M[u[0]] ||= []).push(u); }); return M; })();
+function phUseHit(p,kt,CH){ const L=PHUSE_BY[p.id]; if(!L) return null; let best=null;
+  for(const u of L){ const [, id,b,c,f,t,mode,rel,toks]=u; if(!CH.some(x=>x[0]===b&&x[1]===c)) continue;
+    let cite=false; for(const m of kt.matchAll(/([가-힣]{1,3})?\s?(\d{1,3}):(\d{1,3})/g)){ const ab=m[1], cc=+m[2], vv=+m[3]; const bookOk=ab&&typeof PLAN!=="undefined"&&PLAN.abbr.includes(ab)?PLAN.abbr[b-1]===ab:true; if(bookOk&&cc===c&&vv>=f&&vv<=t){ cite=true; break; } }
+    /* 개념 낱말 하나만으로는 너무 넓음(기도·광야·우상 등): 절을 밝히거나 개념 낱말 둘 이상(개념 낱말이 하나뿐인 관계는 그 하나)이 맞아야 함 */
+    const ws=(toks||[]).filter(x=>phRq(kt,x)), need=Math.min(2,(toks||[]).length||1); if(!cite&&ws.length<need) continue;
+    const r={id,mode,rel,why:cite?`${c}:${f}${t>f?"–"+t:""}`:ws.join("·")}; if(mode==="block-specific") return r; if(!best||(mode==="prefer"&&best.mode!=="prefer")) best=r; }
+  return best; }
 let PHR2=(()=>{ try{ return new URLSearchParams(location.search).get("phrule")!=="v1"; }catch(e){ return true; } })(), PH_MIN=null; const PH_LAST={};
 /* 절 근거 그림이 여럿이면: 실제 사건 → 물건·장소 → 비유·환상 → 설명용 연출 */
 const PH_WEAKT=new Set(['light','darkness','sorrow','joy','prayer','weeping','judgment','strength','healing','still','embrace','hands','hand','man','men','people','crowd','dust','sky','land','sunrise_light_rays','dawn','dusk','night','night_sky','sunset','tears','face','road']);
 /* 절 근거가 여럿이면 관계 서열이 아니라 그 절에 더 좁게 맞는 그림(GPT 2.1 4.3) */
 const phVaW=(p,v)=>{ let m=1e9; (p.va||[]).forEach(([b,c,f,t])=>{ if(b===v[0]&&c===v[1]&&v[2]>=f&&v[2]<=t) m=Math.min(m,t-f); }); return m; };
 /* 조건 낱말(rq): 앞은 낱말 경계, 뒤는 어미·조사가 붙어도 됨(두 글자 이상만 허용) */
-function phRq(t,w){ let i=t.indexOf(w); while(i>=0){ if(!i||!/[가-힣]/.test(t[i-1])) return true; i=t.indexOf(w,i+1); } return false; }
+/* 명사인데 동사 활용과 글자가 같은 낱말(2026-10-31 GPT 전수검수 9.2): '누가 능히 서리요'의 서리 ≠ 서리(霜) */
+const PH_RQ_NOT={"서리":/^(요|라|니|이까|로다|오)/};
+function phRq(t,w){ let i=t.indexOf(w); while(i>=0){ if(!i||!/[가-힣]/.test(t[i-1])){ const nx=PH_RQ_NOT[w]; if(!nx||!nx.test(t.slice(i+w.length))) return true; } i=t.indexOf(w,i+1); } return false; }
+/* 책 이름은 소재 낱말이 아님(GPT 전수검수 9.2·10-1): '로마서 1–3장'의 로마 → 로마 군장 그림이 뜨던 것.
+   사람 이름과 같은 책(에스더·다니엘·요나 등)은 지우지 않고, '…서·…기·…복음·…록·상·하'처럼 책 이름으로만 쓰이는 꼴만 지움 */
+const PH_BOOKRE=(()=>{ try{ const F=(typeof PLAN!=="undefined"&&PLAN.full)||[]; const L=F.filter(n=>/(서|기|복음|록|언|편|상|하)$/.test(n)&&!/^(미가|아가)$/.test(n)).sort((a,b)=>b.length-a.length); return L.length?new RegExp("(?<![가-힣])("+L.join("|")+")(?![가-힣])","g"):null; }catch(e){ return null; } })();
+const phNoBook=t=>PH_BOOKRE?String(t||"").replace(PH_BOOKRE," "):String(t||"");
 const PH_GR={"본문 설명":0,"비유 설명":1,"문맥 배경":2,"중립 장식":3};
 const PH_RLR=p=>({event:0,"object-place":1,figurative:2,illustrative:3}[p&&p.rl]??1.5);
 function phGate(p,CH,manual){ if(!p||p.rs==="hold"||p.rs==="out") return false;
@@ -2808,7 +2826,7 @@ function phGate(p,CH,manual){ if(!p||p.rs==="hold"||p.rs==="out") return false;
   if(!manual&&(p.ap==="manual-only"||p.ak==="ref"||p.rs==="restricted")) return false; return true; }
 function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt.era||null, CH=opt.ch||[]; const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
   if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f&&phGate(f,CH,true)) return f; }
-  const kt=opt.kwText||text, dayB=CH.length?CH[0][0]:0;
+  const kt=phNoBook(opt.kwText||text), dayB=CH.length?CH[0][0]:0;
   const want=new Set(), hs=new Set(); PH_KW.forEach(([ws,t])=>{ if(ws.some(w=>phHas(kt,w))) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
   /* 카드가 밝힌 장절: 다른 책 이름이 붙은 인용(예: 요삼 1:5)은 오늘 책의 장으로 보지 않습니다 */
   const cited=new Set(); for(const m of kt.matchAll(/([가-힣]{1,3})?\s?(\d{1,3}):\d/g)){ const ab=m[1]; if(ab&&typeof PLAN!=="undefined"&&PLAN.abbr.includes(ab)&&!CH.some(x=>PLAN.abbr[x[0]-1]===ab)) continue; cited.add(+m[2]); }
@@ -2819,6 +2837,9 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
   const nightOK=/밤|저녁|어두|어둠|흑암|새벽|별|달빛|등불|등잔|촛대|해 질|해가 지|횃불/.test(kt)||[...hs].some(t=>/^(oil_lamp|night|night_sky|darkness|stars|moon|torch)$/.test(t));
   for(const p of P){ if(used.has(p.id)||used.has(PH_TWIN(p.id))) continue;
     if(!phGate(p,CH,false)) continue;
+    if(PHR2&&PHUSE){ const U=phUseHit(p,kt,CH); if(U){ if(U.mode==="block-specific"){ REJ.push([p.id,"사용 관계 금지 "+U.id]); continue; }
+        if(U.mode==="prefer"||U.mode==="allow"){ const pref=U.mode==="prefer", fig=U.rel==="figurative";
+          V2C.push({p,fit:(pref?30:14)+(phHash(seed+"|"+p.id)%1000)/2000,rep:0,noise:0,grade:pref&&!fig&&U.rel!=="ambient"&&U.rel!=="illustrative"?"본문 설명":fig?"비유 설명":"문맥 배경",m:{w:["사용 관계 "+U.id+"("+U.why+")"],t:[]}}); continue; } } }
     let v2m=null; /* v2: 실제로 맞은 낱말·태그 */
     if(PHR2){ /* 한 글자 낱말(눈·양·불 등)은 근거로 세지 않음(GPT 2.1 4.2) */ const kwHit=(p.kw||[]).find(w=>w.replace(/~$/,'').length>=2&&phHas(kt,w)), conT=(p.tags||[]).filter(t=>(hs.has(t)||want.has(t))&&!PH_WEAKT.has(t)), anyT=(p.tags||[]).some(t=>hs.has(t)||want.has(t));
       if(p.er&&eok&&!p.er.some(x=>eok.includes(x))){ if(anyT||kwHit) REJ.push([p.id,"시대 제한"]); continue; }
@@ -2935,8 +2956,12 @@ function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b"
     
 
     g={st,list:[i],hint:s.img}; groups.push(g); });
+  /* 표지는 장만 맞아도 장면 그림을 쓸 수 있어서, 뒤 카드가 낱말로 부르는 바로 그 장면 그림을 먼저 가져가던 문제(민 17 싹 난 지팡이 → 꽃밭, GPT 전수검수 T08).
+     뒤 카드 글에 장면 낱말이 있는 장면 그림은 표지 후보에서 뺌 */
+  const reserve=new Set(); try{ const PP=(typeof PHOTOS!=="undefined")?PHOTOS:[]; groups.forEach((G,gi)=>{ if(G.list[0]===0) return; const t=phNoBook(G.list.map(i=>sTxt(out[i])).join(" "));
+    PP.forEach(q=>{ if(q.scope==="s"&&phGate(q,p.ch,false)&&(q.kw||[]).some(w=>phHas(t,w))&&(q.refs||[]).some(([b,a,z])=>p.ch.some(x=>x[0]===b&&x[1]>=a&&x[1]<=z))) reserve.add(q.id); }); }); }catch(e){}
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
-    const ph=phPick(txt,ctxPl,gen,ck.replace(/:b$/,"")+":"+gi,used,G.hint,{avoid,stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); G.list.forEach(i=>{ out[i]._phs=PH_LAST.s; out[i]._phw=PH_LAST.why; out[i]._phg=PH_LAST.grade; out[i]._rej=(PH_LAST.rej||[]).slice(0,4); }); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
+    const ph=phPick(txt,ctxPl,gen,ck.replace(/:b$/,"")+":"+gi,G.list[0]===0&&reserve.size?new Set([...used,...reserve]):used,G.hint,{avoid,stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); G.list.forEach(i=>{ out[i]._phs=PH_LAST.s; out[i]._phw=PH_LAST.why; out[i]._phg=PH_LAST.grade; out[i]._rej=(PH_LAST.rej||[]).slice(0,4); }); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
     G.list.forEach((i,k)=>{ out[i].ph=ph; out[i].phv=k; }); });
   out.forEach(s=>{ if(s.k==="fin"||s.k==="ask") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
   SV.cache[ck]=out; return out; }
@@ -3491,8 +3516,8 @@ window.CBSR_seed=function(N){ if(!NOWOFF) return false; const iso=x=>`${x.getFul
     if(i%3!==2){ mem.qt[k]={done:true,doneAt:ds,kv:`${b}:${c}:${1+(i*7)%9}`}; if(i%4===0) mem.qt[k].med="오늘 본문에서 하나님이 먼저 부르신다는 것을 보았다."; if(i%5===1) mem.qt[k].amen={"신실하신 분":ds}; if(i%6===0) mem.qt[k].samen={"§2":{d:ds,t:"생명과 사망을 네 앞에 두었나니",r:"wow"}}; }
     if(i%7===3){ HL[`${b}-${c}-${2+i%5}`]=["y",dateOf(w,d).getTime()]; } }
   save(); saveHL(); render(); return i; };
-window.CBSR_phSim=function(rule,min,noavoid){ PHR2=rule==="v2"; PH_MIN=min==null?null:min; PH_NOAVOID=!!noavoid; SV.cache={}; return PHR2; };
-window.CBSR_phTest=function(text,b,c,rule){ const o=PHR2; PHR2=rule!=="v1"; const ph=phPick(text,[],GENRE_OF(b),"t|"+text.length,new Set(),null,{era:ERA_OK(b,c),ch:[[b,c]],kwText:text}); const r={ph:ph&&ph.id,why:PH_LAST.why,grade:PH_LAST.grade,rej:(PH_LAST.rej||[]).slice(0,10)}; PHR2=o; return r; };
+window.CBSR_phSim=function(rule,min,noavoid,use){ PHR2=rule==="v2"; PH_MIN=min==null?null:min; PH_NOAVOID=!!noavoid; PHUSE=!!use; SV.cache={}; return PHR2; };
+window.CBSR_phTest=function(text,b,c,rule,use){ const o=PHR2, ou=PHUSE; PHR2=rule!=="v1"; if(use!=null) PHUSE=!!use; const ph=phPick(text,[],GENRE_OF(b),"t|"+text.length,new Set(),null,{era:ERA_OK(b,c),ch:[[b,c]],kwText:text}); const r={ph:ph&&ph.id,why:PH_LAST.why,grade:PH_LAST.grade,rej:(PH_LAST.rej||[]).slice(0,10)}; PHR2=o; PHUSE=ou; return r; };
 window.CBSR_dayCards=function(w,d){ return storySlides(w,d).map(x=>[x.k,(x.ph||{}).id,sTxt(x).slice(0,60)]); };
 window.CBSR_mapDemo=function(nm){ const r=ROUTES_B.find(x=>rmBase(x.n)===nm||x.n===nm); if(!r) return false; const el=document.createElement("div"); el.className="rgm"; el.innerHTML=`<div class="rgmtop"><b>${esc(r.n)}</b><button class="gpx">✕</button></div><div class="rgmmap" id="mdMap" style="height:70vh"></div>`; document.body.appendChild(el);
   el.querySelector(".gpx").onclick=()=>el.remove(); const mel=el.querySelector("#mdMap"); setTimeout(()=>{ const map=L.map(mel,{zoomControl:false,attributionControl:true,dragging:false,scrollWheelZoom:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); map.fitBounds(L.latLngBounds(r.p.map(q=>[q[1],q[2]])),{padding:[40,40],maxZoom:10});
