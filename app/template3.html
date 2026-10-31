@@ -999,6 +999,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .tvb{position:absolute;left:0;top:0;z-index:1001;will-change:transform,opacity;backface-visibility:hidden;width:min(64vw,250px);background:#fffdf6;color:#2a2318;border-radius:14px;padding:9px 12px 8px;font:500 14.5px/1.55 var(--f-serif,serif);box-shadow:0 4px 14px rgba(0,0,0,.28);transition:opacity .8s;pointer-events:none;animation:tvbin .45s ease-out}.tvb small{display:block;margin-top:3px;color:#9a6417;font:700 11.5px var(--f-ui)}.tvb.old{opacity:0}@keyframes tvbin{from{opacity:0}to{opacity:1}}
 .mvpil{position:absolute;left:-14px;bottom:30px;width:28px;height:110px;pointer-events:none;transition:opacity .8s}.mvpil i{position:absolute;inset:0;border-radius:14px 14px 10px 10px;background:linear-gradient(to top,rgba(255,255,255,.95),rgba(255,255,255,.75) 60%,rgba(255,255,255,.2));box-shadow:0 0 18px 8px rgba(255,255,255,.7);animation:mvpil 2.4s ease-in-out infinite alternate;transition:background 1.2s,box-shadow 1.2s}.mvpil b{position:absolute;left:-10px;right:-10px;top:-14px;height:36px;border-radius:50%;background:radial-gradient(rgba(255,255,255,.95),rgba(255,255,255,0) 70%)}
 .mvpil.fire i{background:linear-gradient(to top,#fff3b0,#ffb43a 35%,#ff6a1a 70%,rgba(255,80,20,.15));box-shadow:0 0 26px 12px rgba(255,140,40,.75)}.mvpil.fire b{background:radial-gradient(rgba(255,190,80,.95),rgba(255,120,30,0) 70%)}@keyframes mvpil{from{transform:scaleX(.9) skewX(-2deg)}to{transform:scaleX(1.08) skewX(2deg)}}.mvpilout .mvpil{opacity:0}
+.mvsky{position:absolute;left:-22px;top:-22px;font-size:40px;line-height:1;filter:drop-shadow(0 0 14px rgba(255,220,120,.95));animation:mvsky 2.6s ease-in-out infinite alternate;pointer-events:none}.mvsky.moon{font-size:30px;filter:drop-shadow(0 0 10px rgba(220,230,255,.9))}@keyframes mvsky{from{transform:scale(.92)}to{transform:scale(1.08)}}
 .bmtnight{position:absolute;inset:0;z-index:450;pointer-events:none;background:rgba(10,20,50,.5);opacity:0;transition:opacity 1.5s}.mvnight .bmtnight{opacity:1}
 .bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
@@ -1322,6 +1323,7 @@ body.tts-on .totop{display:none}
 @media (prefers-reduced-motion: reduce){.news-track .ni{transition:none}}
 .news-x{flex:none;border:0;background:none;color:var(--muted);font-size:13px;padding:2px 6px;cursor:pointer}
 .newslist{margin:0 0 6px;padding-left:20px;display:grid;gap:4px;font-size:15px;line-height:1.55}
+.leaflet-layer.hshade{mix-blend-mode:multiply}.pz9 .leaflet-layer.physb{filter:blur(1.5px)}.pz10 .leaflet-layer.physb{filter:blur(3.5px)}
 </style>
 
 <div class="wrap">
@@ -3041,6 +3043,14 @@ const CH_DEF={
  woman2:{robe:"#5f8a5a",trim:"#efe0b8",head:"scarf",cloth:"#c9873a",beard:null},
  youth:{robe:"#c08a3e",trim:"#f3e3b8",head:"short",hair:"#3b2616",beard:null},
  elder:{robe:"#56606e",trim:"#ddd2b0",head:"cloth",cloth:"#e8e2d0",band:"#56606e",beard:"#eeeeee",prop:"staff"},
+ /* 큰 여정 인물(2026-10-31) */
+ jacob:{robe:"#4f6d3a",trim:"#e6d6a0",sash:"#a0522d",head:"cloth",cloth:"#e9dfc4",band:"#4f6d3a",beard:"#5a3a1e",prop:"staff"},
+ joseph:{robe:"#c0392b",trim:"#f1c40f",sash:"#2e86c1",mantle:"#2e86c1",head:"short",hair:"#3b2616",beard:null},
+ vizier:{robe:"#f4efe2",trim:"#d4a72c",sash:"#d4a72c",head:"cloth",cloth:"#2d4f8a",band:"#d4a72c",beard:null},
+ joshua:{robe:"#7a4a2a",trim:"#c9c9c9",sash:"#c9a33a",head:"helmet",beard:"#3b2616",prop:"spear"},
+ david0:{robe:"#2f6f8a",trim:"#f1dc8a",sash:"#a0522d",head:"short",hair:"#7a3d14",beard:null},
+ mary:{robe:"#2e5d9a",trim:"#efe0b8",head:"scarf",cloth:"#f2ece0",beard:null},
+ maryb:{robe:"#2e5d9a",trim:"#efe0b8",head:"scarf",cloth:"#f2ece0",beard:null,prop:"baby"},
 };
 const CH_NAME={saul:"사울",jesus:"예수님",peter:"베드로",paul:"바울",abraham:"아브라함",moses:"모세",david:"다윗",elijah:"엘리야"};
 function C(id,o){ const d=Object.assign({},CH_DEF[id]||CH_DEF.man,o||{}), sk=d.skin||"#f2c9a1";
@@ -3577,11 +3587,12 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
   if(st==="natural"){ /* 타일을 못 받으면(오프라인) 아래의 단순한 땅 모양이 보입니다 */ if(!map.getPane("nlbase")){ map.createPane("nlbase").style.zIndex=150; } NEARLAND.forEach(r=>L.polygon(r,{pane:"nlbase",className:"nl nlfb",interactive:false}).addTo(map));
     /* 확대·축소로 지도 조각을 새로 받는 동안 빈 곳이 파랗게 튀지 않도록, 6배율 지도를 아래에 한 겹 깔아 둠(5배율 이상에서만) */
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{minNativeZoom:6,maxNativeZoom:6,minZoom:5,maxZoom:13,keepBuffer:8,zIndex:0,updateWhenZooming:false}).addTo(map);
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:8,maxZoom:13,zIndex:1,keepBuffer:map.options.keepBuf||2,attribution:"지도: Esri, US National Park Service · 지형: AWS Terrain Tiles(Mapzen) · 해안선: Natural Earth"}).addTo(map);
-    /* 가까이 볼 때(9배율 이상)는 자연색 지도의 원본이 거칠어서, 이스라엘 땅은 앱에 든 자세한 지형 그림을 겹칩니다 */
-    /* 지형 그림은 늘 켜 둡니다(목사님 2026-10-30: 확대·축소 때 켜졌다 꺼졌다 하면 지도가 깨져 보임). 타일 위·선 아래 자리(hipane) */
-    /* 자세한 지형(강줄기·능선)은 큰 그림 한 장이 아니라 작은 타일로(목사님 2026-10-31: 큰 그림은 휴대폰에서 확대할 때 다시 그리는 동안 흰 바탕이 비침). 바탕 타일과 같은 방식이라 함께 움직임 */
-    L.tileLayer("terrain/t/{z}/{x}/{y}.webp",{minNativeZoom:7,maxNativeZoom:9,minZoom:6,maxZoom:13,zIndex:5,keepBuffer:map.options.keepBuf||3,bounds:[[27.4,32],[37.6,39]],errorTileUrl:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",className:"nathi"}).addTo(map);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:8,maxZoom:13,zIndex:1,keepBuffer:map.options.keepBuf||2,className:"physb",attribution:"지도: Esri, US National Park Service · 해안선: Natural Earth"}).addTo(map);
+    /* 산 그림자(목사님 2026-10-31): 몇 지역만 덧댄 지형 조각은 PC에서 네모 경계가 보여서 걷어 내고, 온 세계가 한 장으로 이어진 Esri 음영 지도를 곱하기로 겹침.
+       바탕 지도는 8배율까지만 자세하지만 음영은 13배율까지 자세해서, 확대해도 산과 골짜기가 또렷함 */
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:13,maxZoom:13,zIndex:5,opacity:.55,keepBuffer:map.options.keepBuf||3,className:"hshade",attribution:"음영: Esri, USGS, NASA 외"}).addTo(map);
+    /* 바탕 지도는 8배율 원본을 늘려 쓰므로 크게 확대하면 네모 얼룩이 보임 → 그 배율에서만 바탕을 살짝 흐리게(산 그림자는 그대로 또렷) */
+    const pz=()=>{ const z=map.getZoom(); el.classList.toggle("pz9",z>=8.75&&z<9.75); el.classList.toggle("pz10",z>=9.75); }; map.on("zoomend",pz); map.whenReady(pz);
     /* 강줄기(요단·나일·유브라데·힛데겔 등, Natural Earth): 강을 건너는 장면이 보이도록 */
     if(typeof RIVERS!=="undefined"){ const rw=()=>map.getZoom()>=8?3.6:map.getZoom()>=6?2.4:1.6, RL=RIVERS.map(([n,p])=>L.polyline(p,{color:"#3d8fcf",weight:rw(),opacity:.9,interactive:false,className:"river"}).addTo(map)); map.on("zoomend",()=>{ const w=rw(); RL.forEach(l=>l.setStyle({weight:w})); }); }
     return; }
@@ -4435,9 +4446,9 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
    <p class="bmthint">왼쪽을 누르면 이전 · 오른쪽은 다음 · 길게 누르면 멈춤 · 지도는 두 손가락으로</p>`;
   document.body.appendChild(el); document.body.style.overflow="hidden";
   const LL=q=>L.latLng(q[1],q[2]), legs=st=>[...(st.land0||[]),...(st.p||[]),...(st.then||[])];
-  const starts=[]; { let c=T.start; S.forEach(st=>{ starts.push(c); const g=legs(st); if(g.length) c=g[g.length-1]; }); }
+  const starts=[]; { let c=T.start; S.forEach(st=>{ if(st.from) c=st.from; starts.push(c); const g=legs(st); if(g.length) c=g[g.length-1]; }); }
   const $=s=>el.querySelector(s), alive=()=>document.body.contains(el), CRS=L.CRS.EPSG3857;
-  let lead=null; let map=null, tok=0, idx=-1, paused=false, main=null, mainKey="", fol=[], trails=null, cur=null, labs=null, shown=new Set(), zT=6, camOn=true, camFrom=null, follow=null, side=[];
+  let lead=null, CHS=[], SKY=[]; let map=null, tok=0, idx=-1, paused=false, main=null, mainKey="", fol=[], trails=null, cur=null, labs=null, shown=new Set(), zT=6, camOn=true, camFrom=null, follow=null, side=[];
   const close=pop=>{ tok++; if(pop!==true) ovDone(close); try{ map&&map.remove(); }catch(e){} el.remove(); document.body.style.overflow=""; };
   ovOpen(close);
   /* 멈출 수 있는 시계: 멈춘 동안은 시간이 흐르지 않음 */
@@ -4456,12 +4467,13 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
     (one?[one]:VB).forEach(d=>{ const w=d.offsetWidth, h=d.offsetHeight, s2=+d.dataset.slot, left=s2===0||s2===3, up=s2===0||s2===2; const x=left?10:W-w-10, y=up?top0:Math.max(top0+90,bot-h-6); d.style.transform=`translate(${Math.round(x)}px,${Math.round(y)}px)`; }); }
   function cap(i){ const st=S[i]; $(".bmtk").textContent=`${i+1} / ${S.length}${st.s?" · "+st.s:""}`; $(".bmth").textContent=st.t; $(".bmtn").textContent=st.n||""; $(".bmtend").hidden=true; }
   const who=i=>{ let id=T.as_||"man", nm=T.who; for(let k=0;k<=i&&k<S.length;k++){ if(S[k].who){ nm=S[k].who; id=S[k].as_||id; } } return [id,nm]; };
-  const comps=i=>{ let C=(T.wth||[]).slice(); for(let k=0;k<=i&&k<S.length;k++){ if(S[k].add) C.push(S[k].add); if(k<i&&S[k].drop) C=C.filter(c=>c[0]!==S[k].drop); } return C; };
+  const comps=i=>{ let C=(T.wth||[]).slice(); for(let k=0;k<=i&&k<S.length;k++){ if(S[k].add) C.push(S[k].add); if(k<i&&S[k].drop){ const D=[].concat(S[k].drop); C=C.filter(c=>!D.includes(c[0])); } } return C; };
+  const grpOf=i=>{ let g=T.grp||""; for(let k=0;k<=i&&k<S.length;k++) if(S[k].grp!=null) g=S[k].grp; return g; };
   /* 인물: 같은 모습이면 다시 만들지 않고 자리만 옮김(끊김 없이) */
-  function actors(i,at,sea){ const [id,nm]=who(i), C=comps(i), key=[sea,id,nm,C.map(c=>c[0]+c[1]).join(",")].join("|"); if(key===mainKey&&main){ return; } mainKey=key;
+  function actors(i,at,sea){ const [id,nm]=who(i), C=comps(i), G=grpOf(i), key=[sea,id,nm,G,C.map(c=>c[0]+c[1]).join(",")].join("|"); if(key===mainKey&&main){ return; } mainKey=key;
     const pos=main?main.getLatLng():at; if(main) map.removeLayer(main); fol.forEach(f=>map.removeLayer(f.m)); fol=[];
     main=mvMarker(map,sea?"boat":id,{at:pos,w:sea?40:44,name:sea?"":nm,z:id==="jesus"?3000:2000});
-    if(!sea){ C.forEach(c=>fol.push({n:c[0],m:mvMarker(map,c[1],{at:pos,w:32,name:c[0],z:600})})); if(T.grp) ["man","woman","youth","woman2","elder","man","youth"].forEach((a,k)=>fol.push({n:"",m:mvMarker(map,a,{at:pos,w:22,name:k===0?T.grp:"",z:300})})); } }
+    if(!sea){ C.forEach(c=>fol.push({n:c[0],m:mvMarker(map,c[1],{at:pos,w:32,name:c[0],z:600})})); if(G) ["man","woman","youth","woman2","elder","man","youth"].forEach((a,k)=>fol.push({n:"",m:mvMarker(map,a,{at:pos,w:22,name:k===0?G:"",z:300})})); } }
   const chm=m=>m&&m.getElement&&m.getElement()&&m.getElement().querySelector(".chm");
   function emo(m,e){ const x=m&&m.getElement&&m.getElement(); if(!x||!e) return; const b=document.createElement("span"); b.className="mvemo"; b.textContent=e; x.appendChild(b); setTimeout(()=>b.remove(),1700); }
   const EMO=st=>[...(st.mood||"🙏😊❤️")].filter(c=>c.trim()&&c!=="️");
@@ -4493,6 +4505,7 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
         main.setLatLng(here); const c=chm(main); if(c) c.classList.toggle("flip",lf); const mpp=40075016.68/(256*Math.pow(2,map.getZoom()));
         fol.forEach((fo,j)=>{ const [q,,l2]=atM(Lm,dd-(j+1)*(gap||15)*mpp); fo.m.setLatLng(q); const c2=chm(fo.m); if(c2) c2.classList.toggle("flip",l2); });
         if(lead&&!lead.stop){ const [q]=atM(Lm,dd+34*mpp); lead.m.setLatLng(q); }
+        CHS.forEach((m,j)=>{ const [q,,l3]=atM(Lm,dd-(95+j*11)*mpp); m.setLatLng(q); const c4=chm(m); if(c4) c4.classList.toggle("flip",l3); if(Math.random()<.004) emo(m,"😠"); });
         cur.setLatLngs(base.concat(pts.slice(1,i+1),[here])); for(let j=1;j<=i;j++) label(pts[j]._q);
         barSet(idx,(clk-stepT0)/stepMs);
         if(clk>nextE&&E.length&&!paused){ nextE=clk+500+Math.random()*450; emo(A[Math.floor(Math.random()*A.length)],E[Math.floor(Math.random()*E.length)]); }
@@ -4537,17 +4550,21 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
     fol.forEach(f=>{ const e=chm(f.m); if(e) e.classList.remove("walk"); }); return true; }
   function E2(L2,n){ const A=[main,...fol.map(f=>f.m)]; for(let k=0;k<n;k++) setTimeout(()=>emo(A[k%A.length],L2[k%L2.length]),k*260); }
   /* 정탐꾼처럼 무리 일부가 다녀오는 길 */
-  async function sideTrip(sd,ms,my){ const pts=tag([[0,main.getLatLng().lat,main.getLatLng().lng],...sd.p]); const Lm=lineM(pts); const sp=Array.from({length:12},(_,k)=>mvMarker(map,["man","youth","elder","man"][k%4],{at:pts[0],w:20,name:k===0?sd.n:"",z:700}));
+  async function sideTrip(sd,ms,my){ const pts=tag([[0,main.getLatLng().lat,main.getLatLng().lng],...sd.p]); const Lm=lineM(pts); const sp=Array.from({length:sd.k||12},(_,k)=>mvMarker(map,(sd.as_?[sd.as_]:["man","youth","elder","man"])[k%(sd.as_?1:4)],{at:pts[0],w:k===0&&sd.k&&sd.k<5?26:20,name:k===0?sd.n:"",z:700}));
     const tr=L.polyline([],{color:"#8a5a2b",weight:3,dashArray:"4 6",interactive:false}).addTo(trails); const t0=clk; let nextE=clk+500; follow=()=>sp[0].getLatLng(); sp.forEach(m=>{ const c=chm(m); if(c) c.classList.add("walk"); });
     while(clk-t0<ms){ if(!(await sleep(16,my))) return false; const k=Math.min(1,(clk-t0)/ms), dd=k*Lm.tot, mpp=40075016.68/(256*Math.pow(2,map.getZoom()));
       sp.forEach((m,j)=>{ const [q,,lf]=atM(Lm,dd-j*9*mpp); m.setLatLng(q); const c=chm(m); if(c) c.classList.toggle("flip",lf); }); const [h,i]=atM(Lm,dd); tr.setLatLngs(pts.slice(0,i+1).concat([h])); for(let j=1;j<=i;j++) label(pts[j]._q);
-      barSet(idx,(clk-stepT0)/stepMs); if(clk>nextE){ nextE=clk+600; emo(sp[Math.floor(Math.random()*4)],k<.55?["😮","🍇","👀"][Math.floor(Math.random()*3)]:["😨","🍇","😢"][Math.floor(Math.random()*3)]); } }
+      barSet(idx,(clk-stepT0)/stepMs); if(clk>nextE){ nextE=clk+600; const SE=sd.e?[...sd.e].filter(c=>c.trim()&&c!=="️"):null; emo(sp[Math.floor(Math.random()*Math.min(4,sp.length))],SE?SE[Math.floor(Math.random()*SE.length)]:k<.55?["😮","🍇","👀"][Math.floor(Math.random()*3)]:["😨","🍇","😢"][Math.floor(Math.random()*3)]); } }
     sp.forEach(m=>{ const c=chm(m); if(c) c.classList.add("vanish"); }); setTimeout(()=>sp.forEach(m=>map.removeLayer(m)),900); follow=()=>main.getLatLng(); return true; }
   async function play(i){ const my=++tok; for(let s=i;s<S.length;s++){ if(!(await step(s,my))) return; } finish(my); }
   async function step(i,my){ idx=i; const st=S[i]; cap(i); map.getContainer().classList.toggle("mvstorm",!!st.storm);
     if(lead&&!st.lead&&!lead.pil){ map.removeLayer(lead.m); lead=null; } if(st.lead&&!lead){ lead={m:mvMarker(map,st.lead[1],{at:main?main.getLatLng():LL(starts[i]),w:40,name:st.lead[0],z:2500})}; }
     const groups=st.stay?[]:[[st.land0||[],false],[st.p||[],!!st.sea],[st.then||[],false]].filter(g=>g[0].length);
-    zT=st.stay?capZ(st.z):zBase; zoomOK=false; let from=starts[i]; const durs=groups.map(([g])=>{ const d=msFor(tag([from,...g]),zT,st.dash); from=g[g.length-1]; return d; });
+    zT=st.stay?capZ(st.z):zBase; zoomOK=false; let from=starts[i]; const durs=groups.map(([g])=>{ const d=msFor(tag([from,...g]),zT,st.dash)*(st.slow||1); from=g[g.length-1]; return d; });
+    /* 장면이 다른 곳에서 시작(from): 인물을 그 자리로 옮기고 밟은 길은 새로 그림 */
+    if(st.from&&main){ main.setLatLng(LL(st.from)); fol.forEach(f=>f.m.setLatLng(LL(st.from))); cur=L.polyline([LL(st.from)],{color:"#c0392b",weight:5,interactive:false}).addTo(trails); }
+    if(st.chase){ const [cn,ca,cc]=st.chase; CHS=Array.from({length:cc||3},(_,k)=>mvMarker(map,ca||"soldier",{at:LL(starts[i]),w:k?22:28,name:k===0?cn:"",z:650})); }
+    if(st.fx==="sun"){ const mk=(ll,t,c)=>L.marker(ll,{interactive:false,zIndexOffset:2700,icon:L.divIcon({className:"",html:`<span class=\"mvsky ${c}\">${t}</span>`,iconSize:[0,0]})}).addTo(map); SKY=[mk(L.latLng(31.86,35.19),"☀️","sun"),mk(L.latLng(31.85,35.0),"🌙","moon")]; }
     /* 장면 사이에서 멈추지 않음(목사님 2026-10-30): 말씀을 읽을 시간만큼 걸음을 늦추고, 도착하면 곧바로 다음 장면을 걷기 시작 */
     let mv=durs.reduce((a,b)=>a+b,0)+(st.side?9000:0)+(st.fx==="part"?8000:0)+(st.fx==="jordan"?7000:0); const need=st.fx==="pillar"?Math.max(7000,needMs(st)):needMs(st); let k=1; if(mv&&mv<need) k=Math.min(3.5,need/mv);
     const dw=st.stay?need:0; stepT0=clk; stepMs=Math.max(1,mv*k+dw); follow=()=>main?main.getLatLng():LL(starts[i]);
@@ -4561,18 +4578,20 @@ function bmTour(ti){ const T=(typeof BM_TOURS!=="undefined"?BM_TOURS:[])[ti]; if
       else if(!(await walk(pts,durs[gi]*k,my,0,st.pre&&gi===0?()=>showVerse(st.r):null,first&&gi===0?"in":lastS&&gi===groups.length-1?"out":"lin"))) return false; from=g[g.length-1]; }
     if(!groups.length) actors(i,LL(starts[i]),false); else if(st.sea&&!(st.then||[]).length) actors(i,LL(from),true);
     if(st.side&&!(await sideTrip(st.side,9000*k,my))) return false;
-    if(st.drop){ const f=fol.find(x=>x.n===st.drop); if(f){ E2(["😢","🙏"],4); await sleep(500,my); const c=chm(f.m); if(c) c.classList.add("vanish"); await sleep(900,my); map.removeLayer(f.m); fol=fol.filter(x=>x!==f); mainKey=""; } }
+    if(CHS.length){ CHS.forEach(m=>{ const c=chm(m); if(c) c.classList.add("vanish"); }); const old=CHS; CHS=[]; setTimeout(()=>old.forEach(m=>{ try{ map.removeLayer(m); }catch(x){} }),900); }
+    for(const dn of [].concat(st.drop||[])){ const f=fol.find(x=>x.n===dn); if(f){ if(!st.quiet){ E2(["😢","🙏"],4); await sleep(500,my); } const c=chm(f.m); if(c) c.classList.add("vanish"); await sleep(st.quiet?500:900,my); map.removeLayer(f.m); fol=fol.filter(x=>x!==f); mainKey=""; } }
     if(st.stay&&st.pre){ setTimeout(()=>{ if(my===tok) showVerse(st.r); },Math.min(3000,dw*.45)); }
     if(st.stay){ gather(1200,my); const E3=EMO(st), A=[main,...fol.map(f=>f.m)]; for(let q=0;q*650<dw-500;q++) setTimeout(()=>{ if(my===tok&&!paused) emo(A[q%A.length],E3[q%E3.length]); },300+q*650); }
     if(dw&&!(await hold(dw,my,!!st.stay))) return false;
     if(st.stay&&i<S.length-1&&!S[i+1].stay&&Math.abs(map.getZoom()-zBase)>=.5){ if(!(await zoomTo(zBase,my))) return false; zoomOK=false; }
     if(st.fx==="pillar"){ el.querySelector(".bmtmap").classList.remove("mvnight"); if(lead&&lead.pil){ const e=lead.m.getElement(); if(e) e.classList.add("mvpilout"); const m=lead.m; setTimeout(()=>{ try{ map.removeLayer(m); }catch(x){} },900); lead=null; } }
+    if(SKY.length){ SKY.forEach(m=>{ try{ map.removeLayer(m); }catch(x){} }); SKY=[]; }
     barSet(i,1); return true; }
   function finish(my){ if(my!==tok) return; idx=S.length; VB.forEach(v=>{ v.classList.add("old"); setTimeout(()=>v.remove(),900); }); VB=[]; map.getContainer().classList.remove("mvstorm"); legs(S[S.length-1]).forEach(label); barSet(S.length,1); zoomOK=true;
     const B=L.latLngBounds([T.start,...S.flatMap(legs)].map(LL)), sz=map.getSize(); zT=q4(Math.max(3,map.getBoundsZoom(B,false,L.point(60,Math.round(sz.y*.5)))-.25)); const c=B.getCenter(); follow=()=>c;
     $(".bmtk").textContent=T.sub||""; $(".bmth").textContent="여정을 마쳤습니다"; $(".bmtn").textContent=T.end||""; $(".bmtend").hidden=false; }
   /* 건너뛰기: 그 장면의 시작 자리로 바로 옮겨 놓고 이어서 재생 */
-  function jump(i){ i=Math.max(0,Math.min(S.length-1,i)); tok++; VB.forEach(v=>v.remove()); VB=[]; el.querySelector(".bmtmap").classList.remove("mvnight"); if(lead){ map.removeLayer(lead.m); lead=null; } setPause(false); el.querySelector(".bmtmap").classList.remove("mvsplash"); $(".mvwindl").classList.remove("on"); camOn=true; const fx=map.getPane("mvfx"); if(fx) fx.innerHTML="";
+  function jump(i){ i=Math.max(0,Math.min(S.length-1,i)); tok++; [...CHS,...SKY].forEach(m=>{ try{ map.removeLayer(m); }catch(x){} }); CHS=[]; SKY=[]; VB.forEach(v=>v.remove()); VB=[]; el.querySelector(".bmtmap").classList.remove("mvnight"); if(lead){ map.removeLayer(lead.m); lead=null; } setPause(false); el.querySelector(".bmtmap").classList.remove("mvsplash"); $(".mvwindl").classList.remove("on"); camOn=true; const fx=map.getPane("mvfx"); if(fx) fx.innerHTML="";
     drawUpTo(i); mainKey=""; if(main){ map.removeLayer(main); main=null; } actors(i,LL(starts[i]),!!(S[i].sea&&!S[i].land0)); if(main) main.setLatLng(LL(starts[i])); fol.forEach(f=>f.m.setLatLng(LL(starts[i])));
     zT=zBase; zoomOK=false; map.setView(LL(starts[i]),zBase,{animate:false}); play(i); }
   function setPause(p){ paused=p; const b=$('[data-t="pause"]'); b.textContent=p?"▶":"❚❚"; b.setAttribute("aria-label",p?"계속":"멈춤"); el.classList.toggle("paused",p); }
@@ -4598,7 +4617,9 @@ function mapTwoFinger(map){ if(!mapTouch()) return; const c=map.getContainer(); 
 window.CBSR_tour=bmTour;
 const BMT=()=>typeof BM_TOURS!=="undefined"?BM_TOURS:[];
 function bmTourBtns(bi){ return BMT().map((t,i)=>t.big===bi?`<button class="btn small" data-bmtour="${i}">▶ ${esc(t.n)} 따라가기</button>`:"").join(" "); }
-function bmTourList(){ const L2=BMT(); if(!L2.length) return ""; return `<h3 class="bmtlh">따라가 보는 큰 여정</h3><p class="lead rnote">한 사람의 긴 여정을 처음부터 끝까지, 지도가 따라가며 보여 줍니다.</p><div class="bmtl">${L2.map((t,i)=>`<button data-bmtour="${i}"><i>▶</i><span><b>${esc(t.n)}</b><small>${esc(t.sub)} · ${t.steps.length}장면</small></span></button>`).join("")}</div>`; }
+function bmTourList(){ const L2=BMT(); if(!L2.length) return ""; const btn=(t,i)=>`<button data-bmtour="${i}"><i>▶</i><span><b>${esc(t.n)}</b><small>${esc(t.sub)} · ${t.steps.length}장면</small></span></button>`;
+  const G=[["구약의 큰 여정","한 사람의 긴 여정을 처음부터 끝까지, 지도가 따라가며 보여 줍니다.",t=>!t.sec&&t.big<6],["예수님의 길 · 네 복음서","같은 예수님의 길도 복음서마다 담은 장소와 순서가 다릅니다. 네 복음서가 그린 길을 따로 따라가 봅니다.",t=>t.sec==="jesus"],["사도행전의 길","복음이 예루살렘에서 로마까지 이르는 길입니다.",t=>!t.sec&&t.big>=6]];
+  return G.map(([h,d,f])=>{ const B=L2.map((t,i)=>f(t)?btn(t,i):"").join(""); return B?`<h3 class="bmtlh">${h}</h3><p class="lead rnote">${d}</p><div class="bmtl">${B}</div>`:""; }).join(""); }
 /* 통독의 길 이름표 맞추기: 길 기울기대로 눕히고, 묶음 길이에 안 들어가면 길 아래로 */
 function rrFit(m){ (m||document).querySelectorAll(".rroad").forEach(rd=>{ const W=rd.clientWidth; if(!W) return; let lastR=-1e9, row=0, rows=-1;
   rd.querySelectorAll(".rrin").forEach(el=>{ el.classList.remove("out"); el.style.removeProperty("--rot"); const a=+el.dataset.a, z=+el.dataset.z, c=(a+z)/2, xv=8+344*c, segW=(z-a)*344/360*W;

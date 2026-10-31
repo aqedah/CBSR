@@ -42,7 +42,7 @@ for k,v in tj.items():
             A=(np.minimum.outer(ay,ax)*0.92*255).astype('uint8'); im.putalpha(Image.fromarray(A)); im.save(cache,'WEBP',quality=82)
         shutil.copy(cache,dst); terr[k]["url"]=f"terrain/{k}.webp"
 data+="const TERRAIN="+json.dumps(terr)+";\n"
-subprocess.run([sys.executable,'terrain_tiles.py',OUT+'/terrain/t'],check=True)
+# 지형 조각 타일(terrain_tiles.py)은 2026-10-31에 Esri 음영 지도로 바꾸며 그만 씀
 data+="const PLX="+(open("ux/place_extra.json").read() if os.path.exists("ux/place_extra.json") else "{}")+";\n"
 data+="const NEARLAND="+open("ux/nearland.json").read()+";\n"
 # ── 365 통독표 ──
