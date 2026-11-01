@@ -227,10 +227,11 @@ for _bk in _BB:
         _m=_NR.match(_tk)
         if _m: _NM.setdefault(_m.group(1),set()).add(_m.group(2))
 NOUNSHIM='<script>window.NOUNS_KRV='+json.dumps(sorted(k for k,v in _NM.items() if len(v)>=2),ensure_ascii=False,separators=(',',':'))+';</script>'
-v2html=shead.replace(SSHIM,VSHIM+NOUNSHIM).replace('story.html','v2.html')+body+'\n</body>\n</html>\n'
+body_v2=body.replace('스토리 QT','스토리') # v2: 이름은 '스토리'만(2026-11-02)
+v2html=shead.replace(SSHIM,VSHIM+NOUNSHIM).replace('story.html','v2.html')+body_v2+'\n</body>\n</html>\n'
 open(f'{OUT}/v2.html','w').write(v2html)
 ihead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+VSHIM+NOUNSHIM)
-open(f'{OUT}/index.html','w').write(ihead+body+'\n</body>\n</html>\n')
+open(f'{OUT}/index.html','w').write(ihead+body_v2+'\n</body>\n</html>\n')
 V=h(html+v2html+bible)
 sw=f'''/* 오프라인 지원: 앱 화면은 인터넷이 되면 늘 새로 받고(network first),
    성경 본문·지형도·아이콘·글꼴·라이브러리는 처음 받은 뒤 보관해 둡니다(cache first). 기록은 Firestore가 따로 보관합니다. */
