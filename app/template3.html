@@ -6062,6 +6062,8 @@ const GL_END=[["찾은 말씀을 오늘 하루 붙잡고 걸어가세요","주�
  ["찾는 기쁨은 금보다 귀합니다","금 곧 많은 순금보다 더 사모할 것이며 꿀과 송이꿀보다 더 달도다","시 19:10"],
  ["작은 발견이 쌓이면 길이 됩니다","구하라 그리하면 너희에게 주실 것이요 찾으라 그리하면 찾아낼 것이요","마 7:7"]];
 document.addEventListener("click",e=>{ const c=e.target.closest&&e.target.closest("#rgCal"); if(c&&!c.onclick) openWeekPicker(); });
+/* 기록 탭 위 지도 단추도 같은 까닭으로 반응이 없었음(목사님 2026-11-01) */
+document.addEventListener("click",e=>{ const c=e.target.closest&&e.target.closest("#rgMap"); if(!c||c.onclick) return; if(view.tab==="record"&&view.recD==="map"){ recBack(); return; } bmOpen(view.tab==="record"?"lib":"day"); });
 function openWeekPicker(){
   const N=NDW(), cur=dispW(), td=today0(); let h=`<div class="wklist" id="wkList">`;
   for(let W=1;W<=N;W++){
