@@ -2053,6 +2053,96 @@ body.tts-on .totop{display:none}
 .news-x{flex:none;border:0;background:none;color:var(--muted);font-size:13px;padding:2px 6px;cursor:pointer}
 .newslist{margin:0 0 6px;padding-left:20px;display:grid;gap:4px;font-size:15px;line-height:1.55}
 .leaflet-layer.hshade{mix-blend-mode:multiply}.pz9 .leaflet-layer.physb{filter:blur(1.5px)}.pz10 .leaflet-layer.physb{filter:blur(3.5px)}
+
+/* ===== 기록 탭 v4 (2026-11-01) ===== */
+html.v2{--rx-forest:#24493D;--rx-deep:#16302A;--rx-foil:#D2AE63;--rx-slip:#FBF6EA}
+.rxcover{position:relative;margin:4px 0 0;padding:18px 16px 14px;border-radius:22px;color:#F3EEDF;background:radial-gradient(120% 90% at 100% 0%,rgba(210,174,99,.16),transparent 55%),linear-gradient(160deg,var(--rx-forest),var(--rx-deep));box-shadow:0 10px 26px -14px rgba(20,48,40,.7);overflow:hidden}
+.rxcover::after{content:"";position:absolute;inset:7px;border:1px solid rgba(210,174,99,.35);border-radius:16px;pointer-events:none}
+.rxcover .rptop{display:flex;gap:14px;align-items:center;position:relative;z-index:1}
+.rxcover .avatar{width:72px;height:72px;box-shadow:0 0 0 3px var(--rx-deep),0 0 0 5px var(--rx-foil)}
+.rxcover .avcam{border-color:var(--rx-deep);background:var(--rx-foil);color:var(--rx-deep)}
+.rxcover .rpname>b{font-family:var(--f-disp);font-size:21px;color:#fff;letter-spacing:-.2px}
+.rxcover .rpname>small{color:rgba(243,238,223,.75)}
+.rxcover .rgear{color:#F3EEDF}
+.rxcover .rdot{background:rgba(255,255,255,.4)}.rxcover .rdot.on{background:#7fd6a6}
+.rxstats{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);margin:16px 0 0;padding-top:12px;border-top:1px solid rgba(210,174,99,.35)}
+.rxst{display:grid;justify-items:center;gap:1px;border:0;background:none;color:inherit;font:inherit;padding:6px 0;border-radius:12px;cursor:pointer;min-width:0}
+.rxst{position:relative}.rxst+.rxst::before{content:"";position:absolute;left:0;top:18%;bottom:18%;width:1px;background:rgba(210,174,99,.3)}
+.rxst:active{background:rgba(255,255,255,.08)}
+.rxst .rxi{width:18px;height:18px;color:var(--rx-foil);margin-bottom:2px}
+.rxst b{font-family:var(--f-disp);font-size:24px;line-height:1.15;color:#fff}
+.rxst b small{font-size:12px;font-weight:600;margin-left:1px;color:rgba(243,238,223,.8)}
+.rxst span{font-size:11.5px;color:rgba(243,238,223,.78);white-space:nowrap}
+.rxweek{position:relative;z-index:1;display:flex;align-items:center;gap:10px;margin-top:12px;padding:9px 12px;border-radius:14px;background:rgba(0,0,0,.18)}
+.rxweek>span{font-size:12px;color:rgba(243,238,223,.8);flex:none}
+.rxweek>em{font-style:normal;font:700 13px var(--f-ui);color:var(--rx-foil);flex:none}
+.rxdots{display:flex;gap:6px;flex:1;justify-content:space-between}
+.rxdots i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;color:var(--rx-deep);background:rgba(255,255,255,.1);border:1.5px solid rgba(243,238,223,.25)}
+.rxdots i.on{background:var(--rx-foil);border-color:var(--rx-foil)}
+.rxdots i.me{box-shadow:0 0 0 2px var(--rx-deep),0 0 0 3.5px #F3EEDF}
+.rxdots i.fut{opacity:.45}
+.rxcard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 16px 16px;margin:0}
+.rxhd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.rxhd .rxhi{width:30px;height:30px;padding:6px;border-radius:10px;background:var(--accent-soft);color:var(--accent);flex:none}
+.rxhd b{font-family:var(--f-disp);font-size:17px}
+.rxlink{margin-left:auto;border:0;background:var(--accent-soft);color:var(--accent);font:700 12.5px var(--f-ui);padding:7px 12px;border-radius:999px;cursor:pointer;min-height:32px;white-space:nowrap}
+.rxprog{display:flex;gap:14px;align-items:center;margin:2px 0 6px}
+.rxring{position:relative;width:84px;height:84px;flex:none}
+.rxring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.rxring circle{fill:none;stroke-width:8}
+.rxring .bg{stroke:var(--paper)}
+.rxring .fg{stroke:var(--accent);stroke-linecap:round}
+.rxring>b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--f-disp);font-size:23px}
+.rxring>b small{font-size:12px}
+.rxpn{flex:1;min-width:0;display:grid;gap:5px}
+.rxpn>p{margin:0 0 2px;font-size:13px;color:var(--muted)}
+.rxpn>p b{font-family:var(--f-disp);font-size:19px;color:var(--ink);margin-right:2px}
+.rxpn>p small{font-size:12px}
+.rxbar{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:8px;font-size:12px}
+.rxbar>span{color:var(--muted);font-weight:700}
+.rxbar>i{height:7px;border-radius:9px;background:var(--paper);overflow:hidden}
+.rxbar>i b{display:block;height:100%;border-radius:9px}
+.rxbar b.o{background:#b07a2a}.rxbar b.n{background:var(--accent)}
+.rxbar>em{font-style:normal;font-weight:700;font-size:12px;min-width:58px;text-align:right}
+.rxbar>em small{font-weight:500;color:var(--muted)}
+.rxchip{justify-self:start;margin-top:2px;font-size:11.5px;font-weight:700;color:#8a5a14;background:#f6ead2;border-radius:999px;padding:3px 9px}
+.rxroad .rrt{display:none}
+.rxroad .rrsc{margin-top:2px}
+.rxmap{padding:0;overflow:hidden}
+.rxmap .bmcard{position:relative;margin:0;display:block}
+.rxmap .bmmini{height:200px;border:0;border-radius:0}
+.rxmapt{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-between;padding:28px 16px 10px;background:linear-gradient(transparent,rgba(16,30,26,.72));color:#fff;z-index:500;pointer-events:none;text-align:left}
+.rxmapt b{font-family:var(--f-disp);font-size:18px}
+.rxmapt em{font-style:normal;font:700 13px var(--f-ui);background:var(--rx-foil);color:var(--rx-deep);border-radius:999px;padding:3px 10px}
+.rxmapb{display:flex;align-items:center;gap:10px;padding:12px 16px 14px}
+.rxmapb .bmsub{margin:0;font-size:13px;line-height:1.5;color:var(--muted);flex:1}
+.rxmapb .bmsub b{color:#c0392b}
+.rxslip{position:relative;display:block;width:100%;text-align:left;font:inherit;color:#2a2318;cursor:pointer;border:0;border-radius:6px 16px 16px 6px;padding:22px 18px 14px 22px;background:var(--rx-slip);box-shadow:inset 3px 0 0 var(--rx-foil),0 1px 0 rgba(120,90,40,.12)}
+.rxslip::before{content:"\201C";position:absolute;left:12px;top:-6px;font:700 52px/1 var(--f-disp);color:var(--rx-foil);opacity:.75}
+.rxslip q{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;quotes:none;font-family:var(--f-text);font-size:17px;line-height:1.75}
+.rxslip small{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;color:#7a6a50}
+.rxslip small span{font-weight:700;color:#7A4C0C}
+.rxempty{margin:2px 0 10px;font-size:14px;line-height:1.6;color:var(--muted)}
+.rxseg{margin:0 0 6px}
+.rxlist{display:grid;gap:8px}
+.rxli{display:flex;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--paper);border:0;border-radius:14px;padding:10px 12px;cursor:pointer}
+.rxli>span:last-child{min-width:0;display:grid;gap:1px}
+.rxli>span:last-child>small{font-size:11.5px;font-weight:700;color:var(--accent)}
+.rxli>span:last-child>span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--f-text);font-size:14.5px;line-height:1.5}
+.rxdb{flex:none;width:44px;height:48px;border-radius:12px;background:var(--card);display:grid;place-items:center;align-content:center;line-height:1.1;box-shadow:inset 0 0 0 1px var(--line)}
+.rxdb small{font-size:10.5px;color:var(--muted)}
+.rxdb b{font-family:var(--f-disp);font-size:18px}
+.rxtl{display:block;cursor:default}
+.rxdt{display:block;font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.rxfoot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 6px}
+.rxfoot button{display:flex;gap:10px;align-items:center;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;cursor:pointer;min-width:0}
+.rxfoot .rxi{width:22px;height:22px;color:var(--accent);flex:none}
+.rxfoot b{display:block;font-size:13.5px;line-height:1.3}
+.rxfoot small{display:block;font-size:11.5px;color:var(--muted)}
+html.v2[data-theme="dark"]{--rx-slip:#2b2620}
+html.v2[data-theme="dark"] .rxslip{color:#efe6d4}html.v2[data-theme="dark"] .rxslip small{color:#bfae8e}html.v2[data-theme="dark"] .rxslip small span{color:#EBC27A}
+@media (prefers-color-scheme: dark){html.v2:not([data-theme="light"]){--rx-slip:#2b2620}html.v2:not([data-theme="light"]) .rxslip{color:#efe6d4}html.v2:not([data-theme="light"]) .rxslip small{color:#bfae8e}html.v2:not([data-theme="light"]) .rxslip small span{color:#EBC27A}html.v2:not([data-theme="light"]) .rxchip{background:#3a2f1c;color:#EBC27A}}
+html.v2[data-theme="dark"] .rxchip{background:#3a2f1c;color:#EBC27A}
 </style>
 
 <div class="wrap">
@@ -10392,7 +10482,7 @@ function bmRouteRef(r){ const names=r.p.map(q=>q[0]).filter(Boolean); const orde
 function bmCardHTML(){ const B=bmLit(()=>{ if(view.tab==="record"&&!view.recD){ const y=scrollY; render(); scrollTo({top:y}); } });
   const n=B?B.first.size:0, fr=B?B.fresh.slice(0,2):[];
   const sub=!B?`읽은 본문의 지명을 모으는 중입니다…`:n?`지금까지 <b>${n}곳</b>을 지났습니다${fr.length?` · 최근 <b>${fr.map(esc).join("·")}</b>${B.fresh.length>2?` 등 ${B.fresh.length}곳이`:(()=>{ const c=(fr[fr.length-1]||"").slice(-1).charCodeAt(0); return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28===0?"가":"이"; })()} 새로 켜졌습니다`:""}`:`본문을 읽으면 그 날 나온 곳이 지도에 하나씩 켜집니다.`;
-  return `<section class="sec rcard"><div class="rhd"><b>성경 지도</b><button class="rmorelink" data-recgo="map">지도 열기 ›</button></div><button class="bmcard" data-recgo="map" aria-label="성경 지도 열기"><div class="bmmini" id="bmMini"></div></button><p class="rsub bmsub">${sub}</p></section>`; }
+  return `<section class="rxcard rxmap"><button class="bmcard" data-recgo="map" aria-label="성경 지도 열기"><div class="bmmini" id="bmMini"></div><span class="rxmapt"><b>성경 지도</b>${n?`<em>${n}곳</em>`:""}</span></button><div class="rxmapb"><p class="bmsub">${sub}</p><button class="rxlink" data-recgo="map">지도 열기</button></div></section>`; }
 function bmCardInit(){ const el=document.getElementById("bmMini"); if(!el||!window.L) return; const B=bmLit(); setTimeout(()=>{ if(!document.body.contains(el)) return;
   const map=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,zoomSnap:.25}); mapBase(map,"natural");
   map.fitBounds([[29.0,29.5],[38.8,41.5]]); const fresh=new Set(B?B.fresh:[]);
@@ -10893,20 +10983,30 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   if(view.recD) return recDetail(view.recD,secs,byLab,n,sch);
   const bs0=byLab("모은 배지"), stOn=bs0?bs0.querySelectorAll(".bdg.on").length:0; const prof=secs[0], av=prof.querySelector(".avwrap"), doneN=Object.keys(mem.done).length, qtDays=qtDayCount(), CD=recCards();
   const st=window.SYNC&&SYNC.available&&SYNC.loginEnabled?(SYNC.loggedIn()?`<i class="rdot on"></i>기기 연동됨`:`<i class="rdot"></i>이 기기에만 저장`):"이 기기에 저장";
-  let h=topBanners("record")+`<section class="sec rcard rprof"><div class="rptop">${av?av.outerHTML:""}<div class="rpname"><b>${esc(PROF.nick||"내 통독 기록")}</b><small>${st} · ${esc(PI.name)}</small></div><button class="rgear" data-recgo="more" aria-label="설정 · 더 보기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
-    <div class="rnum"><button data-rinfo="read" aria-label="읽은 날 ${doneN}일 자세히"><b>${doneN}<small>일</small></b><span>읽은 날</span></button><button data-rinfo="qt" aria-label="QT 한 날 ${qtDays}일 자세히"><b>${qtDays}<small>일</small></b><span>QT 한 날</span></button><button data-rinfo="cards" aria-label="모은 말씀 ${CD.length}장 자세히"><b>${CD.length}<small>장</small></b><span>모은 말씀</span></button><button data-rinfo="stones" aria-label="에벤에셀 돌 ${stOn}개 자세히"><b>${stOn}<small>개</small></b><span>에벤에셀 돌</span></button></div></section>`;
-  const lb=lastReadBook();
-  /* 통독의 길(목사님 2026-10-30): '전체 보기'와 차이가 없어서 길 그림을 기록 탭에 바로 보여 줌. 더 보기는 성경 책장 */
-  h+=`<section class="sec rcard"><div class="rhd"><b>통독의 길</b><button class="rmorelink" data-recgo="shelf">성경 책장 ›</button></div><p class="rprog"><b>${TOTAL_CH.toLocaleString()}장 중 ${n.toLocaleString()}장 읽음</b> · ${pct1(n,TOTAL_CH)}%${readStreak()?` · ${readStreak()}일째 이어 읽기`:""}</p>${recRoad(n,sch)}</section>`;
+  /* 기록 탭 디자인 v4(목사님 2026-11-01 '글씨의 나열'): 짙은 초록 표지(프로필·숫자·이번 주) → 통독의 길(둥근 진행·구약/신약 막대·길) → 지도(그림 먼저) → 붙잡은 말씀(종이 쪽지) → 나의 기록 → 아래 두 단추 */
+  const IC={read:'<path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1V19c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1z"/><path d="M12 6.5V20"/>',qt:'<path d="M6 3.5h9l3 3V20.5H6z"/><path d="M9 9h6M9 13h6M9 17h4"/>',cards:'<rect x="4" y="6" width="13" height="15" rx="2"/><path d="M8 3h10a2 2 0 0 1 2 2v12"/>',stones:'<path d="M4 19c-1-4 1-8 5-9 1-3 6-4 8-1 3 1 4 5 3 10z"/><path d="M3 19h18"/>',road:'<path d="M5 20c2-6 12-4 14-10M8 4c2 3 0 5-2 6"/><circle cx="19" cy="10" r="1.6"/>',map:'<path d="M9 4 3 6.5v13.5L9 17.5l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>',kv:'<path d="M7 3.5h10v17l-5-4-5 4z"/>',note:'<path d="M5 4h11l3 3v13H5z"/><path d="M9 10h6M9 14h6"/>',church:'<path d="M12 3v4M10 5h4M6 21V11l6-4 6 4v10z"/><path d="M10 21v-4h4v4"/>',more:'<circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/>'};
+  const ic=(k,c)=>`<svg class="${c||"rxi"}" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</g></svg>`;
+  const hd=(k,t,go,lab,seg)=>`<div class="rxhd">${ic(k,"rxhi")}<b>${t}</b>${go?`<button class="rxlink" data-recgo="${go}"${seg?` data-seg="${seg}"`:""}>${lab}</button>`:""}</div>`;
+  /* 이번 주: 일정의 이번 주 날마다 읽음 표시 */
+  let wk=""; try{ if(here&&here.state!=="before"){ const w=here.w, N=nd(w); let c=0; const dots=Array.from({length:N},(_,i)=>{ const on=!!mem.done[keyOf(w,i)], fut=i>here.d; if(on) c++; return `<i class="${on?"on":""}${i===here.d?" me":""}${fut?" fut":""}" title="${i+1}일째">${on?"✓":""}</i>`; }).join(""); wk=`<div class="rxweek"><span>이번 주</span><div class="rxdots">${dots}</div><em>${c}/${N}</em></div>`; } }catch(e){}
+  const stat=(k,v,u,t)=>`<button class="rxst" data-rinfo="${k}" aria-label="${t} ${v}${u} 자세히">${ic(k)}<b>${v}<small>${u}</small></b><span>${t}</span></button>`;
+  let h=topBanners("record")+`<section class="rxcover rprof"><div class="rptop">${av?av.outerHTML:""}<div class="rpname"><b>${esc(PROF.nick||"내 통독 기록")}</b><small>${st} · ${esc(PI.name)}</small></div><button class="rgear" data-recgo="more" aria-label="설정 · 더 보기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
+    <div class="rxstats">${stat("read",doneN,"일","읽은 날")}${stat("qt",qtDays,"일","QT 한 날")}${stat("cards",CD.length,"장","모은 말씀")}${stat("stones",stOn,"개","에벤에셀 돌")}</div>${wk}</section>`;
+  /* 통독의 길: 둥근 진행 + 구약·신약 막대 + 길 */
+  let OT=0, ot=0; try{ for(let b=1;b<=39;b++) OT+=BIBLE[b-1].length; const S=new Set(); for(const k in mem.done){ const [w,d]=k.split("-").map(Number), pl=dayPlan(w,d); if(pl) pl.ch.forEach(([b,c])=>{ if(b<=39) S.add(b+"-"+c); }); } ot=S.size; }catch(e){ OT=929; }
+  const NT=TOTAL_CH-OT, nt=Math.max(0,n-ot), P=n/TOTAL_CH, R=30, CIR=2*Math.PI*R, rs=readStreak();
+  const bar=(t,a,z,c)=>`<div class="rxbar"><span>${t}</span><i><b class="${c}" style="width:${(z?a/z*100:0).toFixed(1)}%"></b></i><em>${a.toLocaleString()}<small>/${z.toLocaleString()}</small></em></div>`;
+  h+=`<section class="rxcard rxroad">${hd("road","통독의 길","shelf","성경 책장")}<div class="rxprog"><div class="rxring"><svg viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="${R}" class="bg"/><circle cx="38" cy="38" r="${R}" class="fg" stroke-dasharray="${(CIR*P).toFixed(1)} ${CIR.toFixed(1)}"/></svg><b>${Math.floor(P*100)}<small>%</small></b></div><div class="rxpn"><p><b>${n.toLocaleString()}</b>장 읽음<small> / ${TOTAL_CH.toLocaleString()}장</small></p>${bar("구약",ot,OT,"o")}${bar("신약",nt,NT,"n")}${rs>1?`<span class="rxchip">${rs}일째 이어 읽는 중</span>`:""}</div></div>${recRoad(n,sch)}</section>`;
   if(window.L) h+=bmCardHTML();
   const c0=CD[0];
-  h+=`<section class="sec rcard"><div class="rhd"><b>최근 붙잡은 말씀</b>${CD.length?`<button class="rmorelink" data-recgo="records" data-seg="cards">모두 보기 ›</button>`:""}</div>${c0?`<button class="rkv" data-wck="${esc(c0.k)}"><q>${esc(c0.t)}</q><small>${esc(fmt(c0.dt,{month:"long",day:"numeric"}))} · ${esc(PLAN.full[c0.v[0]-1])} ${c0.v[1]}:${c0.v[2]}</small></button>`:`<p class="lead">묵상 노트에서 말씀을 한 구절 붙잡아 보세요.</p><button class="btn small ghost" data-tab-go="qt">QT로 가기 ›</button>`}</section>`;
+  h+=`<section class="rxcard rxkvc">${hd("kv","최근 붙잡은 말씀",CD.length?"records":"","모두 보기","cards")}${c0?`<button class="rxslip" data-wck="${esc(c0.k)}"><q>${esc(c0.t)}</q><small><span>${esc(PLAN.full[c0.v[0]-1])} ${c0.v[1]}:${c0.v[2]}</span>${esc(fmt(c0.dt,{month:"long",day:"numeric"}))}</small></button>`:`<p class="rxempty">묵상 노트에서 마음에 남은 한 구절을 고르면 여기에 놓입니다.</p><button class="btn small ghost" data-tab-go="qt">QT 하러 가기</button>`}</section>`;
   const seg=view.recSeg||"cards";
+  const dbadge=dt=>`<span class="rxdb"><small>${dt.getMonth()+1}월</small><b>${dt.getDate()}</b></span>`;
   let pv="";
-  if(seg==="cards") pv=CD.slice(c0?1:0,c0?4:3).map(x=>`<button class="rpi" data-wck="${esc(x.k)}"><small>${esc(fmt(x.dt,{month:"long",day:"numeric"}))} · ${esc(PLAN.abbr[x.v[0]-1])} ${x.v[1]}:${x.v[2]}</small><span>“${esc(x.t)}”</span></button>`).join("")||`<p class="lead">${c0?"모은 말씀이 더 쌓이면 여기에 이어집니다.":"묵상 노트를 마치면 붙잡은 말씀이 카드로 모입니다."}</p>`;
-  else { const T=recTimelineItems().slice(0,3); pv=T.map(x=>`<div class="rpi rpt"><small>${esc(x.date)}</small>${x.html}</div>`).join("")||`<p class="lead">QT에서 아멘을 누르거나 본문에 형광펜을 칠하면 여기에 모입니다.</p>`; }
-  h+=`<section class="sec rcard"><div class="rhd"><b>나의 기록</b><button class="rmorelink" data-recgo="records">모두 보기 ›</button></div><div class="rseg" role="tablist">${[["cards","말씀 카드"],["tl","아멘 · 형광펜 · 노트"]].map(([k,t])=>`<button role="tab" aria-selected="${seg===k}" class="${seg===k?"on":""}" data-recseg="${k}">${t}</button>`).join("")}</div><div class="rpv">${pv}</div></section>`;
-  h+=`<div class="rfoot"><button data-recgo="church">우리 교회 함께 읽기 ›</button><button data-recgo="more">지난 회차 · 기타 ›</button></div>`;
+  if(seg==="cards") pv=CD.slice(c0?1:0,c0?4:3).map(x=>`<button class="rxli" data-wck="${esc(x.k)}">${dbadge(x.dt)}<span><small>${esc(PLAN.full[x.v[0]-1])} ${x.v[1]}:${x.v[2]}</small><span>${esc(x.t)}</span></span></button>`).join("")||`<p class="rxempty">${c0?"모은 말씀이 더 쌓이면 여기에 이어집니다.":"묵상 노트를 마치면 붙잡은 말씀이 카드로 모입니다."}</p>`;
+  else { const T=recTimelineItems().slice(0,3); pv=T.map(x=>`<div class="rxli rxtl"><span class="rxdt">${esc(x.date)}</span><span>${x.html}</span></div>`).join("")||`<p class="rxempty">QT에서 아멘을 누르거나 본문에 형광펜을 칠하면 여기에 모입니다.</p>`; }
+  h+=`<section class="rxcard">${hd("note","나의 기록","records","모두 보기")}<div class="rseg rxseg" role="tablist">${[["cards","말씀 카드"],["tl","아멘·형광펜·노트"]].map(([k,t])=>`<button role="tab" aria-selected="${seg===k}" class="${seg===k?"on":""}" data-recseg="${k}">${t}</button>`).join("")}</div><div class="rpv rxlist">${pv}</div></section>`;
+  h+=`<div class="rxfoot"><button data-recgo="church">${ic("church")}<span><b>우리 교회 함께 읽기</b><small>교회 일정의 진도</small></span></button><button data-recgo="more">${ic("more")}<span><b>지난 회차 · 기타</b><small>설정과 이전 기록</small></span></button></div>`;
   return h; }
 /* 프로필 숫자를 누르면 자세히(목사님 2026-11-01) */
 function recWeeks(on){ if(!here||here.state==="before") return ""; const W=[]; for(let w=Math.max(1,here.w-3);w<=here.w;w++) W.push(w);
