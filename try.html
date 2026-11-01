@@ -10415,6 +10415,9 @@ function bmInit(){ const ALL=document.querySelectorAll("#bmMap"), el=ALL[ALL.len
   const map=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false,zoomSnap:.25,dragging:!mapTouch()}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); BM_MAP=map; BM_LY=L.layerGroup().addTo(map); BM_KD=null; mapTwoFinger(map);
   L.control.zoom({position:"topright",zoomInTitle:"확대",zoomOutTitle:"축소"}).addTo(map); /* PC에서는 손가락으로 넓힐 수 없으므로 +·− 단추 */
   bmDraw(true);
+  /* 라이브러리 위 작은 지도: 빈 곳을 누르면 크게(목사님 2026-11-01 '눌러도 반응이 없음') */
+  { let dx=0, dy=0; el.addEventListener("pointerdown",e=>{ dx=e.clientX; dy=e.clientY; },true);
+    el.addEventListener("click",e=>{ if(BM_OV||bmSegX()!=="lib"||el.closest(".bmov")) return; if(Math.hypot(e.clientX-dx,e.clientY-dy)>8) return; const t=e.target; if(t&&t.closest&&t.closest(".leaflet-interactive,.leaflet-marker-icon,.leaflet-control,.bml")) return; bmMapOpen("lib"); }); }
   setTimeout(()=>{ try{ map.invalidateSize(); }catch(e){} },120); }
 /* 여정·시대·큰 길을 고를 때는 지도를 새로 만들지 않고 위에 그린 것만 바꿈(GPT 지도 개편안 2026-10-31: 고르면 지도가 처음으로 돌아가고 화면이 튀던 문제) */
 function bmDraw(first,refit){ const map=BM_MAP; if(!map||!BM_LY) return; BM_LY.clearLayers(); if(BM_KD){ map.off("moveend",BM_KD); BM_KD=null; } const seg=bmSegX();
