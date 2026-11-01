@@ -78,6 +78,16 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outl
 .libimg em{position:absolute;left:8px;top:8px;font-style:normal;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.45);border-radius:6px;padding:1px 6px}
 .libc b{font:700 14px/1.4 var(--f-disp)}
 .libc small{font-size:11.5px;color:var(--muted)}
+.cbar{display:flex;gap:2px;height:10px}
+.cbar i{flex:1;border-radius:2px;background:var(--line)}
+.cbar i.on,.clg i.on{background:var(--accent)}
+.cbar i.miss,.clg i.miss{background:var(--accent);opacity:.22}
+.cbar i.now,.clg i.now{background:var(--gold)}
+.cbar i.now{height:14px;margin-top:-2px}
+.cbar i.fut,.clg i.fut{background:var(--line)}
+.clg{display:flex;gap:12px;margin-top:6px;font-size:11.5px;color:var(--muted)}
+.clg span{display:flex;align-items:center;gap:4px}
+.clg i{width:10px;height:10px;border-radius:2px;display:inline-block}
 .pager{display:flex;justify-content:space-between;gap:10px;max-width:390px}
 .pager button{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px;font-weight:600;font-size:14px}
 .pager button:disabled{opacity:.4;cursor:default}
@@ -295,8 +305,8 @@ const S=[
  {k:"lib",t:"스토리 모음",states:[]}
 ];
 const CH={
- today:["하단 탭: 아이콘 아래 이름을 늘 보여 줍니다(오늘 · 본문 · 묵상 · 도전 · 기록). 'QT'는 '묵상'으로.","날짜 고리: '나의 통독'을 빼고, 읽은 날은 초록, 안 읽고 지난 날은 회색 점선(A안).","'본문 읽기' 단추를 없애고 그림을 누르면 다음 단계로 갑니다. 그림 아래쪽 글이 상태에 따라 바뀝니다: 본문 읽기 → 이어 읽기 → 스토리 이어 보기 → 묵상 이어하기 → 다시 보기.","맨 위 지도 단추 왼쪽에 '스토리 모음' 단추를 새로 둡니다.","첫 방문 안내는 그림을 가리키는 '오늘 본문 한 번 열어 보기' 하나."],
- read:["날짜 고리를 접어 날짜와 본문 범위 한 줄로(누르면 펼침).","'이 책의 흐름'은 글 + 위치 막대(B안): '사무엘상 전체 31장 중 24–26장'."],
+ today:["하단 탭: 아이콘 아래 이름을 늘 보여 줍니다(오늘 · 본문 · 묵상 · 도전 · 기록). 'QT'는 '묵상'으로.","날짜 고리: '나의 통독'을 빼고, 읽은 날은 초록, 안 읽고 지난 날은 회색 점선(A안).","'본문 읽기' 단추를 없애고 그림을 누르면 다음 단계로 갑니다. 그림 아래쪽 글이 상태에 따라 바뀝니다: 본문 읽기 → 이어 읽기 → 스토리 이어 보기 → 묵상 이어하기 → 다시 보기. 마침에는 오늘 붙잡은 말씀만 보이고 남은 시간 표시는 없습니다.","맨 위 지도 단추 왼쪽에 '스토리 모음' 단추를 새로 둡니다.","첫 방문 안내는 그림을 가리키는 '오늘 본문 한 번 열어 보기' 하나."],
+ read:["날짜 고리를 접어 날짜와 본문 범위 한 줄로(누르면 펼침).","'이 책의 흐름'은 글 + 장마다 한 칸인 위치 막대: 읽은 장은 진하게, 건너뛴 장은 흐리게, 오늘 장은 금색, 앞으로 읽을 장은 회색. 샘플에서는 11·12·17장을 건너뛴 경우입니다."],
  story:["이름은 '스토리'만 씁니다.","자동 넘김 그대로, 누르고 있으면 멈춥니다.","손가락 두 개로 벌려 확대하는 것을 막았습니다. 확대는 지도 경로 카드에서만 됩니다.","닫았다 다시 열면 보던 카드부터, '처음부터'도 고를 수 있습니다.","마지막 카드는 나의 생각거리, 그다음 '묵상 노트 쓰기'."],
  note:["날짜 고리를 접어 한 줄로.","이름은 '묵상 노트', 탭은 '묵상'.","끝에 '오늘의 본문에서 찾기' 연결 하나만."],
  rec:["항목은 지금 기록 탭 그대로: 프로필·이름, 통독 일정, 붙잡은 말씀, 아멘. 지도 칸은 뺐습니다.","첫 방문 때는 0이 늘어선 숫자판 대신 할 일 하나만."],
@@ -334,7 +344,7 @@ function today(){
   const C={start:["본문 읽기","3장 · 약 15분"],first:["본문 읽기","3장 · 약 15분"],read:["이어 읽기","25장 18절부터"],story:["스토리 이어 보기","12장 중 5번째 카드부터"],note:["묵상 이어하기","4단계 중 2단계 · 하나님의 성품"],done:["오늘 본문 다시 보기","스토리 · 묵상 노트도 다시 볼 수 있습니다"]};
   const prog={start:["","",""],first:["","",""],read:["now","",""],story:["done","now",""],note:["done","done","now"],done:["done","done","done"]}[s];
   let h=bar+rings()+`<div class="th"><small>4월 6일 화요일 · 96일째</small><p>사무엘상 24–26장</p><h2>다윗이 사울을 살려주다</h2></div>`;
-  if(s==="done") h+=`<div class="kept"><small>오늘 붙잡은 말씀</small><q>오늘 너를 보내어 나를 영접하게 하신 이스라엘의 하나님 여호와를 찬송할지로다</q><span>사무엘상 25:32</span></div><div class="till">오늘 하루가 끝나기까지<b id="clock">--:--:--</b></div>`;
+  if(s==="done") h+=`<div class="kept"><small>오늘 붙잡은 말씀</small><q>오늘 너를 보내어 나를 영접하게 하신 이스라엘의 하나님 여호와를 찬송할지로다</q><span>사무엘상 25:32</span></div>`;
   h+=`<button class="photo pbtn${s==="first"?" lift":""}" data-next="1"><img alt="낡은 겉옷 자락을 쥔 손" src="${IMG.g06_06}"><span class="plab"><b>${C[s][0]}${sv("chev",20)}</b><small>${C[s][1]}</small></span></button>`;
   if(s==="first") h+=`<div class="tip lift"><b>오늘 본문 한 번 열어 보기</b>그림을 누르면 오늘 읽을 사무엘상 24–26장이 열립니다.<br><button data-st-set="start">닫기</button></div>`;
   h+=`<div class="steps3"><span class="${prog[0]}">본문</span><span class="${prog[1]}">스토리</span><span class="${prog[2]}">묵상 노트</span></div>`;
@@ -344,7 +354,7 @@ function today(){
 function read(){
   const A=st.read==="a";
   const flow=A?`<div class="flow">${sv("read",15)}사무엘상에서 지금 읽는 자리 · <b>24–26장</b></div>`
-   :`<div class="flowB"><p>사무엘상 전체 31장 중 <b>24–26장</b></p><div class="meter"><i style="width:${(26/31*100).toFixed(1)}%"></i></div></div>`;
+   :`<div class="flowB"><p>사무엘상 전체 31장 중 <b>24–26장</b></p><div class="cbar" aria-label="사무엘상 31장 가운데 읽은 장과 오늘 장">${Array.from({length:31},(_,k)=>{ const c=k+1, cl=c>=24&&c<=26?"now":c>26?"fut":[11,12,17].includes(c)?"miss":"on"; return `<i class="${cl}" title="${c}장"></i>`; }).join("")}</div><div class="clg"><span><i class="on"></i>읽음</span><span><i class="miss"></i>안 읽음</span><span><i class="now"></i>오늘</span><span><i class="fut"></i>앞으로</span></div></div>`;
   const V=[[1,"사울이 블레셋 사람을 쫓다가 돌아오매 어떤 사람이 그에게 말하여 이르되 보소서 다윗이 엔게디 광야에 있더이다 하니"],[2,"사울이 온 이스라엘에서 택한 사람 삼천 명을 거느리고 다윗과 그의 사람들을 찾으러 들염소 바위로 갈새"],[3,"길 가 양의 우리에 이른즉 굴이 있는지라 사울이 뒤를 보러 들어가니라 다윗과 그의 사람들이 그 굴 깊은 곳에 있더니"],[4,"다윗의 사람들이 이르되 보소서 여호와께서 당신에게 이르시기를 내가 원수를 네 손에 넘기리니 네 생각에 좋은 대로 그에게 행하라 하시더니 이것이 그 날이니이다 하니 다윗이 일어나서 사울의 겉옷 자락을 가만히 베니라"],[5,"그리 한 후에 사울의 옷자락 벰으로 말미암아 다윗의 마음이 찔려"],[6,"자기 사람들에게 이르되 내가 손을 들어 여호와의 기름 부음을 받은 내 주를 치는 것은 여호와께서 금하시는 것이니 그는 여호와의 기름 부음을 받은 자가 됨이니라 하고"],[7,"다윗이 이 말로 자기 사람들을 금하여 사울을 해하지 못하게 하니라 사울이 일어나 굴에서 나가 자기 길을 가니라"]];
   const h=fold+`<div class="rd"><div style="display:flex;align-items:center;gap:10px"><h2>사무엘상 24–26장</h2><span style="margin-left:auto;display:flex;gap:12px;color:var(--muted)">${sv("sound",21)}</span></div>${flow}<div class="chips"><span>오늘 본문</span><span>3장</span><span>약 15분</span></div><h3>사무엘상 24장</h3><h4>엔게디 굴에서 사울을 살려 줌</h4><p class="vs">${V.map(([n,t])=>`<sup>${n}</sup>${t} `).join("")}</p><div class="fadeout"></div><button class="cta"><b>오늘 통독 완료${sv("chev",20)}</b><small>읽은 뒤 누르면 스토리로 이어집니다</small></button></div>`;
   return `<div class="scr">${h}</div>${tabs("read")}`;
@@ -414,7 +424,7 @@ function draw(){
   document.getElementById("prev").disabled=cur===0; document.getElementById("next").disabled=cur===S.length-1;
   try{ history.replaceState(null,"","#"+s.k); }catch(e){}
   if(s.k==="story") runStory();
-  if(s.k==="today"&&st.today==="done") runClock();
+  
   P.querySelectorAll("[data-go]").forEach(a=>a.onclick=e=>{ e.preventDefault(); cur=+a.dataset.go; draw(); });
   const li=document.getElementById("libq"); if(li){ li.oninput=()=>{ st.libq=li.value; const pos=li.selectionStart; draw(); const l2=document.getElementById("libq"); l2.focus(); try{ l2.setSelectionRange(pos,pos); }catch(e){} }; }
 }
