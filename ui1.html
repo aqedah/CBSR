@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
+<title>CBSR v2 1차 UI 샘플 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* 레이아웃: 왼쪽 휴대폰 한 대(같은 회차 화면을 차례로 넘김) + 오른쪽(좁으면 아래) 바뀐 점·결정 칸. 색·서체는 지금 v2(짙은 초록, 명조 제목, 고딕 본문)를 그대로 씀 */
+:root{
+  --paper:#F3F5F1; --card:#FFFFFF; --ink:#1B2420; --muted:#56615B; --line:#DCE3DE;
+  --accent:#2C5C52; --accent-ink:#FFFFFF; --soft:#E2ECE7; --gold:#7A4C0C; --warn:#B4652A; --warn-soft:#F6E7D8;
+  --stage:#E7EBE8; --night:#16120E;
+  --f-disp:"Noto Serif KR","Gowun Batang",serif; --f-text:"Noto Serif KR","Gowun Batang",serif;
+  --f-ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111714; --card:#18201C; --ink:#E4EAE6; --muted:#A9B6AF; --line:#2A3430;
+  --accent:#8FC4B5; --accent-ink:#0E1513; --soft:#1C2A26; --gold:#EBC27A; --warn:#E3A26A; --warn-soft:#3A2A1C;
+  --stage:#0B0F0D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111714; --card:#18201C; --ink:#E4EAE6; --muted:#A9B6AF; --line:#2A3430;
+  --accent:#8FC4B5; --accent-ink:#0E1513; --soft:#1C2A26; --gold:#EBC27A; --warn:#E3A26A; --warn-soft:#3A2A1C;
+  --stage:#0B0F0D; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--stage);color:var(--ink)}
+body{font-family:var(--f-ui);font-size:15px;line-height:1.6;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;display:grid;gap:18px}
+.head h1{margin:0;font:700 22px/1.35 var(--f-disp);text-wrap:balance}
+.head p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px}
+.nav button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.nav button small{opacity:.7;margin-right:4px;font-weight:500}
+.states{display:flex;gap:6px;flex-wrap:wrap;min-height:34px}
+.states button{border:0;background:transparent;border-bottom:2px solid transparent;padding:5px 4px;font-size:13.5px;color:var(--muted)}
+.states button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:700}
+.stage{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:820px){.stage{grid-template-columns:minmax(0,1fr)}}
+.side{display:grid;gap:14px;min-width:0}
+.box{background:var(--card);border-radius:16px;padding:16px 18px}
+.box h2{margin:0 0 8px;font:700 16px var(--f-ui)}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.ab>div{border:1px solid var(--line);border-radius:12px;padding:10px;min-width:0;background:var(--paper)}
+.ab b{display:block;font-size:13px;margin-bottom:6px}
+.ab p{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
+.sbtn{border:0;background:none;padding:0;color:inherit;display:grid}
+.pbtn{display:block;width:100%;border:0;padding:0;text-align:left;cursor:pointer}
+.plab{position:absolute;left:0;right:0;bottom:0;display:grid;gap:1px;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(10,16,13,.78));color:#fff}
+.plab b{display:flex;align-items:center;gap:6px;font-size:17px}
+.plab b svg{width:20px;height:20px}
+.plab small{font-size:12.5px;opacity:.85}
+.photo.lift,.tip.lift{position:relative;z-index:6}
+.photo.lift{box-shadow:0 0 0 4px rgba(255,255,255,.95)}
+.tip.lift{background:var(--card);border-radius:16px;padding:14px 16px;font-size:14.5px;line-height:1.6;margin:-4px 0 14px}
+.tip.lift b{display:block;font-size:16px;margin-bottom:2px}
+.tip.lift button{margin-top:10px;border:0;background:none;color:var(--muted);font-size:13px;padding:0}
+.coach{position:absolute;inset:0;background:rgba(10,16,13,.55);z-index:5;pointer-events:none}
+.kvrow{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px;scroll-snap-type:x mandatory}
+.kvrow::-webkit-scrollbar{display:none}
+.kvc{flex:none;width:76%;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;gap:10px;background:var(--paper);border-radius:16px;padding:14px}
+.kvc q{quotes:none;font:500 15px/1.7 var(--f-text);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.kvc small{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.kvc small b{color:var(--accent)}
+.libtop{display:flex;align-items:center;gap:8px;margin:2px 0 12px}
+.libtop button{border:0;background:none;padding:4px;display:grid}
+.libtop b{font:700 19px var(--f-disp)}
+.libq{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:15px var(--f-ui);padding:11px 14px;margin-bottom:10px}
+.libchips{display:flex;gap:6px;overflow-x:auto;margin:0 -16px 14px;padding:0 16px;scrollbar-width:none}
+.libchips button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.libchips button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.libgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.libc{border:0;background:none;padding:0;text-align:left;display:grid;gap:4px;min-width:0}
+.libimg{position:relative;display:block;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#222}
+.libimg img{width:100%;height:100%;object-fit:cover;display:block}
+.libimg em{position:absolute;left:8px;top:8px;font-style:normal;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.45);border-radius:6px;padding:1px 6px}
+.libc b{font:700 14px/1.4 var(--f-disp)}
+.libc small{font-size:11.5px;color:var(--muted)}
+.pager{display:flex;justify-content:space-between;gap:10px;max-width:390px}
+.pager button{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px;font-weight:600;font-size:14px}
+.pager button:disabled{opacity:.4;cursor:default}
+
+/* ===== 휴대폰 ===== */
+.phone{position:relative;width:100%;max-width:390px;height:780px;max-height:calc(100dvh - 40px);min-height:620px;border-radius:34px;background:var(--paper);box-shadow:0 0 0 10px #1b201d,0 18px 40px -10px rgba(0,0,0,.45);overflow:hidden;display:flex;flex-direction:column;touch-action:pan-y}
+.scr{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 16px 20px;scrollbar-width:none}
+.scr::-webkit-scrollbar{display:none}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--line);padding:6px 4px 10px}
+.tabs span{display:grid;justify-items:center;gap:2px;font-size:11.5px;font-weight:600;color:var(--muted)}
+.tabs span svg{width:23px;height:23px}
+.tabs span.on{color:var(--accent)}
+.appbar{display:flex;align-items:center;gap:8px;margin:2px 0 10px}
+.appbar b{font:700 20px var(--f-disp)}
+.appbar small{font-size:12px;color:var(--muted)}
+.appbar .ic{margin-left:auto;display:flex;gap:14px;color:var(--ink)}
+.appbar .ic svg{width:21px;height:21px}
+/* 날짜 고리 */
+.rings{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:2px 16px 4px}
+.rings::-webkit-scrollbar{display:none}
+.rg{flex:none;display:grid;justify-items:center;gap:4px;font-size:11.5px;color:var(--muted)}
+.rg i{position:relative;width:60px;height:60px;border-radius:50%;padding:3px;display:block}
+.rg i img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:2px solid var(--paper)}
+.rg.read i{background:var(--accent)}
+.rg.today i{background:var(--accent);box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--accent)}
+.rg.today{color:var(--accent);font-weight:700}
+.rg.fut i{background:var(--line)}
+.rg.fut i img{opacity:.75}
+.rg.sun i{background:var(--gold)}
+.rg.miss i{background:var(--line)}
+.ringA .rg.miss i{background:none;border:2px dashed #9AA6A0;padding:1px}
+.ringB .rg.miss i{background:var(--warn)}
+.ringB .rg.miss b{color:var(--warn)}
+.rg em{position:absolute;right:-1px;bottom:-1px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;border:2px solid var(--paper)}
+.rg b{font-weight:inherit}
+/* 오늘 */
+.th{display:grid;gap:2px;margin-bottom:12px}
+.th small{font-size:12.5px;color:var(--muted)}
+.th h2{margin:0;font:700 26px/1.3 var(--f-disp);text-wrap:balance}
+.th p{margin:0;font:600 13.5px var(--f-ui);color:var(--gold)}
+.cta{display:grid;gap:2px;width:100%;border:0;border-radius:16px;padding:15px 18px;background:var(--accent);color:var(--accent-ink);text-align:left;margin-bottom:12px}
+.cta b{font-size:17px;display:flex;align-items:center;gap:8px}
+.cta b svg{width:20px;height:20px;margin-left:auto}
+.cta small{font-size:12.5px;opacity:.85}
+.steps3{display:flex;gap:6px;margin:-4px 0 12px;font-size:12px;color:var(--muted)}
+.steps3 span{flex:1;display:grid;gap:4px}
+.steps3 span::before{content:"";height:4px;border-radius:4px;background:var(--line)}
+.steps3 span.done::before{background:var(--accent)}
+.steps3 span.now::before{background:linear-gradient(90deg,var(--accent) 45%,var(--line) 45%)}
+.steps3 span.now{color:var(--ink);font-weight:700}
+.photo{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/3;max-width:100%;margin-bottom:14px;background:#222}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.guide{font:500 16px/1.8 var(--f-text);margin:0 2px 12px}
+.kept{background:var(--card);border-radius:18px;padding:16px 18px;margin-bottom:12px;display:grid;gap:8px}
+.kept small{font-size:12.5px;color:var(--muted)}
+.kept q{quotes:"“" "”";font:500 17px/1.75 var(--f-text)}
+.kept span{font-size:12.5px;font-weight:700;color:var(--gold)}
+.till{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:14px;padding:11px 14px;margin-bottom:12px;font-size:13.5px}
+.till b{margin-left:auto;font-variant-numeric:tabular-nums;font-size:16px;color:var(--accent)}
+.done-row{display:flex;gap:8px;margin-bottom:12px}
+.done-row button{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px;font-size:13.5px;font-weight:600}
+.coach{position:absolute;inset:0;background:rgba(10,16,13,.55);display:flex;flex-direction:column;justify-content:flex-start;padding:236px 16px 0;z-index:5}
+.coach .cta{box-shadow:0 0 0 4px rgba(255,255,255,.9)}
+.coach .tip{background:var(--card);border-radius:16px;padding:14px 16px;font-size:14.5px;line-height:1.6}
+.coach .tip b{display:block;font-size:16px;margin-bottom:2px}
+.coach .tip button{margin-top:10px;border:0;background:none;color:var(--muted);font-size:13px;padding:0}
+/* 접힌 고리 줄 */
+.fold{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:14px;padding:9px 12px;margin:0 0 12px;font-size:13.5px}
+.fold i{width:26px;height:26px;border-radius:50%;padding:2px;background:var(--accent);flex:none}
+.fold i img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:1.5px solid var(--card)}
+.fold b{font-weight:700}
+.fold span{color:var(--muted)}
+.fold svg{width:18px;height:18px;margin-left:auto;color:var(--muted)}
+/* 본문 */
+.rd{background:var(--card);border-radius:18px;padding:18px 18px 22px}
+.rd h2{margin:0;font:700 24px/1.3 var(--f-disp)}
+.flow{display:flex;align-items:center;gap:6px;margin:6px 0 12px;font-size:13px;color:var(--muted)}
+.flow b{color:var(--ink);font-weight:700}
+.flow svg{width:15px;height:15px}
+.flowB{margin:8px 0 12px}
+.flowB p{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.flowB p b{color:var(--ink)}
+.chips{display:flex;gap:6px;margin-bottom:14px}
+.chips span{font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:var(--soft);color:var(--accent)}
+.rd h3{margin:4px 0 2px;font:700 19px var(--f-disp);color:var(--accent)}
+.rd h4{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:600}
+.vs{font:400 17px/1.95 var(--f-text);margin:0;word-break:keep-all}
+.vs sup{font:600 10px var(--f-ui);color:var(--muted);margin-right:2px}
+.resume{display:inline;background:linear-gradient(transparent 60%,rgba(226,184,116,.45) 60%)}
+.fadeout{position:relative;height:60px;margin-top:-60px;background:linear-gradient(transparent,var(--card))}
+.rd .cta{margin:16px 0 0}
+.mark{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--warn);font-weight:700;margin:2px 0 8px}
+/* 스토리 */
+.story{position:absolute;inset:0;background:var(--night);color:#fff;z-index:4;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none}
+.story .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.42) saturate(.9)}
+.story .bars{position:relative;display:flex;gap:3px;padding:12px 12px 0}
+.story .bars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.3);overflow:hidden}
+.story .bars i b{display:block;height:100%;width:0;background:#fff}
+.story .top{position:relative;display:flex;align-items:center;gap:8px;padding:10px 14px 0;font-size:13.5px;font-weight:600}
+.story .top .nm{display:flex;gap:6px;align-items:center}
+.story .top .nm em{font-style:normal;font-weight:500;opacity:.75}
+.story .top button{margin-left:auto;border:0;background:none;color:#fff;width:34px;height:34px;display:grid;place-items:center}
+.story .top button+button{margin-left:0}
+.story .top svg{width:20px;height:20px}
+.story .body{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:18px 26px 70px;gap:12px}
+.story .kick{font:600 12.5px var(--f-ui);color:#E2B874;letter-spacing:.04em}
+.story h3{margin:0;font:700 28px/1.35 var(--f-disp);white-space:pre-line;text-wrap:balance}
+.story h4{margin:0;font:700 21px/1.4 var(--f-disp)}
+.story .sub{margin:0;font-size:15px;line-height:1.7;white-space:pre-line;color:#EFE6D8}
+.story p.tx{margin:0;font:500 16.5px/1.85 var(--f-text);color:#EFE6D8}
+.story p.tx strong{color:#fff}
+.story .vq{background:rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;font:500 15.5px/1.75 var(--f-text)}
+.story .vq small{display:block;margin-top:4px;font:700 12px var(--f-ui);color:#E2B874}
+.story .big{font:700 22px/1.6 var(--f-disp)}
+.story .lab{font-size:12px;color:rgba(255,255,255,.7)}
+.story .pair{display:grid;gap:8px}
+.story .pair div{border-left:3px solid #E2B874;padding:4px 0 4px 12px;font:500 15px/1.65 var(--f-text)}
+.story .pair u{text-decoration:none;color:#E2B874;font-weight:700}
+.story .pair small{display:block;font:500 11.5px var(--f-ui);color:rgba(255,255,255,.65)}
+.story table{border-collapse:collapse;font-size:13px;line-height:1.5;width:100%}
+.story td,.story th{border-bottom:1px solid rgba(255,255,255,.18);padding:6px 4px;vertical-align:top;text-align:left}
+.story th{font-weight:700;color:#E2B874;font-size:12px}
+.story .hold{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.55);border-radius:999px;padding:8px 16px;font-size:13.5px;font-weight:700;display:none}
+.story.paused .hold{display:block}
+.story .toast{position:absolute;left:14px;right:14px;top:72px;background:rgba(255,255,255,.95);color:#1B2420;border-radius:14px;padding:11px 14px;font-size:13.5px;display:flex;align-items:center;gap:10px;z-index:2}
+.story .toast b{font-weight:700}
+.story .toast button{margin-left:auto;border:0;background:var(--soft);color:#2C5C52;border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:700}
+.story .tip2{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:12px;color:rgba(255,255,255,.6)}
+.story .go{align-self:flex-start;border:0;border-radius:14px;background:#fff;color:#1B2420;font-weight:700;padding:12px 18px;margin-top:6px}
+/* 묵상 노트 */
+.qh{display:grid;gap:2px;margin:0 0 12px}
+.qh small{font-size:12.5px;color:var(--muted)}
+.qh h2{margin:0;font:700 22px var(--f-disp)}
+.qh a{font-size:13px;font-weight:700;color:var(--accent);text-decoration:none;margin-top:4px}
+.st{display:grid;gap:10px;margin-bottom:16px}
+.st>header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}
+.st>header i{width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-style:normal;font-size:12.5px}
+.st.wait>header i{background:var(--line);color:var(--muted)}
+.st.wait>header{color:var(--muted)}
+.pane{background:var(--card);border-radius:16px;padding:14px 16px;display:grid;gap:10px}
+.pane p{margin:0;font:500 16px/1.75 var(--f-text)}
+.pane a{font-size:13px;font-weight:700;color:var(--accent);text-decoration:none}
+.pane textarea{width:100%;min-height:76px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font:15px/1.6 var(--f-ui);padding:10px 12px;resize:none}
+.pick{display:grid;gap:8px}
+.pick label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:500 14.5px/1.6 var(--f-text);background:var(--paper)}
+.pick label.on{border-color:var(--accent);background:var(--soft)}
+.pick label small{display:block;font:700 11.5px var(--f-ui);color:var(--gold)}
+.pick input{margin-top:5px;accent-color:var(--accent)}
+.findlink{display:flex;align-items:center;gap:8px;justify-content:center;font-size:14px;font-weight:700;color:var(--accent);padding:12px 0 4px}
+/* 기록 */
+.prof{display:flex;align-items:center;gap:12px;margin:2px 0 14px}
+.prof i{width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 20px var(--f-disp);font-style:normal}
+.prof b{display:block;font:700 18px var(--f-disp)}
+.prof small{font-size:12.5px;color:var(--muted)}
+.sec{background:var(--card);border-radius:18px;padding:16px 16px;margin-bottom:12px;display:grid;gap:10px}
+.sec>h3{margin:0;font:700 16px var(--f-ui);display:flex;align-items:center}
+.sec>h3 a{margin-left:auto;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none}
+.sec q{quotes:"“" "”";font:500 16.5px/1.75 var(--f-text)}
+.sec .meta{font-size:12.5px;color:var(--muted)}
+.sec .meta b{color:var(--gold)}
+.note{border-left:3px solid var(--soft);padding:2px 0 2px 12px;font-size:14.5px;line-height:1.65}
+.note small{display:block;font-size:12px;color:var(--muted)}
+.ex{font-size:11px;font-weight:700;color:var(--warn);background:var(--warn-soft);border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.openday{display:flex;align-items:center;gap:12px;border:0;background:var(--soft);border-radius:14px;padding:12px 14px;text-align:left;width:100%}
+.openday b{display:block;font-size:14.5px}
+.openday small{font-size:12.5px;color:var(--muted)}
+.openday svg{width:18px;height:18px;margin-left:auto;color:var(--accent)}
+.prog{display:flex;align-items:baseline;gap:6px}
+.prog b{font:700 24px var(--f-disp)}
+.prog span{color:var(--muted);font-size:13px}
+.meter{height:8px;border-radius:8px;background:var(--paper);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:8px}
+.stamps{display:flex;justify-content:space-between}
+.stamps span{display:grid;justify-items:center;gap:4px;font-size:11.5px;color:var(--muted)}
+.stamps i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;background:var(--paper);color:var(--muted)}
+.stamps .on i{background:var(--accent);color:var(--accent-ink)}
+.stamps .sun i{background:var(--gold);color:var(--card)}
+.stamps .me{color:var(--accent);font-weight:700}
+.row{display:flex;align-items:center;gap:12px;border:0;background:none;width:100%;text-align:left;padding:4px 0}
+.row i{width:34px;height:34px;border-radius:11px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-style:normal}
+.row i svg{width:18px;height:18px}
+.row b{flex:1;font-size:15px;font-weight:600}
+.row small{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.row>svg{width:18px;height:18px;color:var(--muted)}
+.empty{text-align:left;display:grid;gap:10px}
+.empty p{margin:0;font:500 16px/1.75 var(--f-text)}
+.empty ol{margin:0;padding-left:18px;font-size:14px;color:var(--muted);display:grid;gap:2px}
+@media (prefers-reduced-motion: reduce){.story .bars i b{transition:none!important}}
+</style></head><body>
+
+<div class="wrap">
+  <div class="head">
+    <h1>CBSR v2 1차 UI 샘플 · 2차 수정</h1>
+    <p>같은 회차(2027년 96일째 · 4월 6일 · 사무엘상 24–26장)로 오늘 → 본문 → 스토리 → 묵상 노트 → 기록을 차례로 봅니다. 휴대폰 화면을 좌우로 밀거나 아래 단추로 넘깁니다.</p>
+  </div>
+  <div class="nav" role="tablist" id="nav"></div>
+  <div class="states" role="tablist" id="states"></div>
+  <div class="stage">
+    <div style="display:grid;gap:12px;min-width:0">
+      <div class="phone" id="phone"></div>
+      <div class="pager"><button id="prev">‹ 앞 화면</button><button id="next">다음 화면 ›</button></div>
+    </div>
+    <div class="side" id="side"></div>
+  </div>
+</div>
+
+<script>
+const IMG=new Proxy({},{get:(o,k)=>"img/g/"+String(k)+".jpg"});
+const S=[
+ {k:"today",t:"오늘",states:[["start","시작 전"],["read","읽다 중단"],["story","스토리 보는 중"],["note","묵상 중"],["done","마침"],["first","첫 방문"]]},
+ {k:"read",t:"본문",states:[]},
+ {k:"story",t:"스토리",states:[["first","처음 열기"],["resume","닫았다 다시 열기"]]},
+ {k:"note",t:"묵상 노트",states:[]},
+ {k:"rec",t:"기록",states:[["empty","첫 방문(기록 없음)"],["full","기록이 쌓인 상태"]]},
+ {k:"lib",t:"스토리 모음",states:[]}
+];
+const CH={
+ today:["하단 탭: 아이콘 아래 이름을 늘 보여 줍니다(오늘 · 본문 · 묵상 · 도전 · 기록). 'QT'는 '묵상'으로.","날짜 고리: '나의 통독'을 빼고, 읽은 날은 초록, 안 읽고 지난 날은 회색 점선(A안).","'본문 읽기' 단추를 없애고 그림을 누르면 다음 단계로 갑니다. 그림 아래쪽 글이 상태에 따라 바뀝니다: 본문 읽기 → 이어 읽기 → 스토리 이어 보기 → 묵상 이어하기 → 다시 보기.","맨 위 지도 단추 왼쪽에 '스토리 모음' 단추를 새로 둡니다.","첫 방문 안내는 그림을 가리키는 '오늘 본문 한 번 열어 보기' 하나."],
+ read:["날짜 고리를 접어 날짜와 본문 범위 한 줄로(누르면 펼침).","'이 책의 흐름'은 글 + 위치 막대(B안): '사무엘상 전체 31장 중 24–26장'."],
+ story:["이름은 '스토리'만 씁니다.","자동 넘김 그대로, 누르고 있으면 멈춥니다.","손가락 두 개로 벌려 확대하는 것을 막았습니다. 확대는 지도 경로 카드에서만 됩니다.","닫았다 다시 열면 보던 카드부터, '처음부터'도 고를 수 있습니다.","마지막 카드는 나의 생각거리, 그다음 '묵상 노트 쓰기'."],
+ note:["날짜 고리를 접어 한 줄로.","이름은 '묵상 노트', 탭은 '묵상'.","끝에 '오늘의 본문에서 찾기' 연결 하나만."],
+ rec:["항목은 지금 기록 탭 그대로: 프로필·이름, 통독 일정, 붙잡은 말씀, 아멘. 지도 칸은 뺐습니다.","첫 방문 때는 0이 늘어선 숫자판 대신 할 일 하나만."],
+ lib:["오늘 화면 맨 위 '스토리' 단추로 엽니다(지도 단추 왼쪽).","지난 스토리를 날짜순으로 모아 보고, 책 이름·장·낱말로 찾습니다.","표지를 누르면 그 스토리를 처음부터 봅니다."]
+};
+let cur=0, st={today:"start",read:"b",story:"first",rec:"full"}, ring="A";
+try{ const h=location.hash.slice(1); const i=S.findIndex(s=>s.k===h); if(i>=0) cur=i; }catch(e){}
+
+const ico={
+ today:'<path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/>',
+ read:'<path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1V19c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1z"/><path d="M12 6.5V20"/>',
+ qt:'<path d="M6 3.5h9l3 3V20.5H6z"/><path d="M9 9h6M9 13h6M9 17h4"/>',
+ ch:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
+ rec:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+ map:'<path d="M9 4 3 6.5v13.5L9 17.5l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>',
+ cal:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+ menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+ stories:'<rect x="3.5" y="5" width="11" height="15" rx="2.5"/><path d="M17.5 7v11M20.5 9v7"/>',
+ chev:'<path d="m9 6 6 6-6 6"/>', down:'<path d="m6 9 6 6 6-6"/>',
+ x:'<path d="M6 6l12 12M18 6 6 18"/>', pause:'<path d="M8 5v14M16 5v14"/>',
+ sound:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/>',
+ find:'<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>',
+ church:'<path d="M12 3v4M10 5h4M6 21V11l6-4 6 4v10z"/><path d="M10 21v-4h4v4"/>'
+};
+const sv=(k,w)=>`<svg viewBox="0 0 24 24" width="${w||22}" height="${w||22}" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${ico[k]}</g></svg>`;
+const tabs=on=>`<nav class="tabs" aria-label="하단 탭">${[["today","오늘"],["read","본문"],["qt","묵상"],["ch","도전"],["rec","기록"]].map(([k,t])=>`<span class="${k===on?"on":""}">${sv(k,23)}${t}</span>`).join("")}</nav>`;
+const bar=`<div class="appbar"><b>4월 6일 (화)</b><small>365 성경통독</small><span class="ic"><button class="sbtn" data-lib="1" aria-label="스토리 모음">${sv("stories")}</button>${sv("map")}${sv("cal")}${sv("menu")}</span></div>`;
+const RINGS=[["4/1","목","read","g03_09"],["4/2","금","miss","g05_02"],["4/3","토","read","g19_15"],["4/4","주일","sun","g03_09"],["4/5","월","read","g05_02"],["4/6","오늘","today","g06_06"],["4/7","수","fut","g19_15"],["4/8","목","fut","g03_09"]];
+const rings=()=>`<div class="rings ring${ring}">${RINGS.map(([d,w,c,im])=>`<div class="rg ${c}"><i><img alt="" src="${IMG[im]}">${c==="read"&&ring==="B"?"<em>✓</em>":""}</i><b>${d} ${w}</b></div>`).join("")}</div>`;
+const fold=`<div class="fold"><i><img alt="" src="${IMG.g06_06}"></i><b>4월 6일 (화)</b><span>사무엘상 24–26장</span>${sv("down")}</div>`;
+
+function today(){
+  const s=st.today;
+  const C={start:["본문 읽기","3장 · 약 15분"],first:["본문 읽기","3장 · 약 15분"],read:["이어 읽기","25장 18절부터"],story:["스토리 이어 보기","12장 중 5번째 카드부터"],note:["묵상 이어하기","4단계 중 2단계 · 하나님의 성품"],done:["오늘 본문 다시 보기","스토리 · 묵상 노트도 다시 볼 수 있습니다"]};
+  const prog={start:["","",""],first:["","",""],read:["now","",""],story:["done","now",""],note:["done","done","now"],done:["done","done","done"]}[s];
+  let h=bar+rings()+`<div class="th"><small>4월 6일 화요일 · 96일째</small><p>사무엘상 24–26장</p><h2>다윗이 사울을 살려주다</h2></div>`;
+  if(s==="done") h+=`<div class="kept"><small>오늘 붙잡은 말씀</small><q>오늘 너를 보내어 나를 영접하게 하신 이스라엘의 하나님 여호와를 찬송할지로다</q><span>사무엘상 25:32</span></div><div class="till">오늘 하루가 끝나기까지<b id="clock">--:--:--</b></div>`;
+  h+=`<button class="photo pbtn${s==="first"?" lift":""}" data-next="1"><img alt="낡은 겉옷 자락을 쥔 손" src="${IMG.g06_06}"><span class="plab"><b>${C[s][0]}${sv("chev",20)}</b><small>${C[s][1]}</small></span></button>`;
+  if(s==="first") h+=`<div class="tip lift"><b>오늘 본문 한 번 열어 보기</b>그림을 누르면 오늘 읽을 사무엘상 24–26장이 열립니다.<br><button data-st-set="start">닫기</button></div>`;
+  h+=`<div class="steps3"><span class="${prog[0]}">본문</span><span class="${prog[1]}">스토리</span><span class="${prog[2]}">묵상 노트</span></div>`;
+  h+=`<p class="guide">사울에게 쫓기던 다윗이 엔게디의 굴(24장)과 하길라 산의 진영(26장)에서 사울을 죽일 기회를 두 번 만납니다. 그 사이 25장에서는 갈멜의 나발이 다윗을 모욕합니다.</p>`;
+  return `<div class="scr">${h}</div>${s==="first"?'<div class="coach"></div>':""}${tabs("today")}`;
+}
+function read(){
+  const A=st.read==="a";
+  const flow=A?`<div class="flow">${sv("read",15)}사무엘상에서 지금 읽는 자리 · <b>24–26장</b></div>`
+   :`<div class="flowB"><p>사무엘상 전체 31장 중 <b>24–26장</b></p><div class="meter"><i style="width:${(26/31*100).toFixed(1)}%"></i></div></div>`;
+  const V=[[1,"사울이 블레셋 사람을 쫓다가 돌아오매 어떤 사람이 그에게 말하여 이르되 보소서 다윗이 엔게디 광야에 있더이다 하니"],[2,"사울이 온 이스라엘에서 택한 사람 삼천 명을 거느리고 다윗과 그의 사람들을 찾으러 들염소 바위로 갈새"],[3,"길 가 양의 우리에 이른즉 굴이 있는지라 사울이 뒤를 보러 들어가니라 다윗과 그의 사람들이 그 굴 깊은 곳에 있더니"],[4,"다윗의 사람들이 이르되 보소서 여호와께서 당신에게 이르시기를 내가 원수를 네 손에 넘기리니 네 생각에 좋은 대로 그에게 행하라 하시더니 이것이 그 날이니이다 하니 다윗이 일어나서 사울의 겉옷 자락을 가만히 베니라"],[5,"그리 한 후에 사울의 옷자락 벰으로 말미암아 다윗의 마음이 찔려"],[6,"자기 사람들에게 이르되 내가 손을 들어 여호와의 기름 부음을 받은 내 주를 치는 것은 여호와께서 금하시는 것이니 그는 여호와의 기름 부음을 받은 자가 됨이니라 하고"],[7,"다윗이 이 말로 자기 사람들을 금하여 사울을 해하지 못하게 하니라 사울이 일어나 굴에서 나가 자기 길을 가니라"]];
+  const h=fold+`<div class="rd"><div style="display:flex;align-items:center;gap:10px"><h2>사무엘상 24–26장</h2><span style="margin-left:auto;display:flex;gap:12px;color:var(--muted)">${sv("sound",21)}</span></div>${flow}<div class="chips"><span>오늘 본문</span><span>3장</span><span>약 15분</span></div><h3>사무엘상 24장</h3><h4>엔게디 굴에서 사울을 살려 줌</h4><p class="vs">${V.map(([n,t])=>`<sup>${n}</sup>${t} `).join("")}</p><div class="fadeout"></div><button class="cta"><b>오늘 통독 완료${sv("chev",20)}</b><small>읽은 뒤 누르면 스토리로 이어집니다</small></button></div>`;
+  return `<div class="scr">${h}</div>${tabs("read")}`;
+}
+/* 스토리 카드: 원고(2027 A판 96일째)에서 옮김 */
+const CARDS=[
+ {img:"g06_06",html:`<div class="kick">사무엘상 24–26장</div><h3>두 번의 기회,\n한 번의 분노</h3><p class="sub">칼을 거둔 날과 칼을 찬 날,\n누가 다윗을 멈추게 했을까</p>`},
+ {img:"g19_14",html:`<div class="lab">배경 · 매일 쫓기는 사람</div><h4>매일 쫓기는 사람</h4><p class="tx">사울은 다윗을 쫓았고, 다윗은 광야의 요새에서 십 광야 산골로, 다시 마온 광야로 옮겨 다녔습니다(23:14, 24–25).</p><div class="vq">사울이 매일 찾되 하나님이 그를 그의 손에 넘기지 아니하시니라<small>삼상 23:14</small></div>`},
+ {img:"g19_14",html:`<div class="lab">긴장 · 굴 깊은 곳 · 24장</div><h4>굴 깊은 곳에서</h4><p class="tx">그때 사울이 뒤를 보러 길 가의 굴에 들어갑니다. 그 굴 깊은 곳에 <strong>다윗과 그의 사람들</strong>이 있었습니다(24:3).</p><div class="vq">여호와께서 당신에게 이르시기를 내가 원수를 네 손에 넘기리니 네 생각에 좋은 대로 그에게 행하라 하시더니<small>삼상 24:4 · 다윗의 사람들의 말</small></div>`},
+ {img:"g06_06",html:`<div class="lab">전환 · 결정</div><p class="tx">다윗은 사울의 겉옷 자락만 가만히 벱니다. 그런데 <strong>그 일로 마음이 찔렸습니다</strong>(24:4–5).</p><div class="big">“내가 손을 들어 여호와의 기름 부음을 받은 내 주를 치는 것은 여호와께서 금하시는 것이니”</div><div class="lab">삼상 24:6 중</div>`},
+ {img:"g19_14",html:`<div class="lab">전환 · 굴 밖의 고백</div><h4>판단은 여호와께</h4><p class="tx">그 후에 다윗도 굴에서 나가 사울을 불러 세웁니다(24:8). 그리고 판단을 여호와께 맡깁니다.</p><div class="vq">여호와께서 나를 위하여 왕에게 보복하시려니와 내 손으로는 왕을 해하지 않겠나이다<small>삼상 24:12 · 다윗의 말</small></div>`},
+ {img:"g19_14",html:`<div class="lab">긴장 · 반전, 나발 앞에서 · 25장</div><h4>선과 악, 두 번의 대답</h4><div class="pair"><div>사울: "너는 나를 <u>선대</u>하니"<small>24:17 · 굴 밖에서 사울이 한 말</small></div><div>다윗: "그가 <u>악</u>으로 나의 <u>선</u>을 갚는도다"<small>25:21 · 나발을 두고 다윗이 한 말</small></div></div><p class="tx">그러자 다윗은 "각기 칼을 차라"(25:13) 하고 명령합니다. 보복을 맡기던 손이 칼을 찹니다.</p>`},
+ {img:"g19_14",html:`<div class="lab">전환 · 막아선 사람</div><h4>보내신 이를 찬송하다</h4><p class="tx">그때 나발의 아내 아비가일이 음식을 싣고 내려와 다윗을 마주 만납니다(25:18–20). 그의 말을 들은 다윗은 먼저 여호와를 찬송합니다.</p><div class="vq">오늘 너를 보내어 나를 영접하게 하신 이스라엘의 하나님 여호와를 찬송할지로다<small>삼상 25:32 · 다윗의 말</small></div>`},
+ {img:"g19_14",html:`<div class="lab">전환 · 다시 찾아온 밤 · 26장</div><h4>땅에 꽂힌 창</h4><p class="tx">그 뒤 다시 밤이 옵니다. 하길라 산, 잠든 사울의 <strong>머리 곁 땅에 창이 꽂혀</strong> 있습니다(26:7).</p><p class="tx">곁에 선 아비새가 말하고, 다윗이 대답하고, 서술자가 설명을 붙입니다. 같은 밤에 세 목소리가 들립니다.</p>`},
+ {img:"g19_14",html:`<div class="lab">의미 · 세 장을 나란히</div><h4>같은 유혹, 달라진 손</h4><table><tr><th></th><th>24장</th><th>25장</th><th>26장</th></tr><tr><td>상대</td><td>사울</td><td>나발</td><td>사울</td></tr><tr><td>다윗의 손</td><td>옷자락만 벰</td><td>칼을 참</td><td>창과 물병만 가져감</td></tr><tr><td>멈추게 한 것</td><td>찔린 마음</td><td>아비가일을 보내신 여호와</td><td>여호와께서 금하시나니</td></tr></table>`},
+ {img:"g06_06",html:`<div class="lab">나의 생각거리</div><p class="tx">아비새는 '하나님이 오늘 당신의 원수를 당신의 손에 넘기셨나이다'라고 말했습니다(26:8). 이 말처럼, 기회가 왔다는 이유만으로 해도 된다고 확정해 버린 나의 일은 무엇입니까?</p><button class="go">묵상 노트 쓰기 ›</button>`}
+];
+function story(){
+  const resume=st.story==="resume";
+  return `<div class="story" id="story" style="touch-action:none"><div class="bg" id="sbg"></div><div class="bars">${CARDS.map(()=>`<i><b></b></i>`).join("")}</div><div class="top"><span class="nm">스토리 <em>사무엘상 24–26장</em></span><button aria-label="멈춤" id="spause">${sv("pause",20)}</button><button aria-label="닫기">${sv("x",20)}</button></div>${resume?`<div class="toast" id="stoast"><span>보던 <b>5번째 카드</b>부터 이어 봅니다</span><button id="sfirst">처음부터</button></div>`:""}<div class="body" id="sbody"></div><div class="hold">멈춤 · 손을 떼면 이어집니다</div><div class="tip2">누르고 있으면 멈춤 · 왼쪽·오른쪽을 누르면 앞뒤 카드</div></div>`;
+}
+function note(){
+  const h=fold+`<div class="qh"><small>묵상 노트 · 96일째</small><h2>사무엘상 24–26장</h2><a href="#story" data-go="2">스토리 다시 보기 ›</a></div>
+  <section class="st"><header><i>1</i>본문 관찰</header><div class="pane"><p>다윗은 자신을 멈춘 아비가일과 그를 보내신 하나님에 대해 각각 무엇이라고 말합니까?(25:32–33, 39)</p><a href="#read" data-go="1">본문 열기 · 삼상 25:23–35, 39–42 ›</a><textarea id="n1" aria-label="본문 관찰 적기">아비가일보다 먼저, 아비가일을 보내신 여호와를 찬송한다. 아비가일에게는 '네가 막았느니라' 한다.</textarea></div></section>
+  <section class="st"><header><i>2</i>하나님의 성품</header><div class="pane"><p>다윗은 아비가일을 보내 자기를 영접하게 하신 여호와를 찬송하고(25:32), 나발의 죽음을 들은 뒤에는 '종으로 악한 일을 하지 않게 하신 여호와'(25:39)를 찬송합니다.</p><textarea id="n2" aria-label="하나님의 성품에 대해 적기" placeholder="오늘 본문에서 본 하나님을 한 줄로"></textarea></div></section>
+  <section class="st wait"><header><i>3</i>적용</header></section>
+  <section class="st wait"><header><i>4</i>기도와 붙잡을 한 구절</header></section>
+  <a class="findlink" href="#find">${sv("find",18)}오늘의 본문에서 찾기 ›</a>`;
+  return `<div class="scr">${h}</div>${tabs("qt")}`;
+}
+function rec(){
+  const prof=`<div class="prof"><i>나</i><div><b>${st.rec==="empty"?"내 통독 기록":"이츠학"}</b><small>365 성경통독 · 이 기기에 저장</small></div><span style="margin-left:auto;color:var(--muted)">${sv("gear",22)}</span></div>`;
+  let h;
+  if(st.rec==="empty"){
+    h=prof+`<section class="sec empty"><p>오늘 본문을 읽고 묵상 노트를 마치면, 읽은 날과 붙잡은 말씀, 아멘이 여기에 모입니다.</p><button class="cta" style="margin:0" data-go="0"><b>오늘 본문 열기${sv("chev",20)}</b><small>4월 6일 · 사무엘상 24–26장</small></button></section>
+    <section class="sec"><button class="row"><i>${sv("church",18)}</i><b>우리 교회 함께 읽기<small>교회 일정으로는 오늘 사무엘상 24–26장</small></b>${sv("chev",18)}</button></section>`;
+  } else {
+    const KV=[["오늘 너를 보내어 나를 영접하게 하신 이스라엘의 하나님 여호와를 찬송할지로다","삼상 25:32","4. 6."],["여호와께서 너희를 위하여 싸우시리니 너희는 가만히 있을지니라","출 14:14","1. 21."],["사람이 떡으로만 사는 것이 아니요 여호와의 입에서 나오는 모든 말씀으로 사는 줄을 너로 알게 하려 하심이니라","신 8:3","2. 25."]];
+    h=prof+`<section class="sec"><h3>통독 일정<a href="#">성경 책장 ›</a></h3><div class="prog"><b>267</b><span>장 / 1,189장 · 22%</span></div><div class="meter"><i style="width:22.4%"></i></div><p style="margin:2px 0 0;font-size:13.5px;color:var(--muted)">이번 주 <b style="color:var(--ink)">2일</b> 읽었어요</p><div class="stamps">${[["월","on"],["화","on me"],["수",""],["목",""],["금",""],["토",""],["주일","sun"]].map(([d,c])=>`<span class="${c}"><i>${c.includes("on")?"✓":""}</i>${d}</span>`).join("")}</div></section>
+    <section class="sec"><h3>붙잡은 말씀 <span style="color:var(--accent);margin-left:4px">42</span><a href="#">전체 ›</a></h3><div class="kvrow">${KV.map(([t,r,d])=>`<div class="kvc"><q>${t}</q><small><b>${r}</b>${d}</small></div>`).join("")}</div></section>
+    <section class="sec"><h3>아멘 · 형광펜 · 노트<a href="#">전체 ›</a></h3><div class="note"><small>4월 6일 · 아멘</small>“여호와께서 나를 위하여 왕에게 보복하시려니와 내 손으로는 왕을 해하지 않겠나이다” 삼상 24:12</div><div class="note"><small>4월 6일 · 형광펜</small>“사울의 옷자락 벰으로 말미암아 다윗의 마음이 찔려” 삼상 24:5</div></section>
+    <section class="sec"><button class="row"><i>${sv("church",18)}</i><b>우리 교회 함께 읽기<small>교회 일정으로는 오늘 사무엘상 24–26장</small></b>${sv("chev",18)}</button></section>`;
+  }
+  return `<div class="scr">${h}</div>${tabs("rec")}`;
+}
+/* 스토리 모음: 지도 단추 왼쪽 '스토리' 단추로 엶 */
+const LIB=[[96,"4월 6일","사무엘상 24–26장","두 번의 기회, 한 번의 분노","g06_06"],[59,"2월 28일","신명기 9–11장","깨뜨린 판, 처음과 같은 판","g03_09"],[58,"2월 27일","신명기 5–8장","배부를 때 기억할 것","g05_02"],[57,"2월 26일","신명기 1–4장","죽게 된 세대, 살아 남은 너희","g19_15"],[56,"2월 25일","민수기 34–36장","두 번 들린 '말이 옳다'","g19_14"],[55,"2월 24일","민수기 31–33장","다시 땅을 본 사람들","g03_09"],[54,"2월 23일","민수기 26–30장","다시 센 회중, 남은 두 사람","g05_02"],[53,"2월 22일","민수기 22–25장","복을 받은 백성, 회막 문의 두 사람","g19_15"]];
+function lib(){
+  const q=(st.libq||"").trim(), L=LIB.filter(x=>!q||(x[2]+x[3]).includes(q));
+  const h=`<div class="libtop"><button data-go="0" aria-label="닫기">${sv("x",22)}</button><b>스토리 모음</b></div><input id="libq" class="libq" type="search" placeholder="책 이름, 장, 낱말로 찾기 (예: 신명기, 다윗)" value="${q.replace(/"/g,"&quot;")}"><div class="libchips">${["전체","사무엘상","신명기","민수기"].map(x=>`<button data-libq="${x==="전체"?"":x}" class="${(q||"전체")===x?"on":""}">${x}</button>`).join("")}</div><div class="libgrid">${L.map(([n,d,r,t,im])=>`<button class="libc" data-go="2"><span class="libimg"><img alt="" src="${IMG[im]}"><em>${n}일째</em></span><b>${t}</b><small>${r} · ${d}</small></button>`).join("")||`<p style="color:var(--muted)">'${q}'가 들어간 스토리가 없습니다. 책 이름이나 다른 낱말로 찾아 보세요.</p>`}</div>`;
+  return `<div class="scr">${h}</div>${tabs("qt")}`;
+}
+/* 결정이 필요한 곳: 두 안을 나란히 */
+function decide(){ return ""; }
+function mini(v){ return `<div class="rings ring${v}" style="margin:0;padding:0;gap:8px">${RINGS.slice(1,6).map(([d,w,c,im])=>`<div class="rg ${c}" style="font-size:10px"><i style="width:40px;height:40px;padding:2px"><img alt="" src="${IMG[im]}">${c==="read"&&v==="B"?`<em style="width:15px;height:15px;font-size:9px">✓</em>`:""}</i><b>${w}</b></div>`).join("")}</div>`; }
+
+/* 그리기 */
+let timer=null, clockT=null;
+function draw(){
+  clearInterval(timer); clearInterval(clockT);
+  const s=S[cur];
+  document.getElementById("nav").innerHTML=S.map((x,i)=>`<button role="tab" aria-selected="${i===cur}" data-i="${i}"><small>${i+1}</small>${x.t}</button>`).join("");
+  document.getElementById("states").innerHTML=s.states.map(([k,t])=>`<button role="tab" aria-selected="${st[s.k]===k}" data-st="${k}">${t}</button>`).join("");
+  const P=document.getElementById("phone");
+  P.innerHTML=s.k==="today"?today():s.k==="read"?read():s.k==="story"?story():s.k==="note"?note():s.k==="lib"?lib():rec();
+  document.getElementById("side").innerHTML=`<div class="box"><h2>${s.t} · 지금 v2와 달라진 점</h2><ul>${CH[s.k].map(x=>`<li>${x}</li>`).join("")}</ul></div>`+decide()+`<div class="box"><h2>넣지 않은 것</h2><ul><li>스토리 수동 넘김 기본값, 주간 일정표형 날짜, '이야기 따라 읽기' 같은 풀어 쓴 이름</li><li>카드 역할 유형 나누기, '본문에서 찾기'를 읽기 직후로 옮기기</li><li>안심시키는 문구</li><li>기록 탭의 지도 칸</li></ul></div>`;
+  document.getElementById("prev").disabled=cur===0; document.getElementById("next").disabled=cur===S.length-1;
+  try{ history.replaceState(null,"","#"+s.k); }catch(e){}
+  if(s.k==="story") runStory();
+  if(s.k==="today"&&st.today==="done") runClock();
+  P.querySelectorAll("[data-go]").forEach(a=>a.onclick=e=>{ e.preventDefault(); cur=+a.dataset.go; draw(); });
+  const li=document.getElementById("libq"); if(li){ li.oninput=()=>{ st.libq=li.value; const pos=li.selectionStart; draw(); const l2=document.getElementById("libq"); l2.focus(); try{ l2.setSelectionRange(pos,pos); }catch(e){} }; }
+}
+function runClock(){ const el=document.getElementById("clock"); const f=()=>{ const n=new Date(), m=new Date(n); m.setHours(24,0,0,0); let d=Math.max(0,Math.floor((m-n)/1000)); const p=x=>String(x).padStart(2,"0"); if(el) el.textContent=`${p(Math.floor(d/3600))}:${p(Math.floor(d%3600/60))}:${p(d%60)}`; }; f(); clockT=setInterval(f,1000); }
+function runStory(){
+  const root=document.getElementById("story"); ["gesturestart","gesturechange"].forEach(t=>root.addEventListener(t,e=>e.preventDefault()));
+  root.addEventListener("touchmove",e=>{ if(e.touches.length>1) e.preventDefault(); },{passive:false});
+  const body=document.getElementById("sbody"), bg=document.getElementById("sbg"), bars=[...root.querySelectorAll(".bars b")];
+  let i=st.story==="resume"?4:0, t=0, paused=false; const DUR=7000, step=100;
+  const show=()=>{ body.innerHTML=CARDS[i].html; bg.style.backgroundImage=`url(${IMG[CARDS[i].img]})`; bars.forEach((b,k)=>b.style.width=k<i?"100%":"0%"); t=0; const g=body.querySelector(".go"); if(g) g.onclick=e=>{ e.stopPropagation(); cur=3; draw(); }; };
+  show();
+  timer=setInterval(()=>{ if(paused) return; t+=step; bars[i].style.width=Math.min(100,t/DUR*100)+"%"; if(t>=DUR){ if(i<CARDS.length-1){ i++; show(); } else paused=true; } },step);
+  let down=0, held=false, hT=null;
+  root.addEventListener("pointerdown",e=>{ if(e.target.closest("button")) return; down=Date.now(); held=false; hT=setTimeout(()=>{ held=true; paused=true; root.classList.add("paused"); },260); });
+  const up=e=>{ clearTimeout(hT); if(held){ paused=false; root.classList.remove("paused"); return; } if(!down||e.target.closest("button")) return; down=0; const r=root.getBoundingClientRect(); if(e.clientX-r.left<r.width*.3){ i=Math.max(0,i-1); } else { i=Math.min(CARDS.length-1,i+1); } show(); };
+  root.addEventListener("pointerup",up); root.addEventListener("pointerleave",()=>{ clearTimeout(hT); if(held){ paused=false; root.classList.remove("paused"); held=false; } });
+  const sp=document.getElementById("spause"); sp.onclick=()=>{ paused=!paused; root.classList.toggle("paused",paused); };
+  const sf=document.getElementById("sfirst"); if(sf) sf.onclick=()=>{ i=0; show(); document.getElementById("stoast").remove(); };
+  const ts=document.getElementById("stoast"); if(ts) setTimeout(()=>{ if(ts.isConnected) ts.remove(); },4500);
+}
+document.addEventListener("click",e=>{
+  const n=e.target.closest("#nav [data-i]"); if(n){ cur=+n.dataset.i; draw(); return; }
+  const sb=e.target.closest("#states [data-st]"); if(sb){ st[S[cur].k]=sb.dataset.st; draw(); return; }
+  const rb=e.target.closest("[data-ring]"); if(rb){ ring=rb.dataset.ring; draw(); return; }
+  const lb=e.target.closest("[data-lib]"); if(lb){ cur=S.findIndex(x=>x.k==="lib"); draw(); return; }
+  const lq=e.target.closest("[data-libq]"); if(lq){ st.libq=lq.dataset.libq; draw(); return; }
+  const ss=e.target.closest("[data-st-set]"); if(ss){ st.today=ss.dataset.stSet; draw(); return; }
+  const nx=e.target.closest("[data-next]"); if(nx){ const m={start:1,first:1,read:1,story:2,note:3,done:1}[st.today]; if(m===2) st.story="resume"; cur=m; draw(); return; }
+});
+document.getElementById("prev").onclick=()=>{ if(cur>0){ cur--; draw(); } };
+document.getElementById("next").onclick=()=>{ if(cur<S.length-1){ cur++; draw(); } };
+/* 휴대폰 안에서 좌우로 밀면 화면 넘김(스토리 화면은 카드 넘김이 따로 있음) */
+(()=>{ const P=document.getElementById("phone"); let x0=null,y0=0;
+  P.addEventListener("touchstart",e=>{ if(S[cur].k==="story"){ x0=null; return; } x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
+  P.addEventListener("touchend",e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){ if(dx<0&&cur<S.length-1) cur++; else if(dx>0&&cur>0) cur--; draw(); } x0=null; },{passive:true}); })();
+window.addEventListener("hashchange",()=>{ const i=S.findIndex(s=>s.k===location.hash.slice(1)); if(i>=0&&i!==cur){ cur=i; draw(); } });
+draw();
+</script>
+</body></html>
