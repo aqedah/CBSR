@@ -1034,7 +1034,7 @@ html.v2 .bmmap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height
 .spl.tap{cursor:pointer;pointer-events:auto;padding-block:4px}.bmhit{cursor:pointer}
 .bmt2 .bmtgo{pointer-events:auto}.bmtgo{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.bmtgo[hidden]{display:none}.bmtgo button{font:inherit;font-size:13px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:6px 12px;cursor:pointer}.bmtgo button[hidden]{display:none}
 .tourheres{display:grid;gap:8px;margin-top:12px}.tourheres .lead{margin:0;font-size:13px}.tourhere{display:flex;gap:10px;align-items:center;text-align:left;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 12px;cursor:pointer}.tourhere i{font-style:normal;color:#c0392b}.tourhere span{display:grid}.tourhere small{color:var(--muted);font-size:12.5px}
-.mvsky{position:absolute;left:-22px;top:-22px;font-size:40px;line-height:1;filter:drop-shadow(0 0 14px rgba(255,220,120,.95));animation:mvsky 2.6s ease-in-out infinite alternate;pointer-events:none}.mvdust{position:absolute;left:-30px;top:-46px;font-size:50px;line-height:1;opacity:.85;animation:mvdust .35s ease-in-out infinite alternate;pointer-events:none}@keyframes mvdust{from{transform:scale(.85) rotate(-8deg)}to{transform:scale(1.15) rotate(8deg)}}.mvfire{position:absolute;left:-16px;top:-30px;font-size:30px;line-height:1;filter:drop-shadow(0 0 10px rgba(255,120,40,.9));animation:mvfire .5s ease-in-out infinite alternate,tvbin .6s ease-out;pointer-events:none}@keyframes mvfire{from{transform:scale(.9) translateY(0)}to{transform:scale(1.12) translateY(-3px)}}.bmtmap.mvburn::after{content:"";position:absolute;inset:0;z-index:420;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(255,90,20,.28),rgba(80,20,0,.22) 70%);animation:tvbin 1.2s ease-out}.mvsky.moon{font-size:30px;filter:drop-shadow(0 0 10px rgba(220,230,255,.9))}@keyframes mvsky{from{transform:scale(.92)}to{transform:scale(1.08)}}
+.mvsky{position:absolute;left:-22px;top:-22px;font-size:40px;line-height:1;filter:drop-shadow(0 0 14px rgba(255,220,120,.95));animation:mvsky 2.6s ease-in-out infinite alternate;pointer-events:none}.mvchar i{display:inline-block;font-style:normal;transform:scaleX(-1)}.mvchar{position:absolute;left:-30px;top:-40px;font-size:34px;line-height:1;white-space:nowrap;filter:drop-shadow(0 0 12px rgba(255,120,30,.95));pointer-events:none}.mvwhirl{position:absolute;left:-26px;top:-64px;font-size:52px;line-height:1;opacity:.9;animation:mvwhirl 1.6s ease-in forwards;pointer-events:none}@keyframes mvwhirl{from{transform:scale(.6) rotate(0)}to{transform:translateY(-60px) scale(1.25) rotate(540deg);opacity:0}}.mvdust{position:absolute;left:-30px;top:-46px;font-size:50px;line-height:1;opacity:.85;animation:mvdust .35s ease-in-out infinite alternate;pointer-events:none}@keyframes mvdust{from{transform:scale(.85) rotate(-8deg)}to{transform:scale(1.15) rotate(8deg)}}.mvfire{position:absolute;left:-16px;top:-30px;font-size:30px;line-height:1;filter:drop-shadow(0 0 10px rgba(255,120,40,.9));animation:mvfire .5s ease-in-out infinite alternate,tvbin .6s ease-out;pointer-events:none}@keyframes mvfire{from{transform:scale(.9) translateY(0)}to{transform:scale(1.12) translateY(-3px)}}.bmtmap.mvburn::after{content:"";position:absolute;inset:0;z-index:420;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(255,90,20,.28),rgba(80,20,0,.22) 70%);animation:tvbin 1.2s ease-out}.mvsky.moon{font-size:30px;filter:drop-shadow(0 0 10px rgba(220,230,255,.9))}@keyframes mvsky{from{transform:scale(.92)}to{transform:scale(1.08)}}
 .bmtnight{position:absolute;inset:0;z-index:450;pointer-events:none;background:rgba(10,20,50,.5);opacity:0;transition:opacity 1.5s}.mvnight .bmtnight{opacity:1}
 .bml.new{background:#c0392b;color:#fff;border-color:#c0392b}.spl.bml.key::before{display:none}.spl.bml.key{font-size:11.5px;font-weight:600;padding:1px 6px;background:rgba(255,255,255,.85);color:#4a463d}.spl.bml.key.lit{color:#1d2622;font-weight:800}.bmmap .leaflet-control-zoom a{width:34px;height:34px;line-height:32px;font-size:20px}
 .bmno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font:700 13px var(--f-ui);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35)}.bmno.big{cursor:pointer}
@@ -3105,7 +3105,7 @@ const CH_DEF={
  jacob:{robe:"#4f6d3a",trim:"#e6d6a0",sash:"#a0522d",head:"cloth",cloth:"#e9dfc4",band:"#4f6d3a",beard:"#5a3a1e",prop:"staff"},
  joseph:{robe:"#c0392b",trim:"#f1c40f",sash:"#2e86c1",mantle:"#2e86c1",head:"short",hair:"#3b2616",beard:null},
  vizier:{robe:"#f4efe2",trim:"#d4a72c",sash:"#d4a72c",head:"cloth",cloth:"#2d4f8a",band:"#d4a72c",beard:null},
- joshua:{robe:"#7a4a2a",trim:"#c9c9c9",sash:"#c9a33a",head:"helmet",beard:"#3b2616",prop:"spear"},
+ joshua:{robe:"#2f5d4a",trim:"#e6d6a0",sash:"#c9a33a",mantle:"#8a6a2a",head:"cloth",cloth:"#e9dfc4",band:"#2f5d4a",beard:"#3b2616",prop:"spear"}, /* 애굽 병사(투구·붉은 옷)와 헷갈리지 않게 초록 옷·머릿수건(목사님 2026-11-01) */
  david0:{robe:"#2f6f8a",trim:"#f1dc8a",sash:"#a0522d",head:"short",hair:"#7a3d14",beard:null},
  mary:{robe:"#2e5d9a",trim:"#efe0b8",head:"scarf",cloth:"#f2ece0",beard:null},
  maryb:{robe:"#2e5d9a",trim:"#efe0b8",head:"scarf",cloth:"#f2ece0",beard:null,prop:"baby"},
@@ -3195,9 +3195,9 @@ const MAPMETA={
  "세일을 돌아 세렛 시내와 아르논을 건넘":{who:"모세",kind:"무리",group:"이스라엘 백성"},
  "바산으로 올라가 에드레이에서 옥을 침":{who:"모세",kind:"군대",group:"이스라엘 군사"},
  "정탐꾼이 여리고를 엿봄":{who:"두 정탐꾼",as:"man",with:[{n:"",as:"youth"}]},
- "이스라엘이 기브온 성읍들에 이름":{who:"여호수아",as:"soldier",kind:"무리",group:"이스라엘 백성"},
- "남쪽 성읍들을 정복함":{who:"여호수아",as:"soldier",kind:"군대",group:"군사"},
- "메롬 물가 전투와 하솔":{who:"여호수아",as:"soldier",kind:"군대",group:"군사"},
+ "이스라엘이 기브온 성읍들에 이름":{who:"여호수아",as:"joshua",kind:"무리",group:"이스라엘 백성"},
+ "남쪽 성읍들을 정복함":{who:"여호수아",as:"joshua",kind:"군대",group:"군사"},
+ "메롬 물가 전투와 하솔":{who:"여호수아",as:"joshua",kind:"군대",group:"군사"},
  "갈렙과 옷니엘의 정복":{who:"갈렙",as:"elder",with:[{n:"옷니엘",as:"soldier"}],kind:"군대",group:"유다 자손"},
  "동쪽 지파들의 귀향":{who:"르우벤·갓·므낫세 반 지파",as:"soldier",kind:"군대",group:""},
  "유다와 시므온의 정복":{who:"유다 지파",as:"soldier",with:[{n:"시므온 지파",as:"soldier"}],kind:"군대",group:""},
@@ -3328,18 +3328,18 @@ const MAPMETA={
  "르비딤을 떠나 시내 산에 이름":{who:"모세",kind:"무리",group:"이스라엘 백성",end:[2,19,2],after:[2,19,4]},
  "시내 산을 떠남":{who:"모세",kind:"무리",group:"이스라엘 백성",mid:[["시내 산",[4,10,33]]],end:[4,12,16]},
  "시내 광야를 떠나 하세롯을 거쳐 바란 광야로":{who:"모세",kind:"무리",group:"이스라엘 백성",mid:[["시내 광야",[4,10,33]]],end:[4,12,16]},
- "정탐꾼들이 가나안을 정탐하고 가데스로 돌아옴":{who:"정탐꾼",as:"man",with:[{n:"갈렙",as:"man"},{n:"여호수아",as:"soldier"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"}],group:"열두 정탐꾼",mid:[["헤브론",[4,13,22]]],end:[4,13,26],after:[4,14,9]},
- "가데스에서 정탐꾼을 보냄":{who:"정탐꾼",as:"man",with:[{n:"갈렙",as:"man"},{n:"여호수아",as:"soldier"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"}],group:"열두 정탐꾼",mid:[["헤브론",[4,13,22]]],end:[4,13,21]},
+ "정탐꾼들이 가나안을 정탐하고 가데스로 돌아옴":{who:"정탐꾼",as:"man",with:[{n:"갈렙",as:"man"},{n:"여호수아",as:"joshua"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"}],group:"열두 정탐꾼",mid:[["헤브론",[4,13,22]]],end:[4,13,26],after:[4,14,9]},
+ "가데스에서 정탐꾼을 보냄":{who:"정탐꾼",as:"man",with:[{n:"갈렙",as:"man"},{n:"여호수아",as:"joshua"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"},{n:"",as:"elder"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"man"}],group:"열두 정탐꾼",mid:[["헤브론",[4,13,22]]],end:[4,13,21]},
  "가데스를 떠나 호르 산에 이름":{who:"모세",kind:"무리",group:"이스라엘 백성",end:[4,20,22],after:[4,20,28]},
  "에돔을 돌아 모압 평지로":{who:"모세",kind:"무리",group:"이스라엘 백성",mid:[["호르 산",[4,20,28]]],end:[4,22,1]},
  "에돔을 돌아 아르논을 건너 헤스본으로":{who:"모세",kind:"무리",group:"이스라엘 백성",lit:1,mid:[["아르논",[4,21,13]]],end:[4,21,25]},
  "모세가 느보 산에 오름":{who:"모세",end:[5,34,1],after:[5,34,4]},
  /* 여호수아 */
- "요단을 건넘":{who:"여호수아",as:"soldier",kind:"무리",group:"이스라엘 백성",land:1,fx:"jordan",end:[6,4,19],after:[6,4,24]},
- "여리고 성을 돎":{who:"여호수아",as:"soldier",kind:"무리",group:"이스라엘 백성",end:[6,6,20]},
- "여리고와 아이 성":{who:"여호수아",as:"soldier",kind:"무리",group:"이스라엘 백성",mid:[["여리고",[6,6,20]],["아이",[6,8,28]]],end:[6,8,30]},
- "아이 성 정복과 에발 산":{who:"여호수아",as:"soldier",kind:"무리",group:"이스라엘 백성",mid:[["아이",[6,8,28]]],end:[6,8,30]},
- "기브온을 구하러 감":{who:"여호수아",as:"soldier",kind:"군대",group:"군사",mid:[["기브온",[6,10,9]]],end:[6,10,10],after:[6,10,12]},
+ "요단을 건넘":{who:"여호수아",as:"joshua",kind:"무리",group:"이스라엘 백성",land:1,fx:"jordan",end:[6,4,19],after:[6,4,24]},
+ "여리고 성을 돎":{who:"여호수아",as:"joshua",kind:"무리",group:"이스라엘 백성",end:[6,6,20]},
+ "여리고와 아이 성":{who:"여호수아",as:"joshua",kind:"무리",group:"이스라엘 백성",mid:[["여리고",[6,6,20]],["아이",[6,8,28]]],end:[6,8,30]},
+ "아이 성 정복과 에발 산":{who:"여호수아",as:"joshua",kind:"무리",group:"이스라엘 백성",mid:[["아이",[6,8,28]]],end:[6,8,30]},
+ "기브온을 구하러 감":{who:"여호수아",as:"joshua",kind:"군대",group:"군사",mid:[["기브온",[6,10,9]]],end:[6,10,10],after:[6,10,12]},
  /* 사무엘·다윗 */
  "사울을 피해 다니는 다윗":{who:"다윗",as:"youth",kind:"무리",group:"다윗과 함께한 사람들",mid:[["아둘람",[9,22,2]]],endBy:{"헤렛 수풀":[9,22,5],"엔게디":[9,24,1]}},
  "그일라에서 엔게디까지 쫓기는 다윗":{who:"다윗",as:"youth",kind:"무리",group:"다윗과 함께한 사람들",mid:[["그일라",[9,23,5]]],end:[9,23,29],after:[9,24,6]},
@@ -4713,6 +4713,19 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     (lose?A:E).forEach(a=>{ const e=chm(a.m); if(e) e.classList.add("vanish"); }); (lose?E:A).forEach(a=>{ const e=chm(a.m); if(e) e.classList.remove("walk"); }); if(main) emo(main,lose?"😢":"🙌");
     return await sleep(700,my); }
   function burnAt(c,my,si){ el.querySelector(".bmtmap").classList.add("mvburn"); [[0,0],[.008,-.01],[-.006,.011],[.012,.009],[-.01,-.007]].forEach(([a,b],q)=>setTimeout(()=>{ if(my!==tok||idx!==si) return; SKY.push(L.marker([c.lat+a,c.lng+b],{interactive:false,zIndexOffset:2700,icon:L.divIcon({className:"",html:`<span class="mvfire">🔥</span>`,iconSize:[0,0]})}).addTo(map)); },q*350)); }
+  /* 겉옷으로 물을 치니 갈라짐(왕하 2:8, 14) */
+  async function mantleX(st,pts,ms,my){ const a=pts[0], b=pts[pts.length-1], mid=L.latLng((a.lat+b.lat)/2,(a.lng+b.lng)/2);
+    if(!(await zoomTo(capZ(st.z),my,()=>mid))) return false; zoomOK=false; const c=chm(main); if(c) c.classList.add("stretch"); emo(main,"🧥"); if(!(await sleep(1100,my))) return false;
+    const A=map.latLngToContainerPoint(a), B=map.latLngToContainerPoint(b); mvFx(map,"part",[mid.lat,mid.lng],Math.atan2(B.y-A.y,B.x-A.x)*180/Math.PI-90,Math.hypot(B.x-A.x,B.y-A.y)*1.3); E2(["😮","🙏"],3);
+    if(!(await sleep(1000,my))) return false; if(c) c.classList.remove("stretch"); if(!(await walk(pts,Math.max(ms,3600),my,12))) return false;
+    const fx=map.getPane("mvfx"); if(fx) fx.querySelectorAll(".mvpart").forEach(p=>p.classList.add("off","close")); setTimeout(()=>{ const f2=map.getPane("mvfx"); if(f2) f2.innerHTML=""; },1500); return true; }
+  /* 불수레와 불말, 회오리바람(왕하 2:11) */
+  async function ascend(my,si){ if(!main) return; const c0=main.getLatLng(), P0=map.latLngToContainerPoint(c0); if(!(await sleep(1800,my))) return;
+    const ch=L.marker(map.containerPointToLatLng(P0.add(L.point(-190,-10))),{interactive:false,zIndexOffset:2800,icon:L.divIcon({className:"",html:`<span class="mvchar">🔥<i>🐎</i></span>`,iconSize:[0,0]})}).addTo(map); SKY.push(ch);
+    let t0=clk; while(clk-t0<1600){ if(!(await sleep(30,my))) return; const f=(clk-t0)/1600; ch.setLatLng(map.containerPointToLatLng(P0.add(L.point(-190+380*f,-10+Math.sin(f*Math.PI)*-14)))); }
+    fol.forEach(f=>{ f.m.setLatLng(map.containerPointToLatLng(P0.add(L.point(-34,6)))); }); E2(["😮","😭"],3);
+    const wh=L.marker(c0,{interactive:false,zIndexOffset:2750,icon:L.divIcon({className:"",html:`<span class="mvwhirl">🌪️</span>`,iconSize:[0,0]})}).addTo(map); SKY.push(wh);
+    if(!(await sleep(700,my))) return; const e=chm(main); if(e) e.classList.add("rise"); if(!(await sleep(2400,my))) return; try{ map.removeLayer(wh); }catch(x){} }
   async function siege(c,my,si){ const n=14, t0=clk, ms=5200, A=Array.from({length:n},(_,k)=>{ const th=k/n*Math.PI*2, P0=map.latLngToContainerPoint(c), from=map.containerPointToLatLng(P0.add(L.point((Math.random()-.5)*230,-210-Math.random()*90))), to=map.containerPointToLatLng(P0.add(L.point(48*Math.sin(th),38*Math.cos(th)))); /* 화면 기준: 위쪽(북쪽) 밖에서 내려와 둘레 약 50px로 에워쌈 */
       const m=mvMarker(map,"soldier",{at:from,w:k?20:26,name:k===0?"바벨론 군대":"",z:650}); SKY.push(m); const e=chm(m); if(e){ e.classList.add("walk"); e.classList.toggle("flip",to.lng<from.lng); } return {m,from,to,d:Math.random()*.25}; });
     while(clk-t0<ms){ if(!(await sleep(30,my))) return; const k=(clk-t0)/ms; A.forEach(a=>{ const f=Math.max(0,Math.min(1,(k-a.d)/(1-a.d))), e=1-(1-f)*(1-f); a.m.setLatLng([a.from.lat+(a.to.lat-a.from.lat)*e,a.from.lng+(a.to.lng-a.from.lng)*e]); }); if(Math.random()<.03) emo(A[Math.floor(Math.random()*n)].m,"⚔️"); }
@@ -4734,10 +4747,10 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     if(st.chase){ const [cn,ca,cc]=st.chase; CHS=Array.from({length:cc||3},(_,k)=>mvMarker(map,ca||"soldier",{at:LL(starts[i]),w:k?22:28,name:k===0?cn:"",z:650})); }
     if(st.fx==="sun"){ const mk=(ll,t,c)=>L.marker(ll,{interactive:false,zIndexOffset:2700,icon:L.divIcon({className:"",html:`<span class=\"mvsky ${c}\">${t}</span>`,iconSize:[0,0]})}).addTo(map); SKY=[mk(L.latLng(31.86,35.19),"☀️","sun"),mk(L.latLng(31.85,35.0),"🌙","moon")]; }
     /* 장면 사이에서 멈추지 않음(목사님 2026-10-30): 말씀을 읽을 시간만큼 걸음을 늦추고, 도착하면 곧바로 다음 장면을 걷기 시작 */
-    let mv=durs.reduce((a,b)=>a+b,0)+(st.side?9000:0)+(st.fx==="part"?8000:0)+(st.fx==="jordan"?7000:0); const need=st.fx==="pillar"?Math.max(7000,needMs(st)):needMs(st); let k=1; if(mv&&mv<need) k=Math.min(3.5,need/mv);
-    const dw=st.stay?(st.fx==="siege"?Math.max(need,10500):st.war?Math.max(need,7500):need):0; stepT0=clk; stepMs=Math.max(1,mv*k+dw); follow=()=>main?main.getLatLng():LL(starts[i]);
+    let mv=durs.reduce((a,b)=>a+b,0)+(st.side?9000:0)+(st.fx==="part"?8000:0)+(st.fx==="jordan"?7000:0)+(st.fx==="mantle"?2500:0); const need=st.fx==="pillar"?Math.max(7000,needMs(st)):needMs(st); let k=1; if(mv&&mv<need) k=Math.min(3.5,need/mv);
+    const dw=st.stay?(st.fx==="siege"?Math.max(need,10500):st.fx==="ascend"?Math.max(need,9000):st.war?Math.max(need,7500):need):0; stepT0=clk; stepMs=Math.max(1,mv*k+dw); follow=()=>main?main.getLatLng():LL(starts[i]);
     if(st.fx!=="part"&&st.fx!=="jordan") showVerse(st.pre||st.r);
-    if(st.fx==="siege") siege(LL(starts[i]),my,i);
+    if(st.fx==="siege") siege(LL(starts[i]),my,i); if(st.fx==="ascend") ascend(my,i);
     if(st.stay&&st.war) battle(LL(starts[i]),my,i,st.war).then(ok=>{ if(ok&&st.burn&&my===tok) burnAt(LL(starts[i]),my,i); }); else if(st.stay&&st.burn) burnAt(LL(starts[i]),my,i);
     let pil=null; if(st.fx==="pillar"){ pil={m:L.marker(main?main.getLatLng():LL(starts[i]),{interactive:false,zIndexOffset:2600,icon:L.divIcon({className:"",html:`<div class="mvpil"><i></i><b></b></div>`,iconSize:[0,0]})}).addTo(map)}; lead=lead||{m:pil.m,pil:1};
       setTimeout(()=>{ if(my!==tok) return; const e=pil.m.getElement(); if(e) e.querySelector(".mvpil").classList.add("fire"); el.querySelector(".bmtmap").classList.add("mvnight"); },Math.max(1500,mv*k*.5)); }
@@ -4745,6 +4758,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     for(let gi=0;gi<groups.length;gi++){ const [g,sea]=groups[gi]; actors(i,LL(from),sea); const pts=tag([from,...g]);
       if(st.fx==="part"&&g===st.p){ if(!(await redSea(st,pts,durs[gi]*k,my))) return false; }
       else if(st.fx==="jordan"&&g===st.p){ if(!(await jordanX(st,pts,durs[gi]*k,my))) return false; }
+      else if(st.fx==="mantle"&&g===st.p){ if(!(await mantleX(st,pts,durs[gi]*k,my))) return false; }
       else if(!(await walk(pts,durs[gi]*k,my,0,st.pre&&gi===0?()=>showVerse(st.r):null,first&&gi===0?"in":lastS&&gi===groups.length-1?"out":"lin"))) return false; from=g[g.length-1]; }
     if(!groups.length) actors(i,LL(starts[i]),false); else if(st.sea&&!(st.then||[]).length) actors(i,LL(from),true);
     if(st.side&&!(await sideTrip(st.side,9000*k,my))) return false;
