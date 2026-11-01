@@ -4837,7 +4837,7 @@ const BM_WHO=[
  {k:"paul",n:"바울",av:"paul",who:["바울","바나바","바울 (호송됨)","아볼로","뵈뵈","편지","두기고","에바브로디도","두기고와 오네시모"],b:[45,66],tour:["paul1","paul2","paul3","rome"]}];
 function bmWhoOf(r){ let w=""; try{ w=(routeMeta(r.n,r.b)||{}).who||""; }catch(e){}
   if(/끌려감/.test(r.n)) return "exile";
-  for(const g of BM_WHO) if(g.who&&g.who.includes(w)&&!(g.k==="david"&&r.b<9)) return g.k;
+  for(const g of BM_WHO) if(g.who&&g.who.includes(w)&&!(g.k==="david"&&r.b<9)&&(r.b>=40)===["jesus","church","paul"].includes(g.k)) return g.k; /* 이름이 같은 다른 사람(마리아의 남편 요셉 등)은 구약·신약으로 가름(2026-11-01) */
   if(r.b===1) return (r.c[0]<=25?"abraham":r.c[0]<=36?"jacob":"joseph");
   for(const g of BM_WHO) if(g.b&&r.b>=g.b[0]&&r.b<=g.b[1]) return g.k;
   return "exile"; }
