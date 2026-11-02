@@ -562,9 +562,16 @@ REG={
  "paul3":[["수리아",35.6,36.6],["길리기아",36.95,35.2],["아시아",38.4,28.6],["마게도냐",41.3,23.0],["아가야",37.6,22.3]],
  "rome":[["유대",31.6,35.05],["구브로",35.15,33.6],["루기아",36.45,29.8],["그레데",35.2,24.9],["아드리아 바다",36.0,18.5],["이달리야",40.8,15.6]],
 }
+# 다음 여정(목사님 2026-11-02): 이야기가 이어지는 여정은 마지막 화면에 '닫기' 대신 '다음 여정' 단추
+NEXT=["abraham","rebekah","jacob","joseph","midian","exodus","joshua","ruth","ark","saulking","david","absalom","elijah","jonah","assyria","babylon","jeremiah","exilelife","return"]
+NEXT2=["peter","saul","paul1","paul2","paul3","rome"]
+for _ch in (NEXT,NEXT2):
+  for _a,_b in zip(_ch,_ch[1:]):
+    for _t in T:
+      if _t["id"]==_a: _t["next"]=_b
 for _t in T:
   if "reg" not in _t and _t["id"] in REG: _t["reg"]=REG[_t["id"]]
-_O=["abraham","rebekah","jacob","joseph","midian","exodus","joshua","ark","ruth","saulking","david","absalom","elijah","jonah","assyria","babylon","jeremiah","exilelife","return","mt","mk","lk","jn","peter","saul","paul1","paul2","paul3","rome"]
+_O=["abraham","rebekah","jacob","joseph","midian","exodus","joshua","ruth","ark","saulking","david","absalom","elijah","jonah","assyria","babylon","jeremiah","exilelife","return","mt","mk","lk","jn","peter","saul","paul1","paul2","paul3","rome"]
 T.sort(key=lambda t:_O.index(t["id"]) if t["id"] in _O else 99)
 for _t in T:
   for _s in _t["steps"]:
