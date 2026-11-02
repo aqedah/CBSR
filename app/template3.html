@@ -4161,6 +4161,9 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
     /* 산 그림자(목사님 2026-10-31): 몇 지역만 덧댄 지형 조각은 PC에서 네모 경계가 보여서 걷어 내고, 온 세계가 한 장으로 이어진 Esri 음영 지도를 곱하기로 겹침.
        바탕 지도는 8배율까지만 자세하지만 음영은 13배율까지 자세해서, 확대해도 산과 골짜기가 또렷함 */
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:13,maxZoom:13,zIndex:5,opacity:.55,keepBuffer:map.options.keepBuf||3,className:"hshade",attribution:"음영: Esri, USGS, NASA 외"}).addTo(map);
+    /* 자세한 지형(목사님 2026-11-02 승인): 요단·갈릴리·사해 권역은 고도 원자료로 배율마다 만든 조각을 위에 덮음(8–13배율).
+       사해는 물이 줄기 전 물가로. 가장자리는 투명하게 바깥 Esri 바탕과 이어짐 */
+    if(typeof TERRHI!=="undefined"&&TERRHI) L.tileLayer("terrhi/{z}/{x}/{y}.webp",{minZoom:TERRHI.minZoom,minNativeZoom:TERRHI.minZoom,maxNativeZoom:TERRHI.maxZoom,maxZoom:13,bounds:TERRHI.bounds,zIndex:6,className:"terrhi",keepBuffer:map.options.keepBuf||3,attribution:"지형: AWS Terrain Tiles(SRTM)"}).addTo(map);
     /* 바탕 지도를 못 받으면(인터넷 끊김) 지도 위에 알림. 지명·본문·목록은 그대로 쓸 수 있음 */
     { let ok=0, bad=0, note=null; tlNet.on("tileload",()=>{ ok++; if(note){ note.remove(); note=null; } }); tlNet.on("tileerror",()=>{ bad++; if(!ok&&bad>=4&&!note){ note=document.createElement("div"); note.className="mapnet"; note.textContent="지도 바탕을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요. 지명과 본문은 그대로 볼 수 있습니다."; el.appendChild(note); } }); }
     /* 바탕 지도는 8배율 원본을 늘려 쓰므로 크게 확대하면 네모 얼룩이 보임 → 그 배율에서만 바탕을 살짝 흐리게(산 그림자는 그대로 또렷) */
