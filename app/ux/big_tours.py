@@ -314,11 +314,11 @@ T.append(dict(id="jeremiah",big=4,zb=8.6,n="예레미야, 애굽으로",sub="예
  dict(mood="🙏",t="미스바의 그다랴에게",s="남은 백성 가운데",grp="",n="바벨론으로 같이 가자는 말을 뒤로하고, 예레미야는 미스바의 총독 그다랴에게 가서 그 땅에 남은 백성과 함께 삽니다.",p=[P("미스바",31.887,35.217)],r=[24,40,6],z=10.5),
  dict(mood="😱😢",t="미스바의 식탁에서",s="일곱째 달",n="함께 떡을 먹던 이스마엘이 일어나 총독 그다랴를 칼로 쳐죽입니다. 그다랴와 함께 있던 사람들도 죽입니다.",stay=1,r=[24,41,2],z=10.5),
  dict(mood="😨😢",t="사로잡혀 끌려가다",s="암몬 자손에게로",lead=["이스마엘","soldier"],grp="사로잡힌 미스바 백성",n="이스마엘이 미스바에 남은 모든 백성을 사로잡아 암몬 자손에게로 끌고 갑니다. 그다랴와 함께 살던 예레미야도 그 가운데 있습니다.",p=[P("기브온 큰 물 가",31.847,35.185)],r=[24,41,10],z=10.5),
- dict(mood="😊💪",t="기브온 큰 물 가",s="요하난이 되찾다",add=["요하난","soldier"],drop="요하난",quiet=1,grp="되찾은 백성",n="요하난과 군 지휘관들이 쫓아와 기브온 큰 물 가에서 만납니다. 사로잡혔던 백성이 기뻐하며 요하난에게로 돌아오고, 이스마엘은 암몬으로 달아납니다.",stay=1,pre=[24,41,13],r=[24,41,14],z=10.5),
- dict(mood="😨",t="베들레헴 근처 게롯김함",s="애굽으로 가려고",who="요하난",as_="soldier",add=["예레미야","jeremiah"],drop="예레미야",quiet=1,grp="유다의 남은 자",n="갈대아 사람을 두려워한 그들은 애굽으로 가려고 떠나 베들레헴 근처 게롯김함에 머뭅니다.",p=[_(31.80,35.20),P("게롯김함",31.715,35.19)],r=[24,41,17],z=10),
- dict(mood="🙏😮",t="열흘 뒤의 응답",s="애굽으로 가지 말라",who="예레미야",as_="jeremiah",add=["요하난","soldier"],drop="요하난",quiet=1,n="백성이 예레미야에게 갈 길을 여쭈어 달라 청하고, 열흘 뒤 말씀이 임합니다. 이 땅에 머물면 세우고, 애굽으로 가면 칼과 기근이 따라가리라.",stay=1,pre=[24,42,3],r=[24,42,19],z=10),
- dict(mood="😠😢",t="애굽 땅 다바네스로",s="여호와의 목소리를 순종하지 아니하고",who="요하난",as_="soldier",add=[["예레미야","jeremiah"],["바룩","youth"]],drop=["예레미야","바룩"],quiet=1,n="'네가 거짓을 말하는도다.' 요하난과 지휘관들은 남은 자 모두와 예레미야와 바룩을 거느리고 애굽 다바네스에 이릅니다.",p=[_(31.52,34.47),_(31.15,33.85),_(30.98,32.75),P("다바네스",30.87,32.10)],pre=[24,43,2],r=[24,43,7],z=8),
- dict(mood="🙏",t="바로의 궁전 대문 앞 돌",who="예레미야",as_="jeremiah",add=["바룩","youth"],s="유다 사람의 눈 앞에서",n="다바네스에서 예레미야는 큰 돌들을 가져다 바로의 궁전 대문 축대에 진흙으로 감춥니다. 느부갓네살이 그 위에 왕좌를 놓으리라는 표입니다.",stay=1,r=[24,43,9],z=10),
+ dict(mood="😊💪",t="기브온 큰 물 가",s="요하난이 되찾다",add=["요하난","soldier"],grp="되찾은 백성",n="요하난과 군 지휘관들이 쫓아와 기브온 큰 물 가에서 만납니다. 사로잡혔던 백성이 기뻐하며 요하난에게로 돌아오고, 이스마엘은 암몬으로 달아납니다.",stay=1,pre=[24,41,13],r=[24,41,14],z=10.5),
+ dict(mood="😨",t="베들레헴 근처 게롯김함",s="애굽으로 가려고",who="요하난",as_="soldier",add=["예레미야","jeremiah"],grp="유다의 남은 자",n="갈대아 사람을 두려워한 그들은 애굽으로 가려고 떠나 베들레헴 근처 게롯김함에 머뭅니다.",p=[_(31.80,35.20),P("게롯김함",31.715,35.19)],r=[24,41,17],z=10),
+ dict(mood="🙏😮",t="열흘 뒤의 응답",s="애굽으로 가지 말라",who="예레미야",as_="jeremiah",n="백성이 예레미야에게 갈 길을 여쭈어 달라 청하고, 열흘 뒤 말씀이 임합니다. 이 땅에 머물면 세우고, 애굽으로 가면 칼과 기근이 따라가리라.",stay=1,pre=[24,42,3],r=[24,42,19],z=10),
+ dict(mood="😠😢",t="애굽 땅 다바네스로",s="여호와의 목소리를 순종하지 아니하고",who="요하난",as_="soldier",add=["바룩","youth"],n="'네가 거짓을 말하는도다.' 요하난과 지휘관들은 남은 자 모두와 예레미야와 바룩을 거느리고 애굽 다바네스에 이릅니다.",p=[_(31.52,34.47),_(31.15,33.85),_(30.98,32.75),P("다바네스",30.87,32.10)],pre=[24,43,2],r=[24,43,7],z=8),
+ dict(mood="🙏",t="바로의 궁전 대문 앞 돌",who="예레미야",as_="jeremiah",s="유다 사람의 눈 앞에서",n="다바네스에서 예레미야는 큰 돌들을 가져다 바로의 궁전 대문 축대에 진흙으로 감춥니다. 느부갓네살이 그 위에 왕좌를 놓으리라는 표입니다.",stay=1,r=[24,43,9],z=10),
  dict(mood="😢🙏",t="애굽의 유다 사람들에게",s="믹돌·다바네스·놉·바드로스",n="애굽 곳곳에 흩어져 사는 유다 사람들에게도 말씀이 다시 예레미야에게 임합니다.",stay=1,r=[24,44,1],z=8.5),
  ],end="예레미야서는 예레미야가 애굽에서 어떻게 되었는지 말하지 않습니다. 책은 바벨론 감옥에 갇혀 있던 여호야긴 왕이 풀려나는 장면으로 끝납니다(렘 52:31–34)."))
 # 1차 추가(목사님 2026-11-02 승인, GPT 제안 검토): 베드로 · 다윗(압살롬) · 리브가
@@ -647,7 +647,7 @@ _st("paul2","배를 타고 아덴으로").update(drop=["실라","디모데"],dro
 _st("paul2","고린도에서 1년 6개월")["add"]=[["실라","man"],["디모데","youth"],["브리스길라와 아굴라","man"]]
 
 # ===== 데이터 검사(3차 검토 9장, 2026-11-03): 빌드 때 경고만 출력 =====
-_SK={'add','as_','burn','chase','dash','drop','dropAt','exit','focus','from','fx','gap','grp','land0','lead','line','mood','n','p','pin','pre','quake','quiet','r','s','sea','side','slow','stay','storm','t','tent','then','tpl','tplN','unpin','untent','war','who','z'}
+_SK={'id','add','as_','burn','chase','dash','drop','dropAt','exit','focus','from','fx','gap','grp','land0','lead','line','mood','n','p','pin','pre','quake','quiet','r','s','sea','side','slow','stay','storm','t','tent','then','tpl','tplN','unpin','untent','war','who','z'}
 _DK={'as_','e','from','k','line','n','p','war'}
 _FX={'pillar','part','jordan','mantle','siege','ascend','parch','sun','baptism','dark','sleep','fish'}
 _W=[]
@@ -667,7 +667,22 @@ for _t in T:
     _comp=_comp+[c[0] for c in _a]
     _d=[_s['drop']] if isinstance(_s.get('drop'),str) else (_s.get('drop') or [])
     _comp=[c for c in _comp if c not in _d]
+# 장면 고유 ID(원칙 C04·9.6, 2026-11-03): 순서·제목과 따로 유지. scene_ids.json에 한 번 정한 ID를 보관하고, 새 장면만 새 번호.
+#  제목을 바꾸면 scene_ids.json의 그 제목 키도 함께 바꿀 것(안 바꾸면 새 ID가 생기고 옛 ID는 '대응 없음' 경고)
+import json, os as _os
+_IDP=_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'scene_ids.json')
+try: _ID=json.load(open(_IDP))
+except Exception: _ID={}
+for _t in T:
+  _m=_ID.setdefault(_t['id'],{}); _seen=set()
+  for _s in _t['steps']:
+    _k=_s.get('t','')
+    if _k in _seen: _W.append(f"{_t['id']} '{_k}': 같은 여정에 같은 제목 두 번(ID 구분 불가)")
+    _seen.add(_k)
+    if _k not in _m: _m[_k]=f"{_t['id']}-{1+max([int(v.rsplit('-',1)[1]) for v in _m.values()] or [0]):03d}"
+    _s['id']=_m[_k]
+  for _k in [k for k in _m if k not in _seen]: _W.append(f"{_t['id']}: 옛 장면 ID {_m[_k]}('{_k}')에 맞는 장면 없음 — 제목이 바뀌었으면 scene_ids.json 키를 고칠 것")
+json.dump(_ID,open(_IDP,'w'),ensure_ascii=False,indent=1)
 for _w in _W: print("[여정 검사]",_w)
-import json
 import os; json.dump(T,open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'big_tours.json'),'w'),ensure_ascii=False)
 print(len(T),[len(t['steps']) for t in T])
