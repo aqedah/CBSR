@@ -1540,8 +1540,8 @@ html.v2 .vtext,html.v2 .vtext .para,html.v2 .rjtext,html.v2 .eye p,html.v2 .qcar
 .lnv{border-left:3px solid var(--gold);padding:2px 0 2px 12px;display:grid;gap:2px}.lnv q{quotes:none;font:500 15px/1.7 var(--f-text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}.lnv small{font-size:12px;font-weight:700;color:var(--gold)}
 .lnta{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);padding:11px 13px;font:16px/1.6 var(--f-ui);resize:none}
 .lnft{display:flex;gap:8px;justify-content:flex-end}.lnok{flex:1;border:0;border-radius:12px;padding:13px;background:var(--accent);color:var(--card);font:700 15px var(--f-ui);cursor:pointer}.lndel{border:0;background:transparent;color:var(--muted);font:600 14px var(--f-ui);padding:0 12px;cursor:pointer}
-html.v2 .v.ln>sup{color:var(--gold);font-weight:700}html.v2 .v.ln>sup::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:3px;vertical-align:.25em}
-.lnb.on{color:var(--gold)}
+html.v2 .v.ln>sup{color:inherit;font-weight:700}html.v2 .v.ln>sup::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:3px;vertical-align:.25em}
+.hlbar .lnb.on{background:var(--gold-soft);color:var(--ink);border-color:var(--gold)}
 .lnlist{display:grid;gap:8px}.lnc{display:grid;gap:4px;text-align:left;border:0;border-radius:14px;background:color-mix(in srgb,var(--accent) 6%,var(--card));padding:12px 14px;cursor:pointer;color:var(--ink);width:100%}
 .lnc p{margin:0;font:600 15px/1.6 var(--f-ui);word-break:keep-all}.lnc q{quotes:"“" "”";font:14px/1.65 var(--f-text);color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}.lnc small{font-size:12px;color:var(--muted)}.lnc small b{color:var(--gold)}
 .rybox .lnc{background:var(--rytile,var(--paper))}
@@ -1601,6 +1601,8 @@ html.v2 .rgwrap .rg.sel .rgi>b{background:rgba(0,0,0,.42)}
 html.v2 .rgwrap .rg.sel>b{display:none}
 .td3ph.hasum{aspect-ratio:4/5}.td3ph .plsum{display:block;font:500 16.5px/1.75 var(--f-text);color:#fff;margin-bottom:14px;text-shadow:0 1px 8px rgba(0,0,0,.45);word-break:keep-all}
 .td3ph.hasum .plab{padding-top:90px;background:linear-gradient(transparent,rgba(10,16,13,.55) 22%,rgba(10,16,13,.86))}
+/* 고른 날 두 겹 테두리가 스크롤 칸 위아래에서 잘리지 않게(11/2) */
+html.v2 .rgwrap.v3 .rgs{padding-top:8px!important;padding-bottom:8px!important}html.v2 .rgwrap.v3 .rg{padding:0 3px}
 </style>
 
 <div class="wrap">
@@ -3767,13 +3769,15 @@ const MAPMETA={
  "예루살렘으로 올라가심":{who:"예수님",mid:[["여리고",[41,10,46]]],endBy:{"베다니":[41,11,11],"예루살렘":[41,11,11]}},
  "예루살렘으로 올라가시는 길":{who:"예수님",mid:[["빌립보 가이사랴",[41,8,27]]],endBy:{"여리고":[41,10,46]},after:[41,10,52]},
  "나사렛에서 베들레헴으로":{who:"요셉",as:"man",with:[{n:"마리아",as:"woman"}],mid:[["베들레헴",[42,2,7]],["예루살렘",[42,2,22]]],end:[42,2,39]},
- "열두 살 예수의 유월절":{who:"소년 예수",as:"youth",look:{robe:"#fbfaf4",trim:"#efe6cf",sash:"#c0392b"},noTwelve:1,with:[{n:"요셉",as:"man"},{n:"마리아",as:"woman"}],mid:[["예루살렘",[42,2,42]]],end:[42,2,51],after:[42,2,52]},
+ /* 11/2 목사님: 예수님은 성전에 남고, 부모만 하룻길을 갔다가 돌아와 성전에서 만남 */
+ "열두 살 예수의 유월절":{who:"요셉",as:"man",noTwelve:1,with:[{n:"마리아",as:"woman"},{n:"소년 예수",as:"youth",look:{robe:"#fbfaf4",trim:"#efe6cf",sash:"#c0392b"},to:"예루살렘",hold:1,back:"예루살렘#2"}],mid:[["예루살렘",[42,2,43]],["예루살렘#2",[42,2,46]]],pause:{at:"하룻길",seq:[["bub",[42,2,44],2600],["bub",[42,2,45],2400]]},end:[42,2,51]},
  "요단 강에서 나사렛, 가버나움으로":{who:"예수님",noTwelve:1,mid:[["나사렛",[42,4,16]]],end:[42,4,31]},
  "가버나움에서 나인으로":{who:"예수님",end:[42,7,11],after:[42,7,14]},
  "거라사인의 땅으로 건너가심":{who:"예수님",fx:"storm",seaBub:[42,8,24],end:[42,8,26]},
  "예루살렘을 향해 떠나심":{who:"예수님",lit:1,mid:[["가버나움",[42,9,51]]],end:[42,13,22]},
  "여리고를 지나 예루살렘으로":{who:"예수님",mid:[["여리고",[42,19,1]]],end:[42,19,41]},
- "엠마오로 가는 길":{who:"글로바",as:"man",noTwelve:1,with:[{n:"",as:"youth"},{n:"",as:"jesus",to:"엠마오",out:"vanish",hold:1}],group:"",pause:{at:"엠마오",seq:[["bub",[42,24,29],2400],["bub",[42,24,30],2400],["vanish","jesus"],["bub",[42,24,31],2600]]},end:[42,24,33],after:[42,24,34]},
+ /* 11/2 목사님: 두 제자가 가다가 예수님이 길에서 함께하시고, 엠마오에서 사라지시고, 둘이 예루살렘으로 돌아가면 그들 가운데 다시 서심 */
+ "엠마오로 가는 길":{who:"글로바",as:"man",noTwelve:1,with:[{n:"",as:"youth"},{n:"예수님",as:"jesus",from:"엠마오 길",bub:[42,24,15]},{n:"예수님",as:"jesus",from:"예루살렘#2",bub:[42,24,36]}],group:"",pause:{at:"엠마오",seq:[["bub",[42,24,29],2400],["bub",[42,24,30],2400],["vanish","jesus"],["bub",[42,24,31],2600]]},end:[42,24,33]},
  "베다니 앞에서 승천하심":{who:"예수님",with:[{n:"",as:"eleven"}],group:"제자들",pause:{at:"베다니",seq:[["bub",[42,24,50],2400],["rise"],["bub",[42,24,51],2400],["swap","peter","제자들"]]},end:[42,24,52]},
  "예수님이 갈릴리로 가셨다가 예루살렘으로":{who:"예수님",noTwelve:1,with:[{n:"",as:"man"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"elder"}],group:"처음 부르신 제자들",mid:[["가나",[43,2,11]]],end:[43,2,13],after:[43,2,19]},
  "유대에서 사마리아를 거쳐 갈릴리로":{who:"예수님",mid:[["수가",[43,4,5]]],end:[43,4,46],after:[43,4,50]},
@@ -3920,7 +3924,7 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
   if(id==="jesus"&&!Mt.with&&!Mt.noTwelve&&!Mt.kind&&bk>=40&&bk<=43) add({n:"",as:"twelve"}); /* 열두 제자 자동 동행은 복음서에서만(2026-11-02) */
   if(Mt.letter) crowd.length=0;
   const big=crowd.length>6; let gl=false;
-  const F=crowd.map((x,j)=>{ const row=Math.floor(j/2)+1, nm=x.n||(!gl&&Mt.group&&!x.from?(gl=true,Mt.group):""); return {x,j,state:(x.from||x.joinFrac)?"wait":"on",fromI:x.from?mvIdx(names,x.from):-1,toI:x.to?mvIdx(names,x.to):-1,
+  const F=crowd.map((x,j)=>{ const row=Math.floor(j/2)+1, nm=x.n||(!gl&&Mt.group&&!x.from?(gl=true,Mt.group):""); return {x,j,state:(x.from||x.joinFrac)?"wait":"on",fromI:x.from?mvIdx(names,x.from):-1,toI:x.to?mvIdx(names,x.to):-1,backI:x.back?mvIdx(names,x.back):-1,
     form:x.sea?[-6,(j%2?1:-1)*34]:[big?row*13+6:row*16+4,(j%2?1:-1)*(big?9:12)],m:mvMarker(map,x.as,{at:path[0],w:x.as==="jesus"?40:(x.as==="coffin"||x.as==="ark")?38:big||Mt.kind?24:30,name:nm,look:x.look,z:x.as==="jesus"?3000:400})}; });
   const fEl=f=>f.m.getElement()&&f.m.getElement().querySelector(".chm");
   F.forEach(f=>{ if(f.state==="wait"){ const e=f.m.getElement(); if(e) e.style.display="none"; } });
@@ -3930,7 +3934,7 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
   const join=(f)=>{ f.state="on"; const el=f.m.getElement(); if(el){ el.style.display=""; } const c=fEl(f); if(c){ c.classList.add("popin"); } if(mainPt) follow(mainPt,mainU[0],mainU[1],false); if(f.x.bub&&mainPt) mvBub(map,map.layerPointToLatLng(mainPt),f.x.bub,true); };
   const leave=(f)=>{ f.state="left"; const c=fEl(f); if(c) c.classList.remove("walk"); const out=f.x.out||"fade"; if(f.x.hold) return; setTimeout(()=>{ const c2=fEl(f); if(!c2) return; if(out==="vanish"){ c2.classList.add("vanish"); } else if(out==="fade"){ c2.style.transition="opacity 1.2s"; c2.style.opacity="0"; } },900); };
   let arrived=-1, rn=name;
-  const arrive=i=>{ if(i<=arrived) return; for(let k=arrived+1;k<=i;k++){ F.forEach(f=>{ if(f.state==="wait"&&f.fromI===k) join(f); if(f.state==="on"&&f.toI===k) leave(f); });
+  const arrive=i=>{ if(i<=arrived) return; for(let k=arrived+1;k<=i;k++){ F.forEach(f=>{ if(f.state==="wait"&&f.fromI===k) join(f); else if(f.state==="left"&&f.backI===k){ f.state="on"; const c=fEl(f); if(c){ c.classList.remove("vanish"); c.style.opacity=""; c.classList.add("popin"); } if(mainPt) follow(mainPt,mainU[0],mainU[1],false); if(f.x.backBub&&mainPt) mvBub(map,map.layerPointToLatLng(mainPt),f.x.backBub,true); } else if(f.state==="on"&&f.toI===k) leave(f); });
       if(Mt.rename&&mvIdx(names,Mt.rename.at)===k&&main){ rn=Mt.rename.name; const t=main.getElement()&&main.getElement().querySelector(".nm"); if(t) t.textContent=rn; }
       if(k>0&&k<path.length-1&&!still){ const m=(Mt.mid||[]).find(x=>mvIdx(names,x[0])===k); if(m&&k!==pIdx) mvBub(map,path[k],m[1],true); } }
     arrived=i; };
@@ -3961,7 +3965,7 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
       if(lg.t==="sea"&&(li===legs.length-1||legs[li+1].t!=="sea")){ const at=main.getLatLng(); map.removeLayer(main); main=mvMarker(map,id,{at,w:44,name:rn,look:Mt.look,z:id==="jesus"?3000:2000}); if(mainPt) follow(mainPt,mainU[0],mainU[1],false); }
       if(lg.i1===pIdx&&Mt.pause){ for(const st of Mt.pause.seq){ if(!alive()) return; const c=main.getElement()&&main.getElement().querySelector(".chm");
           if(st[0]==="bub"){ if(!still){ mvBub(map,path[pIdx],st[1],true); await mvWait(st[2]||2200); } }
-          else if(st[0]==="vanish"){ F.filter(f=>f.x.as===st[1]&&f.state!=="gone").forEach(f=>{ f.state="gone"; const c2=fEl(f); if(c2) c2.classList.add("vanish"); }); await mvWait(still?0:900); }
+          else if(st[0]==="vanish"){ F.filter(f=>f.x.as===st[1]&&(f.state==="on"||f.state==="left")).forEach(f=>{ f.state="gone"; const c2=fEl(f); if(c2) c2.classList.add("vanish"); }); await mvWait(still?0:900); }
           else if(st[0]==="rise"){ if(c) c.classList.add("rise"); await mvWait(still?0:2000); }
           else if(st[0]==="swap"){ const at=main.getLatLng(); map.removeLayer(main); id=st[1]; rn=st[2]; main=mvMarker(map,id,{at,w:44,name:rn,z:id==="jesus"?3000:2000}); }
           else if(st[0]==="light"){ if(!still) mvFx(map,"light",path[pIdx]); await mvWait(still?0:450); }
@@ -4093,7 +4097,7 @@ function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||
     if(hit){ e.stopImmediatePropagation(); e.preventDefault(); const fb=fr.getBoundingClientRect(), r=hit.getBoundingClientRect(); pop(hit.textContent,r.left+r.width/2-fb.left,r.top-fb.top); return; }
     if(open){ e.stopImmediatePropagation(); e.preventDefault(); open.remove(); } },true));
   /* "지명을 누르면 설명이 나옵니다" 안내는 인물·말씀을 가려서 뺌(목사님 2026-10-30) */
-  setTimeout(()=>{ try{ map.invalidateSize(); if(all.length===1) map.setView(all[0],9); else map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[40,80],paddingBottomRight:[80,250],maxZoom:11}); }catch(e){} setTimeout(()=>{ try{ mapActors(map,M,s,w,d); }catch(e){ console.warn("actors",e); } },120); },60); }
+  setTimeout(()=>{ try{ map.invalidateSize(); if(all.length===1) map.setView(all[0],9); else map.fitBounds(L.latLngBounds(all),{paddingTopLeft:[40,80],paddingBottomRight:[80,250],maxZoom:12}); }catch(e){} setTimeout(()=>{ try{ mapActors(map,M,s,w,d); }catch(e){ console.warn("actors",e); } },120); },60); }
 function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,e,vs,kv}=X;
   if(s.k==="fin"||s.k==="next"||s.k==="ask") return storyEndHTML(s,w,d);
   if(!s.qt) return storyCardHTML(s);
@@ -4982,7 +4986,7 @@ function bmSoft(refit){ if(BM_OV){ bmOvPanel(); bmDraw(false,refit); return; } c
 function bmPlay(i){ const r=ROUTES_B[i]; if(!r) return; const el=document.createElement("div"); el.className="rgm"; el.innerHTML=`<div class="rgmtop"><b>${esc(rmBase(r.n))}</b><button class="gpx" aria-label="닫기">✕</button></div><div class="rgmmap" id="bmPlayMap" style="height:calc(100vh - 190px);height:calc(100dvh - 190px)"></div>`; document.body.appendChild(el); document.body.style.overflow="hidden";
   let map=null; const close=pop=>{ if(pop!==true) ovDone(close); try{ map&&map.remove(); }catch(e){} el.remove(); document.body.style.overflow=""; }; ovOpen(close); el.querySelector(".gpx").onclick=()=>close();
   setTimeout(()=>{ const mel=el.querySelector("#bmPlayMap"); map=L.map(mel,{zoomControl:false,attributionControl:true,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,"natural");
-    map.fitBounds(L.latLngBounds(r.p.map(q=>[q[1],q[2]])),{paddingTopLeft:[40,60],paddingBottomRight:[60,140],maxZoom:10});
+    map.fitBounds(L.latLngBounds(r.p.map(q=>[q[1],q[2]])),{paddingTopLeft:[40,60],paddingBottomRight:[60,140],maxZoom:12});
     const lab=L.layerGroup().addTo(map); r.p.forEach(q=>{ if(q[0]) L.marker([q[1],q[2]],{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl">${esc(q[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]})}).addTo(lab); });
     const M={route:r.p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:r.n,b:r.b}; M.ul=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#fff",weight:10,opacity:.85,interactive:false}).addTo(map); M.rl=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#e2603f",weight:5,interactive:false}).addTo(map);
     const D=bmRouteDay(r)||[1,0]; try{ mapActors(map,M,{h:""},D[0],D[1]); }catch(e){ console.warn(e); }
