@@ -36,6 +36,7 @@ try:
   if _ch: json.dump(_lum,open('ux/phlum.json','w'),separators=(',',':'))
 except Exception as _x:
   _lum=json.load(open('ux/phlum.json')) if os.path.exists('ux/phlum.json') else {}
+data+="\nconst CHROLE="+(open('ux/christ_role.json').read() if os.path.exists('ux/christ_role.json') else "{}")+";"
 data+="\nconst PHLUM="+json.dumps(_lum,separators=(',',':'))+";"
 data+="\nconst NAME_SET=new Set(NAME_MEAN.map(x=>x[0])); for(const n of NAME_MEAN){ if(!GLOSSARY.some(g=>g[0]===n[0])) GLOSSARY.push(n); }"
 data+="\nconst LEITWORT="+open('leitwort.json').read()+";\nconst EMPH="+open('emph.json').read()+";\nconst GAZ="+open('gaz.json').read()+";\nconst PLAN="+json.dumps(plan,ensure_ascii=False,separators=(',',':'))+";\n"
@@ -170,7 +171,7 @@ for tk in ('snb','shg'):
     open(f'{OUT}/bible_{tk}.js','w').write('window.BIBLE_TR=window.BIBLE_TR||{};BIBLE_TR.'+tk+'="'+open(f'bible_{tk}.b64').read()+'";\nwindow.SPEECH_'+tk+'='+open(f'speech/bible_{tk}.json').read()+';\n')
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
-for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html','ui2.html']: shutil.copy('site_src/'+f,OUT+'/'+f)
+for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html','ui2.html','ui3.html']: shutil.copy('site_src/'+f,OUT+'/'+f)
 shutil.copytree('site_src/icons',OUT+'/icons')
 shutil.copytree('site_src/img',OUT+'/img')
 FB="https://www.gstatic.com/firebasejs/10.14.1/"
