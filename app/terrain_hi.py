@@ -5,7 +5,7 @@
 import math, os, json, urllib.request, concurrent.futures as cf, numpy as np, sys
 from PIL import Image
 from scipy import ndimage
-REG=dict(lon=(35.20,35.85),lat=(30.80,33.00)); ZS=range(8,14)
+REG=dict(lon=(34.85,35.85),lat=(30.80,33.35)); ZS=range(8,14)
 os.makedirs('tiles',exist_ok=True)
 def lon2x(lon,z): return (lon+180)/360*256*2**z
 def lat2y(lat,z): r=math.radians(lat); return (1-math.log(math.tan(r)+1/math.cos(r))/math.pi)/2*256*2**z
@@ -40,6 +40,12 @@ def comp_box(th,lat,lon,la0,la1,lo0,lo1):
     w=lab==lab[sy,sx]; w=ndimage.binary_opening(w,iterations=3); w=ndimage.binary_fill_holes(w); l2,_=ndimage.label(w); return l2==l2[sy,sx]
 WM=(comp(-393,31.5,35.48)|comp_box(-384,31.12,35.46,30.98,31.24,35.33,35.6)|comp(-208,32.82,35.59)).astype(np.float32)
 WM=ndimage.binary_closing(WM>0,iterations=4).astype(np.float32)
+# 지중해: 해발 0m 아래이면서 바다 쪽 점과 이어진 곳(요단 골짜기는 0m 아래여도 이어지지 않음). 색은 바깥 Esri 바다와 같게
+SEA=comp(0.5,32.6,34.86).astype(np.float32); SEA=ndimage.gaussian_filter(SEA,1.0)
+# 훌레 호수(1950년대에 말려 없어짐): 옛 지도의 호수 자리(남북 약 5km, 동서 약 4km)를 타원으로 되살림 — 자리는 추정
+HY,HX=np.mgrid[0:EM.shape[0],0:EM.shape[1]]
+hy,hx=lat2y(33.078,MZ)-my0,lon2x(35.615,MZ)-mx0; ry=(lat2y(33.054,MZ)-lat2y(33.102,MZ))/2; rx=(lon2x(35.636,MZ)-lon2x(35.594,MZ))/2
+WM=np.maximum(WM,(((HY-hy)/ry)**2+((HX-hx)/rx)**2<=1).astype(np.float32))
 WM=ndimage.gaussian_filter(WM,1.0)
 st=[(-430,(203,196,160)),(-300,(214,205,163)),(-100,(222,212,170)),(200,(226,214,175)),(500,(214,198,160)),(800,(198,182,148)),(1100,(184,170,142)),(2000,(176,166,146))]
 xs=[s[0] for s in st]
@@ -60,6 +66,8 @@ def render(z,x,y):
     if z<MZ: w=ndimage.zoom(ndimage.zoom(w,1),1)
     wa=np.clip((w-.35)/.3,0,1)[...,None]; edge=np.clip(1-abs(w-.5)/.12,0,1)[...,None]*.0
     C=C*(1-wa)+np.array([143,183,207])*wa
+    sw=ndimage.map_coordinates(SEA,[gy_*f-my0,gx_*f-mx0],order=1,mode='constant',cval=0); sa=np.clip((sw-.35)/.3,0,1)[...,None]
+    C=C*(1-sa)+np.array([122,180,218])*sa
     # 물가 선(살짝 짙게)
     e2=np.clip(1-abs(w-.5)/.15,0,1)[...,None]; C=C*(1-e2*.45)+np.array([95,143,174])*e2*.45
     # 가장자리 투명
