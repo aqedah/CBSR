@@ -59,6 +59,9 @@ data+="const TERRAIN="+json.dumps(terr)+";\n"
 # 지형 조각 타일(terrain_tiles.py)은 2026-10-31에 Esri 음영 지도로 바꾸며 그만 씀
 # 자세한 지형 조각(terrain_hi.py, 2026-11-02): 요단·갈릴리·사해 권역 8–13배율
 if os.path.isdir('terrhi'): shutil.copytree('terrhi',f'{OUT}/terrhi')
+for _d in ['terrw','terrm']:
+    if os.path.isdir(_d): shutil.copytree(_d,f'{OUT}/{_d}')
+data+="\nconst TERRWIDE="+(open('terrwide.json').read() if os.path.exists('terrwide.json') else 'null')+";"
 data+="\nconst TERRHI="+(open('terrhi.json').read() if os.path.exists('terrhi.json') else 'null')+";"
 data+="const PLX="+(open("ux/place_extra.json").read() if os.path.exists("ux/place_extra.json") else "{}")+";\n"
 data+="const NEARLAND="+open("ux/nearland.json").read()+";\n"
@@ -258,7 +261,7 @@ self.addEventListener("install",e=>{{e.waitUntil(caches.open(V).then(c=>c.addAll
 self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>/^cbsr-/.test(k)&&k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));}});
 self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(/firestore\\.googleapis\\.com|identitytoolkit|securetoken|firebaseinstallations/.test(u.hostname))return;
-  const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/terrhi\\/|\\/icons\\/|\\/img\\//.test(u.pathname);
+  const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/terr[hwm]i?\\/|\\/icons\\/|\\/img\\//.test(u.pathname);
   if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match(/v1\\.html$/.test(u.pathname)?"v1.html":/v2\\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}}
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''

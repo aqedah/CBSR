@@ -1361,7 +1361,7 @@ body.tts-on .totop{display:none}
 @media (prefers-reduced-motion: reduce){.news-track .ni{transition:none}}
 .news-x{flex:none;border:0;background:none;color:var(--muted);font-size:13px;padding:2px 6px;cursor:pointer}
 .newslist{margin:0 0 6px;padding-left:20px;display:grid;gap:4px;font-size:15px;line-height:1.55}
-.leaflet-layer.hshade{mix-blend-mode:multiply}.pz9 .leaflet-layer.physb{filter:blur(1.5px)}.pz10 .leaflet-layer.physb{filter:blur(3.5px)}
+.leaflet-layer.hshade{mix-blend-mode:multiply}.wlab{display:inline-block;white-space:nowrap;font:italic 700 14px var(--f-serif,serif);letter-spacing:.25em;color:#2c6a96;text-shadow:0 0 3px #fff,0 0 6px rgba(255,255,255,.9);pointer-events:none}.pz9 .leaflet-layer.physb{filter:blur(1.5px)}.pz10 .leaflet-layer.physb{filter:blur(3.5px)}
 
 /* ===== 기록 탭 v5 (2026-11-01): 회색 바탕·흰 칸·장식 없음 ===== */
 html.v2 body:has(.ryprof){background:var(--rybg)}html.v2 main:has(.ryprof){gap:12px}
@@ -4163,11 +4163,18 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:13,maxZoom:13,zIndex:5,opacity:.55,keepBuffer:map.options.keepBuf||3,className:"hshade",attribution:"음영: Esri, USGS, NASA 외"}).addTo(map);
     /* 자세한 지형(목사님 2026-11-02 승인): 요단·갈릴리·사해 권역은 고도 원자료로 배율마다 만든 조각을 위에 덮음(8–13배율).
        사해는 물이 줄기 전 물가로. 가장자리는 투명하게 바깥 Esri 바탕과 이어짐 */
-    if(typeof TERRHI!=="undefined"&&TERRHI) L.tileLayer("terrhi/{z}/{x}/{y}.webp",{minZoom:TERRHI.minZoom,minNativeZoom:TERRHI.minZoom,maxNativeZoom:TERRHI.maxZoom,maxZoom:13,bounds:TERRHI.bounds,zIndex:6,className:"terrhi",keepBuffer:map.options.keepBuf||3,attribution:"지형: AWS Terrain Tiles(SRTM)"}).addTo(map);
+    /* 넓은 지역(이탈리아~메소보다미아 5–9배율, 레반트·시내·애굽 10–11배율)도 같은 방식의 지형 조각으로(11/2) */
+    if(typeof TERRWIDE!=="undefined"&&TERRWIDE) [["terrw",6],["terrm",7]].forEach(([k,zi])=>{ const W=TERRWIDE[k]; if(!W) return; const R=W.regs, b=L.latLngBounds([[Math.min(...R.map(r=>r[2])),Math.min(...R.map(r=>r[0]))],[Math.max(...R.map(r=>r[3])),Math.max(...R.map(r=>r[1]))]]);
+      L.tileLayer(k+"/{z}/{x}/{y}.webp",{minZoom:W.minZoom,minNativeZoom:W.minZoom,maxNativeZoom:W.maxZoom,maxZoom:13,bounds:b,zIndex:zi,className:"terrhi",keepBuffer:map.options.keepBuf||3,errorTileUrl:"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="}).addTo(map); });
+    if(typeof TERRHI!=="undefined"&&TERRHI) L.tileLayer("terrhi/{z}/{x}/{y}.webp",{minZoom:TERRHI.minZoom,minNativeZoom:TERRHI.minZoom,maxNativeZoom:TERRHI.maxZoom,maxZoom:13,bounds:TERRHI.bounds,zIndex:8,className:"terrhi",keepBuffer:map.options.keepBuf||3,attribution:"지형: AWS Terrain Tiles(SRTM)"}).addTo(map);
     /* 바탕 지도를 못 받으면(인터넷 끊김) 지도 위에 알림. 지명·본문·목록은 그대로 쓸 수 있음 */
     { let ok=0, bad=0, note=null; tlNet.on("tileload",()=>{ ok++; if(note){ note.remove(); note=null; } }); tlNet.on("tileerror",()=>{ bad++; if(!ok&&bad>=4&&!note){ note=document.createElement("div"); note.className="mapnet"; note.textContent="지도 바탕을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요. 지명과 본문은 그대로 볼 수 있습니다."; el.appendChild(note); } }); }
     /* 바탕 지도는 8배율 원본을 늘려 쓰므로 크게 확대하면 네모 얼룩이 보임 → 그 배율에서만 바탕을 살짝 흐리게(산 그림자는 그대로 또렷) */
     const pz=()=>{ const z=map.getZoom(); el.classList.toggle("pz9",z>=8.75&&z<9.75); el.classList.toggle("pz10",z>=9.75); }; map.on("zoomend",pz); map.whenReady(pz);
+    /* 물 이름표(11/2, GPT 지도 제안): 파란 선만으로는 무슨 강인지 모름 → 개역개정 이름을 물 위에 직접. 배율에 맞는 것만 */
+    { const WL=[["요단 강",32.28,35.585,-84,8,13],["염해",31.5,35.49,0,7,13],["갈릴리 바다",32.82,35.592,0,9,13],["대해",33.0,33.6,0,5,9],["홍해",27.2,34.3,-50,5,9],["나일 강",28.5,30.86,-82,6,10],["유브라데",35.4,39.9,-35,5,9],["힛데겔",35.1,43.38,-58,5,9]];
+      const lay=WL.map(([t,a,o,r,z0,z1])=>({z0,z1,m:L.marker([a,o],{interactive:false,keyboard:false,icon:L.divIcon({className:"",html:`<span class="wlab" style="transform:translate(-50%,-50%) rotate(${r}deg)">${t}</span>`,iconSize:[0,0]})})}));
+      const wz=()=>{ const z=map.getZoom(); lay.forEach(l=>{ const on=z>=l.z0&&z<=l.z1; if(on&&!map.hasLayer(l.m)) l.m.addTo(map); else if(!on&&map.hasLayer(l.m)) map.removeLayer(l.m); }); }; map.on("zoomend",wz); map.whenReady(wz); }
     /* 강줄기(요단·나일·유브라데·힛데겔 등, Natural Earth): 강을 건너는 장면이 보이도록 */
     if(typeof RIVERS!=="undefined"){ const rw=()=>map.getZoom()>=8?3.6:map.getZoom()>=6?2.4:1.6, RL=RIVERS.map(([n,p])=>L.polyline(p,{color:"#3d8fcf",weight:rw(),opacity:.9,interactive:false,className:"river"}).addTo(map)); map.on("zoomend",()=>{ const w=rw(); RL.forEach(l=>l.setStyle({weight:w})); }); }
     return; }
