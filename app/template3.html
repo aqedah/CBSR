@@ -3888,16 +3888,31 @@ const vLab=r=>`${PLAN.abbr[r[0]-1]} ${r[1]}:${r[2]}${r[3]&&r[3]>r[2]?"–"+r[3]:
 /* 경로 연출에서 한 구절을 '서술'과 '인물의 말'로 나눕니다(목사님 2026-11-02).
    인물의 말(대화·생각·혼잣말)은 말풍선으로 인물 곁에, 서술은 바깥 팝업으로. 글은 개역개정 그대로 자르고, 길면 앞부분만 보이고 장:절을 답니다 */
 /* 하나님(과 누가·행전의 성령)의 말인지: 말 바로 앞 마디의 주어로 판단 */
-function vDivine(who,b){ who=(who||"").trim(); if(GOD_RE.test(who)) return who; if(who==="주"&&b<40) return "여호와";
-  /* 누가복음·사도행전: 성령·예수의 영의 말도 하나님의 말과 같은 꼴로(목사님 2026-11-02) */
+/* 신적 발언 구분(목사님 2026-11-02, 내러티브 비평의 원칙):
+   내레이터가 전하는 신적 발언(하나님·성령·하늘의 음성) → 위쪽 흰 팝업
+   등장인물이 옮겨 말하는 신적 발언(선지자·아가보 등) → 그 인물의 말풍선 */
+function vDivine(who,b,c){ who=(who||"").trim(); if(!who) return ""; if(GOD_RE.test(who)) return who; if(who==="주") return b<40?"여호와":b>=44?"주":"";
+  if(/소리$/.test(who)) return b===44&&c===9?"예수님의 음성":"하늘에서 들린 음성";
+  /* 누가복음·사도행전: 성령·예수의 영의 말도 하나님의 말과 같은 꼴로 */
   if((b===42||b===44)&&/^(성령|예수의 영|주의 영|주의 성령|하나님의 영)$/.test(who)) return who; return ""; }
-function vSubj(a){ const cl=(a||"").split(/(?:니라|더라|하고|하매|하니|거늘|러니|으나|이요|지라|는데|매)\s/).pop(); const m=[...cl.matchAll(/(여호와 하나님|만군의 여호와|예수의 영|주의 성령|주의 영|하나님의 영|여호와|하나님|성령|주)(께서|이|가)\s/g)];
-  if(!m.length) return ""; const L=m[m.length-1]; if(/[가-힣]+(께서|이|가)\s/.test(cl.slice(L.index+L[0].length).replace(/^\S+\s/,"")) && /(이르되|말하되|대답하되)\s*$/.test(cl)&&!/(이르시되|말씀하시되|가라사대|부르시되)\s*$/.test(cl)) return ""; return L[1]; }
-function vSplit(r){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{}; const sp=[], gsp=[], na=[], core=[]; let who="", god="";
-  for(let v=r[2];v<=(r[3]||r[2]);v++){ const t=vtxt([r[0],r[1],v]); if(!t) continue; const R=S[`${r[0]}-${r[1]}-${v}`];
+const DIV_SUBJ=/(여호와 하나님|만군의 여호와|예수의 영|주의 성령|주의 영|하나님의 영|여호와|하나님|성령|주|소리)(께서|이|가)?\s/g;
+/* 말 바로 앞 서술에서 말한 이를 찾음. 사람이 말을 시작한 뒤(말하기를 …) 나온 신적 주어는 그 사람이 옮기는 말 → "" */
+function vSubj(a){ const cl=(a||"").split(/(?:니라|더라|하고|하매|하니|거늘|러니|으나|이요|지라|는데|매)\s/).pop(); const m=[...cl.matchAll(DIV_SUBJ)].filter(x=>x[2]||x[1]==="소리");
+  if(!m.length) return ""; const L=m[m.length-1];
+  if(/(말하기를|이르기를|이르되|말하되|대답하되|가로되|외치되)\s*$/.test(cl.slice(0,L.index).trim())) return "";
+  if(/[가-힣]+(께서|이|가)\s/.test(cl.slice(L.index+L[0].length).replace(/^\S+\s/,"")) && /(이르되|말하되|대답하되)\s*$/.test(cl)&&!/(이르시되|말씀하시되|가라사대|부르시되)\s*$/.test(cl)) return ""; return L[1]; }
+/* 주어 없이 '이르시되'로 이어지는 말(행 9:5)은 바로 앞 절들의 신적 화자를 이어받음 */
+function vPrevDiv(b,c,v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{}; for(let k=v-1;k>=Math.max(1,v-3);k--){ const t=vtxt([b,c,k]); if(!t) continue; const R=vSpR(S,b,c,k,t); let pos=0, last="";
+    (R||[]).forEach(([x,y])=>{ const s=vSubj(t.slice(pos,x)); if(vDivine(s,b,c)) last=s; pos=y; }); if(last) return last; } return ""; }
+/* 말 구분 자료에 빠진 하늘의 음성 */
+const SP_ADD={"41-1-11":"너는 내 사랑하는 아들이라 내가 너를 기뻐하노라","42-3-22":"너는 내 사랑하는 아들이라 내가 너를 기뻐하노라","41-9-7":"이는 내 사랑하는 아들이니 너희는 그의 말을 들으라","44-10-13":"베드로야 일어나 잡아 먹어라","44-10-15":"하나님께서 깨끗하게 하신 것을 네가 속되다 하지 말라"};
+function vSpR(S,b,c,v,t){ const k=`${b}-${c}-${v}`; let R=S[k]; if((!R||!R.length)&&SP_ADD[k]){ const x=t.indexOf(SP_ADD[k]); if(x>=0) R=[[x,x+SP_ADD[k].length]]; } return R; }
+function vSplit(r){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{}; const sp=[], gsp=[], na=[], core=[]; let who="", god="", lastDiv="";
+  for(let v=r[2];v<=(r[3]||r[2]);v++){ const t=vtxt([r[0],r[1],v]); if(!t) continue; const R=vSpR(S,r[0],r[1],v,t);
     if(!R||!R.length){ na.push(t); core.push(t); continue; } let pos=0; const raw=[]; let vw=""; try{ const i=speechInfo({b:r[0],c:r[1],v,t}); if(i&&i.who) vw=i.who; }catch(e){} if(!who) who=vw;
     R.forEach(([x,y],k)=>{ const a=t.slice(pos,x).trim(), c=vTrimIntro(a,pos>0,true); raw.push(a); if(c) core.push(c); const q=t.slice(x,y).trim();
-      const sj=vSubj(a), g=vDivine(sj||(k===0&&!a?vw:""),r[0]); if(q){ if(g){ gsp.push(q); god=god||g; } else sp.push(q); } pos=Math.max(pos,y); });
+      let sj=vSubj(a); if(!sj&&k===0&&!a&&v===r[2]) sj=GOD_RE.test(vw)||vw==="성령"?vw:""; if(!sj&&/(이르시되|말씀하시되|가라사대|부르시되)\s*$/.test(a)&&!/[가-힣]+(께서|이|가)\s\S*\s*(이르시되|말씀하시되)\s*$/.test(a)) sj=lastDiv||vPrevDiv(r[0],r[1],v);
+      const g=vDivine(sj,r[0],r[1]); if(g) lastDiv=sj; if(q){ if(g){ gsp.push(q); god=god||g; } else sp.push(q); } pos=Math.max(pos,y); });
     const z=t.slice(pos).trim(), zc=vTrimIntro(z,true,false); raw.push(z); if(zc) core.push(zc);
     /* 서술은 개역개정 그대로 두고, 말풍선으로 옮긴 자리만 '⋯'로 */
     na.push(raw.join(" ⋯ ").replace(/^\s*⋯\s*/,"").replace(/\s*⋯\s*$/,"").trim()); }
