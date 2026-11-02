@@ -1722,7 +1722,7 @@ html.v2 .bmmap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height
 .bmother{margin-top:12px}.bmother summary{cursor:pointer;font-weight:700;padding:8px 0}.bmdays{display:grid;gap:4px;max-height:40vh;overflow:auto}.bmdays button{font:inherit;font-size:14px;text-align:left;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer}
 .mapnet{position:absolute;left:10px;right:56px;top:10px;z-index:900;background:rgba(255,253,246,.95);color:#5a3a10;border:1px solid #d9b56a;border-radius:10px;padding:8px 10px;font-size:13px;line-height:1.45}
 @media (prefers-reduced-motion:reduce){ .mvemo,.mvsky{animation:none!important;display:none} .mvstorm{animation:none!important} .bmt2 *{transition-duration:.01s!important} }.bmr{scroll-margin-top:calc(min(50vh,440px) + 16px)}
-.bmgo2{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.bmgo2 .btn,.bmrb .btn{white-space:nowrap}html.v2 .bmrb{display:flex;flex-wrap:wrap;gap:8px}.bmrb .bmgo2{margin-top:0;display:contents}.rgmgo{margin-top:10px}.rgmgo .bmgo2{justify-content:center}
+.bmgo2{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.bmgo2 .btn,.bmrb .btn{white-space:nowrap}html.v2 .bmrb{display:flex;flex-wrap:wrap;gap:8px}.bmrb .bmgo2{margin-top:0;display:contents}.bmovr .bmrb{flex-wrap:nowrap}.bmovr .bmrb .btn{flex:1 1 auto;min-width:0;padding-left:8px;padding-right:8px;font-size:14px;overflow:hidden;text-overflow:ellipsis}.rgmgo{margin-top:10px}.rgmgo .bmgo2{justify-content:center}
 .bmr.part .bmrd{background:linear-gradient(90deg,var(--accent,#c0392b) 50%,transparent 50%);border-color:var(--accent,#c0392b)}.bmr.part em{color:var(--muted);font-style:normal;font-size:12.5px}
 .bmnear{display:grid;gap:8px}.bmnear button{display:flex;align-items:center;gap:10px;font:inherit;font-size:16px;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;min-height:48px}.bmnear i{width:12px;height:12px;border-radius:50%;background:#8c8c84;flex:none}.bmnear i.on{background:#e0a526}
 .spl.tap{cursor:pointer;pointer-events:auto;padding-block:4px}.bmhit{cursor:pointer}
@@ -10637,7 +10637,7 @@ function bmDraw(first,refit){ const map=BM_MAP; if(!map||!BM_LY) return; BM_LY.c
     BM_BIGL.forEach(x=>lab([x[1],x[2]],x[0]));
     if(s!=null){ (first?map.fitBounds.bind(map):map.flyToBounds.bind(map))(L.latLngBounds(BM_BIG[s].p.concat([BM_BIG[s].at])),{padding:[36,36],maxZoom:7,duration:.7}); } else map.fitBounds([[27.5,11.5],[41.5,47]],{padding:[6,6]}); }
   if(seg==="trip"){ const e=view.bmEra==null?0:view.bmEra, sel=view.bmSel, R=ROUTES_B.map((r,i)=>[r,i]).filter(([r])=>bmEra(r.b,r.c[0])===e), all=[];
-    R.forEach(([r,i])=>{ if(i===sel) return; const RD=bmRouteRead(r), ll=r.p.map(q=>[q[1],q[2]]); all.push(...ll);
+    R.forEach(([r,i])=>{ if(i===sel||(BM_OV&&sel!=null)) return; const RD=bmRouteRead(r), ll=r.p.map(q=>[q[1],q[2]]); all.push(...ll);
       /* 점선은 '추정'에만 쓰고, 읽은 정도는 색과 진하기로(GPT 지도 개편안 2026-10-31) */
       L.polyline(ll,{color:RD.some?BM_RED:"#6f6a5e",weight:RD.all?3:2.5,opacity:sel!=null?.3:(RD.all?.85:RD.some?.5:.55)}).addTo(BM_LY).on("click",()=>bmRouteSel(i)); });
     if(sel!=null&&ROUTES_B[sel]){ const r=ROUTES_B[sel], ll=r.p.map(q=>[q[1],q[2]]); L.polyline(ll,{color:"#fff",weight:10,opacity:.9,interactive:false}).addTo(BM_LY); L.polyline(ll,{color:BM_RED,weight:5,interactive:false}).addTo(BM_LY);
@@ -11023,7 +11023,9 @@ function bmOvPanel(){ const P=document.getElementById("bmOvP"); if(!P) return; c
   if(seg==="trip"){ const i=view.bmSel, r=ROUTES_B[i]; if(!r){ P.innerHTML=""; return; } const D=bmRouteDay(r), RD=bmRouteRead(r), L=(BM_OV&&BM_OV.list)||bmWhoGroups()[bmWhoOf(r)], k=L.indexOf(i);
     const est=r.p.some(q=>q[0]&&PLACE.get(q[0])&&PLACE.get(q[0])[4]);
     P.innerHTML=`<div class="bmovr"><div class="bmovnav">${k>0?`<button data-bmnav="${L[k-1]}" aria-label="이전 여정">‹</button>`:"<span></span>"}<div><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장 · ${esc(r.p.map(q=>q[0]).filter(Boolean).join(" → "))}</small><small>${RD.all?"✓ 모두 읽음":RD.some?`${RD.t}장 중 ${RD.n}장 읽음`:"아직 읽지 않음"}${k>=0?` · ${k+1}/${L.length}`:""}</small></div>${k>=0&&k<L.length-1?`<button data-bmnav="${L[k+1]}" aria-label="다음 여정">›</button>`:"<span></span>"}</div>
-      <div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${bmGoBtns(bmRouteRef(r),D)}</div><p class="bmest">${est?"점선 테두리의 곳은 위치가 추정입니다. ":""}선은 실제 옛길이 아니라 지나간 차례를 이은 것입니다.</p></div>`; }
+      <div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${bmGoBtns(bmRouteRef(r),D)}</div>${est?`<p class="bmest">점선 테두리의 곳은 위치가 추정입니다.</p>`:""}</div>`;
+    /* 단추 한 줄(목사님 2026-11-02): 장 정보는 위에 있으니 날짜만 */
+    P.querySelectorAll(".bmrb [data-bmv]").forEach(b=>b.textContent="📖 본문"); P.querySelectorAll(".bmrb [data-bmday]").forEach(b=>{ if(D) b.textContent=`${fmt(dateOf(D[0],D[1]),{month:"numeric",day:"numeric"}).replace(/\.\s?/g,"/").replace(/\/$/,"")} 읽는 날 ›`; }); }
   else if(seg==="lib"){ const B=bmLit(); P.innerHTML=`${bmLandBtn("bmLandT2",B)}<div class="bmpanel">${bmDayPanel()}</div>`; bmLandBind(P.querySelector("#bmLandT2")); }
   else { const t=document.createElement("div"); t.innerHTML=bmDetailHTML(); const p=t.querySelector(".bmpanel"); P.innerHTML=""; if(p){ p.querySelectorAll("[data-bmgo]").forEach(x=>x.remove()); P.appendChild(p); } }
   bmBindIn(P); bmOvBind(P); }
@@ -11925,10 +11927,10 @@ function dayRingHTML(fold){ if(fold&&window.CBSR_V2) return dayFoldHTML(); const
   const dt=dateOf(view.w,view.d), p=dayPlan(view.w,view.d), isT=view.w===here.w&&view.d===here.d;
   const MY=myStoryItems(), myOn=MY.some(x=>x.mine), av=PROF.photo?`<img alt="" src="${PROF.photo}">`:`<em class="rgme-i">${esc(PROF.nick?[...PROF.nick][0]:"나")}</em>`;
   const me=`<button class="rg rgme${myOn?"":" empty"}" id="rgMe" aria-label="나의 통독: 오늘 내게 주시는 말씀과 아멘한 말씀"><span class="rgi">${av}${myOn?"":`<i class="rgplus">+</i>`}</span><b>나의 통독</b></button>`;
-  /* 2026-11-02: '나의 통독'은 고리에서 뺌. 고리 위에 이번 주 공동 통독 한 줄 */
+  /* 2026-11-02: '나의 통독'은 고리에서 뺌. '이번 주 공동 통독' 줄도 뺌(목사님) */
   if(window.CBSR_V2){ const W=view.w, idx=[...Array(nd(W)).keys()].filter(i=>!isRev(i)&&dayPlan(W,i)), a=idx.length?dateOf(W,idx[0]):null, z=idx.length?dateOf(W,idx[idx.length-1]):null;
     const rng=a&&z?(a.getMonth()===z.getMonth()?`${a.getMonth()+1}월 ${a.getDate()}일–${z.getDate()}일`:`${a.getMonth()+1}월 ${a.getDate()}일–${z.getMonth()+1}월 ${z.getDate()}일`):"";
-    return `<section class="rgwrap v3"><p class="rgwk"><b>${W===here.w?"이번 주":W+"주차"} 공동 통독</b><span>${rng}</span></p><div class="rgs" id="rgScroll">${r}</div></section>`; }
+    return `<section class="rgwrap v3"><div class="rgs" id="rgScroll">${r}</div></section>`; }
   return `<section class="rgwrap"><div class="rgline">${me}<div class="rgs" id="rgScroll">${r}</div></div></section>`; }
 /* 본문·묵상 화면에서는 고리를 접어 날짜와 본문 범위 한 줄로(누르면 펼침) */
 function dayFoldHTML(){ const {w,d}=view, p=dayPlan(w,d), dt=dateOf(w,d); let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
