@@ -2088,12 +2088,12 @@ html.v2[data-theme="dark"]{--rybg:#0F1412;--rytile:#1E2723;--rysub:#9AA6A0}
 .rygear{width:40px;height:40px;border:0;background:none;color:var(--rysub);display:grid;place-items:center;border-radius:12px;cursor:pointer}
 .rygear svg{width:24px;height:24px}
 .rybox{background:var(--card);border-radius:22px;padding:20px;margin:0;min-width:0}.rygrid,.ryprof{min-width:0}
-.rysb{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;margin:10px -20px 0;padding:4px 20px 4px}.rysb::-webkit-scrollbar{display:none}
+.rysb{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;margin:10px -20px 0;padding:4px 20px 26px}.rysb::-webkit-scrollbar{display:none}
 .rysbw{display:flex;gap:3px;width:max(900px,100%)}
-.rysg{height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;min-width:0}
+.rysg{position:relative;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;min-width:0}
 .rysg b{font:700 12.5px var(--f-ui);color:var(--ink);white-space:nowrap;padding:0 6px;border-radius:6px}
 .rysg.dk b{color:#fff;text-shadow:0 0 3px rgba(0,0,0,.25)}
-.rysg.cur{box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--gold)}
+.rytd{position:absolute;top:100%;transform:translateX(-50%);margin-top:5px;font:700 11.5px var(--f-ui);font-style:normal;color:var(--ink);white-space:nowrap;line-height:1}.rytd::before{content:"";position:absolute;left:50%;top:-5px;margin-left:-4px;border:4px solid transparent;border-top:0;border-bottom:5px solid var(--ink)}.rytd{padding-top:3px}
 .rycal .ryweek{margin-top:12px;padding-top:0;border-top:0}
 .rycalt{display:flex;align-items:center;gap:8px;width:100%;min-height:40px;border:0;background:none;padding:0;font-family:var(--f-ui);color:var(--ink);cursor:pointer;text-align:left}
 .rycalt b{font-size:17px;font-weight:700}.rycalt span{font-size:13.5px;color:var(--rysub)}.rycalt svg{width:18px;height:18px;margin-left:auto;color:var(--rysub)}
@@ -11681,15 +11681,16 @@ window.CBSR_bm={lit:()=>{ const B=bmLit(); return B?{n:B.first.size,fresh:B.fres
 
 /* 나의 통독 구간 막대(목사님 2026-11-02): 본문 통독 띠와 같은 말투 — 칸 안에 구간 이름, 읽은 장은 초록·오늘은 금색, 좌우로 넘김 */
 const REC_SEC=[["모세오경",1,5],["역사서",6,17],["시가서",18,22],["선지서",23,39],["복음서",40,43],["사도행전",44,44],["서신서",45,65],["계시록",66,66]];
-function recSecBar(){ const len=b=>(BIBLE&&BIBLE[b-1]?BIBLE[b-1].length:0); const RD=new Set(), TD=new Set();
+function recSecBar(){ const len=b=>(BIBLE&&BIBLE[b-1]?BIBLE[b-1].length:0); const RD=new Set(); let TD=null;
   for(const k in mem.done){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(p) p.ch.forEach(([b,c])=>RD.add(b+"-"+c)); }
-  try{ const tp=dayPlan(here.w,here.d); if(tp) tp.ch.forEach(([b,c])=>TD.add(b+"-"+c)); }catch(e){}
-  let cur=-1; const segs=REC_SEC.map(([nm,a,z],si)=>{ const st=[]; for(let b=a;b<=z;b++) for(let c=1;c<=len(b);c++){ const k=b+"-"+c; st.push(TD.has(k)?"t":RD.has(k)?"r":"f"); }
-    const N=st.length||1, rd=st.filter(x=>x!=="f").length; if(st.includes("t")) cur=si;
+  try{ const tp=dayPlan(here.w,here.d); if(tp){ const x=tp.ch[0]; TD=x[0]+"-"+x[1]; } }catch(e){}
+  /* 11/2 목사님: 테두리 대신 '오늘 일정이 어디쯤인가'를 막대 아래 표시로 */
+  const segs=REC_SEC.map(([nm,a,z])=>{ const st=[], ks=[]; for(let b=a;b<=z;b++) for(let c=1;c<=len(b);c++){ const k=b+"-"+c; ks.push(k); st.push(RD.has(k)?"r":"f"); }
+    const N=st.length||1, rd=st.filter(x=>x!=="f").length, ti=TD?ks.indexOf(TD):-1;
     const runs=[]; st.forEach((x,k)=>{ const L=runs[runs.length-1]; if(L&&L.s===x) L.e=k+1; else runs.push({s:x,a:k,e:k+1}); });
-    const COL={r:"var(--accent)",t:"var(--gold)",f:"var(--rytile)"}, P=k=>(k/N*100).toFixed(2)+"%";
+    const COL={r:"var(--accent)",f:"var(--rytile)"}, P=k=>(k/N*100).toFixed(2)+"%";
     const bg=runs.map(R=>`${COL[R.s]} ${P(R.a)} ${P(R.e)}`).join(",");
-    return `<span class="rysg${rd/N>=.5?" dk":""}${st.includes("t")?" cur":""}" style="flex:${N} 0 ${Math.max(78,Math.round(N*.75))}px;background:linear-gradient(90deg,${bg||"var(--rytile) 0 100%"})"><b>${nm}</b></span>`; }).join("");
+    return `<span class="rysg${rd/N>=.5?" dk":""}${ti>=0?" cur":""}" style="flex:${N} 0 ${Math.max(78,Math.round(N*.75))}px;background:linear-gradient(90deg,${bg||"var(--rytile) 0 100%"})"><b>${nm}</b>${ti>=0?`<em class="rytd" style="left:${((ti+.5)/N*100).toFixed(2)}%">오늘</em>`:""}</span>`; }).join("");
   return `<div class="rysb" id="rySB"><div class="rysbw">${segs}</div></div>`; }
 /* 이번 주(누르면 한 달) */
 function recCalBox(c,rs,wk){ const open=!!view.recMon; let mon="";
