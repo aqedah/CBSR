@@ -1591,13 +1591,13 @@ html.v2 .q3 .prayer{background:var(--card);border-radius:18px;padding:18px 18px 
 .qph.nophoto .qphbtn{position:static;flex:none}.qph.nophoto .qphbtn .qtsl,.qph.nophoto .qphbtn .qthelp{background:var(--card);color:var(--accent);border:1px solid var(--line);backdrop-filter:none}
 /* 날짜 고리 → 모서리 둥근 네모(목사님 2026-11-02: 동그라미는 인스타그램 느낌) */
 /* 11/2 2차: 모서리를 더 부드럽게(스퀴어클), 날짜는 도형 안 아래쪽 */
-html.v2 .rgwrap .rgi{border-radius:32%!important;corner-shape:squircle;position:relative;overflow:hidden;width:min(19vw,80px);height:min(23vw,96px)}
+html.v2 .rgwrap .rgi{border-radius:32%!important;corner-shape:squircle;position:relative;overflow:hidden;width:min(20vw,84px);height:min(20vw,84px)}
 html.v2 .rgwrap .rgi img{border-radius:29%!important;corner-shape:squircle}
-@supports (corner-shape:squircle){html.v2 .rgwrap .rgi{border-radius:42%!important}html.v2 .rgwrap .rgi img{border-radius:40%!important}}
-html.v2 .rgwrap .rgi>b{position:absolute;left:3px;right:3px;bottom:3px;margin:0;padding:16px 0 7px;text-align:center;color:#fff;font:700 12px/1.2 var(--f-ui);background:linear-gradient(transparent,rgba(0,0,0,.78) 70%);border-radius:0 0 26% 26%;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+@supports (corner-shape:squircle){html.v2 .rgwrap .rgi{border-radius:42%!important}html.v2 .rgwrap .rgi img,html.v2 .rgwrap .rgi>b{border-radius:40%!important}}
+html.v2 .rgwrap .rgi>b{position:absolute;inset:3px;margin:0;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;font:700 13px/1.2 var(--f-ui);background:rgba(0,0,0,.34);border-radius:29%;corner-shape:squircle;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.7)}
 html.v2 .rgwrap .rgi>b em{display:block;color:rgba(255,255,255,.85);font-weight:600;font-size:11px;margin:1px 0 0}
 html.v2 .rgwrap .rg.tod .rgi>b em{color:#F3D79A}
-html.v2 .rgwrap .rg.sel .rgi>b{background:linear-gradient(transparent,rgba(0,0,0,.72))}
+html.v2 .rgwrap .rg.sel .rgi>b{background:rgba(0,0,0,.42)}
 html.v2 .rgwrap .rg.sel>b{display:none}
 .td3ph.hasum{aspect-ratio:4/5}.td3ph .plsum{display:block;font:500 16.5px/1.75 var(--f-text);color:#fff;margin-bottom:14px;text-shadow:0 1px 8px rgba(0,0,0,.45);word-break:keep-all}
 .td3ph.hasum .plab{padding-top:90px;background:linear-gradient(transparent,rgba(10,16,13,.55) 22%,rgba(10,16,13,.86))}
