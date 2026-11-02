@@ -11913,7 +11913,7 @@ function bindRecordCards(){ document.querySelectorAll("[data-wck]").forEach(b=>b
   const a=document.getElementById("wcAll"); if(a) a.onclick=()=>{ view.wcAll=!view.wcAll; render(); }; }
 
 /* ===== V2: 인스타그램식 요일 고리(본문·도전 탭 위) ===== */
-function dayRingHTML(fold){ if(fold&&window.CBSR_V2) return dayFoldHTML(); const here0=today0(), selN=dayNo(view.w,view.d), N=READ_DAYS; let r=""; const MISS=TRY?[]:missedDays(), MS=new Set(MISS.map(([a,b])=>keyOf(a,b)));
+function dayRingHTML(fold){ if(fold&&window.CBSR_V2) return dayFoldHTML(); const here0=today0(), selN=dayNo(view.w,view.d), N=READ_DAYS; let r=""; const MISS=TRY||window.CBSR_V2?[]:missedDays(), MS=new Set(MISS.map(([a,b])=>keyOf(a,b)));
   const from=Math.max(1,selN-28), to=Math.min(N,selN+28);
   for(let n=from;n<=to;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7;
     if(isRev(d)&&PLAN.plan[w-1]&&WEEKS[w-1]){ const dt=dateOf(w,d), dd=dayDiff(here0,dt), tod=dd===0, sel=n===selN&&!view.pre&&!view.revW, ph=sunCover(w), seen=!!(mem.sun&&mem.sun[w]);
