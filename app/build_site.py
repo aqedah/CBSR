@@ -61,6 +61,7 @@ data+="const TERRAIN="+json.dumps(terr)+";\n"
 if os.path.isdir('terrhi'): shutil.copytree('terrhi',f'{OUT}/terrhi')
 for _d in ['terrw','terrm']:
     if os.path.isdir(_d): shutil.copytree(_d,f'{OUT}/{_d}')
+data+="\nconst TERRIDX="+(open('terrindex.json').read() if os.path.exists('terrindex.json') else 'null')+";"
 data+="\nconst TERRWIDE="+(open('terrwide.json').read() if os.path.exists('terrwide.json') else 'null')+";"
 data+="\nconst TERRHI="+(open('terrhi.json').read() if os.path.exists('terrhi.json') else 'null')+";"
 data+="const PLX="+(open("ux/place_extra.json").read() if os.path.exists("ux/place_extra.json") else "{}")+";\n"
