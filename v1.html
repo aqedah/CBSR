@@ -2086,6 +2086,19 @@ html.v2[data-theme="dark"]{--rybg:#0F1412;--rytile:#1E2723;--rysub:#9AA6A0}
 .rygear{width:40px;height:40px;border:0;background:none;color:var(--rysub);display:grid;place-items:center;border-radius:12px;cursor:pointer}
 .rygear svg{width:24px;height:24px}
 .rybox{background:var(--card);border-radius:22px;padding:20px;margin:0;min-width:0}.rygrid,.ryprof{min-width:0}
+.rysb{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;margin:10px -20px 0;padding:4px 20px 4px}.rysb::-webkit-scrollbar{display:none}
+.rysbw{display:flex;gap:3px;width:max(900px,100%)}
+.rysg{height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;min-width:0}
+.rysg b{font:700 12.5px var(--f-ui);color:var(--ink);white-space:nowrap;padding:0 6px;border-radius:6px}
+.rysg.dk b{color:#fff;text-shadow:0 0 3px rgba(0,0,0,.25)}
+.rysg.cur{box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--gold)}
+.rycal .ryweek{margin-top:12px;padding-top:0;border-top:0}
+.rycalt{display:flex;align-items:center;gap:8px;width:100%;min-height:40px;border:0;background:none;padding:0;font-family:var(--f-ui);color:var(--ink);cursor:pointer;text-align:left}
+.rycalt b{font-size:17px;font-weight:700}.rycalt span{font-size:13.5px;color:var(--rysub)}.rycalt svg{width:18px;height:18px;margin-left:auto;color:var(--rysub)}
+.rymon{margin-top:10px}.rymh,.rymg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));text-align:center;gap:4px 0}
+.rymh small{font-size:12px;color:var(--rysub)}.rymh small:first-child{color:#9A3B2E}
+.rymg i{justify-self:center;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 13px var(--f-ui);font-style:normal;color:var(--rysub)}
+.rymg i.e{visibility:hidden}.rymg i.on{background:var(--accent);color:var(--accent-ink)}.rymg i.me:not(.on){box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent)}.rymg i.fut{opacity:.55}
 .ryhd{display:flex;align-items:center;gap:8px;margin:0 0 14px}
 .ryhd h3{margin:0;font:700 17px/1.35 var(--f-ui);letter-spacing:-.3px}
 .ryhd h3 span{color:var(--accent);margin-left:2px}
@@ -11478,7 +11491,7 @@ const BM_WHO=[
  {k:"elijah",n:"엘리야·엘리사",av:"elijah",who:["엘리야","엘리사","수넴 여인","나아만","하사엘","예후","아람 군대"],tour:["elijah"]},
  {k:"exile",n:"포로와 귀환",av:"elder",b:[15,39],tour:["assyria","babylon","jeremiah","exilelife","return"]},
  {k:"jesus",n:"예수님",av:"jesus",b:[40,43],tour:["mt","mk","lk","jn"]},
- {k:"church",n:"초대 교회",av:"peter",b:[44,44],tour:["peter"]},
+ {k:"church",n:"초대교회",av:"peter",b:[44,44],tour:["peter"]},
  {k:"paul",n:"바울",av:"paul",who:["바울","바나바","바울 (호송됨)","아볼로","뵈뵈","편지","두기고","에바브로디도","두기고와 오네시모"],b:[45,66],tour:["saul","paul1","paul2","paul3","rome"]}];
 /* 시대로 찾기(목사님 2026-11-02): 같은 큰 여정·지도 경로를 시대로 묶어 봄. 예언자는 책 머리말(표제)에 왕·연대가 적힌 사람만(요엘·오바댜·나훔·하박국·말라기처럼 시대를 특정할 수 없는 책은 넣지 않음) */
 const BM_ERA9=[
@@ -11489,9 +11502,9 @@ const BM_ERA9=[
  {k:"div",n:"분열 왕국",y:"기원전 930–586년 무렵",av:"elijah",d:"나라가 북 이스라엘과 남 유다로 갈라집니다. 북쪽은 앗수르에, 남쪽은 바벨론에 무너집니다.",tour:["elijah","jonah","assyria"],pro:[["엘리야·엘리사","아합 때",[11,17,1]],["요나","여로보암 2세 때",[12,14,25]],["아모스","웃시야·여로보암 때",[30,1,1]],["호세아","웃시야~히스기야, 여로보암 때",[28,1,1]],["이사야","웃시야~히스기야 때",[23,1,1]],["미가","요담~히스기야 때",[33,1,1]],["스바냐","요시야 때",[36,1,1]],["예레미야","요시야 13년부터",[24,1,2]]]},
  {k:"exi",n:"포로",y:"기원전 605–539년",av:"jeremiah",d:"예루살렘이 무너지고 백성이 바벨론에 끌려갑니다. 하나님의 사람들은 예루살렘·바벨론·그발 강·애굽에 흩어져 있습니다.",tour:["babylon","jeremiah","exilelife"],pro:[["예레미야","시드기야 11년까지",[24,1,3]],["에스겔","여호야긴이 사로잡힌 지 5년",[26,1,2]],["다니엘","여호야김 3년부터 고레스 원년까지",[27,1,1]]]},
  {k:"ret",n:"귀환",y:"기원전 538–430년 무렵",av:"elder",d:"고레스의 조서로 돌아와 성전을 다시 짓고, 에스라와 느헤미야 때 율법과 성벽을 세웁니다. 에스더는 바사 땅에 남은 사람들의 이야기입니다.",tour:["return"],pro:[["학개","다리오 왕 2년",[37,1,1]],["스가랴","다리오 왕 2년",[38,1,1]]]},
- {k:"stp",n:"제2성전기(중간사)",y:"기원전 430년 무렵–예수님 탄생",av:"elder",d:"말라기 뒤 신약까지 약 400년입니다. 구약 본문은 이 시기의 일을 이야기로 들려주지 않지만, 바사·헬라·로마가 차례로 이 땅을 다스리고, 회당과 바리새인·사두개인이 생겨나 예수님 때의 배경이 됩니다.",tour:[]},
+ {k:"stp",n:"중간사",y:"기원전 430년 무렵–예수님 탄생",av:"temple",d:"말라기 뒤 신약까지 약 400년입니다. 구약 본문은 이 시기의 일을 이야기로 들려주지 않지만, 바사·헬라·로마가 차례로 이 땅을 다스리고, 회당과 바리새인·사두개인이 생겨나 예수님 때의 배경이 됩니다.",tour:[]},
  {k:"jes",n:"예수님",y:"",av:"jesus",d:"네 복음서가 같은 예수님의 길을 저마다 다르게 그립니다.",tour:["mt","mk","lk","jn"]},
- {k:"chu",n:"초대 교회",y:"",av:"paul",d:"예루살렘에서 시작한 복음이 사마리아와 이방의 땅을 지나 로마까지 이릅니다.",tour:["peter","saul","paul1","paul2","paul3","rome"]}];
+ {k:"chu",n:"초대교회",y:"",av:"cross",d:"예루살렘에서 시작한 복음이 사마리아와 이방의 땅을 지나 로마까지 이릅니다.",tour:["peter","saul","paul1","paul2","paul3","rome"]}];
 function bmEra9(b,c){ if(b===1) return "pat"; if(b<=5) return "exo"; if(b<=8) return "jud"; if(b===9||b===10||(b===11&&c<=11)||b===13||(b===14&&c<=9)||(b>=18&&b<=22)) return "uni";
   if((b===12&&c>=24)||(b===14&&c>=36)||b===24||b===25||b===26||b===27) return "exi"; if(b===11||b===12||b===14||b===23||(b>=28&&b<=36)) return "div";
   if(b===15||b===16||b===17||(b>=37&&b<=39)) return "ret"; if(b<=43) return "jes"; return "chu"; }
@@ -11504,8 +11517,11 @@ function bmWhoOf(r){ let w=""; try{ w=(routeMeta(r.n,r.b)||{}).who||""; }catch(e
   return "exile"; }
 let BM_WG=null; function bmWhoGroups(){ if(BM_WG) return BM_WG; const M={}; BM_WHO.forEach(g=>M[g.k]=[]); ROUTES_B.forEach((r,i)=>M[bmWhoOf(r)].push(i)); BM_WG=M; return M; }
 /* 픽셀 배지: 앱의 인물 그림을 아주 작은 칸에 그린 뒤 크게 늘려(이웃 화소 그대로) 픽셀 그림처럼 */
+/* 시대 그림 가운데 사람이 아닌 것(목사님 2026-11-02): 중간사 = 성전, 초대교회 = 십자가 */
+const PXOBJ={temple:`<svg viewBox="0 0 44 36"><rect x="3" y="27" width="38" height="6" rx="1" fill="#cbb58a" stroke="#4a3b26" stroke-width="1.6"/><rect x="8" y="13" width="28" height="14" fill="#efe2c2" stroke="#4a3b26" stroke-width="1.6"/><rect x="15" y="4" width="14" height="23" fill="#f8efd6" stroke="#4a3b26" stroke-width="1.6"/><path d="M15 4h14M8 13h7M29 13h7" stroke="#c99a1e" stroke-width="2.6"/><rect x="19.5" y="17" width="5" height="10" fill="#6b5434"/></svg>`,
+ cross:`<svg viewBox="0 0 44 44"><rect x="18" y="3" width="8" height="38" fill="#9a6a3a" stroke="#4a3b26" stroke-width="1.8"/><rect x="7" y="12" width="30" height="8" fill="#9a6a3a" stroke="#4a3b26" stroke-width="1.8"/><path d="M9 41h26" stroke="#6b7a55" stroke-width="3.5" stroke-linecap="round"/></svg>`};
 const BM_PX={}; function bmPx(root){ (root||document).querySelectorAll("img[data-px]").forEach(img=>{ const id=img.dataset.px; if(BM_PX[id]){ img.src=BM_PX[id]; return; }
-  const obj=id==="ark"||id==="coffin", w=obj?60:60, h=obj?60:92, raw=(obj?OBJ(id):C(id)).replace("<svg ",`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" `);
+  const PO=PXOBJ[id], obj=id==="ark"||id==="coffin"||!!PO, w=obj?60:60, h=obj?60:92, raw=(PO?PO:obj?OBJ(id):C(id)).replace("<svg ",`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" `);
   const im=new Image(); im.onload=()=>{ const cw=obj?18:16, ch=Math.round(cw*h/w), cv=document.createElement("canvas"); cv.width=cw; cv.height=ch; const x=cv.getContext("2d"); x.imageSmoothingEnabled=true; x.drawImage(im,0,0,cw,ch);
     const d=x.getImageData(0,0,cw,ch); for(let i=3;i<d.data.length;i+=4) d.data[i]=d.data[i]>110?255:0; x.putImageData(d,0,0); BM_PX[id]=cv.toDataURL(); document.querySelectorAll(`img[data-px="${id}"]`).forEach(e=>e.src=BM_PX[id]); };
   im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(raw); }); }
@@ -11638,6 +11654,26 @@ function bmSearchBind(m){ const q=m.querySelector("#bmQ"), out=m.querySelector("
   let tm=null; q.addEventListener("input",()=>{ clearTimeout(tm); tm=setTimeout(run,150); }); q.addEventListener("keydown",e=>{ if(e.key==="Escape"){ q.value=""; run(); } }); }
 window.CBSR_bm={lit:()=>{ const B=bmLit(); return B?{n:B.first.size,fresh:B.fresh,last:B.last}:null; },open:bmOpen,eras:()=>BM_ERA.map((x,i)=>[x[0],ROUTES_B.filter(r=>bmEra(r.b,r.c[0])===i).length])};
 
+/* 나의 통독 구간 막대(목사님 2026-11-02): 본문 통독 띠와 같은 말투 — 칸 안에 구간 이름, 읽은 장은 초록·오늘은 금색, 좌우로 넘김 */
+const REC_SEC=[["모세오경",1,5],["역사서",6,17],["시가서",18,22],["선지서",23,39],["복음서",40,43],["사도행전",44,44],["서신서",45,65],["계시록",66,66]];
+function recSecBar(){ const len=b=>(BIBLE&&BIBLE[b-1]?BIBLE[b-1].length:0); const RD=new Set(), TD=new Set();
+  for(const k in mem.done){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(p) p.ch.forEach(([b,c])=>RD.add(b+"-"+c)); }
+  try{ const tp=dayPlan(here.w,here.d); if(tp) tp.ch.forEach(([b,c])=>TD.add(b+"-"+c)); }catch(e){}
+  let cur=-1; const segs=REC_SEC.map(([nm,a,z],si)=>{ const st=[]; for(let b=a;b<=z;b++) for(let c=1;c<=len(b);c++){ const k=b+"-"+c; st.push(TD.has(k)?"t":RD.has(k)?"r":"f"); }
+    const N=st.length||1, rd=st.filter(x=>x!=="f").length; if(st.includes("t")) cur=si;
+    const runs=[]; st.forEach((x,k)=>{ const L=runs[runs.length-1]; if(L&&L.s===x) L.e=k+1; else runs.push({s:x,a:k,e:k+1}); });
+    const COL={r:"var(--accent)",t:"var(--gold)",f:"var(--rytile)"}, P=k=>(k/N*100).toFixed(2)+"%";
+    const bg=runs.map(R=>`${COL[R.s]} ${P(R.a)} ${P(R.e)}`).join(",");
+    return `<span class="rysg${rd/N>=.5?" dk":""}${st.includes("t")?" cur":""}" style="flex:${N} 0 ${Math.max(78,Math.round(N*.75))}px;background:linear-gradient(90deg,${bg||"var(--rytile) 0 100%"})"><b>${nm}</b></span>`; }).join("");
+  return `<div class="rysb" id="rySB"><div class="rysbw">${segs}</div></div>`; }
+/* 이번 주(누르면 한 달) */
+function recCalBox(c,rs,wk){ const open=!!view.recMon; let mon="";
+  if(open){ const t=NOW(), y=t.getFullYear(), m=t.getMonth(), first=new Date(y,m,1), last=new Date(y,m+1,0).getDate(), M={};
+    for(let n=1;n<=READ_DAYS;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(!PLAN.plan[w-1]) break; const dt=dateOf(w,d); if(dt.getFullYear()===y&&dt.getMonth()===m) M[dt.getDate()]=keyOf(w,d); }
+    const td=t.getDate(); let cells=""; for(let i=0;i<first.getDay();i++) cells+=`<i class="e"></i>`;
+    for(let dd=1;dd<=last;dd++){ const k=M[dd], on=k&&mem.done[k]; cells+=`<i class="${on?"on":""}${dd===td?" me":""}${dd>td?" fut":""}">${dd}</i>`; }
+    mon=`<div class="rymon"><div class="rymh">${["일","월","화","수","목","금","토"].map(x=>`<small>${x}</small>`).join("")}</div><div class="rymg">${cells}</div></div>`; }
+  const t=NOW(), mc=open?(mon.match(/class="on/g)||[]).length:c; return `<button class="rycalt" id="ryCalT" aria-expanded="${open}"><b>${open?`${t.getMonth()+1}월`:"이번 주"}</b><span>${mc}일 읽었어요${rs>1?` · ${rs}일 연속`:""}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${open?"m6 15 6-6 6 6":"m6 9 6 6 6-6"}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${open?mon:`<div class="ryweek">${wk}</div>`}`; }
 function renderRecordV2(){ const tmp=document.createElement("div"); const ba=view.bdgAll; view.bdgAll=true; tmp.innerHTML=renderRecord(); view.bdgAll=ba; const secs=[...tmp.children];
   const byLab=t=>secs.find(x=>{ const l=x.querySelector(":scope > .label"); return l&&l.textContent.trim().startsWith(t); });
   const n=chDone(), sch=chScheduled();
@@ -11656,24 +11692,19 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen))){ const tp=dayPlan(here.w,here.d);
     h+=`<section class="rybox"><p class="ryfirst">오늘 본문을 읽고 묵상 노트를 마치면, 읽은 날과 붙잡은 말씀, 아멘이 여기에 모입니다.</p>${tp?`<button class="ryfirstb" data-tab-go="read"><b>오늘 본문 열기</b><small>${esc(fmt(dateOf(here.w,here.d),{month:"long",day:"numeric"}))} · ${esc(tp.label)}</small></button>`:""}</section>`;
     h+=`<section class="rybox rymenu">${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`; return h; }
-  h+=lnRecHTML();
   /* 2) 통독 요약: 큰 숫자 + 막대 + 이번 주 */
   let OT=0, ot=0; try{ for(let b=1;b<=39;b++) OT+=BIBLE[b-1].length; const S=new Set(); for(const k in mem.done){ const [w,d]=k.split("-").map(Number), pl=dayPlan(w,d); if(pl) pl.ch.forEach(([b,c])=>{ if(b<=39) S.add(b+"-"+c); }); } ot=S.size; }catch(e){ OT=929; }
   const NT=TOTAL_CH-OT, nt=Math.max(0,n-ot), pc=Math.floor(n/TOTAL_CH*100), rs=readStreak();
-  let wk=""; try{ if(here&&here.state!=="before"){ const w=here.w, N=nd(w); let c=0; const WD=["주","월","화","수","목","금","토"]; const ds=Array.from({length:N},(_,i)=>{ const on=!!mem.done[keyOf(w,i)], fut=i>here.d, dt=dateOf(w,i); if(on) c++; return `<li class="${on?"on":""}${i===here.d?" me":""}${fut?" fut":""}"><small>${WD[dt.getDay()]}</small><i>${on?'<svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>':dt.getDate()}</i></li>`; }).join(""); wk=`<div class="ryweek"><p>이번 주 <b>${c}일</b> 읽었어요${rs>1?` <span>${rs}일 연속</span>`:""}</p><ol>${ds}</ol></div>`; } }catch(e){}
-  h+=`<section class="rybox">${hd("나의 통독","shelf","성경 책장")}<p class="rybig"><b>${n.toLocaleString()}</b>장 <small>/ ${TOTAL_CH.toLocaleString()}장</small><em>${pc}%</em></p><div class="rymeter"><i style="width:${(n/TOTAL_CH*100).toFixed(1)}%"></i></div><div class="rysplit"><span>구약 <b>${ot}</b>/${OT}</span><span>신약 <b>${nt}</b>/${NT}</span></div>${wk}</section>`;
+  let wk=""; try{ if(here&&here.state!=="before"){ const w=here.w, N=nd(w); let c=0; const WD=["주","월","화","수","목","금","토"]; const ds=Array.from({length:N},(_,i)=>{ const on=!!mem.done[keyOf(w,i)], fut=i>here.d, dt=dateOf(w,i); if(on) c++; return `<li class="${on?"on":""}${i===here.d?" me":""}${fut?" fut":""}"><small>${WD[dt.getDay()]}</small><i>${on?'<svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>':dt.getDate()}</i></li>`; }).join(""); wk=`<ol>${ds}</ol>`; wk=recCalBox(c,rs,wk); } }catch(e){}
+  /* 기록 탭 K(목사님 2026-11-02 수용): 나의 통독(+책장 바로가기·구간 막대) → 이번 주(누르면 한 달) → 기록 네 칸 → 접은 목록 */
+  h+=`<section class="rybox">${hd("나의 통독","shelf","성경 책장")}<p class="rybig"><b>${n.toLocaleString()}</b>장 <small>/ ${TOTAL_CH.toLocaleString()}장</small><em>${pc}%</em></p>${recSecBar()}</section>`;
+  if(wk) h+=`<section class="rybox rycal">${wk}</section>`;
   /* 3) 숫자 넷: 2×2 칸 */
   const tile=(k,v,u,t)=>`<button class="rytile" data-rinfo="${k}"><span class="ryico ${k}">${ic(k)}</span><small>${t}</small><b>${v}<em>${u}</em></b></button>`;
-  h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length,"장","모은 말씀")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
-  /* 4) 통독의 길 */
-  h+=`<section class="rybox ryroad">${hd("통독의 길")}${recRoad(n,sch)}</section>`;
-  /* 5) 붙잡은 말씀: 옆으로 넘기는 카드 */
-  h+=`<section class="rybox">${hd(`붙잡은 말씀${CD.length?` <span>${CD.length}</span>`:""}`,CD.length?"records":"","전체","cards")}${CD.length?`<div class="rykv">${CD.slice(0,8).map(x=>`<button class="rykc" data-wck="${esc(x.k)}"><q>${esc(x.t)}</q><small><b>${esc(PLAN.abbr[x.v[0]-1])} ${x.v[1]}:${x.v[2]}</b>${esc(fmt(x.dt,{month:"numeric",day:"numeric"}))}</small></button>`).join("")}</div>`:`<div class="ryempty"><p>묵상 노트에서 마음에 남은 한 구절을 고르면 여기에 모여요.</p><button class="rybtn" data-tab-go="qt">QT 하러 가기</button></div>`}</section>`;
-  /* 6) 아멘·형광펜·노트 */
-  const T=recTimelineItems().slice(0,3);
-  h+=`<section class="rybox">${hd("아멘 · 형광펜 · 노트","records","전체","tl")}${T.length?`<div class="rytl">${T.map(x=>`<div class="rytli"><small>${esc(x.date)}</small><div>${x.html}</div></div>`).join("")}</div>`:`<div class="ryempty"><p>QT에서 아멘을 누르거나 본문에 형광펜을 칠하면 여기에 모여요.</p></div>`}</section>`;
-  /* 7) 메뉴 줄 */
-  h+=`<section class="rybox rymenu">${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
+  h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length,"장","말씀 카드")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
+  /* 그 밖의 것은 접어서 한 줄씩 */
+  const nL=lnAll().length;
+  h+=`<section class="rybox rymenu">${row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`남긴 한 줄 · ${nL}`):""}${row("road","read","통독의 길 자세히")}${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
   return h; }
 /* 프로필 숫자를 누르면 자세히(목사님 2026-11-01) */
 function recWeeks(on){ if(!here||here.state==="before") return ""; const W=[]; for(let w=Math.max(1,here.w-3);w<=here.w;w++) W.push(w);
@@ -12766,6 +12797,7 @@ function render(){
     m.querySelectorAll("[data-alm]").forEach(b=>b.onclick=keep(()=>{ view.alM=+b.dataset.alm; }));
     const ta=m.querySelector("#tlAll"); if(ta) ta.onclick=keep(()=>{ view.tlAll=!view.tlAll; });
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
+  if(window.CBSR_V2&&view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
   if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
     m.querySelectorAll("[data-recseg]").forEach(b=>b.onclick=()=>{ view.recSeg=b.dataset.recseg; const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const rb=m.querySelector("#recBack"); if(rb) rb.onclick=()=>{ ovDone(recBackOv); recBack(); };
