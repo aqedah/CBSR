@@ -2152,17 +2152,17 @@ html.v2[data-theme="dark"] .ryico:not(.hist){background:var(--rytile);filter:bri
 /* ===== 날짜 고리 v3 (2026-11-02): 읽은 날 초록 · 오늘 금색 · 고른 날 두 겹 · 안 읽고 지난 날 점선 ===== */
 html.v2 .rpath{margin-top:0}html.v2 .rpath .rgs{display:flex;gap:0;padding:2px 0 6px!important;overflow-x:auto;scroll-snap-type:none}
 html.v2 .rp{flex:none;width:78px;border:0;background:none;padding:0;position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--ink);font-family:var(--f-ui);cursor:pointer}
-html.v2 .rp .rpl{position:absolute;left:0;right:0;top:35px;height:3px;background:#C9D1CD}html.v2 .rp.done .rpl{background:var(--accent)}
-html.v2 .rp .rpd{position:relative;z-index:1;height:72px;display:flex;align-items:center;justify-content:center}
+html.v2 .rp .rpl{position:absolute;left:0;right:0;top:24.5px;height:3px;background:#C9D1CD}html.v2 .rp.done .rpl{background:var(--accent)}
+html.v2 .rp .rpd{position:relative;z-index:1;height:52px;display:flex;align-items:center;justify-content:center}
 html.v2 .rp .rpd>i{display:block;width:15px;height:15px;border-radius:50%;background:var(--rybg,#F2F4F3);box-shadow:inset 0 0 0 3px #B9C3BE}
 html.v2 .rp.done .rpd>i{background:var(--accent);box-shadow:none}
 html.v2 .rp.sun .rpd>i{width:11px;height:11px;border-radius:2px;transform:rotate(45deg);box-shadow:inset 0 0 0 2.5px var(--gold)}html.v2 .rp.sun.done .rpd>i{background:var(--gold)}
 html.v2 .rp b{font-size:13.5px;font-weight:600;white-space:nowrap;line-height:1.3}html.v2 .rp small{font-size:11.5px;color:var(--rysub,#6B7570);white-space:nowrap}
 html.v2 .rp.fut b{color:#4A5550}
-html.v2 .rp.cur{width:104px}html.v2 .rp.cur b{font-size:15.5px;font-weight:700}html.v2 .rp.cur small{color:var(--gold);font-weight:700}
-html.v2 .rp .rpc{position:relative;width:64px;height:64px;border-radius:50%;background:#2a2620;box-shadow:0 0 0 3px var(--rybg,#F2F4F3),0 0 0 6px var(--gold)}
+html.v2 .rp.cur{width:92px}html.v2 .rp.cur b{font-size:15.5px;font-weight:700}html.v2 .rp.cur small{color:var(--gold);font-weight:700}
+html.v2 .rp .rpc{position:relative;width:30px;height:30px;border-radius:50%;background:#2a2620;box-shadow:0 0 0 2.5px var(--rybg,#F2F4F3),0 0 0 4.5px var(--gold)}
 html.v2 .rp .rpc img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
-html.v2 .rp .rpplay{position:absolute;right:-6px;bottom:-4px;width:26px;height:26px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2.5px var(--rybg,#F2F4F3)}html.v2 .rp .rpplay svg{width:14px;height:14px;margin-left:2px}
+html.v2 .rp .rpplay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.28);color:#fff;display:flex;align-items:center;justify-content:center}html.v2 .rp .rpplay svg{width:13px;height:13px;margin-left:2px}
 html.v2 .rp:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:12px}
 html.v2 .rgwrap.v3{margin-top:0}
 html.v2 .rgwk{display:flex;align-items:baseline;gap:8px;margin:0 0 6px;padding:0 16px;font-size:12.5px}
@@ -12501,7 +12501,7 @@ function dayPathHTML(from,to,selN,here0){ let r="";
     let dot=`<i></i>`;
     if(sel&&!sun){ let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
       dot=`<span class="rpc">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}<em class="rpplay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></em></span>`; }
-    r+=`<button class="${cls}" ${da}${sel?' id="rgSel"':""} aria-label="${esc(lab)}${sel&&!sun?", 스토리 보기":""}"><i class="rpl"></i><span class="rpd">${dot}</span><b>${esc(nm)}</b><small>${esc(sel&&!sun?(tod?"오늘 · 스토리":when+" · 스토리"):when)}</small></button>`; }
+    r+=`<button class="${cls}" ${da}${sel?' id="rgSel"':""} aria-label="${esc(lab)}${sel&&!sun?", 스토리 보기":""}"><i class="rpl"></i><span class="rpd">${dot}</span><b>${esc(nm)}</b><small>${esc(sel&&!sun?(tod?"오늘 · 스토리 ▸":when+" · 스토리 ▸"):when)}</small></button>`; }
   return `<section class="rgwrap v3 rpath"><div class="rgs" id="rgScroll">${r}</div></section>`; }
 /* 본문·묵상 화면에서는 고리를 접어 날짜와 본문 범위 한 줄로(누르면 펼침) */
 function dayFoldHTML(){ const {w,d}=view, p=dayPlan(w,d), dt=dateOf(w,d); let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
