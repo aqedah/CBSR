@@ -196,7 +196,7 @@ T.append(dict(id="ark",zb=8.4,n="언약궤의 여정",sub="실로에서 예루�
  dict(mood="😢🙏",t="기럇여아림의 이십 년",who="언약궤",as_="ark",s="여호와를 사모하니라",n="벧세메스 사람들이 언약궤를 들여다보다 화를 입자, 기럇여아림 사람들이 메어 아비나답의 집에 둡니다.",p=[P("기럇여아림",31.81,35.10)],r=[9,7,2],z=10),
  dict(mood="😨🙏",t="오벧에돔의 집",who="언약궤",as_="cart",s="삼하 6장",grp="다윗과 이스라엘 무리",n="다윗이 새 수레로 언약궤를 옮기다 웃사가 죽자, 두려워 오벧에돔의 집에 석 달 동안 둡니다. 그 집이 복을 받습니다.",p=[P("오벧에돔의 집",31.79,35.18)],pre=[10,6,7],r=[10,6,11],z=10),
  dict(mood="🎉🎵🙌",t="다윗 성으로, 춤추며",who="언약궤",as_="ark",s="온 이스라엘의 즐거운 함성",add=["다윗","david"],grp="온 이스라엘",n="이번에는 레위인들이 어깨에 메고 올라갑니다. 다윗이 여호와 앞에서 힘을 다하여 춤추며 언약궤를 다윗 성으로 모십니다.",p=[P("다윗 성",31.7735,35.2355)],r=[10,6,14],z=10.5),
- dict(mood="🙏✨",t="성전 지성소로",s="왕상 8장",drop="다윗",quiet=1,grp="제사장들",n="솔로몬이 성전을 다 지은 뒤 제사장들이 언약궤를 지성소 그룹들의 날개 아래 둡니다. 여호와의 영광이 성전에 가득합니다.",p=[P("성전",31.778,35.2354)],pre=[11,8,6],r=[11,8,11],z=10.5),
+ dict(mood="🙏✨",t="성전 지성소로",s="왕상 8장",drop="다윗",quiet=1,grp="제사장들",n="솔로몬이 성전을 다 지은 뒤 제사장들이 언약궤를 지성소 그룹들의 날개 아래 둡니다. 여호와의 영광이 성전에 가득합니다.",p=[P("",31.778,35.2354)],pre=[11,8,6],r=[11,8,11],z=10.5),
  ],end="실로를 떠난 언약궤가 오랜 떠돎 끝에 예루살렘 성전 지성소에 들어갑니다. 하나님은 이스라엘의 무기가 아니라 백성 가운데 거하시는 분이셨습니다."))
 T.append(dict(id="joshua",zb=8.0,n="여호수아의 정복",sub="길갈에서 세겜까지 · 여호수아 7–24장",who="여호수아",as_="joshua",grp="이스라엘 군대",big=3,
  d="여리고 다음, 아이에서의 패배와 회복, 기브온을 구한 날의 기적, 남쪽과 북쪽의 싸움을 지나 세겜에서 언약을 새롭게 하기까지의 길입니다.",
@@ -581,6 +581,37 @@ for _t in T:
   for _s in _t["steps"]:
     if "fr" in _s: _s["from"]=_s.pop("fr")
     if "side" in _s and "from_" in _s["side"]: _s["side"]["from"]=_s["side"].pop("from_")
+# 성전과 성막 표시(목사님 2026-11-02): 예루살렘 성전은 시대마다 모습이 다름 — tpl: site(성전 터)·built(성전)·ruin(무너진 성전)·build(다시 짓는 성전).
+#  여정 첫 상태는 여정의 tpl, 장면의 tpl은 그 장면부터. 불타는 장면(burn)은 불이 붙은 뒤 무너진 모습으로 바뀜.
+#  성막(장막): tent=[[이름,위도,경도]] 그 장면부터 세움(같은 이름이면 옮김 — 길을 걷는 장면이면 걷기 전에 걷고 도착한 뒤 세움), untent=[이름]
+TPL={"elijah":"built","jonah":"built","assyria":"built","babylon":"built","jeremiah":"built","exilelife":"ruin","return":"ruin",
+ "mt":"built","mk":"built","lk":"built","jn":"built","peter":"built","saul":"built","paul1":"built","paul2":"built","paul3":"built","rome":"built"}
+def _st(tid,title):
+  for _t in T:
+    if _t["id"]==tid:
+      for _s in _t["steps"]:
+        if _s["t"]==title: return _s
+  raise KeyError((tid,title))
+def _tour(tid): return [t for t in T if t["id"]==tid][0]
+for _t in T:
+  if _t["id"] in TPL: _t["tpl"]=TPL[_t["id"]]
+_st("abraham","모리아 땅으로 사흘 길").update(tpl="site",tplN="훗날 성전 터")
+_st("babylon","성전이 불타다")["tpl"]="ruin"
+_st("jeremiah","바벨론이 쳐들어오다")["tpl"]="ruin"
+_st("exilelife","성전을 건축하라")["tpl"]="build"
+_st("return","울음과 함성")["tpl"]="build"
+_st("return","아하와 강 가에 모이다")["tpl"]="built"
+_st("ark","성전 지성소로").update(tpl="built",untent=["성막","다윗의 장막"])
+# 성막의 길: 시내 산에서 세우고 → 진을 옮길 때마다 따라감 → 길갈 → 실로
+TB="성막"
+for _ti,_pl in [("시내 산에서 약 1년",["",28.548,33.975]),("구름이 떠오르다",None),("열두 정탐꾼",None),("호르 산에서 아론이 죽다",None),("에돔을 돌아서",None),("모압 평지에 진을 치다",None),("요단을 건너다",None)]:
+  _s=_st("exodus",_ti); q=_pl or _s["p"][-1]; _s["tent"]=[[TB,q[1],q[2]]]
+_tour("joshua")["tent"]=[[TB,31.86,35.50]]
+_st("joshua","실로에 회막을 세우다")["tent"]=[[TB,32.06,35.29]]
+_tour("ark")["tent"]=[[TB,32.06,35.29]]
+_st("ark","다윗 성으로, 춤추며")["tent"]=[["다윗의 장막",31.7735,35.2355]]
+_tour("david")["tent"]=[[TB,31.795,35.240]]
+_tour("absalom")["tent"]=[["다윗의 장막",31.7735,35.2355]]
 import json
 import os; json.dump(T,open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'big_tours.json'),'w'),ensure_ascii=False)
 print(len(T),[len(t['steps']) for t in T])
