@@ -11387,7 +11387,7 @@ const BM_WHO=[
  {k:"elijah",n:"엘리야·엘리사",av:"elijah",who:["엘리야","엘리사","수넴 여인","나아만","하사엘","예후","아람 군대"],tour:["elijah"]},
  {k:"exile",n:"포로와 귀환",av:"elder",b:[15,39],tour:["assyria","babylon","jeremiah","exilelife","return"]},
  {k:"jesus",n:"예수님",av:"jesus",b:[40,43],tour:["mt","mk","lk","jn"]},
- {k:"church",n:"베드로·초대 교회",av:"peter",b:[44,44],tour:["peter"]},
+ {k:"church",n:"초대 교회",av:"peter",b:[44,44],tour:["peter"]},
  {k:"paul",n:"바울",av:"paul",who:["바울","바나바","바울 (호송됨)","아볼로","뵈뵈","편지","두기고","에바브로디도","두기고와 오네시모"],b:[45,66],tour:["saul","paul1","paul2","paul3","rome"]}];
 function bmWhoOf(r){ let w=""; try{ w=(routeMeta(r.n,r.b)||{}).who||""; }catch(e){}
   if(/끌려감/.test(r.n)) return "exile";
