@@ -157,7 +157,7 @@ for tk in ('snb','shg'):
     open(f'{OUT}/bible_{tk}.js','w').write('window.BIBLE_TR=window.BIBLE_TR||{};BIBLE_TR.'+tk+'="'+open(f'bible_{tk}.b64').read()+'";\nwindow.SPEECH_'+tk+'='+open(f'speech/bible_{tk}.json').read()+';\n')
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
-for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html']: shutil.copy('site_src/'+f,OUT+'/'+f)
+for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html','ui2.html']: shutil.copy('site_src/'+f,OUT+'/'+f)
 shutil.copytree('site_src/icons',OUT+'/icons')
 shutil.copytree('site_src/img',OUT+'/img')
 FB="https://www.gstatic.com/firebasejs/10.14.1/"
