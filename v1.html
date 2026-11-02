@@ -2279,6 +2279,10 @@ html.v2 .q3 .prayer{background:var(--card);border-radius:18px;padding:18px 18px 
 .chotf{display:flex;align-items:center;justify-content:space-between}.chotf b{font-size:12.5px;color:var(--gold)}.chotf .lnk{border:0;background:none;color:var(--accent);font:700 13.5px var(--f-ui);padding:4px 0;cursor:pointer}
 .chcm{margin-top:10px}.chcm .label{display:block;margin-bottom:6px}
 .chq{margin:14px 2px 0;font:600 15.5px/1.7 var(--f-ui);color:var(--accent);word-break:keep-all}
+.qph.nophoto{aspect-ratio:auto;background:none;border-radius:0;overflow:visible;display:flex;align-items:flex-start;gap:10px;padding:4px 0 0}
+.qph.nophoto::after{display:none}.qph.nophoto .qphin{position:static;flex:1;min-width:0;color:var(--ink)}.qph.nophoto .qphin .qk{color:var(--gold)}
+.qph.nophoto .qphin h2{color:var(--ink);font-size:24px}.qph.nophoto .qphin small{color:var(--muted);opacity:1}
+.qph.nophoto .qphbtn{position:static;flex:none}.qph.nophoto .qphbtn .qtsl,.qph.nophoto .qphbtn .qthelp{background:var(--card);color:var(--accent);border:1px solid var(--line);backdrop-filter:none}
 </style>
 
 <div class="wrap">
@@ -7868,12 +7872,11 @@ function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.don
   const TT=G.map(g=>{ const st=g[0].querySelector(":scope>.stage span"), lb=g[0].querySelector(":scope>.label"); return (st||lb||{}).textContent||""; });
   secs.forEach(x=>x.classList.add("q3")); const hd=m.querySelector("section.qthd"); if(hd) hd.style.display="none";
   const top=document.createElement("section"); top.className="qth3";
-  top.innerHTML=`<div class="qph">${PS.length?`<img alt="" src="${esc(PS[0].u)}" referrerpolicy="no-referrer">`:""}<div class="qphin"><span class="qk">묵상 노트 · ${esc(MODE==="y365"?dayNo(view.w,view.d)+"일째":dayName(view.w,view.d))}</span><h2>${esc(p.topic||p.label)}</h2>${p.topic&&p.topic!==p.label?`<small>${esc(p.label)}</small>`:""}</div><div class="qphbtn"></div></div><div class="qtstp"></div>`;
+  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">묵상 노트 · ${esc(MODE==="y365"?dayNo(view.w,view.d)+"일째":dayName(view.w,view.d))}</span><h2>${esc(p.topic||p.label)}</h2>${p.topic&&p.topic!==p.label?`<small>${esc(p.label)}</small>`:""}</div><div class="qphbtn"></div></div><div class="qtstp"></div>`;
   (hd||G[0][0]).before(top); const pb=top.querySelector(".qphbtn"); ["qtStory","qtHelp"].forEach(id=>{ const b=hd&&hd.querySelector("#"+id); if(b){ if(id==="qtStory") b.textContent="스토리 ›"; pb.appendChild(b); } });
   const bar=top.querySelector(".qtstp"), img=top.querySelector(".qph img");
   const nx=document.createElement("div"); nx.className="qtnext"; (G[N-1][G[N-1].length-1]).after(nx);
   const show=()=>{ const i=view.qtStep; G.forEach((g,j)=>g.forEach(x=>x.style.display=j===i?"":"none"));
-    if(img&&PS.length){ const u=PS[i%PS.length].u; if(img.getAttribute("src")!==u){ img.style.opacity=0; setTimeout(()=>{ img.src=u; img.style.opacity=1; },160); } }
     bar.innerHTML=`<button class="qtprev" aria-label="앞 장"${i?"":" disabled"}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="qtbars">${G.map((_,j)=>`<i class="${j<=i?"on":""}"></i>`).join("")}</span><b>${i+1} / ${N}</b>`;
     nx.innerHTML=i<N-1?`<button class="btn qtnb">다음 · ${esc(TT[i+1].trim())}</button>`:""; const bn=document.querySelector(".bnav"); nx.style.bottom=(bn?bn.offsetHeight:0)+"px";
     bar.querySelector(".qtprev").onclick=()=>{ if(view.qtStep>0){ view.qtStep--; show(); scrollTo({top:0}); } };
