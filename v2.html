@@ -12608,6 +12608,8 @@ document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,her
 const TAB_Y={};
 const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view.d);
 function switchTab(t){ if(view.tab===t){ window.scrollTo({top:0,behavior:"smooth"}); return; } view.rgOpen=false;
+  /* 기록 탭에서 연 지도·책장 같은 세부 화면은 다른 탭으로 가면 닫음(목사님 2026-11-02) */
+  if(window.CBSR_V2&&view.tab==="record"&&t!=="record"&&view.recD){ if(BM_OV) try{ BM_OV.close(true); }catch(e){} try{ ovDone(recBackOv); }catch(e){} view.recD=null; }
   TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); else if(view.tab==="study"&&t!=="study"&&typeof studyOutro==="function") studyOutro(t); view.tab=t; HSEL.clear(); render();
   const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
 applyPV();
