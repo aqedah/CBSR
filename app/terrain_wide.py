@@ -79,11 +79,11 @@ def layer(out,regs,zs):
         n+=sum(r); print(out,z,len(J),sum(r),flush=True)
     return n
 # 범위: (경도0,경도1,위도0,위도1)
-WIDE=[(11.5,30.5,34.0,42.2),(29.5,48.8,27.0,42.2),(25.0,29.6,29.5,32.2)]
-MID=[(29.8,38.6,27.3,37.4)]
+WIDE=[(6.5,30.5,34.0,46.6),(29.5,48.8,27.0,42.2),(25.0,29.6,29.5,32.2)]
+MID=[(29.8,38.6,27.3,37.4),(12.0,16.3,35.6,42.2),(21.5,30.5,36.3,41.3)]  # 레반트·시내·애굽 / 바울의 로마 길(멜리데~로마) / 에게 해(마게도냐·아가야·아시아)
 which=sys.argv[1:] or ["w","m"]
 info={}
-if "w" in which: layer("terrw",WIDE,range(5,10)); info["terrw"]={"regs":WIDE,"minZoom":5,"maxZoom":9}
+if "w" in which: layer("terrw",WIDE,range(4,10)); info["terrw"]={"regs":WIDE,"minZoom":4,"maxZoom":9}
 if "m" in which: layer("terrm",MID,range(10,12)); info["terrm"]={"regs":MID,"minZoom":10,"maxZoom":11}
 old=json.load(open('terrwide.json')) if os.path.exists('terrwide.json') else {}
 old.update(info); json.dump(old,open('terrwide.json','w'))

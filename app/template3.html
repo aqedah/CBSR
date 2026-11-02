@@ -998,6 +998,15 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 
 /* 글상자는 늘 따로 합성(will-change): 애니메이션이 끝나는 순간 층이 합쳐지며 글씨가 깜빡이던 것 막기(목사님 녹화 2026-10-31) */
 .bmtparts{position:absolute;z-index:1000;top:calc(env(safe-area-inset-top,0px) + 62px);left:calc(env(safe-area-inset-left,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 12px);will-change:transform}.bmtpc{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.bmtpc::-webkit-scrollbar{display:none}.bmtpc button{flex:none;border:0;border-radius:99px;padding:6px 12px;font:700 13px var(--f-ui);background:rgba(255,255,255,.82);color:#3a3226;box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer}.bmtpc button.on{background:#2f2a22;color:#f5efe2}.bmtps{margin:5px 2px 0;font:600 12px var(--f-ui);color:#2f2a22;text-shadow:0 0 4px #fff,0 0 8px #fff}
+.parch{position:absolute;z-index:1003;left:9%;right:9%;top:calc(env(safe-area-inset-top,0px) + 232px);max-width:360px;margin:0 auto;transform:scale(.06) rotate(-6deg);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .6s;will-change:transform,opacity;pointer-events:none}
+.parch.on{transform:none;opacity:1}
+.parin{background:radial-gradient(ellipse at 30% 20%,#f3e6c4,#e6d1a1 60%,#d4b981);border-radius:6px 14px 8px 12px/12px 6px 14px 8px;padding:10px 12px 8px;box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 0 40px rgba(120,80,30,.45),inset 0 0 6px rgba(90,60,20,.6);color:#4a3418}
+.part{margin:2px 0 4px;text-align:center;font:700 15px var(--f-serif,serif);letter-spacing:.08em;color:#4a3418}.pnote{margin:2px 0 0;text-align:center;font:12px var(--f-serif,serif);color:#6b4f2a}
+.parch svg{display:block;width:100%;height:auto}.parch .pv{fill:none;stroke:#7fa0b0;stroke-width:9;stroke-linecap:round;opacity:.35}.parch .pv.t{stroke-width:6}
+.parch .pw{fill:rgba(160,120,60,.16);stroke:#6b4a24;stroke-width:3;stroke-dasharray:7 3;stroke-linejoin:round}.parch .ptm{fill:rgba(107,74,36,.18);stroke:#6b4a24;stroke-width:1.5}
+.parch .pl{font:600 10.5px var(--f-serif,serif);fill:#3e2a12}.parch .pl.v{font-style:italic;fill:#466b80;font-size:10px}.parch .pl.s{text-anchor:middle;font-size:10px}
+.parch .pg{fill:#a5361f;stroke:#f3e6c4;stroke-width:1.5}.parch .pr{fill:none;stroke:#a5361f;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:0}.parch .pr.w{stroke-dasharray:2 5}.parch .pr.b{stroke:#8a5a2b;stroke-width:2.4}
+.parch .px{font:700 10.5px var(--f-ui);fill:#a5361f;transition:opacity .4s}.parch .pme{fill:#2f2a22;stroke:#f3e6c4;stroke-width:2}.parch .pme.stop{fill:#a5361f}.parch .pme.foot{r:4.5}
 .bmtgap{position:absolute;z-index:1002;left:50%;top:38%;transform:translate(-50%,-50%);background:rgba(32,28,22,.88);color:#f5efe2;font:800 22px var(--f-ui);padding:14px 26px;border-radius:16px;pointer-events:none;animation:bmtgap 2.7s ease forwards;will-change:opacity}@keyframes bmtgap{0%{opacity:0}15%{opacity:1}75%{opacity:1}100%{opacity:0}}
 .tvb{position:absolute;left:0;top:0;z-index:1001;will-change:transform,opacity;backface-visibility:hidden;width:min(64vw,250px);transition:transform .45s ease,opacity .8s!important;background:#fffdf6;color:#2a2318;border-radius:14px;padding:9px 12px 8px;font:500 14.5px/1.55 var(--f-serif,serif);box-shadow:0 4px 14px rgba(0,0,0,.28);transition:opacity .8s;pointer-events:none;animation:tvbin .45s ease-out}.tvb small{display:block;margin-top:3px;color:#9a6417;font:700 11.5px var(--f-ui)}.tvb.old{opacity:0}.tvb .mvtail{background:#fffdf6;border:0;box-shadow:2px 2px 3px rgba(0,0,0,.12)}.tvb .mvtag{font-family:var(--f-ui);margin-bottom:2px}@keyframes tvbin{from{opacity:0}to{opacity:1}}
 .mvpil{position:absolute;left:-14px;bottom:30px;width:28px;height:110px;pointer-events:none;transition:opacity .8s}.mvpil i{position:absolute;inset:0;border-radius:14px 14px 10px 10px;background:linear-gradient(to top,rgba(255,255,255,.95),rgba(255,255,255,.75) 60%,rgba(255,255,255,.2));box-shadow:0 0 18px 8px rgba(255,255,255,.7);animation:mvpil 2.4s ease-in-out infinite alternate;transition:background 1.2s,box-shadow 1.2s}.mvpil b{position:absolute;left:-10px;right:-10px;top:-14px;height:36px;border-radius:50%;background:radial-gradient(rgba(255,255,255,.95),rgba(255,255,255,0) 70%)}
@@ -1015,7 +1024,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 .bmwho b{font-size:12.5px;line-height:1.25;text-align:center;word-break:keep-all}.bmwho small{font-size:11px;color:var(--muted)}
 .px{display:grid;place-items:center;width:52px;height:56px;border-radius:12px;background:repeating-conic-gradient(rgba(0,0,0,.035) 0 25%,transparent 0 50%) 0 0/8px 8px,#f3ead6}.px img{width:36px;height:auto;image-rendering:pixelated;image-rendering:crisp-edges}.px.big{width:60px;height:64px}.px.big img{width:42px}
 .bmshelf{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}.bmshh{display:flex;gap:12px;align-items:center;margin-bottom:10px}.bmshelf.in{margin-top:0;border-top:0;padding-top:0}#bmWS,#bmWS .bmshelf{min-width:0;max-width:100%}#bmWS .bmtours.row,#bmWS .bmbk{justify-content:flex-start!important;margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px;scroll-padding:0 18px;touch-action:pan-x pan-y}.bmshn{margin:0 0 10px;font-size:13px;color:var(--muted)}.bmshn b{color:var(--ink);font-size:15px}.bmtours.row{display:flex;flex-wrap:nowrap!important;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:0 16px;scroll-snap-type:x proximity;scroll-padding:0 16px}.bmtours.row::-webkit-scrollbar{display:none}.bmtours.row .bmtc{flex:none;width:min(78%,300px);scroll-snap-align:start}.bmbk{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 10px;padding:2px 16px}.bmbk::-webkit-scrollbar{display:none}.bmbk button{flex:none;font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:5px;align-items:center}.bmbk button small{font-size:11px;color:var(--muted);font-weight:500}.bmbk button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}.bmbk button.on small{color:var(--accent-ink);opacity:.8}.bmshh b{display:block;font-size:17px}.bmshh small{color:var(--muted)}
-.bmtours{display:grid;gap:8px;margin-bottom:12px}.bmtc{display:grid;grid-template-columns:auto 1fr;column-gap:10px;text-align:left;font:inherit;border:0;border-radius:14px;padding:12px 14px;cursor:pointer;color:#fff;background:linear-gradient(120deg,#3b2a1a,#6b3f22)}.bmtc i{grid-row:span 3;font-style:normal;align-self:center;font-size:18px;color:#f3d79a}.bmtc b{font-size:15px}.bmtc small{opacity:.8;font-size:12px}.bmtc em{font-style:normal;font-size:12px;color:#f3d79a}
+.bmtours{display:grid;gap:8px;margin-bottom:12px}.bmtc{display:grid;grid-template-columns:auto 1fr;column-gap:10px;text-align:left;font:inherit;border:0;border-radius:14px;padding:12px 14px;cursor:pointer;color:#fff;background:linear-gradient(120deg,#3b2a1a,#6b3f22)}.bmtc i{grid-row:span 3;font-style:normal;align-self:center;font-size:18px;color:#f3d79a}.bmtc b{font-size:15px}.bmtc small{opacity:.8;font-size:12px}.bmtc em{font-style:normal;font-size:12px;color:#f3d79a}.bmtours.row{align-items:stretch}.bmtc b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bmtc small{min-width:0;height:calc(12px * 1.5 * 2);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2} /* 큰 여정 카드 높이 통일(목사님 11/2): 제목 한 줄, 설명 두 줄 고정 */
 .bmov{position:fixed;inset:0;z-index:9950;max-width:720px;margin:0 auto;background:var(--paper,#f6f3ec);display:flex;flex-direction:column}.bmovtop{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px}.bmovtop b{font-size:16px}.bmovx{font:inherit;font-size:22px;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
 .bmovmap{flex:1;min-height:0;position:relative}.bmov .bmmap{position:absolute!important;inset:0;height:auto!important;margin:0!important;border-radius:0;border:0;box-shadow:none}
 .bmovp{max-height:42vh;overflow:auto;padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--paper,#f6f3ec)}.bmovp .bmpanel{margin:0}
@@ -5270,6 +5279,29 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     try{ map.removeLayer(dust); }catch(x){}
     (lose?A:E).forEach(a=>{ const e=chm(a.m); if(e) e.classList.add("vanish"); }); (lose?E:A).forEach(a=>{ const e=chm(a.m); if(e) e.classList.remove("walk"); }); if(main) emo(main,lose?"😢":"🙌");
     return await sleep(700,my); }
+  /* 지도 안의 지도(목사님 2026-11-02): 느헤미야의 밤 성벽 답사(느 2:12–15)를 양피지 성 안 지도로.
+     예루살렘 표지에서 종이가 펼쳐지고, 골짜기 문 → 용정 → 분문 → 샘문·왕의 못(짐승이 지나갈 곳이 없음) → 시내를 따라 걸어 올라감 → 돌아서 골짜기 문.
+     성문 자리는 복원도(학자마다 다름) */
+  async function parchWall(c,my,si){ const P0=map.latLngToContainerPoint(c), box=el.querySelector(".bmtmap").getBoundingClientRect();
+    const pa=document.createElement("div"); pa.className="parch"; pa.style.transformOrigin=`${P0.x-box.width*.06}px ${P0.y-Math.max(90,box.height*.12)}px`;
+    const G=[["골짜기 문",124,190,-1],["용정",96,222,-1],["분문",150,284,0],["샘문",186,256,1],["왕의 못",176,274,1],["시내(기드론)",224,150,1]];
+    pa.innerHTML=`<div class="parin"><p class="part">예루살렘 성 · 느헤미야의 밤길</p><svg viewBox="0 0 300 320" aria-label="예루살렘 성벽 복원도">
+      <path d="M232 0 C226 80 222 160 208 230 C200 262 190 290 178 320" class="pv"/><path d="M108 0 C118 90 128 170 150 240 C158 270 166 300 170 320" class="pv t"/><path d="M30 140 C60 210 92 270 170 304" class="pv"/>
+      <path d="M128 36 L204 36 L206 110 L198 182 L186 240 L166 286 L152 284 L138 238 L126 196 L122 120 Z" class="pw"/><rect x="140" y="44" width="52" height="46" rx="3" class="ptm"/><text x="166" y="72" class="pl s">성전</text>
+      <text x="236" y="40" class="pl v">기드론 시내</text><text x="22" y="150" class="pl v">힌놈 골짜기</text><text x="80" y="40" class="pl v">성 안 골짜기</text>
+      ${G.map(([t,x,y,a])=>`<g><circle cx="${x}" cy="${y}" r="4.5" class="pg"/><text x="${x+(a<0?-8:a>0?8:0)}" y="${y+(a===0?16:4)}" text-anchor="${a<0?"end":a>0?"start":"middle"}" class="pl">${t}</text></g>`).join("")}
+      <path id="pwRide" d="M124 190 L96 222 L150 284 L186 256 L178 272" class="pr"/><path id="pwWalk" d="M186 256 C200 230 214 190 220 150" class="pr w"/><path id="pwBack" d="M220 150 C214 190 200 230 186 256 L150 284 L96 222 L124 190" class="pr b"/>
+      <text x="214" y="304" text-anchor="middle" class="px" opacity="0">✕ 짐승이 지나갈 곳이 없음</text><circle r="6" class="pme" cx="124" cy="190"/></svg>
+      <p class="pnote">복원도 · 성문과 용정의 자리는 학자마다 다릅니다</p></div>`;
+    el.appendChild(pa); requestAnimationFrame(()=>pa.classList.add("on")); el.querySelector(".bmtmap").classList.add("mvnight");
+    const me=pa.querySelector(".pme"), X=pa.querySelector(".px");
+    const run=async(id,ms)=>{ const pth=pa.querySelector("#"+id), L0=pth.getTotalLength(); pth.style.strokeDasharray=L0; pth.style.strokeDashoffset=L0; pth.style.opacity=1; const t0=clk;
+      while(clk-t0<ms){ if(!(await sleep(30,my))) return false; const k=Math.min(1,(clk-t0)/ms), q=pth.getPointAtLength(L0*k); pth.style.strokeDashoffset=L0*(1-k); me.setAttribute("cx",q.x); me.setAttribute("cy",q.y); } return true; };
+    if(!(await sleep(1400,my))) return; showVerse([16,2,13]);
+    if(!(await run("pwRide",5200))) return; showVerse([16,2,14]); X.setAttribute("opacity",1); me.classList.add("stop");
+    if(!(await sleep(2400,my))) return; me.classList.remove("stop"); me.classList.add("foot"); showVerse([16,2,15]);
+    if(!(await run("pwWalk",2800))) return; if(!(await run("pwBack",4200))) return;
+    if(!(await sleep(1500,my))) return; pa.classList.remove("on"); el.querySelector(".bmtmap").classList.remove("mvnight"); setTimeout(()=>pa.remove(),900); }
   function burnAt(c,my,si){ el.querySelector(".bmtmap").classList.add("mvburn"); [[0,0],[.008,-.01],[-.006,.011],[.012,.009],[-.01,-.007]].forEach(([a,b],q)=>setTimeout(()=>{ if(my!==tok||idx!==si) return; SKY.push(L.marker([c.lat+a,c.lng+b],{interactive:false,zIndexOffset:2700,icon:L.divIcon({className:"",html:`<span class="mvfire">🔥</span>`,iconSize:[0,0]})}).addTo(map)); },q*350)); }
   /* 겉옷으로 물을 치니 갈라짐(왕하 2:8, 14) */
   async function mantleX(st,pts,ms,my){ const a=pts[0], b=pts[pts.length-1], mid=L.latLng((a.lat+b.lat)/2,(a.lng+b.lng)/2);
@@ -5309,9 +5341,9 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     if(st.fx==="sun"){ const mk=(ll,t,c)=>L.marker(ll,{interactive:false,zIndexOffset:2700,icon:L.divIcon({className:"",html:`<span class=\"mvsky ${c}\">${t}</span>`,iconSize:[0,0]})}).addTo(map); SKY=[mk(L.latLng(31.86,35.19),"☀️","sun"),mk(L.latLng(31.85,35.0),"🌙","moon")]; }
     /* 장면 사이에서 멈추지 않음(목사님 2026-10-30): 말씀을 읽을 시간만큼 걸음을 늦추고, 도착하면 곧바로 다음 장면을 걷기 시작 */
     let mv=durs.reduce((a,b)=>a+b,0)+(st.side?9000:0)+(st.fx==="part"?8000:0)+(st.fx==="jordan"?7000:0)+(st.fx==="mantle"?2500:0); const need=st.fx==="pillar"?Math.max(7000,needMs(st)):needMs(st); let k=1; if(mv&&mv<need) k=Math.min(3.5,need/mv);
-    const dw=st.stay?(st.fx==="siege"?Math.max(need,10500):st.fx==="ascend"?Math.max(need,9000):st.war?Math.max(need,7500):need):0; stepT0=clk; stepMs=Math.max(1,mv*k+dw); follow=()=>main?main.getLatLng():LL(starts[i]);
+    const dw=st.stay?(st.fx==="parch"?Math.max(need,17500):st.fx==="siege"?Math.max(need,10500):st.fx==="ascend"?Math.max(need,9000):st.war?Math.max(need,7500):need):0; stepT0=clk; stepMs=Math.max(1,mv*k+dw); follow=()=>main?main.getLatLng():LL(starts[i]);
     if(st.fx!=="part"&&st.fx!=="jordan") showVerse(st.pre||st.r);
-    if(st.fx==="siege") siege(LL(starts[i]),my,i); if(st.fx==="ascend") ascend(my,i);
+    if(st.fx==="siege") siege(LL(starts[i]),my,i); if(st.fx==="ascend") ascend(my,i); if(st.fx==="parch") parchWall(LL(starts[i]),my,i);
     if(st.stay&&st.war) battle(LL(starts[i]),my,i,st.war).then(ok=>{ if(ok&&st.burn&&my===tok) burnAt(LL(starts[i]),my,i); }); else if(st.stay&&st.burn) burnAt(LL(starts[i]),my,i);
     let pil=null; if(st.fx==="pillar"){ pil={m:L.marker(main?main.getLatLng():LL(starts[i]),{interactive:false,zIndexOffset:2600,icon:L.divIcon({className:"",html:`<div class="mvpil"><i></i><b></b></div>`,iconSize:[0,0]})}).addTo(map)}; lead=lead||{m:pil.m,pil:1};
       setTimeout(()=>{ if(my!==tok) return; const e=pil.m.getElement(); if(e) e.querySelector(".mvpil").classList.add("fire"); el.querySelector(".bmtmap").classList.add("mvnight"); },Math.max(1500,mv*k*.5)); }
@@ -5337,7 +5369,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     const B=L.latLngBounds([T.start,...S.flatMap(legs)].map(LL)), sz=map.getSize(); zT=q4(Math.max(3,map.getBoundsZoom(B,false,L.point(60,Math.round(sz.y*.5)))-.25)); const c=B.getCenter(); follow=()=>c;
     $(".bmtgo").hidden=true; $(".bmtp").classList.remove("fix"); $(".bmtk").textContent=T.sub||""; $(".bmth").textContent="여정을 마쳤습니다"; $(".bmtn").textContent=T.end||""; $(".bmtend").hidden=false; }
   /* 건너뛰기: 그 장면의 시작 자리로 바로 옮겨 놓고 이어서 재생 */
-  function jump(i){ i=Math.max(0,Math.min(S.length-1,i)); tok++; el.querySelectorAll(":scope>.mvnar").forEach(n=>n.classList.remove("on")); [...CHS,...SKY].forEach(m=>{ try{ map.removeLayer(m); }catch(x){} }); CHS=[]; SKY=[]; VB.forEach(v=>v.remove()); VB=[]; el.querySelector(".bmtmap").classList.remove("mvnight","mvburn"); if(lead){ map.removeLayer(lead.m); lead=null; } setPause(false); el.querySelector(".bmtmap").classList.remove("mvsplash"); $(".mvwindl").classList.remove("on"); camOn=true; const fx=map.getPane("mvfx"); if(fx) fx.innerHTML="";
+  function jump(i){ i=Math.max(0,Math.min(S.length-1,i)); tok++; el.querySelectorAll(".parch").forEach(n=>n.remove()); el.querySelectorAll(":scope>.mvnar").forEach(n=>n.classList.remove("on")); [...CHS,...SKY].forEach(m=>{ try{ map.removeLayer(m); }catch(x){} }); CHS=[]; SKY=[]; VB.forEach(v=>v.remove()); VB=[]; el.querySelector(".bmtmap").classList.remove("mvnight","mvburn"); if(lead){ map.removeLayer(lead.m); lead=null; } setPause(false); el.querySelector(".bmtmap").classList.remove("mvsplash"); $(".mvwindl").classList.remove("on"); camOn=true; const fx=map.getPane("mvfx"); if(fx) fx.innerHTML="";
     drawUpTo(i); mainKey=""; if(main){ map.removeLayer(main); main=null; } actors(i,LL(starts[i]),!!(S[i].sea&&!S[i].land0)); if(main) main.setLatLng(LL(starts[i])); fol.forEach(f=>f.m.setLatLng(LL(starts[i])));
     zT=zBase; zoomOK=false; map.setView(LL(starts[i]),zBase,{animate:false}); play(i); }
   function setPause(p){ paused=p; const b=$('[data-t="pause"]'); b.textContent=p?"▶":"❚❚"; b.setAttribute("aria-label",p?"계속":"멈춤"); el.classList.toggle("paused",p); }
@@ -5386,13 +5418,13 @@ const BM_WHO=[
  {k:"joseph",n:"요셉",av:"joseph",who:["요셉","요셉의 형들"],tour:["joseph"]},
  {k:"moses",n:"모세",av:"moses",b:[2,5],tour:["midian","exodus"]},
  {k:"joshua",n:"여호수아",av:"joshua",b:[6,6],tour:["joshua"]},
- {k:"judges",n:"사사들",av:"soldier",b:[7,8]},
+ {k:"judges",n:"사사들",av:"soldier",b:[7,8],tour:["ruth"]},
  {k:"saul",n:"사무엘·사울",av:"saul",who:["사무엘","사울","한나","요나단","야베스 사람들"],tour:["saulking"]},
  {k:"ark",n:"언약궤",av:"ark",who:["언약궤"],tour:["ark"]},
  {k:"david",n:"다윗",av:"david0",who:["다윗","요압","압살롬","아브넬","우리아","아비아달","시므이","아말렉 청년","블레셋 군대"],b:[9,10],tour:["david","absalom"]},
- {k:"kings",n:"왕들",av:"king",b:[11,14]},
+ {k:"kings",n:"왕들",av:"king",b:[11,14],tour:["jonah"]},
  {k:"elijah",n:"엘리야·엘리사",av:"elijah",who:["엘리야","엘리사","수넴 여인","나아만","하사엘","예후","아람 군대"],tour:["elijah"]},
- {k:"exile",n:"포로와 귀환",av:"elder",b:[15,39],tour:["babylon","jeremiah"]},
+ {k:"exile",n:"포로와 귀환",av:"elder",b:[15,39],tour:["assyria","babylon","jeremiah","return"]},
  {k:"jesus",n:"예수님",av:"jesus",b:[40,43],tour:["mt","mk","lk","jn"]},
  {k:"church",n:"베드로·초대 교회",av:"peter",b:[44,44],tour:["peter"]},
  {k:"paul",n:"바울",av:"paul",who:["바울","바나바","바울 (호송됨)","아볼로","뵈뵈","편지","두기고","에바브로디도","두기고와 오네시모"],b:[45,66],tour:["saul","paul1","paul2","paul3","rome"]}];
