@@ -11309,7 +11309,7 @@ addEventListener("resize",()=>{ clearTimeout(rrFit.t); rrFit.t=setTimeout(()=>rr
 /* ===== 성경 지도 라이브러리(목사님 2026-10-31): 지도가 화면을 차지해 답답하다 → 위에는 주인공 픽셀 배지, 누르면 아래에 그 주인공의 여정 목록.
    지도는 여정·장소를 고를 때만 전체 화면으로 열림 ===== */
 const BM_WHO=[
- {k:"abraham",n:"아브라함",av:"abraham",who:["아브람","아브라함","롯","하갈","아브라함의 종"],tour:["abraham"]},
+ {k:"abraham",n:"아브라함",av:"abraham",who:["아브람","아브라함","롯","하갈","아브라함의 종"],tour:["abraham","rebekah"]},
  {k:"jacob",n:"이삭·야곱",av:"jacob",who:["이삭","에서","야곱"],tour:["jacob"]},
  {k:"joseph",n:"요셉",av:"joseph",who:["요셉","요셉의 형들"],tour:["joseph"]},
  {k:"moses",n:"모세",av:"moses",b:[2,5],tour:["exodus"]},
@@ -11317,12 +11317,12 @@ const BM_WHO=[
  {k:"judges",n:"사사들",av:"soldier",b:[7,8]},
  {k:"saul",n:"사무엘·사울",av:"saul",who:["사무엘","사울","한나","요나단","야베스 사람들"]},
  {k:"ark",n:"언약궤",av:"ark",who:["언약궤"],tour:["ark"]},
- {k:"david",n:"다윗",av:"david0",who:["다윗","요압","압살롬","아브넬","우리아","아비아달","시므이","아말렉 청년","블레셋 군대"],b:[9,10],tour:["david"]},
+ {k:"david",n:"다윗",av:"david0",who:["다윗","요압","압살롬","아브넬","우리아","아비아달","시므이","아말렉 청년","블레셋 군대"],b:[9,10],tour:["david","absalom"]},
  {k:"kings",n:"왕들",av:"king",b:[11,14]},
  {k:"elijah",n:"엘리야·엘리사",av:"elijah",who:["엘리야","엘리사","수넴 여인","나아만","하사엘","예후","아람 군대"],tour:["elijah"]},
  {k:"exile",n:"포로와 귀환",av:"elder",b:[15,39],tour:["jeremiah"]},
  {k:"jesus",n:"예수님",av:"jesus",b:[40,43],tour:["mt","mk","lk","jn"]},
- {k:"church",n:"베드로·초대 교회",av:"peter",b:[44,44]},
+ {k:"church",n:"베드로·초대 교회",av:"peter",b:[44,44],tour:["peter"]},
  {k:"paul",n:"바울",av:"paul",who:["바울","바나바","바울 (호송됨)","아볼로","뵈뵈","편지","두기고","에바브로디도","두기고와 오네시모"],b:[45,66],tour:["paul1","paul2","paul3","rome"]}];
 function bmWhoOf(r){ let w=""; try{ w=(routeMeta(r.n,r.b)||{}).who||""; }catch(e){}
   if(/끌려감/.test(r.n)) return "exile";
