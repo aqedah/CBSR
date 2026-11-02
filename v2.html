@@ -2206,6 +2206,29 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .libmore{display:block;margin:16px auto 0;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 18px;font:600 14px var(--f-ui);cursor:pointer}
 .ryfirst{margin:0 0 14px;font:500 16px/1.75 var(--f-text)}.ryfirstb{display:grid;gap:2px;width:100%;text-align:left;border:0;border-radius:16px;padding:14px 16px;background:var(--accent);color:var(--accent-ink);font:inherit;cursor:pointer}.ryfirstb b{font-size:16.5px}.ryfirstb small{font-size:12.5px;opacity:.85}
 .fcov{position:fixed;inset:0;z-index:9800}.fchole{position:fixed;border-radius:22px;box-shadow:0 0 0 9999px rgba(10,16,13,.6),0 0 0 4px rgba(255,255,255,.95);cursor:pointer}.fctip{position:fixed;left:16px;right:16px;max-width:520px;margin:0 auto;background:var(--card);color:var(--ink);border-radius:18px;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}.fctip b{display:block;font-size:17px}.fctip p{margin:4px 0 12px;font-size:14.5px;color:var(--muted)}.fctip button{border:0;border-radius:12px;padding:10px 16px;font:700 14px var(--f-ui);background:var(--accent);color:var(--accent-ink);margin-right:8px;cursor:pointer}.fctip button.ghost{background:var(--accent-soft);color:var(--accent)}
+.finov{position:fixed;inset:0;z-index:9800;background:var(--paper);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.finx{position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:calc(10px + env(safe-area-inset-top,0px));border:0;background:transparent;padding:10px;display:grid;color:var(--muted);z-index:2}.finx svg{width:22px;height:22px}
+.finsc{flex:1;overflow-y:auto;padding:0 max(18px,env(safe-area-inset-right,0px)) 16px max(18px,env(safe-area-inset-left,0px))}
+.fin{max-width:480px;margin:0 auto;display:grid;justify-items:center;text-align:center;gap:6px;padding-top:44px}
+.finck{width:76px;height:76px;border-radius:50%;background:var(--accent);display:grid;place-items:center;margin-bottom:10px}
+.finck svg{width:40px;height:40px;stroke:var(--card);stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40}
+.finov.play .finck{animation:finPop .45s cubic-bezier(.2,1.4,.4,1) both}.finov.play .finck path{animation:finDraw .5s .25s ease-out both}
+@keyframes finPop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}@keyframes finDraw{from{stroke-dashoffset:40}to{stroke-dashoffset:0}}
+.fin h2{margin:0;font:700 22px/1.4 var(--f-disp);text-wrap:balance}.finsub{font-size:13.5px;color:var(--muted)}
+.finkv{width:100%;text-align:left;background:var(--card);border-radius:16px;padding:14px 16px;margin-top:14px;display:grid;gap:6px}.finkv small{font-size:12px;color:var(--muted);font-weight:600}.finkv q{quotes:"“" "”";font:500 16px/1.75 var(--f-text)}.finkv span{font-size:12.5px;font-weight:700;color:var(--gold)}
+.finw{width:100%;display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--gold) 14%,var(--card));border-radius:14px;padding:11px 14px;margin-top:12px;font-size:13.5px;text-align:left}.finw[hidden]{display:none}.finw>span:last-child{min-width:0}
+.fdots{display:flex;flex:none}.fdots i{width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid color-mix(in srgb,var(--gold) 14%,var(--card));margin-left:-6px}.fdots i:first-child{margin-left:0}.fdots i:nth-child(2){opacity:.6}.fdots i:nth-child(3){opacity:.35}
+.fcal{width:100%;background:var(--card);border-radius:16px;padding:14px 14px 12px;margin-top:12px;text-align:left}.fcal h3{margin:0 0 10px;font:700 13px var(--f-ui);font-weight:700;display:flex;justify-content:space-between}.fcal h3 span{font-weight:500;color:var(--muted)}
+.fcg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px 4px;justify-items:center}.fwd{font-size:11px;color:var(--muted);font-weight:600}
+.fcg i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fcg i.r{background:var(--accent-soft);color:var(--accent);font-weight:700}.fcg i.t{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--gold);color:var(--ink);font-weight:700}.fcg i.t.r{background:var(--accent);color:var(--card)}.finov.play .fcg i.t.r{animation:finPop .4s .55s both}.fcg i.f{opacity:.45}
+.fcal p{margin:10px 2px 0;font-size:13px}.fcal p b{color:var(--accent)}
+.finft{padding:10px max(18px,env(safe-area-inset-right,0px)) 16px max(18px,env(safe-area-inset-left,0px));display:grid;gap:4px;max-width:516px;width:100%;margin:0 auto}
+.finb{border:0;border-radius:14px;padding:15px;background:var(--accent);color:var(--card);font:700 16px var(--f-ui);cursor:pointer}.finb2{border:0;background:transparent;color:var(--muted);font:600 14px var(--f-ui);padding:10px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.finov.play .finck,.finov.play .finck path,.finov.play .fcg i.t.r{animation:none}}
+.qtstp{display:flex;align-items:center;gap:10px;margin:0 0 14px}.qtprev{border:0;background:transparent;padding:4px;display:grid;color:var(--ink);cursor:pointer}.qtprev[disabled]{opacity:.25}.qtprev svg{width:22px;height:22px}
+.qtbars{flex:1;display:flex;gap:4px}.qtbars i{flex:1;height:4px;border-radius:2px;background:var(--line)}.qtbars i.on{background:var(--accent)}.qtstp b{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.qtnext{position:sticky;z-index:5;padding:12px 0 14px;background:linear-gradient(transparent,var(--paper) 35%)}.qtnext:empty{display:none}.qtnext .btn{width:100%;padding:15px;font-size:16px}
 </style>
 
 <div class="wrap">
@@ -7696,6 +7719,50 @@ function bookCover(b){ const D=bookDays(b), u=b===19?"편":"장", N=BOOKCH[b-1],
     ${KV.length?`<div class="bkkv"><small>이 책에서 붙잡은 말씀</small>${KV.slice(-3).map(v=>`<q>${esc(vtxt(v))}</q><span>${esc(PLAN.abbr[v[0]-1])} ${v[1]}:${v[2]}</span>`).join("")}</div>`:""}
     ${rx?`<p class="bkrx">이야기 카드에 남긴 반응 ${rx}</p>`:""}<button class="bkok">닫기</button></div></div>`;
   document.body.appendChild(el); const close=()=>el.remove(); el.querySelector(".bkx").onclick=close; el.querySelector(".bkok").onclick=close; el.onclick=e=>{ if(e.target===el) close(); }; }
+/* ===== 마친 순간(v2, 목사님 2026-11-02 · 2차 UI 샘플): 통독·묵상 노트를 마치면 한 화면으로. 최근 4주 달력은 읽은 날만 채우고 빠진 날은 드러내지 않음 ===== */
+const dsOf=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
+function finCal(){ const t0=today0(), mon=new Date(t0); mon.setDate(t0.getDate()-((t0.getDay()+6)%7)-21);
+  const end=new Date(mon); end.setDate(mon.getDate()+26); const M=new Map();
+  for(let n=1;n<=READ_DAYS;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if(isRev(d)||!dayPlan(w,d)) continue; const dt=dateOf(w,d); if(dt<mon||dt>end) continue; M.set(dsOf(dt),keyOf(w,d)); }
+  let c=["월","화","수","목","금","토"].map(x=>`<span class="fwd">${x}</span>`).join(""), n=0;
+  for(let i=0;i<4;i++) for(let j=0;j<6;j++){ const x=new Date(mon); x.setDate(mon.getDate()+i*7+j); const k=M.get(dsOf(x)), dd=dayDiff(t0,x), rd=!!(k&&mem.done[k]); if(rd) n++;
+    c+=`<i class="${dd===0?"t"+(rd?" r":""):dd>0?"f":rd?"r":""}">${x.getDate()}</i>`; }
+  const f=x=>`${x.getMonth()+1}월 ${x.getDate()}일`;
+  return `<div class="fcal"><h3>최근 4주<span>${f(mon)} – ${f(end)}</span></h3><div class="fcg">${c}</div>${n?`<p>이 4주 동안 <b>${n}일</b> 말씀을 읽었습니다.</p>`:""}</div>`; }
+const objJ=t=>{ const ch=(t||"").trim().slice(-1), c=ch.charCodeAt(0)-0xAC00; return c>=0&&c<11172&&c%28===0?"를":"을"; };
+function finOpen(kind,w,d){ if(!window.CBSR_V2) return; document.querySelector(".finov")?.remove();
+  const k=keyOf(w,d), p=dayPlan(w,d), dt=dateOf(w,d), q=mem.qt[k]||{}, kv=kind==="note"?storyQT(w,d).kv:null, sp=(mem.sp||{})[k];
+  const hasS=STORY()&&storySlides(w,d).length, sSeen=!!(sp&&sp.n&&sp.i>=sp.n-1);
+  const go=kind==="read"&&!q.done?(hasS&&!sSeen?["story","스토리로 이어 보기"]:["note","묵상 노트 쓰기"]):null;
+  const ttl=kind==="read"?`${esc(p.label)}${objJ(p.label)}<br>읽었습니다`:`오늘 묵상 노트를<br>마쳤습니다`;
+  const el=document.createElement("div"); el.className="finov"; el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); el.setAttribute("aria-label",kind==="read"?"통독을 마쳤습니다":"묵상 노트를 마쳤습니다");
+  el.innerHTML=`<button class="finx" data-fx aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+   <div class="finsc"><div class="fin"><div class="finck"><svg viewBox="0 0 40 40"><path d="M10 21l7 7 13-15"/></svg></div>
+    <h2>${ttl}</h2><span class="finsub">${dt.getMonth()+1}월 ${dt.getDate()}일 · ${kind==="read"?esc(dayName(w,d)):esc(p.label)}</span>
+    ${kv?`<div class="finkv"><small>오늘 붙잡은 말씀</small><q>${esc(kv.t)}</q><span>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</span></div>`:""}
+    <div class="finw" id="finWith" hidden></div>${finCal()}</div></div>
+   <div class="finft">${go?`<button class="finb" data-fgo="${go[0]}">${go[1]}</button>`:""}<button class="${go?"finb2":"finb"}" data-fx>오늘 화면으로</button></div>`;
+  document.body.appendChild(el); document.body.style.overflow="hidden"; requestAnimationFrame(()=>el.classList.add("play"));
+  const close=pop=>{ if(pop!==true) ovDone(close); el.remove(); document.body.style.overflow=""; if(kind==="read") try{ bookFinCheck(k); }catch(e){} };
+  ovOpen(close);
+  el.querySelectorAll("[data-fx]").forEach(b=>b.onclick=()=>{ close(); if(view.tab==="today"){ render(); scrollTo({top:0}); } else switchTab("today"); });
+  el.querySelectorAll("[data-fgo]").forEach(b=>b.onclick=()=>{ close(); if(b.dataset.fgo==="story") storyOpen(0); else { view.qtDeep=true; if(view.tab==="qt"){ render(); scrollTo({top:0}); } else switchTab("qt"); } });
+  if(window.SYNC&&SYNC.available) setTimeout(()=>SYNC.counts(syncKey(k),syncKey(todayStr())).then(c=>{ const W=document.getElementById("finWith"); if(!c||!W) return; const n=c.day+(c.mine||!mem.done[k]?0:1); if(n<1) return;
+    W.innerHTML=`<span class="fdots"><i></i><i></i><i></i></span><span>${n>1?`우리 교회 <b>${n}명</b>이 이 본문을 함께 읽었습니다`:`이 본문을 마친 첫 번째 분입니다`}</span>`; W.hidden=false; }).catch(()=>{}),900);
+}
+/* 묵상 노트 한 장씩(v2, 목사님 2026-11-02): 본문 관찰 · 하나님의 성품 · 붙잡을 한 구절 · 기도를 한 장에 하나, 아래 '다음' 하나 */
+function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done||FB_ON) return;
+  const secs=[...m.querySelectorAll("section.sec")].filter(x=>!x.classList.contains("qthd")); const G=[];
+  secs.forEach(x=>{ const lab=x.querySelector(":scope>.label"); const start=x.querySelector(":scope>.stage")||(lab&&/기도/.test(lab.textContent)); if(start||!G.length) G.push([x]); else G[G.length-1].push(x); });
+  if(G.length<2) return; if(view.qtStepK!==key){ view.qtStepK=key; view.qtStep=0; } const N=G.length; view.qtStep=Math.max(0,Math.min(N-1,view.qtStep||0));
+  const hd=m.querySelector("section.qthd"); const bar=document.createElement("div"); bar.className="qtstp";
+  const nx=document.createElement("div"); nx.className="qtnext"; (G[N-1][G[N-1].length-1]).after(nx); if(hd) hd.after(bar); else G[0][0].before(bar);
+  const show=()=>{ const i=view.qtStep; G.forEach((g,j)=>g.forEach(x=>x.style.display=j===i?"":"none"));
+    bar.innerHTML=`<button class="qtprev" aria-label="앞 장"${i?"":" disabled"}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="qtbars">${G.map((_,j)=>`<i class="${j<=i?"on":""}"></i>`).join("")}</span><b>${i+1} / ${N}</b>`;
+    nx.innerHTML=i<N-1?`<button class="btn qtnb">다음</button>`:""; const bn=document.querySelector(".bnav"); nx.style.bottom=(bn?bn.offsetHeight:0)+"px";
+    bar.querySelector(".qtprev").onclick=()=>{ if(view.qtStep>0){ view.qtStep--; show(); scrollTo({top:0}); } };
+    const b=nx.querySelector(".qtnb"); if(b) b.onclick=()=>{ view.qtStep++; show(); scrollTo({top:0}); }; };
+  show(); }
 function bookFinCheck(k){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return; mem.bookFin ||= {};
   for(const b of [...new Set(p.ch.map(x=>x[0]))]){ if(!mem.bookFin[b]&&bookDone(b)){ mem.bookFin[b]=todayStr(); save(); setTimeout(()=>bookCover(b),1400); return; } } }
 
@@ -8914,7 +8981,7 @@ function rdShow(){ const r=document.getElementById("readRoot"); if(!r) return; c
   r.querySelector("#rdX").onclick=()=>rdClose();
   const fs=dlt=>{ const f=Math.max(15,Math.min(28,rdFontPx()+dlt)); try{ localStorage.setItem("cbsr-rdfs",f); }catch(e){} const pv=RV.pages[i-1], at=pv?pv.v1:0, ch=pv?[pv.b,pv.c]:null; RV.pages=rdPages(w,d); if(ch){ const j=RV.pages.findIndex(x=>x.b===ch[0]&&x.c===ch[1]&&x.v1<=at&&x.v2>=at); if(j>=0) RV.i=j+1; } rdSave(); rdShow(); };
   r.querySelector("#rdFm").onclick=()=>fs(-2); r.querySelector("#rdFp").onclick=()=>fs(2);
-  const dn=r.querySelector("#rdDone"); if(dn) dn.onclick=()=>{ touchDone(k); mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k); save(); confetti(); setTimeout(churchCounts,1500); rdShow(); };
+  const dn=r.querySelector("#rdDone"); if(dn) dn.onclick=()=>{ touchDone(k); mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k); save(); if(window.CBSR_V2){ rdClose(); finOpen("read",w,d); return; } confetti(); setTimeout(churchCounts,1500); rdShow(); };
   const st=r.querySelector("#rdStory"); if(st) st.onclick=()=>{ const oi=OVS.indexOf(rdClose); if(oi>=0) OVS.splice(oi,1); const rr=document.getElementById("readRoot"); if(rr) rr.remove(); document.documentElement.classList.remove("story-on"); storyOpen(0); };
   const nt=r.querySelector("#rdNote"); if(nt) nt.onclick=()=>{ view.tab="qt"; view.qtDeep=true; rdClose(); scrollTo({top:0}); };
   const ag=r.querySelector("#rdAgain"); if(ag) ag.onclick=()=>go(1);
@@ -9999,6 +10066,7 @@ function renderQTWeek(list,title){
 let qtT;
 function bindQT(m){
   if(view.tab!=="qt"||isRev(view.d)) return;
+  if(window.CBSR_V2) qtSteps(m);
   /* 기기 연동으로 기록이 새로 합쳐져도 늘 지금 기록을 고치도록, 누를 때마다 다시 찾습니다 */
   const key=keyOf(view.w,view.d), cur=()=>qtOf(key);
   m.querySelectorAll("[data-qt]").forEach(t=>t.oninput=()=>{const q=cur(); q[t.dataset.qt]=t.value; touchQ(q,t.dataset.qt); clearTimeout(qtT); qtT=setTimeout(()=>{save(); const s=document.getElementById("qtSaved"); if(s) s.textContent="저장됨";},400);});
@@ -10018,6 +10086,7 @@ function bindQT(m){
     const on=!!q.amen[n]; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); b.textContent=on?"아멘 ✓":"아멘"; if(on){ b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); } });
   const db=document.getElementById("deepBox"); if(db) db.ontoggle=()=>{view.deepOpen=db.open;};
   const dn=document.getElementById("qtDone"); if(dn) dn.onclick=()=>{const q=cur(); q.done=!q.done; touchQ(q,"done"); if(q.done){ if(!q.doneAt) q.doneAt=todayStr(); if(!q.kv&&view.kvShown) q.kv=view.kvShown; view.qtJust=true;} save(); const y=window.scrollY; render(); window.scrollTo({top:y});
+    if(q.done&&window.CBSR_V2){ view.qtStep=0; finOpen("note",view.w,view.d); return; }
     if(q.done){ if(STORY()){ const S=storySlides(view.w,view.d); if(S[0]&&S[0].ph){ q.cph=S[0].ph.id; save(); } storyOpen(0,"fin"); return; } document.getElementById("qtDoneSec")?.scrollIntoView({block:"center",behavior:"smooth"}); confetti(); } };
   const tr=document.getElementById("qtToRec"); if(tr) tr.onclick=()=>{view.tab="record";render();window.scrollTo({top:0});};
   const qs=document.getElementById("qtStory"); if(qs) qs.onclick=()=>{ if(window.CBSR_V2){ storyOpen(0); return; } view.qtDeep=false; render(); scrollTo({top:0}); };
@@ -12237,7 +12306,7 @@ function bind(){
   const bg=document.getElementById("bmGo"); if(bg) bg.onclick=()=>{ const B=mem.bm; view.pre=false; view.revW=null; view.w=B.w; view.d=B.d; view.tab="read"; view.open=true; render(); const el=document.getElementById("v-"+B.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2200);} };
 
   m.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{view.open=false;render();document.getElementById("textSec")?.scrollIntoView({block:"start"});});
-  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); touchDone(k); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k);} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was) confetti(); if(was) setTimeout(churchCounts,1500); if(was&&window.CBSR_V2) bookFinCheck(k);};
+  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); touchDone(k); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k);} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was&&window.CBSR_V2){ finOpen("read",view.w,view.d); return; } if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
   const toQT=()=>switchTab("qt");
   const tqt=document.getElementById("toQT"); if(tqt) tqt.onclick=toQT;
   m.querySelectorAll("[data-toqt]").forEach(b=>b.onclick=toQT);
