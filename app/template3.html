@@ -1427,6 +1427,17 @@ html.v2 body:has(.ryprof){background:var(--rybg)}html.v2 main:has(.ryprof){gap:1
 .rymh small{font-size:12px;color:var(--rysub)}.rymh small:first-child{color:#9A3B2E}
 .rymg i{justify-self:center;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 13px var(--f-ui);font-style:normal;color:var(--rysub)}
 .rymg i.e{visibility:hidden}.rymg i.on{background:var(--accent);color:var(--accent-ink)}.rymg i.me:not(.on){box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent)}.rymg i.fut{opacity:.55}
+.rplm{border-top:1px solid var(--line)}.rplm:first-of-type{border-top:0}
+.rplm>summary{display:flex;align-items:baseline;gap:10px;min-height:52px;align-items:center;cursor:pointer;list-style:none;font-family:var(--f-ui)}.rplm>summary::-webkit-details-marker{display:none}
+.rplm>summary b{font-size:17px}.rplm>summary span{font-size:13.5px;color:var(--rysub)}.rplm>summary::after{content:"⌄";margin-left:auto;color:var(--rysub);font-size:18px}.rplm[open]>summary::after{content:"⌃"}
+.rplr{display:flex;flex-direction:column;padding-bottom:10px}
+.rpl{display:flex;align-items:center;gap:12px;min-height:52px;border:0;border-top:1px solid color-mix(in srgb,var(--line) 60%,transparent);background:none;padding:6px 2px;text-align:left;font-family:var(--f-ui);color:var(--ink);cursor:pointer}
+.rpld{width:34px;flex:none;display:flex;flex-direction:column;align-items:center;font-size:16px;font-weight:700;line-height:1.1}.rpld small{font-size:11px;font-weight:600;color:var(--rysub)}
+.rplt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.rplt b{font-size:15px;font-weight:600}.rplt small{font-size:12.5px;color:var(--rysub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rpli{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10.5px;font-weight:700;background:var(--rytile)}.rpli svg{width:16px;height:16px}
+.rpl.on .rpli{background:var(--accent);color:var(--accent-ink)}.rpl.me .rpli{background:var(--hi);color:var(--hi-ink)}.rpl.me{background:color-mix(in srgb,var(--hi) 12%,transparent);border-radius:10px}
+.rpl.miss .rpli{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--rysub) 50%,transparent) 0 2px,transparent 2px 5px)}
+.rpl.fut{color:color-mix(in srgb,var(--ink) 70%,transparent)}.rpl.sun .rplt b{color:var(--gold)}
 .ryhd{display:flex;align-items:center;gap:8px;margin:0 0 14px}
 .ryhd h3{margin:0;font:700 17px/1.35 var(--f-ui);letter-spacing:-.3px}
 .ryhd h3 span{color:var(--accent);margin-left:2px}
@@ -5060,6 +5071,15 @@ function lastReadBook(){ /* 일정에서 가장 앞선 읽은 날의 책(뒤늦�
 const recRow=(go,t,sub)=>`<button class="rrow" data-recgo="${go}"><span><b>${t}</b><small>${sub}</small></span><i aria-hidden="true">›</i></button>`;
 function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">‹ ${back?"돌아가기":"기록"}</button><h2>${t}</h2></div>`;
   if(D==="lines") return head("남긴 한 줄")+lnDetailHTML();
+  /* 통독표(목사님 2026-11-03): 달마다 날짜 · 본문 · 읽음. 지금 달만 펼치고 나머지는 접음. 줄을 누르면 그날 본문으로 */
+  if(D==="plan"){ const t0=today0(), M=new Map();
+    for(let nn=1;nn<=TOTAL_DAYS;nn++){ const w=Math.floor((nn-1)/7)+1, d=(nn-1)%7; if(!PLAN.plan[w-1]) break; const sun=isRev(d), p=sun?null:dayPlan(w,d); if(!sun&&!p) continue; if(sun&&!WEEKS[w-1]) continue;
+      const dt=dateOf(w,d), mk=`${dt.getFullYear()}-${dt.getMonth()}`; if(!M.has(mk)) M.set(mk,{y:dt.getFullYear(),m:dt.getMonth()+1,rows:[],n:0,r:0});
+      const g=M.get(mk), dd=dayDiff(t0,dt), done=sun?!!(mem.sun&&mem.sun[w]):!!mem.done[keyOf(w,d)], st=done?"on":dd===0?"me":dd<0?"miss":"fut"; if(!sun){ g.n++; if(done) g.r++; }
+      g.rows.push(`<button class="rpl ${st}${sun?" sun":""}" data-plgo="${w}-${d}"><span class="rpld">${dt.getDate()}<small>${DAYN[dt.getDay()]}</small></span><span class="rplt"><b>${esc(sun?"주일 · 한 주 돌아보기":(typeof shortRange==="function"?shortRange(p):p.label))}</b>${!sun&&p.topic?`<small>${esc(p.topic)}</small>`:""}</span><i class="rpli" aria-label="${st==="on"?"읽음":st==="me"?"오늘":st==="miss"?"안 읽음":""}">${st==="on"?'<svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>':st==="me"?"오늘":""}</i></button>`); }
+    const nowK=`${t0.getFullYear()}-${t0.getMonth()}`; let h="";
+    M.forEach((g,k)=>{ h+=`<details class="rplm"${k===nowK?" open":""}><summary><b>${g.m}월</b><span>${g.r}/${g.n}일 읽음</span></summary><div class="rplr">${g.rows.join("")}</div></details>`; });
+    return head("통독표")+`<section class="sec rsec"><p class="lead rnote">${esc(PI.name)} 일정입니다. 줄을 누르면 그날 본문으로 갑니다. 빗금은 지난 날 가운데 아직 읽지 않은 날입니다.</p>${h}</section>`; }
   if(D==="road"){ const {tot,got}=bookProgress(); return head("통독의 길")+`<section class="sec rsec">${recRoad(n,null)}<div class="rstat"><div><b>${n.toLocaleString()}</b><span>읽은 장</span></div><div><b>${Object.keys(mem.done).length}</b><span>읽은 날</span></div><div><b>${readStreak()}일</b><span>이어 읽기</span></div></div><p class="lead rnote">읽은 장은 성경 1,189장 가운데 '오늘 통독 완료'를 누른 날의 본문 장 수입니다. 같은 날을 다시 눌러도 한 번만 셉니다.</p></section>`+recRow("shelf","성경 책장","책마다 읽은 장 보기"); }
   if(D==="shelf"){ const {tot,got}=bookProgress(), SH=recShelf();
     const grp=[["모세오경",1,5],["역사서",6,17],["시가서",18,22],["선지서",23,39],["복음서·사도행전",40,44],["서신서·계시록",45,66]];
@@ -5842,7 +5862,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length,"장","말씀 카드")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
   /* 그 밖의 것은 접어서 한 줄씩 */
   const nL=lnAll().length;
-  h+=`<section class="rybox rymenu">${row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`남긴 한 줄 · ${nL}`):""}${row("road","read","통독의 길 자세히")}${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
+  h+=`<section class="rybox rymenu">${row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`남긴 한 줄 · ${nL}`):""}${row("plan","read","통독표")}${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
   return h; }
 /* 프로필 숫자를 누르면 자세히(목사님 2026-11-01) */
 function recWeeks(on){ if(!here||here.state==="before") return ""; const W=[]; for(let w=Math.max(1,here.w-3);w<=here.w;w++) W.push(w);
@@ -6479,7 +6499,7 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   if(q.done) sec=`<button class="td4b2" id="tdNote"><b>묵상 노트</b><small>다시 보기</small></button>`;
   else if(read) sec=`<button class="td4b2" id="tdReread"><b>본문 다시</b><small>${p.ch.length}${p.ch[0][0]===19?"편":"장"}</small></button>`;
   else if(!futLock(w,d)) sec=`<button class="td4b2" id="tdStory0"><b>스토리</b><small>카드 ${n}장</small></button>`;
-  h+=`<div class="td4btns"><button class="td4b1" id="tdHero"><b>${N.e?"다음: ":""}${esc(N.t)}</b><small>${esc(N.s)}</small></button>${sec}</div>`;
+  h+=`<div class="td4btns"><button class="td4b1" id="tdHero"><b>${N.e?"다음: ":""}${esc(N.t)}</b><small>${esc(N.s)}</small></button></div>`; /* 11/3 목사님: 단추는 하나만(스토리는 본문을 읽은 뒤 이 단추가 이끔) */
   if(q.done&&kv) h+=`<div class="td4wc">${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}</div>`;
   h+=tdTrip(w,d)+`</div></section>`;
   return h; }
@@ -6949,6 +6969,7 @@ function render(){
     const ta=m.querySelector("#tlAll"); if(ta) ta.onclick=keep(()=>{ view.tlAll=!view.tlAll; });
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
   if(window.CBSR_V2&&view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
+  if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
   if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
     m.querySelectorAll("[data-recseg]").forEach(b=>b.onclick=()=>{ view.recSeg=b.dataset.recseg; const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const rb=m.querySelector("#recBack"); if(rb) rb.onclick=()=>{ ovDone(recBackOv); recBack(); };
