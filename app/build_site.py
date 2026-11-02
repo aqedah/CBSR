@@ -24,6 +24,19 @@ data+="""
   for(const n of NAME_MEAN){ const p=PEOPLEINFO[n[0]]; if(p){ if(!p.m) p.m=n[1]; } else if(n[0]!=="이스라엘"){ const sc=[]; const r=n[2]||[]; for(let i=0;i<r.length;i+=2) for(let b=r[i];b<=r[i+1];b++) sc.push(b); PEOPLEINFO[n[0]]=sc.length?{v:[[sc,n[1],null]],m:n[1],x:1,s:sc}:{v:[[[],n[1],null]],m:n[1]}; } }
   NAME_MEAN.length=0; })();
 """
+# 그림 밝기(0–255): 그림 없는 스토리 카드의 바탕을 그날 그림들의 분위기에 맞춤(2026-11-02)
+try:
+  from PIL import Image as _I, ImageStat as _S
+  _lum=json.load(open('ux/phlum.json')) if os.path.exists('ux/phlum.json') else {}
+  _ch=False
+  for _f in os.listdir('site_src/img/g'):
+    _n,_e=os.path.splitext(_f)
+    if _e.lower() in ('.jpg','.jpeg','.png','.webp') and _n not in _lum:
+      _im=_I.open('site_src/img/g/'+_f).convert('L'); _im.thumbnail((64,64)); _lum[_n]=round(_S.Stat(_im).mean[0]); _ch=True
+  if _ch: json.dump(_lum,open('ux/phlum.json','w'),separators=(',',':'))
+except Exception as _x:
+  _lum=json.load(open('ux/phlum.json')) if os.path.exists('ux/phlum.json') else {}
+data+="\nconst PHLUM="+json.dumps(_lum,separators=(',',':'))+";"
 data+="\nconst NAME_SET=new Set(NAME_MEAN.map(x=>x[0])); for(const n of NAME_MEAN){ if(!GLOSSARY.some(g=>g[0]===n[0])) GLOSSARY.push(n); }"
 data+="\nconst LEITWORT="+open('leitwort.json').read()+";\nconst EMPH="+open('emph.json').read()+";\nconst GAZ="+open('gaz.json').read()+";\nconst PLAN="+json.dumps(plan,ensure_ascii=False,separators=(',',':'))+";\n"
 tj=json.load(open('terrain.json')); terr={}
