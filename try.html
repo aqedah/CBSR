@@ -2286,7 +2286,17 @@ html.v2 .q3 .prayer{background:var(--card);border-radius:18px;padding:18px 18px 
 .qph.nophoto .qphin h2{color:var(--ink);font-size:24px}.qph.nophoto .qphin small{color:var(--muted);opacity:1}
 .qph.nophoto .qphbtn{position:static;flex:none}.qph.nophoto .qphbtn .qtsl,.qph.nophoto .qphbtn .qthelp{background:var(--card);color:var(--accent);border:1px solid var(--line);backdrop-filter:none}
 /* 날짜 고리 → 모서리 둥근 네모(목사님 2026-11-02: 동그라미는 인스타그램 느낌) */
-html.v2 .rgwrap .rgi{border-radius:20px!important}html.v2 .rgwrap .rgi img{border-radius:17px!important}
+/* 11/2 2차: 모서리를 더 부드럽게(스퀴어클), 날짜는 도형 안 아래쪽 */
+html.v2 .rgwrap .rgi{border-radius:32%!important;corner-shape:squircle;position:relative;overflow:hidden;width:min(19vw,80px);height:min(23vw,96px)}
+html.v2 .rgwrap .rgi img{border-radius:29%!important;corner-shape:squircle}
+@supports (corner-shape:squircle){html.v2 .rgwrap .rgi{border-radius:42%!important}html.v2 .rgwrap .rgi img{border-radius:40%!important}}
+html.v2 .rgwrap .rgi>b{position:absolute;left:3px;right:3px;bottom:3px;margin:0;padding:16px 0 7px;text-align:center;color:#fff;font:700 12px/1.2 var(--f-ui);background:linear-gradient(transparent,rgba(0,0,0,.78) 70%);border-radius:0 0 26% 26%;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+html.v2 .rgwrap .rgi>b em{display:block;color:rgba(255,255,255,.85);font-weight:600;font-size:11px;margin:1px 0 0}
+html.v2 .rgwrap .rg.tod .rgi>b em{color:#F3D79A}
+html.v2 .rgwrap .rg.sel .rgi>b{background:linear-gradient(transparent,rgba(0,0,0,.72))}
+html.v2 .rgwrap .rg.sel>b{display:none}
+.td3ph.hasum{aspect-ratio:4/5}.td3ph .plsum{display:block;font:500 16.5px/1.75 var(--f-text);color:#fff;margin-bottom:14px;text-shadow:0 1px 8px rgba(0,0,0,.45);word-break:keep-all}
+.td3ph.hasum .plab{padding-top:90px;background:linear-gradient(transparent,rgba(10,16,13,.55) 22%,rgba(10,16,13,.86))}
 </style>
 
 <div class="wrap">
@@ -11965,13 +11975,13 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g}=o, N=todayNe
   let h=`<section class="td3"><div class="td3top">${p.topic&&p.topic!==p.label?`<p class="td3k">${esc(p.label)}</p>`:"<span></span>"}${MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}${live?"":`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div><h1>${esc(p.topic||p.label)}</h1></section>`;
   if(read) h+=`<div class="td3ok">${ck(1)}<b>${live?"오늘 통독 완료":"이 날 통독 완료"}</b><span>${esc(fmt(dt,{month:"long",day:"numeric"}))} · ${esc(p.label)}</span></div>`;
   if(q.done&&kv) h+=wordCard(w,d,q,kv,wordCardPh(w,d,q),true);
-  h+=`<button class="td3ph" id="tdHero">${phImg(ph,"td3img")}<span class="plab">${N.e?`<em>${N.e}</em>`:""}<b>${esc(N.t)}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></b><small>${esc(N.s)}</small></span>${ph&&ph.link?`<span class="tdcr">${esc(ph.by||"")}</span>`:""}</button>`;
+  h+=`<button class="td3ph${g.today?" hasum":""}" id="tdHero">${phImg(ph,"td3img")}<span class="plab">${g.today?`<span class="plsum">${esc(g.today)}</span>`:""}${N.e?`<em>${N.e}</em>`:""}<b>${esc(N.t)}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></b><small>${esc(N.s)}</small></span>${ph&&ph.link?`<span class="tdcr">${esc(ph.by||"")}</span>`:""}</button>`;
   const chip=(on,mid,t)=>`<span class="td3c${on?" on":mid?" mid":""}">${on?ck(1):mid?`<em>${esc(mid)}</em>`:"<i></i>"}${t}</span>`;
   /* 통독·스토리·묵상 노트 칩은 뺌(목사님 2026-11-02: 처음 화면에서 뜻을 알 수 없음) */
   if(q.done) h+=`<div class="td3more"><button id="tdStory0">스토리 다시 보기</button><button id="tdNote">묵상 노트 보기</button></div>`;
   else if(!read&&!futLock(w,d)) h+=`<button class="td3sub" id="tdStory0">${TD.past?"스토리 먼저 보기 ›":"이야기 먼저 보기 ›"}</button>`;
   h+=`<section class="tdsheet td3sheet">`;
-  if(g.today) h+=`<p class="tdstory">${esc(g.today)}</p>`;
+  /* 본문 요약은 그림 위로 옮김(목사님 2026-11-02) */
   if(!read&&g.find) h+=`<p class="tdfind"><span>읽으면서 찾아보세요</span>${esc(g.find)}</p>`;
   h+=tdAid(w,d,p)+tdTrip(w,d)+`</section>`;
   return h; }
@@ -12157,11 +12167,11 @@ function dayRingHTML(fold){ if(fold&&window.CBSR_V2) return dayFoldHTML(); const
   const from=Math.max(1,selN-28), to=Math.min(N,selN+28);
   for(let n=from;n<=to;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7;
     if(isRev(d)&&PLAN.plan[w-1]&&WEEKS[w-1]){ const dt=dateOf(w,d), dd=dayDiff(here0,dt), tod=dd===0, sel=n===selN&&!view.pre&&!view.revW, ph=sunCover(w), seen=!!(mem.sun&&mem.sun[w]);
-      r+=`<button class="rg rgsun${sel?" sel":""}${tod?" tod":""}${dd>0?" fut":""}${seen?" done":""}" data-rgsun="${w}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2?"":" 주일"}, 한 주 돌아보기"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}<i class="rgsunm">쉼</i></span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":"주일"}</em></b></button>`; continue; }
+      r+=`<button class="rg rgsun${sel?" sel":""}${tod?" tod":""}${dd>0?" fut":""}${seen?" done":""}" data-rgsun="${w}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2?"":" 주일"}, 한 주 돌아보기"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}<i class="rgsunm">쉼</i>${window.CBSR_V2?`<b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":"주일"}</em></b>`:""}</span>${window.CBSR_V2?"":`<b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":"주일"}</em></b>`}</button>`; continue; }
     if(!dayPlan(w,d)) continue; const dt=dateOf(w,d), key=keyOf(w,d), done=!!mem.done[key], qtd=!!(mem.qt[key]&&mem.qt[key].done), sel=n===selN&&!view.pre&&!view.revW, dd=dayDiff(here0,dt), tod=dd===0, fut=dd>0;
     let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
     const p=dayPlan(w,d);
-    r+=`<button class="rg${sel?" sel":""}${MS.has(key)?" miss":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${w}-${d}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p.label)}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}</span><b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":DAYN[dt.getDay()]}</em></b></button>`; }
+    r+=`<button class="rg${sel?" sel":""}${MS.has(key)?" miss":""}${done?" done":""}${tod?" tod":""}${fut?" fut":""}" data-rg="${w}-${d}"${sel?' id="rgSel"':""} aria-label="${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))} ${esc(p.label)}${done?" 읽음":""}"><span class="rgi">${ph?`<img alt="" src="${esc(ph.u)}" loading="lazy" referrerpolicy="no-referrer">`:""}${qtd?`<i class="rgq">✓</i>`:done?`<i class="rgd">✓</i>`:""}${window.CBSR_V2?`<b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":DAYN[dt.getDay()]}</em></b>`:""}</span>${window.CBSR_V2?"":`<b>${dt.getMonth()+1}/${dt.getDate()}<em>${tod?"오늘":DAYN[dt.getDay()]}</em></b>`}</button>`; }
   const dt=dateOf(view.w,view.d), p=dayPlan(view.w,view.d), isT=view.w===here.w&&view.d===here.d;
   const MY=myStoryItems(), myOn=MY.some(x=>x.mine), av=PROF.photo?`<img alt="" src="${PROF.photo}">`:`<em class="rgme-i">${esc(PROF.nick?[...PROF.nick][0]:"나")}</em>`;
   const me=`<button class="rg rgme${myOn?"":" empty"}" id="rgMe" aria-label="나의 통독: 오늘 내게 주시는 말씀과 아멘한 말씀"><span class="rgi">${av}${myOn?"":`<i class="rgplus">+</i>`}</span><b>나의 통독</b></button>`;
