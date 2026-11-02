@@ -2227,6 +2227,22 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .qtstp{display:flex;align-items:center;gap:10px;margin:0 0 14px}.qtprev{border:0;background:transparent;padding:4px;display:grid;color:var(--ink);cursor:pointer}.qtprev[disabled]{opacity:.25}.qtprev svg{width:22px;height:22px}
 .qtbars{flex:1;display:flex;gap:4px}.qtbars i{flex:1;height:4px;border-radius:2px;background:var(--line)}.qtbars i.on{background:var(--accent)}.qtstp b{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .qtnext{position:sticky;z-index:5;padding:12px 0 14px;background:linear-gradient(transparent,var(--paper) 35%)}.qtnext:empty{display:none}.qtnext .btn{width:100%;padding:15px;font-size:16px}
+html.v2 .vtext,html.v2 .vtext .para,html.v2 .rjtext,html.v2 .eye p,html.v2 .qcard p{word-break:keep-all;overflow-wrap:anywhere}
+.lnov{position:fixed;inset:0;z-index:9700;display:flex;flex-direction:column;justify-content:flex-end}.lnbg{position:absolute;inset:0;background:rgba(10,16,13,.35)}
+.lnp{position:relative;background:var(--card);border-radius:20px 20px 0 0;padding:14px max(18px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:grid;gap:10px;max-width:640px;width:100%;margin:0 auto;box-shadow:0 -8px 30px rgba(0,0,0,.15)}
+.lnhd{display:flex;align-items:center;justify-content:space-between}.lnhd b{font-size:16px}.lnx{border:0;background:transparent;padding:6px;display:grid;color:var(--muted);cursor:pointer}.lnx svg{width:20px;height:20px}
+.lnv{border-left:3px solid var(--gold);padding:2px 0 2px 12px;display:grid;gap:2px}.lnv q{quotes:none;font:500 15px/1.7 var(--f-text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}.lnv small{font-size:12px;font-weight:700;color:var(--gold)}
+.lnta{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);padding:11px 13px;font:16px/1.6 var(--f-ui);resize:none}
+.lnft{display:flex;gap:8px;justify-content:flex-end}.lnok{flex:1;border:0;border-radius:12px;padding:13px;background:var(--accent);color:var(--card);font:700 15px var(--f-ui);cursor:pointer}.lndel{border:0;background:transparent;color:var(--muted);font:600 14px var(--f-ui);padding:0 12px;cursor:pointer}
+html.v2 .v.ln>sup{color:var(--gold);font-weight:700}html.v2 .v.ln>sup::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:3px;vertical-align:.25em}
+.lnb.on{color:var(--gold)}
+.lnlist{display:grid;gap:8px}.lnc{display:grid;gap:4px;text-align:left;border:0;border-radius:14px;background:color-mix(in srgb,var(--accent) 6%,var(--card));padding:12px 14px;cursor:pointer;color:var(--ink);width:100%}
+.lnc p{margin:0;font:600 15px/1.6 var(--f-ui);word-break:keep-all}.lnc q{quotes:"“" "”";font:14px/1.65 var(--f-text);color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}.lnc small{font-size:12px;color:var(--muted)}.lnc small b{color:var(--gold)}
+.rybox .lnc{background:var(--rytile,var(--paper))}
+.lnseg{display:flex;gap:4px;background:var(--line);border-radius:12px;padding:3px;margin-bottom:14px}.lnseg button{flex:1;border:0;border-radius:9px;padding:8px 4px;background:transparent;font:600 13.5px var(--f-ui);color:var(--muted);cursor:pointer}.lnseg button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.lnbk{margin-bottom:16px}.lnbk h4{margin:0 0 8px;font-size:14px}.lnbk h4 span{color:var(--muted);font-weight:500}
+.lnq{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:11px 14px;font:15px var(--f-ui);margin-bottom:12px}
+.lnempty{color:var(--muted);font-size:14px;margin:6px 2px}
 </style>
 
 <div class="wrap">
@@ -7717,6 +7733,47 @@ function bookCover(b){ const D=bookDays(b), u=b===19?"편":"장", N=BOOKCH[b-1],
     ${KV.length?`<div class="bkkv"><small>이 책에서 붙잡은 말씀</small>${KV.slice(-3).map(v=>`<q>${esc(vtxt(v))}</q><span>${esc(PLAN.abbr[v[0]-1])} ${v[1]}:${v[2]}</span>`).join("")}</div>`:""}
     ${rx?`<p class="bkrx">이야기 카드에 남긴 반응 ${rx}</p>`:""}<button class="bkok">닫기</button></div></div>`;
   document.body.appendChild(el); const close=()=>el.remove(); el.querySelector(".bkx").onclick=close; el.querySelector(".bkok").onclick=close; el.onclick=e=>{ if(e.target===el) close(); }; }
+/* ===== 한 줄 남기기(v2, UX 로드맵 A1·A2, 2026-11-02): 본문에서 고른 절에 짧게 남기고, 기록 탭에서 다시 찾아 원문으로 돌아감.
+   저장: mem.qt[날 key].ln = {절 id: {t, at}} (지운 것은 t:"" 로 남겨 두 기기 합치기에서 되살아나지 않게) */
+let LNDAY=null;
+const lnGet=(k,id)=>{ const x=((mem.qt||{})[k]||{}).ln; return x&&x[id]&&x[id].t?x[id]:null; };
+function lnAll(){ const out=[]; for(const k in (mem.qt||{})){ const L=(mem.qt[k]||{}).ln; if(!L) continue; for(const v in L) if(L[v]&&L[v].t&&L[v].t.trim()) out.push({k,v,t:L[v].t,at:L[v].at||0}); } return out.sort((a,b)=>b.at-a.at); }
+const lnRef=v=>{ const [b,c,n]=v.split("-").map(Number); return {b,c,n,lab:`${PLAN.abbr[b-1]} ${c}:${n}`,t:vtxt([b,c,n])}; };
+function lnOpen(id,w,d){ document.querySelector(".lnov")?.remove(); const k=keyOf(w,d), old=lnGet(k,id), R=lnRef(id);
+  const el=document.createElement("div"); el.className="lnov"; el.innerHTML=`<div class="lnbg"></div><div class="lnp" role="dialog" aria-modal="true" aria-label="한 줄 남기기">
+    <div class="lnhd"><b>${old?"남긴 한 줄":"한 줄 남기기"}</b><button class="lnx" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="lnv"><q>${esc(R.t)}</q><small>${esc(R.lab)}</small></div>
+    <textarea class="lnta" rows="3" maxlength="300" placeholder="이 구절에서 본 것, 물음, 기도 한 줄" aria-label="남길 글">${esc(old?old.t:"")}</textarea>
+    <div class="lnft">${old?`<button class="lndel">지우기</button>`:""}<button class="lnok">${old?"고치기":"남기기"}</button></div></div>`;
+  document.body.appendChild(el); const ta=el.querySelector(".lnta"); setTimeout(()=>{ try{ ta.focus({preventScroll:true}); }catch(e){} },60);
+  const close=pop=>{ if(pop!==true) ovDone(close); el.remove(); }; ovOpen(close);
+  const put=t=>{ const q=qtOf(k); q.ln ||= {}; q.ln[id]={t,at:Date.now()}; touchQ(q,"ln"); save(); const v=document.getElementById("v-"+id); if(v) v.classList.toggle("ln",!!t); };
+  el.querySelector(".lnx").onclick=()=>close(); el.querySelector(".lnbg").onclick=()=>close();
+  el.querySelector(".lnok").onclick=()=>{ const t=ta.value.trim(); if(!t){ ta.focus(); return; } put(t); close(); toast(old?"고쳤습니다":"한 줄을 남겼습니다"); };
+  const dl=el.querySelector(".lndel"); if(dl) dl.onclick=()=>{ put(""); close(); toast("지웠습니다"); }; }
+function lnCard(x){ const R=lnRef(x.v), [w,d]=x.k.split("-").map(Number), dt=dayPlan(w,d)?dateOf(w,d):null;
+  return `<button class="lnc" data-lnk="${esc(x.k)}" data-lnv="${esc(x.v)}"><p>${esc(x.t)}</p><q>${esc(R.t)}</q><small><b>${esc(R.lab)}</b>${dt?` · ${dt.getMonth()+1}월 ${dt.getDate()}일`:""}</small></button>`; }
+function lnQtHTML(k){ const L=lnAll().filter(x=>x.k===k).sort((a,b)=>{ const A=lnRef(a.v),B=lnRef(b.v); return A.b-B.b||A.c-B.c||A.n-B.n; }); if(!L.length) return "";
+  return `<section class="sec lnsec"><span class="label">본문에서 남긴 한 줄</span><div class="lnlist">${L.map(lnCard).join("")}</div></section>`; }
+function lnRecHTML(){ const L=lnAll(); if(!L.length) return "";
+  return `<section class="rybox"><div class="ryhd"><h3>남긴 한 줄 <span>${L.length}</span></h3>${L.length>3?`<button class="rylink" data-recgo="lines">전체<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`:""}</div><div class="lnlist">${L.slice(0,3).map(lnCard).join("")}</div></section>`; }
+function lnDetailHTML(){ const L=lnAll(), sg=view.lnSeg||"new";
+  const seg=`<div class="lnseg" role="tablist">${[["new","최근 순"],["book","성경 책별"],["find","찾기"]].map(([k,t])=>`<button role="tab" aria-selected="${k===sg}" data-lnseg="${k}">${t}</button>`).join("")}</div>`;
+  let body="";
+  if(!L.length) body=`<p class="lnempty">본문에서 절을 누르고 '한 줄 남기기'를 고르면 여기에 모입니다.</p>`;
+  else if(sg==="book"){ const G={}; L.forEach(x=>{ const b=lnRef(x.v).b; (G[b] ||= []).push(x); });
+    body=Object.keys(G).map(Number).sort((a,b)=>a-b).map(b=>`<div class="lnbk"><h4>${esc(PLAN.full[b-1])} <span>${G[b].length}</span></h4><div class="lnlist">${G[b].sort((x,y)=>{ const A=lnRef(x.v),B=lnRef(y.v); return A.c-B.c||A.n-B.n; }).map(lnCard).join("")}</div></div>`).join(""); }
+  else if(sg==="find") body=`<input class="lnq" id="lnQ" type="search" placeholder="낱말로 찾기" value="${esc(view.lnQ||"")}" aria-label="남긴 한 줄 찾기"><div class="lnlist" id="lnRes">${lnFind(view.lnQ||"")}</div>`;
+  else body=`<div class="lnlist">${L.map(lnCard).join("")}</div>`;
+  return `<section class="sec rsec lnwrap">${seg}${body}</section>`; }
+function lnFind(q){ q=(q||"").trim(); const L=lnAll(); if(!q) return L.map(lnCard).join(""); const R=L.filter(x=>x.t.includes(q)||lnRef(x.v).t.includes(q)||lnRef(x.v).lab.includes(q)||(PLAN.full[lnRef(x.v).b-1]||"").includes(q));
+  return R.length?R.map(lnCard).join(""):`<p class="lnempty">'${esc(q)}'이(가) 들어간 한 줄이 없습니다.</p>`; }
+function lnGo(k,id){ const [w,d]=k.split("-").map(Number); if(!dayPlan(w,d)) return; if(BM_OV) try{ BM_OV.close(); }catch(e){}
+  view.pre=false; view.revW=null; view.w=w; view.d=d; view.recD=null; view.tab="read"; view.open=true; render();
+  const el=document.getElementById("v-"+id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2400); } else scrollTo({top:0}); }
+function lnBind(m){ const on=r=>r.querySelectorAll("[data-lnk]").forEach(b=>b.onclick=()=>lnGo(b.dataset.lnk,b.dataset.lnv)); on(m);
+  m.querySelectorAll("[data-lnseg]").forEach(b=>b.onclick=()=>{ view.lnSeg=b.dataset.lnseg; render(); });
+  const q=m.querySelector("#lnQ"); if(q) q.oninput=()=>{ view.lnQ=q.value; const r=m.querySelector("#lnRes"); if(r){ r.innerHTML=lnFind(q.value); on(r); } }; }
 /* ===== 마친 순간(v2, 목사님 2026-11-02 · 2차 UI 샘플): 통독·묵상 노트를 마치면 한 화면으로. 최근 4주 달력은 읽은 날만 채우고 빠진 날은 드러내지 않음 ===== */
 const dsOf=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
 function finCal(){ const t0=today0(), mon=new Date(t0); mon.setDate(t0.getDate()-((t0.getDay()+6)%7)-21);
@@ -8097,11 +8154,13 @@ function syncHlBar(){
   if(!HSEL.size||view.tab!=="read"){ bar.hidden=true; bar.innerHTML=""; return; }
   const anyMk=[...HSEL].some(id=>HL[id]);
   const one=HSEL.size===1?[...HSEL][0]:null, isBm=one&&mem.bm&&mem.bm.v===one;
-  bar.innerHTML=`${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${one&&STUDY_ON()&&+one.split("-")[0]<=39?`<button class="bmb" data-mk="orig" aria-label="원문 보기">원문</button>`:""}${one&&ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d))?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="bmb erase" data-mk="x" aria-label="형광펜 지우기">지우기</button>`:""}<button class="cl" data-mk="close">취소</button>`;
+  const lnHas=one&&window.CBSR_V2&&lnGet(keyOf(view.w,view.d),one);
+  bar.innerHTML=`${one&&window.CBSR_V2?`<button class="bmb lnb${lnHas?" on":""}" data-mk="ln">${lnHas?"남긴 한 줄":"한 줄 남기기"}</button>`:""}${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${one&&STUDY_ON()&&+one.split("-")[0]<=39?`<button class="bmb" data-mk="orig" aria-label="원문 보기">원문</button>`:""}${one&&ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d))?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="bmb erase" data-mk="x" aria-label="형광펜 지우기">지우기</button>`:""}<button class="cl" data-mk="close">취소</button>`;
   bar.hidden=false;
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
     if(k==="orig"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); const [b,c,v]=id.split("-").map(Number); studyOpenVerse(b,c,v); return; }
     if(k==="tts"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); HSEL.clear(); syncHlBar(); ttsStart(id); ttsBtnSync(); return; }
+    if(k==="ln"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); HSEL.clear(); syncHlBar(); lnOpen(id,view.w,view.d); return; }
     if(k==="bm"){ const id=[...HSEL][0]; if(mem.bm&&mem.bm.v===id) delete mem.bm; else mem.bm={v:id,w:view.w,d:view.d,at:Date.now()}; save(); HSEL.clear(); const y=scrollY; render(); scrollTo({top:y}); syncHlBar(); return; }
     if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x"){ delete HL[id]; HLDEL[id]=t; } else { HL[id]=[k,t]; delete HLDEL[id]; } const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]?" mk-"+HL[id][0]:""); } } saveHL(); }
     else for(const id of HSEL){ document.getElementById("v-"+id)?.classList.remove("sel"); }
@@ -8414,11 +8473,11 @@ function verseHTML(t,b,c,v,s2,useSp){
   const R=useSp?((window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{})[`${b}-${c}-${v}`]):null;
   if(!R||!R.length) return markGloss(t,b,s2);
   let h="", p=0; for(const [s,e] of R){ if(s>p) h+=markGloss(t.slice(p,s),b,s2); h+=`<span class="sp">${markGloss(t.slice(s,e),b,s2)}</span>`; p=e; } if(p<t.length) h+=markGloss(t.slice(p),b,s2); return h; }
-function chapHTML(b,c,s2){ const o=RD_OPT(), P=o.para?new Set(PARA[b+"-"+c]||[]):new Set(); let h=o.para?`<p class="para">`:"";
+function chapHTML(b,c,s2){ LNDAY=((mem.qt||{})[keyOf(view.w,view.d)]||{}).ln||null; const o=RD_OPT(), P=o.para?new Set(PARA[b+"-"+c]||[]):new Set(); let h=o.para?`<p class="para">`:"";
   BIBLE[b-1][c-1].forEach((t,i)=>{ const v=i+1, id=`${b}-${c}-${v}`, mk=HL[id];
     if(P.has(v)) h+=`</p><p class="para">`;
     const bm=mem.bm&&mem.bm.v===id;
-    h+=`<span class="v${mk?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}${bm?" bm":""}" id="v-${id}" data-v="${id}">${bm?`<i class="bmk" aria-label="책갈피"></i>`:""}<sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
+    h+=`<span class="v${mk?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}${bm?" bm":""}${window.CBSR_V2&&LNDAY&&LNDAY[id]&&LNDAY[id].t?" ln":""}" id="v-${id}" data-v="${id}">${bm?`<i class="bmk" aria-label="책갈피"></i>`:""}<sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
   return h+(o.para?`</p>`:""); }
 
 /* ── 본문 들려주기: 기기에 들어 있는 음성 읽기(한국어)로 절마다 읽습니다 ── */
@@ -8890,6 +8949,7 @@ function renderQT(){
     :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${STORY()?`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`:""}</section>`;
   // 1 본문 관찰
   h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${V2Q?(R?`<button class="qtlnk" id="scopeRead">본문 열기 · ${esc(sceneLabel(R))} ›</button>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
+  if(V2Q) h+=lnQtHTML(key);
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
@@ -10225,6 +10285,7 @@ function mergeMem(a,b){
     const newer=f=>{ const tx=fx[f]||0, ty=fy[f]||0; if(!tx&&!ty) return null; if(tx!==ty) r.ft[f]=Math.max(tx,ty); return ty>tx?y:x; };
     for(const t of ["story","obs","med","pray","gap","l0","l1","l2"]){ const W=newer(t); r[t]=W?(W[t]||""):(((x[t]||"").length>=(y[t]||"").length?x[t]:y[t])||""); }
     for(const t of ["kv","pv","amen","samen"]){ const W=newer(t); if(W){ if(W[t]===undefined) delete r[t]; else r[t]=W[t]; } }
+    { const L={...(y.ln||{})}; for(const v in (x.ln||{})){ if(!L[v]||(x.ln[v].at||0)>=(L[v].at||0)) L[v]=x.ln[v]; } if(Object.keys(L).length) r.ln=L; else delete r.ln; }
     { const W=newer("done"); r.done=W?!!W.done:!!(x.done||y.done); }
     /* 완료한 날짜는 가장 이른 날을 남깁니다(다시 불러와도 날이 늘지 않음) */
     { const da=[x.doneAt,y.doneAt].filter(Boolean).sort(); if(da.length) r.doneAt=da[0]; }
@@ -10565,6 +10626,7 @@ function recCards(){ return Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q.
 function lastReadBook(){ /* 일정에서 가장 앞선 읽은 날의 책(뒤늦게 완료한 지난 날이 '지금 읽는 책'이 되지 않게) */ let best=null; for(const k in mem.done){ const [w,d]=k.split("-").map(Number); const p=dayPlan(w,d); if(!p) continue; const o=dayNo(w,d); if(!best||o>best.o) best={o,b:p.ch[p.ch.length-1][0]}; } return best?PLAN.full[best.b-1]:""; }
 const recRow=(go,t,sub)=>`<button class="rrow" data-recgo="${go}"><span><b>${t}</b><small>${sub}</small></span><i aria-hidden="true">›</i></button>`;
 function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">‹ ${back?"돌아가기":"기록"}</button><h2>${t}</h2></div>`;
+  if(D==="lines") return head("남긴 한 줄")+lnDetailHTML();
   if(D==="road"){ const {tot,got}=bookProgress(); return head("통독의 길")+`<section class="sec rsec">${recRoad(n,null)}<div class="rstat"><div><b>${n.toLocaleString()}</b><span>읽은 장</span></div><div><b>${Object.keys(mem.done).length}</b><span>읽은 날</span></div><div><b>${readStreak()}일</b><span>이어 읽기</span></div></div><p class="lead rnote">읽은 장은 성경 1,189장 가운데 '오늘 통독 완료'를 누른 날의 본문 장 수입니다. 같은 날을 다시 눌러도 한 번만 셉니다.</p></section>`+recRow("shelf","성경 책장","책마다 읽은 장 보기"); }
   if(D==="shelf"){ const {tot,got}=bookProgress(), SH=recShelf();
     const grp=[["율법",1,5],["역사",6,17],["시가",18,22],["선지서",23,39],["복음서·행전",40,44],["서신·계시",45,66]];
@@ -11149,9 +11211,10 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   let h=topBanners("record")+`<section class="ryprof rprof">${av?av.outerHTML:""}<div class="rpname"><b>${esc(PROF.nick||"내 통독 기록")}</b><small>${st} · ${esc(PI.name)}</small></div><button class="rygear" data-recgo="more" aria-label="설정 · 더 보기">${ic("gear")}</button></section>`;
   const row=(go,k,t)=>`<button class="ryrow" data-recgo="${go}"><span class="ryico ${k}">${ic(k)}</span><b>${t}</b><svg class="ych" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
   /* 첫 방문(기록 없음, 2026-11-02): 0이 늘어선 숫자판 대신 할 일 하나 */
-  if(!Object.keys(mem.done).length&&!CD.length&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen))){ const tp=dayPlan(here.w,here.d);
+  if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen))){ const tp=dayPlan(here.w,here.d);
     h+=`<section class="rybox"><p class="ryfirst">오늘 본문을 읽고 묵상 노트를 마치면, 읽은 날과 붙잡은 말씀, 아멘이 여기에 모입니다.</p>${tp?`<button class="ryfirstb" data-tab-go="read"><b>오늘 본문 열기</b><small>${esc(fmt(dateOf(here.w,here.d),{month:"long",day:"numeric"}))} · ${esc(tp.label)}</small></button>`:""}</section>`;
     h+=`<section class="rybox rymenu">${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`; return h; }
+  h+=lnRecHTML();
   /* 2) 통독 요약: 큰 숫자 + 막대 + 이번 주 */
   let OT=0, ot=0; try{ for(let b=1;b<=39;b++) OT+=BIBLE[b-1].length; const S=new Set(); for(const k in mem.done){ const [w,d]=k.split("-").map(Number), pl=dayPlan(w,d); if(pl) pl.ch.forEach(([b,c])=>{ if(b<=39) S.add(b+"-"+c); }); } ot=S.size; }catch(e){ OT=929; }
   const NT=TOTAL_CH-OT, nt=Math.max(0,n-ot), pc=Math.floor(n/TOTAL_CH*100), rs=readStreak();
@@ -12243,6 +12306,7 @@ function render(){
   if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
     m.querySelectorAll("[data-recseg]").forEach(b=>b.onclick=()=>{ view.recSeg=b.dataset.recseg; const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const rb=m.querySelector("#recBack"); if(rb) rb.onclick=()=>{ ovDone(recBackOv); recBack(); };
+    lnBind(m);
     bmBind(m);
     m.querySelectorAll("[data-tab-go]").forEach(b=>b.onclick=()=>{ view.tab=b.dataset.tabGo; render(); window.scrollTo({top:0}); }); }
   bind(); if(view.tab==="admin"&&window.CBSR_V2) bindDash(m); else document.documentElement.classList.remove("admwide"); if(view.tab==="study") bindStudy(m); else if(typeof bindStudyNotes==="function") bindStudyNotes(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); } if(TTS.on) ttsMark(false);
