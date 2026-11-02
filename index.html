@@ -2307,6 +2307,10 @@ html.v2 .q3 .qev{background:var(--card)}.qevs{margin-top:12px}.qevs .label{displ
 .prmine{margin-top:12px;background:color-mix(in srgb,var(--accent) 6%,var(--card));border-radius:16px;padding:12px 16px;display:grid;gap:6px}.prmine small{font-size:12px;font-weight:700;color:var(--muted)}.prmine p{margin:0;font:15px/1.65 var(--f-ui);word-break:keep-all}.prmine p b{display:block;font-size:12px;color:var(--accent)}
 .chrole{margin-top:12px;display:grid;gap:8px}.chrole>div{background:var(--card);border-radius:16px;padding:12px 16px}.chrole b{display:block;font:700 12.5px var(--f-ui);color:var(--muted);margin-bottom:3px}.chrole p{margin:0;font:15.5px/1.75 var(--f-ui);word-break:keep-all}
 .chrole>div.main{border-left:3px solid var(--gold)}.chrole>div.main b{color:var(--gold)}
+.chpair{display:grid;gap:4px;margin-top:2px}.chpair>i{justify-self:center;font-style:normal;color:var(--muted);font-size:16px;line-height:1}
+.chq2{background:var(--card);border-radius:18px;padding:14px 16px 10px 18px;display:grid;gap:6px;border-left:3px solid var(--accent)}.chq2.ot{border-left-color:var(--gold)}
+.chq2 small{font-size:12px;font-weight:700;color:var(--accent)}.chq2.ot small{color:var(--gold)}.chq2 q{quotes:"“" "”";font:600 17px/1.7 var(--f-text);word-break:keep-all}
+.chtx{margin-top:10px}
 </style>
 
 <div class="wrap">
@@ -7903,14 +7907,23 @@ function christRefs(t,w,d){ const p=dayPlan(w,d), own=new Set(p.ch.map(x=>x[0]))
   String(t||"").replace(/([가-힣]{1,3})\s?(\d{1,3}):(\d{1,3})(?:[–-](\d{1,3}))?/g,(m,a,c,v,e)=>{ const b=PLAN.abbr.indexOf(a)+1; if(!b||own.has(b)) return m; const k=`${b}-${c}-${v}`; if(seen.has(k)) return m; seen.add(k);
     const C=(BIBLE[b-1]||[])[+c-1]; if(!C) return m; const z=Math.min(C.length,e?+e:+v), vs=[]; for(let i=+v;i<=z;i++) vs.push(C[i-1]); out.push({b,c:+c,v:+v,e:z,t:vs.join(" ")}); return m; });
   return out.slice(0,3); }
-function christSecV2(w,d,t,ck,det){ if(!t) return ""; const R=christRefs(t,w,d);
+/* 11/2 목사님: 떠 있기만 하는 물음은 뺌. 신약·구약은 인용된 부분만 짝으로 보여 주고, 해설은 아래(역할 해설)에서 */
+function christQuotes(t,w,d){ const p=dayPlan(w,d), own=new Set(p.ch.map(x=>x[0])), out=[];
+  String(t||"").replace(/["“]([^"”]{4,})["”]\s*\(([^)]+)\)/g,(m,q,ref)=>{ const mm=ref.match(/^(?:([가-힣]{1,3})\s?)?(\d{1,3}):(\d{1,3})(?:[–-](\d{1,3}))?/); if(!mm) return m;
+    let b=0; if(mm[1]&&PLAN.abbr.includes(mm[1])) b=PLAN.abbr.indexOf(mm[1])+1; else { const ch=p.ch.find(x=>x[1]===+mm[2]); if(ch) b=ch[0]; } if(!b) return m;
+    out.push({q,b,c:+mm[2],v:+mm[3],e:mm[4]?+mm[4]:+mm[3],own:own.has(b)}); return m; }); return out; }
+function christSecV2(w,d,t,ck,det){ if(!t) return ""; const R=christRefs(t,w,d), Q=christQuotes(t,w,d), nq=Q.filter(x=>x.own), oq=Q.filter(x=>!x.own);
+  const qc=(x,lab)=>{ const fl=!x.own&&typeof FLOW!=="undefined"&&FLOW[x.b+"-"+x.c]?FLOW[x.b+"-"+x.c].t.replace(/[.。]$/,""):""; return `<div class="chq2${x.own?" nt":" ot"}"><small>${esc(lab)}${fl?` · ${esc(PLAN.full[x.b-1])} ${x.c}${x.b===19?"편":"장"} ${esc(fl)}`:""}</small><q>${esc(x.q)}</q><div class="chotf"><b>${esc(PLAN.abbr[x.b-1])} ${x.c}:${x.v}${x.e>x.v?"–"+x.e:""}</b><button class="lnk chopen" data-chv="${x.b}-${x.c}-${x.v}-${x.e}">본문 열기 ›</button></div></div>`; };
+  const pair=nq.length&&oq.length?`<div class="chpair">${qc(nq[0],"오늘 본문")}<i aria-hidden="true">↕</i>${qc(oq[0],"인용된 말씀")}</div>`:"";
+  const bk=(dayPlan(w,d).ch[0]||[0])[0], pv=/[?&]chrole=1/.test(location.search); let role="";
+  for(const r of [...oq,...R]){ const X=typeof CHROLE!=="undefined"&&CHROLE[`${bk}|${r.b}:${r.c}:${r.v}`]; if(X&&(X.ok||pv)){ role=`<div class="chrole"><div><b>구약에서는</b><p>${esc(X.ot)}</p></div><div><b>신약에서는</b><p>${esc(X.nt)}</p></div><div class="main"><b>여기서 하는 역할</b><p>${esc(X.role)}</p></div></div>`; break; } }
+  /* 짝이 없으면 지금처럼 글 + 다른 책 구절 카드. 짝이 있으면 글은 역할 해설이 없을 때만 아래에 */
+  const otCards=pair?"":R.map(r=>{ const fl=(typeof FLOW!=="undefined"&&FLOW[r.b+"-"+r.c])?FLOW[r.b+"-"+r.c].t.replace(/[.。]$/,""):""; return `<div class="chot"><small>${esc(PLAN.full[r.b-1])} ${r.c}${r.b===19?"편":"장"}${fl?` · ${esc(fl)}`:""}</small><q>${esc(r.t)}</q><div class="chotf"><b>${esc(PLAN.abbr[r.b-1])} ${r.c}:${r.v}${r.e>r.v?"–"+r.e:""}</b><button class="lnk chopen" data-chv="${r.b}-${r.c}-${Math.max(1,r.v)}-${r.e}">본문 열기 ›</button></div></div>`; }).join("");
   return `<section class="sec chsec"><div class="stage"><b>3</b><span>성경 전체로</span></div>
    ${ck&&CK_L[ck]?`<div class="chk"><b>${esc(CK_L[ck])}</b><p>${esc(CK_EXP[ck]||"")}</p></div>`:""}
-   <div class="qcard"><p>${esc(t)}</p></div>
-   ${R.map(r=>{ const fl=(typeof FLOW!=="undefined"&&FLOW[r.b+"-"+r.c])?FLOW[r.b+"-"+r.c].t.replace(/[.。]$/,""):""; return `<div class="chot"><small>${esc(PLAN.full[r.b-1])} ${r.c}${r.b===19?"편":"장"}${fl?` · ${esc(fl)}`:""}</small><q>${esc(r.t)}</q><div class="chotf"><b>${esc(PLAN.abbr[r.b-1])} ${r.c}:${r.v}${r.e>r.v?"–"+r.e:""}</b><button class="lnk chopen" data-chv="${r.b}-${r.c}-${Math.max(1,r.v)}-${r.e}">본문 열기 ›</button></div></div>`; }).join("")}
-   ${(()=>{ const bk=(dayPlan(w,d).ch[0]||[0])[0], pv=/[?&]chrole=1/.test(location.search); for(const r of R){ const X=typeof CHROLE!=="undefined"&&CHROLE[`${bk}|${r.b}:${r.c}:${r.v}`]; if(X&&(X.ok||pv)) return `<div class="chrole"><div><b>구약에서는</b><p>${esc(X.ot)}</p></div><div><b>신약에서는</b><p>${esc(X.nt)}</p></div><div class="main"><b>여기서 하는 역할</b><p>${esc(X.role)}</p></div></div>`; } return ""; })()}
-   ${det&&det.cm?`<div class="qcard chcm"><span class="label">무슨 뜻일까</span><p>${esc(det.cm)}</p></div>`:""}
-   <p class="chq">${R.length?"이 구약 말씀을 알고 다시 보면, 오늘 본문에서 무엇이 새롭게 보이나요?":"이 연결을 알고 다시 보면, 오늘 본문에서 무엇이 새롭게 보이나요?"}</p></section>`; }
+   ${pair}${pair?"":`<div class="qcard"><p>${esc(t)}</p></div>`}${otCards}
+   ${role||(pair?`<div class="qcard chtx"><p>${esc(t)}</p></div>`:"")}
+   ${det&&det.cm?`<div class="qcard chcm"><span class="label">무슨 뜻일까</span><p>${esc(det.cm)}</p></div>`:""}</section>`; }
 /* 묵상 노트 한 장씩(v2, 목사님 2026-11-02): 본문 관찰 · 하나님의 성품 · 붙잡을 한 구절 · 기도를 한 장에 하나, 아래 '다음' 하나 */
 function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done||FB_ON) return;
   if(!view.qsUrl){ view.qsUrl=1; try{ const n=+new URLSearchParams(location.search).get("qs"); if(n>0){ view.qtStepK=key; view.qtStep=n-1; } }catch(e){} }
