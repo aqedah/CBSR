@@ -2232,10 +2232,14 @@ html.v2 body.tdcov.hdk .td4top{height:190px;background:linear-gradient(180deg,rg
 html.v2 body.tdcov.hlt .td4top{height:190px;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,0))}
 html.v2 body.tdcov.hlt .td4ar{background:rgba(255,255,255,.55);color:#1B2420}
 html.v2 body.tdcov header.top .rgtoday{background:var(--hi)!important;color:var(--hi-ink)!important;border:0}
+html.v2 .td4hero>img.td4nb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+html.v2 .td4hero>img.td4img{z-index:0}html.v2 .td4hero>img.td4nb{z-index:0}
+html.v2 .td4hero.anim>img,html.v2 .td4hero.anim .td4head,html.v2 .td4hero.anim .td4sumb{transition:transform .26s ease,opacity .26s ease,-webkit-mask-image .26s ease}
+html.v2 .td4hero.drag>img,html.v2 .td4hero.drag .td4head,html.v2 .td4hero.drag .td4sumb{transition:none!important}
+html.v2 body.tdcov header.top #rgToday{display:none}
 html.v2 .td4nav{justify-content:center!important}
 html.v2 .td4ar{position:absolute;top:38%;z-index:3;transform:translateY(-50%)}html.v2 .td4ar.l{left:10px}html.v2 .td4ar.r{right:10px}
 html.v2 .td4hero{touch-action:pan-y}html.v2 .td4hero.drag>img,html.v2 .td4hero.drag .td4head,html.v2 .td4hero.drag .td4sumb{transition:none}
-html.v2 .td4hero>img,html.v2 .td4head,html.v2 .td4sumb{transition:transform .28s ease,opacity .28s ease}
 html.v2 .td4.inL .td4hero>img,html.v2 .td4.inL .td4head,html.v2 .td4.inL .td4sumb{animation:td4inL .32s ease}
 html.v2 .td4.inR .td4hero>img,html.v2 .td4.inR .td4head,html.v2 .td4.inR .td4sumb{animation:td4inR .32s ease}
 @keyframes td4inL{from{transform:translateX(-40px);opacity:.3}to{transform:none;opacity:1}}@keyframes td4inR{from{transform:translateX(40px);opacity:.3}to{transform:none;opacity:1}}
@@ -12448,9 +12452,10 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
   const arr=dir=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${dir<0?"m15 6-6 6 6 6":"m9 6 6 6-6 6"}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const n0=dayNo(w,d), nb=k=>{ for(let n=n0+k;n>=1&&n<=TOTAL_DAYS;n+=k){ const a=Math.floor((n-1)/7)+1, c=(n-1)%7; if(PLAN.plan[a-1]&&(dayPlan(a,c)||(isRev(c)&&WEEKS[a-1]))) return [a,c]; } return null; }, PV0=nb(-1), NX=nb(1);
-  const tag=live?`<span class="td4now">오늘</span>`:`<span></span>`; /* 다른 날이면 위쪽 머리줄에 '오늘로'가 있음 */
+  const tag=live?`<span class="td4now">오늘</span>`:`<button class="td4now go" id="tdGoToday">오늘로 ›</button>`; /* 11/3: '오늘'과 '오늘로'를 같은 자리에 */
+  const cov=x=>{ if(!x) return null; try{ if(isRev(x[1])) return sunCover(x[0]); const S2=storySlides(x[0],x[1]); return S2[0]&&S2[0].ph; }catch(e){ return null; } }, nbP=cov(PV0), nbN=cov(NX);
   /* 11/2 목사님: 위는 검은 그라데이션, 제목은 그림 위에, 아래 설명부터 바탕색으로 녹아듦 */
-  let h=`<section class="td4"><div class="td4hero">${phImg(ph,"td4img")}<i class="td4top"></i><div class="td4nav">${tag}</div><button class="td4ar l" id="tdPrev" aria-label="이전 날"${PV0?` data-go="${PV0.join("-")}"`:" disabled"}>${arr(-1)}</button><button class="td4ar r" id="tdNext" aria-label="다음 날"${NX?` data-go="${NX.join("-")}"`:" disabled"}>${arr(1)}</button>${ph&&ph.link?`<span class="tdcr">${esc(ph.by||"")}</span>`:""}
+  let h=`<section class="td4"><div class="td4hero">${nbP?phImg(nbP,"td4nb p"):""}${nbN?phImg(nbN,"td4nb n"):""}${phImg(ph,"td4img")}<i class="td4top"></i><div class="td4nav">${tag}</div><button class="td4ar l" id="tdPrev" aria-label="이전 날"${PV0?` data-go="${PV0.join("-")}"`:" disabled"}>${arr(-1)}</button><button class="td4ar r" id="tdNext" aria-label="다음 날"${NX?` data-go="${NX.join("-")}"`:" disabled"}>${arr(1)}</button>${ph&&ph.link?`<span class="tdcr">${esc(ph.by||"")}</span>`:""}
   <div class="td4head"><p class="td4k">${esc(p.label)}${MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</p><h1>${esc(p.topic||p.label)}</h1></div>
   <div class="td4sumb">${g.today?`<p class="td4sum">${esc(g.today)}</p>`:""}</div></div><div class="td4tx">`;
   const n=(S||[]).length;
@@ -12532,12 +12537,18 @@ function bindToday(){ clearInterval(TD.cd); if(isRev(view.d)) bindSunday();
   const ttp=document.getElementById("tdTrip"); if(ttp) ttp.onclick=()=>{ const R=routesFor(view.w,view.d).filter(r=>r.p.filter(q=>q[0]).length>=2); if(R[0]) bmOpenRoute(R[0]); };
   const gt=document.getElementById("tdGoToday"); if(gt) gt.onclick=()=>{ view.w=here.w; view.d=here.d; render(); };
   const tdGo=(id,dir)=>{ const x=document.getElementById(id); if(!x||!x.dataset.go) return false; const [a,c]=x.dataset.go.split("-").map(Number); TD.slide=dir; rgGoDay(a,c,"today"); return true; };
-  ["tdPrev","tdNext"].forEach(id=>{ const x=document.getElementById(id); if(x&&x.dataset.go) x.onclick=()=>tdGo(id,id==="tdPrev"?"inL":"inR"); });
-  /* 그림을 좌우로 밀어 날짜 넘기기(11/3 목사님 시험): 손가락을 따라 그림·제목이 밀리고, 충분히 밀면 다음/이전 날 */
-  { const H=document.querySelector(".td4hero"); if(H&&!H._sw){ H._sw=1; let x0=0,y0=0,dx=0,on=false,lock=null; const parts=()=>H.querySelectorAll(":scope>img,.td4head,.td4sumb");
+  ["tdPrev","tdNext"].forEach(id=>{ const x=document.getElementById(id); if(x&&x.dataset.go) x.onclick=()=>{ const H=document.querySelector(".td4hero"), k=id==="tdPrev"?"p":"n", nbi=H&&H.querySelector(`:scope>img.td4nb.${k}`), im=H&&H.querySelector(":scope>img.td4img"); if(nbi&&im){ H.classList.add("anim"); nbi.style.opacity="1"; im.style.opacity="0"; H.querySelectorAll(".td4head,.td4sumb").forEach(t=>t.style.opacity="0"); setTimeout(()=>tdGo(id,id==="tdPrev"?"inL":"inR"),260); } else tdGo(id,id==="tdPrev"?"inL":"inR"); }; });
+  /* 그림을 좌우로 밀어 날짜 넘기기(11/3): 밀리는 그림의 가장자리는 그라데이션으로 녹고, 뒤에서 다음(이전) 날 그림이 떠오름. 놓으면 끝까지 넘어간 뒤 그날로 */
+  { const H=document.querySelector(".td4hero"); if(H&&!H._sw){ H._sw=1; let x0=0,y0=0,dx=0,on=false,lock=null; const W=()=>H.clientWidth||360, cur=()=>H.querySelector(":scope>img.td4img"), txt=()=>H.querySelectorAll(".td4head,.td4sumb"), nb=k=>H.querySelector(`:scope>img.td4nb.${k}`);
+      const paint=(v,anim)=>{ const im=cur(), f=Math.min(1,Math.abs(v)/W()), side=v<0?"n":"p", o=v<0?"p":"n"; H.classList.toggle("anim",!!anim);
+        if(im){ im.style.transform=`translateX(${v*.5}px)`; const g=`linear-gradient(${v<0?"90deg":"270deg"},#000 ${Math.max(0,60-f*120)}%,transparent ${Math.max(20,100-f*120)}%)`; im.style.webkitMaskImage=im.style.maskImage=v?g:""; }
+        const a=nb(side), b=nb(o); if(a) a.style.opacity=String(Math.min(1,f*1.6)); if(b) b.style.opacity="0";
+        txt().forEach(t=>{ t.style.transform=`translateX(${v*.35}px)`; t.style.opacity=String(1-Math.min(1,f*1.8)); }); };
+      const reset=()=>{ H.classList.add("anim"); paint(0,true); H.querySelectorAll(":scope>img.td4nb").forEach(x=>x.style.opacity="0"); };
       H.addEventListener("touchstart",e=>{ if(e.touches.length!==1) return; if(e.touches[0].clientX<24||e.touches[0].clientX>innerWidth-24){ on=false; return; } /* 화면 가장자리는 브라우저 뒤로 가기 몸짓과 겹치므로 뺌 */ x0=e.touches[0].clientX; y0=e.touches[0].clientY; dx=0; on=true; lock=null; },{passive:true});
-      H.addEventListener("touchmove",e=>{ if(!on) return; const X=e.touches[0].clientX-x0, Y=e.touches[0].clientY-y0; if(lock===null&&(Math.abs(X)>10||Math.abs(Y)>10)) lock=Math.abs(X)>Math.abs(Y)*1.3?"x":"y"; if(lock!=="x") return; dx=X; H.classList.add("drag"); parts().forEach(p=>{ p.style.transform=`translateX(${dx*.6}px)`; p.style.opacity=String(1-Math.min(.5,Math.abs(dx)/600)); }); },{passive:true});
-      H.addEventListener("touchend",()=>{ if(!on) return; on=false; H.classList.remove("drag"); const go=lock==="x"&&Math.abs(dx)>70; parts().forEach(p=>{ p.style.transform=""; p.style.opacity=""; }); if(go){ if(dx<0) tdGo("tdNext","inR"); else tdGo("tdPrev","inL"); } }); } }
+      H.addEventListener("touchmove",e=>{ if(!on) return; const X=e.touches[0].clientX-x0, Y=e.touches[0].clientY-y0; if(lock===null&&(Math.abs(X)>10||Math.abs(Y)>10)) lock=Math.abs(X)>Math.abs(Y)*1.3?"x":"y"; if(lock!=="x") return; dx=X; if((dx<0&&!nb("n"))||(dx>0&&!nb("p"))) dx=X*.25; H.classList.add("drag"); paint(dx,false); },{passive:true});
+      H.addEventListener("touchend",()=>{ if(!on) return; on=false; H.classList.remove("drag"); const go=lock==="x"&&Math.abs(dx)>70&&((dx<0&&nb("n"))||(dx>0&&nb("p")));
+        if(!go){ reset(); return; } paint(dx<0?-W():W(),true); setTimeout(()=>{ if(dx<0) tdGo("tdNext","inR"); else tdGo("tdPrev","inL"); },230); }); } }
   if(TD.slide){ const t4=document.querySelector(".td4"); if(t4){ t4.classList.add(TD.slide); setTimeout(()=>t4.classList.remove("inL","inR"),400); } TD.slide=null; }
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
   const ce=document.getElementById("tdCount"); if(ce){ const tk=()=>{ const t=cdText(); ce.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); setTimeout(()=>location.reload(),1500); } }; tk(); TD.cd=setInterval(tk,1000); } }
