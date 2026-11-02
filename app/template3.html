@@ -2218,11 +2218,11 @@ function placeBand(w,d){ const I=placeInfo(w,d); if(!I||I.N<2) return ""; const 
   const past=new Set(); I.D.slice(0,Math.max(0,I.i)).forEach(([a,c])=>dayPlan(a,c).ch.forEach(x=>{ if(x[0]===I.b) past.add(x[1]); })); /* 일정상 지난 날의 장 */
   const st=Array.from({length:I.N},(_,k)=>{ const c=k+1; return I.td.has(c)?"t":I.rd.has(c)?"r":past.has(c)?"m":"f"; });
   const runs=[]; st.forEach((x,k)=>{ const L=runs[runs.length-1]; if(L&&L.s===x) L.e=k+1; else runs.push({s:x,a:k,e:k+1}); });
-  const COL={r:"var(--accent)",m:"color-mix(in srgb,var(--accent) 22%,var(--line))",t:"var(--gold)",f:"var(--line)"}, P=k=>(k/I.N*100).toFixed(3)+"%", H="5px";
+  const COL={r:"var(--accent)",m:"color-mix(in srgb,var(--accent) 30%,var(--line))",t:"var(--gold)",f:"var(--line)"}, P=k=>(k/I.N*100).toFixed(3)+"%", H="0px"; /* 11/2 목사님: 큰 화면에서 섞인 경계·빗금이 자글자글해 보여 색만 남김 */
   /* 색과 색 사이는 경계 앞뒤 5px씩 부드럽게 섞음 */
   const stops=runs.map((R,j)=>`${COL[R.s]} ${j?`calc(${P(R.a)} + ${H})`:"0%"} ${j<runs.length-1?`calc(${P(R.e)} - ${H})`:"100%"}`).join(",");
   const mask=runs.map((R,j)=>{ const v=R.s==="m"?"#000":"transparent"; return `${v} ${j?`calc(${P(R.a)} + ${H})`:"0%"} ${j<runs.length-1?`calc(${P(R.e)} - ${H})`:"100%"}`; }).join(",");
-  const hasM=runs.some(R=>R.s==="m");
+  const hasM=false;
   const cells=`<i class="pbg" style="background:linear-gradient(90deg,${stops})"></i>${hasM?`<i class="pbh" style="-webkit-mask-image:linear-gradient(90deg,${mask});mask-image:linear-gradient(90deg,${mask})"></i>`:""}<i class="pbl" style="background-size:${(100/I.N).toFixed(4)}% 100%"></i>`;
   return `<button class="pband" id="placeBand" aria-label="${esc(PLAN.full[I.b-1])} ${I.N}${u} 가운데 ${chRange(p,I.b)}${u} · 이 책의 흐름 보기"><span class="pbt">${esc(PLAN.full[I.b-1])} 전체 ${I.N}${u} 중 <b>${chRange(p,I.b)}${u}</b></span><span class="pbar">${cells}</span></button>`; }
 function placeSheet(w,d){ const I=placeInfo(w,d); if(!I) return; const u=I.b===19?"편":"장";
@@ -5529,6 +5529,7 @@ const BM_ERA9=[
  {k:"div",n:"분열 왕국",y:"기원전 930–586년 무렵",av:"elijah",d:"나라가 북 이스라엘과 남 유다로 갈라집니다. 북쪽은 앗수르에, 남쪽은 바벨론에 무너집니다.",tour:["elijah","jonah","assyria"],pro:[["엘리야·엘리사","아합 때",[11,17,1]],["요나","여로보암 2세 때",[12,14,25]],["아모스","웃시야·여로보암 때",[30,1,1]],["호세아","웃시야~히스기야, 여로보암 때",[28,1,1]],["이사야","웃시야~히스기야 때",[23,1,1]],["미가","요담~히스기야 때",[33,1,1]],["스바냐","요시야 때",[36,1,1]],["예레미야","요시야 13년부터",[24,1,2]]]},
  {k:"exi",n:"포로",y:"기원전 605–539년",av:"jeremiah",d:"예루살렘이 무너지고 백성이 바벨론에 끌려갑니다. 하나님의 사람들은 예루살렘·바벨론·그발 강·애굽에 흩어져 있습니다.",tour:["babylon","jeremiah","exilelife"],pro:[["예레미야","시드기야 11년까지",[24,1,3]],["에스겔","여호야긴이 사로잡힌 지 5년",[26,1,2]],["다니엘","여호야김 3년부터 고레스 원년까지",[27,1,1]]]},
  {k:"ret",n:"귀환",y:"기원전 538–430년 무렵",av:"elder",d:"고레스의 조서로 돌아와 성전을 다시 짓고, 에스라와 느헤미야 때 율법과 성벽을 세웁니다. 에스더는 바사 땅에 남은 사람들의 이야기입니다.",tour:["return"],pro:[["학개","다리오 왕 2년",[37,1,1]],["스가랴","다리오 왕 2년",[38,1,1]]]},
+ {k:"stp",n:"제2성전기(중간사)",y:"기원전 430년 무렵–예수님 탄생",av:"elder",d:"말라기 뒤 신약까지 약 400년입니다. 구약 본문은 이 시기의 일을 이야기로 들려주지 않지만, 바사·헬라·로마가 차례로 이 땅을 다스리고, 회당과 바리새인·사두개인이 생겨나 예수님 때의 배경이 됩니다.",tour:[]},
  {k:"jes",n:"예수님",y:"",av:"jesus",d:"네 복음서가 같은 예수님의 길을 저마다 다르게 그립니다.",tour:["mt","mk","lk","jn"]},
  {k:"chu",n:"초대 교회",y:"",av:"paul",d:"예루살렘에서 시작한 복음이 사마리아와 이방의 땅을 지나 로마까지 이릅니다.",tour:["peter","saul","paul1","paul2","paul3","rome"]}];
 function bmEra9(b,c){ if(b===1) return "pat"; if(b<=5) return "exo"; if(b<=8) return "jud"; if(b===9||b===10||(b===11&&c<=11)||b===13||(b===14&&c<=9)||(b>=18&&b<=22)) return "uni";
@@ -5554,16 +5555,33 @@ function bmLibHTML(){ if(view.bmFind==null){ try{ view.bmFind=localStorage.getIt
   const B=bmLit(), p=dayPlan(view.w,view.d); let np=0; try{ np=[...dayA(view.w,view.d).places.values()].filter(x=>PLACE.has(x.name)&&PLACE.get(x.name)[3]!=="r").length; }catch(e){}
   let h=`<div class="bmlibmap"><div class="bmmap" id="bmMap"></div><button class="bmbigbtn" id="bmBig" aria-label="지도 크게 보기">⤢ 크게</button></div>
   <div class="bmmapbar"><span><i class="dot red"></i>오늘 본문 · ${esc(p?p.label:"")}${np?` · ${np}곳`:""}</span></div>${window.CBSR_V2?"":bmLandBtn("bmLandT",B)}`; /* v2: 통독하며 지나온 곳 뺌(목사님 11/2) */
-  const byEra=view.bmFind==="era", EG=bmEraGroups();
-  h+=`<div class="bmlibh"><div class="bmfind" role="tablist"><button role="tab" data-bmfind="who" class="${byEra?"":"on"}" aria-selected="${!byEra}">주인공</button><button role="tab" data-bmfind="era" class="${byEra?"on":""}" aria-selected="${byEra}">시대</button></div><small class="bmwhoh">누르면 여정이 열립니다</small></div>`;
+  const byEra=view.bmFind==="era", byWar=view.bmFind==="war", EG=bmEraGroups();
+  h+=`<div class="bmlibh"><div class="bmfind" role="tablist"><button role="tab" data-bmfind="who" class="${byEra||byWar?"":"on"}" aria-selected="${!byEra&&!byWar}">주인공</button><button role="tab" data-bmfind="era" class="${byEra?"on":""}" aria-selected="${byEra}">시대</button><button role="tab" data-bmfind="war" class="${byWar?"on":""}" aria-selected="${byWar}">전쟁</button></div><small class="bmwhoh">누르면 여정이 열립니다</small></div>`;
+  if(byWar){ h+=`<div class="bmwho bmerarow" role="tablist">${BM_WAR.map((g,i)=>`<button role="tab" data-bmwar="${g.k}"><span class="px"><img data-px="${g.av}" alt=""><i>${i+1}</i></span><b>${esc(g.n)}</b></button>`).join("")}</div>`; return h; }
   if(byEra){ h+=`<div class="bmwho bmerarow" role="tablist">${BM_ERA9.map((g,i)=>`<button role="tab" data-bmera9="${g.k}"><span class="px"><img data-px="${g.av}" alt=""><i>${i+1}</i></span><b>${esc(g.n)}</b></button>`).join("")}</div>`; return h; }
   h+=`<div class="bmwho" role="tablist">${BM_WHO.map(g=>{ const n=G[g.k].length+(g.tour||[]).length; const rd=G[g.k].filter(i=>bmRouteRead(ROUTES_B[i]).all).length; return `<button role="tab" aria-selected="${g.k===view.bmWho}" class="${g.k===view.bmWho?"on":""}" data-bmwho="${g.k}"><span class="px"><img data-px="${g.av}" alt=""></span><b>${esc(g.n)}</b></button>`; }).join("")}</div>`;
   return h; }
+/* 전쟁으로 찾기(목사님 2026-11-02): 큰 여정과 지도 경로 가운데 전쟁·침공을 시대 순서로 묶음 */
+const BM_WAR=[
+ {k:"w1",n:"광야·정복",av:"joshua",d:"광야에서 만난 싸움과 요단을 건넌 뒤 가나안 땅을 얻는 싸움입니다.",tour:["joshua"],r:[3,25,27,32,36,37,39,40,41,42]},
+ {k:"w2",n:"사사 시대",av:"soldier",d:"왕이 없던 때, 하나님이 세우신 사사들이 이웃 민족과 싸웁니다. 지파끼리 싸운 일도 있습니다.",tour:[],r:[44,45,46,47,48,54]},
+ {k:"w3",n:"사울·다윗",av:"david0",d:"블레셋과의 싸움, 다윗의 정복, 왕국 안의 내전입니다.",tour:["ark"],r:[58,63,65,67,72,73,77,80,137,83,138,90]},
+ {k:"w4",n:"분열 왕국",av:"king",d:"애굽·아람·모압과의 싸움, 북 이스라엘과 남 유다 사이의 싸움입니다.",tour:[],r:[100,145,101,146,107,109,148,112,115,116,149,150,120,151,121,152,157,129,158]},
+ {k:"w5",n:"앗수르·바벨론 침공",av:"soldier",d:"북 이스라엘은 앗수르에, 남 유다는 바벨론에 무너집니다.",tour:["assyria","babylon"],r:[124,126,155,127,131,160,132]}];
+function bmWarSheet(k){ const g=BM_WAR.find(x=>x.k===k); if(!g) return; const T=BMT(), L=g.r.filter(i=>ROUTES_B[i]), tours=T.map((t,i)=>[t,i]).filter(([t])=>g.tour.includes(t.id));
+  let h=`<p class="bmshn">따라가는 큰 여정 ${tours.length} · 지도로 보는 전쟁 ${L.length}</p><p class="bmerad">${esc(g.d)}</p>`;
+  if(tours.length) h+=`<div class="bmtours${tours.length>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}</div>`;
+  h+=`<p class="bmproh">지도로 보는 전쟁</p><div class="bmrl">${L.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")}</div>`;
+  sheet(`전쟁 · ${g.n}`,`<div id="bmWS">${h}</div>`);
+  const root=document.getElementById("sheetRoot"), go=f=>{ document.getElementById("sheetClose").click(); setTimeout(f,90); };
+  root.querySelectorAll("[data-bmtour]").forEach(b=>b.onclick=()=>go(()=>bmTour(+b.dataset.bmtour)));
+  root.querySelectorAll("[data-bmopen]").forEach(b=>b.onclick=()=>go(()=>bmMapOpen("trip",{sel:+b.dataset.bmopen,list:L}))); }
 /* 시대 창: 그 시대의 큰 여정 · 이때 말씀을 전한 예언자(근거 구절) · 지도로 보는 여정 */
 function bmEraSheet(k){ const g=BM_ERA9.find(x=>x.k===k); if(!g) return; const EG=bmEraGroups(), T=BMT(), L=EG[k], tours=T.map((t,i)=>[t,i]).filter(([t])=>g.tour.includes(t.id));
   let h=`<p class="bmshn">${g.y?esc(g.y)+" · ":""}따라가는 큰 여정 ${tours.length} · 지도로 보는 여정 ${L.length}</p><p class="bmerad">${esc(g.d)}</p>`;
   if(tours.length) h+=`<div class="bmtours${tours.length>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}</div>`;
   if(g.pro) h+=`<div class="bmpro"><p class="bmproh">이때 말씀을 전한 예언자</p><div class="bmprol">${g.pro.map(([n,w,r])=>`<button data-bmprov="${r.join("-")}-${r[2]}"><b>${esc(n)}</b><small>${esc(w)} · ${esc(vLab(r))}</small></button>`).join("")}</div></div>`;
+  if(!tours.length&&!L.length&&!g.pro) h+=`<p class="lead">이 시기를 따라가는 여정은 아직 없습니다.</p>`; else
   h+=`<p class="bmproh">지도로 보는 여정</p><div class="bmrl">${L.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")}</div>`;
   sheet(`${g.n} 시대`,`<div id="bmWS">${h}</div>`);
   const root=document.getElementById("sheetRoot"), go=f=>{ document.getElementById("sheetClose").click(); setTimeout(f,90); };
@@ -5598,6 +5616,7 @@ function bmLibBind(m){ bmPx(m); view.bmSeg="lib"; setTimeout(()=>{ if(!BM_OV&&do
   const bb=m.querySelector("#bmBig"); if(bb) bb.onclick=()=>bmMapOpen("lib");
   m.querySelectorAll("[data-bmfind]").forEach(b=>b.onclick=()=>{ view.bmFind=b.dataset.bmfind; try{ localStorage.setItem("cbsr-bmfind",view.bmFind); }catch(e){} const w=m.querySelector(".bmlibh"); const x=document.createElement("div"); x.innerHTML=bmLibHTML(); const nh=x.querySelector(".bmlibh"), nr=x.querySelector(".bmwho"); w.replaceWith(nh); m.querySelector(".bmwho").replaceWith(nr); bmLibBind(m); });
   m.querySelectorAll("[data-bmera9]").forEach(b=>b.onclick=()=>bmEraSheet(b.dataset.bmera9));
+  m.querySelectorAll("[data-bmwar]").forEach(b=>b.onclick=()=>bmWarSheet(b.dataset.bmwar));
   m.querySelectorAll("[data-bmwho]").forEach(b=>b.onclick=()=>{ const gw=b.closest(".bmwho"); if(gw) view.bmWhoX=gw.scrollLeft; m.querySelectorAll("[data-bmwho]").forEach(x=>{ x.classList.toggle("on",x===b); x.setAttribute("aria-selected",x===b); }); bmWhoSheet(b.dataset.bmwho); });
   m.querySelectorAll("[data-bmopen]").forEach(b=>b.onclick=()=>bmMapOpen("trip",{sel:+b.dataset.bmopen,list:bmWhoGroups()[bmWhoOf(ROUTES_B[+b.dataset.bmopen])]}));
   m.querySelectorAll("[data-bmov]").forEach(b=>b.onclick=()=>bmMapOpen(b.dataset.bmov));
