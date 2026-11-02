@@ -2245,6 +2245,20 @@ html.v2 .v.ln>sup{color:var(--gold);font-weight:700}html.v2 .v.ln>sup::before{co
 .lnbk{margin-bottom:16px}.lnbk h4{margin:0 0 8px;font-size:14px}.lnbk h4 span{color:var(--muted);font-weight:500}
 .lnq{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:11px 14px;font:15px var(--f-ui);margin-bottom:12px}
 .lnempty{color:var(--muted);font-size:14px;margin:6px 2px}
+/* 표현 규칙 (가)(나)(다) · v2 스토리 */
+html.v2 #storyRoot .sq2 small a.sv::after{content:"  본문 열기 ›";font-weight:700;text-decoration:none;display:inline-block;margin-left:6px;opacity:.9}
+html.v2 #storyRoot .sq2.b .swho,html.v2 #storyRoot .spair2>div.b .swho{background:#cfd8e8;color:#1f2f47}
+html.v2 #storyRoot .sq2.b{border-left-color:#cfd8e8}
+html.v2 #storyRoot .spair2.zig>div:first-child{margin-right:24px}html.v2 #storyRoot .spair2.zig>div:last-child{margin-left:24px}
+html.v2 #storyRoot .sfr.kpaper{background:#F4EFE3;--sgold:#7A4C0C;--ssub:#3b3226;--sline:rgba(0,0,0,.12)}
+html.v2 #storyRoot .sfr.kpaper .sbox h1,html.v2 #storyRoot .sfr.kpaper .sbox h2,html.v2 #storyRoot .sfr.kpaper .sbigq,html.v2 #storyRoot .sfr.kpaper .sline2,html.v2 #storyRoot .sfr.kpaper .sq2,html.v2 #storyRoot .sfr.kpaper .stop,html.v2 #storyRoot .sfr.kpaper .sx{color:#1B2420;text-shadow:none}
+html.v2 #storyRoot .sfr.kpaper .sbox p{text-shadow:none}
+html.v2 #storyRoot .sfr.kpaper .sbase{display:none}html.v2 #storyRoot .sfr.kpaper.k-split .sbox{top:50%;bottom:auto;transform:translateY(-50%)}
+html.v2 #storyRoot .sfr.kpaper .spair2 div{background:#fff;color:#1B2420}
+html.v2 #storyRoot .sfr.kpaper .sbars2 span{background:rgba(0,0,0,.12)}html.v2 #storyRoot .sfr.kpaper .sbars2 span i{background:#2C5C52}
+html.v2 #storyRoot .sfr.kpaper .swho.n{background:rgba(0,0,0,.08);color:#5a4a33}
+html.v2 #storyRoot .sfr.kpaper .stapnote{color:rgba(0,0,0,.45)}
+html.v2 #storyRoot .sfr.kpaper .sq2.b{border-left-color:#8fa3c4}
 </style>
 
 <div class="wrap">
@@ -7732,7 +7746,7 @@ function bookCover(b){ const D=bookDays(b), u=b===19?"편":"장", N=BOOKCH[b-1],
   document.body.appendChild(el); const close=()=>el.remove(); el.querySelector(".bkx").onclick=close; el.querySelector(".bkok").onclick=close; el.onclick=e=>{ if(e.target===el) close(); }; }
 /* ===== 한 줄 남기기(v2, UX 로드맵 A1·A2, 2026-11-02): 본문에서 고른 절에 짧게 남기고, 기록 탭에서 다시 찾아 원문으로 돌아감.
    저장: mem.qt[날 key].ln = {절 id: {t, at}} (지운 것은 t:"" 로 남겨 두 기기 합치기에서 되살아나지 않게) */
-let LNDAY=null;
+let LNDAY=null; const LNDRAFT={}; /* 닫아도 쓰던 글은 남김(점검표 3, 2026-11-02) */
 const lnGet=(k,id)=>{ const x=((mem.qt||{})[k]||{}).ln; return x&&x[id]&&x[id].t?x[id]:null; };
 function lnAll(){ const out=[]; for(const k in (mem.qt||{})){ const L=(mem.qt[k]||{}).ln; if(!L) continue; for(const v in L) if(L[v]&&L[v].t&&L[v].t.trim()) out.push({k,v,t:L[v].t,at:L[v].at||0}); } return out.sort((a,b)=>b.at-a.at); }
 const lnRef=v=>{ const [b,c,n]=v.split("-").map(Number); return {b,c,n,lab:`${PLAN.abbr[b-1]} ${c}:${n}`,t:vtxt([b,c,n])}; };
@@ -7740,11 +7754,12 @@ function lnOpen(id,w,d){ document.querySelector(".lnov")?.remove(); const k=keyO
   const el=document.createElement("div"); el.className="lnov"; el.innerHTML=`<div class="lnbg"></div><div class="lnp" role="dialog" aria-modal="true" aria-label="한 줄 남기기">
     <div class="lnhd"><b>${old?"남긴 한 줄":"한 줄 남기기"}</b><button class="lnx" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="lnv"><q>${esc(R.t)}</q><small>${esc(R.lab)}</small></div>
-    <textarea class="lnta" rows="3" maxlength="300" placeholder="이 구절에서 본 것, 물음, 기도 한 줄" aria-label="남길 글">${esc(old?old.t:"")}</textarea>
+    <textarea class="lnta" rows="3" maxlength="300" placeholder="이 구절에서 본 것, 물음, 기도 한 줄" aria-label="남길 글">${esc(LNDRAFT[k+"|"+id]??(old?old.t:""))}</textarea>
     <div class="lnft">${old?`<button class="lndel">지우기</button>`:""}<button class="lnok">${old?"고치기":"남기기"}</button></div></div>`;
   document.body.appendChild(el); const ta=el.querySelector(".lnta"); setTimeout(()=>{ try{ ta.focus({preventScroll:true}); }catch(e){} },60);
+  ta.oninput=()=>{ LNDRAFT[k+"|"+id]=ta.value; };
   const close=pop=>{ if(pop!==true) ovDone(close); el.remove(); }; ovOpen(close);
-  const put=t=>{ const q=qtOf(k); q.ln ||= {}; q.ln[id]={t,at:Date.now()}; touchQ(q,"ln"); save(); const v=document.getElementById("v-"+id); if(v) v.classList.toggle("ln",!!t); };
+  const put=t=>{ delete LNDRAFT[k+"|"+id]; const q=qtOf(k); q.ln ||= {}; q.ln[id]={t,at:Date.now()}; touchQ(q,"ln"); save(); const v=document.getElementById("v-"+id); if(v) v.classList.toggle("ln",!!t); };
   el.querySelector(".lnx").onclick=()=>close(); el.querySelector(".lnbg").onclick=()=>close();
   el.querySelector(".lnok").onclick=()=>{ const t=ta.value.trim(); if(!t){ ta.focus(); return; } put(t); close(); toast(old?"고쳤습니다":"한 줄을 남겼습니다"); };
   const dl=el.querySelector(".lndel"); if(dl) dl.onclick=()=>{ put(""); close(); toast("지웠습니다"); }; }
@@ -9300,11 +9315,13 @@ function sVerseSheet(id,onX){ const [b,c,v,e]=id.split("-").map(Number); const C
   const al=document.getElementById("svAll"); if(al) al.onclick=()=>{ document.getElementById("svText").innerHTML=span(1,C.length); al.remove(); document.getElementById("svFirst")?.scrollIntoView({block:"center"}); }; }
 function storyCardHTML(s){ return sLinkRefs(storyCardHTML0(s)); }
 function storyCardHTML0(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</span>`:"", h2=s.h?`<h2>${smk(s.h)}</h2>`:"";
-  const B=(s.b||[]).map(x=>typeof x==="string"?`<p>${smk(x)}</p>`:`<div class="sq2">${sWho(x.q)}${smk(x.q[0])}<small>${esc(x.q[1]||"")}</small></div>`).join("");
+  /* 표현 규칙(가)(나), 2026-11-02: 인용은 금색 선+말한 사람 이름표+'본문 열기', 해설은 일반 글. 말한 사람이 둘이면 두 번째 사람은 다른 색 이름표, 엇갈려 놓음 */
+  const WHO=[]; const wc=n=>{ if(!n) return ""; let i=WHO.indexOf(n); if(i<0){ WHO.push(n); i=WHO.length-1; } return i%2?" b":""; };
+  const B=(s.b||[]).map(x=>typeof x==="string"?`<p>${smk(x)}</p>`:`<div class="sq2${wc(x.q[2])}">${sWho(x.q)}${smk(x.q[0])}<small>${esc(x.q[1]||"")}</small></div>`).join("");
   if(s.k==="cover") return `<div class="sbox"><div class="skick">${esc(s.kick||"")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}${TR!=="krv"?`<div class="strnote">말씀 인용: 개역개정</div>`:""}</div>`;
   if(s.k==="book") return `<div class="sbox"><div class="skick">${esc(s.kick||"이제 다른 책")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
   if(s.k==="quote") return `<div class="sbox">${lab}${B}<div class="sbigq" style="margin-top:14px">${smk(s.big)}</div><div class="sref">${esc(s.ref||"")}</div></div>`;
-  if(s.k==="echo"){ const rv=!!s.reveal; return `<div class="sbox">${lab}${h2}<div class="spair2${rv?" hide-u":""}">${(s.pair||[]).map(x=>`<div>${x[2]&&window.CBSR_V2?`<span class="swho">${esc(x[2])}</span>`:""}${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 같은 말과 달라진 말 보기</button><div class="rvhide">${B}${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`:B}</div>`; }
+  if(s.k==="echo"){ const rv=!!s.reveal; return `<div class="sbox">${lab}${h2}<div class="spair2${rv?" hide-u":""}${(s.pair||[]).length===2&&window.CBSR_V2?" zig":""}">${(s.pair||[]).map(x=>`<div class="${wc(x[2]).trim()}">${x[2]&&window.CBSR_V2?`<span class="swho">${esc(x[2])}</span>`:""}${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 같은 말과 달라진 말 보기</button><div class="rvhide">${B}${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`:B}</div>`; }
   if(s.k==="line"){ const one=s.r&&!s.r[3]?vtxt(s.r):""; return `<div class="sbox">${lab}<p class="sline2">${smk(s.t)}</p>${s.r?(one&&one.length<=90?`<div class="sq2">${esc(one)}<small>${esc(rlab2(s.r))}</small></div>`:`<div class="sref">${esc(rlab2(s.r))}</div>`):""}</div>`; }
   if(s.k==="table"){ const T=s.tbl, n=T.h.length, hl=new Set((T.hl||[]).map(x=>x.join(","))), mid=T.mid;
     let g=`<div></div>`+T.h.map((x,j)=>`<div class="h${j===mid?" mid":""}">${esc(x)}</div>`).join("");
@@ -10026,7 +10043,7 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   if(old){ const oi=old.querySelector(".sph img"); if(oi){ oldPid=oi.dataset.pid; try{ oldM=getComputedStyle(oi).transform; }catch(e){} }
     if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst"); ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); } else old.remove(); }
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
-  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew":old?"":" sfirst"}">
+  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew":old?"":" sfirst"}${window.CBSR_V2&&!showPh&&!["table","map","qt","next","fin"].includes(kind)?" kpaper":""}">
    ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
    ${showPh?`<div class="sph v${s.phv||0}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
