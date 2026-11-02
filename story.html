@@ -8308,7 +8308,7 @@ function syncHlBar(){
     if(k==="orig"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); const [b,c,v]=id.split("-").map(Number); studyOpenVerse(b,c,v); return; }
     if(k==="tts"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); HSEL.clear(); syncHlBar(); ttsStart(id); ttsBtnSync(); return; }
     if(k==="ln"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); HSEL.clear(); syncHlBar(); lnOpen(id,view.w,view.d); return; }
-    if(k==="bm"){ const id=[...HSEL][0]; if(mem.bm&&mem.bm.v===id) delete mem.bm; else mem.bm={v:id,w:view.w,d:view.d,at:Date.now()}; save(); HSEL.clear(); const y=scrollY; render(); scrollTo({top:y}); syncHlBar(); return; }
+    if(k==="bm"){ const id=[...HSEL][0]; if(mem.bm&&mem.bm.v===id) mem.bm={at:Date.now()}; /* 지운 표시(다른 기기의 책갈피가 되살아나지 않게) */ else mem.bm={v:id,w:view.w,d:view.d,at:Date.now()}; save(); HSEL.clear(); const y=scrollY; render(); scrollTo({top:y}); syncHlBar(); return; }
     if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x"){ delete HL[id]; HLDEL[id]=t; } else { HL[id]=[k,t]; delete HLDEL[id]; } const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]?" mk-"+HL[id][0]:""); } } saveHL(); }
     else for(const id of HSEL){ document.getElementById("v-"+id)?.classList.remove("sel"); }
     HSEL.clear(); syncHlBar(); });
@@ -10569,6 +10569,18 @@ function mergeMem(a,b){
   { const ja=[a.joinAt,b.joinAt].filter(Boolean).sort(); if(ja.length) o.joinAt=ja[0]; }
   for(const f of ["counted","seen","bk"]) o[f]=Object.assign({},b[f]||{},a[f]||{});
   if(b.onb) o.onb=1;
+  /* 2026-11-02 목사님(휴대폰→태블릿 연동): 아래 기록은 예전에 합치지 않아 다른 기기로 넘어가지 않았습니다 */
+  /* 스토리 진행: 더 많이 본 쪽 */
+  if(a.sp||b.sp){ o.sp={...(b.sp||{})}; for(const k in (a.sp||{})){ const x=a.sp[k], y=o.sp[k]; if(!y||(x.m||0)>=(y.m||0)) o.sp[k]=x; } }
+  /* 게임(장면 순서·누가 한 말·단서)·지도 길 맞추기: 날마다, 이 기기 기록이 없으면 다른 기기 기록 */
+  if(a.ch||b.ch){ o.ch={}; for(const k of new Set([...Object.keys(a.ch||{}),...Object.keys(b.ch||{})])) o.ch[k]=Object.assign({},(b.ch||{})[k]||{},(a.ch||{})[k]||{}); }
+  if(a.rgm||b.rgm){ o.rgm={}; for(const k of new Set([...Object.keys(a.rgm||{}),...Object.keys(b.rgm||{})])){ const x=(a.rgm||{})[k]||{}, y=(b.rgm||{})[k]||{}; o.rgm[k]=Object.assign({},y,x,{ok:Math.max(x.ok||0,y.ok||0)}); } }
+  /* 주일: 처음 연 날은 이른 쪽, 붙잡은 말씀은 이 기기에서 고른 것이 있으면 그것 */
+  if(a.sun||b.sun){ o.sun={...(b.sun||{})}; for(const k in (a.sun||{})){ if(!o.sun[k]||(a.sun[k]&&a.sun[k]<o.sun[k])) o.sun[k]=a.sun[k]; } }
+  if(a.sunkv||b.sunkv) o.sunkv=Object.assign({},b.sunkv||{},a.sunkv||{});
+  /* 책갈피: 나중에 꽂은 쪽. 읽던 자리: 이 기기에 없을 때만 */
+  if(b.bm&&(!a.bm||(b.bm.at||0)>(a.bm.at||0))) o.bm=b.bm;
+  if(!a.last&&b.last) o.last=b.last;
   return o;
 }
 function churchCounts(){
@@ -10584,6 +10596,8 @@ function renderAccount(){
   if(!(window.SYNC&&SYNC.available)) return "";
   return `<section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`; }
 function acctHTML(){
+  /* 미리 보기 날짜를 쓰는 동안에는 연동이 꺼져 있음 — 예전에는 '새로 등록했습니다'라고 잘못 알렸음(11/2) */
+  if(NOWOFF&&!DEMO) return `<div class="acct"><p><b>지금은 미리 보기 날짜(${esc(sessionStorage.getItem("cbsr-now")||"")})로 보고 있어 연동이 꺼져 있습니다.</b></p><p class="lead">미리 보기 중에 남긴 기록은 이 기기의 임시 사본에만 있고 다른 기기로 넘어가지 않습니다. 연동하려면 미리 보기를 끄고 다시 여세요.</p><div class="row"><button class="btn small" id="acctNowOff">미리 보기 끄기</button></div></div>`;
   if(SYNC.loggedIn()){ const t=SYNC.lastSaved();
     return `<div class="acct"><p><b>${esc(SYNC.name())}</b> 이름으로 기록이 이어지고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰·태블릿·컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 그대로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 연동 끊기</button></div></div>`; }
   return `<div class="acct"><p>휴대폰·태블릿·컴퓨터에서 <b>같은 이름과 숫자 4자리</b>를 넣으면 기록이 하나로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다. 회원 가입은 필요 없습니다.</p>
@@ -10591,6 +10605,7 @@ function acctHTML(){
    <p class="lead">같은 이름을 쓰는 분이 있을 수 있으니, 숫자는 생일처럼 남이 짐작하기 쉬운 것은 피해 주세요. 이름과 숫자를 잊으면 기록을 다시 찾을 수 없습니다.</p><p class="lead" id="acctMsg" role="status"></p></div>`; }
 function openAcct(){ sheet("다른 기기와 연동",acctHTML()); bindAcctSheet(); }
 function bindAcctSheet(){
+  const no=document.getElementById("acctNowOff"); if(no) no.onclick=()=>{ location.search="?now=0"; };
   const bi=document.getElementById("acctIn");
   if(bi) bi.onclick=async()=>{ const msg=document.getElementById("acctMsg"); msg.textContent="확인하는 중…";
     const shareCk=document.getElementById("acctShare"), share=shareCk?shareCk.checked:null;
