@@ -8270,7 +8270,7 @@ function placeBand(w,d){ const I=placeInfo(w,d); if(!I||I.N<2) return ""; const 
   const mask=runs.map((R,j)=>{ const v=R.s==="m"?"#000":"transparent"; return `${v} ${j?`calc(${P(R.a)} + ${H})`:"0%"} ${j<runs.length-1?`calc(${P(R.e)} - ${H})`:"100%"}`; }).join(",");
   const hasM=runs.some(R=>R.s==="m"); /* 11/2 목사님: 안 읽은 날은 빗금(경계는 딱 끊기게) */
   const cells=`<i class="pbg" style="background:linear-gradient(90deg,${stops})"></i>${hasM?`<i class="pbh" style="-webkit-mask-image:linear-gradient(90deg,${mask});mask-image:linear-gradient(90deg,${mask})"></i>`:""}<i class="pbl" style="background-size:${(100/I.N).toFixed(4)}% 100%"></i>`;
-  return `<button class="pband" id="placeBand" aria-label="${esc(PLAN.full[I.b-1])} ${I.N}${u} 가운데 ${chRange(p,I.b)}${u} · 이 책의 흐름 보기"><span class="pbt">${esc(PLAN.full[I.b-1])} 전체 ${I.N}${u} 중 <b>${chRange(p,I.b)}${u}</b></span><span class="pbar">${cells}</span></button>`; }
+  return `<button class="pband" id="placeBand" aria-label="${esc(PLAN.full[I.b-1])} ${I.N}${u} 가운데 ${chRange(p,I.b)}${u} · 이 책의 흐름 보기"><span class="pbar">${cells}</span></button>`; }
 function placeSheet(w,d){ const I=placeInfo(w,d); if(!I) return; const u=I.b===19?"편":"장";
   const rows=I.D.map(([a,c])=>{ const P=dayPlan(a,c), dt=dateOf(a,c), fut=dayDiff(today0(),dt)>0, cur=a===w&&c===d, dn=!!mem.done[keyOf(a,c)];
     return `<button class="pbrow${cur?" on":""}${fut?" fut":""}" data-pbj="${a}-${c}"><small>${dt.getMonth()+1}/${dt.getDate()}</small><b>${esc(chRange(P,I.b))}${u}</b><span>${fut?"아직 열리지 않은 이야기":esc(dayTitle(a,c)||P.label)}</span>${dn?`<em>✓</em>`:""}</button>`; }).join("");
