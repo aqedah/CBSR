@@ -3307,10 +3307,25 @@ function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt
 /* 이야기 카드 목록: 손으로 쓴 카드(STORYC)가 있으면 그것, 없으면 본문 자료로 자동 구성 → 뒤에 QT 네 단계 */
 const smk=t=>esc(t||"").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/__(.+?)__/g,"<u>$1</u>").replace(/\n/g,"<br>");
 const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==="string"?x:(x.q||[])[0]),...(s.pair||[]).map(x=>x[0])].filter(Boolean).join(" ").replace(/\*\*|__/g,"");
+/* 그날 읽는 장까지만(목사님 2026-11-02 "출시 전에 해결"): 경로의 지점마다 그 이름이 처음 나오는 장을 본문에서 찾아,
+   오늘 본문의 마지막 장 뒤 지점은 그리지 않고, 오늘 첫 장 앞에서 이미 지나온 구간은 흐린 선(past)으로만 둠 */
+const RCH=new Map();
+function routeChs(r){ if(RCH.has(r)) return RCH.get(r); const b=r.b, c0=r.c[0], c1=r.c[1], C=(BIBLE&&BIBLE[b-1])||[];
+  const find=n=>{ if(!n) return 0; const t=[n,n.replace(/\s+/g,""),...n.split(/\s+/).filter(x=>x.length>=2&&!/^(강|산|광야|건너편|저편|지방|성|땅|바다)$/.test(x))];
+    for(let c=c0;c<=c1;c++){ const tx=(C[c-1]||[]).join(" "); if(t.some(x=>x&&tx.includes(x))) return c; } return 0; };
+  let ch=r.p.map(q=>find(q[0]));
+  for(let i=ch.length-2;i>=0;i--) if(!ch[i]&&ch[i+1]) ch[i]=ch[i+1];
+  for(let i=0;i<ch.length;i++){ if(!ch[i]) ch[i]=i?ch[i-1]:c0; if(i&&ch[i]<ch[i-1]) ch[i]=ch[i-1]; }
+  RCH.set(r,ch); return ch; }
+function routeCut(r,w,d){ const p=dayPlan(w,d), mine=p.ch.filter(x=>x[0]===r.b).map(x=>x[1]); const all={pts:r.p,past:[],dc1:99,cut:false};
+  if(!mine.length||!BIBLE) return all; const dc0=Math.min(...mine), dc1=Math.max(...mine), ch=routeChs(r);
+  let a=0; for(let i=0;i<ch.length;i++) if(ch[i]<dc0) a=i; let z=-1; for(let i=0;i<ch.length;i++) if(ch[i]<=dc1) z=i;
+  if(z<1) return all; if(ch[0]>=dc0) a=0; if(z-a<1) a=Math.max(0,z-1);
+  return {pts:r.p.slice(a,z+1),past:r.p.slice(0,a+1),dc1,cut:a>0||z<r.p.length-1}; }
 function storyMapPts(w,d,s){ const G=n=>{ const g=PLACE.get(n); return g?[n,g[1],g[2],g[4]?1:0,0]:null; };
   const one=x=>Array.isArray(x)?(x.length>=3?[x[0],x[1],x[2],x[3]?1:0,x[4]?1:0]:G(x[0])):G(x);
   if(s&&(s.route||s.gather)) return {route:(s.route||[]).map(one).filter(Boolean),extra:(s.extra||[]).map(one).filter(Boolean),to:s.gather?one(s.gather):null};
-  const R=routesFor(w,d), RI=s&&s.ri!=null&&R[s.ri]?s.ri:0; if(R.length&&R[RI].p.length>1) return {route:R[RI].p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:R[RI].n,b:R[RI].b||(dayPlan(w,d).ch[0]||[0])[0]};
+  const R=routesFor(w,d), RI=s&&s.ri!=null&&R[s.ri]?s.ri:0; if(R.length&&R[RI].p.length>1){ const T=routeCut(R[RI],w,d); return {route:T.pts.map(q=>[q[0],q[1],q[2],0,0]),past:T.past.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:R[RI].n,b:R[RI].b||(dayPlan(w,d).ch[0]||[0])[0],dc1:T.dc1,cut:T.cut}; }
   /* 이동 경로가 없는 날은 '본문의 무대'만: 두 번 이상 나오는 곳(목록에 한 번 지나가는 지명은 빼고). 없으면 가장 많이 나온 한 곳 */
   const A=dayA(w,d), all=[...A.places.values()].filter(p=>PLACE.has(p.name)).sort((a,b)=>b.n-a.n), many=all.filter(p=>p.n>=2), pts=(many.length?many:all.slice(0,1)).slice(0,6).map(p=>G(p.name)).filter(Boolean);
   return {route:[],extra:pts}; }
@@ -3516,7 +3531,8 @@ const MV_NAME=[["예수","jesus","예수님"],["사울","saul","사울"],["바�
 const TWELVE=[["","peter"],["","man",{robe:"#4f7a5a"}],["","youth",{robe:"#c97b3a"}],["","man",{robe:"#7a4f6e",head:"short",hair:"#3b2616"}],["","elder",{robe:"#6e6a4f"}],["","youth",{robe:"#3f6f8f"}],["","man",{robe:"#9a5b3a",cloth:"#e8dcc0"}],["","youth",{robe:"#5d7a8a",hair:"#5a3a1e"}],["","man",{robe:"#8a7a3b",head:"short",hair:"#2a1a10"}],["","elder",{robe:"#7a5a3a"}],["","youth",{robe:"#a0566a"}],["","man",{robe:"#556b2f"}]];
 function mvWho(s,w,d){ if(s.mover){ const f=MV_NAME.find(x=>x[2]===s.mover||x[0]===s.mover); return f?[f[1],f[2]]:["man",s.mover]; }
   let S=[]; try{ S=storySlides(w,d); }catch(e){} const i=S.indexOf(s); const txt=[s,S[i-1],S[i+1]].filter(Boolean).map(x=>sTxt(x)).join(" ");
-  let best=null; for(const m of MV_NAME){ const k=txt.indexOf(m[0]); if(k>=0&&(!best||k<best[0])) best=[k,m]; } return best?[best[1][1],best[1][2]]:["man",""]; }
+  const bk0=((dayPlan(w,d)||{}).ch||[[0]])[0][0]; /* 사도행전부터는 글에 '예수'가 나와도 걷는 사람으로 고르지 않음(2026-11-02) */
+  let best=null; for(const m of MV_NAME){ if(bk0>=44&&m[1]==="jesus") continue; const k=txt.indexOf(m[0]); if(k>=0&&(!best||k<best[0])) best=[k,m]; } return best?[best[1][1],best[1][2]]:["man",""]; }
 function inLand(ll){ const [y,x]=ll; const inR=r=>{ let c=false; for(let i=0,j=r.length-1;i<r.length;j=i++){ const yi=r[i][0],xi=r[i][1],yj=r[j][0],xj=r[j][1]; if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; };
   for(const P of NEARLAND){ const R=Array.isArray(P[0][0])?P:[P]; if(inR(R[0])&&!R.slice(1).some(inR)) return true; } return false; }
 function mvWalker(map,id,path,dur,o){ o=o||{}; const w=o.w||40, boat=id==="boat";
@@ -3749,7 +3765,7 @@ const MAPMETA={
  "여리고를 지나 예루살렘으로":{who:"예수님",mid:[["여리고",[42,19,1]]],end:[42,19,41]},
  "엠마오로 가는 길":{who:"글로바",as:"man",noTwelve:1,with:[{n:"",as:"youth"},{n:"",as:"jesus",to:"엠마오",out:"vanish",hold:1}],group:"",pause:{at:"엠마오",seq:[["bub",[42,24,29],2400],["bub",[42,24,30],2400],["vanish","jesus"],["bub",[42,24,31],2600]]},end:[42,24,33],after:[42,24,34]},
  "베다니 앞에서 승천하심":{who:"예수님",with:[{n:"",as:"eleven"}],group:"제자들",pause:{at:"베다니",seq:[["bub",[42,24,50],2400],["rise"],["bub",[42,24,51],2400],["swap","peter","제자들"]]},end:[42,24,52]},
- "예수님이 갈릴리로 가셨다가 예루살렘으로":{who:"예수님",mid:[["가나",[43,2,11]]],end:[43,2,13],after:[43,2,19]},
+ "예수님이 갈릴리로 가셨다가 예루살렘으로":{who:"예수님",noTwelve:1,with:[{n:"",as:"man"},{n:"",as:"youth"},{n:"",as:"man"},{n:"",as:"elder"}],group:"처음 부르신 제자들",mid:[["가나",[43,2,11]]],end:[43,2,13],after:[43,2,19]},
  "유대에서 사마리아를 거쳐 갈릴리로":{who:"예수님",mid:[["수가",[43,4,5]]],end:[43,4,46],after:[43,4,50]},
  "요한복음 1–4장의 여정":{who:"예수님",mid:[["가나",[43,2,11]],["수가",[43,4,5]]],end:[43,4,46],after:[43,4,50]},
  "명절에 예루살렘으로 올라가심":{who:"예수님",end:[43,5,1],after:[43,5,8]},
@@ -3781,8 +3797,8 @@ const MAPMETA={
  "3차 전도 여행: 마게도냐와 헬라를 거쳐 밀레도로":{who:"바울",group:"함께 간 일행",with:[{n:"",as:"youth"},{n:"",as:"man"}],mid:[["드로아",[44,20,6]]],end:[44,20,15],after:[44,20,24]},
  "예루살렘으로 올라감":{who:"바울",group:"함께 간 일행",with:[{n:"",as:"youth"},{n:"",as:"man"}],mid:[["두로",[44,21,5]],["가이사랴",[44,21,8]]],end:[44,21,17]},
  "가이사랴로 호송됨":{who:"바울 (호송됨)",as:"paul",kind:"군대",group:"로마 군인 호송대",mid:[["예루살렘",[44,23,11]]],end:[44,23,33]},
- "로마로 가는 항해":{who:"바울",fx:"storm",mid:[["가우다",[44,27,16]],["멜리데",[44,28,1]]],pause:{at:"멜리데",seq:[["bub",[44,28,1],2400]]},end:[44,28,16],after:[44,28,31]},
- "광풍을 지나 로마로":{who:"바울",fx:"storm",mid:[["그레데",[44,27,8]],["멜리데",[44,28,1]]],pause:{at:"멜리데",seq:[["bub",[44,28,1],2400]]},end:[44,28,16],after:[44,28,31]},
+ "로마로 가는 항해":{who:"바울 (호송됨)",as:"paul",with:[{n:"백부장 율리오",as:"soldier"},{n:"",as:"soldier"}],fx:"storm",mid:[["가우다",[44,27,16]],["멜리데",[44,28,1]]],pause:{at:"멜리데",seq:[["bub",[44,28,1],2400]]},end:[44,28,16],after:[44,28,31]},
+ "광풍을 지나 로마로":{who:"바울 (호송됨)",as:"paul",with:[{n:"백부장 율리오",as:"soldier"},{n:"",as:"soldier"}],fx:"storm",mid:[["그레데",[44,27,8]],["멜리데",[44,28,1]]],pause:{at:"멜리데",seq:[["bub",[44,28,1],2400]]},end:[44,28,16],after:[44,28,31]},
  "여러 나라에서 예루살렘으로":{kind:"출신",end:[44,2,5]},
  /* 서신 */
  "드로아에서 마게도냐로":{who:"바울",with:[{n:"디도",as:"youth",from:"마게도냐"}],mid:[["드로아",[47,2,12]]],end:[47,7,6]},
@@ -3794,7 +3810,18 @@ const MAPMETA={
  "에바브로디도가 빌립보로 돌아감":{who:"에바브로디도",letter:"보냄 · 도착 기록 없음",end:[50,2,25]},
  "두기고와 오네시모가 골로새로":{who:"두기고와 오네시모",letter:"출발지·항로 추정",end:[51,4,9]},
  "실루아노가 베드로전서를 들고 다섯 지방으로":{kind:"수신지",end:[60,1,1]},
- "밧모에서 일곱 교회로":{kind:"수신지",order:1,end:[66,1,11]}
+ "밧모에서 일곱 교회로":{kind:"수신지",order:1,end:[66,1,11]},
+ /* 지도 점검(2026-11-02)에서 걷는 사람이 틀렸던 카드: 카드 제목으로 찾음 */
+ "가이사랴에서 로마까지":{who:"바울 (호송됨)",as:"paul",with:[{n:"백부장 율리오",as:"soldier"},{n:"",as:"soldier"}],fx:"storm",mid:[["그레데",[44,27,8]],["멜리데",[44,28,1]]],pause:{at:"멜리데",seq:[["bub",[44,28,1],2400]]},end:[44,28,16],after:[44,28,31]},
+ "안디옥에서 더베까지":{who:"바울",as:"paul",with:[{n:"바나바",as:"man"}],mid:[["바보",[44,13,6]]],end:[44,14,20]},
+ "아시아도, 비두니아도":{who:"바울",as:"paul",with:[{n:"실라",as:"man"},{n:"디모데",as:"youth"}],end:[44,16,8]},
+ "밧모에서 라오디게아까지":{kind:"수신지",order:1,end:[66,1,11]},
+ "시내 광야에서 바란 광야까지":{who:"모세",kind:"무리",group:"이스라엘 백성",end:[4,12,16]},
+ "브엘세바에서 고센까지":{who:"야곱",as:"elder",kind:"무리",group:"야곱의 집안 칠십 명",end:[1,46,27]},
+ "미디안에서 애굽까지":{who:"모세",with:[{n:"십보라",as:"woman"},{n:"",as:"youth"},{n:"아론",as:"elder",from:"호렙"}],mid:[["호렙",[2,3,2]]],end:[2,4,29]},
+ "모세가 호렙에서 부름받고 애굽으로 돌아감":{who:"모세",with:[{n:"십보라",as:"woman"},{n:"",as:"youth"},{n:"아론",as:"elder",from:"호렙"}],mid:[["호렙",[2,3,2]]],end:[2,4,29]},
+ "애굽에서 미디안까지":{who:"모세",end:[2,2,15]},
+ "모세가 미디안으로 피함":{who:"모세",end:[2,2,15]}
 };
 function routeMeta(name,b){ const k=rmBase(name); if((k==="빌립보 가이사랴에서 가버나움으로"||k==="베다니에서 겟세마네, 골고다로")&&b===41) return MAPMETA[k+"_막"]; return MAPMETA[k]||null; }
 
@@ -3845,6 +3872,7 @@ const mvWait=ms=>new Promise(r=>setTimeout(r,ms));
 function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") return; const still=!!(matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
   const bk=M.b||(dayPlan(w,d).ch[0]||[0])[0], X=(s.mkey&&routeMeta(s.mkey,bk))||routeMeta(M.name,bk)||routeMeta(s.h,bk)||{};
   const Mt=Object.assign({},X,s.mover?{who:s.mover}:{},s.mkind?{kind:s.mkind}:{},s.mbub?{end:s.mbub}:{});
+  if(M.cut){ const over=r=>Array.isArray(r)&&r[0]===M.b&&r[1]>M.dc1; ["end","after"].forEach(k=>{ if(over(Mt[k])) delete Mt[k]; }); if(Mt.endBy) delete Mt.endBy; if(Mt.mid) Mt.mid=Mt.mid.filter(x=>!over(x[1])); if(Mt.pause&&Mt.pause.seq&&Mt.pause.seq.some(x=>over(x[1]))) delete Mt.pause; }
   const ppl=["man","woman","youth","woman2","elder"], fr=map.getContainer(), alive=()=>document.body.contains(fr);
   /* 오순절: 출신 지역 핀만(행 2:5 '예루살렘에 머물러 있더니') — 그날 걸어오는 길로 그리지 않음 */
   if(M.to&&M.extra.length){ if(Mt.kind==="출신"||!Mt.kind){ M.extra.slice(0,16).forEach((p,i)=>setTimeout(()=>{ if(!alive()) return; const m=mvMarker(map,ppl[i%5],{at:[p[1],p[2]],w:22}); m.getElement()?.querySelector(".chm")?.classList.add("popin"); },still?0:250+i*140));
@@ -3879,7 +3907,7 @@ function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") retu
   if(Mt.kind==="무리") ["man","woman","youth","woman2","elder","man","woman"].forEach(a=>add({n:"",as:a}));
   if(Mt.kind==="포로"){ ["woman","elder","youth","woman2","man"].forEach(a=>add({n:"",as:a})); add({n:"",as:"soldier"}); add({n:"",as:"soldier"}); }
   if(Mt.kind==="군대") ["soldier","soldier","soldier","soldier","soldier"].forEach(a=>add({n:"",as:a}));
-  if(id==="jesus"&&!Mt.with&&!Mt.noTwelve&&!Mt.kind) add({n:"",as:"twelve"});
+  if(id==="jesus"&&!Mt.with&&!Mt.noTwelve&&!Mt.kind&&bk>=40&&bk<=43) add({n:"",as:"twelve"}); /* 열두 제자 자동 동행은 복음서에서만(2026-11-02) */
   if(Mt.letter) crowd.length=0;
   const big=crowd.length>6; let gl=false;
   const F=crowd.map((x,j)=>{ const row=Math.floor(j/2)+1, nm=x.n||(!gl&&Mt.group&&!x.from?(gl=true,Mt.group):""); return {x,j,state:(x.from||x.joinFrac)?"wait":"on",fromI:x.from?mvIdx(names,x.from):-1,toI:x.to?mvIdx(names,x.to):-1,
@@ -4032,10 +4060,11 @@ function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||
   const MS=mapStyleOf(w,d), RT=MAPRT[MS]; mapBase(map,MS);
   /* 모여드는 길(예: 오순절에 여러 나라에서 예루살렘으로): 곳마다 목적지로 선을 긋습니다 */
   if(M.to){ const MX=routeMeta(s&&s.h,0)||{}; if(MX.kind!=="출신") M.extra.forEach(p=>{ const ll=[[p[1],p[2]],[M.to[1],M.to[2]]]; L.polyline(ll,{color:"#fff",weight:8,opacity:.85,interactive:false}).addTo(map); L.polyline(ll,{color:RT,weight:4,opacity:1,dashArray:"9 7",lineCap:"round",interactive:false}).addTo(map); }); M.route=[M.to]; }
+  if(M.past&&M.past.length>1){ const pl=M.past.map(p=>[p[1],p[2]]); L.polyline(pl,{color:"#fff",weight:6,opacity:.5,interactive:false}).addTo(map); L.polyline(pl,{color:"#7d766a",weight:3,opacity:.75,dashArray:"6 7",lineCap:"round",interactive:false}).addTo(map); M.past.slice(0,-1).forEach(p=>{ if(p[0]) M.extra.push(p); }); }
   if(M.route.length>1){ const ll=M.route.map(p=>[p[1],p[2]]); M.ul=L.polyline(ll,{color:"#fff",weight:10,opacity:.85,lineJoin:"round",interactive:false}).addTo(map); const rl=M.rl=L.polyline(ll,{color:RT,weight:5,opacity:1,className:"sroute",lineJoin:"round",lineCap:"round",interactive:false}).addTo(map); const fixLen=()=>{ try{ const e=rl.getElement(); if(e&&e.getTotalLength){ const n=Math.ceil(e.getTotalLength())+20; e.style.setProperty("--sl",n); } }catch(x){} }; fixLen(); map.once("zoomend moveend",fixLen); }
   const lab=(p,alt)=>L.marker([p[1],p[2]],{icon:L.divIcon({className:"",html:`<span class="spl${alt?" alt":""}${p[3]?" est":""}${p[4]?" lf":""}">${esc(p[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]}),interactive:false}).addTo(map);
   /* 너무 가까운 이름(예: 예루살렘과 유다)은 겹치므로 먼저 나온 것만 씁니다 */
-  const put=[]; const near=p=>put.some(q=>Math.abs(q[1]-p[1])<.22&&Math.abs(q[2]-p[2])<.3); M.route.forEach(p=>{ lab(p,0); put.push(p); }); M.extra.forEach(p=>{ if(near(p)) return; lab(p,M.route.length>1||!!M.to); put.push(p); });
+  const put=[]; const near=p=>put.some(q=>Math.abs(q[1]-p[1])<.22&&Math.abs(q[2]-p[2])<.3); /* 같은 자리(좌표가 같은 추정 위치)의 이름은 한 이름표로 묶음: 다베라 · 기브롯 핫다아와 */ { const RL=[]; M.route.forEach(p=>{ if(!p[0]) return; const q=RL.find(x=>Math.abs(x[1]-p[1])<.005&&Math.abs(x[2]-p[2])<.005); if(q){ if(!q[0].split(" · ").includes(p[0])) q[0]+=" · "+p[0]; } else RL.push([p[0],p[1],p[2],p[3],p[4]]); }); RL.forEach(p=>{ lab(p,0); put.push(p); }); } M.extra.forEach(p=>{ if(near(p)) return; lab(p,M.route.length>1||!!M.to); put.push(p); });
   const all=M.route.concat(M.extra).map(p=>[p[1],p[2]]); if(!all.length) return;
   /* 지명 태그: 인스타 사람 태그처럼, 지명을 누르면 짧은 설명이 뜹니다. 지도 위 좌우 넘김 단추보다 먼저 받습니다 */
   const B0=(dayPlan(w,d).ch[0]||[0])[0], fr=el.parentNode;
