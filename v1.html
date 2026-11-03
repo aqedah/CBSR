@@ -2543,7 +2543,7 @@ html.v2 body .mynote{display:block;width:100%;text-align:left;border:0;backgroun
 html.v2 body .mynote small{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 html.v2 body .mynote q{display:block;quotes:none;font-family:"Noto Serif KR",serif;font-size:16.5px;line-height:1.7}
 html.v2 body .mynote cite{display:block;font-style:normal;font-weight:700;font-size:12px;color:var(--hn-ink);margin-top:4px}
-html.v2 body .mynote p{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--note-bd);font-size:14.5px;line-height:1.65}
+html.v2 body .mynote .ntdr{margin-left:6px;padding:1px 7px;border-radius:99px;background:var(--note-bg);border:1px solid var(--note-bd);color:var(--hn-ink);font-weight:700;font-size:11px}html.v2 body .mynote p b{display:block;font-size:11.5px;color:var(--muted);margin-bottom:2px}html.v2 body .mynote p+p{border-top:0;padding-top:0}html.v2 body .mynote p{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--note-bd);font-size:14.5px;line-height:1.65}
 /* 본문: 장과 장 사이를 띠로 나누고, 장 소제목은 이야기 흐름 한 줄로 */
 html.v2 body .bible .chap+.chap{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
 html.v2 body .bible .chap h3 .chsub{display:block;margin-top:4px;font:600 13.5px/1.5 "IBM Plex Sans KR",sans-serif;color:var(--hn-ink)}
@@ -8092,6 +8092,14 @@ function lnQtHTML(k){ const L=lnAll().filter(x=>x.k===k).sort((a,b)=>{ const A=l
   return `<section class="sec lnsec"><span class="label">본문에서 남긴 한 줄</span><div class="lnlist">${L.map(lnCard).join("")}</div></section>`; }
 function lnRecHTML(){ const L=lnAll(); if(!L.length) return "";
   return `<section class="rybox"><div class="ryhd"><h3>남긴 한 줄 <span>${L.length}</span></h3>${L.length>3?`<button class="rylink" data-recgo="lines">전체<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`:""}</div><div class="lnlist">${L.slice(0,3).map(lnCard).join("")}</div></section>`; }
+/* 11/4: 내 노트 = 마친 노트와 쓰는 중인 노트 모두(관찰·적용·기도). 최근에 손댄 순 */
+const NT_F=[["obs","관찰"],["med","적용"],["pray","기도"]];
+function noteAll(){ return Object.entries(mem.qt||{}).filter(([k,q])=>q&&/^\d+-\d+$/.test(k)&&(q.done||NT_F.some(([f])=>String(q[f]||"").trim()))).map(([k,q])=>{ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return null; const ft=q.ft?Math.max(0,...Object.values(q.ft).map(Number).filter(x=>x>0)):0, t=ft||(q.doneAt?Date.parse(q.doneAt)||0:0);
+  let kv=null; try{ const v=String(q.kv||"").split(":").map(Number); if(v.length===3){ const tx=vtxt(v); if(tx) kv={v,t:tx}; } }catch(e){} return {k,w,d,q,p,t,kv}; }).filter(Boolean).sort((a,b)=>b.t-a.t||b.k.localeCompare(a.k,undefined,{numeric:true})); }
+function noteCard(x,full){ const {q,p,kv}=x, F=NT_F.filter(([f])=>String(q[f]||"").trim()), sh=full?F:F.slice(0,1);
+  return `<button class="mynote${q.done?"":" draft"}" data-myn="${x.k}"><small>${esc(fmt(dateOf(x.w,x.d),{month:"long",day:"numeric"}))} · ${esc(p.label)}${q.done?"":`<span class="ntdr">쓰는 중</span>`}</small>${kv?`<q>${esc(kv.t)}</q><cite>${esc(PLAN.abbr[kv.v[0]-1])} ${kv.v[1]}:${kv.v[2]}</cite>`:""}${sh.map(([f,l])=>`<p>${full?`<b>${l}</b>`:""}${esc(q[f])}</p>`).join("")}</button>`; }
+function noteFind(t){ t=(t||"").trim(); const L=noteAll(), R=t?L.filter(x=>x.p.label.includes(t)||(x.kv&&x.kv.t.includes(t))||NT_F.some(([f])=>String(x.q[f]||"").includes(t))):L;
+  return R.length?R.map(x=>noteCard(x,true)).join(""):`<p class="lnempty">${t?`'${esc(t)}'이(가) 들어간 노트가 없습니다.`:"묵상 노트에 적은 글이 여기에 모입니다."}</p>`; }
 function lnDetailHTML(){ const L=lnAll(), sg=view.lnSeg||"new";
   const seg=`<div class="lnseg" role="tablist">${[["new","최근 순"],["book","성경 책별"],["find","찾기"]].map(([k,t])=>`<button role="tab" aria-selected="${k===sg}" data-lnseg="${k}">${t}</button>`).join("")}</div>`;
   let body="";
@@ -11217,6 +11225,7 @@ function lastReadBook(){ /* 일정에서 가장 앞선 읽은 날의 책(뒤늦�
 const recRow=(go,t,sub)=>`<button class="rrow" data-recgo="${go}"><span><b>${t}</b><small>${sub}</small></span><i aria-hidden="true">›</i></button>`;
 function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">${window.CBSR_V2?"‹":`‹ ${back?"돌아가기":"기록"}`}</button><h2>${t}</h2></div>`;
   if(D==="lines") return head("남긴 한 줄")+lnDetailHTML();
+  if(D==="notes") return head("내 노트")+`<section class="sec rsec lnwrap"><input class="lnq" id="ntQ" type="search" placeholder="낱말로 찾기" value="${esc(view.ntQ||"")}" aria-label="내 노트 찾기"><div class="mynotes" id="ntRes">${noteFind(view.ntQ||"")}</div></section>`;
   /* 통독표(목사님 2026-11-03): 달마다 날짜 · 본문 · 읽음. 지금 달만 펼치고 나머지는 접음. 줄을 누르면 그날 본문으로 */
   if(D==="plan"&&window.CBSR_V2){ const t=today0(); if(view.pcStart){ PCM=view.pcStart; view.pcStart=null; } else if(!PCM) PCM=`${t.getFullYear()}-${t.getMonth()}`; return head("통독표")+`<section class="sec rsec">${pcSearchHTML()}<div id="pcBox" class="pcbox">${pcHTML()}</div><p class="lead rnote">${esc(PI.name)} 일정입니다. 날짜를 누르면 그날 본문으로 갑니다.</p></section>`; }
   if(D==="plan"){ const t0=today0(), M=new Map();
@@ -12035,7 +12044,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   let h=topBanners("record")+`<section class="ryprof rprof">${av?av.outerHTML:""}<div class="rpname"><b>${esc(PROF.nick||"내 통독 기록")}</b><small>${st} · ${esc(PI.name)}</small></div><button class="rygear" data-recgo="more" aria-label="설정 · 더 보기">${ic("gear")}</button></section>`;
   const row=(go,k,t)=>`<button class="ryrow" data-recgo="${go}"><span class="ryico ${k}">${ic(k)}</span><b>${t}</b><svg class="ych" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
   /* 첫 방문(기록 없음, 2026-11-02): 0이 늘어선 숫자판 대신 할 일 하나 */
-  if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen))){ const tp=dayPlan(here.w,here.d);
+  if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen||x.obs||x.med||x.pray))){ const tp=dayPlan(here.w,here.d);
     h+=`<section class="rybox"><p class="ryfirst">오늘 본문을 읽고 묵상 노트를 마치면, 읽은 날과 붙잡은 말씀, 아멘이 여기에 모입니다.</p>${tp?`<button class="ryfirstb" data-tab-go="read" data-today="1"><b>오늘 본문 열기</b><small>${esc(fmt(dateOf(here.w,here.d),{month:"long",day:"numeric"}))} · ${esc(tp.label)}</small></button>`:""}</section>`;
     h+=`<section class="rybox rymenu">${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`; return h; }
   /* 2) 통독 요약: 큰 숫자 + 막대 + 이번 주 */
@@ -12049,7 +12058,9 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   const tile=(k,v,u,t)=>`<button class="rytile" data-rinfo="${k}"><span class="ryico ${k}">${ic(k)}</span><small>${t}</small><b>${v}<em>${u}</em></b></button>`;
   h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length,"장","말씀 카드")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
   /* 11/3 UI v3: 내 노트 — 최근에 붙잡은 말씀과 내가 쓴 한 줄(이 탭의 주인공) */
-  { const NL=Object.entries(mem.qt||{}).filter(([k,q])=>q&&q.done&&/^\d+-\d+$/.test(k)).sort((a,b)=>String(b[1].doneAt||"").localeCompare(String(a[1].doneAt||""))||b[0].localeCompare(a[0],undefined,{numeric:true})).slice(0,3);
+  { const it=noteAll().slice(0,3).map(x=>noteCard(x)).join("");
+    if(it) h+=`<section class="rybox">${hd("내 노트","notes","모두 보기")}<div class="mynotes">${it}</div></section>`; }
+  if(0){ const NL=[];
     const it=NL.map(([k,q])=>{ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return ""; let kv=null; try{ const v=(q.kv||"").split(":"); if(v.length===3){ kv={b:+v[0],c:+v[1],v:+v[2]}; kv.t=vtxt([kv.b,kv.c,kv.v]); } }catch(e){}
       const mine=q.obs||q.med||q.pray||"";
       return `<button class="mynote" data-myn="${k}"><small>${esc(q.doneAt?fmt(parseD(q.doneAt),{month:"long",day:"numeric"}):dayName(w,d))} · ${esc(p.label)}</small>${kv&&kv.t?`<q>${esc(kv.t)}</q><cite>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</cite>`:""}${mine?`<p>${esc(mine)}</p>`:""}</button>`; }).join("");
@@ -13260,7 +13271,9 @@ function render(){
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
   if(window.CBSR_V2&&view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
   if(window.CBSR_V2&&view.tab==="record"){ pcBind(m,(w,d)=>{ const f=view.bmFrom, t=isRev(d)?"today":f&&f.tab!=="record"?f.tab:"read"; /* 주일은 오늘 탭의 주일 화면으로 */ view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }); m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
-  if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.myn.split("-").map(Number); view.pre=false; view.revW=null; view.w=w; view.d=d; view.tab="qt"; render(); scrollTo({top:0}); });
+  if(window.CBSR_V2&&view.tab==="record"){ const nq=m.querySelector("#ntQ"); if(nq) nq.oninput=()=>{ view.ntQ=nq.value; const r=m.querySelector("#ntRes"); if(r){ r.innerHTML=noteFind(nq.value); r.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b)); } }; }
+  const myGo=b=>{ const [w,d]=b.dataset.myn.split("-").map(Number); view.pre=false; view.revW=null; view.recD=null; view.w=w; view.d=d; view.tab="qt"; render(); scrollTo({top:0}); };
+  if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b));
   if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
     m.querySelectorAll("[data-recseg]").forEach(b=>b.onclick=()=>{ view.recSeg=b.dataset.recseg; const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const rb=m.querySelector("#recBack"); if(rb) rb.onclick=()=>{ ovDone(recBackOv); recBack(); };
