@@ -8623,7 +8623,7 @@ function renderHead(){
   document.getElementById("planName").textContent=PI.name+(TR!=="krv"?" · "+TR_INFO[TR].name:"");
   if(window.CBSR_V2){ const bl=document.getElementById("brandL"), hx=document.getElementById("hdx"); const isT=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d, MISS=TRY?[]:missedDays();
     if(bl) bl.innerHTML=`<b class="v2d">${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b><small class="v2p">${view.revW?esc(PI.name):esc(MODE==="y365"?dayNo(view.w,view.d)+"일째":dayName(view.w,view.d))}</small><span id="planName" hidden></span>`;
-    if(hx) hx.innerHTML=`${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgLib" aria-label="스토리 모음"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="11" height="15" rx="2.5"/><path d="M17.5 7v11M20.5 9v7"/></svg></button><button class="rgcal" id="rgMap" aria-label="성경 지도"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3.5 6.5 9 4l6 2.5 5.5-2.5v13.5L15 20l-6-2.5-5.5 2.5z"/><path d="M9 4v13.5M15 6.5V20"/></svg></button><button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
+    if(hx) hx.innerHTML=`${isT?"":`<button class="rgtoday" id="rgToday">오늘로</button>`}<button class="rgcal" id="rgLib" aria-label="스토리 모음"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg></button><button class="rgcal" id="rgMap" aria-label="성경 지도"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></button><button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
   document.querySelectorAll(".bnav .tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
 }
 
@@ -12500,15 +12500,18 @@ function todayNext(w,d,o){ const {key,q,read,S,mins}=o, p=dayPlan(w,d), P=(mem.s
   else if(sDone) r={act:"note",e:"다음으로",t:"묵상 노트 쓰기",s:"관찰 · 성품 · 적용 · 기도"};
   else r={act:"story",e:"다음으로",t:"스토리 보기",s:`카드 ${n}장`};
   r.sDone=sDone; r.sMid=sMid?`${(P.m||P.i)+1}/${n}`:""; r.nMid=nMid; return r; }
-try{ if(localStorage.getItem("v2:tdswiped")) document.documentElement.classList.add("tdswiped"); }catch(e){}
-function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=todayNext(w,d,o); TD.act=N.act; TD.stage=q.done?2:read?1:0; TD.past=dayDiff(today0(),dt)<0;
-  /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
+/* 오늘 탭 그림 머리(평일·주일 같이 씀, 11/3): 앞뒤 날 그림·‹ ›·오늘/오늘로. 닫는 </div></section>은 부르는 쪽에서 */
+function td4Top(w,d,ph,live){
   const arr=dir=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${dir<0?"m15 6-6 6 6 6":"m9 6 6 6-6 6"}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const n0=dayNo(w,d), nb=k=>{ for(let n=n0+k;n>=1&&n<=TOTAL_DAYS;n+=k){ const a=Math.floor((n-1)/7)+1, c=(n-1)%7; if(PLAN.plan[a-1]&&(dayPlan(a,c)||(isRev(c)&&WEEKS[a-1]))) return [a,c]; } return null; }, PV0=nb(-1), NX=nb(1);
   const tag=live?`<span class="td4now">오늘</span>`:`<button class="td4now go" id="tdGoToday">오늘로 ›</button>`; /* 11/3: '오늘'과 '오늘로'를 같은 자리에 */
   const cov=x=>{ if(!x) return null; try{ if(isRev(x[1])) return sunCover(x[0]); const S2=storySlides(x[0],x[1]); return S2[0]&&S2[0].ph; }catch(e){ return null; } }, nbP=cov(PV0), nbN=cov(NX);
   /* 11/2 목사님: 위는 검은 그라데이션, 제목은 그림 위에, 아래 설명부터 바탕색으로 녹아듦 */
-  let h=`<section class="td4"><div class="td4hero">${nbP?phImg(nbP,"td4nb p"):""}${nbN?phImg(nbN,"td4nb n"):""}${phImg(ph,"td4img")}<i class="td4top"></i><div class="td4nav">${tag}</div><button class="td4ar l" id="tdPrev" aria-label="이전 날"${PV0?` data-go="${PV0.join("-")}"`:" disabled"}>${arr(-1)}</button><button class="td4ar r" id="tdNext" aria-label="다음 날"${NX?` data-go="${NX.join("-")}"`:" disabled"}>${arr(1)}</button>${ph&&ph.link?`<span class="tdcr">${esc(ph.by||"")}</span>`:""}
+  return `<section class="td4"><div class="td4hero">${nbP?phImg(nbP,"td4nb p"):""}${nbN?phImg(nbN,"td4nb n"):""}${phImg(ph,"td4img")}<i class="td4top"></i><div class="td4nav">${tag}</div><button class="td4ar l" id="tdPrev" aria-label="이전 날"${PV0?` data-go="${PV0.join("-")}"`:" disabled"}>${arr(-1)}</button><button class="td4ar r" id="tdNext" aria-label="다음 날"${NX?` data-go="${NX.join("-")}"`:" disabled"}>${arr(1)}</button>${ph&&ph.link?`<span class="tdcr">${esc(ph.by||"")}</span>`:""}`; }
+try{ if(localStorage.getItem("v2:tdswiped")) document.documentElement.classList.add("tdswiped"); }catch(e){}
+function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=todayNext(w,d,o); TD.act=N.act; TD.stage=q.done?2:read?1:0; TD.past=dayDiff(today0(),dt)<0;
+  /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
+  let h=td4Top(w,d,ph,live)+`
   <div class="td4head"><p class="td4k">${p.topic?esc(p.label):""}${MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</p><h1>${esc(p.topic||p.label)}</h1></div>
   <div class="td4sumb">${g.today?`<p class="td4sum">${esc(g.today)}</p>`:""}</div></div><div class="td4tx">`;
   const n=(S||[]).length;
@@ -12543,7 +12546,8 @@ function sunPlaces(w){ const seen=new Map(); SUN_DAYS(w).forEach(([ww,d])=>{ try
 function renderSunday(w){ const W=WEEKS[w-1]||{}, ph=sunCover(w), dt=dateOf(w,6), L=SUN_DAYS(w), read=L.filter(([a,b])=>mem.done[keyOf(a,b)]).length;
   mem.sun ||= {}; if(!mem.sun[w]){ mem.sun[w]=todayStr(); save(); }
   const sent=t=>String(t||"").split(/(?<=[다요]\.)\s+/).filter(Boolean);
-  let h=`<section class="tdh sunh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin"><div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span></div>
+  let h=window.CBSR_V2?td4Top(w,6,ph,isHere(w,6))+`<div class="td4head"><p class="td4k">주일 · 쉼과 잇기</p><h1>${w}주차 돌아보기</h1></div><div class="td4sumb">${W.t?`<p class="td4sum">${esc(W.t)}</p>`:""}</div></div></section><section class="tdsheet sun">`: /* 11/3: 주일도 평일과 같은 그림 머리(‹ › 넘기기) */
+    `<section class="tdh sunh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin"><div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span></div>
     <div class="tdttl"><p class="tdk">주일 · 쉼과 잇기</p><h1>${w}주차 돌아보기</h1><p class="tdsub">${esc(W.t||"")}</p></div></div></section><section class="tdsheet sun">`;
   h+=`<p class="tdstory">오늘은 주일입니다. 이번 주에 읽은 이야기를 모아 보고, 예배로 이어 가세요.</p><p class="sunstat">이번 주 <b>${read}</b> / ${L.length}일 읽음</p>`;
   /* ① 지도 */
@@ -13047,7 +13051,7 @@ function v2Nav(){ const n=document.querySelector(".bnav-in"); if(!n) return; con
   const dl=document.getElementById("dateLine"), tp=document.querySelector("header.top"); if(dl&&tp&&!dl._v2){ dl._v2=1; dl.setAttribute("role","button"); dl.tabIndex=0; const t=()=>tp.classList.toggle("wkopen"); dl.onclick=t; dl.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); t(); } }; } }
 function render(){
   useKRV(qtTabKRV());
-  renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today"); document.body.classList.toggle("tdcov",!!(window.CBSR_V2&&view.tab==="today"&&!isRev(view.d)&&BIBLE)); if(window.CBSR_V2&&view.tab==="today") setTimeout(tdTone,0);
+  renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today"); document.body.classList.toggle("tdcov",!!(window.CBSR_V2&&view.tab==="today"&&BIBLE)); if(window.CBSR_V2&&view.tab==="today") setTimeout(tdTone,0);
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
   try{ m.innerHTML=view.tab==="today"?((window.CBSR_V2&&BIBLE?topBanners("today"):"")+renderToday()):view.tab==="challenge"?(window.CBSR_V2?v2ChallengeHTML():renderChallenge()):view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():(window.CBSR_V2?renderRecordV2():renderRecord()); }
