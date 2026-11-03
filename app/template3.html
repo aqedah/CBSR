@@ -1911,7 +1911,7 @@ html.v2 body .rdt{display:block;font:600 14px var(--f-ui);color:var(--muted);mar
 (function(){
 const DAYN=["주일","월","화","수","목","금","토"];
 const TRY=!!window.CBSR_TRY; if(TRY) document.documentElement.classList.add("try");
-const MODE=window.CBSR_MODE||"rj", PI=PLAN_INFO[MODE];
+const MODE=window.CBSR_MODE||"rj", PI=Object.assign({},PLAN_INFO[MODE]);
 /* 미리 보기 날짜(시험용): ?now=2027-01-01 로 오늘을 바꿔 보고, ?now=0 으로 되돌립니다(이 탭에서만) */
 const NOWOFF=(()=>{ try{ const u=new URLSearchParams(location.search).get("now"); if(u==="0") sessionStorage.removeItem("cbsr-now"); else if(u&&/^\d{4}-\d{2}-\d{2}$/.test(u)) sessionStorage.setItem("cbsr-now",u); const s=sessionStorage.getItem("cbsr-now"); if(!s) return 0; const [y,m,d]=s.split("-").map(Number), n=new Date(); return new Date(y,m-1,d,n.getHours(),n.getMinutes(),n.getSeconds())-n; }catch(e){ return 0; } })();
 const NOW=()=>new Date(Date.now()+NOWOFF);
@@ -1930,7 +1930,10 @@ function guardSync(){ if(!NOWOFF||!window.SYNC||SYNC.__g) return; SYNC.__g=1; co
 guardSync(); window.addEventListener("load",guardSync);
 /* 365 통독의 회차(판): 해마다 1월 1일에 새 회차. 2026 = 첫 회차, 2027 = 2027판 */
 const ED_Y=Math.max(2026,NOW().getFullYear()), ED=MODE==="y365"?ED_Y:2026;
-const DEFAULT_START=MODE==="y365"?ED+"-01-01":PI.start;
+/* 2027판(목사님 2026-11-03·04): 월–토 313회, 주일은 쉼과 설교. 격자는 2026-12-28(월)부터 한 주 7칸(6번 = 주일), 첫 주 0–3번 칸은 비움 */
+const Y27=MODE==="y365"&&ED===2027&&typeof P313!=="undefined", Y27_PRE=4;
+if(Y27) Object.assign(PI,{name:"2027 성경통독",short:"313일",src:"CBSR 2027 성경통독표(월–토 313회)",start:"2027-01-01"});
+const DEFAULT_START=Y27?"2026-12-28":MODE==="y365"?ED+"-01-01":PI.start;
 /* 새 회차가 되면 지난 회차의 기록(통독·QT·퀴즈)은 hist[해]에 옮겨 보관하고 새로 시작합니다 */
 function rollY(m,to){ to=to||ED_Y; if(!m) return m; const e=m.ed||2026; if(e>=to) { if(!m.ed) m.ed=to; return m; }
   const arc={start:m.start,done:m.done||{},dT:m.dT||{},qt:m.qt||{},q:m.q||{},wq:m.wq||{}};
@@ -1938,6 +1941,33 @@ function rollY(m,to){ to=to||ED_Y; if(!m) return m; const e=m.ed||2026; if(e>=to
   m.hist ||= {}; if(has) m.hist[e]=m.hist[e]?mergeMem(m.hist[e],arc):arc;
   m.start=to+"-01-01"; m.done={}; m.dT={}; m.qt={}; m.q={}; m.wq={}; m.counted={}; m.ed=to; return m; }
 const KEY=MODE==="y365"?"rjnote:y365":"rjnote:v2";
+/* 2027판으로 옮기기: 옛 365판 날(n)이 새 날 안에 통째로 들어가면 그 날의 원고·질문·안내·퀴즈를 물려받음(목사님 결정 11/4).
+   옛 날의 열쇠(w-d)는 2026-01-01부터 7칸 격자, 새 날의 열쇠는 2026-12-28부터 7칸 격자 */
+const Y27N={}; /* 새 격자 번호 → 옛 날 번호(관리자 고치기가 원본 파일의 옛 번호로 가도록) */
+function y27Remap(){
+  const oW=n=>[Math.floor((n-1)/7)+1,(n-1)%7], gW=gi=>[Math.floor(gi/7)+1,gi%7];
+  const BAD=new Set(Object.keys(typeof P365_27!=="undefined"?P365_27:{}).map(Number)); /* 2026판과 범위가 달랐던 여섯 날: 2026판에서 온 질문·안내·퀴즈는 쓰지 않음(원고는 2027판 번호라 씀) */
+  const inR=(ch,ref)=>Array.isArray(ref)&&ch.some(([b,c])=>b===ref[0]&&c===ref[1]);
+  const W=[], SUMN=[], WKN=[], nk={GUIDE:{},EYE:{},DAYC:{},CUR:{},LW:{},EM:{},IN:{},DET:{},CK:{},TX:{},SC:{},KW:{},CN:{},ST:{}};
+  const SC=typeof STORYC!=="undefined"?STORYC:{}, TX=typeof TOOLX!=="undefined"?TOOLX:{}, KW=typeof KWQ!=="undefined"?KWQ:{}, CN=typeof CARDNEWS!=="undefined"?CARDNEWS:{}, ST=(typeof DSTATUS!=="undefined"&&DSTATUS.y365)||{};
+  for(const x of P313){ const [w,d]=gW(x.gi), gn=x.gi+1, k=w+"-"+d, k1=w+"-"+(d+1);
+    (W[w-1] ||= [])[d]={spec:x.spec,label:x.label,ch:x.ch,topic:x.topic}; (SUMN[w-1] ||= [])[d]="";
+    Y27N[gn]=x.prim||0; if(!x.prim) continue;
+    const [ow,od]=oW(x.prim), ok=ow+"-"+od, ok1=ow+"-"+(od+1), good=!BAD.has(x.prim);
+    if(SC[x.prim]) nk.SC[gn]=SC[x.prim]; if(KW[x.prim]) nk.KW[gn]=KW[x.prim]; if(CN[x.prim]) nk.CN[gn]=CN[x.prim]; if(ST[x.prim]) nk.ST[gn]=ST[x.prim];
+    if(!good) continue;
+    if(GUIDE[ok]) nk.GUIDE[k]=GUIDE[ok]; if(EYE[ok]) nk.EYE[k]=EYE[ok]; if(DAYC[ok]) nk.DAYC[k]=DAYC[ok];
+    if(LEITWORT[ok1]) nk.LW[k1]=LEITWORT[ok1]; if(EMPH[ok1]) nk.EM[k1]=EMPH[ok1]; if(INCL[ok1]) nk.IN[k1]=INCL[ok1]; if(DETAIL[ok1]) nk.DET[k1]=DETAIL[ok1];
+    if(CHRIST_K["y:"+ok]) nk.CK["y:"+k]=CHRIST_K["y:"+ok]; if(TX["y365:"+ok]) nk.TX["y365:"+k]=TX["y365:"+ok];
+    if(SUMMARY[ow-1]&&SUMMARY[ow-1][od]) SUMN[w-1][d]=SUMMARY[ow-1][od];
+    /* 퀴즈: 통째로 든 옛 날들의 문제 가운데 근거가 새 범위 안에 있는 것 */
+    const Q=[]; for(const n of x.src){ if(BAD.has(n)) continue; const [a,b]=oW(n); (CURATED[a+"-"+(b+1)]||[]).forEach(q=>{ if(!q.ref||inR(x.ch,q.ref)) Q.push(q); }); } if(Q.length) nk.CUR[k1]=Q; }
+  const nW=W.length; for(let i=0;i<nW;i++){ W[i] ||= []; SUMN[i] ||= []; const L=W[i].filter(Boolean); if(!L.length){ WKN.push({t:"",story:"",christ:""}); continue; }
+    const a=L[0].ch[0], z=L[L.length-1].ch.slice(-1)[0]; WKN.push({t:a[0]===z[0]?`${PLAN.abbr[a[0]-1]} ${a[1]}–${z[1]}`:`${PLAN.abbr[a[0]-1]} ${a[1]} – ${PLAN.abbr[z[0]-1]} ${z[1]}`,story:"",christ:""}); }
+  const RP=(o,n,pre)=>{ for(const k in o) if(!pre||k.startsWith(pre)) delete o[k]; Object.assign(o,n); };
+  PLAN.plan=W; SUMMARY.length=0; SUMMARY.push(...SUMN); WEEKS.length=0; WEEKS.push(...WKN);
+  RP(GUIDE,nk.GUIDE); RP(EYE,nk.EYE); RP(DAYC,nk.DAYC); RP(CURATED,nk.CUR); RP(LEITWORT,nk.LW); RP(EMPH,nk.EM); RP(INCL,nk.IN); RP(DETAIL,nk.DET); RP(CHRIST_K,nk.CK,"y:");
+  if(typeof TOOLX!=="undefined") RP(TOOLX,nk.TX,"y365:"); if(typeof STORYC!=="undefined") RP(STORYC,nk.SC); if(typeof KWQ!=="undefined") RP(KWQ,nk.KW); if(typeof CARDNEWS!=="undefined") RP(CARDNEWS,nk.CN); if(typeof DSTATUS!=="undefined"&&DSTATUS.y365) RP(DSTATUS.y365,nk.ST); }
 /* 처음 온 사람은 '간단 보기'로 시작합니다 */
 try{ if(!localStorage.getItem("rjnote:v2")&&!localStorage.getItem("rjnote:y365")&&localStorage.getItem("cbsr-simple")===null) localStorage.setItem("cbsr-simple","1"); }catch(e){}
 const SIMPLE=()=>{ try{ return localStorage.getItem("cbsr-simple")==="1"; }catch(e){ return false; } };
@@ -1946,7 +1976,8 @@ try{const s=localStorage.getItem(KEY);if(s)mem=Object.assign(mem,JSON.parse(s));
 mem.done ||= {}; mem.qt ||= {};
 if(MODE==="y365"){ const e0=mem.ed; mem=rollY(mem); if(e0!==mem.ed) try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
 /* 2027판 통독표: 경계가 바뀐 여섯 날(69·70·235·236·262·263)을 고치고, 예전 표에 맞춘 요약·안내·퀴즈는 비웁니다 */
-if(MODE==="y365"&&ED>=2027&&typeof P365_27!=="undefined"){ for(const no in P365_27){ const n=+no-1, w=Math.floor(n/7)+1, d=n%7, c=PLAN.plan[w-1]&&PLAN.plan[w-1][d]; if(!c) continue; Object.assign(c,P365_27[no]); if(SUMMARY[w-1]) SUMMARY[w-1][d]=""; delete GUIDE[w+"-"+d]; delete EYE[w+"-"+d]; delete CURATED[w+"-"+(d+1)]; } }
+if(Y27){ mem.start=DEFAULT_START; y27Remap(); }
+else if(MODE==="y365"&&ED>=2027&&typeof P365_27!=="undefined"){ for(const no in P365_27){ const n=+no-1, w=Math.floor(n/7)+1, d=n%7, c=PLAN.plan[w-1]&&PLAN.plan[w-1][d]; if(!c) continue; Object.assign(c,P365_27[no]); if(SUMMARY[w-1]) SUMMARY[w-1][d]=""; delete GUIDE[w+"-"+d]; delete EYE[w+"-"+d]; delete CURATED[w+"-"+(d+1)]; } }
 /* 예전 '주일~금 읽기' 설정을 쓰던 분은 월요일 시작으로 되돌립니다 */
 if(MODE==="rj"){ const d0=new Date(DEFAULT_START+"T00:00:00"); d0.setDate(d0.getDate()-1); const p2=n=>String(n).padStart(2,"0"); if(mem.start===d0.getFullYear()+"-"+p2(d0.getMonth()+1)+"-"+p2(d0.getDate())) mem.start=DEFAULT_START; }
 /* 날짜는 모두 이 기기 시간(한국시간) 기준으로 셉니다 */
@@ -1964,23 +1995,23 @@ const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 const parseD=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
 const today0=()=>{const n=NOW();return new Date(n.getFullYear(),n.getMonth(),n.getDate());};
 const dayDiff=(a,b)=>Math.round((b-a)/86400000);
-const NW=PLAN.plan.length, READ_DAYS=PLAN.plan.flat().length, TOTAL_DAYS=MODE==="y365"?READ_DAYS:NW*7;
-const isRev=d=>MODE==="rj"&&d===6;
+const NW=PLAN.plan.length, READ_DAYS=PLAN.plan.flat().length, TOTAL_DAYS=Y27?369:MODE==="y365"?READ_DAYS:NW*7; /* 2027판: 12/28–12/31(비운 칸) + 365일 */
+const isRev=d=>(MODE==="rj"||Y27)&&d===6;
 const nd=w=>PLAN.plan[w-1]?PLAN.plan[w-1].length:0;
 const dayNo=(w,d)=>(w-1)*7+d+1;
-const dayName=(w,d)=>MODE==="y365"?`${dayNo(w,d)}일째`:`${w}주차 ${d+1}일째`;
+const dayName=(w,d)=>Y27?fmt(dateOf(w,d),{month:"long",day:"numeric",weekday:"short"}):MODE==="y365"?`${dayNo(w,d)}일째`:`${w}주차 ${d+1}일째`;
 /* 11/3 목사님: 본문·묵상 맨 위 한 줄은 "37주차 2일째"로 통일(365판은 "n일째") */
-const dayK=(w,d)=>MODE==="y365"?`${dayNo(w,d)}일째`:dayName(w,d);
+const dayK=(w,d)=>Y27?dayName(w,d):MODE==="y365"?`${dayNo(w,d)}일째`:dayName(w,d);
 const syncKey=k=>MODE==="y365"?"y-"+k:k;
 /* 함께 읽기 숫자: 한 사람이 한 본문을 처음 완료할 때 한 번만 셉니다(완료 취소 후 다시 눌러도 다시 세지 않음) */
 function countDone(k){ mem.counted ||= {}; if(mem.counted[k]) return; mem.counted[k]=1; save(); if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),syncKey(todayStr())); }
 const dateOf=(w,d)=>{const s=parseD(mem.start);s.setDate(s.getDate()+(w-1)*7+d);return s;};
 /* 화면의 한 주: 리딩지저스 월~주일, 365 주일~토요일. 통독표 날짜(w,d)는 그대로 두고 보여 주는 묶음만 달력 주로 맞춥니다. */
 /* 리딩지저스는 월요일~주일, 365는 주일~토요일 */
-const S0=()=>{const s=parseD(mem.start); s.setDate(s.getDate()-(MODE==="rj"?(s.getDay()+6)%7:s.getDay())); return s;};
+const S0=()=>{const s=parseD(mem.start); s.setDate(s.getDate()-(MODE==="rj"||Y27?(s.getDay()+6)%7:s.getDay())); return s;};
 function NDW(){ const last=parseD(mem.start); last.setDate(last.getDate()+TOTAL_DAYS-1); return Math.floor(dayDiff(S0(),last)/7)+1; }
 function cellOf(W,i){ const dt=S0(); dt.setDate(dt.getDate()+(W-1)*7+i); const n=dayDiff(parseD(mem.start),dt);
-  if(n<0) return {dt,pre:true}; if(n>=TOTAL_DAYS) return {dt,after:true}; return {dt,w:Math.floor(n/7)+1,d:n%7}; }
+  if(n<0||Y27&&n<Y27_PRE) return {dt,pre:true}; if(n>=TOTAL_DAYS) return {dt,after:true}; return {dt,w:Math.floor(n/7)+1,d:n%7}; }
 const weekOfDay=(w,d)=>Math.floor(dayDiff(S0(),dateOf(w,d))/7)+1;
 function dispW(){ if(view.pre) return 1; if(view.revW) return view.revW; return weekOfDay(view.w,view.d); }
 const hasPre=()=>MODE==="rj"&&cellOf(1,0).pre&&dayDiff(parseD(mem.start),cellOf(1,0).dt)===-1;
@@ -1993,7 +2024,7 @@ function dispTitle(W){
 }
 function posOfToday(){
   const diff=dayDiff(parseD(mem.start),today0());
-  if(diff<0) return {w:1,d:0,state:"before",diff};
+  if(diff<0||Y27&&diff<Y27_PRE) return Y27?{w:1,d:Y27_PRE,state:"before",diff}:{w:1,d:0,state:"before",diff};
   if(diff>=TOTAL_DAYS){ const L=TOTAL_DAYS-1; return {w:Math.floor(L/7)+1,d:L%7,state:"after",diff}; }
   return {w:Math.floor(diff/7)+1,d:diff%7,state:"in",diff};
 }
@@ -2779,7 +2810,7 @@ function renderHead(){
   document.getElementById("planName").textContent=PI.name+(TR!=="krv"?" · "+TR_INFO[TR].name:"");
   if(window.CBSR_V2){ const bl=document.getElementById("brandL"), hx=document.getElementById("hdx"); const isT=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d, MISS=TRY?[]:missedDays();
     const REL=(()=>{ if(view.pre||view.revW) return null; const t0=today0(), dd=dayDiff(t0,dt); if(dd===0) return "오늘"; if(dd===-1) return "어제"; if(dd===1) return "내일"; const ws=x=>{ const y=new Date(x); y.setDate(y.getDate()-y.getDay()); return y; }, wd=Math.round(dayDiff(ws(t0),ws(dt))/7); return wd===0?"이번 주":wd===-1?"지난주":wd===1?"다음 주":wd<0?`${-wd}주 전`:`${wd}주 뒤`; })(); /* 11/3 목사님: 오늘/오늘로는 날짜 옆에, 지금 보는 날이 언제인지 말로 */
-    if(bl) bl.innerHTML=`<b class="v2d">${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b>${REL?(REL==="오늘"?`<span class="rgrel now">오늘</span>`:`<button class="rgrel" id="rgToday" aria-label="${esc(REL)} · 오늘로 가기">${esc(REL)}<i>오늘로</i><b>›</b></button>`):""}<small class="v2p">${view.revW?esc(PI.name):esc(MODE==="y365"?dayNo(view.w,view.d)+"일째":dayName(view.w,view.d))}</small><span id="planName" hidden></span>`;
+    if(bl) bl.innerHTML=`<b class="v2d">${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}</b>${REL?(REL==="오늘"?`<span class="rgrel now">오늘</span>`:`<button class="rgrel" id="rgToday" aria-label="${esc(REL)} · 오늘로 가기">${esc(REL)}<i>오늘로</i><b>›</b></button>`):""}<small class="v2p">${view.revW?esc(PI.name):esc(Y27?PI.name:MODE==="y365"?dayNo(view.w,view.d)+"일째":dayName(view.w,view.d))}</small><span id="planName" hidden></span>`;
     if(hx) hx.innerHTML=`<button class="rgcal" id="rgLib" aria-label="스토리 모음"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg></button><button class="rgcal" id="rgMap" aria-label="성경 지도"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></button><button class="rgcal" id="rgCal" aria-label="주 고르기"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
   document.querySelectorAll(".bnav .tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
 }
@@ -2787,7 +2818,7 @@ function renderHead(){
 /* 진행률 */
 const TOTAL_CH=PLAN.plan.flat().reduce((a,p)=>a+p.ch.length,0);
 function chDone(){ let n=0; for(const k in mem.done){ const [w,d]=k.split("-").map(Number); if(PLAN.plan[w-1]&&PLAN.plan[w-1][d]) n+=PLAN.plan[w-1][d].ch.length; } return n; }
-function chScheduled(){ if(here.state==="before") return 0; let n=0; for(let w=1;w<=here.w;w++) for(let d=0;d<nd(w);d++){ if(w===here.w&&d>here.d) break; n+=PLAN.plan[w-1][d].ch.length; } return n; }
+function chScheduled(){ if(here.state==="before") return 0; let n=0; for(let w=1;w<=here.w;w++) for(let d=0;d<nd(w);d++){ if(w===here.w&&d>here.d) break; const P0=PLAN.plan[w-1][d]; if(P0) n+=P0.ch.length; } return n; }
 const pct1=(a,b)=>b?(a/b*100).toFixed(1):"0.0";
 /* 합류한 날 이후: 그날부터 오늘까지 일정에 있던 분량 가운데 읽은 분량 (통독표 시작 뒤에 합류한 경우만) */
 function joinProgress(){ if(!mem.joinAt) return null; const j=dayDiff(parseD(mem.start),parseD(mem.joinAt)); if(j<=0||here.state==="before") return null;
@@ -3112,7 +3143,7 @@ function showEM(word){
   sheet(Array(x[1]).fill(word).join(" "),`<p class="vq">${esc(v)}</p><p class="src">${esc(refList([x[2]],b0))}</p>`);
 }
 /* 단서 자료를 날짜별로 */
-function dayOfRef(q){ for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++) if(PLAN.plan[w-1][d].ch.some(([b,c])=>b===q[0]&&c===q[1])) return [w,d]; return null; }
+function dayOfRef(q){ for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++) if(PLAN.plan[w-1][d]&&PLAN.plan[w-1][d].ch.some(([b,c])=>b===q[0]&&c===q[1])) return [w,d]; return null; }
 const CLUES={};
 /* QT '성경 전체로': 오늘 본문이 직접 부르는 구약 말씀(단서의 '구약의 메아리')을 원문 그대로 함께 보입니다 */
 function echoBox(w,d){ const L=(CLUES[w+"-"+(d+1)]||[]).filter(c=>c.t==="echo"); if(!L.length||!BIBLE) return "";
@@ -4692,7 +4723,7 @@ function bindStory(m){
   if(seen!==MODE+":"+keyOf(view.w,view.d)&&!document.getElementById("storyRoot")) setTimeout(()=>{ if(view.tab==="qt"&&!view.qtDeep) storyOpen(0); },80);
 }
 function renderQTWeek(list,title){
-  const w=view.w; const L=list||[0,1,2,3,4,5].map(d=>[w,d]);
+  const w=view.w; const L=list||SUN_DAYS(w);
   let h=`<section class="sec"><span class="label">QT · 한 주 돌아보기</span><h2>${esc(title||`${w}주차 ${WEEKS[w-1].t}`)}</h2><p class="lead">이번 주에 적은 묵상과 기도를 다시 읽어 보세요.</p></section>`;
   let any=false;
   for(const [ww,d] of L){ const q=mem.qt[keyOf(ww,d)]; const p=dayPlan(ww,d);
@@ -5026,7 +5057,7 @@ function renderPreview(){
   const W=WEEKS[0];
   let h=`<section class="sec"><span class="label">시작 주일</span><h2>45주 이야기 통독을 시작합니다</h2><p class="lead">월요일부터 토요일까지 날마다 정해진 본문을 읽고, 주일에는 지난 한 주를 돌아봅니다. 오늘은 첫 주를 미리 살펴보는 날입니다.</p></section>`;
   h+=`<section class="sec"><span class="label">1주차 미리 보기 · ${esc(W.t)}</span>${W.story?`<details class="where" open><summary><span class="k">이번 주 이야기</span></summary><p>${esc(W.story)}</p>${W.christ?`<p class="c">${esc(W.christ)}</p>`:""}</details>`:""}<div class="tbl">`;
-  for(let d=0;d<6;d++){ const p=dayPlan(1,d), dt=dateOf(1,d); h+=`<button class="trow" data-jump="1-${d}"><span class="d">${DAYN[dt.getDay()]}</span><span class="r">${esc(p.label)}${GUIDE[keyOf(1,d)]?`<div class="lead" style="font-size:13px">${esc(GUIDE[keyOf(1,d)].today)}</div>`:""}</span><span class="s none">›</span></button>`; }
+  for(let d=0;d<6;d++){ const p=dayPlan(1,d), dt=dateOf(1,d); if(!p) continue; h+=`<button class="trow" data-jump="1-${d}"><span class="d">${DAYN[dt.getDay()]}</span><span class="r">${esc(p.label)}${GUIDE[keyOf(1,d)]?`<div class="lead" style="font-size:13px">${esc(GUIDE[keyOf(1,d)].today)}</div>`:""}</span><span class="s none">›</span></button>`; }
   h+=`</div></section><section class="sec"><button class="btn" data-jump="1-0" style="width:100%;padding:14px">첫날 본문 보기 · ${esc(dayPlan(1,0).label)}</button></section>`;
   return h;
 }
@@ -5094,17 +5125,17 @@ function bindSerm(m){ const S=sermOf(view.w); if(!S) return; const j=m.querySele
 function renderReview(){
   const w=view.w, W=WEEKS[w-1]; const T=weekTotals(w);
   if(window.CBSR_V2){ /* 11/3 목사님: 주일 = 쉼과 잇기. 새 본문은 없음 — ① 이번 주 이야기와 그리스도로 잇기 ② 인물의 변화 ③ 못 읽은 본문 채우기. 퀴즈 성적표는 뺌 */
-    const SM=sermOf(w); if(SM) return sermReadHTML(w,SM)+`<section class="sec"><details class="flow"><summary>이번 주 돌아보기<small>${esc(W.t)}</small></summary>${W.story?`<p class="sunp">${esc(W.story)}</p>`:""}${W.christ?`<p class="sunc"><b>예수 그리스도로 잇기</b>${esc(W.christ)}</p>`:""}${unreadChips([0,1,2,3,4,5].map(d=>[w,d]))}</details></section>`+nextPreview(weekOfDay(w,6),"다음 주 미리 보기 · 내일부터");
-    let h=`<section class="sec daycard sunrv"><span class="label">주일 · 쉼과 잇기</span><h2>${w}주차 ${esc(W.t)}</h2><p class="lead">오늘은 새 본문이 없습니다. 쉬며 예배하고, 이번 주에 읽은 이야기를 한 번에 돌아봅니다.</p>${unreadChips([0,1,2,3,4,5].map(d=>[w,d]))}</section>`;
+    const SM=sermOf(w); if(SM) return sermReadHTML(w,SM)+`<section class="sec"><details class="flow"><summary>이번 주 돌아보기<small>${esc(W.t)}</small></summary>${W.story?`<p class="sunp">${esc(W.story)}</p>`:""}${W.christ?`<p class="sunc"><b>예수 그리스도로 잇기</b>${esc(W.christ)}</p>`:""}${unreadChips(SUN_DAYS(w))}</details></section>`+nextPreview(weekOfDay(w,6),"다음 주 미리 보기 · 내일부터");
+    let h=`<section class="sec daycard sunrv"><span class="label">주일 · 쉼과 잇기</span><h2>${w}주차 ${esc(W.t)}</h2><p class="lead">오늘은 새 본문이 없습니다. 쉬며 예배하고, 이번 주에 읽은 이야기를 한 번에 돌아봅니다.</p>${unreadChips(SUN_DAYS(w))}</section>`;
     if(W.story) h+=`<section class="sec"><span class="label">이번 주 이야기</span><p class="sunp">${esc(W.story)}</p>${W.christ?`<p class="sunc"><b>예수 그리스도로 잇기</b>${esc(W.christ)}</p>`:""}</section>`;
     h+=renderArcs(w);
-    h+=`<section class="sec"><details class="flow"><summary>날마다 요약</summary><div class="sumlist">${[0,1,2,3,4,5].map(d=>`<details><summary>${DAYN[dateOf(w,d).getDay()]} · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`).join("")}</div></details></section>`;
+    h+=`<section class="sec"><details class="flow"><summary>날마다 요약</summary><div class="sumlist">${[0,1,2,3,4,5].filter(d=>dayPlan(w,d)).map(d=>`<details><summary>${DAYN[dateOf(w,d).getDay()]} · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`).join("")}</div></details></section>`;
     return h+nextPreview(weekOfDay(w,6),"다음 주 미리 보기 · 내일부터"); }
   let h=`<section class="sec"><span class="label">${DAYN[dateOf(w,6).getDay()]} · 한 주 돌아보기</span><h2>${w}주차 ${esc(W.t)}</h2></section>`;
-  h+=unreadWeek([0,1,2,3,4,5].map(d=>[w,d]));
+  h+=unreadWeek(SUN_DAYS(w));
   h+=`<section class="sec"><span class="label">이번 주 퀴즈 성적</span><div class="tbl">`;
   for(let d=0;d<6;d++){
-    const f=dayScore(w,d), p=dayPlan(w,d);
+    const f=dayScore(w,d), p=dayPlan(w,d); if(!p) continue;
     h+=`<button class="trow" data-jump="${w}-${d}"><span class="d">${d+1}일째</span><span class="r">${esc(p.label)}${f?`<div class="meter"><i style="width:${pct(f.s,f.t)}%"></i></div>`:""}</span><span class="s ${f?"":"none"}">${f?`${f.s}/${f.t}`:"아직"}</span></button>`;
   }
   const [g,msg]=T.t?grade(T.s,T.t):["아직 시작 전","이번 주 날마다 퀴즈를 풀면 여기에 점수가 모입니다."];
@@ -5113,7 +5144,7 @@ function renderReview(){
   if(BIBLE) h+=`<section class="sec"><span class="label">주간 도전 문제</span>${renderQuiz(String(w),null,"week")}</section>`;
   h+=renderArcs(w);
   h+=`<section class="sec"><span class="label">이번 주 이야기 다시 보기</span><details class="flow" open><summary>이번 주 전체 흐름</summary><p>${esc(W.story)}</p><p style="color:var(--muted);font-size:14.5px">${esc(W.christ)}</p></details><div class="sumlist">`;
-  for(let d=0;d<6;d++) h+=`<details><summary>${d+1}일째 · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`;
+  for(let d=0;d<6;d++) if(dayPlan(w,d)) h+=`<details><summary>${d+1}일째 · ${esc(dayPlan(w,d).label)}</summary><p>${esc(SUMMARY[w-1][d])}</p></details>`;
   return h+`</div></section>`+nextPreview(weekOfDay(w,6),"다음 주 미리 보기 · 내일부터");
 }
 
@@ -6216,7 +6247,7 @@ function openPhotoEditor(file){
 }
 function showBook(b){
   const I=(typeof BOOKINFO!=="undefined")&&BOOKINFO[b]; const {tot,got}=bookProgress(); const T=tot[b]||0,G=got[b]||0;
-  let first=null; for(let w=1;w<=NW&&!first;w++) for(let d=0;d<nd(w);d++) if(dayPlan(w,d).ch.some(c=>c[0]===b)){ first=[w,d]; break; }
+  let first=null; for(let w=1;w<=NW&&!first;w++) for(let d=0;d<nd(w);d++) if(dayPlan(w,d)&&dayPlan(w,d).ch.some(c=>c[0]===b)){ first=[w,d]; break; }
   const unit=b===19?"편":"장";
   let h=`<p class="src">${T?`이 통독표에서 ${T}${unit} 가운데 ${G}${unit}을 읽었습니다.`:""}</p>`;
   if(I){ h+=`<div class="bkinfo"><b>어떤 책인가요</b><p>${esc(I.what)}</p><b>왜 중요한가요</b><p>${esc(I.why)}</p><b>읽을 때 눈여겨볼 것</b><p>${esc(I.look)}</p><b>그리스도와 이어지는 곳</b><p>${esc(I.christ)}</p></div>`;
@@ -6298,7 +6329,7 @@ function edFind(el){ const R=edRaws(); for(let e=el,i=0;e&&i<7&&e!==document.bod
     const b=R.filter(r=>r.n.length>=4&&t.includes(r.n)&&r.n.length>=t.length*0.5); if(b.length) return b.sort((x,y)=>y.n.length-x.n.length)[0];
     if(i===0&&t.length>=2) return null; /* 누른 글 자체가 원고에 없으면(단추·성경 본문 등) 위로 올라가 엉뚱한 글을 잡지 않음 */ }
   return null; }
-function edKeys(w=view.w,d=view.d){ const n=String(dayNo(w,d)); return MODE==="rj"?{"ux/story_rj.json":n,"srj/all.json":w+"-"+(d+1)}:{"ux/story_cards.json":n,"s365b/all.json":n}; }
+function edKeys(w=view.w,d=view.d){ const n=String(Y27?(Y27N[dayNo(w,d)]||"x"+dayNo(w,d)):dayNo(w,d)); /* 2027판: 원본 파일은 아직 옛 365판 번호 */ return MODE==="rj"?{"ux/story_rj.json":n,"srj/all.json":w+"-"+(d+1)}:{"ux/story_cards.json":n,"s365b/all.json":n}; }
 function edWhere(el){ const {w,d}=view; const sv=el.closest("#storyRoot")?"스토리 QT":{read:"본문",qt:"묵상 노트",challenge:"도전",today:"오늘"}[view.tab]||view.tab; let c=""; try{ if(sv==="스토리 QT"&&typeof SV!=="undefined") c=` ${SV.i+1}번째 카드`; }catch(e){}
   return `${PI.name} ${fmt(dateOf(w,d),{month:"numeric",day:"numeric"})} ${dayPlan(w,d).label} · ${sv}${c}`; }
 /* 고친 글을 이 화면 자료에도 바로 넣음(빌드가 끝나기 전에도 목사님 화면에서는 바뀐 대로 보이게) */
@@ -6584,7 +6615,7 @@ function renderGuideV2(){ const rj=MODE==="rj", sd=parseD(mem.start);
   const row=(pg,t,v)=>`<button class="mrow" data-mgo="${pg}"><span>${t}</span><em>${v||""}</em><i aria-hidden="true">›</i></button>`;
   const pg=(id,t,body)=>`<section class="mpage" data-pg="${id}" hidden><button class="mback" data-mback="1">‹ 메뉴</button><h3 class="mpt">${t}</h3>${body}</section>`;
   const top=`<div class="mtop">
-    <p class="mgh">통독</p><div class="mgrp">${row("plan","통독표",esc(PI.name))}${row("tr","성경 번역",esc(TR_INFO[TR].name))}${row("start","시작일",esc(fmt(sd,{month:"long",day:"numeric"})))}${row("view","읽기 설정",RD_OPT().para?"문단 나누기":"")}</div>
+    <p class="mgh">통독</p><div class="mgrp">${row("plan","통독표",esc(PI.name))}${row("tr","성경 번역",esc(TR_INFO[TR].name))}${Y27?"":row("start","시작일",esc(fmt(sd,{month:"long",day:"numeric"})))}${row("view","읽기 설정",RD_OPT().para?"문단 나누기":"")}</div>
     <p class="mgh">화면</p><div class="mgrp"><div class="mrow mseg"><span>화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기"],["light","주간"],["dark","야간"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div></div></div>
     <p class="mgh">도움말</p><div class="mgrp"><button class="mrow" id="tourAgain"><span>둘러보기</span><i aria-hidden="true">›</i></button>${row("howto","쓰는 방법","")}${row("install","홈 화면에 추가","")}</div>
     <p class="mgh">바로 가기</p><div class="mbans">
@@ -6594,7 +6625,7 @@ function renderGuideV2(){ const rj=MODE==="rj", sd=parseD(mem.start);
     <p class="mgh">기타</p><div class="mgrp">${window.SYNC&&SYNC.available?row("fb","의견 보내기",""):""}${window.SYNC&&SYNC.available?row("together","함께 읽기",PROF.share?"켜짐":"꺼짐"):""}${row("data","기록 관리","")}</div>
     <p class="mfoot">이야기 통독 노트 · 시험판 · <a class="linkbtn" href="v1.html">이전 화면</a>${window.SYNC&&SYNC.available?` · <button class="linkbtn" id="adminGo">관리자</button>`:""}</p></div>`;
   const pages=
-   pg("plan","통독표",`<div class="plans" role="radiogroup">${RJ_OFF()&&!rj?"":`<button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다.</span></button>`}<button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">날마다 읽어 1년에 성경을 한 번 읽습니다.</span></button></div><p class="lead">통독표마다 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다.</p>`)+
+   pg("plan","통독표",`<div class="plans" role="radiogroup">${RJ_OFF()&&!rj?"":`<button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다.</span></button>`}<button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>${Y27?"2027 성경통독":"365 성경통독"}</b><span class="lead">${Y27?"월요일부터 토요일까지 읽고 주일은 쉬며 예배를 준비합니다. 1년에 성경을 한 번 읽습니다.":"날마다 읽어 1년에 성경을 한 번 읽습니다."}</span></button></div><p class="lead">통독표마다 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다.</p>`)+
    pg("tr","성경 번역",`<div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${esc(v.name)}</b></button>`).join("")}</div><p class="lead">본문 읽기가 이 번역으로 보입니다. 스토리 QT·묵상 노트·도전은 원고가 개역개정으로 쓰여 늘 개역개정입니다.</p>`)+
    pg("start","시작일",`<p class="lead">${rj?"1주차 1일째가 시작된 날입니다.":"1일째가 시작된 날입니다."}</p><div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>`)+
    pg("view","읽기 설정",`<div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div><span class="label" style="margin-top:14px">본문 듣기 목소리</span><div id="voiceList"></div>`)+
@@ -6660,7 +6691,7 @@ function openMenu(){
     let diff=want-wd; if(diff>3) diff-=7; if(diff<-3) diff+=7; s0.setDate(s0.getDate()+diff);
     mem.start=s0.getFullYear()+"-"+String(s0.getMonth()+1).padStart(2,"0")+"-"+String(s0.getDate()).padStart(2,"0"); save(); Object.assign(here,posOfToday()); closeMenu(); go(here.w,here.d); });
   document.getElementById("startSave").onclick=()=>{const v=document.getElementById("startIn").value; if(!v) return; mem.start=v; save(); Object.assign(here,posOfToday()); closeMenu(); go(here.w,here.d);};
-  document.getElementById("markPast").onclick=()=>{ for(let w=1;w<=here.w;w++) for(let d=0;d<nd(w);d++){ if(w===here.w&&d>=here.d) break; const k=keyOf(w,d); if(!mem.done[k]) mem.done[k]="past"; } save(); closeMenu(); view.tab="record"; render(); window.scrollTo({top:0}); };
+  document.getElementById("markPast").onclick=()=>{ for(let w=1;w<=here.w;w++) for(let d=0;d<nd(w);d++){ if(w===here.w&&d>=here.d) break; if(!dayPlan(w,d)) continue; const k=keyOf(w,d); if(!mem.done[k]) mem.done[k]="past"; } save(); closeMenu(); view.tab="record"; render(); window.scrollTo({top:0}); };
   const v1a=document.getElementById("v1Ask"); if(v1a) v1a.onclick=()=>{
     document.getElementById("v1Box").innerHTML=`<div class="confirm"><span>이전 화면(v1)에서 남긴 통독·QT·형광펜·설정 기록을 이 기기에서 모두 지울까요? 새 화면 기록은 그대로입니다. 되돌릴 수 없습니다.</span><div class="row"><button class="btn small" id="v1Yes">지우기</button><button class="btn ghost small" id="v1No">취소</button></div></div>`;
     document.getElementById("v1Yes").onclick=()=>{ const n=v1Wipe(); document.getElementById("v1Box").innerHTML=`<p class="lead">이전 화면 기록 ${n}가지를 지웠습니다.</p>`; };
@@ -6700,7 +6731,7 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   const stage=q.done?2:read?1:0; TD.stage=stage;
   if(window.CBSR_V2) return renderTodayV3(w,d,p,{key,q,read,S,ph,dt,live,kv,g,mins});
   let h=`<section class="tdh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin">
-    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2&&MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
+    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2&&MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"&&!Y27?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
     <div class="tdttl"><p class="tdk">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1></div></div>
     ${ph&&ph.link?`<a class="tdcr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}</section>
   <section class="tdsheet">`;
@@ -7422,12 +7453,12 @@ function gotoW(W,col){
 function curCol(){ return view.pre?0:view.revW?6:dateOf(view.w,view.d).getDay(); }
 function findChapter(q){
   q=String(q||"").replace(/\s+/g," ").trim(); const m=q.match(/^(.+?)\s*(\d+)\s*(?:장|편)?(?:\s*[:：]\s*\d+.*)?$/);
-  if(!m){ if(q.length<2) return null; const qq=q.replace(/\s/g,""); for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++){ const t=dayPlan(w,d).topic; if(t&&t.replace(/\s/g,"").includes(qq)) return {label:t,day:[w,d]}; } return null; }
+  if(!m){ if(q.length<2) return null; const qq=q.replace(/\s/g,""); for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++){ const t=dayPlan(w,d)&&dayPlan(w,d).topic; if(t&&t.replace(/\s/g,"").includes(qq)) return {label:t,day:[w,d]}; } return null; }
   const nm=m[1].replace(/\s/g,""), c=+m[2];
   let b=PLAN.full.findIndex(x=>x===nm)+1; if(!b) b=PLAN.abbr.findIndex(x=>x===nm)+1; if(!b) b=PLAN.full.findIndex(x=>x.startsWith(nm))+1;
   if(!b||c<1) return null;
   const label=`${PLAN.full[b-1]} ${c}${b===19?"편":"장"}`;
-  for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++) if(dayPlan(w,d).ch.some(x=>x[0]===b&&x[1]===c)) return {label,day:[w,d]};
+  for(let w=1;w<=NW;w++) for(let d=0;d<nd(w);d++) if(dayPlan(w,d)&&dayPlan(w,d).ch.some(x=>x[0]===b&&x[1]===c)) return {label,day:[w,d]};
   return {label,day:null};
 }
 /* 본문에서 찾기를 마친 뒤 한 장(목사님 2026-11-01: 밋밋하다 → 소망·도전의 말 한 줄과 말씀, 열 가지 가운데 하나씩) · 인용은 개역개정 대조함 */
