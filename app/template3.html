@@ -1564,7 +1564,7 @@ html.v2 body.tdcov.hdk header.top svg{stroke:#fff}
 html.v2 body.tdcov.hlt header.top,html.v2 body.tdcov.hlt header.top *{color:#1B2420!important}
 html.v2 body.tdcov.hdk .td4top{height:190px;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0))}
 html.v2 body.tdcov.hlt .td4top{height:190px;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,0))}
-html.v2 body.tdcov.hlt .td4ar{background:rgba(255,255,255,.55);color:#1B2420}
+html.v2 body.tdcov.hlt .td4ar{background:radial-gradient(circle,rgba(255,255,255,.42) 0 16px,transparent 16.5px);color:#1B2420}
 html.v2 body.tdcov header.top .rgtoday{background:var(--hi)!important;color:var(--hi-ink)!important;border:0}
 html.v2 .td4hero>img.td4nb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
 html.v2 .td4hero>img.td4img{z-index:0}html.v2 .td4hero>img.td4nb{z-index:0}
@@ -1585,7 +1585,7 @@ html.v2 .td4hero{position:relative;overflow:hidden;background:#2a2620;display:fl
 html.v2 .td4hero>.td4img,html.v2 .td4hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 html.v2 .td4top{position:absolute;left:0;right:0;top:0;height:150px;background:linear-gradient(180deg,rgba(0,0,0,.62),rgba(0,0,0,0));pointer-events:none}
 html.v2 .td4nav{position:absolute;left:10px;right:10px;top:10px;display:flex;align-items:center;justify-content:space-between;z-index:2}
-html.v2 .td4ar{width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.32);color:#fff;display:grid;place-items:center;cursor:pointer}html.v2 .td4ar svg{width:22px;height:22px}html.v2 .td4ar:disabled{opacity:0;pointer-events:none}
+html.v2 .td4ar{width:44px;height:44px;border-radius:50%;border:0;background:radial-gradient(circle,rgba(0,0,0,.2) 0 16px,transparent 16.5px);color:#fff;display:grid;place-items:center;cursor:pointer;opacity:.82;transition:opacity .2s}html.v2 .td4ar svg{width:18px;height:18px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}html.v2.tdswiped .td4ar{opacity:.4}html.v2 .td4ar:hover,html.v2 .td4ar:focus-visible{opacity:1} /* 11/3: 작고 옅게, 손으로 넘겨 본 사람에게는 더 옅게(누르는 자리 44px는 그대로) */html.v2 .td4ar:disabled{opacity:0;pointer-events:none}
 html.v2 .td4now{font:700 13px var(--f-ui);color:var(--hi-ink);background:var(--hi);border-radius:12px;padding:3px 10px;border:0}
 html.v2 .td4hero .tdcr{position:absolute;right:10px;top:60px;font-size:10px;color:rgba(255,255,255,.75);z-index:2}
 html.v2 .td4head{position:relative;padding:60px 20px 14px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.45));display:flex;flex-direction:column;gap:8px}
@@ -6541,6 +6541,7 @@ function todayNext(w,d,o){ const {key,q,read,S,mins}=o, p=dayPlan(w,d), P=(mem.s
   else if(sDone) r={act:"note",e:"다음으로",t:"묵상 노트 쓰기",s:"관찰 · 성품 · 적용 · 기도"};
   else r={act:"story",e:"다음으로",t:"스토리 보기",s:`카드 ${n}장`};
   r.sDone=sDone; r.sMid=sMid?`${(P.m||P.i)+1}/${n}`:""; r.nMid=nMid; return r; }
+try{ if(localStorage.getItem("v2:tdswiped")) document.documentElement.classList.add("tdswiped"); }catch(e){}
 function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=todayNext(w,d,o); TD.act=N.act; TD.stage=q.done?2:read?1:0; TD.past=dayDiff(today0(),dt)<0;
   /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
   const arr=dir=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${dir<0?"m15 6-6 6 6 6":"m9 6 6 6-6 6"}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -6641,7 +6642,7 @@ function bindToday(){ clearInterval(TD.cd); if(isRev(view.d)) bindSunday();
       H.addEventListener("touchstart",e=>{ if(e.touches.length!==1) return; if(e.touches[0].clientX<24||e.touches[0].clientX>innerWidth-24){ on=false; return; } /* 화면 가장자리는 브라우저 뒤로 가기 몸짓과 겹치므로 뺌 */ x0=e.touches[0].clientX; y0=e.touches[0].clientY; dx=0; on=true; lock=null; },{passive:true});
       H.addEventListener("touchmove",e=>{ if(!on) return; const X=e.touches[0].clientX-x0, Y=e.touches[0].clientY-y0; if(lock===null&&(Math.abs(X)>10||Math.abs(Y)>10)) lock=Math.abs(X)>Math.abs(Y)*1.3?"x":"y"; if(lock!=="x") return; dx=X; if((dx<0&&!nb("n"))||(dx>0&&!nb("p"))) dx=X*.25; H.classList.add("drag"); paint(dx,false); },{passive:true});
       H.addEventListener("touchend",()=>{ if(!on) return; on=false; H.classList.remove("drag"); const go=lock==="x"&&Math.abs(dx)>70&&((dx<0&&nb("n"))||(dx>0&&nb("p")));
-        if(!go){ reset(); return; } paint(dx<0?-W():W(),true); setTimeout(()=>{ if(dx<0) tdGo("tdNext","inF"); else tdGo("tdPrev","inF"); },230); }); } }
+        if(!go){ reset(); return; } paint(dx<0?-W():W(),true); setTimeout(()=>{ try{ localStorage.setItem("v2:tdswiped","1"); }catch(e){} document.documentElement.classList.add("tdswiped"); if(dx<0) tdGo("tdNext","inF"); else tdGo("tdPrev","inF"); },230); }); } }
   if(TD.slide){ const t4=document.querySelector(".td4"); if(t4){ t4.classList.add(TD.slide); setTimeout(()=>t4.classList.remove("inL","inR","inF"),400); } TD.slide=null; }
   const gn=document.getElementById("tdGoNext"); if(gn) gn.onclick=()=>{ const N=nextWD(view.w,view.d); if(N){ view.w=N[0]; view.d=N[1]; render(); scrollTo({top:0}); } };
   const ce=document.getElementById("tdCount"); if(ce){ const tk=()=>{ const t=cdText(); ce.textContent=t; if(t==="00:00:00"){ clearInterval(TD.cd); setTimeout(()=>location.reload(),1500); } }; tk(); TD.cd=setInterval(tk,1000); } }
