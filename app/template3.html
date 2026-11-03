@@ -5443,7 +5443,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   function drawUpTo(i){ trails.clearLayers(); labs.clearLayers(); shown=new Set(); label(T.start);
     for(let k=0;k<i;k++){ const st=S[k], g=[starts[k],...legs(st)]; if(g.length>1) L.polyline(g.map(LL),Object.assign(LST(st),{weight:LST(st).weight-1,opacity:.85,interactive:false})).addTo(trails); legs(st).forEach(label);
       /* 3차 R3-17: 다른 무리의 길(정탐꾼·사자·이주민)도 지나온 길로 다시 그림 */
-      sideLegs(st,k).forEach(([sd,P])=>{ L.polyline(P.map(LL),sd.line?Object.assign(LST(sd),{weight:LST(sd).weight-2,opacity:.7,interactive:false}):{color:"#8a5a2b",weight:3,dashArray:null,opacity:.75,interactive:false}).addTo(trails); P.slice(1).forEach(label); }); }
+      sideLegs(st,k).forEach(([sd,P])=>{ L.polyline(P.map(LL),sd.line?Object.assign(LST(sd),{weight:LST(sd).weight-2,opacity:.7,interactive:false}):{color:"#8a5a2b",weight:3,dashArray:null,opacity:.75,interactive:false}).addTo(trails); P.forEach(label); }); }
     cur=L.polyline([],{color:"#c0392b",weight:5,interactive:false}).addTo(trails); cur._ln=""; syncPins(i-1); syncLm(Math.max(0,i-1),i>0); }
   function sideLegs(st,k){ if(!st.side) return []; const at=st.stay||!legs(st).length?starts[k]:legs(st)[legs(st).length-1]; return [].concat(st.side).map(sd=>[sd,[sd.from||at,...(sd.p||[])]]).filter(x=>x[1].length>1); }
   /* 선 모양(11/2): 침공군은 짙은 붉은 굵은 선, 포로 이송은 회색 점선(사슬처럼), 본문이 길을 밝히지 않은 곳은 끊긴 선 */
@@ -5616,7 +5616,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   async function sideTrip(sd,ms,my,nof){ /* from: 다른 곳에서 출발(행 10 고넬료의 사람들), war: 도착한 곳에서 싸움(삼하 18 에브라임 수풀) */
     /* 3차 검토 R3-03: 일행 가운데 같은 사람이 갈라져 나가면 그 사람을 옮김(같은 사람이 둘이 되지 않게) */
     const own=fol.find(f=>f.n===sd.n); let o0=null; if(own){ o0=own.m.getLatLng(); try{ map.removeLayer(own.m); }catch(x){} fol=fol.filter(f=>f!==own); }
-    const pts=tag([sd.from?sd.from:o0?[0,o0.lat,o0.lng]:[0,main.getLatLng().lat,main.getLatLng().lng],...sd.p]); const Lm=lineM(pts); const sp=Array.from({length:sd.k||12},(_,k)=>mvMarker(map,foeAs((sd.as_?[sd.as_]:["man","youth","elder","man"])[k%(sd.as_?1:4)],sd.n),{at:pts[0],w:k===0&&sd.k&&sd.k<5?26:20,name:k===0?sd.n:"",z:700})); TMP.push(...sp); /* 3차 검토 R3-02: 장면을 넘기면 함께 지움 */
+    const pts=tag([sd.from?sd.from:o0?[0,o0.lat,o0.lng]:[0,main.getLatLng().lat,main.getLatLng().lng],...sd.p]); const Lm=lineM(pts); if(sd.from) label(sd.from); /* 11/3: 출발한 곳 이름을 처음부터 */ ms=Math.min(ms,Math.max(2600,msFor(pts,map.getZoom())*1.15)); /* 11/3: 가까운 길은 빨리(지체 말고 와 달라는데 느리던 것) — 글은 읽기 기다림이 지켜 줌 */ const sp=Array.from({length:sd.k||12},(_,k)=>mvMarker(map,foeAs((sd.as_?[sd.as_]:["man","youth","elder","man"])[k%(sd.as_?1:4)],sd.n),{at:pts[0],w:k===0&&sd.k&&sd.k<5?26:20,name:k===0?sd.n:"",z:700})); TMP.push(...sp); /* 3차 검토 R3-02: 장면을 넘기면 함께 지움 */
     const tr=L.polyline([],sd.line?Object.assign(LST(sd),{weight:LST(sd).weight-1,interactive:false}):{color:"#8a5a2b",weight:3,dashArray:null,interactive:false}).addTo(trails); const t0=clk; let nextE=clk+500; if(!nof) follow=()=>sp[0].getLatLng(); sp.forEach(m=>{ const c=chm(m); if(c) c.classList.add("walk"); });
     while(clk-t0<ms){ if(!(await sleep(16,my))) return false; const k=Math.min(1,(clk-t0)/ms), dd=k*Lm.tot, mpp=40075016.68/(256*Math.pow(2,map.getZoom()));
       sp.forEach((m,j)=>{ const [q,,lf]=atM(Lm,dd-j*9*mpp); m.setLatLng(q); const c=chm(m); if(c) c.classList.toggle("flip",lf); }); const [h,i]=atM(Lm,dd); tr.setLatLngs(pts.slice(0,i+1).concat([h])); for(let j=1;j<=i;j++) label(pts[j]._q);
