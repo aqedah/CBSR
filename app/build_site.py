@@ -121,6 +121,8 @@ import glob as _g
 CK=json.load(open('ux/christ_out.json')); MN=json.load(open('ux/mean_out.json')); GF={}
 for f in sorted(_g.glob('ux/guide_out*.json')): GF.update(json.load(open(f)))
 data+='const FLOW='+open('flow/all.json').read()+';\n'
+import importlib.util as _iu2; _sp2=_iu2.spec_from_file_location('smb','ux/sermon_build.py'); _smb=_iu2.module_from_spec(_sp2); _sp2.loader.exec_module(_smb)
+data+='const SERMON='+json.dumps(_smb.build(),ensure_ascii=False,separators=(',',':'))+';\n'  # 주일 설교 본문(2026-11-03)
 data+='const TRAITS_C='+open('traits/all.json').read()+';\n'
 data+='const PARA='+open('para/all.json').read()+';\n'
 data+='const SCX='+open('scene/scx.json').read()+';\n'

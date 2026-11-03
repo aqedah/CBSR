@@ -1108,6 +1108,7 @@ html .libx,html.v2 .rdback,html .bmovx{width:44px;height:44px;border:0;border-ra
 html .libtop b,html.v2 .rdh.rdh h2,html .bmovtop b{font:700 20px var(--f-disp,serif);color:var(--ink)}
 html.v2 body.recsub header.top{display:none}
 html.v2 body.recsub .rdh.rdh{position:sticky;top:0;z-index:1300;background:var(--paper);margin:-8px -16px 8px;padding-left:10px!important;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 4px;gap:6px}
+html .smv{font-weight:700;background:linear-gradient(transparent 8%,rgba(214,168,74,.26) 8%,rgba(214,168,74,.26) 92%,transparent 92%);color:var(--ink)}html .smbible{margin-top:12px}html .smq{margin:10px 0;padding:10px 14px;border-left:3px solid #c9a24a;background:rgba(214,168,74,.08);border-radius:0 10px 10px 0}html .smq p{margin:0;font-family:"Noto Serif KR",serif;line-height:1.75}html .smq cite{display:block;margin-top:6px;font-style:normal;font-size:12.5px;font-weight:700;color:#8a5f0e}html .smp{line-height:1.7;margin:6px 0}html .smpray{color:var(--muted)}html .smsaved{font-size:12px;color:var(--muted);min-height:1em}html .smtd .row{display:flex;gap:8px;margin-top:10px}html .smcard .bmjump{margin-top:8px}
 html .bmov .bmovmap .bmmap{inset:34px 16px 0!important;border-radius:16px!important;overflow:hidden;box-shadow:0 0 0 1px var(--line)!important} /* 11/3: 성경 지도 화면과 같은 모양(지도는 둥근 상자, 양옆 16px) */html .bmovtop{gap:6px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 10px}
 
 .gbcard .gbgo{width:100%;min-height:0}
@@ -3311,7 +3312,7 @@ function renderQT(){
   if(!BIBLE) return `<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
   if(view.pre) return renderPreview();
   if(view.revW) return renderQTWeek(weekDays(view.revW),dispTitle(view.revW));
-  if(isRev(d)) return renderQTWeek();
+  if(isRev(d)){ const SM=window.CBSR_V2&&sermOf(w); if(SM) return sermQTHTML(w,SM)+`<section class="sec"><details class="flow"><summary>이번 주에 적은 묵상 다시 보기</summary>${renderQTWeek()}</details></section>`; return renderQTWeek(); }
   if(futLock(w,d)) return `<section class="sec glock"><span class="label">QT</span><p class="lead">이 날의 스토리 QT와 묵상 노트는 <b>${esc(futMsg(w,d))}</b>. 본문은 읽기 탭에서 미리 읽어 볼 수 있습니다.</p>${flipHTML(w,d)}</section>`;
   if(window.CBSR_V2) view.qtDeep=true;
   if(STORY()&&!view.qtDeep) return renderQTStory();
@@ -4625,6 +4626,7 @@ function renderQTWeek(list,title){
 }
 let qtT;
 function bindQT(m){
+  if(view.tab==="qt"&&isRev(view.d)) bindSerm(m);
   if(view.tab!=="qt"||isRev(view.d)) return;
   if(window.CBSR_V2) qtSteps(m);
   m.querySelectorAll("[data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
@@ -4981,9 +4983,39 @@ function nextPreview(W,label){
   else if(GUIDE[keyOf(w,d)]) story=GUIDE[keyOf(w,d)].today;
   return `<section class="sec"><span class="label">${esc(label||"다음 주 미리 보기")}</span><div class="qcard"><span class="k">${esc(dispTitle(W+1))}</span>${story?`<p>${esc(story)}</p>`:""}<div class="row"><button class="btn ghost small" data-jump="${w}-${d}">첫날 본문 · ${esc(dayPlan(w,d).label)}</button></div></div></section>`;
 }
+/* ===== 주일 = 설교와 잇기(2026-11-03 목사님): 청년부 설교 본문을 미리 넣어 두고(ux/sermons.json) 주일에 띄움.
+   본문 탭: 설교 본문이 든 장 전체 + 설교 본문은 진하게·꿀색 바탕 / 묵상 탭: 그 장(이야기 단위)을 내러티브 비평으로 읽은 묵상 / 오늘 탭: 설교 본문 카드 ===== */
+const SERM_T=(()=>{ try{ return new URLSearchParams(location.search).get("sermtest")==="1"; }catch(e){ return false; } })();
+function sermOf(w){ if(typeof SERMON==="undefined"||!isRev(6)) return null; const S=SERMON[dsOf(dateOf(w,6))]; return S&&(!S.sample||SERM_T)?S:null; }
+const inSeg=(sg,b,c,v)=>sg.some(([B,c1,v1,c2,v2])=>B===b&&(c>c1||c===c1&&v>=v1)&&(c<c2||c===c2&&v<=v2));
+function segText(sg){ const [b,c1,v1,c2,v2]=sg, out=[]; for(let c=c1;c<=c2;c++){ const C=BIBLE&&BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!C) continue; const a=c===c1?v1:1, z=Math.min(c===c2?v2:C.length,C.length); for(let v=a;v<=z;v++) out.push(C[v-1]); } return out.join(" "); }
+const smQ=(sg,ref)=>`<blockquote class="smq"><p>“${esc(segText(sg))}”</p><cite>${esc(ref)}</cite></blockquote>`;
+const smRec=w=>{ mem.serm ||= {}; const k=dsOf(dateOf(w,6)); return mem.serm[k] ||= {}; };
+function sermReadHTML(w,S){
+  let h=`<section class="sec daycard smcard"><span class="label">주일 · 설교와 잇기</span><h2>${esc(S.t||S.r)}</h2><p class="dmeta"><span class="dmtag today">오늘 설교 본문</span><span>${esc(S.r)}</span></p><p class="lead">설교 본문은 <b class="smv">진하게</b> 표시했습니다. 앞뒤 이야기와 함께 읽어 보세요.</p><button class="bmjump" id="smJump">설교 본문으로 가기 ↓</button></section>`;
+  if(!BIBLE) return h+`<div class="loading">${bibleErr||"본문을 준비하는 중입니다…"}</div>`;
+  h+=`<div class="bible smbible">`;
+  for(const [b,c] of S.ch){ const s2=new Set(); let t=chapHTML(b,c,s2);
+    t=t.replace(/<span class="v([^"]*)" id="v-(\d+)-(\d+)-(\d+)"/g,(m0,cl,B,C,V)=>inSeg(S.rs,+B,+C,+V)?`<span class="v${cl} smv" id="v-${B}-${C}-${V}"`:m0);
+    h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}</h3><div class="vtext">${t}</div></div>`; }
+  return h+`</div>`; }
+function sermQTHTML(w,S){ const Q=S.qt||{}, R=smRec(w), ta=(k,ph)=>`<div class="oneline"><textarea data-sq="${k}" rows="2" placeholder="${esc(ph)}">${esc(R[k]||"")}</textarea></div>`;
+  let h=`<div class="daycard qtcard smqt"><section class="qth3"><div class="qph nophoto"><div class="qphin"><span class="qk">주일 묵상 · 설교와 잇기</span><h2>${esc(S.t||S.r)}</h2><small>${esc(S.r)}</small></div></div></section>`;
+  if(Q.frame) h+=`<section class="sec q3"><span class="label">이 본문이 놓인 자리</span><p class="smp">${esc(Q.frame.p)}</p>${Q.frame.v.map((g,i)=>smQ(g,Q.frame.vs[i])).join("")}</section>`;
+  if(Q.obs) h+=`<section class="sec q3"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(Q.obs.q)}</p>${Q.obs.v.map((g,i)=>smQ(g,Q.obs.vs[i])).join("")}${ta("obs","한 줄로 적어 보세요")}</div></section>`;
+  if(Q.gap) h+=`<section class="sec q3"><span class="label">말하지 않은 것</span><p class="smp">${esc(Q.gap.q)}</p>${Q.gap.v.map((g,i)=>smQ(g,Q.gap.vs[i])).join("")}${ta("gap","내가 생각한 빈자리")}</section>`;
+  if(Q.god&&Q.god.length) h+=`<section class="sec q3"><div class="stage"><b>2</b><span>하나님은 어떤 분</span></div>${Q.god.map(g=>`<div class="trait"><b>${esc(g.n)}</b>${smQ(g.v,g.vs)}</div>`).join("")}</section>`;
+  if(Q.hold) h+=`<section class="sec q3"><div class="stage"><b>3</b><span>붙잡을 한 구절</span></div>${smQ(Q.hold.v,Q.hold.vs)}</section>`;
+  h+=`<section class="sec q3"><div class="stage"><b>4</b><span>예배로 가져갈 것</span></div>${Q.ask?`<p class="smp">${esc(Q.ask)}</p>`:""}${ta("ask","설교에서 듣고 싶은 것")}${Q.pray?`<p class="smp smpray">${esc(Q.pray)}</p>`:""}${ta("pray","나의 기도")}</section>`;
+  h+=`<section class="sec q3"><div class="stage"><b>5</b><span>설교를 듣고</span></div><p class="smp">예배를 마친 뒤, 붙잡은 말씀을 한 줄로 남겨 보세요.</p>${ta("after","오늘 들은 말씀 한 줄")}<p class="smsaved" id="smSaved"></p></section></div>`;
+  return h; }
+function bindSerm(m){ const S=sermOf(view.w); if(!S) return; const j=m.querySelector("#smJump"); if(j) j.onclick=()=>{ const v=m.querySelector(".smv[id]"); if(v) v.scrollIntoView({behavior:"smooth",block:"center"}); };
+  m.querySelectorAll("[data-sq]").forEach(t=>t.oninput=()=>{ smRec(view.w)[t.dataset.sq]=t.value; clearTimeout(qtT); qtT=setTimeout(()=>{ save(); const s=document.getElementById("smSaved"); if(s) s.textContent="저장됨"; },400); });
+  m.querySelectorAll("[data-smgo]").forEach(b=>b.onclick=()=>{ view.tab=b.dataset.smgo; render(); scrollTo({top:0}); }); }
 function renderReview(){
   const w=view.w, W=WEEKS[w-1]; const T=weekTotals(w);
   if(window.CBSR_V2){ /* 11/3 목사님: 주일 = 쉼과 잇기. 새 본문은 없음 — ① 이번 주 이야기와 그리스도로 잇기 ② 인물의 변화 ③ 못 읽은 본문 채우기. 퀴즈 성적표는 뺌 */
+    const SM=sermOf(w); if(SM) return sermReadHTML(w,SM)+`<section class="sec"><details class="flow"><summary>이번 주 돌아보기<small>${esc(W.t)}</small></summary>${W.story?`<p class="sunp">${esc(W.story)}</p>`:""}${W.christ?`<p class="sunc"><b>예수 그리스도로 잇기</b>${esc(W.christ)}</p>`:""}${unreadChips([0,1,2,3,4,5].map(d=>[w,d]))}</details></section>`+nextPreview(weekOfDay(w,6),"다음 주 미리 보기 · 내일부터");
     let h=`<section class="sec daycard sunrv"><span class="label">주일 · 쉼과 잇기</span><h2>${w}주차 ${esc(W.t)}</h2><p class="lead">오늘은 새 본문이 없습니다. 쉬며 예배하고, 이번 주에 읽은 이야기를 한 번에 돌아봅니다.</p>${unreadChips([0,1,2,3,4,5].map(d=>[w,d]))}</section>`;
     if(W.story) h+=`<section class="sec"><span class="label">이번 주 이야기</span><p class="sunp">${esc(W.story)}</p>${W.christ?`<p class="sunc"><b>예수 그리스도로 잇기</b>${esc(W.christ)}</p>`:""}</section>`;
     h+=renderArcs(w);
@@ -6646,10 +6678,12 @@ function sunPlaces(w){ const seen=new Map(); SUN_DAYS(w).forEach(([ww,d])=>{ try
     for(const p of dayA(ww,d).places.values()){ const g=PLACE.get(p.name); if(g&&g[3]!=="r"&&(p.n>=2||RP.has(p.name))) seen.set(p.name,{g,n:(seen.get(p.name)||{n:0}).n+p.n}); } }catch(e){} }); return seen; }
 function renderSunday(w){ const W=WEEKS[w-1]||{}, ph=sunCover(w), dt=dateOf(w,6), L=SUN_DAYS(w), read=L.filter(([a,b])=>mem.done[keyOf(a,b)]).length;
   mem.sun ||= {}; if(!mem.sun[w]){ mem.sun[w]=todayStr(); save(); }
+  const SM=window.CBSR_V2&&sermOf(w);
   const sent=t=>String(t||"").split(/(?<=[다요]\.)\s+/).filter(Boolean);
-  let h=window.CBSR_V2?td4Top(w,6,ph,isHere(w,6))+`<div class="td4head"><p class="td4k">주일 · 쉼과 잇기</p><h1>${w}주차 돌아보기</h1></div><div class="td4sumb">${W.t?`<p class="td4sum">${esc(W.t)}</p>`:""}</div></div></section><section class="tdsheet sun">`: /* 11/3: 주일도 평일과 같은 그림 머리(‹ › 넘기기) */
+  let h=window.CBSR_V2?td4Top(w,6,ph,isHere(w,6))+`<div class="td4head"><p class="td4k">${SM?"주일 · 설교와 잇기":"주일 · 쉼과 잇기"}</p><h1>${SM?esc(SM.t||SM.r):w+"주차 돌아보기"}</h1>${SM?`<p class="td4r">${esc(SM.r)}</p>`:""}</div><div class="td4sumb">${W.t?`<p class="td4sum">${esc(W.t)}</p>`:""}</div></div></section><section class="tdsheet sun">`: /* 11/3: 주일도 평일과 같은 그림 머리(‹ › 넘기기) */
     `<section class="tdh sunh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin"><div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span></div>
     <div class="tdttl"><p class="tdk">주일 · 쉼과 잇기</p><h1>${w}주차 돌아보기</h1><p class="tdsub">${esc(W.t||"")}</p></div></div></section><section class="tdsheet sun">`;
+  if(SM){ const Q=SM.qt||{}; h+=`<div class="suncard smtd"><span class="sunk">오늘 설교 본문 · ${esc(SM.r)}</span>${Q.hold&&BIBLE?smQ(Q.hold.v,Q.hold.vs):""}${Q.ask?`<p class="sunp">${esc(Q.ask)}</p>`:""}<div class="row"><button class="btn small" data-smgo="read">설교 본문 읽기</button><button class="btn ghost small" data-smgo="qt">주일 묵상</button></div></div><p class="tdstory sm2">이번 주에 읽은 이야기도 함께 돌아봅니다.</p>`; } else
   h+=`<p class="tdstory">오늘은 주일입니다. 이번 주에 읽은 이야기를 모아 보고, 예배로 이어 가세요.</p><p class="sunstat">이번 주 <b>${read}</b> / ${L.length}일 읽음</p>${window.CBSR_V2?unreadChips(L):""}`;
   /* ② 이야기 */
   const st=sent(W.story).slice(0,4);
@@ -6674,7 +6708,7 @@ function renderSunday(w){ const W=WEEKS[w-1]||{}, ph=sunCover(w), dt=dateOf(w,6)
   const U=L.filter(([a,b])=>!mem.done[keyOf(a,b)]&&dateOf(a,b)<=today0());
   if(U.length&&!window.CBSR_V2) h+=`<div class="suncard"><span class="sunk">6 · 이번 주에 못 읽은 날 ${U.length}일</span><p class="sunt">주일 오후에 이어 읽어도 좋습니다.</p><div class="qtstart-list">${U.map(([a,b])=>dayBtn(a,b)).join("")}</div></div>`;
   return h+`</section>`; }
-function bindSunday(){ const w=view.w; document.querySelectorAll("#main [data-jump]").forEach(b=>b.onclick=()=>{ const [a2,b2]=b.dataset.jump.split("-").map(Number); go(a2,b2); }); document.querySelectorAll("[data-sunarc]").forEach(b=>b.onclick=()=>{ view.tab="read"; render(); scrollTo({top:0}); }); { const mm=document.getElementById("main")||document; if(window.CBSR_V2) lnBind(mm); } const m=document.getElementById("sunMap");
+function bindSunday(){ const w=view.w; bindSerm(document.getElementById("main")||document); document.querySelectorAll("#main [data-jump]").forEach(b=>b.onclick=()=>{ const [a2,b2]=b.dataset.jump.split("-").map(Number); go(a2,b2); }); document.querySelectorAll("[data-sunarc]").forEach(b=>b.onclick=()=>{ view.tab="read"; render(); scrollTo({top:0}); }); { const mm=document.getElementById("main")||document; if(window.CBSR_V2) lnBind(mm); } const m=document.getElementById("sunMap");
   if(m&&window.L){ setTimeout(()=>{ if(!document.body.contains(m)) return; const map=L.map(m,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,zoomSnap:.25}); mapBase(map,"natural");
     const P=sunPlaces(w), pts=[]; SUN_DAYS(w).forEach(([a,b])=>{ try{ routesFor(a,b).forEach(r=>{ const ll=r.p.map(q=>[q[1],q[2]]); L.polyline(ll,{color:"#fff",weight:6,opacity:.8,interactive:false}).addTo(map); L.polyline(ll,{color:"#c0392b",weight:3,interactive:false}).addTo(map); pts.push(...ll); }); }catch(e){} });
     let k=0; P.forEach((x,nm)=>{ const ll=[x.g[1],x.g[2]]; pts.push(ll); L.circleMarker(ll,{radius:5,color:"#fff",weight:1.5,fillColor:"#e0a526",fillOpacity:1,interactive:false}).addTo(map); if(k++<6) L.marker(ll,{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl bml key">${esc(nm)}</span>`,iconSize:[0,0],iconAnchor:[-6,8]})}).addTo(map); });
@@ -7179,6 +7213,7 @@ function render(){
     bmBind(m);
     m.querySelectorAll("[data-tab-go]").forEach(b=>b.onclick=()=>{ view.tab=b.dataset.tabGo; render(); window.scrollTo({top:0}); }); }
   bind(); if(view.tab==="admin"&&window.CBSR_V2) bindDash(m); else document.documentElement.classList.remove("admwide"); if(view.tab==="study") bindStudy(m); else if(typeof bindStudyNotes==="function") bindStudyNotes(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); } if(TTS.on) ttsMark(false);
+  if(view.tab==="read"&&isRev(view.d)) bindSerm(document.getElementById("main")||document);
   if(view.tab==="read"&&!isRev(view.d)&&BIBLE&&view.mapOpen) initMap(dayA(view.w,view.d)); else destroyMap();
 }
 function go(w,d){ if(TTS.on&&TTS.key!==keyOf(w,d)) ttsStop(); view.pre=false;view.revW=null;view.w=w;view.d=d;view.tab="read";view.open=false;view.quiz=null;view.wquiz=null;render();window.scrollTo({top:0});}
