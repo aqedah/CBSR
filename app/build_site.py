@@ -161,7 +161,10 @@ _perr=_pp.validate(_POL,set(_PMR));
 if _perr:
     print('그림 정책 오류 — 빌드를 멈춥니다:'); [print('  -',x) for x in _perr[:30]]; raise SystemExit(2)
 for _p in _PH: _p.update(_pp.app_fields(_pp.effective(_PMR.get(_p['id'],_p),_POL)))
-_PH=[_p for _p in _PH if _p['rs'] not in ('hold','out')]  # 보류·제외는 자동·지정·고정 어느 길로도 앱에 나오지 않음
+_PH=[_p for _p in _PH if _p['rs'] not in ('hold','out')]
+_FXA=json.load(open('ux/photo_fx.json')) if os.path.exists('ux/photo_fx.json') else {}
+for _p in _PH:
+    if _p['id'] in _FXA: _p['fx']=_FXA[_p['id']]  # 11/4: 세로 화면에서 인물 얼굴이 잘리지 않게(ux/photo_fx_auto.py)  # 보류·제외는 자동·지정·고정 어느 길로도 앱에 나오지 않음
 data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role','tm','ak','ap','rs','va','bu','au','rl','er','rq','ac','gp')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
 _SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
 _SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}

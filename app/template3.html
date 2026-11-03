@@ -3787,7 +3787,7 @@ function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
   const N=nextWD(w,d); if(!N) return `<div class="sbox snext"><span class="slab">마지막 날</span><h1>통독을 마쳤습니다</h1><div class="sfbtn"><button class="btn" id="sEnd">닫기</button></div></div>`;
   const P2=dayPlan(N[0],N[1]), dt=dateOf(N[0],N[1]), live=isHere(w,d);
   return `<div class="sbox snext"><span class="slab">내일 본문 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}(${DAYN[dt.getDay()]})</span><h1>${esc(P2.topic||P2.label)}</h1><p>${esc(P2.label)}</p>${live?`<div class="scount" id="sCount" aria-live="off">--:--:--</div><p class="scnote">자정에 열립니다</p>`:`<p class="scnote">지금 바로 열 수 있습니다</p>`}<div class="sfbtn">${window.CBSR_V2?`<button class="btn ghost" id="sToCh">도전 하나</button>`:""}<button class="btn ghost" id="sToRec">나의 기록</button><button class="btn" id="sEnd">닫기</button></div></div>`; }
-function phPos(fx,v){ const m=String(fx||"50% 50%").match(/([\d.]+)%\s+([\d.]+)%/); let x=m?+m[1]:50, y=m?+m[2]:50; if(v===1) x=Math.min(100,x+18); if(v===2) x=Math.max(0,x-18); return x+"% "+y+"%"; }
+function phPos(fx,v){ const m=String(fx||"50% 50%").match(/([\d.]+)%\s+([\d.]+)%/); let x=m?+m[1]:50, y=m?+m[2]:50; /* 11/4 목사님: 같은 그림을 이어 쓸 때 좌우로 18%씩 옮기던 것은 인물을 잘라서 뺌(확대·천천히 움직임으로만 다르게) */ return x+"% "+y+"%"; }
 function cdText(){ const n=new Date(), m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1), s=Math.max(0,Math.floor((m-n)/1000)); return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,"0")).join(":"); }
 /* (v2) 인용문의 출처 이름표: 원고에 적은 말한 사람(q[2])을 씁니다. 적지 않았으면, 그 절에 대화가 전혀 없을 때만 '본문의 설명'으로 붙입니다 */
 function sWho(q){ if(!window.CBSR_V2) return ""; if(q[2]) return `<span class="swho">${esc(q[2])}</span>`;
