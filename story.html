@@ -8118,7 +8118,7 @@ function christSecV2(w,d,t,ck,det){ if(!t) return ""; const R=christRefs(t,w,d),
    ${role||(pair?`<div class="qcard chtx"><p>${esc(t)}</p></div>`:"")}
    ${det&&det.cm?`<div class="qcard chcm"><span class="label">무슨 뜻일까</span><p>${esc(det.cm)}</p></div>`:""}</section>`; }
 /* 묵상 노트 한 장씩(v2, 목사님 2026-11-02): 본문 관찰 · 하나님의 성품 · 붙잡을 한 구절 · 기도를 한 장에 하나, 아래 '다음' 하나 */
-function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done||FB_ON) return;
+function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done||FB_ON){ qtDoneLook(m); return; }
   if(!view.qsUrl){ view.qsUrl=1; try{ const n=+new URLSearchParams(location.search).get("qs"); if(n>0){ view.qtStepK=key; view.qtStep=n-1; } }catch(e){} }
   const secs=[...m.querySelectorAll("section.sec")].filter(x=>!x.classList.contains("qthd")); const G=[];
   secs.forEach(x=>{ const lab=x.querySelector(":scope>.label"); const start=x.querySelector(":scope>.stage")||(lab&&/기도/.test(lab.textContent)); if(start||!G.length) G.push([x]); else G[G.length-1].push(x); });
@@ -8139,6 +8139,13 @@ function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.don
     bar.querySelector(".qtprev").onclick=()=>{ if(view.qtStep>0){ view.qtStep--; show(); scrollTo({top:0}); } };
     const b=nx.querySelector(".qtnb"); if(b) b.onclick=()=>{ view.qtStep++; show(); scrollTo({top:0}); }; };
   show(); }
+/* 11/3 목사님: 묵상을 마친 뒤 다시 와도 같은 모양(그림 머리 + 흰 상자). 한 장씩 넘기기만 없음 */
+function qtDoneLook(m){ const hd=m.querySelector("section.qthd"); if(!hd||m.querySelector(".qtcard")) return; const p=dayPlan(view.w,view.d);
+  const secs=[...m.querySelectorAll("section.sec")].filter(x=>x!==hd); secs.forEach(x=>x.classList.add("q3")); hd.style.display="none";
+  const top=document.createElement("section"); top.className="qth3";
+  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">묵상 노트 · ${esc(MODE==="y365"?dayNo(view.w,view.d)+"일째":dayName(view.w,view.d))}</span><h2>${esc(p.topic||p.label)}</h2>${p.topic&&p.topic!==p.label?`<small>${esc(p.label)}</small>`:""}</div><div class="qphbtn"></div></div>`;
+  const hb=hd.querySelector("#qtHelp"); if(hb) top.querySelector(".qphbtn").appendChild(hb);
+  hd.before(top); const card=document.createElement("div"); card.className="daycard qtcard"; top.before(card); card.append(top,...secs); }
 function bookFinCheck(k){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return; mem.bookFin ||= {};
   for(const b of [...new Set(p.ch.map(x=>x[0]))]){ if(!mem.bookFin[b]&&bookDone(b)){ mem.bookFin[b]=todayStr(); save(); setTimeout(()=>bookCover(b),1400); return; } } }
 
@@ -9274,7 +9281,7 @@ function renderQT(){
   const ST=sceneTraits(w,d,A,godTraits(A)), traits=ST.list, R=ST.R;
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
   const V2Q=!!window.CBSR_V2;
-  let h=V2Q?`<section class="sec qthd"><div class="qthl"><span class="label">묵상 노트 · ${dayName(w,d)}</span><button class="qthelp" id="qtHelp" aria-label="묵상 노트 안내">?</button></div><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">묵상 노트의 말씀은 개역개정입니다.</p>`:""}${STORY()&&storySlides(w,d).length?`<button class="qtsl" id="qtStory">스토리 QT 열어 보기 ›</button>`:""}</section>`
+  let h=V2Q?`<section class="sec qthd"><div class="qthl"><span class="label">묵상 노트 · ${dayName(w,d)}</span><button class="qthelp" id="qtHelp" aria-label="묵상 노트 안내">?</button></div><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">묵상 노트의 말씀은 개역개정입니다.</p>`:""}</section>`
     :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${STORY()?`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`:""}</section>`;
   // 1 본문 관찰
   h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${V2Q?(()=>{ const r=qtRefs(eye.q,w,d)[0]; return r?qEvi(r,"",3):""; })():""}${V2Q?(R?`<button class="qtlnk" id="scopeRead">본문 열기 · ${esc(sceneLabel(R))} ›</button>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
