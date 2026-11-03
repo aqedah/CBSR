@@ -5489,7 +5489,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
       const f=now=>{ tick(now); if(my!==tok||!alive()) return res(false); const k=Math.min(1,(clk-t0)/ms), e=ease==="in"?k*k:ease==="out"?1-(1-k)*(1-k):ease==="both"?(k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2):k, dd=e*Lm.tot, [here,i,lf]=atM(Lm,dd);
         if(mid&&k>=.5){ const m2=mid; mid=null; m2(); }
         main.setLatLng(here); const c=chm(main); if(c) c.classList.toggle("flip",lf); const mpp=40075016.68/(256*Math.pow(2,map.getZoom()));
-        fol.forEach((fo,j)=>{ const [q,,l2]=atM(Lm,dd-(j+1)*(gap||15)*mpp); fo.m.setLatLng(q); const c2=chm(fo.m); if(c2) c2.classList.toggle("flip",l2); });
+        let off=0; fol.forEach((fo,j)=>{ off+=fo.n?(gap||28):(gap?gap*.6:14); const [q,,l2]=atM(Lm,dd-off*mpp); /* 11/3: 이름 있는 동행은 간격을 넓혀 겹치지 않게 */ fo.m.setLatLng(q); const c2=chm(fo.m); if(c2) c2.classList.toggle("flip",l2); });
         if(lead&&!lead.stop){ const [q]=atM(Lm,dd+34*mpp); lead.m.setLatLng(q); }
         CHS.forEach((m,j)=>{ const [q,,l3]=atM(Lm,dd-(95+j*11)*mpp); m.setLatLng(q); const c4=chm(m); if(c4) c4.classList.toggle("flip",l3); if(Math.random()<.004) emo(m,"😠"); });
         cur.setLatLngs(base.concat(pts.slice(1,i+1),[here])); for(let j=1;j<=i;j++) label(pts[j]._q);
@@ -5529,8 +5529,8 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     /* 4) 언약궤도 올라오고 물이 다시 흐름(수 4:18) */ const t1=clk, lb=lead.m.getLatLng(); while(clk-t1<1400){ if(!(await sleep(30,my))) return false; const f=(clk-t1)/1400; lead.m.setLatLng(L.latLng(lb.lat+(B.lat-lb.lat)*f,lb.lng+(B.lng-lb.lng)*f)); }
     lead.stop=false; for(let q=10;q>=0;q--){ if(!(await sleep(70,my))) return false; dry.forEach(d=>d.setStyle({opacity:q/10})); } dry.forEach(d=>trails.removeLayer(d)); E2(["🎉","🙌","🙏"],5); follow=()=>main.getLatLng(); if(!(await zoomTo(zBase,my))) return false; zoomOK=false; return true; }
   /* 무리 모으기: 멈춰 선 주인공 둘레로 동행들이 걸어와 모임 */
-  async function gather(ms,my){ if(!main||!fol.length) return true; const c=main.getLatLng(), mpp=40075016.68/(256*Math.pow(2,map.getZoom())), P=CRS.project(c), from=fol.map(f=>CRS.project(f.m.getLatLng())), t0=clk;
-    const to=fol.map((f,j)=>{ const r=(10+Math.floor(j/5)*13)*mpp, a=-Math.PI*.15-j*(Math.PI*1.3/Math.max(1,fol.length-1)); return L.point(P.x+Math.cos(a)*r,P.y+Math.sin(a)*r*.6+8*mpp); });
+  async function gather(ms,my,zz){ if(!main||!fol.length) return true; const c=main.getLatLng(), mpp=40075016.68/(256*Math.pow(2,zz||map.getZoom())), /* 11/3: 곧 당겨질 배율로 간격을 잼(먼 배율로 재면 확대 뒤 동행이 화면 밖으로 멀어짐 — 아나니아) */ P=CRS.project(c), from=fol.map(f=>CRS.project(f.m.getLatLng())), t0=clk;
+    const to=fol.map((f,j)=>{ const r=(f.n?30:14+Math.floor(j/5)*13)*mpp, /* 11/3: 이름 있는 동행은 주인공과 겹치지 않게 조금 떨어져 */ a=-Math.PI*.15-j*(Math.PI*1.3/Math.max(1,fol.length-1)); return L.point(P.x+Math.cos(a)*r,P.y+Math.sin(a)*r*.6+8*mpp); });
     fol.forEach(f=>{ const e=chm(f.m); if(e) e.classList.add("walk"); });
     while(clk-t0<ms){ if(!(await sleep(30,my))) return false; const k=Math.min(1,(clk-t0)/ms), e=1-(1-k)*(1-k); fol.forEach((f,j)=>{ const q=L.point(from[j].x+(to[j].x-from[j].x)*e,from[j].y+(to[j].y-from[j].y)*e); f.m.setLatLng(CRS.unproject(q)); const el2=chm(f.m); if(el2) el2.classList.toggle("flip",to[j].x<from[j].x); }); }
     fol.forEach(f=>{ const e=chm(f.m); if(e) e.classList.remove("walk"); }); return true; }
@@ -5584,8 +5584,11 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   /* 도착 뒤의 장면(GPT 2차): 세례 · 십자가의 어둠 · 로뎀 나무. 이 장면은 r 말씀을 장면 안에서 보여 줌 */
   const skyM=(ll,html,z)=>{ const m=L.marker(ll,{interactive:false,zIndexOffset:z||2800,icon:L.divIcon({className:"",html,iconSize:[0,0]})}).addTo(map); SKY.push(m); return m; };
   /* 3차 R3-14: 도착 뒤 현장 연출 시간도 진행 막대에 넣음 */
-  const FXMS={baptism:()=>10300,dark:st=>st.quake?10600:9100,sleep:()=>12800,fish:()=>5200};
+  const FXMS={light:()=>7400,baptism:()=>10300,dark:st=>st.quake?10600:9100,sleep:()=>12800,fish:()=>5200};
   const FXP={
+    /* 다메섹 길의 빛(행 9:3–8): 하늘에서 빛이 둘러 비치고 사울이 땅에 엎드러짐 → 주의 음성 → 일어나나 보지 못함(11/3 목사님: 예전 오늘 지도에 있던 연출) */
+    light:async(st,my)=>{ if(!main) return true; const c=main.getLatLng(), e=chm(main), sky=skyM(c,'<span class="mvbeam"></span>',2500); mvFx(map,"light",[c.lat,c.lng]); if(!(await sleep(700,my))) return false; mvFx(map,"light",[c.lat,c.lng]); if(e) e.classList.add("fall");
+      if(!(await sleep(900,my))) return false; showVerse(st.r); if(!(await sleep(4200,my))) return false; try{ map.removeLayer(sky); }catch(x){} if(e) e.classList.remove("fall"); emo(main,"😶",1); return sleep(1200,my); },
     baptism:async(st,my)=>{ if(!main) return true; const c=main.getLatLng(), e=chm(main); if(!(await sleep(900,my))) return false;
       if(e) e.classList.add("dip"); const sp=skyM(c,'<span class="mvprop">💧</span>',2700); if(!(await sleep(1500,my))) return false; if(e) e.classList.remove("dip"); try{ map.removeLayer(sp); }catch(x){} if(!(await sleep(500,my))) return false;
       skyM(c,'<span class="mvbeam"></span>',2500); const P=map.latLngToContainerPoint(c), dv=skyM(map.containerPointToLatLng(P.add(L.point(0,-200))),'<span class="mvdove">🕊️</span>');
@@ -5657,7 +5660,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     if(CHS.length){ CHS.forEach(m=>{ const c=chm(m); if(c) c.classList.add("vanish"); }); const old=CHS; CHS=[]; setTimeout(()=>old.forEach(m=>{ try{ map.removeLayer(m); }catch(x){} }),900); }
     if(st.dropAt!=="start"&&st.dropAt!=="end") await drops(st,my);
     if(st.stay&&st.pre){ later(()=>{ if(my===tok) showVerse(st.r); },Math.min(3000,dw*.45)); }
-    if(st.stay){ gather(1200,my); const E3=EMO(st); if(!st.fx) for(let q=0;q*2400<dw-1200&&q<3;q++) later(()=>{ if(my===tok) emo(main,E3[q%E3.length]); },900+q*2400); }
+    if(st.stay){ gather(1200,my,st.fx!=="siege"&&st.z?capS(st.z):null); const E3=EMO(st); if(!st.fx) for(let q=0;q*2400<dw-1200&&q<3;q++) later(()=>{ if(my===tok) emo(main,E3[q%E3.length]); },900+q*2400); }
     if(dw&&!(await hold(dw,my,!!st.stay&&st.fx!=="siege"))) return false;
     if(st.dropAt==="end") await drops(st,my);
     if(!(await readWait(my))) return false; /* 글을 다 읽기 전에는 다음 장면으로 가지 않음 */
