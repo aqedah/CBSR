@@ -267,6 +267,8 @@ self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''
 open(f'{OUT}/sw.js','w').write(sw)
+# 성경 골든벨 문제(도전 탭에서 처음 열 때만 받음, 2026-11-03)
+import importlib.util as _iu; _sp=_iu.spec_from_file_location('gbb','ux/gb_build.py'); _gbb=_iu.module_from_spec(_sp); _sp.loader.exec_module(_gbb); _gbb.build(f'{OUT}/gb.json')
 for f in []:
   if os.path.exists('study/'+f): shutil.copy('study/'+f,f'{OUT}/study/'+f)
 open(f'{OUT}/.nojekyll','w').write('')
