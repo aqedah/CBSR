@@ -1807,6 +1807,53 @@ html.v2 .q3 .qev{background:var(--card)}.qevs{margin-top:12px}.qevs .label{displ
 .chq2{background:var(--card);border-radius:18px;padding:14px 16px 10px 18px;display:grid;gap:6px;border-left:3px solid var(--accent)}.chq2.ot{border-left-color:var(--gold)}
 .chq2 small{font-size:12px;font-weight:700;color:var(--accent)}.chq2.ot small{color:var(--gold)}.chq2 q{quotes:"“" "”";font:600 17px/1.7 var(--f-text);word-break:keep-all}
 .chtx{margin-top:10px}
+/* ===== UI 문법 v3(2026-11-03 목사님 "신문 같다" → 전체 정리) =====
+   ① 상자는 두 단계까지(큰 흰 카드 안에는 테두리 상자 없음)
+   ② 글의 세 얼굴: 말씀 = 명조 + 꿀색 왼쪽 줄 / 나에게 묻는 말 = 굵은 고딕 / 풀이 = 고딕, 조금 흐리게
+   ③ 내가 쓰는 칸 = 줄 노트 ④ 초록은 단추·마침 표시에만 ⑤ 제작·출처 글은 기록 탭에만 */
+html.v2{--hn-bg:#FBF5E6;--hn-bar:#C9A24A;--hn-ink:#7A4C0C;--note-bg:#FFFDF7;--note-line:#EFE6CF;--note-bd:#E6DCC4;--feat-bg:#F8EBC8}
+@media (prefers-color-scheme: dark){html.v2:not([data-theme="light"]){--hn-bg:#221E15;--hn-bar:#B08A3E;--hn-ink:#EBC27A;--note-bg:#1B211E;--note-line:#2C332F;--note-bd:#33403A;--feat-bg:#2A2416}}
+html.v2[data-theme="dark"]{--hn-bg:#221E15;--hn-bar:#B08A3E;--hn-ink:#EBC27A;--note-bg:#1B211E;--note-line:#2C332F;--note-bd:#33403A;--feat-bg:#2A2416}
+html.v2 body:not([data-tab="record"]) footer{display:none}
+/* 묵상: 겹상자 걷기 */
+html.v2 body .qtcard .eye,html.v2 body .qtcard .qcard,html.v2 body .qtcard .trait{border:0!important;background:none!important;padding:0!important;box-shadow:none!important;margin:10px 0}
+html.v2 body .qtcard .eye>p,html.v2 body .smqt .eye>p{font-family:"IBM Plex Sans KR",sans-serif;font-size:18px;font-weight:700;line-height:1.6;color:var(--ink);margin:4px 0 12px}
+html.v2 body .qtcard .qcard>p,html.v2 body .qtcard .smp{font-family:"IBM Plex Sans KR",sans-serif;font-size:16px;line-height:1.8;color:var(--ink)}
+html.v2 body .qtcard .qev,html.v2 body .qtcard .chq2,html.v2 body .qtcard p.prayer,html.v2 body .qtcard .smq{border:0!important;border-left:3px solid var(--hn-bar)!important;background:var(--hn-bg)!important;border-radius:0 12px 12px 0!important;padding:12px 14px!important;box-shadow:none!important;margin:10px 0}
+html.v2 body .qtcard .chq2.ot{border-left-color:var(--hn-ink)!important}
+html.v2 body .qtcard .qev q,html.v2 body .qtcard .chq2 q{font-family:"Noto Serif KR",serif}
+html.v2 body .qtcard .qevs>.label,html.v2 body .qtcard .chq2 .k,html.v2 body .qtcard .chq2>small{color:var(--hn-ink)}
+html.v2 body .qtcard .chk{background:none!important;border:0!important;padding:0!important;color:var(--muted)}
+html.v2 body .qtcard .chk b,html.v2 body .qtcard .chk strong{color:var(--hn-ink)}
+/* 붙잡을 한 구절 = 이 화면의 주인공 */
+html.v2 body .qtcard .kvsel{background:var(--feat-bg)!important;border:0!important;border-radius:16px!important;padding:18px 18px 16px!important;font-family:"Noto Serif KR",serif;font-size:18px;line-height:1.75;color:var(--ink)}
+html.v2 body .qtcard .kvsel small,html.v2 body .qtcard .kvsel b{font-family:"IBM Plex Sans KR",sans-serif;color:var(--hn-ink)}
+/* 내가 쓰는 칸 = 줄 노트 */
+html.v2 body .qtcard textarea,html.v2 body .smqt textarea{background-color:var(--note-bg)!important;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--note-line) 31px,var(--note-line) 32px)!important;background-attachment:local;border:1px solid var(--note-bd)!important;border-radius:12px!important;line-height:32px!important;padding:2px 14px!important;font-size:16px;min-height:68px}
+html.v2 body .qtcard .stage span{font-size:21px}
+html.v2 body .qtcard .q3+.q3{border-top:1px solid var(--line);padding-top:14px}
+html.v2 body .qtcard .kvsel q{font-family:"Noto Serif KR",serif;font-size:18px;line-height:1.75}
+/* 마친 뒤 = "오늘의 한 장": 초록 면적 줄이고, 붙잡은 말씀이 주인공, 내가 쓴 말은 노트처럼 */
+html.v2 body .qtdone{background:none;padding:6px 0 0;text-align:left;gap:14px}
+html.v2 body .qtdone .qtd-seal{display:none}
+html.v2 body .qtdone .qtd-title{display:flex;align-items:center;gap:8px;font:700 14px "IBM Plex Sans KR",sans-serif;color:var(--accent)}
+html.v2 body .qtdone .qtd-title::before{content:"✓";display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink,#fff);font-size:13px}
+html.v2 body .qtdone .keyv{background:var(--feat-bg);border:0;border-radius:16px;padding:18px;font-family:"Noto Serif KR",serif;font-size:19px;line-height:1.75;color:var(--ink)}
+html.v2 body .qtdone .keyv small{display:block;font:700 12.5px "IBM Plex Sans KR",sans-serif;color:var(--hn-ink);margin-bottom:6px}
+html.v2 body .qtdone .mine{background:none;border-radius:0;padding:12px 2px 0;border-top:1px solid var(--line);font-size:15.5px;line-height:1.75}
+html.v2 body .qtdone .mine b{color:var(--hn-ink);font-size:12.5px;margin-bottom:2px}
+html.v2 body .qtdone .qtd-reward{background:var(--paper);border-radius:14px;padding:14px;text-align:center;display:grid;gap:10px}
+html.v2 body .qtdone .qtd-msg{font-size:14px;color:var(--muted)}
+html.v2 body .mynotes{display:grid;gap:10px;margin-top:8px}
+html.v2 body .mynote{display:block;width:100%;text-align:left;border:0;background:var(--hn-bg);border-left:3px solid var(--hn-bar);border-radius:0 14px 14px 0;padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer}
+html.v2 body .mynote small{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+html.v2 body .mynote q{display:block;quotes:none;font-family:"Noto Serif KR",serif;font-size:16.5px;line-height:1.7}
+html.v2 body .mynote cite{display:block;font-style:normal;font-weight:700;font-size:12px;color:var(--hn-ink);margin-top:4px}
+html.v2 body .mynote p{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--note-bd);font-size:14.5px;line-height:1.65}
+/* 본문: 장과 장 사이를 띠로 나누고, 장 소제목은 이야기 흐름 한 줄로 */
+html.v2 body .bible .chap+.chap{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+html.v2 body .bible .chap h3 .chsub{display:block;margin-top:4px;font:600 13.5px/1.5 "IBM Plex Sans KR",sans-serif;color:var(--hn-ink)}
+html.v2 body .bible .bible-tools{border:0;background:none;padding:0 0 6px;box-shadow:none}
 </style>
 
 <div class="wrap">
@@ -6016,6 +6063,12 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   /* 3) 숫자 넷: 2×2 칸 */
   const tile=(k,v,u,t)=>`<button class="rytile" data-rinfo="${k}"><span class="ryico ${k}">${ic(k)}</span><small>${t}</small><b>${v}<em>${u}</em></b></button>`;
   h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length,"장","말씀 카드")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
+  /* 11/3 UI v3: 내 노트 — 최근에 붙잡은 말씀과 내가 쓴 한 줄(이 탭의 주인공) */
+  { const NL=Object.entries(mem.qt||{}).filter(([k,q])=>q&&q.done&&/^\d+-\d+$/.test(k)).sort((a,b)=>String(b[1].doneAt||"").localeCompare(String(a[1].doneAt||""))||b[0].localeCompare(a[0],undefined,{numeric:true})).slice(0,3);
+    const it=NL.map(([k,q])=>{ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return ""; let kv=null; try{ const v=(q.kv||"").split(":"); if(v.length===3){ kv={b:+v[0],c:+v[1],v:+v[2]}; kv.t=vtxt([kv.b,kv.c,kv.v]); } }catch(e){}
+      const mine=q.obs||q.med||q.pray||"";
+      return `<button class="mynote" data-myn="${k}"><small>${esc(q.doneAt?fmt(parseD(q.doneAt),{month:"long",day:"numeric"}):dayName(w,d))} · ${esc(p.label)}</small>${kv&&kv.t?`<q>${esc(kv.t)}</q><cite>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</cite>`:""}${mine?`<p>${esc(mine)}</p>`:""}</button>`; }).join("");
+    if(it) h+=`<section class="rybox">${hd("내 노트","records","모두 보기")}<div class="mynotes">${it}</div></section>`; }
   /* 그 밖의 것은 접어서 한 줄씩 */
   const nL=lnAll().length;
   h+=`<section class="rybox rymenu">${row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`남긴 한 줄 · ${nL}`):""}${""}${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
@@ -7199,7 +7252,7 @@ function v2Nav(){ const n=document.querySelector(".bnav-in"); if(!n) return; con
   const dl=document.getElementById("dateLine"), tp=document.querySelector("header.top"); if(dl&&tp&&!dl._v2){ dl._v2=1; dl.setAttribute("role","button"); dl.tabIndex=0; const t=()=>tp.classList.toggle("wkopen"); dl.onclick=t; dl.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); t(); } }; } }
 function render(){
   useKRV(qtTabKRV());
-  renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today"); document.body.classList.toggle("recsub",!!(window.CBSR_V2&&view.tab==="record"&&view.recD)); /* 기록의 하위 화면(성경 지도·통독표 등)은 스토리 모음처럼 ‹ 제목 막대만 */ document.body.classList.toggle("tdcov",!!(window.CBSR_V2&&view.tab==="today"&&BIBLE)); if(window.CBSR_V2&&view.tab==="today") setTimeout(tdTone,0);
+  renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today"); document.body.dataset.tab=view.tab; document.body.classList.toggle("recsub",!!(window.CBSR_V2&&view.tab==="record"&&view.recD)); /* 기록의 하위 화면(성경 지도·통독표 등)은 스토리 모음처럼 ‹ 제목 막대만 */ document.body.classList.toggle("tdcov",!!(window.CBSR_V2&&view.tab==="today"&&BIBLE)); if(window.CBSR_V2&&view.tab==="today") setTimeout(tdTone,0);
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
   try{ m.innerHTML=view.tab==="today"?((window.CBSR_V2&&BIBLE?topBanners("today"):"")+renderToday()):view.tab==="challenge"?(window.CBSR_V2?v2ChallengeHTML():renderChallenge()):view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():(window.CBSR_V2?renderRecordV2():renderRecord()); }
@@ -7214,6 +7267,7 @@ function render(){
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
   if(window.CBSR_V2&&view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
   if(window.CBSR_V2&&view.tab==="record"){ pcBind(m,(w,d)=>{ const f=view.bmFrom, t=isRev(d)?"today":f&&f.tab!=="record"?f.tab:"read"; /* 주일은 오늘 탭의 주일 화면으로 */ view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }); m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
+  if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.myn.split("-").map(Number); view.pre=false; view.revW=null; view.w=w; view.d=d; view.tab="qt"; render(); scrollTo({top:0}); });
   if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
     m.querySelectorAll("[data-recseg]").forEach(b=>b.onclick=()=>{ view.recSeg=b.dataset.recseg; const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const rb=m.querySelector("#recBack"); if(rb) rb.onclick=()=>{ ovDone(recBackOv); recBack(); };
