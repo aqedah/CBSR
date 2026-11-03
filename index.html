@@ -1798,11 +1798,11 @@ html.v2 .bmmap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height
 
 /* 하위 화면 위 막대 통일(11/3 목사님): 스토리 모음 · 성경 지도 · 기록의 하위 화면 · 큰 지도 — '‹ 제목', 내려도 위에 붙어 있음 */
 html .libov{padding-top:0}
-html .libtop{position:sticky;top:0;z-index:5;background:var(--paper);margin:0 -16px 12px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 4px}
+html .libtop{position:sticky;top:0;z-index:5;background:var(--paper);margin:0 -16px 12px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 10px}
 html .libx,html.v2 .rdback,html .bmovx{width:44px;height:44px;border:0;border-radius:12px;background:none;color:var(--ink);font:400 30px/1 var(--f-ui);padding:0;display:grid;place-items:center;cursor:pointer;flex:none}
 html .libtop b,html.v2 .rdh.rdh h2,html .bmovtop b{font:700 20px var(--f-disp,serif);color:var(--ink)}
 html.v2 body.recsub header.top{display:none}
-html.v2 body.recsub .rdh.rdh{position:sticky;top:0;z-index:40;background:var(--paper);margin:0 -16px 8px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 4px;gap:6px}
+html.v2 body.recsub .rdh.rdh{position:sticky;top:0;z-index:1300;background:var(--paper);margin:0 -16px 8px;padding-left:10px!important;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 4px;gap:6px}
 html .bmovtop{gap:6px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 4px}
 
 .gbcard .gbgo{width:100%;min-height:0}
@@ -11098,7 +11098,7 @@ const recRow=(go,t,sub)=>`<button class="rrow" data-recgo="${go}"><span><b>${t}<
 function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">${window.CBSR_V2?"‹":`‹ ${back?"돌아가기":"기록"}`}</button><h2>${t}</h2></div>`;
   if(D==="lines") return head("남긴 한 줄")+lnDetailHTML();
   /* 통독표(목사님 2026-11-03): 달마다 날짜 · 본문 · 읽음. 지금 달만 펼치고 나머지는 접음. 줄을 누르면 그날 본문으로 */
-  if(D==="plan"&&window.CBSR_V2){ const t=today0(); PCM=`${t.getFullYear()}-${t.getMonth()}`; return head("통독표")+`<section class="sec rsec">${pcSearchHTML()}<div id="pcBox" class="pcbox">${pcHTML()}</div><p class="lead rnote">${esc(PI.name)} 일정입니다. 날짜를 누르면 그날 본문으로 갑니다.</p></section>`; }
+  if(D==="plan"&&window.CBSR_V2){ const t=today0(); if(view.pcStart){ PCM=view.pcStart; view.pcStart=null; } else if(!PCM) PCM=`${t.getFullYear()}-${t.getMonth()}`; return head("통독표")+`<section class="sec rsec">${pcSearchHTML()}<div id="pcBox" class="pcbox">${pcHTML()}</div><p class="lead rnote">${esc(PI.name)} 일정입니다. 날짜를 누르면 그날 본문으로 갑니다.</p></section>`; }
   if(D==="plan"){ const t0=today0(), M=new Map();
     for(let nn=1;nn<=TOTAL_DAYS;nn++){ const w=Math.floor((nn-1)/7)+1, d=(nn-1)%7; if(!PLAN.plan[w-1]) break; const sun=isRev(d), p=sun?null:dayPlan(w,d); if(!sun&&!p) continue; if(sun&&!WEEKS[w-1]) continue;
       const dt=dateOf(w,d), mk=`${dt.getFullYear()}-${dt.getMonth()}`; if(!M.has(mk)) M.set(mk,{y:dt.getFullYear(),m:dt.getMonth()+1,rows:[],n:0,r:0});
@@ -11905,7 +11905,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length,"장","말씀 카드")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
   /* 그 밖의 것은 접어서 한 줄씩 */
   const nL=lnAll().length;
-  h+=`<section class="rybox rymenu">${row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`남긴 한 줄 · ${nL}`):""}${row("plan","read","통독표")}${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
+  h+=`<section class="rybox rymenu">${row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`남긴 한 줄 · ${nL}`):""}${""}${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
   return h; }
 /* 프로필 숫자를 누르면 자세히(목사님 2026-11-01) */
 function recWeeks(on){ if(!here||here.state==="before") return ""; const W=[]; for(let w=Math.max(1,here.w-3);w<=here.w;w++) W.push(w);
@@ -13098,7 +13098,7 @@ function render(){
     const ta=m.querySelector("#tlAll"); if(ta) ta.onclick=keep(()=>{ view.tlAll=!view.tlAll; });
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
   if(window.CBSR_V2&&view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
-  if(window.CBSR_V2&&view.tab==="record"){ pcBind(m,(w,d)=>{ view.recD=null; rgGoDay(w,d,"read"); }); m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
+  if(window.CBSR_V2&&view.tab==="record"){ pcBind(m,(w,d)=>{ const f=view.bmFrom, t=f&&f.tab!=="record"?f.tab:"read"; view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }); m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
   if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
     m.querySelectorAll("[data-recseg]").forEach(b=>b.onclick=()=>{ view.recSeg=b.dataset.recseg; const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const rb=m.querySelector("#recBack"); if(rb) rb.onclick=()=>{ ovDone(recBackOv); recBack(); };
@@ -13263,6 +13263,7 @@ function pcHTML(){ const D=pcDays(), keys=[...D.values()]; if(!keys.length) retu
   for(let dd=1;dd<=nd;dd++){ const x=D.get(`${Y}-${Mo}-${dd}`); if(!x){ cells+=`<span class="pcc pcn"><b>${dd}</b></span>`; continue; } if(!x.sun){ n++; if(x.st==="on") r++; }
     const lab=x.sun?"돌아보기":pcShort(x.p), full=x.sun?`${x.w}주차 돌아보기`:(x.p.label+(x.p.topic?` · ${x.p.topic}`:""));
     cells+=`<button class="pcc ${x.st}${x.sun?" sun":""}${x.me?" today":""}" data-pcgo="${x.w}-${x.d}" aria-label="${Mo+1}월 ${dd}일 ${esc(full)}${x.st==="on"?", 읽음":x.st==="miss"?", 안 읽음":x.me?", 오늘":""}"><b>${dd}</b><small>${esc(lab)}</small></button>`; }
+  { const used=first.getDay()+nd; for(let i=used;i<42;i++) cells+=`<span class="pcc pce"></span>`; } /* 11/3: 어느 달이든 6줄 — 달을 넘겨도 높이가 같게 */
   return `<div class="pchd"><button class="pcnav" data-pcm="${mi-1}"${mi>0?"":" disabled"} aria-label="이전 달">‹</button><b>${Y}년 ${Mo+1}월</b><span>${r}/${n}일 읽음</span><button class="pcnav" data-pcm="${mi+1}"${mi<months.length-1?"":" disabled"} aria-label="다음 달">›</button></div>
     <div class="pcw">${["일","월","화","수","목","금","토"].map(t=>`<span>${t}</span>`).join("")}</div><div class="pcg">${cells}</div>
     <p class="pclg"><i class="on"></i>읽음 <i class="me"></i>오늘 <i class="miss"></i>안 읽은 지난 날${PCM!==nowK&&months.includes(nowK)?` <button class="pcnow" data-pcnow="1">이번 달 ›</button>`:""}</p>`; }
@@ -13276,9 +13277,8 @@ function pcBind(root,onGo){ const box=root.querySelector("#pcBox"); if(!box) ret
       if(!r.day){ msg.textContent=`${r.label}은(는) 이 통독표에 없습니다.`; return; } onGo(r.day[0],r.day[1]); };
     cg.onclick=go2; fi.onkeydown=e=>{ if(e.key==="Enter") go2(); }; } }
 function openWeekPicker(){
-  if(window.CBSR_V2){ try{ const dt=dateOf(view.w,view.d||0); PCM=`${dt.getFullYear()}-${dt.getMonth()}`; }catch(e){}
-    sheet("통독표",pcSearchHTML()+`<div id="pcBox" class="pcbox">${pcHTML()}</div>`); const R=document.getElementById("sheetRoot"); R.querySelector(".sheet")?.classList.add("pcsheet");
-    pcBind(R,(w,d)=>{ document.getElementById("sheetClose")?.click(); rgGoDay(w,d,view.tab==="record"?"read":view.tab); }); return; } /* 11/3: 주차 목록 대신 통독표 달력(기록 탭과 같은 것) */
+  if(window.CBSR_V2){ if(view.tab==="record"&&view.recD==="plan"){ recBack(); return; } let pm=null; try{ const dt=dateOf(view.w,view.d||0); pm=`${dt.getFullYear()}-${dt.getMonth()}`; }catch(e){}
+    view.bmFrom={tab:view.tab,recD:view.recD||null,y:window.scrollY}; view.pcStart=pm; view.tab="record"; view.recD=null; recGo("plan"); return; } /* 11/3: 위쪽 달력 = 통독표 전체 화면(성경 지도처럼, ‹ 로 보던 곳에 돌아감) */
   const N=NDW(), cur=dispW(), td=today0(); let h=`<div class="wklist" id="wkList">`;
   for(let W=1;W<=N;W++){
     const L=weekDays(W); let dn=0; L.forEach(([w,d])=>{ if(mem.done[keyOf(w,d)]) dn++; });
