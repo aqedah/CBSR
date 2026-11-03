@@ -48,7 +48,8 @@ def build():
         src = [n for n in ns if set(oldch[n]) <= S]
         sp=(f"{AB[ch[0][0]-1]} {ch[0][1]}"+(f"-{ch[-1][1]}" if ch[0][0]==ch[-1][0] and ch[-1][1]!=ch[0][1] else (f"-{AB[ch[-1][0]-1]} {ch[-1][1]}" if ch[0][0]!=ch[-1][0] else "")))
         out.append({'i': i + 1, 'gi': gi, 'ds': dt.isoformat(), 'ch': ch, 'spec': sp, 'label': label(ch), 'topic': tops[i],
-                    'prim': src[0] if src else 0, 'src': src, 'part': [n for n in ns if n not in src]})
+                    'prim': (ns[0] if len(ns)==1 and oldch[ns[0]]==[tuple(x) for x in ch] else 0),  # 11/4 목사님: 옛 원고는 폐기, 범위가 똑같은 날만 재사용
+                     'src': src, 'part': [n for n in ns if n not in src]})
         dt += datetime.timedelta(1)
     assert out[-1]['ds'] == '2027-12-31'
     allc = [tuple(x) for d in out for x in d['ch']]

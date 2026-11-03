@@ -1961,7 +1961,7 @@ function y27Remap(){
     if(CHRIST_K["y:"+ok]) nk.CK["y:"+k]=CHRIST_K["y:"+ok]; if(TX["y365:"+ok]) nk.TX["y365:"+k]=TX["y365:"+ok];
     if(SUMMARY[ow-1]&&SUMMARY[ow-1][od]) SUMN[w-1][d]=SUMMARY[ow-1][od];
     /* 퀴즈: 통째로 든 옛 날들의 문제 가운데 근거가 새 범위 안에 있는 것 */
-    const Q=[]; for(const n of x.src){ if(BAD.has(n)) continue; const [a,b]=oW(n); (CURATED[a+"-"+(b+1)]||[]).forEach(q=>{ if(!q.ref||inR(x.ch,q.ref)) Q.push(q); }); } if(Q.length) nk.CUR[k1]=Q; }
+    const Q=[]; for(const n of [x.prim]){ if(BAD.has(n)) continue; const [a,b]=oW(n); (CURATED[a+"-"+(b+1)]||[]).forEach(q=>{ if(!q.ref||inR(x.ch,q.ref)) Q.push(q); }); } if(Q.length) nk.CUR[k1]=Q; }
   const nW=W.length; for(let i=0;i<nW;i++){ W[i] ||= []; SUMN[i] ||= []; const L=W[i].filter(Boolean); if(!L.length){ WKN.push({t:"",story:"",christ:""}); continue; }
     const a=L[0].ch[0], z=L[L.length-1].ch.slice(-1)[0]; WKN.push({t:a[0]===z[0]?`${PLAN.abbr[a[0]-1]} ${a[1]}–${z[1]}`:`${PLAN.abbr[a[0]-1]} ${a[1]} – ${PLAN.abbr[z[0]-1]} ${z[1]}`,story:"",christ:""}); }
   const RP=(o,n,pre)=>{ for(const k in o) if(!pre||k.startsWith(pre)) delete o[k]; Object.assign(o,n); };
@@ -3702,7 +3702,7 @@ let PV_FORCE=null;
 function PV(){ if(PV_FORCE) return PV_FORCE; try{ const u=new URLSearchParams(location.search).get("pv"); if(u==="A"||u==="B") return u; const s=localStorage.getItem("cbsr-pv"); if(s==="A"||s==="B") return s; }catch(e){} return NOW().getFullYear()>=2028?"B":"A"; }
 /* 이야기 원고 묶음: 365일은 STORYC(날 번호), 리딩지저스 45주는 STORYC_RJ(주·요일로 만든 날 번호) */
 function SC_SRC(){ if(!window.CBSR_V2) return null; /* v1은 v2로 바꿀 때까지 그대로 */ return MODE==="y365"&&typeof STORYC!=="undefined"?STORYC:(MODE==="rj"&&typeof STORYC_RJ!=="undefined"?STORYC_RJ:null); }
-function storyDay(no){ const SC=SC_SRC(), C=SC?SC[no]:null; if(!C) return null; if(C.A||C.B) return C[PV()]||null; return (MODE==="rj"||PV()==="A")?C:null; }
+function storyDay(no){ const SC=SC_SRC(), C=SC?SC[no]:null; if(!C) return null; if(Y27&&(C.A||C.B)) return C.A||null; /* 2027판: 2027 원고(A)만, 2028 원고는 폐기 */ if(C.A||C.B) return C[PV()]||null; return (MODE==="rj"||PV()==="A")?C:null; }
 const PV_ORIG={EYE:{},DETAIL:{},GUIDE:{},KWQ:{}};
 const PVQ=new Set();
 function applyPV(){ const SC=SC_SRC(); if(!SC) return;
@@ -5096,7 +5096,7 @@ function nextPreview(W,label){
 /* ===== 주일 = 설교와 잇기(2026-11-03 목사님): 청년부 설교 본문을 미리 넣어 두고(ux/sermons.json) 주일에 띄움.
    본문 탭: 설교 본문이 든 장 전체 + 설교 본문은 진하게·꿀색 바탕 / 묵상 탭: 그 장(이야기 단위)을 내러티브 비평으로 읽은 묵상 / 오늘 탭: 설교 본문 카드 ===== */
 const SERM_T=(()=>{ try{ return new URLSearchParams(location.search).get("sermtest")==="1"; }catch(e){ return false; } })();
-function sermOf(w){ if(typeof SERMON==="undefined"||!isRev(6)) return null; const S=SERMON[dsOf(dateOf(w,6))]; return S&&(!S.sample||SERM_T)?S:null; }
+function sermOf(w){ return null; /* 11/4 목사님: 주일 설교 잇기는 거둠(통독 앱이 주보 역할까지는 과함) */ if(typeof SERMON==="undefined"||!isRev(6)) return null; const S=SERMON[dsOf(dateOf(w,6))]; return S&&(!S.sample||SERM_T)?S:null; }
 const inSeg=(sg,b,c,v)=>sg.some(([B,c1,v1,c2,v2])=>B===b&&(c>c1||c===c1&&v>=v1)&&(c<c2||c===c2&&v<=v2));
 function segText(sg){ const [b,c1,v1,c2,v2]=sg, out=[]; for(let c=c1;c<=c2;c++){ const C=BIBLE&&BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!C) continue; const a=c===c1?v1:1, z=Math.min(c===c2?v2:C.length,C.length); for(let v=a;v<=z;v++) out.push(C[v-1]); } return out.join(" "); }
 const smQ=(sg,ref)=>`<blockquote class="smq"><p>“${esc(segText(sg))}”</p><cite>${esc(ref)}</cite></blockquote>`;
@@ -6731,7 +6731,7 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   const stage=q.done?2:read?1:0; TD.stage=stage;
   if(window.CBSR_V2) return renderTodayV3(w,d,p,{key,q,read,S,ph,dt,live,kv,g,mins});
   let h=`<section class="tdh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin">
-    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2&&MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"&&!Y27?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
+    <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}${window.CBSR_V2&&MODE==="y365"&&!Y27?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</span>${live?(MODE==="y365"&&!Y27?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
     <div class="tdttl"><p class="tdk">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1></div></div>
     ${ph&&ph.link?`<a class="tdcr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}</section>
   <section class="tdsheet">`;
@@ -6772,7 +6772,7 @@ try{ if(localStorage.getItem("v2:tdswiped")) document.documentElement.classList.
 function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=todayNext(w,d,o); TD.act=N.act; TD.stage=q.done?2:read?1:0; TD.past=dayDiff(today0(),dt)<0;
   /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
   let h=td4Top(w,d,ph,live)+`
-  <div class="td4head"><p class="td4k">${esc(MODE==="rj"?dispTitle(w):dayName(w,d))}${MODE==="y365"?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</p><h1>${esc(p.label)}</h1>${p.topic&&p.topic!==p.label?`<p class="td4r">${esc(p.topic)}</p>`:""}</div>
+  <div class="td4head"><p class="td4k">${esc(MODE==="rj"?dispTitle(w):dayName(w,d))}${MODE==="y365"&&!Y27?`<button class="pvsw" id="pvSw" title="시험용: 1년차·2년차 관점 바꾸기">${PV()==="B"?"2028판":"2027판"} ⇄</button>`:""}</p><h1>${esc(p.label)}</h1>${p.topic&&p.topic!==p.label?`<p class="td4r">${esc(p.topic)}</p>`:""}</div>
   <div class="td4sumb">${g.today?`<p class="td4sum">${esc(g.today)}</p>`:""}</div></div><div class="td4tx">`;
   const n=(S||[]).length;
   let sec="";
@@ -7613,7 +7613,8 @@ document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==
 /* 2027년부터 v2는 365 통독만 둡니다(목사님 결정 2026-10-28). 리딩지저스 마지막 주(2027-01-03)가 지나면 365로 옮기고 메뉴에서 감춥니다. 지난 기록은 ?p=rj 로 볼 수 있습니다 */
 /* 11/4 목사님: 2027 통독은 1/1(금)부터 — 앱도 그날 바꿈 */
 const RJ_OFF=()=>!!window.CBSR_V2&&NOW()>=new Date("2027-01-01T00:00:00");
-if(RJ_OFF()&&MODE==="rj"&&new URLSearchParams(location.search).get("p")!=="rj"){ try{ localStorage.setItem("cbsr-mode","y365"); }catch(e){} const u=new URL(location.href); u.searchParams.set("p","365"); location.replace(u.toString()); }
+/* 11/4 목사님: 1/1 정식 출시부터 리딩지저스·옛 365판은 없앰(최신 통독표만). 기기에 저장된 기록은 지우지 않음 */
+if(RJ_OFF()&&MODE==="rj"){ try{ localStorage.setItem("cbsr-mode","y365"); }catch(e){} const u=new URL(location.href); u.searchParams.set("p","365"); location.replace(u.toString()); }
 if(window.CBSR_V2) v2Nav(); if(window.CBSR_V2) setTimeout(()=>{ switchNotice(); welcomeTour(); },1200);
 if(window.CBSR_V2&&/[?&]admin=1/.test(location.search)){ view.tab="admin"; render(); }
 /* 검토용: v2.html?day=80 → 그날 이야기 바로 열기(통독 완료 여부와 상관없이) */
