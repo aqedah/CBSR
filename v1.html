@@ -1804,7 +1804,7 @@ html.v2 body.recsub .rdh.rdh{position:sticky;top:0;z-index:40;background:var(--p
 html .bmovtop{gap:6px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 4px}
 
 .gbcard .gbgo{width:100%;min-height:0}
-.gbov{position:fixed;inset:0;z-index:9600;background:var(--paper,#F3F5F1);color:var(--ink);display:flex;flex-direction:column;max-width:560px;margin:0 auto;font-family:var(--f-ui)}
+.gbov{touch-action:manipulation;-webkit-tap-highlight-color:transparent;position:fixed;inset:0;z-index:9600;background:var(--paper,#F3F5F1);color:var(--ink);display:flex;flex-direction:column;max-width:560px;margin:0 auto;font-family:var(--f-ui)}
 .gbtop{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 12px) 12px 8px 18px}.gbtop b{flex:1;font-size:16px}.gbtop .gbn{margin-left:auto;font-size:14px;color:var(--rysub,#5F6B66)}
 .gbx{width:44px;height:44px;border:0;background:none;color:var(--ink);font-size:22px;cursor:pointer}
 .gbchip{font-size:13px;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:3px 12px;background:var(--card)}
@@ -12937,8 +12937,8 @@ function gbReadSet(){ const RD=new Set(); for(const k in mem.done){ const [w,d]=
 const GBSC=[["all","전체"],["ot","구약"],["nt","신약"],["gos","복음서"],["read","내가 읽은 곳"]]; /* 목사님 11/3: 기본은 전체, 범위는 사용자가 고름 */
 function gbIn(q,scope,RD){ const b=q.rv[0]; return scope==="ot"?b<=39:scope==="nt"?b>=40:scope==="gos"?(b>=40&&b<=43):scope==="read"?q.ch.every(([bb,c])=>RD.has(bb+"-"+c)):true; }
 function gbPool(lv,scope){ const RD=scope==="read"?gbReadSet():null; return GB.q.filter(q=>q.d===lv&&gbIn(q,scope,RD)); }
-function gbCardHTML(){ const g=gbMem(), c=g.cur, R=g.runs, last=["e","m","h"].map(k=>R[k]&&R[k].last?`${GBLV.find(x=>x[0]===k)[1]} ${R[k].last}`:"").filter(Boolean).join(" · ");
-  return `<section class="gbcard"><button class="gsm gbgo" data-gbopen="1"><small>성경 골든벨</small><b>${c&&c.i<c.ids.length?`이어 풀기 · ${esc(GBLV.find(x=>x[0]===c.lv)[1])} ${c.i+1}/${c.ids.length}`:"쉬움 · 보통 · 어려움"}</b><span>${last?`지난 회차 ${esc(last)}`:"구약·복음서·사도행전 500문제에서 10문제씩"}</span></button></section>`; }
+function gbCardHTML(wait){ const g=gbMem(), c=g.cur, R=g.runs, last=["e","m","h"].map(k=>R[k]&&R[k].last?`${GBLV.find(x=>x[0]===k)[1]} ${R[k].last}`:"").filter(Boolean).join(" · ");
+  return `<section class="gbcard"><button class="gsm gbgo" data-gbopen="1"><small>성경 골든벨</small><b>${c&&c.i<c.ids.length?`이어 풀기 · ${esc(GBLV.find(x=>x[0]===c.lv)[1])} ${c.i+1}/${c.ids.length}`:"쉬움 · 보통 · 어려움"}</b><span>${wait?"이 날을 기다리는 동안 골든벨을 풀어 보세요":last?`지난 회차 ${esc(last)}`:"구약·복음서·사도행전 500문제에서 10문제씩"}</span></button></section>`; }
 let GBV=null; /* 화면 상태: {s:"pick"|"q"|"end", lv, scope, err} */
 function gbOpen(){ GBV={s:"pick",lv:null,scope:"all"}; ovOpen(gbClose); gbDraw(); gbLoad().then(()=>gbDraw()).catch(()=>{ if(GBV){ GBV.err=1; gbDraw(); } }); }
 function gbClose(pop){ if(pop!==true) ovDone(gbClose); GBV=null; document.getElementById("gbPlay")?.remove(); document.documentElement.classList.remove("story-on"); render(); }
@@ -12979,11 +12979,14 @@ function gbDraw(){ document.getElementById("gbPlay")?.remove(); if(!GBV) return;
   document.documentElement.classList.add("story-on"); gbBind(); }
 function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; const g=gbMem(), c=g.cur, on=(s,f)=>el.querySelectorAll(s).forEach(b=>b.onclick=f);
   on("[data-gbx]",()=>gbClose());
+  el.querySelectorAll(".gbl,.gbscope label").forEach(l=>l.onclick=e=>{ const i=l.querySelector("input"); if(!i||i.disabled) return; e.preventDefault(); if(!i.checked){ i.checked=true; i.dispatchEvent(new Event("change")); } });
   el.querySelectorAll('input[name="gblv"]').forEach(x=>x.onchange=()=>{ GBV.lv=x.value; gbDraw(); setTimeout(()=>document.querySelector(`#gbPlay input[value="${x.value}"]`)?.focus(),0); });
   el.querySelectorAll('input[name="gbsc"]').forEach(x=>x.onchange=()=>{ GBV.scope=x.value; gbDraw(); });
   on("[data-gbstart]",()=>{ if(GBV.lv) gbNew(GBV.lv,GBV.scope); });
   on("[data-gbresume]",()=>{ GBV.s="q"; gbDraw(); });
-  el.querySelectorAll('input[name="gbo"]').forEach(x=>x.onchange=()=>{ c.sel=x.value; save(); const b=el.querySelector("[data-gbsub]"); if(b) b.disabled=false; el.querySelectorAll(".gbo").forEach(l=>l.classList.toggle("on",l.querySelector("input").checked)); });
+  const pickO=v=>{ c.sel=v; save(); const b=el.querySelector("[data-gbsub]"); if(b) b.disabled=false; el.querySelectorAll(".gbo").forEach(l=>{ const i=l.querySelector("input"); i.checked=i.value===v; l.classList.toggle("on",i.value===v); }); };
+  el.querySelectorAll('input[name="gbo"]').forEach(x=>x.onchange=()=>pickO(x.value));
+  el.querySelectorAll(".gbo").forEach(l=>l.onclick=e=>{ const i=l.querySelector("input"); if(!i||i.disabled) return; e.preventDefault(); pickO(i.value); }); /* 11/3: 휴대폰에서 두 번 눌러야 되던 것 — 보기 칸을 누르면 바로 고름 */
   const fin=(st)=>{ const q=gbQ(); c.ans[q.id]={sel:st==="s"?null:c.sel,st}; c.sel=null; g.seen[q.id]=st==="r"?1:st==="w"?2:3; save(); const y=el.querySelector(".gbbody")?.scrollTop||0; gbDraw(); const b2=document.querySelector("#gbPlay .gbbody"); if(b2){ b2.scrollTop=y; const fb=b2.querySelector(".gbfb"); if(fb&&fb.getBoundingClientRect().top>b2.getBoundingClientRect().bottom-40) b2.scrollTop=y+Math.min(fb.getBoundingClientRect().top-b2.getBoundingClientRect().bottom+160, fb.offsetTop); } }; /* 문제는 그대로 두고, 해설이 화면 밖이면 조금만 올림 */
   on("[data-gbsub]",()=>{ const q=gbQ(); if(!c.sel) return; fin(c.sel===q.a?"r":"w"); });
   on("[data-gbskip]",()=>fin("s"));
@@ -12997,7 +13000,7 @@ function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=
   const nq=Object.values(mem.qt).filter(q=>q.done&&q.kv).length, Qz=mem.q[key]&&mem.q[key].first;
   const cardBtn=`<button class="gsm" data-gplay="card"><small>빈칸 채우기</small><b>${nq?`모은 카드 ${nq}장`:"아직 카드 없음"}</b><span>${nq?"빈칸을 채워 외웁니다":"묵상 노트를 마치면 열립니다"}</span></button>`;
   let h=`<section class="chhd"><h2>도전</h2><p>${esc(p?p.label:"")}</p></section>`;
-  if(chFuture(w,d)){ const dt=dateOf(w,d); return h+`<section class="sec glock"><p class="lead">이 날의 도전은 <b>${esc(fmt(dt,{month:"long",day:"numeric"}))}</b>에 열립니다. 같은 날 함께 읽고 풀어 봅니다.</p>${flipHTML(w,d)}</section><section class="gpair">${cardBtn}</section>`; }
+  if(chFuture(w,d)){ const dt=dateOf(w,d); return h+`<section class="sec glock"><p class="lead">이 날의 도전은 <b>${esc(fmt(dt,{month:"long",day:"numeric"}))}</b>에 열립니다. 같은 날 함께 읽고 풀어 봅니다.</p>${flipHTML(w,d)}</section>${gbCardHTML(1)}<section class="gpair">${cardBtn}</section>`; } /* 11/3: 미래 날에도 골든벨은 열림 — 기다리는 동안 풀어 보기 */
   const L=gLook(w,d,key); let PS=[]; try{ PS=[...new Set(storySlides(w,d).map(x=>x.ph).filter(Boolean))]; }catch(e){} const tp0=PS[1]||ph;
   if(L) h+=`<section class="grecw"><button class="grec glrec" data-gplay="look"${tp0?` style="--gp:url('${esc(tp0.u)}')"`:""}><small>오늘의 도전</small><b>본문에서 찾기</b><span>질문 ${L.qs.length}개 · 본문을 읽고 답이 되는 절을 찾아 누릅니다</span><em>${esc(gcut(L.qs[0].n,60))}</em>${R.look&&/^\d+\/\d+$/.test(R.look)?`<span class="glfound">오늘 찾은 말씀 ${R.look.split("/")[0]}곳 ✓</span>`:""}</button></section>`;
   else h+=`<section class="sec"><p class="lead">이 날은 '본문에서 찾기' 질문이 아직 없습니다.</p></section>`;
