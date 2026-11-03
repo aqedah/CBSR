@@ -1803,6 +1803,7 @@ html .libtop b,html.v2 .rdh.rdh h2,html .bmovtop b{font:700 20px var(--f-disp,se
 html.v2 body.recsub header.top{display:none}
 html.v2 body.recsub .rdh.rdh{position:sticky;top:0;z-index:1300;background:var(--paper);margin:-8px -16px 8px;padding-left:10px!important;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 4px;gap:6px}
 html .smv{font-weight:700;background:linear-gradient(transparent 8%,rgba(214,168,74,.26) 8%,rgba(214,168,74,.26) 92%,transparent 92%);color:var(--ink)}html .smbible{margin-top:12px}html .smq{margin:10px 0;padding:10px 14px;border-left:3px solid #c9a24a;background:rgba(214,168,74,.08);border-radius:0 10px 10px 0}html .smq p{margin:0;font-family:"Noto Serif KR",serif;line-height:1.75}html .smq cite{display:block;margin-top:6px;font-style:normal;font-size:12.5px;font-weight:700;color:#8a5f0e}html .smp{line-height:1.7;margin:6px 0}html .smpray{color:var(--muted)}html .smsaved{font-size:12px;color:var(--muted);min-height:1em}html .smtd .row{display:flex;gap:8px;margin-top:10px}html .smcard .bmjump{margin-top:8px}
+html .qtdonec{margin-bottom:6px}html .qtdonec #qtDoneSec{padding:0;margin:0;border:0;background:none}html .qtfoldk{margin:18px 4px 8px;font-size:13px;color:var(--muted)}html details.qtfold{margin:0 0 10px;padding:0}html details.qtfold>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;font-family:"Noto Serif KR",serif;font-size:17px;font-weight:700}html details.qtfold>summary::-webkit-details-marker{display:none}html details.qtfold>summary b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent,#2f5d4e);color:#fff;font:700 14px/28px "IBM Plex Sans KR",sans-serif;text-align:center}html details.qtfold>summary span{flex:1}html details.qtfold>summary::after{content:"›";font-size:22px;color:var(--muted);transform:rotate(90deg);transition:transform .2s}html details.qtfold[open]>summary::after{transform:rotate(-90deg)}html details.qtfold>section{padding:0 18px 14px}
 html .bmov .bmovmap .bmmap{inset:34px 16px 0!important;border-radius:16px!important;overflow:hidden;box-shadow:0 0 0 1px var(--line)!important} /* 11/3: 성경 지도 화면과 같은 모양(지도는 둥근 상자, 양옆 16px) */html .bmovtop{gap:6px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 10px}
 
 .gbcard .gbgo{width:100%;min-height:0}
@@ -8139,13 +8140,20 @@ function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.don
     bar.querySelector(".qtprev").onclick=()=>{ if(view.qtStep>0){ view.qtStep--; show(); scrollTo({top:0}); } };
     const b=nx.querySelector(".qtnb"); if(b) b.onclick=()=>{ view.qtStep++; show(); scrollTo({top:0}); }; };
   show(); }
-/* 11/3 목사님: 묵상을 마친 뒤 다시 와도 같은 모양(그림 머리 + 흰 상자). 한 장씩 넘기기만 없음 */
+/* 11/3 목사님: 마친 뒤의 묵상 탭이 "신문 읽는 것 같다" → 맨 위에 마친 결과(내가 남긴 말·붙잡은 말씀) 한 상자,
+   그 아래 네 단계는 각각 접힌 상자로. 열면 그대로 고칠 수 있음 */
 function qtDoneLook(m){ const hd=m.querySelector("section.qthd"); if(!hd||m.querySelector(".qtcard")) return; const p=dayPlan(view.w,view.d);
-  const secs=[...m.querySelectorAll("section.sec")].filter(x=>x!==hd); secs.forEach(x=>x.classList.add("q3")); hd.style.display="none";
+  const dn=m.querySelector("#qtDoneSec"); const secs=[...m.querySelectorAll("section.sec")].filter(x=>x!==hd&&x!==dn); hd.style.display="none";
+  const G=[]; secs.forEach(x=>{ const lab=x.querySelector(":scope>.label"); const start=x.querySelector(":scope>.stage")||(lab&&/기도/.test(lab.textContent)); if(start||!G.length) G.push([x]); else G[G.length-1].push(x); });
   const top=document.createElement("section"); top.className="qth3";
   top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">묵상 노트 · ${esc(MODE==="y365"?dayNo(view.w,view.d)+"일째":dayName(view.w,view.d))}</span><h2>${esc(p.topic||p.label)}</h2>${p.topic&&p.topic!==p.label?`<small>${esc(p.label)}</small>`:""}</div><div class="qphbtn"></div></div>`;
   const hb=hd.querySelector("#qtHelp"); if(hb) top.querySelector(".qphbtn").appendChild(hb);
-  hd.before(top); const card=document.createElement("div"); card.className="daycard qtcard"; top.before(card); card.append(top,...secs); }
+  const card=document.createElement("div"); card.className="daycard qtcard qtdonec"; hd.before(card); card.append(top); if(dn) card.append(dn);
+  const lab=document.createElement("p"); lab.className="qtfoldk"; lab.textContent="묵상 노트 다시 보기 · 눌러서 열고 고칠 수 있습니다"; card.after(lab);
+  let last=lab; G.forEach((g,i)=>{ const st=g[0].querySelector(":scope>.stage span"), lb=g[0].querySelector(":scope>.label"); const t=((st||lb||{}).textContent||"").trim();
+    const d=document.createElement("details"); d.className="daycard qtfold"; d.innerHTML=`<summary><b>${i+1}</b><span>${esc(t)}</span></summary>`;
+    g.forEach(x=>{ x.classList.add("q3"); const s0=x.querySelector(":scope>.stage"); if(s0&&x===g[0]) s0.style.display="none"; else if(lb&&x===g[0]&&!st) lb.style.display="none"; d.append(x); });
+    last.after(d); last=d; }); }
 function bookFinCheck(k){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return; mem.bookFin ||= {};
   for(const b of [...new Set(p.ch.map(x=>x[0]))]){ if(!mem.bookFin[b]&&bookDone(b)){ mem.bookFin[b]=todayStr(); save(); setTimeout(()=>bookCover(b),1400); return; } } }
 
