@@ -10482,8 +10482,9 @@ let TerrTL=null; function terrLayer(k,o){ if(!TerrTL) TerrTL=L.GridLayer.extend(
       if(terrHas(t,c.z,c.x,c.y)) src=U(c.z,c.x,c.y);
       else if(c.z>8&&terrHas(t,c.z-1,c.x>>1,c.y>>1)){ src=U(c.z-1,c.x>>1,c.y>>1); big=true; } /* 3차 R3-16: 조각이 없는 곳은 한 단계 낮은 조각을 두 배로 키워 메움 */
       if(!src){ setTimeout(()=>{ if(!d._gone) done(null,d); },0); return d; } /* 원래 지형 자료가 없는 곳(비워 두는 자리) */
-      const im=document.createElement("img"); im.alt=""; im.decoding="async"; d._im=im;
-      im.style.cssText=big?`position:absolute;width:512px;height:512px;max-width:none;left:${-(c.x&1)*256}px;top:${-(c.y&1)*256}px`:"position:absolute;left:0;top:0;width:256px;height:256px;max-width:none";
+      const im=document.createElement("img"); im.alt=""; im.decoding="async";
+      if(!big){ /* 원래 배율 조각: 그림 한 장만(화면 요소를 늘리지 않게) */ im._im=im; im.onload=()=>{ if(!im._gone) done(null,im); }; im.onerror=()=>{ im._bad=1; }; im.src=src; return im; }
+      d._im=im; im.style.cssText=`position:absolute;width:512px;height:512px;max-width:none;left:${-(c.x&1)*256}px;top:${-(c.y&1)*256}px`;
       im.onload=()=>{ if(!d._gone) done(null,d); };
       im.onerror=()=>{ d._bad=1; }; /* 못 받음: 완료로 알리지 않음 → 그 자리의 옛 지형(부모 조각)이 지워지지 않고 남음 */
       d.appendChild(im); im.src=src; return d; } });
@@ -10525,7 +10526,7 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
        사해는 물이 줄기 전 물가로. 가장자리는 투명하게 바깥 Esri 바탕과 이어짐 */
     /* 넓은 지역(이탈리아~메소보다미아 5–9배율, 레반트·시내·애굽 10–11배율)도 같은 방식의 지형 조각으로(11/2) */
     if(typeof TERRWIDE!=="undefined"&&TERRWIDE) [["terrw",6],["terrm",7]].forEach(([k,zi])=>{ const W=TERRWIDE[k]; if(!W) return; const R=W.regs, b=L.latLngBounds([[Math.min(...R.map(r=>r[2])),Math.min(...R.map(r=>r[0]))],[Math.max(...R.map(r=>r[3])),Math.max(...R.map(r=>r[1]))]]);
-      if(k==="terrw"&&W.minZoom<=7&&W.maxZoom>=7) terrLayer(k,{minZoom:5,minNativeZoom:7,maxNativeZoom:7,maxZoom:13,bounds:b,zIndex:zi,className:"terrhi terrbk",keepBuffer:8,updateWhenZooming:false}).addTo(map); /* 11/4 목사님 휴대폰 영상: 카메라가 날아가듯 축소할 때 새로 드러난 가장자리에 아직 지형 조각이 없어 옅은 바탕 지도가 비침(흰 깜빡임) → 같은 색감의 7배율 지형을 맨 아래에 늘 한 겹 */
+      /* 11/4: 7배율 지형을 맨 아래에 늘 깔던 것은 휴대폰에서 그림이 너무 많아 지형·지명이 그려지지 않아(목사님 영상) 뺌 */
       terrLayer(k,{minZoom:W.minZoom,minNativeZoom:W.minZoom,maxNativeZoom:W.maxZoom,maxZoom:13,bounds:b,zIndex:zi,className:"terrhi",keepBuffer:map.options.keepBuf||3}).addTo(map); });
     if(typeof TERRHI!=="undefined"&&TERRHI) terrLayer("terrhi",{minZoom:TERRHI.minZoom,minNativeZoom:TERRHI.minZoom,maxNativeZoom:TERRHI.maxZoom,maxZoom:13,bounds:TERRHI.bounds,zIndex:8,className:"terrhi",keepBuffer:map.options.keepBuf||3,attribution:"지형: AWS Terrain Tiles(SRTM)"}).addTo(map);
     { const inTour=!!el.closest(".bmt2"); nmMarks(map,NMLS.filter(x=>x[3]==="lmk"),false,null).addTo(map); /* 랜드마크 산 넷은 늘(11/4 목사님) */
