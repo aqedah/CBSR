@@ -10247,7 +10247,7 @@ const foeAs=(as,nm)=>as==="soldier"&&FOE_RE.test(nm||"")?"foe":as;
 function mvChar(name,as){ if(as) return as; const f=MV_NAME.find(x=>x[2]===name||x[0]===name); return f?f[1]:"man"; }
 /* 도트 효과(11/4 목사님: 이모지 대신 인물 그림과 같은 도트로). 그림은 모두 CC0 공개 자료(site_src/img/fx/SOURCES.txt) — 그림 띠를 한 칸씩 넘겨 움직임.
    [한 칸 폭, 높이, 칸 수, 한 바퀴 초] */
-const PXS={altarfire:[48,32,12,1.1],firefall:[10,26,30,.9],firechariot:[68,9,30,.9],whirlwind:[16,16,4,.42]};
+const PXS={altarfire:[48,32,12,1.1],firefall:[10,26,30,.9],firechariot:[60,30,4,.52],whirlwind:[16,16,4,.42]};
 function pxSpr(k,sc){ const [w,h,n,d]=PXS[k]; return `<i class="pxs" style="width:${w*sc}px;height:${h*sc}px;background-image:url(img/fx/${k}.png);background-size:${w*n*sc}px ${h*sc}px;--pxe:${-w*n*sc}px;animation:pxs ${d}s steps(${n}) infinite"></i>`; }
 function pxMark(map,ll,k,o,z){ o=o||{}; const sc=o.s||2, [w,h]=PXS[k];
   return L.marker(ll,{interactive:false,keyboard:false,zIndexOffset:z||2800,icon:L.divIcon({className:"",iconSize:[0,0],html:`<span class="pxwrap${o.cls?" "+o.cls:""}" style="left:${-w*sc/2+(o.dx||0)}px;top:${-h*sc+(o.dy||0)}px">${pxSpr(k,sc)}</span>`})}).addTo(map); }
@@ -11826,7 +11826,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     fish:async(st,my)=>{ if(!main) return true; const c=main.getLatLng(); [main,...fol.map(f=>f.m)].forEach(m=>{ const x=m.getElement&&m.getElement(); if(x) x.classList.add("mvhide"); });
       skyM(c,'<span class="mvfish">🐋<b>물고기 뱃속의 요나</b></span>'); return sleep(Math.max(5200,needMs({r:st.r})),my); } }; /* 천사의 깨움은 두 번(왕상 19:5, 7) */
   async function ascend(my,si){ if(!main) return; const c0=main.getLatLng(), P0=map.latLngToContainerPoint(c0); if(!(await sleep(1800,my))) return;
-    const ch=pxMark(map,map.containerPointToLatLng(P0.add(L.point(-190,-10))),"firechariot",{s:3,dy:14},2800); SKY.push(ch); /* 11/4: 🔥🐎 대신 도트 불덩이(CC0) — 꼬리를 끌며 지나감 */
+    const ch=pxMark(map,map.containerPointToLatLng(P0.add(L.point(-190,-10))),"firechariot",{s:2,dy:18},2800); SKY.push(ch); /* 11/4 목사님: 🔥🐎 대신 불말 두 마리가 뛰며 끄는 불수레(직접 그린 도트, 시안 5 도약) */
     let t0=clk; while(clk-t0<1600){ if(!(await sleep(30,my))) return; const f=(clk-t0)/1600; ch.setLatLng(map.containerPointToLatLng(P0.add(L.point(-190+380*f,-10+Math.sin(f*Math.PI)*-14)))); }
     fol.forEach(f=>{ f.m.setLatLng(map.containerPointToLatLng(P0.add(L.point(-34,6)))); }); E2(["😮","😭"],3);
     const wh=pxMark(map,c0,"whirlwind",{s:5,dy:10,cls:"pxgrow"},2750); SKY.push(wh); /* 11/4: 🌪️ 대신 도트 회오리바람(CC0) */
