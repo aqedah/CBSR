@@ -31,7 +31,7 @@ T.append(dict(id="elijah",n="엘리야의 길",sub="그릿 시내에서 요단 �
  d="가뭄을 선포한 엘리야가 숨어 지내다 갈멜 산에서 바알 선지자들과 맞서고, 이세벨을 피해 호렙 산까지 도망했다가, 엘리사를 불러 함께 걷고 회오리바람으로 하늘에 올라가기까지의 길입니다.",
  start=P("디셉(길르앗)",32.30,35.85),steps=[
  dict(mood="🙏",t="그릿 시내에 숨다",s="왕상 17장",n="가뭄을 선포한 뒤, 엘리야는 요단 앞 그릿 시냇가에 숨고 까마귀가 먹을 것을 나릅니다.",p=[P("그릿 시내?",32.33,35.62)],r=[11,17,6],z=9.5),
- dict(mood="🙏😊",t="사르밧 과부의 집",s="시돈 땅",n="시내가 마르자 이방 땅 사르밧으로 갑니다. 과부의 통의 가루와 병의 기름이 떨어지지 않습니다.",p=[_(32.8,35.6),P("사르밧",33.37,35.27)],r=[11,17,16],z=8.5),
+ dict(mood="🙏😊",t="사르밧 과부의 집",s="시돈 땅",n="시내가 마르자 이방 땅 사르밧으로 갑니다. 과부의 통의 가루와 병의 기름이 떨어지지 않습니다.",p=[_(32.80,35.50),P("사르밧",33.37,35.27)],r=[11,17,16],z=8.5),
  dict(mood="🙏",t="아합에게 보이라",s="삼 년째",n="하나님의 말씀을 따라 엘리야가 숨어 있던 곳에서 나와 아합을 만나러 갑니다.",p=[P("사마리아",32.28,35.20)],r=[11,18,1],z=8.5),
  dict(mood="🙏",t="갈멜 산으로",s="왕상 18장",n="아합이 이스라엘 모든 자손과 바알의 선지자들을 갈멜 산으로 모읍니다. 엘리야도 그리로 갑니다.",p=[P("갈멜 산",32.67,35.09)],r=[11,18,20],z=9),
  dict(mood="😶",t="바알을 불러도",s="아무 소리도 없고",stay=1,pin=[["바알의 선지자","man",P("",32.685,35.07)],["아세라의 선지자","man",P("",32.66,35.065)]],n="바알의 선지자들이 아침부터 저녁 소제 드릴 때까지 바알의 이름을 부르고 몸을 상하게 하며 떠들어도, 아무 소리도 없고 응답하는 자도 없습니다.",pre=[11,18,26],r=[11,18,29],z=9.5),
@@ -534,7 +534,7 @@ T.append(dict(id="jonah",zb=6.0,n="요나, 도망과 두 번째 부르심",sub="
  dict(mood="😱🌊",t="큰 바람",s="나를 바다에 던지라",storm=1,sea=1,n="여호와께서 큰 바람을 바다에 내리시자 배가 깨질 듯합니다. 요나는 자기 때문이라며 자기를 바다에 던지라고 합니다.",p=[_(32.25,34.2),_(32.4,33.3)],pre=[32,1,4],r=[32,1,12],z=7),
  dict(mood="😨🌊",t="요나를 바다에 던지매",s="바다가 곧 그치다",sea=1,stay=1,n="사공들이 힘써 노를 저어도 바다가 더 흉용해지자, 그들은 여호와께 부르짖고 요나를 들어 바다에 던집니다. 바다가 뛰노는 것이 곧 그치고, 사람들이 여호와를 크게 두려워합니다.",pre=[32,1,14],r=[32,1,15,16],z=7),
  dict(mood="😮🐟",t="큰 물고기",s="밤낮 삼 일",n="여호와께서 큰 물고기를 예비하셔서 요나를 삼키게 하십니다. 요나는 물고기 뱃속에서 기도합니다.",stay=1,r=[32,1,17],z=7.5),
- dict(mood="🙏",t="두 번째 말씀",s="토해 낸 육지는 본문이 밝히지 않음 · 길은 대략",line="approx",gap="육지에서",fr=_(32.9,34.98),n="물고기가 요나를 육지에 토해 냅니다. 여호와의 말씀이 두 번째로 임하고, 요나는 이번에는 니느웨로 갑니다.",p=[_(33.3,35.6),_(33.9,36.0),P("하맛",35.13,36.75),_(36.4,37.6),_(36.65,39.8),_(36.3,41.6),NIN],pre=[32,2,10],r=[32,3,2],z=6),
+ dict(mood="🙏",t="두 번째 말씀",s="토해 낸 육지는 본문이 밝히지 않음 · 길은 대략",line="approx",gap="육지에서",fr=_(32.82,35.0),n="물고기가 요나를 육지에 토해 냅니다. 여호와의 말씀이 두 번째로 임하고, 요나는 이번에는 니느웨로 갑니다.",p=[_(33.3,35.6),_(33.9,36.0),P("하맛",35.13,36.75),_(36.4,37.6),_(36.65,39.8),_(36.3,41.6),NIN],pre=[32,2,10],r=[32,3,2],z=6),
  dict(mood="📢😨",t="사십 일이 지나면",s="큰 성읍 니느웨",n="요나가 성읍에 들어가 하루 동안 다니며 외칩니다. 니느웨 사람들이 하나님을 믿고 금식하며 굵은 베 옷을 입습니다.",stay=1,pre=[32,3,3],r=[32,3,4],z=9.5),
  dict(mood="😮🙏",t="하나님이 뜻을 돌이키사",s="욘 3:10",n="하나님이 그들이 악한 길에서 돌이킨 것을 보시고 재앙을 내리지 않으십니다. 요나는 매우 싫어하고 성을 냅니다.",stay=1,r=[32,3,10],z=9.5),
  dict(mood="😠",t="성읍 동쪽 초막에서",s="그 성읍에 무슨 일이 일어나는가",n="여호와께서 요나에게 성내는 것이 옳으냐고 물으십니다. 요나는 성읍에서 나가 동쪽에 초막을 짓고, 그 그늘 아래 앉아 성읍이 어떻게 되는지 봅니다.",p=[P("성읍 동쪽",36.36,43.26)],pre=[32,4,4],r=[32,4,5],z=10),
@@ -772,5 +772,33 @@ for _t in T:
   for _k in [k for k in _m if k not in _seen]: _W.append(f"{_t['id']}: 옛 장면 ID {_m[_k]}('{_k}')에 맞는 장면 없음 — 제목이 바뀌었으면 scene_ids.json 키를 고칠 것")
 json.dump(_ID,open(_IDP,'w'),ensure_ascii=False,indent=1)
 for _w in _W: print("[여정 검사]",_w)
+# 물 위를 걸어가는 직선 고침(11/4 목사님: 마가 여정에서 바다 위 횡단). ux/landroute.py가 지형 그림의 물빛으로 육지 길을 찾아 ux/landpath.json에 경유점을 둠.
+#  여기서는 그 경유점을 육지 이동 구간 앞에 넣기만 함(그림 파일 없이도 빌드됨). 경로를 고친 뒤 다시 만들 때: NO_LANDPATH=1 python3 ux/big_tours.py && python3 ux/landroute.py
+import os as _os2
+if not _os2.environ.get('NO_LANDPATH'):
+  _LP=json.load(open(_os2.path.join(_os2.path.dirname(_os2.path.abspath(__file__)),'landpath.json'))); _used=set()
+  _pt=lambda q:(q[1],q[2]) if isinstance(q,list) and len(q)==3 else (q[0],q[1]) if isinstance(q,list) else None
+  def _fix(L,land,cur):
+    out=[]
+    for q in L:
+      c=_pt(q)
+      if c and land and cur:
+        k=f"{cur[0]},{cur[1]}>{c[0]},{c[1]}"
+        if k in _LP: out+= [["",a,b] for a,b in _LP[k]]; _used.add(k)
+      out.append(q); cur=c or cur
+    return out,cur
+  for _t in T:
+    cur=_pt(_t['start'])
+    for _s in _t['steps']:
+      if _s.get('from'): cur=_pt(_s['from'])
+      if _s.get('land0'): _s['land0'],cur=_fix(_s['land0'],True,cur)
+      _s['p'],cur2=_fix(_s.get('p',[]),not _s.get('sea'),cur)
+      if not _s['p']: del _s['p']
+      cur=cur2
+      if _s.get('then'): _s['then'],cur=_fix(_s['then'],True,cur)
+      SD=_s.get('side'); SD=SD if isinstance(SD,list) else [SD] if SD else []
+      for sd in SD:
+        if sd.get('p'): sd['p'],_=_fix(sd['p'],not sd.get('sea'),_pt(sd['from']) if sd.get('from') else cur)
+  for k in set(_LP)-_used: print("[여정 검사] 물 피하기 경유점이 쓰이지 않음(경로가 바뀜?):",k)
 import os; json.dump(T,open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'big_tours.json'),'w'),ensure_ascii=False)
 print(len(T),[len(t['steps']) for t in T])
