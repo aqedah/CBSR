@@ -344,6 +344,28 @@ T.append(dict(id="jeremiah",big=4,zb=8.6,n="예레미야, 애굽으로",sub="예
  dict(mood="😢🙏",t="애굽의 유다 사람들에게",s="믹돌·다바네스·놉·바드로스",n="애굽 곳곳에 흩어져 사는 유다 사람들에게도 말씀이 다시 예레미야에게 임합니다.",stay=1,r=[24,44,1],z=8.5),
  ],end="예레미야서는 예레미야가 애굽에서 어떻게 되었는지 말하지 않습니다. 책은 바벨론 감옥에 갇혀 있던 여호야긴 왕이 풀려나는 장면으로 끝납니다(렘 52:31–34)."))
 # 1차 추가(목사님 2026-11-02 승인, GPT 제안 검토): 베드로 · 다윗(압살롬) · 리브가
+# 빌립(11/4 목사님 승인): 스데반의 순교 → 흩어짐 → 사마리아 → 광야 길의 에디오피아 내시 → 아소도에서 가이사랴까지. 다음 여정은 베드로(룻다·욥바, 9:32)
+JRS=P("예루살렘",31.78,35.23); SAMC=P("사마리아 성",32.28,35.2)
+T.append(dict(id="philip",zb=8.4,n="빌립, 사마리아와 광야 길로",sub="예루살렘에서 사마리아, 가사로 가는 길, 가이사랴까지 · 사도행전 6–8장",who="빌립",as_="man",big=6,
+ d="스데반이 순교한 날 예루살렘 교회에 큰 박해가 일어나 성도들이 흩어집니다. 일곱 사람 가운데 하나인 빌립은 사마리아로 내려가 그리스도를 전하고, 다시 광야 길에서 에디오피아 내시를 만나 아소도와 해안의 여러 성을 지나 가이사랴에 이릅니다.",
+ start=JRS,steps=[
+ dict(mood="🙏",t="일곱 사람을 세우다",s="예루살렘 · 사도들 앞에서",stay=1,pin=[["스데반","youth",P("",31.781,35.226)]],grp="열두 사도",n="예루살렘 · 제자가 많아진 때, 구제를 맡을 일곱 사람",pre=[44,6,5],r=[44,6,6],z=10.5),
+ dict(mood="😮🙏",t="하늘이 열리고",s="공회 앞의 스데반",stay=1,grp="",n="예루살렘 · 공회 앞에 선 스데반",pre=[44,7,55],r=[44,7,56],z=11),
+ dict(mood="😢🙏",t="성 밖에서",s="사울이라 하는 청년",stay=1,pin=[["사울","paul",P("",31.7805,35.237)]],n="예루살렘 성 밖 · 증인들이 옷을 벗어 둔 곳",pre=[44,7,58],r=[44,7,59,60],z=11.5),
+ dict(mood="😢😨",t="큰 박해, 흩어지다",s="사도 외에는 다",stay=1,unpin=["스데반"],side=[dict(n="흩어진 성도들",k=3,as_="man",p=[_(31.6,35.08),P("유대",31.5,35.0)],e="😢🙏"),dict(n="",k=2,as_="woman",p=[_(31.95,35.22),_(32.1,35.25)],e="🙏")],n="예루살렘 · 스데반이 죽은 날",pre=[44,8,1],r=[44,8,4],z=9),
+ dict(mood="🙏",t="사마리아 성으로 내려가다",s="그리스도를 전파하니",unpin=["사울"],n="예루살렘에서 북쪽 사마리아로",p=[_(31.93,35.22),_(32.08,35.26),SAMC],r=[44,8,5],z=9),
+ dict(mood="🎉🙏",t="그 성에 큰 기쁨이",s="한마음으로",stay=1,grp="사마리아 사람들",n="사마리아 성",pre=[44,8,6],r=[44,8,8],z=10.5),
+ dict(mood="😮🤔",t="마술하던 시몬도",s="믿고 세례를 받은 후에",stay=1,pin=[["시몬","man",P("",32.282,35.204)]],grp="사마리아 사람들",n="사마리아 성 · 전부터 마술로 사람들을 놀라게 하던 사람",pre=[44,8,9],r=[44,8,13],z=10.5),
+ dict(mood="🙏😮",t="베드로와 요한이 내려오다",s="예루살렘의 사도들이 듣고",stay=1,grp="사마리아 사람들",side=dict(n="베드로와 요한",k=2,as_="peter",from_=JRS,p=[_(31.93,35.22),_(32.08,35.26),SAMC],e="🙏"),n="사마리아 성 · 세례만 받았을 뿐 아직 성령이 내리시지 않았을 때",pre=[44,8,14],r=[44,8,17],z=9),
+ dict(mood="😠🙏",t="돈으로 살 수 없는 선물",s="하나님의 선물",stay=1,pin=[["베드로","peter",P("",32.279,35.197)]],grp="사마리아 사람들",n="사마리아 성 · 사도들의 안수로 성령 받는 것을 본 시몬",pre=[44,8,19],r=[44,8,20],z=11),
+ dict(mood="🙏",t="사마리아인의 여러 마을에서",s="두 사도가 돌아갈새",stay=1,unpin=["베드로","시몬"],grp="",side=dict(n="베드로와 요한",k=2,as_="peter",from_=SAMC,p=[_(32.2,35.27),_(32.08,35.24),_(31.93,35.22),JRS],e="🙏"),n="사마리아에서 예루살렘으로 돌아가는 두 사도",r=[44,8,25],z=9),
+ dict(mood="🙏😮",t="남쪽으로, 광야 길로",s="길은 대략 · 만난 자리는 본문이 밝히지 않음",line="approx",n="사마리아에서 남쪽, 예루살렘에서 가사로 내려가는 길까지",p=[_(32.1,35.24),_(31.9,35.17),_(31.72,35.09),P("가사로 내려가는 길?",31.6,34.95)],r=[44,8,26],z=8.5),
+ dict(mood="😮🙏",t="이 수레로 가까이 나아가라",s="에디오피아 여왕 간다게의 내시",stay=1,fx="meetcart",n="광야 길 · 예배하러 예루살렘에 왔다가 돌아가는 수레",pre=[44,8,28],r=[44,8,29,31],z=11),
+ dict(mood="🤔🙏",t="이 글에서 시작하여",s="선지자 이사야의 글",stay=1,ride=1,n="수레 위 · 내시가 읽던 이사야의 글",pre=[44,8,32,33],r=[44,8,34,35],z=11),
+ dict(mood="😊🙏",t="보라 물이 있으니",s="길 가다가",ride=1,n="가사로 가는 길 위 · 물 있는 곳",p=[_(31.58,34.9),P("물 있는 곳?",31.55,34.84)],r=[44,8,36],z=10.5),
+ dict(mood="🙏😮",t="둘이 물에서 올라올새",s="내시는 기쁘게 길을 가므로",stay=1,fx="spirit",n="물 있는 곳",pre=[44,8,38],r=[44,8,39],z=11),
+ dict(mood="🙏😊",t="아소도에서 가이사랴까지",s="여러 성을 지나 다니며",fr=P("아소도",31.8,34.65),n="블레셋 해안의 아소도에서 북쪽 가이사랴로 · 지나간 성은 본문이 밝히지 않음",line="approx",p=[_(31.88,34.74),_(31.98,34.8),_(32.18,34.84),P("가이사랴",32.5,34.89)],r=[44,8,40],z=8.5),
+ ],end="빌립은 가이사랴에 자리를 잡습니다. 이십여 년 뒤 바울 일행이 그의 집에 머뭅니다(행 21:8). 그 사이 빌립이 지나온 해안의 룻다와 욥바에서는 베드로의 이야기가 이어집니다(행 9:32)."))
 T.append(dict(id="peter",zb=8.6,n="베드로, 고넬료의 집으로",sub="룻다에서 가이사랴, 다시 예루살렘으로 · 사도행전 9–11장",who="베드로",as_="peter",big=6,
  d="두루 다니던 베드로가 룻다와 욥바에서 일하는 동안, 가이사랴의 백부장 고넬료가 사람을 보냅니다. 두 곳에서 시작된 이야기가 욥바에서 만나 이방인의 집 문이 열리는 길입니다.",
  start=P("룻다",31.95,34.89),steps=[
@@ -582,6 +604,7 @@ REG={
  "saul":[["유대",31.65,35.05],["사마리아",32.25,35.25],["수리아",34.8,36.8],["길리기아",36.95,35.2]],
  "saulking":[["에브라임 산지",32.08,35.25],["베냐민",31.86,35.32],["유다",31.62,35.1]],
  "babylon":[["유다",31.6,35.0],["아람",33.8,36.9],["메소보다미아",34.6,41.8],["갈대아",31.6,45.4]],
+ "philip":[["유대",31.55,35.05],["사마리아",32.3,35.35],["사론",32.35,34.98]],
  "peter":[["사론",32.35,34.98],["유대",31.65,35.1],["사마리아",32.25,35.25]],
  "absalom":[["유다",31.6,35.05],["길르앗",32.3,35.9],["에브라임 산지",32.1,35.2]],
  "rebekah":[["가나안",31.6,35.0],["메소보다미아",36.3,39.6],["네게브",30.85,34.6]],
@@ -604,14 +627,14 @@ REG={
 }
 # 다음 여정(목사님 2026-11-02): 이야기가 이어지는 여정은 마지막 화면에 '닫기' 대신 '다음 여정' 단추
 NEXT=["abraham","rebekah","jacob","joseph","midian","exodus","joshua","ruth","ark","saulking","david","absalom","elijah","jonah","assyria","babylon","jeremiah","exilelife","return"]
-NEXT2=["peter","saul","paul1","paul2","paul3","rome"]
+NEXT2=["philip","peter","saul","paul1","paul2","paul3","rome"]
 for _ch in (NEXT,NEXT2):
   for _a,_b in zip(_ch,_ch[1:]):
     for _t in T:
       if _t["id"]==_a: _t["next"]=_b
 for _t in T:
   if "reg" not in _t and _t["id"] in REG: _t["reg"]=REG[_t["id"]]
-_O=["abraham","rebekah","jacob","joseph","midian","exodus","joshua","ruth","ark","saulking","david","absalom","elijah","jonah","assyria","babylon","jeremiah","exilelife","return","mt","mk","lk","jn","peter","saul","paul1","paul2","paul3","rome"]
+_O=["abraham","rebekah","jacob","joseph","midian","exodus","joshua","ruth","ark","saulking","david","absalom","elijah","jonah","assyria","babylon","jeremiah","exilelife","return","mt","mk","lk","jn","philip","peter","saul","paul1","paul2","paul3","rome"]
 T.sort(key=lambda t:_O.index(t["id"]) if t["id"] in _O else 99)
 for _t in T:
   for _s in _t["steps"]:
@@ -622,7 +645,7 @@ for _t in T:
 #  여정 첫 상태는 여정의 tpl, 장면의 tpl은 그 장면부터. 불타는 장면(burn)은 불이 붙은 뒤 무너진 모습으로 바뀜.
 #  성막(장막): tent=[[이름,위도,경도]] 그 장면부터 세움(같은 이름이면 옮김 — 길을 걷는 장면이면 걷기 전에 걷고 도착한 뒤 세움), untent=[이름]
 TPL={"elijah":"built","jonah":"built","assyria":"built","babylon":"built","jeremiah":"built","exilelife":"ruin","return":"ruin",
- "mt":"built","mk":"built","lk":"built","jn":"built","peter":"built","saul":"built","paul1":"built","paul2":"built","paul3":"built","rome":"built"}
+ "mt":"built","mk":"built","lk":"built","jn":"built","philip":"built","peter":"built","saul":"built","paul1":"built","paul2":"built","paul3":"built","rome":"built"}
 def _st(tid,title):
   for _t in T:
     if _t["id"]==tid:
@@ -735,9 +758,9 @@ _u("rome","밤에 가이사랴로 호송",n="바울을 죽이려는 맹세를 �
 _tour("rome")["end"]="'로마에서도 증언하여야 하리라' 하신 말씀대로, 바울은 로마에서도 증언합니다. 사도행전은 바울이 셋집에서 담대히 하나님 나라를 전했다는 말로 열린 채 끝납니다(행 28:30–31)."
 
 # ===== 데이터 검사(3차 검토 9장, 2026-11-03): 빌드 때 경고만 출력 =====
-_SK={'id','add','as_','burn','chase','dash','drop','dropAt','exit','focus','from','fx','gap','grp','land0','lead','line','mood','n','p','pin','pre','quake','quiet','r','s','sea','side','slow','stay','storm','t','tent','then','tpl','tplN','unpin','untent','war','who','z'}
+_SK={'id','add','as_','burn','chase','dash','drop','dropAt','exit','focus','from','fx','gap','grp','land0','lead','line','mood','n','p','pin','pre','quake','quiet','r','ride','s','sea','side','slow','stay','storm','t','tent','then','tpl','tplN','unpin','untent','war','who','z'}
 _DK={'as_','e','from','k','line','n','p','war'}
-_FX={'fire','light','pillar','part','jordan','mantle','siege','ascend','parch','sun','baptism','dark','sleep','fish'}
+_FX={'fire','light','pillar','part','jordan','mantle','siege','ascend','parch','sun','baptism','dark','sleep','fish','meetcart','spirit'}
 _W=[]
 for _t in T:
   _comp=[c[0] for c in _t.get('wth',[])]
