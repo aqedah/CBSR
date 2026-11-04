@@ -1,0 +1,6 @@
+도트 효과 그림(2026-11-04). 모두 CC0(퍼블릭 도메인, 출처 표기 필요 없음). 앱에 맞게 한 줄 띠로 다시 붙이거나 좌우를 뒤집음.
+altarfire.png   — OpenGameArt "Fire" (fire_4.png), CC0
+firefall.png    — OpenGameArt "Animated Fires" (Small_Fireball_10x26), CC0
+firechariot.png — OpenGameArt "Animated Fires" (Fireball_68x9, 좌우 뒤집음), CC0
+whirlwind.png   — OpenGameArt "Whirlwind - Arne16" (tornado_wobbly), CC0
+emotes.png      — Kenney "Emotes Pack" Pixel Style 1, CC0
