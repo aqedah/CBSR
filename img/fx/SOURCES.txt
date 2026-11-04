@@ -4,3 +4,4 @@ firefall.png    — OpenGameArt "Animated Fires" (Small_Fireball_10x26), CC0
 firechariot.png — 직접 그림(2026-11-04, 불말 두 마리가 끄는 불수레 4장면)
 whirlwind.png   — OpenGameArt "Whirlwind - Arne16" (tornado_wobbly), CC0
 emotes.png      — Kenney "Emotes Pack" Pixel Style 1, CC0
+cart.png — 이 저장소에서 직접 그림(빌립과 내시의 수레, 60x32 4프레임)
