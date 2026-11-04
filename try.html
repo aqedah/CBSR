@@ -1426,7 +1426,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .mvfish{position:absolute;left:-40px;top:-46px;width:80px;display:flex;flex-direction:column;align-items:center;font-size:52px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));animation:mvfish 3.2s ease-in-out infinite alternate;pointer-events:none}.mvfish b{font:700 12px var(--f-ui);color:#fff;background:rgba(0,0,0,.45);border-radius:8px;padding:1px 7px;white-space:nowrap;margin-top:2px}
 @keyframes mvfish{from{transform:translateX(-10px) rotate(-3deg)}to{transform:translateX(10px) rotate(3deg)}}
 @media (prefers-reduced-motion: reduce){.mvfish{animation:none}}
-.bmt2 .leaflet-container{background:#dcd5c3} /* 11/3: 확대·축소 때 아직 안 온 지도 조각 자리가 하얗게 비던 것 → 땅빛 */
+/* 11/4: 예전 .bmt2 땅빛 배경 규칙은 아래 .mst-natural(!important 파랑)에 덮여 쓰이지 않았으므로 지움. 자연색 지도의 빈 자리 색은 .mst-natural 한 곳에서 정함(바다 파랑 + 땅 모양 도형 + 6배율 바탕 지도가 아래에 깔림) */
 .bmtgo0{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:1200;border:0;border-radius:99px;background:rgba(255,255,255,.94);color:#1d2622;display:flex;align-items:center;gap:10px;padding:14px 24px 14px 18px;font:700 17px var(--f-ui);box-shadow:0 4px 18px rgba(0,0,0,.3);cursor:pointer}.bmtgo0 i{font-style:normal;width:40px;height:40px;border-radius:50%;background:var(--accent,#2C5C52);color:#fff;display:grid;place-items:center;font-size:16px;padding-left:3px}.bmtfol{position:absolute;right:12px;bottom:calc(36% + 10px);z-index:1200;border:0;border-radius:20px;background:var(--card,#fff);color:var(--ink,#1B2420);font:700 13.5px var(--f-ui);padding:9px 14px;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer}
 .spl.est{border-style:dashed}.spl small{font-size:10px;font-weight:600;margin-left:4px;opacity:.85}.spl{color:#fff;font:700 13px var(--f-ui);white-space:nowrap;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000;display:inline-block;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.35);border-radius:9px;padding:1px 6px}
 .spl::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--sred);margin-right:5px;vertical-align:-1px;box-shadow:0 0 4px #000}
@@ -1711,7 +1711,7 @@ body.tab-study{--paper:#FBF8F1;--card:#FFFFFF;--ink:#1E2230;--muted:#666B77;--li
 @keyframes mvemo{0%{opacity:0;transform:translate(-50%,8px) scale(.6)}15%{opacity:1;transform:translate(-50%,0) scale(1)}75%{opacity:1;transform:translate(-50%,-10px)}100%{opacity:0;transform:translate(-50%,-18px)}}
 .chm.stretch .arm.r{animation:none!important;transform-origin:46px 40px;transform:rotate(-65deg);transition:transform .6s ease-out}
 .bmtverse{position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 64px);z-index:1001;background:rgba(18,22,20,.8);color:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 4px 14px rgba(0,0,0,.3);opacity:0;transform:translateY(-6px);transition:opacity .5s,transform .5s;pointer-events:none}.bmtverse.on{opacity:1;transform:none}.bmtverse q{display:block;quotes:none;font-family:var(--f-serif,serif);font-size:16px;line-height:1.6}.bmtverse small{display:block;margin-top:3px;color:#e8d6a8;font:700 12px var(--f-ui)}
-.bmt2 .bmtp{padding-top:40px;background:linear-gradient(to top,rgba(16,20,18,.9) 55%,rgba(16,20,18,0))}
+.bmt2 .bmtp{padding-top:40px;background:linear-gradient(to top,rgba(16,20,18,.9) 55%,rgba(16,20,18,0))}@media (min-width:700px){.bmt2 .bmtp{padding-left:max(18px,calc(50% - 280px));padding-right:max(18px,calc(50% - 280px))}} /* 11/4 GPT 지도 검토: 태블릿·PC에서 아래 설명이 화면 끝까지 길게 늘어지던 것 → 위 본문 카드와 같은 가운데 축, 폭 560px */
 .mvwindl{position:absolute;inset:0;z-index:900;pointer-events:none;opacity:0;transition:opacity .6s;overflow:hidden}.mvwindl.on{opacity:.8}.mvwindl i{position:absolute;right:-40%;width:38%;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.9) 40%,rgba(255,255,255,0));animation:mvwind 1.1s linear infinite;will-change:transform}
 @keyframes mvwind{from{transform:translateX(0) rotate(-3deg)}to{transform:translateX(-380%) rotate(-3deg)}}
 .mvsplash .leaflet-pane.leaflet-mvfx-pane::after{content:""}.mvpart.close i{transition:transform .9s ease-in,opacity .9s;transform:translateX(0)!important}
@@ -10452,11 +10452,23 @@ function rgmOpen(w,d,ri){ const LS=rgmRoutes(w,d); if(!LS.length) return; ri=ri|
 function mapStyleOf(w,d){ return "natural"; }
 /* 만든 지형 조각만 요청(목사님 태블릿 확대·축소 때 빈 조각·Esri 조각이 네모로 비침, 11/2): 목록에 없는 조각은 요청하지 않고 빈 칸으로 */
 function terrHas(k,z,x,y){ const I=typeof TERRIDX!=="undefined"&&TERRIDX&&TERRIDX[k], X=I&&I[z]&&I[z][x]; if(!X) return false; for(let i=0;i<X.length;i+=2) if(y>=X[i]&&y<=X[i+1]) return true; return false; }
-let TerrTL=null; function terrLayer(k,o){ if(!TerrTL) TerrTL=L.TileLayer.extend({ createTile(c,done){ if(!terrHas(this.options.tk,c.z,c.x,c.y)){ const d=document.createElement("div");
-      /* 3차 R3-16: 13배율 조각이 없는 곳은 12배율 조각을 두 배로 키워 메움(지형이 갑자기 흐려지지 않게) */
-      if(c.z>8&&terrHas(this.options.tk,c.z-1,c.x>>1,c.y>>1)){ const im=document.createElement("img"); im.alt=""; im.src=this._url.replace("{z}",c.z-1).replace("{x}",c.x>>1).replace("{y}",c.y>>1); im.style.cssText=`position:absolute;width:512px;height:512px;max-width:none;left:${-(c.x&1)*256}px;top:${-(c.y&1)*256}px`; d.style.overflow="hidden"; d.appendChild(im); im.onload=()=>done(null,d); im.onerror=()=>done(null,d); return d; }
-      setTimeout(()=>done(null,d),0); return d; } return L.TileLayer.prototype.createTile.call(this,c,done); } });
-  return new TerrTL(k+"/{z}/{x}/{y}.webp",Object.assign({tk:k,updateWhenIdle:false,updateInterval:120},o)); } /* 태블릿(모바일로 분류)에서는 기본값이 '멈춘 뒤에만 조각 갱신'이라 카메라가 따라가는 동안 빈 네모가 오래 남음(11/2 갤럭시탭 영상) */
+/* 11/4 GPT 지도 검토: 예전에는 TileLayer에 DIV(속에 확대한 낮은 배율 그림)를 섞어 넣어서, 줌 단계가 바뀔 때 Leaflet이 '아직 안 받은 조각'(complete 없음)으로 보고
+   이미 보이던 지형을 먼저 지움 → 잠깐 바닥이 드러나며 깜빡임. 이제 GridLayer로: 그림이 실제로 그려진 뒤에만 완료, 못 받으면 완료하지 않아 옛 지형이 그대로 남음,
+   지워진 조각의 늦은 완료는 무시 */
+let TerrTL=null; function terrLayer(k,o){ if(!TerrTL) TerrTL=L.GridLayer.extend({
+    createTile(c,done0){ const ly=this, done=(e,x)=>{ if(!x._gone&&ly._map) done0(e,x); }, t=this.options.tk, U=(z,x,y)=>`${t}/${z}/${x}/${y}.webp`, d=document.createElement("div"); d.style.overflow="hidden";
+      let src=null, big=false;
+      if(terrHas(t,c.z,c.x,c.y)) src=U(c.z,c.x,c.y);
+      else if(c.z>8&&terrHas(t,c.z-1,c.x>>1,c.y>>1)){ src=U(c.z-1,c.x>>1,c.y>>1); big=true; } /* 3차 R3-16: 조각이 없는 곳은 한 단계 낮은 조각을 두 배로 키워 메움 */
+      if(!src){ setTimeout(()=>{ if(!d._gone) done(null,d); },0); return d; } /* 원래 지형 자료가 없는 곳(비워 두는 자리) */
+      const im=document.createElement("img"); im.alt=""; im.decoding="async"; d._im=im;
+      im.style.cssText=big?`position:absolute;width:512px;height:512px;max-width:none;left:${-(c.x&1)*256}px;top:${-(c.y&1)*256}px`:"position:absolute;left:0;top:0;width:256px;height:256px;max-width:none";
+      im.onload=()=>{ if(!d._gone) done(null,d); };
+      im.onerror=()=>{ d._bad=1; }; /* 못 받음: 완료로 알리지 않음 → 그 자리의 옛 지형(부모 조각)이 지워지지 않고 남음 */
+      d.appendChild(im); im.src=src; return d; } });
+  const ly=new TerrTL(Object.assign({tk:k,updateWhenIdle:false,updateInterval:120},o)); /* 태블릿(모바일로 분류)에서는 기본값이 '멈춘 뒤에만 조각 갱신'이라 카메라가 따라가는 동안 빈 네모가 오래 남음(11/2 갤럭시탭 영상) */
+  ly.on("tileunload",e=>{ const d=e.tile; d._gone=1; const im=d._im; if(im){ im.onload=im.onerror=null; } });
+  return ly; }
 /* 여정을 열 때 쓸 조각을 미리 받아 둠(서비스 워커가 보관) */
 function terrPrefetch(boxes,alive){ if(typeof TERRIDX==="undefined"||!TERRIDX) return; const U=[], seen=new Set();
   const tile=(lat,lng,z)=>{ const n=2**z, x=Math.floor((lng+180)/360*n), r=lat*Math.PI/180, y=Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n); return [x,y]; };
