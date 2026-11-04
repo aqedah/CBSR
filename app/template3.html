@@ -6042,7 +6042,7 @@ const BM_WHO=[
  {k:"elijah",n:"엘리야·엘리사",av:"elijah",who:["엘리야","엘리사","수넴 여인","나아만","하사엘","예후","아람 군대"],tour:["elijah"]},
  {k:"exile",n:"포로와 귀환",av:"elder",b:[15,39],tour:["assyria","babylon","jeremiah","exilelife","return"]},
  {k:"jesus",n:"예수님",av:"jesus",b:[40,43],tour:["mt","mk","lk","jn"]},
- {k:"church",n:"초대교회",av:"peter",b:[44,44],tour:["peter"]},
+ {k:"church",n:"초대교회",av:"peter",b:[44,44],tour:["philip","peter"]},
  {k:"paul",n:"바울",av:"paul",who:["바울","바나바","바울 (호송됨)","아볼로","뵈뵈","편지","두기고","에바브로디도","두기고와 오네시모"],b:[45,66],tour:["saul","paul1","paul2","paul3","rome"]}];
 /* 시대로 찾기(목사님 2026-11-02): 같은 큰 여정·지도 경로를 시대로 묶어 봄. 예언자는 책 머리말(표제)에 왕·연대가 적힌 사람만(요엘·오바댜·나훔·하박국·말라기처럼 시대를 특정할 수 없는 책은 넣지 않음) */
 const BM_ERA9=[
@@ -6055,7 +6055,7 @@ const BM_ERA9=[
  {k:"ret",n:"귀환",y:"기원전 538–430년 무렵",av:"elder",d:"고레스의 조서로 돌아와 성전을 다시 짓고, 에스라와 느헤미야 때 율법과 성벽을 세웁니다. 에스더는 바사 땅에 남은 사람들의 이야기입니다.",tour:["return"],pro:[["학개","다리오 왕 2년",[37,1,1]],["스가랴","다리오 왕 2년",[38,1,1]]]},
  {k:"stp",n:"중간사",y:"기원전 430년 무렵–예수님 탄생",av:"temple",d:"말라기 뒤 신약까지 약 400년입니다. 구약 본문은 이 시기의 일을 이야기로 들려주지 않지만, 바사·헬라·로마가 차례로 이 땅을 다스리고, 회당과 바리새인·사두개인이 생겨나 예수님 때의 배경이 됩니다.",tour:[]},
  {k:"jes",n:"예수님",y:"",av:"jesus",d:"네 복음서가 같은 예수님의 길을 저마다 다르게 그립니다.",tour:["mt","mk","lk","jn"]},
- {k:"chu",n:"초대교회",y:"",av:"cross",d:"예루살렘에서 시작한 복음이 사마리아와 이방의 땅을 지나 로마까지 이릅니다.",tour:["peter","saul","paul1","paul2","paul3","rome"]}];
+ {k:"chu",n:"초대교회",y:"",av:"cross",d:"예루살렘에서 시작한 복음이 사마리아와 이방의 땅을 지나 로마까지 이릅니다.",tour:["philip","peter","saul","paul1","paul2","paul3","rome"]}];
 function bmEra9(b,c){ if(b===1) return "pat"; if(b<=5) return "exo"; if(b<=8) return "jud"; if(b===9||b===10||(b===11&&c<=11)||b===13||(b===14&&c<=9)||(b>=18&&b<=22)) return "uni";
   if((b===12&&c>=24)||(b===14&&c>=36)||b===24||b===25||b===26||b===27) return "exi"; if(b===11||b===12||b===14||b===23||(b>=28&&b<=36)) return "div";
   if(b===15||b===16||b===17||(b>=37&&b<=39)) return "ret"; if(b<=43) return "jes"; return "chu"; }
