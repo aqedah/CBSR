@@ -125,6 +125,10 @@ for f in sorted(_g.glob('ux/guide_out*.json')): GF.update(json.load(open(f)))
 data+='const FLOW='+open('flow/all.json').read()+';\n'
 import importlib.util as _iu2; _sp2=_iu2.spec_from_file_location('smb','ux/sermon_build.py'); _smb=_iu2.module_from_spec(_sp2); _sp2.loader.exec_module(_smb)
 data+='const SERMON='+json.dumps(_smb.build(),ensure_ascii=False,separators=(',',':'))+';\n'  # 주일 설교 본문(2026-11-03)
+import base64 as _b64, gzip as _gz
+_BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())))
+_sp4=_iu2.spec_from_file_location('tsay','ux/tour_say.py'); _ts=_iu2.module_from_spec(_sp4); _sp4.loader.exec_module(_ts)
+data+='const SAYX='+json.dumps(_ts.build(lambda b,c,v: (_BB[b-1][c-1][v-1] if b<=len(_BB) and c<=len(_BB[b-1]) and v<=len(_BB[b-1][c-1]) else '')),ensure_ascii=False,separators=(',',':'))+';\n'  # 큰 여정 말한 사람(2026-11-04)
 data+='const TRAITS_C='+open('traits/all.json').read()+';\n'
 data+='const PARA='+open('para/all.json').read()+';\n'
 data+='const SCX='+open('scene/scx.json').read()+';\n'
