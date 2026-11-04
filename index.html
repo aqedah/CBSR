@@ -11829,20 +11829,24 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
     /* 물고기 속의 요나(3차 검토 R3-05): 지도 위 사람은 숨기고 물고기 하나만 — 뱃속에서 기도(욘 1:17–2:10) */
     fish:async(st,my)=>{ if(!main) return true; const c=main.getLatLng(); [main,...fol.map(f=>f.m)].forEach(m=>{ const x=m.getElement&&m.getElement(); if(x) x.classList.add("mvhide"); });
       skyM(c,'<span class="mvfish">🐋<b>물고기 뱃속의 요나</b></span>'); return sleep(Math.max(5200,needMs({r:st.r})),my); } }; /* 천사의 깨움은 두 번(왕상 19:5, 7) */
-  /* 왕하 2:11(11/4 목사님): 불수레와 불말들이 두 사람 사이로 달려와 갈라놓고 → 엘리야 발밑에 회오리바람 → 엘리야·회오리바람·불수레가 함께 하늘로 올라감 */
+  /* 왕하 2:11(11/4 목사님): 불수레와 불말들이 두 사람 사이로 달려와 갈라놓고 지나가 사라짐 → 엘리야 발밑에 회오리바람 → 엘리야가 회오리바람으로 하늘로 올라감 */
   async function ascend(my,si){ if(!main) return; const c0=main.getLatLng(), P0=map.latLngToContainerPoint(c0), at=(x,y)=>map.containerPointToLatLng(P0.add(L.point(x,y))); if(!(await sleep(1800,my))) return;
     const F0=fol.map(f=>map.latLngToContainerPoint(f.m.getLatLng()));
     /* 갈라놓기(11/4): 엘리사는 지금 서 있는 쪽 그대로 조금 더 떨어짐. 붙어 있으면 아래(같은 강변)로. 강을 건너가지 않게 짧게 */
-    const FT=F0.map(a=>{ let vx=a.x-P0.x, vy=a.y-P0.y, d=Math.hypot(vx,vy); if(d<8){ vx=.25; vy=1; d=Math.hypot(vx,vy); } const r=Math.min(Math.max(d,26),40); return L.point(P0.x+vx/d*r,P0.y+vy/d*r); });
+    const FT=F0.map((a,k)=>L.point(P0.x+8+k*14,P0.y+48)); /* 엘리사는 아래로 확실히(그림이 겹치지 않게), 불수레는 두 사람 사이 높이로 가로지름 */
     const E0=FT[0]||L.point(P0.x-30,P0.y+10), MX=(E0.x-P0.x)/2, MY=(E0.y-P0.y)/2-4; /* 불수레는 두 사람 한가운데로 */
     const ch=pxMark(map,at(-220,MY),"firechariot",{s:2,dy:18},2800); SKY.push(ch);
     let t0=clk; while(clk-t0<1500){ if(!(await sleep(30,my))) return; const f=(clk-t0)/1500, e=1-(1-f)*(1-f); ch.setLatLng(at(-220+(MX+220)*e,MY-Math.sin(f*Math.PI)*6));
       if(f>.45){ const g=Math.min(1,(f-.45)/.55); fol.forEach((x,k)=>{ const a=F0[k]; const T2=FT[k]; x.m.setLatLng(map.containerPointToLatLng(L.point(a.x+(T2.x-a.x)*g,a.y+(T2.y-a.y)*g))); }); } }
     E2(["😮"],2);
-    const wh=pxMark(map,c0,"whirlwind",{s:5,dy:10,cls:"pxgrow"},2750); SKY.push(wh); if(!(await sleep(800,my))) return;
-    const e=chm(main); if(e) e.classList.add("rise"); const op=(m,o)=>{ const x=m.getElement&&m.getElement(); if(x) x.style.opacity=o; };
-    t0=clk; while(clk-t0<2300){ if(!(await sleep(30,my))) return; const f=(clk-t0)/2300, q=f*f; wh.setLatLng(at(0,-q*200)); ch.setLatLng(at(MX+(-MX)*f*.6,MY-q*230)); op(wh,1-Math.max(0,(f-.55)/.45)); op(ch,1-Math.max(0,(f-.5)/.5)); }
-    try{ map.removeLayer(wh); map.removeLayer(ch); }catch(x){} E2(["😭"],2);
+    /* 11/4 목사님: 불수레는 두 사람을 갈라놓고 지나가 사라짐 — 엘리야는 불수레가 아니라 회오리바람으로 올라감 */
+    const op=(m,o)=>{ const x=m.getElement&&m.getElement(); if(x) x.style.opacity=o; };
+    t0=clk; while(clk-t0<1300){ if(!(await sleep(30,my))) return; const f=(clk-t0)/1300; ch.setLatLng(at(MX+260*f*f,MY-Math.sin(f*Math.PI)*5-f*30)); op(ch,1-Math.max(0,(f-.35)/.65)); }
+    try{ map.removeLayer(ch); }catch(x){} if(!(await sleep(500,my))) return;
+    const wh=pxMark(map,c0,"whirlwind",{s:5,dy:10,cls:"pxgrow"},2750); SKY.push(wh); if(!(await sleep(900,my))) return;
+    const e=chm(main); if(e) e.classList.add("rise");
+    t0=clk; while(clk-t0<2300){ if(!(await sleep(30,my))) return; const f=(clk-t0)/2300, q=f*f; wh.setLatLng(at(0,-q*200)); op(wh,1-Math.max(0,(f-.55)/.45)); }
+    try{ map.removeLayer(wh); }catch(x){} E2(["😭"],2);
     /* 엘리사가 엘리야가 서 있던 자리로 걸어감(왕하 2:13 떨어진 겉옷을 주움) — 다음 장면이 그 자리에서 시작하므로 순간이동하지 않게 */
     if(!(await sleep(900,my))) return; const F1=fol.map(f=>f.m.getLatLng()); fol.forEach(f=>{ const x=chm(f.m); if(x) x.classList.add("walk"); }); t0=clk;
     while(clk-t0<1100){ if(!(await sleep(30,my))) return; const f=(clk-t0)/1100; fol.forEach((x,k)=>{ const a=F1[k]; x.m.setLatLng(L.latLng(a.lat+(c0.lat-a.lat)*f,a.lng+(c0.lng-a.lng)*f)); }); } /* 땅 위치 기준(카메라가 움직여도 엘리야 자리로) */
