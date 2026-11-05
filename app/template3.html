@@ -3100,7 +3100,7 @@ function renderRead(){
     h+=V2R?`${aid}<button class="openbtn" id="openText">본문 펼치기</button>`:`${helpBox}${eyeQ}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else if(V2R){
     const bmHere=mem.bm&&mem.bm.w===w&&mem.bm.d===d;
-    h+=aid+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span>절을 누르면 형광펜·책갈피·듣기·말씀 카드를 고를 수 있습니다.</span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button></span></div>`;
+    h+=aid+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span></span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button></span></div>`;
     for(const [b,c] of p.ch){ const s2=new Set();
       h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}${FLOW[b+"-"+c]?`<small class="chsub">${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`:""}</h3><div class="vtext">`+chapHTML(b,c,s2)+`</div></div>`; }
     h+=`</div>`;
@@ -3396,8 +3396,7 @@ function switchNotice(){ try{ if(!window.CBSR_V2||!window.CBSR_HADV1||window.CBS
 }
 /* 처음 온 사람: 한 번만 둘러보기 권하기(나중에 하면 메뉴 › 도움말 › 둘러보기) */
 function welcomeTour(){ try{ if(!window.CBSR_V2||window.CBSR_HADV1||window.CBSR_TRY||tourDone()||localStorage.getItem("cbsr-welcome-seen")) return; if(/[?&](day|review|now|pv)=/.test(location.search)) return; localStorage.setItem("cbsr-welcome-seen",todayStr()); }catch(e){ return; }
-  /* 첫 방문 안내는 하나만(2026-11-02): 오늘 화면의 그림을 가리키며 "오늘 본문 한 번 열어 보기" */
-  firstCoach(); }
+  /* 11/5: 덮는 안내 상자 대신 짧은 한 줄 안내(coachTick)로 바꿈 */ }
 function firstCoach(){ const go=()=>{ if(view.tab!=="today"){ view.tab="today"; render(); } setTimeout(()=>{ const h=document.getElementById("tdHero"); if(!h) return; h.scrollIntoView({block:"center"}); setTimeout(()=>{ const r=h.getBoundingClientRect(); const ov=document.createElement("div"); ov.id="fcOv"; ov.className="fcov";
     ov.innerHTML=`<div class="fchole" style="left:${r.left-4}px;top:${r.top-4}px;width:${r.width+8}px;height:${r.height+8}px"></div><div class="fctip" style="top:${Math.min(innerHeight-170,r.bottom+14)}px"><b>오늘 본문 한 번 열어 보기</b><p>그림을 누르면 오늘 읽을 본문이 열립니다.</p><button id="fcGo">본문 열기</button><button id="fcX" class="ghost">닫기</button></div>`; document.body.appendChild(ov);
     const end=()=>{ ov.remove(); try{ localStorage.setItem(TOUR_KEY,"1"); }catch(e){} };
@@ -5628,7 +5627,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
    <div class="bmtverse" hidden></div>
    <div class="bmtp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><div class="bmtgo" hidden><button data-t="verse">📖 본문 펼치기</button><button data-t="day"></button></div><div class="bmtend" hidden><button class="btn bmtag" data-t="again">↺ 처음부터</button>${(()=>{ const ni=T.next?BM_TOURS.findIndex(x=>x.id===T.next):-1; return ni>=0?`<button class="btn bmtnx" data-t="next" data-ni="${ni}"><small>다음 여정</small>${esc(BM_TOURS[ni].n)} ›</button>`:`<button class="btn bmtcl" data-t="x">닫기</button>`; })()}</div></div>
    <p class="bmthint">‹ › 장면 넘기기 · 길게 누르면 잠시 멈춤 · 지도를 움직이면 멈추고, ▶로 이어 봄</p>`;
-  document.body.appendChild(el); document.body.style.overflow="hidden";
+  document.body.appendChild(el); document.body.style.overflow="hidden"; setTimeout(()=>coach("tour",el.querySelector('[data-t="nm"]'),"‹ › 로 장면을 넘기고, 지명 버튼으로 땅 이름을 켜고 끕니다",{ms:4600}),1800); /* 11/5 처음 한 번 안내 */
   const NTOP=T.parts?118:66; /* 부(部) 칩이 있으면 위쪽 팝업을 그 아래로 */
   const LL=q=>L.latLng(q[1],q[2]), legs=st=>[...(st.land0||[]),...(st.p||[]),...(st.then||[])];
   const starts=[]; { let c=T.start; S.forEach(st=>{ if(st.from) c=st.from; starts.push(c); const g=legs(st); if(g.length) c=g[g.length-1]; }); }
@@ -7252,10 +7251,25 @@ function wcDraw(cv,o,im){ const [,,W,H]=WC_SIZE.find(z=>z[0]===o.size), x=cv.get
 function coach(id,el,text,opt){ opt=opt||{}; if(!el||!el.isConnected) return; let seen={}; try{ seen=JSON.parse(localStorage.getItem("cbsr-coach")||"{}"); }catch(e){} if(seen[id]) return;
   seen[id]=Date.now(); try{ localStorage.setItem("cbsr-coach",JSON.stringify(seen)); }catch(e){}
   const r=el.getBoundingClientRect(), t=document.createElement("div"); t.className="coach"+(opt.swipe?" sw":""); t.setAttribute("role","status"); t.innerHTML=`${opt.swipe?'<i aria-hidden="true">⇆</i>':""}<span>${esc(text)}</span>`;
-  document.body.appendChild(t); t.style.left="0px"; t.style.width="max-content"; const tw=Math.min(Math.ceil(t.getBoundingClientRect().width),innerWidth-24), th=t.offsetHeight; t.style.width=tw+"px"; t.style.whiteSpace="normal"; let top=opt.at==="mid"?r.top+r.height/2-th/2:r.top-th-10; if(top<60) top=r.bottom+10;
+  document.body.appendChild(t); t.style.left="0px"; t.style.width="max-content"; const tw=Math.min(Math.ceil(t.getBoundingClientRect().width),innerWidth-24), th=t.offsetHeight; t.style.width=tw+"px"; t.style.whiteSpace="normal"; let top=opt.at==="mid"?r.top+r.height/2-th/2:opt.at==="below"?r.bottom+10:r.top-th-10; if(top<60) top=r.bottom+10;
   t.style.top=Math.round(Math.min(innerHeight-th-80,top))+"px"; t.style.left=Math.round(Math.max(12,Math.min(innerWidth-tw-12,r.left+r.width/2-tw/2)))+"px";
   requestAnimationFrame(()=>t.classList.add("on")); const off=()=>{ t.classList.remove("on"); setTimeout(()=>t.remove(),400); removeEventListener("pointerdown",off,true); };
   setTimeout(off,opt.ms||3600); setTimeout(()=>addEventListener("pointerdown",off,true),300); }
+/* 처음 한 번 안내의 차례(11/5 목사님 채택). 화면이 그려진 뒤 그 자리에 맞는 것 하나만. 저절로 뜨는 것(위 아이콘·날 넘기기)은 한 번 켤 때 하나만 */
+function coachSeen(id){ try{ return !!JSON.parse(localStorage.getItem("cbsr-coach")||"{}")[id]; }catch(e){ return true; } }
+function coachTick(){ if(!window.CBSR_V2||document.querySelector(".coach,.bmt2,.wcm,.sheet-bg")) return; if(/[?&](review|pv)=/.test(location.search)) return;
+  const q=s=>{ const e=document.querySelector(s); return e&&e.offsetParent?e:null; };
+  let once=false; try{ once=!!sessionStorage.getItem("cbsr-coach-s"); }catch(e){}
+  const passive=(id,el,t)=>{ if(once||!el||coachSeen(id)) return false; try{ sessionStorage.setItem("cbsr-coach-s","1"); }catch(e){} coach(id,el,t,{ms:4200}); return true; };
+  if(view.tab==="today"){ const key=keyOf(view.w,view.d), hero=q("#tdHero");
+    if(!mem.done[key]&&!coachSeen("t-read")){ if(hero) coach("t-read",hero,"여기를 눌러 오늘 본문을 읽으세요",{ms:4600}); return; }
+    if(passive("t-lib",q("#rgLib"),"스토리 모음: 지나온 이야기 카드를 다시 봅니다")) return;
+    if(passive("t-map",q("#rgMap"),"성경 지도: 큰 여정과 땅 이름을 봅니다")) return;
+    if(passive("t-cal",q("#rgCal"),"통독표: 다른 날을 고릅니다")) return;
+    passive("t-day",q("#tdNext"),"‹ › 로 앞날과 다음 날을 봅니다"); return; }
+  if(view.tab==="read"){ const v=q("#bible .v"); if(v) coach("r-verse",v,"절을 누르면 형광펜·책갈피·말씀 카드",{ms:4600}); return; }
+  if(view.tab==="qt"){ const b=q(".qth3 .qtstp"); if(b) coach("q-bar",b,"묵상 단계를 다 하면 이 막대가 채워집니다",{at:"below"}); return; }
+  if(view.tab==="challenge"){ const b=q(".gcard2 .qtstp"); if(b) coach("c-bar",b,"도전을 하나씩 마치면 이 막대가 채워집니다",{at:"below"}); return; } }
 function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   const o=Object.assign({look:"over",size:"sq",mineOn:!!a.mine,i:0},(()=>{ try{ return JSON.parse(localStorage.getItem("cbsr-wc")||"{}"); }catch(e){ return {}; } })(),a);
   o.text=wcText(o.b,o.c,o.v1,o.v2); if(!o.text) return; o.cands=wcCands(o.b,o.c,o.v1,o.w,o.d,a.ph); o.i=0; o.ph=o.cands[0]||null; o.mineOn=!!a.mine&&o.mineOn!==false;
@@ -7654,6 +7668,7 @@ function render(){
   document.body.classList.toggle("tab-study",view.tab==="study");
   /* 11/5: 오늘 탭은 윗줄(날짜·버튼)이 사진 위에 떠 있어 맨 위 배너가 그 줄을 가림 → 사진 카드 아래로 옮김 */
   if(view.tab==="today"){ const bn=m.querySelector(":scope>.sbnrs"), td=m.querySelector(":scope>.td4"); if(bn&&td){ td.after(bn); bn.classList.add("aft"); } }
+  document.querySelectorAll(".coach").forEach(c=>c.remove()); clearTimeout(window.__ct); window.__ct=setTimeout(coachTick,900);
   if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-bdg]").forEach(b=>b.onclick=()=>badgeSheet(b.dataset.bdg,!b.classList.contains("off"))); if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-bkf]").forEach(b=>b.onclick=()=>bookCover(+b.dataset.bkf));
   if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-rt]").forEach(b=>b.onclick=()=>{ view.recT=b.dataset.rt; const y=window.scrollY; render(); window.scrollTo({top:y}); });
   if(window.CBSR_V2&&view.tab==="record"){ const keep=f=>()=>{ f(); const y=window.scrollY; render(); window.scrollTo({top:y}); };
