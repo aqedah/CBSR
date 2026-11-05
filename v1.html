@@ -2033,6 +2033,7 @@ button.bk{font-family:inherit;cursor:pointer}
 .rjdesc .src{font-family:var(--f-ui);font-size:12px;color:var(--muted);margin:0}
 .hbook{margin:8px 14px 12px;padding:10px 12px;background:var(--gold-soft);border-radius:10px}
 .hbook p{margin:6px 0;line-height:1.6}
+.qph .qphin small.qchs{display:block;margin-top:3px;font:500 13.5px/1.45 "IBM Plex Sans KR",sans-serif;color:var(--muted)}.qph .qphin small.qchs b{font-weight:700;margin-right:4px}.qph .qphin h2+small.qchs{margin-top:6px}
 .chsub{display:block;font-size:14px;font-weight:500;color:var(--muted);margin-top:2px;font-family:var(--f-ui,inherit)}
 .moreent>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0}
 .moreent>summary small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:2px}
@@ -8256,7 +8257,7 @@ function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.don
   secs.forEach(x=>x.classList.add("q3")); const hd=m.querySelector("section.qthd"); if(hd) hd.style.display="none";
   G.forEach((g,j)=>{ if(g[0].querySelector(":scope>.stage")) return; const lb=g[0].querySelector(":scope>.label"); if(lb&&!lb.querySelector(".stn")) lb.insertAdjacentHTML("afterbegin",`<b class="stn">${j+1}</b>`); }); /* 11/3: 단계 이름에 모두 번호 */
   const top=document.createElement("section"); top.className="qth3";
-  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${p.topic&&p.topic!==p.label?`<small>${esc(p.topic)}</small>`:""}</div><div class="qphbtn"></div></div><div class="qtstp"></div>`;
+  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${dayChSub(p)}</div><div class="qphbtn"></div></div><div class="qtstp"></div>`;
   (hd||G[0][0]).before(top); const pb=top.querySelector(".qphbtn"); ["qtHelp"].forEach(id=>{ const b=hd&&hd.querySelector("#"+id); if(b) pb.appendChild(b); }); /* 11/3: 스토리 단추는 뺌(스토리 모음에 있음) */
   { const card=document.createElement("div"); card.className="daycard qtcard"; top.before(card); card.append(top,...secs); } /* 11/3: 본문 탭처럼 흰 상자 하나에 */
   const bar=top.querySelector(".qtstp"), img=top.querySelector(".qph img");
@@ -8273,7 +8274,7 @@ function qtDoneLook(m){ const hd=m.querySelector("section.qthd"); if(!hd||m.quer
   const dn=m.querySelector("#qtDoneSec"); const secs=[...m.querySelectorAll("section.sec")].filter(x=>x!==hd&&x!==dn); hd.style.display="none";
   const G=[]; secs.forEach(x=>{ const lab=x.querySelector(":scope>.label"); const start=x.querySelector(":scope>.stage")||(lab&&/기도/.test(lab.textContent)); if(start||!G.length) G.push([x]); else G[G.length-1].push(x); });
   const top=document.createElement("section"); top.className="qth3";
-  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${p.topic&&p.topic!==p.label?`<small>${esc(p.topic)}</small>`:""}</div><div class="qphbtn"></div></div>`;
+  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${dayChSub(p)}</div><div class="qphbtn"></div></div>`;
   const hb=hd.querySelector("#qtHelp"); if(hb) top.querySelector(".qphbtn").appendChild(hb);
   const card=document.createElement("div"); card.className="daycard qtcard qtdonec"; hd.before(card); card.append(top); if(dn) card.append(dn);
   const lab=document.createElement("p"); lab.className="qtfoldk"; lab.textContent="묵상 노트 다시 보기 · 눌러서 열고 고칠 수 있습니다"; card.after(lab);
@@ -13378,6 +13379,8 @@ function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; c
   on("[data-gbagain]",()=>gbNew(c.lv,c.scope||"all"));
   on("[data-gbpick]",()=>{ GBV={s:"pick",lv:c.lv,scope:c.scope||"all"}; gbDraw(); });
   el.addEventListener("keydown",e=>{ if(e.key==="Tab"){ const F=[...el.querySelectorAll("button:not([disabled]),input:not([disabled]),summary")].filter(b=>b.offsetParent||b.type==="radio"); if(!F.length) return; const a=F.indexOf(document.activeElement); const n=e.shiftKey?(a<=0?F.length-1:a-1):(a<0||a===F.length-1?0:a+1); F[n].focus(); e.preventDefault(); } }); }
+/* 11/5 목사님: 도전(·묵상) 머리에도 본문 탭처럼 장 아래 소제목 */
+function dayChSub(p){ if(!p||!p.ch) return ""; const L=p.ch.filter(([b,c])=>FLOW[b+"-"+c]).map(([b,c])=>`<small class="qchs"><b>${c}${b===19?"편":"장"}</b> ${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`); if(L.length>4){ const n=L.length-3; L.splice(3,L.length,`<small class="qchs">외 ${n}${p.ch.some(([b])=>b===19)?"편":"장"}</small>`); } return L.length?L.join(""):(p.topic&&p.topic!==p.label?`<small>${esc(p.topic)}</small>`:""); }
 function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=chRec(key); let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
   /* 11/4 목사님: 도전 탭만 따로 논다 → 본문·묵상과 같은 흰 카드·같은 머리·같은 진행 막대. 큰 사진은 한 장만 띠로, 도전은 같은 모양의 줄로 */
   const nq=Object.values(mem.qt).filter(q=>q.done&&q.kv).length, Qz=mem.q[key]&&mem.q[key].first;
@@ -13385,7 +13388,7 @@ function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=
   const IC={look:I('<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>'),map:I('<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>'),quiz:'<i class="gox">O/X</i>',card:I('<rect x="4" y="5" width="16" height="14" rx="2.5"/><path d="M8 10h8M8 14h5"/>')};
   const row=(attr,ic,t,sub,done,off)=>`<button class="grow${done?" dn":""}${off?" off":""}" ${attr}><span class="gri">${IC[ic]}</span><span class="grt"><b>${t}</b><small>${sub}</small></span><em>${done?"✓":"›"}</em></button>`;
   const head=(rows,extra)=>{ const n=rows.length, k=rows.filter(x=>x.done).length;
-    return `<div class="daycard qtcard gcard2"><section class="qth3"><div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(w,d))} · 도전</span><h2>${esc(p?p.label:"")}</h2></div><div class="qphbtn"><button class="qthelp" id="chHelp" aria-label="도전 안내">?</button></div></div>${n?`<div class="qtstp gstp"><span class="qtbars">${rows.map(x=>`<i class="${x.done?"on":""}"></i>`).join("")}</span><b>${k} / ${n} 마침</b></div>`:""}</section>${extra}</div>`; };
+    return `<div class="daycard qtcard gcard2"><section class="qth3"><div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(w,d))} · 도전</span><h2>${esc(p?p.label:"")}</h2>${dayChSub(p)}</div><div class="qphbtn"><button class="qthelp" id="chHelp" aria-label="도전 안내">?</button></div></div>${n?`<div class="qtstp gstp"><span class="qtbars">${rows.map(x=>`<i class="${x.done?"on":""}"></i>`).join("")}</span><b>${k} / ${n} 마침</b></div>`:""}</section>${extra}</div>`; };
   const cardRow=row('data-gplay="card"',"card","빈칸 채우기",nq?`모은 카드 ${nq}장 · 빈칸을 채워 외웁니다`:"묵상 노트를 마치면 열립니다",!!R.card,!nq);
   if(chFuture(w,d)){ const dt=dateOf(w,d); return head([],`<section class="glock"><p class="lead">이 날의 도전은 <b>${esc(fmt(dt,{month:"long",day:"numeric"}))}</b>에 열립니다. 같은 날 함께 읽고 풀어 봅니다.</p>${flipHTML(w,d)}</section><div class="grows">${cardRow}</div>`)+gbCardHTML(1); } /* 11/3: 미래 날에도 골든벨은 열림 */
   const L=gLook(w,d,key); let PS=[]; try{ PS=[...new Set(storySlides(w,d).map(x=>x.ph).filter(Boolean))]; }catch(e){} const tp0=PS[1]||ph;
