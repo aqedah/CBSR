@@ -2036,6 +2036,7 @@ button.bk{font-family:inherit;cursor:pointer}
 .hbook{margin:8px 14px 12px;padding:10px 12px;background:var(--gold-soft);border-radius:10px}
 .hbook p{margin:6px 0;line-height:1.6}
 .qph .qphin small.qchs{display:block;margin-top:3px;font:500 13.5px/1.45 "IBM Plex Sans KR",sans-serif;color:var(--muted)}.qph .qphin small.qchs b{font-weight:700;margin-right:4px}.qph .qphin h2+small.qchs{margin-top:6px}
+.sbnrs.aft{margin-top:14px;margin-bottom:6px}
 .chsub{display:block;font-size:14px;font-weight:500;color:var(--muted);margin-top:2px;font-family:var(--f-ui,inherit)}
 .moreent>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0}
 .moreent>summary small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:2px}
@@ -13484,6 +13485,8 @@ function render(){
   try{ m.innerHTML=view.tab==="today"?((window.CBSR_V2&&BIBLE?topBanners("today"):"")+renderToday()):view.tab==="challenge"?(window.CBSR_V2?v2ChallengeHTML():renderChallenge()):view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():(window.CBSR_V2?renderRecordV2():renderRecord()); }
   catch(e){ console.error(e); m.innerHTML=`<section class="sec"><h2>화면을 그리다 문제가 생겼습니다</h2><p class="lead">다른 탭으로 갔다가 다시 와 보세요. 계속되면 이 문구를 제작자에게 알려 주세요: ${esc(String(e&&e.message||e))}</p></section>`; }
   document.body.classList.toggle("tab-study",view.tab==="study");
+  /* 11/5: 오늘 탭은 윗줄(날짜·버튼)이 사진 위에 떠 있어 맨 위 배너가 그 줄을 가림 → 사진 카드 아래로 옮김 */
+  if(view.tab==="today"){ const bn=m.querySelector(":scope>.sbnrs"), td=m.querySelector(":scope>.td4"); if(bn&&td){ td.after(bn); bn.classList.add("aft"); } }
   if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-bdg]").forEach(b=>b.onclick=()=>badgeSheet(b.dataset.bdg,!b.classList.contains("off"))); if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-bkf]").forEach(b=>b.onclick=()=>bookCover(+b.dataset.bkf));
   if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-rt]").forEach(b=>b.onclick=()=>{ view.recT=b.dataset.rt; const y=window.scrollY; render(); window.scrollTo({top:y}); });
   if(window.CBSR_V2&&view.tab==="record"){ const keep=f=>()=>{ f(); const y=window.scrollY; render(); window.scrollTo({top:y}); };
