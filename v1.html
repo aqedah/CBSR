@@ -13515,7 +13515,7 @@ function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; c
   on("[data-gbpick]",()=>{ GBV={s:"pick",lv:c.lv,scope:c.scope||"all"}; gbDraw(); });
   el.addEventListener("keydown",e=>{ if(e.key==="Tab"){ const F=[...el.querySelectorAll("button:not([disabled]),input:not([disabled]),summary")].filter(b=>b.offsetParent||b.type==="radio"); if(!F.length) return; const a=F.indexOf(document.activeElement); const n=e.shiftKey?(a<=0?F.length-1:a-1):(a<0||a===F.length-1?0:a+1); F[n].focus(); e.preventDefault(); } }); }
 /* 11/5 목사님: 도전(·묵상) 머리에도 본문 탭처럼 장 아래 소제목 */
-function dayChSub(p){ if(!p||!p.ch) return ""; const L=p.ch.filter(([b,c])=>FLOW[b+"-"+c]).map(([b,c])=>`<small class="qchs"><b>${c}${b===19?"편":"장"}</b> ${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`); if(L.length>4){ const n=L.length-3; L.splice(3,L.length,`<small class="qchs">외 ${n}${p.ch.some(([b])=>b===19)?"편":"장"}</small>`); } return L.length?L.join(""):(p.topic&&p.topic!==p.label?`<small>${esc(p.topic)}</small>`:""); }
+function dayChSub(p){ /* 11/5 목사님: 장마다 설명 대신 오늘·본문 탭과 같은 짧은 제목 하나로 */ const t=p&&p.topic; return t&&t!==p.label&&!/^\S+ \d+([–-]\d+)?(장|편)?$/.test(t)?`<small>${esc(t)}</small>`:""; }
 function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=chRec(key); let ph=null; try{ const S=storySlides(w,d); ph=S[0]&&S[0].ph; }catch(e){}
   /* 11/4 목사님: 도전 탭만 따로 논다 → 본문·묵상과 같은 흰 카드·같은 머리·같은 진행 막대. 큰 사진은 한 장만 띠로, 도전은 같은 모양의 줄로 */
   const nq=Object.values(mem.qt).filter(q=>q.done&&q.kv).length, Qz=mem.q[key]&&mem.q[key].first;
