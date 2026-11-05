@@ -2058,8 +2058,10 @@ body.wcmon{overflow:hidden}
 .wcpaint{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid rgba(255,255,255,.16);background:transparent;color:#f3ece0;border-radius:10px;padding:8px 12px;font-weight:600;font-size:14px}.wcpaint span{flex:1}.wcpaint em{font-style:normal;font-size:12.5px;color:#E2B874}
 .wcpanel{position:absolute;left:0;right:0;bottom:0;max-height:52%;display:flex;flex-direction:column;background:#26201a;border-radius:18px 18px 0 0;box-shadow:0 -12px 30px rgba(0,0,0,.4);padding:14px max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:3}
 .wcphd{display:flex;align-items:center;gap:10px;margin-bottom:10px}.wcphd b{flex:1;font-size:14.5px}.wcsw{display:flex;gap:8px}.wcsw button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;background:var(--c)}.wcsw button.on{border-color:#fff;box-shadow:0 0 0 2px #26201a inset}
-.wcwords{flex:1;min-height:0;overflow-y:auto;display:flex;flex-wrap:wrap;gap:6px 4px;padding:2px 0 10px}.wcwords button{border:0;border-radius:6px;padding:6px 7px;background:rgba(255,255,255,.06);color:#f3ece0;font:700 16px/1.3 "Noto Serif KR","Gowun Batang",serif}.wcwords button.on{background:var(--c);color:#1d1813}
+.wcwords{flex:1;min-height:0;overflow-y:auto;display:flex;flex-wrap:wrap;gap:6px 4px;padding:2px 0 10px}.wcwords button{border:0;border-radius:6px;padding:6px 7px;background:rgba(255,255,255,.06);color:#f3ece0;font:700 16px/1.3 "Noto Serif KR","Gowun Batang",serif}.wcwords button.on{color:var(--c);background:rgba(255,255,255,.1);box-shadow:inset 0 -2px 0 var(--c)}
 .wcpft{display:flex;gap:10px}.wcpft button{flex:1;height:44px;border-radius:11px;font-weight:700}.wcclr{border:1px solid rgba(255,255,255,.2);background:transparent;color:#f3ece0}.wcok{border:0;background:#E2B874;color:#2a1d0c}
+html.v2 .hlbar{flex-wrap:wrap;justify-content:center;overflow-x:visible;row-gap:8px;max-width:calc(100vw - 24px)}
+html.v2 .hlbar .hlbr{flex-basis:100%;height:0;flex-grow:1}
 .chsub{display:block;font-size:14px;font-weight:500;color:var(--muted);margin-top:2px;font-family:var(--f-ui,inherit)}
 .moreent>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0}
 .moreent>summary small{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:2px}
@@ -8645,7 +8647,7 @@ function syncHlBar(){
   const anyMk=[...HSEL].some(id=>HL[id]);
   const one=HSEL.size===1?[...HSEL][0]:null, isBm=one&&mem.bm&&mem.bm.v===one;
   const lnHas=one&&window.CBSR_V2&&lnGet(keyOf(view.w,view.d),one);
-  bar.innerHTML=`${one&&window.CBSR_V2?`<button class="bmb lnb${lnHas?" on":""}" data-mk="ln">${lnHas?"남긴 한 줄":"한 줄 남기기"}</button>`:""}${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${one&&STUDY_ON()&&+one.split("-")[0]<=39?`<button class="bmb" data-mk="orig" aria-label="원문 보기">원문</button>`:""}${one&&ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d))?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="bmb erase" data-mk="x" aria-label="형광펜 지우기">지우기</button>`:""}${window.CBSR_V2?`<button class="bmb wcb" data-mk="wc">말씀 카드</button>`:""}<button class="cl" data-mk="close">취소</button>`;
+  bar.innerHTML=`${one&&window.CBSR_V2?`<button class="bmb lnb${lnHas?" on":""}" data-mk="ln">${lnHas?"남긴 한 줄":"한 줄 남기기"}</button>`:""}${one?`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="책갈피">${isBm?"책갈피 빼기":"책갈피"}</button>`:""}${window.CBSR_V2?`<button class="bmb wcb" data-mk="wc">말씀 카드</button>`:""}${one&&STUDY_ON()&&+one.split("-")[0]<=39?`<button class="bmb" data-mk="orig" aria-label="원문 보기">원문</button>`:""}${one&&ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d))?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}${window.CBSR_V2?`<i class="hlbr"></i>`:""}${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="bmb erase" data-mk="x" aria-label="형광펜 지우기">지우기</button>`:""}<button class="cl" data-mk="close">취소</button>`;
   bar.hidden=false; setTimeout(()=>coach("hl-wc",bar.querySelector(".wcb"),"고른 절로 말씀 카드를 만들 수 있습니다"),250);
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
     if(k==="wc"){ wcFromSel(); return; }
@@ -13162,7 +13164,9 @@ function recordCardsHTML(){ const L=Object.entries(mem.qt).filter(([k,q])=>q.don
    · 글자가 잘 읽히도록 그림 밝기를 재서 어둡기를 저절로 맞춤
    · 묵상 노트의 '내 한 줄'을 함께 넣을 수 있음 ===== */
 const WCM={}, WC_IMG={};
-const WC_HLC={y:"#F2C94C",g:"#79C38A",p:"#F29BB7",b:"#86BFEA"};
+/* 글자 색: [그림 위(어두운 바탕), 종이(밝은 바탕)] */
+const WC_TC={y:["#F5C451","#A86A00"],r:["#FF8A7A","#B3261E"],g:["#8EDB9C","#2E7D4A"],b:["#8CC8FF","#2560A8"]};
+const WC_HLC={y:"#F5C451",r:"#FF8A7A",g:"#8EDB9C",b:"#86BFEA"}, WC_TN={y:"금색",r:"빨강",g:"초록",b:"파랑"};
 const WC_SIZE=[["sq","카톡·밴드",1080,1080],["pt","인스타",1080,1350],["st","배경화면",1080,1920]];
 const WC_LOOK=[["over","그림 위에"],["mark","책갈피"],["paper","종이"]];
 function wcRefLabel(b,c,v1,v2){ return `${PLAN.full[b-1]} ${c}:${v1}${v2&&v2>v1?"–"+v2:""}`; }
@@ -13198,10 +13202,10 @@ function wcDraw(cv,o,im){ const [,,W,H]=WC_SIZE.find(z=>z[0]===o.size), x=cv.get
     const room=y1-y0-mineH-refH-30, fs=o.fs||1; const F=wcFit(x,o.text,W-2*M,room,Math.round((tall?66:60)*fs),Math.round(34*Math.min(1,fs)),1.62);
     const tH=F.L.length*F.s*1.62; let ty=y1-mineH-refH-tH-10;
     if(o.look==="paper") ty=Math.max(y0,y0+(y1-y0-(tH+refH+mineH+10))/2-20);
-    x.font=`700 ${F.s}px "Noto Serif KR","Gowun Batang",serif`; const sp=x.measureText(" ").width, HLA=o.look==="over"?.5:.6; let k=0;
+    x.font=`700 ${F.s}px "Noto Serif KR","Gowun Batang",serif`; const sp=x.measureText(" ").width; let k=0;
     F.L.forEach((l,i)=>{ const by=ty+F.s*1.12+i*F.s*1.62; let cx=M; const ws=l.split(" ");
-      ws.forEach((wd,j)=>{ const ww=x.measureText(wd).width, c=o.hl&&o.hl[k]; if(c){ const nx=o.hl[k+1]&&j<ws.length-1; x.fillStyle=WC_HLC[c]; x.globalAlpha=HLA; x.beginPath(); x.roundRect?x.roundRect(cx-6,by-F.s*.86,ww+12+(nx?sp-12:0),F.s*1.1,8):x.rect(cx-6,by-F.s*.86,ww+12+(nx?sp-12:0),F.s*1.1); x.fill(); x.globalAlpha=1; }
-        x.fillStyle=col; x.fillText(wd,cx,by); cx+=ww+sp; k++; }); });
+      ws.forEach((wd,j)=>{ const ww=x.measureText(wd).width, c=o.hl&&o.hl[k];
+        x.fillStyle=c?(o.look==="over"?WC_TC[c][0]:WC_TC[c][1]):col; x.fillText(wd,cx,by); cx+=ww+sp; k++; }); }); /* 11/5 목사님: 칠하기는 글자 색 */
     let ry=ty+tH+10+40; x.fillStyle=refCol; x.font=`600 32px "IBM Plex Sans KR",sans-serif`; x.fillText(ref,M,ry);
     if(mineL.length){ let my=ry+40; x.fillStyle=refCol; x.fillRect(M,my+6,4,mineL.length*48-14); x.fillStyle=mineCol; x.font=`500 32px "IBM Plex Sans KR",sans-serif`; mineL.forEach((l,i)=>x.fillText(l,M+28,my+36+i*48)); }
     return ty; };
@@ -13275,7 +13279,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   o.hl={}; let hc="y"; const pb=box.querySelector(".wcpaint");
   const pnum=()=>{ const n=Object.keys(o.hl).length; pb.querySelector("em").textContent=n?`${n}낱말`:""; };
   pb.onclick=()=>{ const ws=o.text.split(" "); const pn=document.createElement("div"); pn.className="wcpanel";
-    pn.innerHTML=`<div class="wcphd"><b>칠할 낱말을 누르세요</b><span class="wcsw">${Object.keys(WC_HLC).map(k=>`<button data-c="${k}" class="${k===hc?"on":""}" style="--c:${WC_HLC[k]}" aria-label="${HLC[k]}"></button>`).join("")}</span></div><div class="wcwords">${ws.map((t,i)=>`<button data-w="${i}"${o.hl[i]?` style="--c:${WC_HLC[o.hl[i]]}" class="on"`:""}>${esc(t)}</button>`).join("")}</div><div class="wcpft"><button class="wcclr">모두 지우기</button><button class="wcok">다 됐어요</button></div>`;
+    pn.innerHTML=`<div class="wcphd"><b>색을 고르고 낱말을 누르세요</b><span class="wcsw">${Object.keys(WC_HLC).map(k=>`<button data-c="${k}" class="${k===hc?"on":""}" style="--c:${WC_HLC[k]}" aria-label="${WC_TN[k]}"></button>`).join("")}</span></div><div class="wcwords">${ws.map((t,i)=>`<button data-w="${i}"${o.hl[i]?` style="--c:${WC_HLC[o.hl[i]]}" class="on"`:""}>${esc(t)}</button>`).join("")}</div><div class="wcpft"><button class="wcclr">모두 지우기</button><button class="wcok">다 됐어요</button></div>`;
     box.appendChild(pn);
     const paint=()=>{ pn.querySelectorAll("[data-w]").forEach(b=>{ const c=o.hl[b.dataset.w]; b.classList.toggle("on",!!c); b.style.setProperty("--c",c?WC_HLC[c]:"transparent"); }); pnum(); draw(); };
     pn.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ hc=b.dataset.c; pn.querySelectorAll("[data-c]").forEach(x=>x.classList.toggle("on",x===b)); });
