@@ -7203,7 +7203,7 @@ const WCM={}, WC_IMG={};
 const WC_TC={y:["#F5C451","#A86A00"],r:["#FF8A7A","#B3261E"],g:["#8EDB9C","#2E7D4A"],b:["#8CC8FF","#2560A8"]};
 const WC_HLC={y:"#F5C451",r:"#FF8A7A",g:"#8EDB9C",b:"#86BFEA"}, WC_TN={y:"금색",r:"빨강",g:"초록",b:"파랑"};
 const WC_SIZE=[["sq","카톡·밴드",1080,1080],["pt","인스타",1080,1350],["st","배경화면",1080,1920]];
-const WC_LOOK=[["over","그림 위에"],["mark","책갈피"],["paper","종이"]];
+const WC_LOOK=[["over","그림 위에"],["paper","종이"]]; /* 11/6 목사님: 책갈피 꼴 뺌 */
 function wcRefLabel(b,c,v1,v2){ return `${PLAN.full[b-1]} ${c}:${v1}${v2&&v2>v1?"–"+v2:""}`; }
 function wcText(b,c,v1,v2){ const L=[]; for(let v=v1;v<=(v2||v1);v++){ const t=vtxt([b,c,v]); if(t) L.push(t); } return L.join(" ").replace(/\s+/g," ").trim(); }
 function wcCands(b,c,v1,w,d,first){ const out=[], seen=new Set(), add=p=>{ if(p&&p.u&&!seen.has(p.id)){ seen.add(p.id); out.push(p); } };
@@ -7291,7 +7291,7 @@ function coachTick(){ if(!window.CBSR_V2||document.querySelector(".coach,.bmt2,.
   if(view.tab==="challenge"){ const b=q(".gcard2 .qtstp"); if(b) coach("c-bar",b,"도전을 하나씩 마치면 이 막대가 채워집니다",{at:"below"}); return; } }
 function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   const o=Object.assign({look:"over",size:"sq",mineOn:!!a.mine,i:0},(()=>{ try{ return JSON.parse(localStorage.getItem("cbsr-wc")||"{}"); }catch(e){ return {}; } })(),a);
-  o.text=wcText(o.b,o.c,o.v1,o.v2); if(!o.text) return; o.cands=wcCands(o.b,o.c,o.v1,o.w,o.d,a.ph); o.i=0; o.ph=o.cands[0]||null; o.mineOn=!!a.mine&&o.mineOn!==false;
+  if(!WC_LOOK.some(z=>z[0]===o.look)) o.look="over"; o.text=wcText(o.b,o.c,o.v1,o.v2); if(!o.text) return; o.cands=wcCands(o.b,o.c,o.v1,o.w,o.d,a.ph); o.i=0; o.ph=o.cands[0]||null; o.mineOn=!!a.mine&&o.mineOn!==false;
   const box=document.createElement("div"); box.className="wcm"; box.setAttribute("role","dialog"); box.setAttribute("aria-modal","true"); box.setAttribute("aria-label","말씀 카드");
   const seg=(k,L,cur)=>`<div class="wcseg" data-k="${k}">${L.map(z=>`<button class="${z[0]===cur?"on":""}" data-v="${z[0]}">${z[1]}</button>`).join("")}</div>`;
   box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b><span>${esc(wcRefLabel(o.b,o.c,o.v1,o.v2))}</span></div>
