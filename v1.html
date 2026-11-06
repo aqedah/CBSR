@@ -13198,7 +13198,7 @@ function wcCover(x,im,ph,X,Y,W,H){ const [fx,fy]=String(ph&&ph.fx||"50% 50%").sp
   const r=Math.max(W/im.width,H/im.height), w=im.width*r, h=im.height*r; x.drawImage(im,X+(W-w)*(isNaN(fx)?.5:fx),Y+(H-h)*(isNaN(fy)?.5:fy),w,h); }
 function wcLum(x,X,Y,W,H){ try{ const d=x.getImageData(X|0,Y|0,Math.max(1,W|0),Math.max(1,H|0)).data; let s=0,n=0; for(let i=0;i<d.length;i+=4*37){ s+=(.2126*d[i]+.7152*d[i+1]+.0722*d[i+2])/255; n++; } return n?s/n:.5; }catch(e){ return .5; } }
 function wcDraw(cv,o,im){ const [,,W,H]=WC_SIZE.find(z=>z[0]===o.size), x=cv.getContext("2d"); cv.width=W; cv.height=H;
-  const M=96, ref=wcRefLabel(o.b,o.c,o.v1,o.v2), mine=o.mineOn&&o.mine?o.mine:"", foot="개역개정 · CBSR";
+  const M=96, ref=wcRefLabel(o.b,o.c,o.v1,o.v2), mine=o.mineOn&&o.mine?o.mine:"", foot=""; /* 11/6 목사님: 꼬리말 뺌 */
   const PAPER="#F4EFE4", INK="#2A231C", GOLD="#9A6417", tall=H/W>1.5;
   const words=(y0,y1,col,refCol,mineCol)=>{ /* 아래에서 위로 쌓음: 각주 → 내 한 줄 → 구절 위치 → 말씀 */
     let y=y1; x.textBaseline="alphabetic"; x.textAlign="left";
@@ -13220,21 +13220,21 @@ function wcDraw(cv,o,im){ const [,,W,H]=WC_SIZE.find(z=>z[0]===o.size), x=cv.get
     const g=x.createLinearGradient(0,top-H*.12,0,H); g.addColorStop(0,"rgba(18,13,9,0)"); g.addColorStop(.35,`rgba(18,13,9,${a*.85})`); g.addColorStop(1,`rgba(18,13,9,${a})`); x.fillStyle=g; x.fillRect(0,top-H*.12,W,H-top+H*.12);
     const ty=words(top,H-M-40,"#FFFFFF","#E2B874","rgba(255,255,255,.9)");
     x.fillStyle="#E2B874"; x.fillRect(M,ty-26,72,4);
-    x.fillStyle="rgba(255,255,255,.62)"; x.font=`500 24px "IBM Plex Sans KR",sans-serif`; x.textAlign="right"; x.fillText(foot,W-M,H-56); x.textAlign="left";
+    x.fillStyle="rgba(255,255,255,.62)"; x.font=`500 24px "IBM Plex Sans KR",sans-serif`; if(foot){ x.textAlign="right"; x.fillText(foot,W-M,H-56); x.textAlign="left"; }
   } else if(o.look==="mark"){
     const ph=Math.round(H*Math.max(.18,(tall?.5:o.size==="sq"?.34:.44)-Math.max(0,(o.fs||1)-1)*.6)); x.fillStyle=PAPER; x.fillRect(0,0,W,H);
     x.fillStyle="#2a2119"; x.fillRect(0,0,W,ph); if(im) wcCover(x,im,o.ph,0,0,W,ph);
     x.fillStyle=GOLD; x.fillRect(0,ph,W,6);
     /* 책갈피 끈 */ x.fillStyle="#8B2E2A"; x.beginPath(); x.moveTo(W-M-44,ph+6); x.lineTo(W-M,ph+6); x.lineTo(W-M,ph+110); x.lineTo(W-M-22,ph+90); x.lineTo(W-M-44,ph+110); x.closePath(); x.fill();
     words(ph+90,H-M-40,INK,GOLD,"#4A4036");
-    x.fillStyle="rgba(42,35,28,.5)"; x.font=`500 24px "IBM Plex Sans KR",sans-serif`; x.textAlign="right"; x.fillText(foot,W-M,H-56); x.textAlign="left";
+    x.fillStyle="rgba(42,35,28,.5)"; x.font=`500 24px "IBM Plex Sans KR",sans-serif`; if(foot){ x.textAlign="right"; x.fillText(foot,W-M,H-56); x.textAlign="left"; }
   } else {
     x.fillStyle=PAPER; x.fillRect(0,0,W,H);
     /* 종이 결 */ for(let i=0;i<W*H/900;i++){ x.fillStyle=Math.random()<.5?"rgba(120,96,60,.05)":"rgba(255,255,255,.18)"; x.fillRect(Math.random()*W,Math.random()*H,2,2); }
     x.strokeStyle="rgba(154,100,23,.45)"; x.lineWidth=2; x.strokeRect(40,40,W-80,H-80);
     const ty=words(M+60,H-M-80,INK,GOLD,"#4A4036");
     x.fillStyle=GOLD; x.fillRect(M,ty-26,72,4);
-    x.fillStyle="rgba(42,35,28,.5)"; x.font=`500 24px "IBM Plex Sans KR",sans-serif`; x.textAlign="right"; x.fillText(foot,W-M,H-80); x.textAlign="left";
+    x.fillStyle="rgba(42,35,28,.5)"; x.font=`500 24px "IBM Plex Sans KR",sans-serif`; if(foot){ x.textAlign="right"; x.fillText(foot,W-M,H-80); x.textAlign="left"; }
   } }
 /* 처음 한 번만 뜨고 사라지는 짧은 안내(11/5 목사님: 둘러보기 없이, 필요한 순간에 한 줄) */
 function coach(id,el,text,opt){ opt=opt||{}; if(!el||!el.isConnected) return; let seen={}; try{ seen=JSON.parse(localStorage.getItem("cbsr-coach")||"{}"); }catch(e){} if(seen[id]) return;
