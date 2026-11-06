@@ -707,3 +707,48 @@ g53_05|s|66:19|할렐루야/허다한 무리|crowd,people,sunrise_light_rays,fie
 g53_06|s|32:3|굵은 베 옷/재 위에/금식|city_gate,people,ashes,cattle,city|니느웨|7|dark|50|성문 앞 재 위에 앉은 왕과 베옷 입은 사람·짐승(욘 3:5–8) · 53회|||scene
 g53_07|s|17:7|하만/잔치/내 민족|palace,banquet,people,wine||7|warm|50|두 번째 잔치에서 하만을 가리키는 에스더(에 7:3–6) · 53회|||scene
 g53_09|s|15:1|고레스/조서/공포|crowd,scroll,city,people||7|warm|50|성문 광장에서 조서를 읽는 페르시아 전령과 유대 포로들(스 1:1–3) · 53회, g37_07 대신|||scene
+g54_01|s|40:21;41:11;42:19;43:12|나귀 새끼/새끼 나귀/어린 나귀를 타/호산나/감람 산 내리막|donkey,palm,crowd,jesus,cloaks|예루살렘|9|warm|50|나귀를 타고 들어오시는 예수님 (둘째 그림)|||scene
+g54_02|s|43:13|발을 씻기/수건을 가져다가 허리에/대야에 물/발을 씻으|basin,feet,towel,oil_lamp|예루살렘|9|warm|50|발을 씻기는 손과 대야·수건 (둘째 그림)|||scene
+g54_03|s|40:26;41:14;42:22;43:13|마지막 만찬/유월절 음식/이것은 내 몸/이 잔은/유월절 식탁/떡을 떼어 주시|bread,table,disciples,jesus,oil_lamp|예루살렘|9|warm|50|만찬 상에서 떡을 떼시는 예수님 (둘째 그림)|||scene
+g54_04|s|40:26;41:14;42:22|겟세마네/땀이 땅에 떨어지는 핏방울/이 잔을 내게서|prayer,olive_tree,night_sky,jesus|예루살렘|9|dark|50|겟세마네 바위에 엎드려 기도하심 (둘째 그림)|||scene
+g54_05|s|40:26;41:14;42:22;43:18|입맞추어 넘기/입맞추는 자/검과 몽치/등과 횃불/예수님이 잡히/칼을 칼집에|torch,soldiers,kiss,night_sky|예루살렘|9|dark|50|횃불 아래 입맞추는 유다 (둘째 그림)|||scene
+g54_06|s|40:26;41:14;42:22;43:18|불을 쬐/대제사장의 집 뜰/대제사장의 뜰/결박하여|fire,courtyard,bound,night_sky|예루살렘|9|dark|50|뜰의 불 곁에 결박되신 예수님 (둘째 그림)|보류: 왼쪽 인물이 십자가 목걸이를 걸고 있음(시대 어긋남)||scene
+g54_07|s|40:27;41:15;42:23;43:18-19|빌라도/재판석에 앉/총독이 물어/박석|governor,soldiers,judgment_seat,crowd|예루살렘|9|bright|50|재판석의 빌라도 앞에 선 예수님 (둘째 그림)|보류: 화면 가운데 큰 검은 호 모양 생성 결함||scene
+g54_08|s|40:27;41:15;43:19|가시관/자색 옷/홍포/유대인의 왕이여 평안|crown_of_thorns,robe,jesus,hands|예루살렘|9|dark|50|가시관을 씌우는 군인의 손 (둘째 그림)|||scene
+g54_09|s|40:27;41:15;42:23|구레네 사람 시몬/십자가를 지우/십자가를 지고/억지로|cross,street,simon,fallen|예루살렘|9|bright|50|십자가 아래 쓰러지신 예수님과 십자가를 드는 시몬|||scene
+g54_10|s|40:27;41:15;42:23;43:19|십자가 곁에는/여자들이 멀리서/멀리 서서 이 일을/어머니|women,cross,sorrow,storm|예루살렘|9|dark|50|십자가 밑에 엎드린 여인들 (둘째 그림)|||scene
+g54_11|s|40:27;41:15;42:23;43:19|세마포로 싸/아리마대 사람 요셉/아리마대 요셉/몰약과 침향|linen,burial,tomb,two_men|예루살렘|9|dark|50|세마포로 싼 시신을 무덤에 누이는 두 사람 (둘째 그림)|||scene
+g54_12|s|40:28;41:16;42:24;43:20|빈 무덤/세마포가 놓/머리를 쌌던 수건|rock_tomb,linen,sunrise_light_rays|예루살렘|9|bright|50|세마포와 개어진 수건만 남은 빈 무덤 (셋째 그림)|||scene
+g54_13|s|43:20;40:28|막달라 마리아/마리아야/랍오니/동산지기/나를 붙들지 말라|garden,woman,jesus,dawn|예루살렘|9|bright|50|동산에서 마리아 앞에 서신 예수님 (둘째 그림)|||scene
+g54_14|s|42:24|엠마오/떡을 가지사 축사하시고 떼어/눈이 밝아져|bread,table,disciples,jesus,oil_lamp|엠마오|9|warm|50|엠마오에서 떡을 떼시는 예수님 (둘째 그림)|||scene
+g54_15|s|43:21|숯불/디베랴 호수/조반을 먹으라/내 양을 먹이라/나를 사랑하느냐|charcoal_fire,fish,bread,sea,jesus|갈릴리|9|warm|50|바닷가 숯불 위의 떡과 생선, 물가에 서신 예수님 (둘째 그림)|||scene
+g55_01|s|9:13;7:6|바위 틈/굴과 수풀/굴에 숨/숨었/숨어/산 구멍|cave,rock,hiding,two_men,light||5,6|warm|50|바위틈에 숨은 두 사람|||scene
+g55_02|g|||warrior,sling,sword,shield,sunset||5,6|warm|50|해 질 녘 물매와 칼·방패를 든 용사|||scene
+g55_03|s|2:14;7:4-5|병거/바퀴/기손|chariot,wheel,mud,water,horse||3,5|warm|50|물과 진흙에 빠진 병거 바퀴|||object
+g55_04|s|7:7|기드온/항아리와 횃불/항아리를 부수/나팔을 불|shofar,clay_jar,torches,night_sky,valley||5|dark|50|양각 나팔과 깨지는 항아리, 골짜기의 횃불|||scene
+g55_05|s|9:17;9:4;7:20;10:10;13:19;14:13|진을 치/두 진영/골짜기를 사이에|army,valley,sunrise_light_rays,dust||5,6|warm|50|골짜기 양쪽 비탈에 늘어선 두 군대 (둘째 그림)|||scene
+g55_06|s|9:31;10:1|길보아/방패가 버린 바/방패|spear,shield,blood,dusk||6|dark|50|버려진 방패와 창 (둘째 그림)|||setting
+g55_07|g|||fire,city_wall,watchman,night_sky,sparks||6,7|dark|50|무너진 성벽 위 불 곁의 사람 (둘째 그림)|||scene
+g55_08|s|12:18-19;23:36-37;14:32|라기스/포위하~/활 쏘는 자/궁수|army,archers,siege,shield|라기스|7|warm|50|큰 방패 뒤의 앗수르 궁수들 (둘째 그림)|||scene
+g55_09|g|||battle,spear,shield,clash,dust||5,6,7|warm|50|맞부딪치는 창과 방패|||scene
+g55_10|s|14:20|노래하는 자들을 군대/찬송하는 자/여호사밧|singers,army,sunrise_light_rays,lyre||6|bright|50|군대 앞에서 수금을 든 노래하는 자들 (둘째 그림)|보류: 요즘 금관 트럼펫(밸브)이 보임||scene
+g55_11|s|12:25;14:36;24:39;24:52;25:1-5|불사르~/불태우~/함락/성문을 불|ruins,fire,gate,columns,night_sky|예루살렘|7|dark|50|불타는 성문과 무너지는 들보 (둘째 그림)|||setting
+g55_12|s|12:2;12:6|불말/불병거/불수레|horse,chariot,fire,clouds,mountain||6|warm|50|구름 속의 불말과 불병거 (둘째 그림)|||scene
+g55_13|s|23:2;33:4;9:13;29:3|보습/대장장이/칼을 쳐서/철공|blacksmith,anvil,sword,fire,sparks||6,7,8|dark|50|칼을 두드려 보습으로 펴는 대장장이|||scene
+g55_14|s|44:21-28|로마 군대/군대가/병사들이/군사들이/보병|army,roman,road,shields||9,10|bright|50|돌길을 행군하는 로마 군대 (둘째 그림)||배를 타/배에|scene
+g55_15|g|||ruins,sprout,wall,smoke,dawn||7|bright|50|무너진 성벽 돌 틈의 새싹 (둘째 그림)|||setting
+g56_01|s|9:13;7:6|바위 틈/굴과 수풀/굴에 숨/숨었/숨어/산 구멍|cave,rock,hiding,city_wall,dusk||5,6|dark|50|성 밖 바위틈에 숨은 사람들|||scene
+g56_02|g|||warriors,sling,sword,shield,sunset,band||5,6|warm|50|해 질 녘 칼·물매·방패를 들고 오는 무리|||scene
+g56_03|s|2:14;7:4-5|병거/바퀴/기손|chariot,wheel,mud,horse,soldier||3,5|warm|50|진흙에 빠진 병거를 미는 병사|보류: 병사가 그리스식 투구를 씀(시대 어긋남)||object
+g56_04|s|7:7|기드온/항아리와 횃불/항아리를 부수/나팔을 불|torch,clay_jar,trumpet,night_sky,valley||5|dark|50|횃불과 항아리와 쇠 나팔을 든 두 사람|보류: 양각 나팔이 아닌 쇠 나팔|은 나팔|scene
+g56_05|s|9:17;9:4;7:20;10:10;13:19;14:13|진을 치/두 진영/골짜기를 사이에|army,valley,sunset,cracked_ground||5,6|warm|50|갈라진 골짜기 땅 양쪽의 두 군대 (셋째 그림)|||scene
+g56_06|s|9:31;10:1|길보아/방패가 버린 바/방패|spear,shield,cloth,dusk||6|dark|50|버려진 창과 방패와 겉옷 (셋째 그림)|||setting
+g56_07|g|||fire,brazier,wall,night_sky,man||6,7|dark|50|무너진 담 사이 화로 곁에 앉은 사람|||scene
+g56_08|s|12:18-19;23:36-37;14:32|라기스/포위하~/활 쏘는 자/궁수|army,archers,siege,shield,city|라기스|7|dark|50|큰 방패 뒤의 앗수르 궁수들과 멀리 성 (셋째 그림)|||scene
+g56_09|g|||battle,gate,shield,sword,melee||5,6,7|warm|50|성문 앞의 백병전|||scene
+g56_10|s|14:20|노래하는 자들을 군대/찬송하는 자/여호사밧|singers,army,sunrise_light_rays,white_robe||6|bright|50|군대 앞에서 걷는 흰 옷의 세 사람 (셋째 그림)|보류: 세 사람이 같은 얼굴의 흔한 예수 그림처럼 보임||scene
+g56_11|s|12:25;14:36;24:39;24:52;25:1-5|불사르~/불태우~/함락/성문을 불|ruins,fire,beams,soldiers,night_sky|예루살렘|7|dark|50|불타는 성과 지켜보는 병사들 (셋째 그림)|||setting
+g56_12|s|12:6;12:2|불말/불병거/불수레/산에 가득|horse,chariot,clouds,mountain,people||6|warm|50|산 위 구름 속 말과 병거를 바라보는 사람들|||scene
+g56_13|s|23:2;33:4;9:13;29:3|보습/대장장이/칼을 쳐서/철공|blacksmith,anvil,sword,helmet,sparks||6,7,8|dark|50|칼을 두드려 펴는 대장장이와 쌓인 투구·칼 (셋째 그림)|||scene
+g56_14|s|44:21-28|로마 군대/군대가/병사들이/군사들이/보병|army,roman,road,shields,desert||9,10|bright|50|사막 돌길을 행군하는 로마 군단 (셋째 그림)||배를 타/배에|scene
+g56_15|g|||ruins,pasture,smoke,sunrise||7|bright|50|푸른 들판의 무너진 담과 연기 (셋째 그림)|||setting
