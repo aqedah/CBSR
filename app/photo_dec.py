@@ -56,6 +56,8 @@ try:
   import photo_policy as _pp, datetime as _dt
   _P=_pp.load(); _A=_P.setdefault('assets',{}); _ch=[]
   for i,a in dec.items():
+    if a=='del' and i in _A:  # 삭제한 그림의 정책 기록도 지움(남겨 두면 '그림 목록에 없는 번호'로 빌드가 멈춤, 2026-11-06)
+      _A.pop(i); _ch.append(i+' 정책 삭제')
     if a in ('ok','hold'):
       e=_A.setdefault(i,{}); want='approved' if a=='ok' else 'hold'
       if e.get('reviewStatus')!=want:
