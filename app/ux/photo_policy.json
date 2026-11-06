@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "mode": "observe",
- "notes": "사람이 정한 값만 적습니다. 없는 그림은 legacy-unclassified로 보고 기존 role에서 제안값을 계산합니다(photo_policy.py). hold/out·blockedUses·manual-only·reference는 앱에서 바로 막고, 나머지 분류는 관측(observe)만 합니다.",
+ "notes": "사람이 정한 값만 적습니다. 없는 그림은 legacy-unclassified로 보고 기존 role에서 제안값을 계산합니다(photo_policy.py). hold/out·blockedUses·manual-only·reference는 앱에서 바로 막고, 나머지 분류는 관측(observe)만 합니다. 워터마크(Gemini Notebook)가 있는 그림은 원본을 app/photo_orig/에 그대로 두고, 앱 표시용(site_src/img/g)은 아래 띠를 잘라 씁니다(목사님 결정 2026-11-07).",
  "assets": {
   "g01_01": {
    "assetKind": "background",
@@ -136,7 +136,7 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    },
    "relation": "event",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 광장 돌 위에서 두루마리 조서를 읽는 전령과 둘러선 사람들(기존 판단 유지) · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)"
+   "note": "광장 돌 위에서 두루마리 조서를 읽는 전령과 둘러선 사람들(기존 판단 유지) · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)"
   },
   "g48_05": {
    "reviewStatus": "hold",
@@ -1530,7 +1530,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "아버지가 칼과 불그릇을 들고 아들은 장작을 지고 산을 오름(창 22:6). 옷은 거친 겉옷으로 시대 문제 없음. 그러나 오른쪽 아래에 'Gemini Notebook' 워터마크 글자가 있어 hold — 글자 지운 판으로 바꿔야 함 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "아버지가 칼과 불그릇을 들고 아들은 장작을 지고 산을 오름(창 22:6). 옷은 거친 겉옷으로 시대 문제 없음. — 글자 지운 판으로 바꿔야 함 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -15429,7 +15429,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 바위 위 노인이 내려다보는 금빛 성. 다시 그린 그림으로 큰 성전 건물은 보이지 않음 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "바위 위 노인이 내려다보는 금빛 성. 다시 그린 그림으로 큰 성전 건물은 보이지 않음 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -15531,7 +15531,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 항구 도시 돌난간 위 기름 등잔 하나와 기둥들. 본문은 금 촛대 — 등잔은 해석적 연출 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "항구 도시 돌난간 위 기름 등잔 하나와 기둥들. 본문은 금 촛대 — 등잔은 해석적 연출 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -15553,7 +15553,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 바위 해안의 노인 앞으로 구름이 갈라지며 빛이 열림 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "바위 해안의 노인 앞으로 구름이 갈라지며 빛이 열림 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -15575,7 +15575,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 돌 제단 곁 빛 속에서 흰 옷을 받쳐 든 세 사람 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "돌 제단 곁 빛 속에서 흰 옷을 받쳐 든 세 사람 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -15597,7 +15597,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 바다 건너 여러 곳에서 연기가 오르는 큰 항구 도시. 도시 식별 표지는 없음. 17:18 후보 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "바다 건너 여러 곳에서 연기가 오르는 큰 항구 도시. 도시 식별 표지는 없음. 17:18 후보 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -15626,7 +15626,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 아침 해 아래 들판의 흰 옷 큰 무리가 손을 들고 찬송 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "아침 해 아래 들판의 흰 옷 큰 무리가 손을 들고 찬송 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -15648,7 +15648,7 @@
     }
    ],
    "reviewStatus": "reviewed",
-   "note": "오른쪽 아래 생성기 워터마크(Gemini Notebook) 글자가 보임 → hold. 워터마크를 잘라 다시 올리면 reviewed 가능. 성문 앞 재 위에 굵은 베옷을 입고 앉은 왕, 엎드린 사람들과 베를 덮은 소들 · 워터마크: 목사님 결정 대기(앱에서는 그대로 씀)",
+   "note": "성문 앞 재 위에 굵은 베옷을 입고 앉은 왕, 엎드린 사람들과 베를 덮은 소들 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -16755,6 +16755,330 @@
     "by": "claude-visual",
     "at": "2026-11-06",
     "basis": "PDF 원본(Gemini Notebook 15장씩 3묶음)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 6,
+     "chapter": 10,
+     "fromVerse": 12,
+     "toVerse": 13,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "한낮 하늘의 해와 반대편 희미한 낮달, 골짜기의 쫓는 군대(작게), 바위 위에 두 팔 든 사람 뒷모습. 수 10:12–13",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 6,
+     "chapter": 24,
+     "fromVerse": 25,
+     "toVerse": 27,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "큰 상수리나무 그늘 아래 세운 거친 돌 하나, 지팡이 짚은 노인과 뒤의 백성. 수 24:26–27. 글자 없음",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_03": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 7,
+     "chapter": 9,
+     "fromVerse": 52,
+     "toVerse": 53,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "망대 난간 위 두 손에서 떨어지는 둥근 맷돌 위짝, 아래 투구 쓴 군인들과 불. 맞는 사람·피 없음. 삿 9:52–53",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_04": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 9,
+     "chapter": 20,
+     "fromVerse": 35,
+     "toVerse": 38,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "활 쥔 손 가까이, 들판에 꽂힌 화살과 그쪽으로 뛰는 아이, 앞쪽 돌무더기에 옷자락. 삼상 20:35–38",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_05": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 10,
+     "chapter": 15,
+     "fromVerse": 30,
+     "toVerse": 30,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "돌길을 오르는 맨발 클로즈업, 뒤에 머리를 가리고 우는 사람들과 멀리 성읍. 삼하 15:30. 왕관 없음",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_06": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "reviewStatus": "hold",
+   "note": "굵은 가지에 머리털이 걸려 매달린 남자와 달아나는 노새 — 구도는 삼하 18:9 그대로이나 매달린 사람이 로마식 판갑(가슴 갑옷과 가죽 치마)을 입어 시대가 어긋나 보류. 다시 그릴 때 \"긴 겉옷·허리띠, 갑옷 없음\"",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "reviewStatus": "hold",
+   "note": "굴 앞에서 가죽부대의 물을 땅에 쏟는 남자와 지켜보는 세 용사 — 장면은 맞으나 세 용사가 그리스·로마식 근육 갑옷을 입어 보류. 다시 그릴 때 \"가죽 갑옷이나 거친 겉옷\"",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_08": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 11,
+     "chapter": 1,
+     "fromVerse": 50,
+     "toVerse": 51,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "장막 성소의 어둠 속, 제단 모서리의 뿔을 두 손으로 붙잡은 겁먹은 젊은 남자. 왕상 1:50–51. 출 21:14·왕상 2:28(요압)에도 쓸 수 있으나 요압은 노장이라 연출",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_09": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 11,
+     "chapter": 22,
+     "fromVerse": 34,
+     "toVerse": 35,
+     "basis": "explicit"
+    },
+    {
+     "book": 14,
+     "chapter": 18,
+     "fromVerse": 33,
+     "toVerse": 34,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "비늘 갑옷 솔기에 꽂힌 화살 클로즈업, 나무 병거 안에서 부축받아 선 왕. 피 없음. 왕상 22:34–35",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_10": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 12,
+     "chapter": 13,
+     "fromVerse": 15,
+     "toVerse": 17,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "열린 나무 덧문 창을 향해 활을 당기는 손, 아침 빛. 선지자의 손이 얹힌 것은 뚜렷하지 않음(16절은 연출로만). 왕하 13:15–17",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_11": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 12,
+     "chapter": 20,
+     "fromVerse": 9,
+     "toVerse": 11,
+     "basis": "explicit"
+    },
+    {
+     "book": 23,
+     "chapter": 38,
+     "fromVerse": 8,
+     "toVerse": 8,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "돌계단 아래쪽이 다시 햇빛을 받고, 위에 지팡이 짚은 사람들이 내려다봄. 둥근 해시계 없음. 왕하 20:9–11; 사 38:8",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_12": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 23,
+     "chapter": 6,
+     "fromVerse": 6,
+     "toVerse": 7,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "연기 가득한 성전, 부집게에 집힌 붉은 숯이 누운 사람의 입술 가까이. 숯을 든 쪽은 빛 속이라 보이지 않음(천사 없음). 사 6:6–7",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_13": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 24,
+     "chapter": 24,
+     "fromVerse": 1,
+     "toVerse": 3,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "성전 기둥 아래 돌바닥의 광주리 둘, 하나는 잘 익은 무화과, 하나는 썩어 곰팡이 핀 무화과. 렘 24:1–3",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_14": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 26,
+     "chapter": 43,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    },
+    {
+     "book": 26,
+     "chapter": 44,
+     "fromVerse": 1,
+     "toVerse": 2,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "reviewed",
+   "note": "열린 큰 성전 동문으로 쏟아져 들어오는 빛과 구름, 문 앞에 엎드린 작은 실루엣. 환상 내용이라 symbolic. 겔 43:1–5; 44:1–2(닫힌 동문)에는 연출",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g57_15": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "reviewStatus": "hold",
+   "note": "앞 다섯은 등잔이 타고 뒤 다섯은 꺼져 연기만 남음 — 비유 내용은 맞으나 흰 두건이 수녀 복장처럼 읽혀(g50_08과 같은 이유) 보류. 다시 그릴 때 \"머리 수건은 갈색·줄무늬 양모\"",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
    }
   }
  },
