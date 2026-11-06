@@ -8065,31 +8065,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g24_06": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "eraLock": [
-    2
-   ],
-   "verseAnchors": [
-    {
-     "book": 1,
-     "chapter": 25,
-     "fromVerse": 34,
-     "toVerse": 34,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "reviewed",
-   "note": "떡과 팥죽 그릇으로 손을 뻗는 남자",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g24_07": {
    "assetKind": "scene",
    "relation": "illustrative",
