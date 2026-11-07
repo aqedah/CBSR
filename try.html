@@ -13553,7 +13553,7 @@ function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; c
   el.querySelectorAll('input[name="gbsc"]').forEach(x=>x.onchange=()=>{ GBV.scope=x.value; gbDraw(); });
   on("[data-gbstart]",()=>{ if(GBV.lv) gbNew(GBV.lv,GBV.scope); });
   on("[data-gbresume]",()=>{ GBV.s="q"; gbDraw(); });
-  const pickO=v=>{ if(c.ans[(gbQ()||{}).id]) return; c.sel=v; el.querySelectorAll(".gbo").forEach(l=>{ const i=l.querySelector("input"); i.checked=i.value===v; l.classList.toggle("on",i.value===v); }); const q=gbQ(); setTimeout(()=>fin(v===q.a?"r":"w"),160); }; /* 11/7 목사님: 보기를 누르면 바로 채점(정답 확인 단추 없이 한 번에) */
+  const pickO=v=>{ if(c.ans[(gbQ()||{}).id]||el.__picked) return; el.__picked=1; c.sel=v; el.querySelectorAll(".gbo").forEach(l=>{ const i=l.querySelector("input"); i.checked=i.value===v; l.classList.toggle("on",i.value===v); }); const q=gbQ(); setTimeout(()=>fin(v===q.a?"r":"w"),160); }; /* 11/7 목사님: 보기를 누르면 바로 채점(정답 확인 단추 없이 한 번에) */
   el.querySelectorAll('input[name="gbo"]').forEach(x=>x.onchange=()=>pickO(x.value));
   el.querySelectorAll(".gbo").forEach(l=>l.onclick=e=>{ const i=l.querySelector("input"); if(!i||i.disabled) return; e.preventDefault(); pickO(i.value); }); /* 11/3: 휴대폰에서 두 번 눌러야 되던 것 — 보기 칸을 누르면 바로 고름 */
   const fin=(st)=>{ const q=gbQ(); c.ans[q.id]={sel:st==="s"?null:c.sel,st}; c.sel=null; g.seen[q.id]=st==="r"?1:st==="w"?2:3; save(); const y=el.querySelector(".gbbody")?.scrollTop||0; gbDraw(); const b2=document.querySelector("#gbPlay .gbbody"); if(b2){ b2.scrollTop=y; const fb=b2.querySelector(".gbfb"); if(fb&&fb.getBoundingClientRect().top>b2.getBoundingClientRect().bottom-40) b2.scrollTop=y+Math.min(fb.getBoundingClientRect().top-b2.getBoundingClientRect().bottom+160, fb.offsetTop); } }; /* 문제는 그대로 두고, 해설이 화면 밖이면 조금만 올림 */
@@ -13564,6 +13564,14 @@ function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; c
   on("[data-gbretry]",()=>{ const miss=c.ids.filter(id=>(c.ans[id]||{}).st!=="r"); gbNew(c.lv,c.scope,miss); });
   on("[data-gbagain]",()=>gbNew(c.lv,c.scope||"all"));
   on("[data-gbpick]",()=>{ GBV={s:"pick",lv:c.lv,scope:c.scope||"all"}; gbDraw(); });
+  /* 11/7 목사님 휴대폰: 한 번 눌러서는 안 먹고 두 번 눌러야 넘어감 → 손가락을 뗄 때(pointerup) 바로 실행하고, 뒤따르는 click은 버림 */
+  let pd=null; el.addEventListener("pointerdown",e=>{ pd=e.pointerType==="mouse"?null:{x:e.clientX,y:e.clientY,t:e.target}; },{passive:true});
+  el.addEventListener("pointercancel",()=>{ pd=null; },{passive:true});
+  el.addEventListener("pointerup",e=>{ const P=pd; pd=null; if(!P||Math.hypot(e.clientX-P.x,e.clientY-P.y)>12) return;
+    const tg=P.t.closest&&P.t.closest(".gbo,.gbl,.gbscope label,button"); if(!tg||tg.disabled||!tg.onclick) return;
+    if(tg.matches(".gbo,.gbl,.gbscope label")&&tg.querySelector("input:disabled")) return;
+    window.__gbTapAt=Date.now(); tg.onclick.call(tg,{preventDefault(){},stopPropagation(){},target:tg,currentTarget:tg}); });
+  if(!window.__gbClickGuard){ window.__gbClickGuard=1; document.addEventListener("click",e=>{ if(Date.now()-(window.__gbTapAt||0)<700&&e.target.closest&&e.target.closest("#gbPlay")&&!e.target.closest("summary,details")){ e.preventDefault(); e.stopPropagation(); } },true); }
   el.addEventListener("keydown",e=>{ if(e.key==="Tab"){ const F=[...el.querySelectorAll("button:not([disabled]),input:not([disabled]),summary")].filter(b=>b.offsetParent||b.type==="radio"); if(!F.length) return; const a=F.indexOf(document.activeElement); const n=e.shiftKey?(a<=0?F.length-1:a-1):(a<0||a===F.length-1?0:a+1); F[n].focus(); e.preventDefault(); } }); }
 /* 11/5 목사님: 도전(·묵상) 머리에도 본문 탭처럼 장 아래 소제목 */
 function dayChSub(p){ /* 11/5 목사님: 장마다 설명 대신 오늘·본문 탭과 같은 짧은 제목 하나로 */ const t=p&&p.topic; return t&&t!==p.label&&!/^\S+ \d+([–-]\d+)?(장|편)?$/.test(t)?`<small>${esc(t)}</small>`:""; }
