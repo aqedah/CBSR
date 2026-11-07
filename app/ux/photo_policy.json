@@ -68,27 +68,6 @@
    "relation": "event",
    "note": "가시덤불에 걸린 숫양 뿔 클로즈업과 빛줄기. 창 22:13 '뿔이 수풀에 걸려'"
   },
-  "g37_07": {
-   "assetKind": "reference",
-   "directness": null,
-   "assignmentPolicy": "manual-only",
-   "reviewStatus": "hold",
-   "review": {
-    "reason": "고레스 원통과 에스라 1장 조서를 동일 문서로 제시할 수 없음. 기존 out 상태 유지",
-    "approvedBy": null,
-    "approvedAt": null,
-    "by": null,
-    "note": "GPT 구조 예시(2026-10-30)에서 옮김. 목사님 승인 전"
-   },
-   "blockedUses": [
-    {
-     "book": 15,
-     "chapterFrom": 1,
-     "chapterTo": 1,
-     "reason": "성경의 조서 실물처럼 묘사하는 용도 차단"
-    }
-   ]
-  },
   "g53_09": {
    "assetKind": "scene",
    "directness": "D2",
@@ -230,10 +209,12 @@
    }
   },
   "g53_07": {
-   "reviewStatus": "hold",
+   "reviewStatus": "approved",
    "review": {
     "reason": "보류: 엎질러진 포도주가 피처럼 보여 처형을 미리 보이는 듯함",
-    "note": "photos_master의 기존 out 사유에서 옮김"
+    "note": "photos_master의 기존 out 사유에서 옮김",
+    "by": "gallery-admin",
+    "at": "2026-11-07"
    }
   },
   "g38_03": {
@@ -555,28 +536,6 @@
    "directness": "D2",
    "assignmentPolicy": "narrow",
    "note": "빛이 내리는 다듬은 돌 기초 앞에서 손을 들거나 엎드린 무리. 스 3:10–13 기쁨과 통곡(기존 판단 유지)"
-  },
-  "g34_07": {
-   "eraLock": [
-    9,
-    10
-   ],
-   "reviewStatus": "approved",
-   "note": "창과 둥근 방패, 볏 없는 그리스식 청동 투구의 두 병사. 이스라엘 왕국 시대 문지기로는 맞지 않아 9·10시대로 잠금(기존 판단 유지). 로마 군인과도 차이 있어 관리자 선택만",
-   "review": {
-    "by": "claude-visual",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
-    "at": "2026-10-30"
-   },
-   "assetKind": "scene",
-   "relation": "ambient",
-   "directness": "D4",
-   "assignmentPolicy": "manual-only",
-   "requireAny": [
-    "문지기",
-    "군사",
-    "파수"
-   ]
   },
   "g07_04": {
    "group": "captives",
@@ -4850,19 +4809,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g13_08": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "reviewStatus": "hold",
-   "note": "엎드린 형제들 앞, 빛나는 문에 선 흰 옷·긴 머리 인물. 애굽 총리 요셉이라기보다 흔한 예수 그림처럼 보여 오해 위험. 후보: 창 42:6, 44:14",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g13_09": {
    "assetKind": "scene",
    "relation": "event",
@@ -7062,28 +7008,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g21_04": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 6,
-     "chapter": 3,
-     "fromVerse": 15,
-     "toVerse": 17,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "마른 땅으로 궤를 메고 가는 사람들 바로 뒤에 바다 같은 거대한 물벽 — 본문은 물이 멀리 아담 성읍에서 쌓였다고 함(수 3:16). 홍해 장면처럼 보여 오해 위험",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g21_05": {
    "assetKind": "scene",
    "relation": "event",
@@ -7555,28 +7479,6 @@
    ],
    "reviewStatus": "approved",
    "note": "길에서 아들을 끌어안는 아버지 — 탕자 비유",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
-  "g22_12": {
-   "assetKind": "symbolic",
-   "relation": "figurative",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 42,
-     "chapter": 15,
-     "fromVerse": 8,
-     "toVerse": 8,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "집 안에 무릎 꿇은 여인과 화덕 곁의 다른 여인, 문가의 인물. 등불 켜고 쓸며 찾는 동작이 없고 여인이 둘이라 비유와 어긋남",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -9120,11 +9022,11 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "hold",
+   "reviewStatus": "approved",
    "note": "화면 문제: 물고기 꼬리 달린 다곤 상(본문에 없는 후대 전승)이고 머리가 몸에 붙은 채 쓰러짐. 본문은 머리와 두 손목이 끊어져 문지방에 있음(5:4). 손만 떨어져 있음",
    "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
+    "by": "gallery-admin",
+    "at": "2026-11-07",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
@@ -10088,28 +9990,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g33_03": {
-   "assetKind": "symbolic",
-   "relation": "figurative",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 66,
-     "chapter": 5,
-     "fromVerse": 1,
-     "toVerse": 1,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "화면 문제: 두루마리 바탕에 중세 라틴식 흑체 글자가 또렷이 보이고, 보이는 인이 다섯 개뿐(일곱 인과 어긋남)",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g33_05": {
    "assetKind": "symbolic",
    "relation": "figurative",
@@ -10784,28 +10664,6 @@
    ],
    "reviewStatus": "approved",
    "note": "빛 아래 언약궤 앞에 꽃 핀 지팡이와 만나 항아리. 히 9:4는 궤 안이라 하므로 그 절은 illustrative",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
-  "g35_11": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 6,
-     "chapter": 3,
-     "fromVerse": 15,
-     "toVerse": 17,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "화면 문제: 요단 물이 홍해처럼 양쪽 물벽으로 갈라짐(본문은 위에서 물이 그쳐 한 곳에 쌓임 3:16), 궤를 멘 제사장 없이 궤만 강바닥에 놓임(3:17과 어긋남)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -13102,28 +12960,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g43_12": {
-   "assetKind": "background",
-   "relation": "figurative",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 59,
-     "chapter": 3,
-     "fromVerse": 5,
-     "toVerse": 6,
-     "basis": "interpretive"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "산불이 숲으로 번지고 앞쪽 가시덤불 고리 속에 붉은 불씨. 가시덤불이 둥근 관 모양이라 가시 면류관처럼 읽힐 위험이 있어 보류",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g43_13": {
    "assetKind": "object",
    "relation": "figurative",
@@ -14222,11 +14058,11 @@
     "금 그릇",
     "금잔"
    ],
-   "reviewStatus": "hold",
+   "reviewStatus": "approved",
    "note": "금잔·은그릇·석류·무화과·포도가 차려진 긴 식탁. 접시 곁에 요즘 포크가 여러 개 보임 → hold",
    "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
+    "by": "gallery-admin",
+    "at": "2026-11-07",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },

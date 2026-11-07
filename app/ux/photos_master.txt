@@ -195,7 +195,6 @@ g13_04|s|1:40|술 맡은|cup,grapes,hands||3|dark|45|포도를 짜 넣는 잔|||
 g13_05|s|1:41|일곱 암소/살진 소/파리한 소/바로가 두 꿈/아무도 풀지 못한|cattle,river,reeds|나일|3|dark|55|강가의 살진 소와 파리한 소|||symbolic
 g13_06|s|1:41-47|곡식을 저장/곡물을 쌓/창고/일곱 해 동안 풍년|grain,labor,egypt|애굽|3|warm|50|곡식 창고와 일꾼들|||scene
 g13_07|s|1:41|인장 반지/금 사슬/총리|hands,egypt,ring||3|bright|50|인장 반지와 금 목걸이|||object
-g13_08|s|1:42-44;1:50|땅에 엎드려 절/요셉 앞에 섭/요셉 앞에 서|men,bowing,egypt|애굽|3|dark|50|땅에 엎드린 형제들|||scene
 g13_09|s|1:45-46|수레를 보내/수레들/고센 땅으로 데려|cart,donkey,crowd,dust||2,3|warm|50|수레와 나귀 행렬|||scene
 g13_10|s|1:46-47;2:8-9|고센|pasture,river,sheep,village|고센|3|bright|50|강가의 목초지와 마을|||landscape
 g13_11|s|2:1-2;8:4;9:1|산파|hands,baby,darkness||3,5|dark|50|강보에 싼 아기를 안은 손|||scene
@@ -205,7 +204,6 @@ g13_15|s|2:10;29:1-2|메뚜기|locusts,storm_sky,wheat_field||3|dark|50|하늘�
 g21_01|s|2:13-14;2:40;4:9-10|구름 기둥/구름기둥|clouds,pillar,desert,tent||3,4|warm|50|광야의 구름기둥(둘째 그림)|||symbolic
 g21_02|s|2:19-20;2:24;5:4-5|시내 산/시내산/산에 강림/연기|mountain_peak,storm_sky,fire,smoke|시내|4|dark|50|연기에 싸인 산(둘째 그림)|||symbolic
 g21_03|s|4:10|은 나팔/나팔 둘|trumpet,priest,tent,camp||4,5|warm|60|은 나팔을 부는 두 사람(둘째 그림)|||scene
-g21_04|s|6:3-4|요단을 건너|ark,priest,river|요단|5|warm|35|강바닥을 건너는 궤(둘째 그림)||홍해|scene
 g21_05|s|7:7|항아리 속에 횃불/항아리를 깨|fire,clay_jar,night_sky,army||5|dark|50|항아리를 깨뜨리는 병사(둘째 그림)|||scene
 g21_06|s|7:13-16;9:4-7;9:13-14;9:17;9:29;9:31|블레셋|army,philistine,dusk||5,6|dark|35|해 질 녘 블레셋 군인(둘째 그림)|||scene
 g21_07|s|11:8;14:5-7|불이 하늘에서/성전 봉헌/낙성식|temple_stones,stone_altar,smoke,priest|예루살렘|6|warm|50|성전 뜰의 불(둘째 그림)|||scene
@@ -295,7 +293,6 @@ g22_08|s|43:9|진흙을 이겨/눈에 바르/맹인으로 난/날 때부터 맹�
 g22_09|s|40:13;41:4;42:8|씨를 뿌리는 자/씨 뿌리는 자/씨를 뿌릴새/좋은 땅에|sower,field,seed||9,8|warm|50|씨 뿌리는 사람|||scene
 g22_10|s|40:18;42:15;43:10|잃은 양/양 백 마리/아흔아홉/어깨에 메고/선한 목자|shepherd,sheep,hill||9|warm|50|잃은 양을 어깨에 멘 목자|||scene
 g22_11|s|42:15|탕자/둘째 아들이/살진 송아지/목을 안고 입을 맞추|father,son,embrace,house||9|warm|50|돌아온 아들을 끌어안는 아버지|||scene
-g22_12|s|42:15|드라크마/등불을 켜고 집을 쓸|woman,house,oven,oil_lamp||9|dark|40|집 안에서 무릎 꿇고 찾는 여인|||scene
 g22_14|s|40:17;41:9;42:9|변형되사/얼굴이 해 같이/모세와 엘리야/초막 셋|mountain_peak,light,jesus,disciples||9|bright|50|높은 산에서 변형되신 예수님|||scene
 g22_15|s|40:21;41:11;42:19;43:2|돈 바꾸는/환전/비둘기 파는/채찍을 만들/상을 엎으|temple_stones,dove,coins,table|예루살렘|9|warm|50|성전 뜰의 엎어진 상과 비둘기|||scene
 g23_01|s|40:21;41:11;42:19;43:12|나귀 새끼/새끼 나귀/어린 나귀를 타/호산나/감람 산 내리막|donkey,palm,crowd,jesus|예루살렘|9|warm|50|나귀를 타고 들어오시는 예수님|||scene
@@ -416,7 +413,6 @@ g32_14|g||안수/손을 얹|hands,prayer,man||10|warm|50|무릎 꿇은 사람 �
 g32_15|g||과부/구제/고아와 과부|widow,bread,hands||10,8|warm|50|늙은 여인에게 떡을 건네는 손|||scene
 g33_01|s|66:1|밧모|cave,sea,rock,island|밧모|10|bright|60|밧모 섬 바위 동굴에서 본 바다|||setting
 g33_02|s|66:1-2|일곱 금 촛대/일곱 촛대/촛대 사이|lampstands,light||10|dark|50|어둠 속 일곱 금 촛대|||object
-g33_03|s|66:5-6|일곱 인/인을 떼/두루마리를 취하|scroll,seals||10|dark|50|일곱 인으로 봉한 두루마리|||object
 g33_04|s|66:4|유리 바다/보좌/무지개가 있어|light,sea,rainbow||10|bright|50|유리 바다 위의 흰빛과 무지개|||symbolic
 g33_05|s|66:5;66:8|금 대접/향이 가득한/향연|bowls,incense,smoke||10|warm|50|향이 피어오르는 금 대접들|||object
 g33_06|s|66:7|흰 옷을 입고/종려 가지/큰 무리|crowd,white_robes,palm||10|bright|50|흰 옷에 종려 가지를 든 큰 무리|||scene
@@ -435,7 +431,6 @@ g34_03|g||감람유/기름을 짜/올리브|olive_press,oil||5,6,8|dark|40|기�
 g34_04|g||양 우리/우리에|sheepfold,shepherd,night_sky,moon||1,5,6,8|dark|70|밤 양 우리를 지키는 목자|||setting
 g34_05|g||우물/물을 길|well,women,clay_jar,sunset||1,5,6,8|warm|50|물동이를 이고 돌아가는 저녁 길|||scene
 g34_06|g||성문에서/성문 곁/재판|city_gate,elders||5,6,7|bright|50|성문 그늘의 장로들|||setting
-g34_07|g|||soldiers,palace,gate||6|bright|50|왕궁 문지기|||scene
 g34_08|g||파수꾼/성벽 위/에워싸|city_wall,fire,night_sky,camp||6,7|dark|50|밤 성벽과 멀리 적진의 모닥불|||setting
 g34_09|g||산당/아세라|high_place,altar,pillar,smoke||6,7|dark|50|언덕 위 산당의 돌 제단과 나무 기둥|||setting
 g34_10|g||돌아오/포로에서 돌아온/귀환|caravan,donkey,road,family||7|warm|50|짐 실은 나귀와 돌아오는 긴 행렬|||scene
@@ -454,7 +449,6 @@ g35_07|s|9:6|벧세메스/밀을 베다가/수레를 패고/큰 돌|ark,wheat_fi
 g35_08|s|9:7;10:6;13:13|아비나답의 집/기럇여아림/엘르아살|ark,house,man,window_light||5,6|dark|50|아비나답의 집에 놓인 언약궤 곁에 선 사람(삼상 7)|||scene
 g35_09|s|9:3|사무엘이 누웠더니/하나님의 등불/궤 있는 곳|ark,boy,lamp,night||5|dark|50|실로 성소의 밤, 언약궤 곁에 잠든 아이와 등불(삼상 3)|||scene
 g35_10|s|4:17;2:16;58:9|싹 난 지팡이/만나 항아리/증거궤 앞|ark,rod,almond_blossom,jar||4|warm|50|언약궤 앞의 싹 난 지팡이와 만나 항아리(히 9:4)|||object
-g35_11|s|6:3;6:4|요단/언약궤를 멘 제사장/물이 그치고|ark,river,stones,crowd||5|bright|50|물이 갈라진 요단 가운데의 언약궤(수 3–4, 널리 알려진 그림 방식)|||scene
 g35_12|s|6:6|여리고/성벽이 무너져/나팔을 불|ark,city_wall,trumpet,ruins|여리고|5|warm|50|무너지는 여리고 성벽 앞의 언약궤(수 6)|||scene
 g35_13|s|9:5|다곤/엎드러져/머리와 두 손목|ark,idol,temple,broken_statue|아스돗|5|dark|50|엎드러져 부서진 다곤 상 앞의 언약궤(삼상 5)|||scene
 g36_01|s|4:2|진영/회막을 중심/사방에 진|camp,tents,tabernacle,banners||4|warm|50|회막을 가운데 둔 지파별 진영(민 2)|||landscape
@@ -477,7 +471,6 @@ g37_03|s|14:7;11:18|불이 하늘에서 내려/엎드려 경배|fire,altar,bowin
 g37_04|s|14:20|노래하는 자들/군대 앞에서/찬송하게|singer,army,dust||6|warm|50|군대 앞에서 노래하며 나아가는 사람(대하 20)|||scene
 g37_05|s|14:26;12:15|웃시야/분향/이마에 나병|king,censer,leprosy,temple||6|dark|50|분향하다 이마에 나병이 생긴 왕(대하 26)|||scene
 g37_06|s|14:29;14:30|성전 문을 열고/그릇들을 정결하게|temple_doors,vessels,light||6,7|warm|50|다시 열린 성전 문과 닦은 그릇들(대하 29)|||object
-g37_07|s|15:1;14:36|고레스/조서/공포하여|clay_cylinder,hands,palace|바사|7|warm|50|페르시아 궁의 진흙 원통 조서(스 1)|보류: 고레스 원통은 스 1장 조서와 다른 문서(GPT 감사 2026-10-29)||object
 g37_08|s|15:3|대성통곡/기뻐하여 즐거이 부르는/기초를 놓|old_man,young_man,weeping,joy,foundation|예루살렘|7|warm|50|성전 기초 앞에서 우는 노인과 외치는 젊은이(스 3:12)|||scene
 g37_09|s|15:9;15:10|엎드려/심히 통곡/에스라가 기도|bowing,crowd,weeping||7|dark|50|땅에 엎드린 학자와 둘러앉아 우는 무리(스 9–10)|||scene
 g37_10|s|16:2|밤에/성벽을 살펴보니/짐승을 탄|night,ruins,donkey,moon|예루살렘|7|dark|50|달빛 아래 무너진 성벽을 살피는 사람(느 2)|||scene
@@ -571,7 +564,6 @@ g43_08|s|57:1|오네시모/돌려보내/종으로 대하지|slave,letter,door,yo
 g43_09|s|50:3;46:9|푯대/달려가노라/달음질|runner,race,dust,pillar||10|warm|50|결승 기둥을 향해 달리는 사람(빌 3:14)|||scene
 g43_10|s|55:2|병사/군사/농부|soldier,farmer,plow,shield||10|warm|50|보초 서는 군사와 밭 가는 농부(딤후 2:3–6)|||scene
 g43_11|s|58:12|구름 같이 둘러싼/허다한 증인/경주|stadium,crowd,stairs,light||10|warm|50|관중이 가득한 돌 경기장(히 12:1)|||setting
-g43_12|s|59:3|작은 불이/많은 나무를/혀는 곧 불|fire,forest,smoke,thorns||10|dark|50|작은 불씨가 숲으로 번지는 산비탈(약 3:5)|||landscape
 g43_13|s|60:2|산 돌/신령한 집/돌같이|stones,wall,light||10|warm|50|빛이 새는 틈으로 맞물려 쌓인 돌들(벧전 2:5)|||object
 g43_14|s|60:5|우는 사자/삼킬 자/두루 다니며|lion,night,rock,moon||10|dark|50|밤 바위 위에서 두리번거리는 사자(벧전 5:8)|||landscape
 g43_15|s|65:1|물 없는 구름/뿌리까지 뽑힌/열매 없는|tree,drought,clouds,dry_ground||10|dark|50|마른 땅에 뿌리째 뽑혀 쓰러진 나무(유 1:12)|||landscape
