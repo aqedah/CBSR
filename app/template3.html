@@ -3664,7 +3664,7 @@ function phGate(p,CH,manual){ if(!p||p.rs==="hold"||p.rs==="out") return false;
   if(p.bu&&(CH||[]).some(([b,c])=>p.bu.some(([B,a,z])=>B===b&&c>=a&&c<=z))) return false;
   if(!manual&&(p.ap==="manual-only"||p.ak==="ref"||p.rs==="restricted")) return false; return true; }
 function phPick(text,ctxPl,genre,seed,used,hint,opt){ opt=opt||{}; const eok=opt.era||null, CH=opt.ch||[]; const P=(typeof PHOTOS!=="undefined")?PHOTOS:[]; if(!P.length) return null;
-  if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f&&phGate(f,CH,true)) return f; }
+  if(hint&&!/[,\s]/.test(hint)){ const f=P.find(p=>p.id===hint||p.u.includes(hint)); if(f&&phGate(f,CH,true)){ PH_LAST.s=99; PH_LAST.why="원고가 지정한 그림"; PH_LAST.grade="지정"; PH_LAST.m={w:[],t:[]}; PH_LAST.rej=[]; return f; } }
   const kt=phNoBook(opt.kwText||text), dayB=CH.length?CH[0][0]:0;
   const want=new Set(), hs=new Set(); PH_KW.forEach(([ws,t])=>{ if(ws.some(w=>phHas(kt,w))) want.add(t); }); if(hint) String(hint).split(/[,\s]+/).forEach(t=>t&&hs.add(t));
   /* 카드가 밝힌 장절: 다른 책 이름이 붙은 인용(예: 요삼 1:5)은 오늘 책의 장으로 보지 않습니다 */
