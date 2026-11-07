@@ -673,6 +673,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sph img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);filter:saturate(.92) contrast(1.04)}
 .sph.v1 img{transform:scale(1.14)}.sph.v2 img{transform:scale(1.16)}
 .sph img{transition:filter .9s ease}
+.sph.sblur img{filter:blur(16px) brightness(.5) saturate(.7);transform:scale(1.15)}
 #storyRoot .sfr{z-index:1}#storyRoot .sfr.sfirst{animation:sfin .45s ease}@keyframes sfin{from{opacity:.4}to{opacity:1}}
 #storyRoot .sfr.snew{opacity:0;transition:opacity .75s ease}#storyRoot .sfr.snew.in{opacity:1}
 #storyRoot .sfr.sghost{z-index:0;pointer-events:none}.sghost .sbox,.sghost .stapnote,.sghost .spanel{transition:opacity .25s ease;opacity:0}
@@ -3644,7 +3645,7 @@ function phUseHit(p,kt,CH){ const L=PHUSE_BY[p.id]; if(!L) return null; let best
     const ws=(toks||[]).filter(x=>phRq(kt,x)), need=Math.min(2,(toks||[]).length||1); if(!cite&&ws.length<need) continue;
     const r={id,mode,rel,why:cite?`${c}:${f}${t>f?"–"+t:""}`:ws.join("·")}; if(mode==="block-specific") return r; if(!best||(mode==="prefer"&&best.mode!=="prefer")) best=r; }
   return best; }
-let PHR2=(()=>{ try{ return new URLSearchParams(location.search).get("phrule")!=="v1"; }catch(e){ return true; } })(), PH_MIN=null; const PH_LAST={};
+let PHR2=(()=>{ try{ return new URLSearchParams(location.search).get("phrule")!=="v1"; }catch(e){ return true; } })(), PH_MIN=0; /* 2026-11-07 목사님 결정(규칙 ⑦): 중립 장식 풍경만 남는 카드는 그림을 비우고 흐린 표지를 씀 */ const PH_LAST={};
 /* 절 근거 그림이 여럿이면: 실제 사건 → 물건·장소 → 비유·환상 → 설명용 연출 */
 const PH_WEAKT=new Set(['light','darkness','sorrow','joy','prayer','weeping','judgment','strength','healing','still','embrace','hands','hand','man','men','people','crowd','dust','sky','land','sunrise_light_rays','dawn','dusk','night','night_sky','sunset','tears','face','road']);
 /* 절 근거가 여럿이면 관계 서열이 아니라 그 절에 더 좁게 맞는 그림(GPT 2.1 4.3) */
@@ -3816,7 +3817,7 @@ function storySlides(w,d,base){ const ck=MODE+":"+PV()+":"+keyOf(w,d)+(base?":b"
   const reserve=new Set(); try{ const PP=(typeof PHOTOS!=="undefined")?PHOTOS:[]; groups.forEach((G,gi)=>{ if(G.list[0]===0) return; const t=phNoBook(G.list.map(i=>sTxt(out[i])).join(" "));
     PP.forEach(q=>{ if(q.scope==="s"&&phGate(q,p.ch,false)&&(q.kw||[]).some(w=>phHas(t,w))&&(q.refs||[]).some(([b,a,z])=>p.ch.some(x=>x[0]===b&&x[1]>=a&&x[1]<=z))) reserve.add(q.id); }); }); }catch(e){}
   groups.forEach((G,gi)=>{ const txt=G.list.map(i=>sTxt(out[i])).join(" ")+(G.list[0]===0?" "+ctxPl.join(" "):"");
-    const ph=phPick(txt,ctxPl,gen,ck.replace(/:b$/,"")+":"+gi,G.list[0]===0&&reserve.size?new Set([...used,...reserve]):used,G.hint,{avoid,stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); G.list.forEach(i=>{ out[i]._phs=PH_LAST.s; out[i]._phw=PH_LAST.why; out[i]._phg=PH_LAST.grade; out[i]._rej=(PH_LAST.rej||[]).slice(0,4); }); if(!ph) return; used.add(ph.id); if(!cover) cover=ph;
+    const ph=phPick(txt,ctxPl,gen,ck.replace(/:b$/,"")+":"+gi,G.list[0]===0&&reserve.size?new Set([...used,...reserve]):used,G.hint,{avoid,stage:G.st,mood:cover&&cover.mood,era:ERA_OK(p.ch[0][0],p.ch[0][1]),ch:p.ch,cover:G.list[0]===0,kwText:G.list.map(i=>sTxt(out[i])).join(" ")}); G.list.forEach(i=>{ out[i]._phs=PH_LAST.s; out[i]._phw=PH_LAST.why; out[i]._phg=PH_LAST.grade; out[i]._rej=(PH_LAST.rej||[]).slice(0,4); }); if(!ph){ /* 맞는 그림이 없으면 흐린 표지(2026-11-07) */ if(cover) G.list.forEach(i=>{ out[i].ph=cover; out[i].phv=0; out[i].phBlur=true; }); return; } used.add(ph.id); if(!cover) cover=ph;
     G.list.forEach((i,k)=>{ out[i].ph=ph; out[i].phv=k; }); });
   out.forEach(s=>{ if(s.k==="fin"||s.k==="ask") s.ph=cover; if(s.qt) s.ph=(C&&C.qtImg&&(PHOTOS||[]).find(x=>x.u.includes(C.qtImg)))||cover; });
   SV.cache[ck]=out; return out; }
@@ -4753,7 +4754,7 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
   const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew":old?"":" sfirst"}${window.CBSR_V2&&!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
    ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
-   ${showPh?`<div class="sph v${s.phv||0}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
+   ${showPh?`<div class="sph v${s.phv||0}${s.phBlur?" sblur":""}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
    <div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${dur}ms"`:""}></i></span>`).join("")}</div>
    <div class="stop"><span class="sdot"><img alt="" src="icons/icon-192.png"></span><b>${esc(p.label)}</b><span></span>${FB_ON?`<button class="sx sfb${fbAll()[fbKey(SV.i)]?" has":""}" id="sFb" aria-label="이 카드에 검토 메모">✎</button>`:""}${EDON&&s._ci!=null&&ph&&kind!=="map"&&kind!=="table"?`<button class="sx edui" id="sPh">그림 바꾸기</button>`:""}${window.CBSR_V2&&!s.qt?`<button class="sx sauto${sAutoOff()?"":" on"}" id="sAuto" aria-pressed="${!sAutoOff()}" title="자동 넘김">${sAutoOff()?"손으로":auto?"자동":"눌러서 넘김"}</button>`:""}${auto?`<button class="sx sps" id="sPause" aria-label="멈춤">❚❚</button>`:""}<button class="sx" id="sClose" aria-label="닫기">✕</button></div>

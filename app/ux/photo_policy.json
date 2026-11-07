@@ -1,13 +1,13 @@
 {
  "schemaVersion": 1,
  "mode": "enforce",
- "notes": "사람이 정한 값만 적습니다. 없는 그림은 legacy-unclassified로 보고 기존 role에서 제안값을 계산합니다(photo_policy.py). hold/out·blockedUses·manual-only·reference는 앱에서 바로 막고, 배정 규칙 2판(v2)은 2026-10-30 목사님 결정에 따라 기본으로 켜져 있어(?phrule=v1로만 옛 규칙) relation·eraLock·requireAny·group·allowChapters·verseAnchors가 실제 배정에 쓰입니다(mode=enforce). 아직 꺼 둔 것: 점수가 낮으면 그림 비우기(규칙 ⑦). 워터마크(Gemini Notebook)가 있는 그림은 원본을 app/photo_orig/에 그대로 두고, 앱 표시용(site_src/img/g)은 아래 띠를 잘라 씁니다(목사님 결정 2026-11-07).",
+ "notes": "사람이 정한 값만 적습니다. 없는 그림은 legacy-unclassified로 보고 기존 role에서 제안값을 계산합니다(photo_policy.py). hold/out·blockedUses·manual-only·reference는 앱에서 바로 막고, 배정 규칙 2판(v2)은 2026-10-30 목사님 결정에 따라 기본으로 켜져 있어(?phrule=v1로만 옛 규칙) relation·eraLock·requireAny·group·allowChapters·verseAnchors가 실제 배정에 쓰입니다(mode=enforce). 아직 꺼 둔 것: 점수가 낮으면 그림 비우기(규칙 ⑦). 워터마크(Gemini Notebook)가 있는 그림은 원본을 app/photo_orig/에 그대로 두고, 앱 표시용(site_src/img/g)은 아래 띠를 잘라 씁니다(목사님 결정 2026-11-07). 2026-11-07 목사님 결정: 검토함(reviewed)은 모두 승인(approved)으로 두고, 불필요한 그림은 갤러리에서 삭제한다. 그림 없는 카드는 흐린 표지로 보인다(규칙 ⑦ 켬).",
  "assets": {
   "g01_01": {
    "assetKind": "background",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "fidelity": {
     "statedInText": [],
     "visualChoices": [
@@ -32,7 +32,7 @@
    "assetKind": "object",
    "directness": "D1",
    "assignmentPolicy": "strict",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "verseAnchors": [
     {
      "book": 1,
@@ -93,7 +93,7 @@
    "assetKind": "scene",
    "directness": "D2",
    "assignmentPolicy": "narrow",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "verseAnchors": [
     {
      "book": 15,
@@ -238,7 +238,7 @@
   },
   "g38_03": {
    "group": "storm",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "allowChapters": [
     [
      18,
@@ -260,7 +260,7 @@
   "g38_04": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "시냇가",
     "뿌리를 강변",
@@ -292,7 +292,7 @@
    "group": "deer",
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "allowChapters": [
     [
      19,
@@ -313,7 +313,7 @@
    "group": "deer",
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "allowChapters": [
     [
      19,
@@ -342,7 +342,7 @@
   "g38_11": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "두 길",
     "갈림길",
@@ -363,7 +363,7 @@
    "note": "해 비치는 밝은 길과 어두운 골짜기로 갈라지는 길. 기존 판단 유지"
   },
   "g38_12": {
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "해는 뜨고",
     "바람은 남으로",
@@ -389,7 +389,7 @@
    "assignmentPolicy": "narrow"
   },
   "g38_15": {
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "무화과",
     "겨울도 지나",
@@ -415,7 +415,7 @@
   },
   "g46_01": {
    "group": "galilee",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 뜨는 호수와 물안개, 둘레 산. 갈릴리 묶음(지명 조건), eraLock 없음",
    "review": {
     "by": "claude-visual",
@@ -431,7 +431,7 @@
    "group": "wallbuild",
    "assetKind": "object",
    "relation": "object-place",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -444,7 +444,7 @@
   "g02_03": {
    "group": "shepherd",
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -465,7 +465,7 @@
   },
   "g03_05": {
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -485,7 +485,7 @@
    "group": "writing",
    "assetKind": "object",
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -499,7 +499,7 @@
    "group": "writing",
    "assetKind": "object",
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -514,7 +514,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 산 사이 골짜기 길, 사람·양이 아주 작음(기존 정책 유지)",
    "review": {
     "by": "claude-visual",
@@ -525,7 +525,7 @@
   "g34_12": {
    "assetKind": "scene",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "기초를 놓",
     "기초가 놓",
@@ -561,7 +561,7 @@
     9,
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "창과 둥근 방패, 볏 없는 그리스식 청동 투구의 두 병사. 이스라엘 왕국 시대 문지기로는 맞지 않아 9·10시대로 잠금(기존 판단 유지). 로마 군인과도 차이 있어 관리자 선택만",
    "review": {
     "by": "claude-visual",
@@ -581,7 +581,7 @@
   "g07_04": {
    "group": "captives",
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "쇠사슬에 발이 묶인 사람들이 광야 길로 길게 끌려감. 사슬은 이 장면에 맞음",
    "review": {
     "by": "claude-visual",
@@ -596,7 +596,7 @@
    "group": "race",
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -612,7 +612,7 @@
     "손을 얹"
    ],
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "무릎 꿇은 사람 머리와 어깨에 여러 손을 얹음. 일반 안수 장면, 특정 사건 재현 아님",
    "review": {
     "by": "claude-visual",
@@ -631,7 +631,7 @@
     "안수"
    ],
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -650,7 +650,7 @@
     "나팔을 불며"
    ],
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -669,7 +669,7 @@
     "망대"
    ],
    "relation": "ambient",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -683,7 +683,7 @@
   "g14_08": {
    "assetKind": "object",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -705,7 +705,7 @@
   "g21_01": {
    "assetKind": "scene",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -727,7 +727,7 @@
   "g20_07": {
    "assetKind": "scene",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -749,7 +749,7 @@
   "g12_03": {
    "assetKind": "scene",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 돌 제단, 한쪽은 연기가 곧게 오르고 다른 쪽은 흙먼지로 흩어짐. 받으심/안 받으심을 연출한 재구성(본문에 연기 표현 없음)",
    "review": {
     "by": "claude-visual",
@@ -771,7 +771,7 @@
   "g11_15": {
    "assetKind": "scene",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "초원 위 무지개와 연기 나는 돌 제단. 두 장면(8:20 제단, 9:13 무지개)을 한 화면에 합친 재구성이라 symbolic 아닌 scene/event로 둠",
    "review": {
     "by": "claude-visual",
@@ -800,7 +800,7 @@
   "g21_15": {
    "assetKind": "scene",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "무지개 아래 연기 오르는 돌 제단과 작은 사람. 제단과 무지개를 한 화면에 합친 재구성",
    "review": {
     "by": "claude-visual",
@@ -832,7 +832,7 @@
   "g21_02": {
    "assetKind": "scene",
    "relation": "event",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -854,7 +854,7 @@
   "g13_05": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "안개 낀 강가 갈밭의 소. 꿈의 내용(기존 판단 유지). 화면엔 소 두 마리만 보임",
    "review": {
     "by": "claude-visual",
@@ -876,7 +876,7 @@
   "g13_01": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "가운데 선 곡식 단과 둘레에 절하듯 기운 단들. 꿈의 내용(기존 판단 유지)",
    "review": {
     "by": "claude-visual",
@@ -896,7 +896,7 @@
    ]
   },
   "g16_12": {
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불빛 구름 속을 달리는 불말과 불병거, 아래 산. 본문의 실제 사건(환상이 아닌 서술)이라 symbolic이 아닌 scene/event로 둠. 산이 보여 6:17에 더 가까움",
    "review": {
     "by": "claude-visual",
@@ -927,7 +927,7 @@
   "g08_08": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "allowChapters": [
     [
      19,
@@ -961,7 +961,7 @@
   "g08_12": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -990,7 +990,7 @@
   "g10_15": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -1012,7 +1012,7 @@
   "g33_04": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "잔잔한 바다 위 흰빛과 둥근 무지개. 보좌는 빛으로만 암시. 계 4의 유리 바다·무지개, 15:2 사용은 관리자 판단",
    "review": {
     "by": "claude-visual",
@@ -1034,7 +1034,7 @@
   "g33_11": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "구름 위 탄 자 없는 흰 말. 본문은 두 곳 모두 탄 자가 있음 — 계 6과 19 사용처 구분은 관리자 판단",
    "review": {
     "by": "claude-visual",
@@ -1063,7 +1063,7 @@
   "g33_12": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -1085,7 +1085,7 @@
   "g38_08": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -1114,7 +1114,7 @@
   "g43_05": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -1140,7 +1140,7 @@
   "g45_01": {
    "assetKind": "symbolic",
    "relation": "figurative",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "review": {
     "by": "claude-visual",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)",
@@ -1163,7 +1163,7 @@
    "assetKind": "scene",
    "relation": "illustrative",
    "assignmentPolicy": "manual-only",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "옛 도시 돌길을 걷는 두 두건 쓴 사람. 전령은 본문에 없는 연출(기존 판단 유지)",
    "review": {
     "by": "claude-visual",
@@ -1186,7 +1186,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "은하수 아래 바위 사막의 밤하늘. 사람 없음, 순수 풍경(중립)",
    "review": {
     "by": "claude-visual",
@@ -1205,7 +1205,7 @@
     "폭풍",
     "광풍"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름과 바위 위로 내리치는 번개. 눈에 띄는 날씨라 번개·우레 낱말로 범위 제한",
    "review": {
     "by": "claude-visual",
@@ -1218,7 +1218,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "노을 언덕의 감람나무 한 그루. 순수 풍경(중립)",
    "review": {
     "by": "claude-visual",
@@ -1239,7 +1239,7 @@
     "마른 땅",
     "비가 오지"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거북등처럼 갈라진 마른 땅 클로즈업. 가뭄·메마름을 뚜렷이 보여 줌",
    "review": {
     "by": "claude-visual",
@@ -1260,7 +1260,7 @@
     "물이 나",
     "반석에서"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 바위틈에서 솟는 맑은 물. 샘·물이 솟는 장면",
    "review": {
     "by": "claude-visual",
@@ -1280,7 +1280,7 @@
     "요단",
     "나일"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "안개 낀 새벽 강가와 양쪽 갈대숲. 강가 장소가 뚜렷함",
    "review": {
     "by": "claude-visual",
@@ -1301,7 +1301,7 @@
     "폭풍",
     "바다"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위에 부서지는 거센 파도와 폭풍 하늘. 거친 바다",
    "review": {
     "by": "claude-visual",
@@ -1314,7 +1314,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "안개 낀 새벽 호수와 산. 배·사람 없음, 순수 풍경(중립). 갈릴리로 특정할 표시 없음",
    "review": {
     "by": "claude-visual",
@@ -1335,7 +1335,7 @@
     "거두",
     "이삭을 줍"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "햇빛 받은 익은 밀 이삭 클로즈업(밀밭). 추수·곡식 맥락. '이삭'은 인명과 겹쳐 '이삭을 줍'만 씀",
    "review": {
     "by": "claude-visual",
@@ -1353,7 +1353,7 @@
     "포도나무",
     "포도원"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌벽 옆 무화과 잎 덩굴 사이 햇빛(포도덩굴은 뚜렷하지 않음)",
    "review": {
     "by": "claude-visual",
@@ -1366,7 +1366,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "눈 덮인 큰 산(헤르몬 느낌)과 초록 들판. 순수 풍경(중립)",
    "review": {
     "by": "claude-visual",
@@ -1379,7 +1379,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 틈으로 내리는 빛줄기와 광야. 순수 풍경(중립)",
    "review": {
     "by": "claude-visual",
@@ -1398,7 +1398,7 @@
     "진을 치",
     "천막"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤의 검은 장막들과 모닥불이 있는 진영. 장막 생활 장면",
    "review": {
     "by": "claude-visual",
@@ -1417,7 +1417,7 @@
     "늙은",
     "나이 많"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "장막 입구에서 지팡이를 쥔 노인의 손 클로즈업",
    "review": {
     "by": "claude-visual",
@@ -1435,7 +1435,7 @@
     "단을 쌓",
     "번제"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌을 쌓은 제단 위에 장작이 타고 연기가 오름",
    "review": {
     "by": "claude-visual",
@@ -1471,7 +1471,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "우물가에서 물동이를 어깨에 멘 여인 뒷모습. 창 24:15(리브가) 서술과 가장 가까움. 라헬·르우엘의 딸들 장면은 양이 보이지 않아 illustrative",
    "review": {
     "by": "claude-visual",
@@ -1507,7 +1507,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "은하수를 올려다보는 남자 뒷모습. 창 15:5 '하늘을 우러러 뭇별을 셀 수 있나'",
    "review": {
     "by": "claude-visual",
@@ -1529,7 +1529,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "아버지가 칼과 불그릇을 들고 아들은 장작을 지고 산을 오름(창 22:6). 옷은 거친 겉옷으로 시대 문제 없음. — 글자 지운 판으로 바꿔야 함 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -1551,7 +1551,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌을 베고 겉옷을 덮고 자는 남자(창 28:11). 사닥다리는 그리지 않음",
    "review": {
     "by": "claude-visual",
@@ -1573,7 +1573,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 안개 낀 시내를 홀로 건너는 사람. 얍복 나루·'홀로 남았더니'(창 32:22–24). 씨름 장면은 아님",
    "review": {
     "by": "claude-visual",
@@ -1602,7 +1602,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "수염 난 두 남자가 서로 껴안음. 창 33:4 에서와 야곱에 가장 가깝고, 창 45 요셉과 형제들에도 맞음",
    "review": {
     "by": "claude-visual",
@@ -1624,7 +1624,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "위에서 빛이 내려오는 물 없는 돌 구덩이(창 37:24 '빈 것이라 물이 없었더라'). 사람 없음",
    "review": {
     "by": "claude-visual",
@@ -1642,7 +1642,7 @@
     "대상",
     "상인"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먼 지평선을 지나는 낙타 대상 행렬과 광야",
    "review": {
     "by": "claude-visual",
@@ -1671,7 +1671,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "곡식 자루 속에 놓인 은잔(창 44:2,12)",
    "review": {
     "by": "claude-visual",
@@ -1691,7 +1691,7 @@
     2,
     3
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거대한 애굽 신전 기둥 회랑과 작은 두 사람. 애굽 건축이 시대를 특정함(요셉 이야기 창 39–50과 출애굽기 앞부분)",
    "review": {
     "by": "claude-visual",
@@ -1720,7 +1720,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "진흙·짚을 담은 나무 틀을 미는 두 노예와 채찍 든 감독 그림자. 흙 이기기·벽돌 노역(출 1:14, 5:7–8)",
    "review": {
     "by": "claude-visual",
@@ -1742,7 +1742,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈대 사이 물 위의 역청 칠한 바구니(출 2:3). 갈대 색이 청록으로 다소 양식화됨",
    "review": {
     "by": "claude-visual",
@@ -1775,7 +1775,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "애굽 머리장식을 한 바로의 뒷모습과 양옆에 늘어선 신하·호위, 석상과 기둥. 애굽 궁정이 시대를 특정(요셉과 모세 이야기 모두)",
    "review": {
     "by": "claude-visual",
@@ -1797,7 +1797,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위산 아래 불붙은 떨기나무(출 3:2–3). 사람 없음",
    "review": {
     "by": "claude-visual",
@@ -1826,7 +1826,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "문 인방과 좌우 문설주에 바른 피, 횃불(출 12:7,22)",
    "review": {
     "by": "claude-visual",
@@ -1848,7 +1848,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤에 횃불을 들고 나귀와 짐을 지고 떠나는 큰 무리(출 12:31–42). 횃불은 연출",
    "review": {
     "by": "claude-visual",
@@ -1870,7 +1870,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "좌우 물벽 사이로 드러난 마른 바닥, 아래쪽 작은 사람들(출 14:21–22)",
    "review": {
     "by": "claude-visual",
@@ -1895,7 +1895,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "애굽식 머리장식·창을 든 병거병들이 먼지 속에 달려옴(출 14:7–9). 복식이 애굽을 특정",
    "review": {
     "by": "claude-visual",
@@ -1917,7 +1917,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바닷가에서 소고를 든 손 클로즈업. 출 15:20 미리암의 소고. 바다 배경이라 삿 11:34에는 덜 맞음",
    "review": {
     "by": "claude-visual",
@@ -1939,7 +1939,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 땅의 탁한 웅덩이 가에 엎드린 사람. 마라의 쓴 물(출 15:23–25)",
    "review": {
     "by": "claude-visual",
@@ -1968,7 +1968,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 뜰 무렵 광야 땅을 덮은 작고 흰 알갱이(출 16:14). 만나는 실제 사건으로 event",
    "review": {
     "by": "claude-visual",
@@ -1997,7 +1997,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "검은 장막들이 둘러싼 광야 진영 가운데 흰 포장의 성막 뜰(민 2:2 회막을 향해 사방으로 진을 침)",
    "review": {
     "by": "claude-visual",
@@ -2026,7 +2026,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "놋 제단의 불과 연기, 흰 휘장, 나무 기둥. 그러나 뒤편에 흙벽과 지붕 덮인 회랑이 있어 포장으로 두른 성막 뜰(출 27:9)과 어긋남 → hold · Claude 재검토: 경미하여 사용",
    "review": {
     "by": "claude-visual",
@@ -2048,7 +2048,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "겉옷 입은 사람이 어린 양을 품에 안은 손 클로즈업. 번제 예물(레 1:10)로 연출. 제사장 표시는 뚜렷하지 않음. 요 1:29 '하나님의 어린 양' 같은 비유 카드에는 kw 일치 주의",
    "review": {
     "by": "claude-visual",
@@ -2077,7 +2077,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "놋 대야에서 손을 씻는 손(출 30:18–21). 받침은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -2094,7 +2094,7 @@
     "등잔",
     "등불"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어둠 속에 타는 흙 등잔 하나. 등대(촛대)가 아니므로 등잔·등불 낱말만",
    "review": {
     "by": "claude-visual",
@@ -2116,7 +2116,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "산 위 바위에 선 위가 둥근 두 돌판과 역광(출 31:18). 둥근 윗머리는 전통적 표현으로 본문에 없음. 글자 없음",
    "review": {
     "by": "claude-visual",
@@ -2145,7 +2145,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먼지 속에 금빛 송아지 형상과 그 뒤로 몰려드는 백성(출 32:4–6). 송아지가 실제 소처럼 사실적",
    "review": {
     "by": "claude-visual",
@@ -2167,7 +2167,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 땅에 깨진 평평한 돌 조각들과 사람 그림자(출 32:19). 화면만으로는 돌판인지 알아보기 어려움 — 깨진 돌판 카드에만",
    "review": {
     "by": "claude-visual",
@@ -2196,7 +2196,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 바위에서 물이 터져 나옴(출 17:6, 민 20:11). 모세·지팡이는 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -2218,7 +2218,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 장대 위에 감긴 뱀과 햇빛(민 21:9)",
    "review": {
     "by": "claude-visual",
@@ -2247,7 +2247,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먼지 낀 하늘을 뒤덮은 새 떼와 검은 장막 진영(민 11:31, 출 16:13)",
    "review": {
     "by": "claude-visual",
@@ -2269,7 +2269,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "막대기에 꿴 큰 포도송이를 메고 가는 두 사람(민 13:23)",
    "review": {
     "by": "claude-visual",
@@ -2291,7 +2291,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "노을 광야에 흩어진 돌무더기들. 광야에서 죽은 세대의 무덤으로 연출(민 14:32). 화면에 무덤 표시는 따로 없음",
    "review": {
     "by": "claude-visual",
@@ -2313,7 +2313,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "높은 산에서 내려다본 골짜기와 넓은 땅, 햇빛(신 34:1–4 느보·비스가). 사람 없음",
    "review": {
     "by": "claude-visual",
@@ -2342,7 +2342,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 땅에 쌓은 작은 돌탑(약 열두 개). 길갈의 열두 돌(수 4:20), 갈르엣 돌무더기(창 31:46)로 쓰임",
    "review": {
     "by": "claude-visual",
@@ -2364,7 +2364,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙먼지와 빛 속에 무너져 내리는 흙벽돌 성벽(수 6:20)",
    "review": {
     "by": "claude-visual",
@@ -2385,7 +2385,7 @@
     "안뜰",
     "마당"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙벽돌 집 안뜰, 토기 항아리들과 농기구. 일반 가정 배경",
    "review": {
     "by": "claude-visual",
@@ -2421,7 +2421,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 아치 안 돌 의자에 앉은 두 노인(장로). 룻 4:1–2 성문 재판 장면 연출",
    "review": {
     "by": "claude-visual",
@@ -2435,7 +2435,7 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "group": "winnow",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "햇빛 속 타작마당에서 쇠스랑으로 곡식을 공중에 던지는 사람(키질). 메모와 일치. 새 묶음: winnow(키질·타작) / 키질, 타작, 까불, 쭉정이, 겨를, 겨 같",
    "review": {
     "by": "claude-visual",
@@ -2457,7 +2457,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 바위 굴(포도주 틀) 안에서 몸을 숙이고 밀 단을 치는 남자(삿 6:11)",
    "review": {
     "by": "claude-visual",
@@ -2479,7 +2479,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 돌기둥을 양손으로 미는 근육질 장사 뒷모습, 긴 머리(삿 16:29). 등의 상처 피가 약간 보임, 과장은 허용 범위",
    "review": {
     "by": "claude-visual",
@@ -2508,7 +2508,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "황금빛 밀밭에서 허리 굽혀 이삭을 줍는 여인(룻 2:2–3). 레 19:9 등 이삭 규례 카드에도",
    "review": {
     "by": "claude-visual",
@@ -2528,7 +2528,7 @@
     "거두",
     "타작"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "끈으로 묶은 곡식 단 클로즈업",
    "review": {
     "by": "claude-visual",
@@ -2550,7 +2550,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 타작마당의 곡식 단 더미 끝에 누워 자는 남자의 발(룻 3:7). 룻은 보이지 않음. 쇠 화로의 불은 본문에 없는 연출(작은 세부)",
    "review": {
     "by": "claude-visual",
@@ -2579,7 +2579,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "황혼 들판의 낡은 천 장막 성소, 안에서 불빛. 실로 성소 연출(삼상 1:3,9). 삼상 1:9 '전 문설주'는 건물 느낌이라 장막으로만 그린 점 note",
    "review": {
     "by": "claude-visual",
@@ -2608,7 +2608,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "뿔병에서 흘러내리는 기름 클로즈업(삼상 16:13, 10:1). 여러 기름 부음 카드에 씀",
    "review": {
     "by": "claude-visual",
@@ -2637,7 +2637,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 들판에 선 맨발 소년, 등에 수금 같은 것을 멤. 양은 보이지 않음 — 양 치는 소년 다윗 연출",
    "review": {
     "by": "claude-visual",
@@ -2659,7 +2659,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "매끄러운 돌 몇 개와 물매 끈을 쥔 손바닥(삼상 17:40)",
    "review": {
     "by": "claude-visual",
@@ -2681,7 +2681,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "투구와 비늘 갑옷을 입은 거대한 병사의 뒷모습(삼상 17:5)",
    "review": {
     "by": "claude-visual",
@@ -2710,7 +2710,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 굴 안에 웅크린 두 남자가 입구 쪽을 봄(삼상 22:1 아둘람, 24:3 굴 깊은 곳)",
    "review": {
     "by": "claude-visual",
@@ -2732,7 +2732,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛줄기 아래 찢긴 자줏빛 옷자락을 쥔 손(삼상 24:4)",
    "review": {
     "by": "claude-visual",
@@ -2761,7 +2761,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 진영 땅에 꽂힌 창과 물병, 뒤에 잠든 사람들(삼상 26:7,12)",
    "review": {
     "by": "claude-visual",
@@ -2781,7 +2781,7 @@
     "산성",
     "요새"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "산비탈에 자리한 성벽 두른 돌 성읍을 위에서 본 풍경",
    "review": {
     "by": "claude-visual",
@@ -2803,7 +2803,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "저녁 성읍을 내려다보며 왕궁 옥상에 선 남자 실루엣(삼하 11:2). 여인은 그리지 않음",
    "review": {
     "by": "claude-visual",
@@ -2825,7 +2825,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "큰 통나무(백향목)를 어깨에 메고 나르는 두 일꾼(왕상 5:6–9)",
    "review": {
     "by": "claude-visual",
@@ -2847,7 +2847,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌계단 앞에 무릎 꿇은 두 여인, 한 명은 아기를 안음(왕상 3:16–22). 왕과 칼은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -2869,7 +2869,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 아래 돌 제단 위로 치솟는 불, 바닥에 물 고임(왕상 18:38 도랑의 물)",
    "review": {
     "by": "claude-visual",
@@ -2891,7 +2891,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 땅의 작은 덤불(로뎀 나무) 옆에 엎드려 누운 사람(왕상 19:4–5)",
    "review": {
     "by": "claude-visual",
@@ -2920,7 +2920,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "겉옷 두건을 쓰고 굴 어귀에 서서 밖을 보는 사람(왕상 19:13)",
    "review": {
     "by": "claude-visual",
@@ -2952,7 +2952,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "뾰족 투구·비늘 갑옷·창을 든 앗수르식 군대 행렬. 복식이 앗수르를 특정(분열 왕국 시대)",
    "review": {
     "by": "claude-visual",
@@ -2984,7 +2984,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 공성탑과 공성 망치가 흙벽돌 성벽을 깨뜨림. 앗수르·바벨론 포위전 양식",
    "review": {
     "by": "claude-visual",
@@ -3004,7 +3004,7 @@
     "무너진",
     "황폐"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 하늘 아래 불타고 무너진 흙벽돌 성벽과 잿더미",
    "review": {
     "by": "claude-visual",
@@ -3026,7 +3026,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강변 버드나무 가지에 걸린 수금, 뒤로 강가 성읍(시 137:2)",
    "review": {
     "by": "claude-visual",
@@ -3045,7 +3045,7 @@
    "eraLock": [
     7
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "청색 유약 벽돌에 사자 부조가 있는 이슈타르 문(바벨론), 그 앞을 지나는 사람들. 건축이 바벨론을 특정",
    "review": {
     "by": "claude-visual",
@@ -3067,7 +3067,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "물레 위 진흙 그릇을 빚는 손(렘 18:3–4). 사 29:16, 45:9, 롬 9:21 등 비유 카드에도 쓰이나 화면은 실제 토기장이",
    "review": {
     "by": "claude-visual",
@@ -3089,7 +3089,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 땅에 깨진 토기 조각들(렘 19:10)",
    "review": {
     "by": "claude-visual",
@@ -3111,7 +3111,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "방 안 화로 불 속에 타는 두루마리(렘 36:23). 칼은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -3140,7 +3140,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "위로 빛이 들어오는 깊은 흙 구덩이와 내려온 밧줄(렘 38:6 줄로 달아내림)",
    "review": {
     "by": "claude-visual",
@@ -3162,7 +3162,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "골짜기 땅에 가득 흩어진 마른 해골과 뼈(겔 37:1–2). 환상 내용 → figurative",
    "review": {
     "by": "claude-visual",
@@ -3191,7 +3191,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 굴 속 사자들과 위에서 내려오는 빛기둥. 다니엘은 보이지 않음. 빛기둥은 천사 보호를 해석적으로 표현",
    "review": {
     "by": "claude-visual",
@@ -3213,7 +3213,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "벽돌 가마 속 맹렬한 불(단 3:21 풀무불). 사람은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -3243,7 +3243,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙손으로 돌·벽돌을 쌓으며 허리에 칼을 찬 남자(느 4:18 '허리에 칼을 차고 건축')",
    "review": {
     "by": "claude-visual",
@@ -3263,7 +3263,7 @@
     "밤중에",
     "묵상"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "별이 많은 밤 바위에 앉아 하늘을 올려다보는 사람 뒷모습",
    "review": {
     "by": "claude-visual",
@@ -3292,7 +3292,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 수금 줄을 고르는 손 클로즈업. 시편 찬양 카드용",
    "review": {
     "by": "claude-visual",
@@ -3314,7 +3314,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "재 가운데 무릎 꿇고 질그릇 조각을 든 손(욥 2:8)",
    "review": {
     "by": "claude-visual",
@@ -3336,7 +3336,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 땅에 말없이 나란히 앉은 세 사람 뒷모습(욥 2:13). 욥 본인은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -3359,7 +3359,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 위 먹구름 속 회오리바람과 빛. 욥 38:1 '폭풍우 가운데' 연출",
    "review": {
     "by": "claude-visual",
@@ -3373,7 +3373,7 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "group": "shepherd",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "물가 풀밭에 쉬는 양 떼. 목자는 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -3400,7 +3400,7 @@
     "층계",
     "성전 문"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 돌계단을 오르는 발. 그러나 금속 버클 달린 샌들이 요즘 신발처럼 보여 hold · Claude 재검토: 경미하여 사용",
    "review": {
     "by": "claude-visual",
@@ -3414,7 +3414,7 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "group": "winnow",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "노을 속 쇠스랑으로 곡식을 공중에 던져 겨를 날리는 사람. g05_06과 같은 종류. 새 묶음: winnow(키질·타작) / 키질, 타작, 까불, 쭉정이, 겨를, 겨 같",
    "review": {
     "by": "claude-visual",
@@ -3427,7 +3427,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강가에 선 큰 나무. 시 1:3 동기지만 화면은 순수 풍경(중립)",
    "review": {
     "by": "claude-visual",
@@ -3449,7 +3449,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "노을 아래 나무 연장을 메고 땀 흘리는 남자. 전 1:3 '해 아래 수고' 분위기 연출",
    "review": {
     "by": "claude-visual",
@@ -3468,7 +3468,7 @@
     "백합화",
     "들의 꽃"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 사이 포도나무 새순과 들꽃",
    "review": {
     "by": "claude-visual",
@@ -3487,7 +3487,7 @@
     "망대",
     "성벽 위"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "새벽 성벽 위에서 창을 들고 먼 곳을 보는 파수꾼 뒷모습",
    "review": {
     "by": "claude-visual",
@@ -3501,7 +3501,7 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "group": "galilee",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "새벽 물안개 낀 호숫가에 대어 놓은 돛단 고기잡이 배",
    "review": {
     "by": "claude-visual",
@@ -3518,7 +3518,7 @@
     "그물",
     "어부"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "뱃전에 걸쳐 놓은 그물 클로즈업, 뒤로 잔잔한 물",
    "review": {
     "by": "claude-visual",
@@ -3547,7 +3547,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "물고기가 가득 든 그물을 두 사람이 끌어올림(눅 5:6, 요 21:6)",
    "review": {
     "by": "claude-visual",
@@ -3583,7 +3583,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "번개와 큰 물결 속 작은 배에서 애쓰는 사람들(막 4:37). 번개는 본문에 없는 연출, 예수는 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -3601,7 +3601,7 @@
     "오천 명",
     "산에 올라"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕 비탈을 가득 메운 큰 무리. 오병이어·산상 설교 등",
    "review": {
     "by": "claude-visual",
@@ -3630,7 +3630,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바구니 속 둥근 떡 다섯과 물고기 두 마리(요 6:9)",
    "review": {
     "by": "claude-visual",
@@ -3648,7 +3648,7 @@
     "두루마리",
     "낭독"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 돌방 탁자 위에 펼친 두루마리와 빛줄기. 회당 표시는 약함",
    "review": {
     "by": "claude-visual",
@@ -3670,7 +3670,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 우물 가에 놓인 금 간 물동이, 옆으로 떠나는 옷자락(요 4:28 '물동이를 버려 두고')",
    "review": {
     "by": "claude-visual",
@@ -3699,7 +3699,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "깨진 옥합에서 발에 향유를 붓는 장면. 발에 부음(눅 7·요 12)이므로 머리에 부은 마 26·막 14에는 쓰지 않음. 깨뜨림은 막 14:3 세부라 구도는 연출",
    "review": {
     "by": "claude-visual",
@@ -3721,7 +3721,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무에 올라 길을 내려다보는 사람. 개역개정은 '돌무화과나무'(kw의 '뽕나무'는 본문에 없음 — kw 보완 필요)",
    "review": {
     "by": "claude-visual",
@@ -3743,7 +3743,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감람나무 사이 땅에 엎드린 사람. 마 26:39 '얼굴을 땅에 대시고 엎드려'와 맞음",
    "review": {
     "by": "claude-visual",
@@ -3765,7 +3765,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "뜰의 모닥불 둘레에 앉은 사람들과 담 위의 닭. 베드로의 부인 장면(요 18:18, 막 14:66–72 병행)",
    "review": {
     "by": "claude-visual",
@@ -3794,7 +3794,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "폭풍 하늘 아래 멀리 언덕 위 작은 십자가 셋. 사건을 멀리서 연상시키는 구도",
    "review": {
     "by": "claude-visual",
@@ -3823,7 +3823,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "굴려진 돌과 빛, 무덤 안에 놓인 세마포. 사람은 없음",
    "review": {
     "by": "claude-visual",
@@ -3845,7 +3845,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔을 사이에 두고 앉아 기도하는 두 사람의 방. '다락방'은 연출이며 행 12·20에도 쓸 수 있으나 kw로 묶임",
    "review": {
     "by": "claude-visual",
@@ -3867,7 +3867,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 돌문 빛 앞에 무릎 꿇고 손을 내민 사람. 못 걷는 이가 구걸하는 장면으로 읽힘",
    "review": {
     "by": "claude-visual",
@@ -3889,7 +3889,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "땅에 쌓인 겉옷들과 뒤편 흙먼지 속 쓰러진 사람. 행 7:58 '옷을 벗어 … 발 앞에 두니라'",
    "review": {
     "by": "claude-visual",
@@ -3911,7 +3911,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "쏟아지는 빛 아래 땅에 엎드린 사람",
    "review": {
     "by": "claude-visual",
@@ -3940,7 +3940,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 성벽에 밧줄로 내려지는 광주리",
    "review": {
     "by": "claude-visual",
@@ -3964,7 +3964,7 @@
     9,
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감람나무 사이 포장된 돌길을 걷는 두 사람. 다듬은 판석 포장길은 로마식 도로라 신약 시대로 묶음",
    "review": {
     "by": "claude-visual",
@@ -3993,7 +3993,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 옥에 빛이 들고 바닥에 풀린 쇠사슬. 사람 없음. 사도행전 옥 사건 여러 곳에 쓰임(kw로 묶임)",
    "review": {
     "by": "claude-visual",
@@ -4018,7 +4018,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 위에서 기둥 많은 헬라 도시를 내려다보는 사람. 도시가 폐허처럼 그려져 당시 모습과는 다소 어긋남(경미). 헬라식 신전·기둥",
    "review": {
     "by": "claude-visual",
@@ -4038,7 +4038,7 @@
     "항구",
     "선창"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "항구의 고대 범선과 화물. 특정 사건 없음. 배·항해가 카드에 있을 때만",
    "review": {
     "by": "claude-visual",
@@ -4060,7 +4060,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "폭풍 속 부서진 배와 널조각 사이로 기어 나오는 두 사람",
    "review": {
     "by": "claude-visual",
@@ -4096,7 +4096,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 상 위에서 두 손이 떡을 떼는 클로즈업. 초대 교회·주의 만찬 등 여러 곳(kw로 묶임)",
    "review": {
     "by": "claude-visual",
@@ -4118,7 +4118,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "폭풍 바다의 바위 위에 홀로 선 사람과 구름 사이 빛. 밧모 섬은 본문 장소, 구도는 연출",
    "review": {
     "by": "claude-visual",
@@ -4147,7 +4147,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 장막들 위로 솟은 흰 구름 기둥",
    "review": {
     "by": "claude-visual",
@@ -4169,7 +4169,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "연기와 불빛에 싸인 산. 사람은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -4191,7 +4191,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰 옷 두 사람이 곧은 은 나팔을 부는 모습. 은 나팔 둘과 맞음",
    "review": {
     "by": "claude-visual",
@@ -4213,7 +4213,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛 아래 금 언약궤를 멘 네 사람, 뒤편 흰 절벽(쌓인 물처럼 보임). 요단 도하로 읽힘",
    "review": {
     "by": "claude-visual",
@@ -4235,7 +4235,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤에 항아리를 깨자 횃불이 드러나는 장면",
    "review": {
     "by": "claude-visual",
@@ -4261,7 +4261,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 저녁 하늘 아래 깃털 관을 쓴 군인 대열. 깃털 관은 블레셋(바다 민족) 부조 양식",
    "review": {
     "by": "claude-visual",
@@ -4286,7 +4286,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 뜰 제단 위로 빛 기둥이 내리고 흰 옷 제사장들이 서 있음. 대하 7:1 불이 하늘에서 내림",
    "review": {
     "by": "claude-visual",
@@ -4311,7 +4311,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "높은 기둥이 늘어선 궁전 홀과 안쪽 보좌. 페르시아식 기둥",
    "review": {
     "by": "claude-visual",
@@ -4337,7 +4337,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "로마식 투구·갑옷을 입고 창을 든 군인 클로즈업, 횃불 밤. 특정 장면보다 인물 연출",
    "review": {
     "by": "claude-visual",
@@ -4359,7 +4359,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "수레에 앉아 두루마리를 읽는 사람. 수레가 소박한 짐수레로 보임(경미)",
    "review": {
     "by": "claude-visual",
@@ -4384,7 +4384,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "벽돌에 역청을 바르는 손, 뒤에 지구라트형 탑과 벽돌 더미",
    "review": {
     "by": "claude-visual",
@@ -4406,7 +4406,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "비와 파도 속에 떠 있는 상자형 방주",
    "review": {
     "by": "claude-visual",
@@ -4428,7 +4428,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감람 잎을 문 비둘기와 산 위에 멈춘 방주",
    "review": {
     "by": "claude-visual",
@@ -4450,7 +4450,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛이 드는 숲 사이로 흐르는 시내. 에덴 동산의 연출",
    "review": {
     "by": "claude-visual",
@@ -4472,7 +4472,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 들 한가운데 선 큰 나무. 동산 중앙의 나무로 쓰나 화면은 에덴보다 메마른 들(뱀·열매 없음)",
    "review": {
     "by": "claude-visual",
@@ -4494,7 +4494,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 석양을 향해 홀로 걸어가는 사람의 뒷모습",
    "review": {
     "by": "claude-visual",
@@ -4516,7 +4516,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "방주의 나무 뼈대와 끓는 역청 솥, 연장들. 사람 없음",
    "review": {
     "by": "claude-visual",
@@ -4542,7 +4542,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강가 흙벽돌 도시와 지구라트. 메소포타미아 양식",
    "review": {
     "by": "claude-visual",
@@ -4564,7 +4564,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "큰 나무 아래 검은 장막, 장막 앞 사람과 다가오는 세 사람",
    "review": {
     "by": "claude-visual",
@@ -4586,7 +4586,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "메마른 땅 관목 아래 누운 아이와 빈 가죽부대",
    "review": {
     "by": "claude-visual",
@@ -4608,7 +4608,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 들에 선 남자와 멀리 오는 낙타 행렬",
    "review": {
     "by": "claude-visual",
@@ -4630,7 +4630,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 팥죽 그릇과 떡, 상 위의 활. 활은 사냥꾼 에서를 가리키는 연출",
    "review": {
     "by": "claude-visual",
@@ -4652,7 +4652,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "껍질 벗긴 얼룩 가지를 세운 돌 물구유와 뒤의 양 떼",
    "review": {
     "by": "claude-visual",
@@ -4674,7 +4674,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "새벽빛 속 돌기둥 위에 항아리로 기름을 붓는 손",
    "review": {
     "by": "claude-visual",
@@ -4716,7 +4716,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 굴로 향하는 사람들의 행렬. 막벨라 굴 장례(사라·아브라함·야곱)에 두루 쓰임",
    "review": {
     "by": "claude-visual",
@@ -4742,7 +4742,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "애굽식 기둥과 휘장이 있는 귀족 집 안뜰, 멀리 한 사람",
    "review": {
     "by": "claude-visual",
@@ -4764,7 +4764,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "작은 창으로 빛이 드는 어두운 옥과 바닥의 쇠사슬. 사람 없음. 요셉의 옥(바울·베드로 옥은 deny로 막힘)",
    "review": {
     "by": "claude-visual",
@@ -4790,7 +4790,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "포도를 손으로 짜 금 잔에 떨어뜨림. 애굽 문양 잔",
    "review": {
     "by": "claude-visual",
@@ -4816,7 +4816,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "애굽 옷차림 일꾼들이 둥근 곡식 창고에 곡식을 나르는 장면",
    "review": {
     "by": "claude-visual",
@@ -4842,7 +4842,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "세마포 옷에 애굽식 넓은 목걸이와 인장 반지를 낀 손. '금 사슬'은 애굽식 넓은 목장식으로 연출",
    "review": {
     "by": "claude-visual",
@@ -4877,7 +4877,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "소 수레와 짐 실은 나귀를 끄는 사람들의 행렬, 흙먼지",
    "review": {
     "by": "claude-visual",
@@ -4899,7 +4899,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강가 푸른 목초지의 양 떼와 마을. 고센의 연출(고센 kw로 묶임)",
    "review": {
     "by": "claude-visual",
@@ -4921,7 +4921,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어둠 속 강보에 싼 아기를 안은 손. 산파 본문에 대한 해석적 연출(본문에 이 장면 서술 없음)",
    "review": {
     "by": "claude-visual",
@@ -4946,7 +4946,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰 옷의 애굽 여인들이 갈대 물가로 걸어감. 갈대 상자는 화면에 없음",
    "review": {
     "by": "claude-visual",
@@ -4968,7 +4968,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "집 문턱과 흙 화덕을 뒤덮은 개구리 떼",
    "review": {
     "by": "claude-visual",
@@ -4990,7 +4990,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "검은 구름 하늘을 덮은 메뚜기 떼와 아래 들",
    "review": {
     "by": "claude-visual",
@@ -5012,7 +5012,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "칠흑 같은 어둠 속 한 집 문틈의 불빛. '이스라엘 자손이 거주하는 곳에는 빛'의 연출(아주 가로로 긴 화면)",
    "review": {
     "by": "claude-visual",
@@ -5041,7 +5041,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "숯불 위 흙 화덕의 납작한 무교병과 천에 싼 반죽 그릇",
    "review": {
     "by": "claude-visual",
@@ -5063,7 +5063,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해를 향해 양을 이끌고 떠나는 큰 무리",
    "review": {
     "by": "claude-visual",
@@ -5085,7 +5085,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바다 앞에 선 백성, 뒤로 병거의 흙먼지가 몰려옴",
    "review": {
     "by": "claude-visual",
@@ -5107,7 +5107,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 위에 앉은 노인의 팔을 두 사람이 받쳐 들고, 아래 들에서 싸우는 군대",
    "review": {
     "by": "claude-visual",
@@ -5129,7 +5129,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 바위 틈에서 물이 뿜어 나오고 지팡이가 보임. 민 20의 반석 사건에도 kw로 쓰임",
    "review": {
     "by": "claude-visual",
@@ -5151,7 +5151,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "장막 앞에서 끌어안은 두 노인과 낙타",
    "review": {
     "by": "claude-visual",
@@ -5173,7 +5173,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "장막 곁 돌에 앉아 머리를 감싼 사람과 길게 줄 선 백성",
    "review": {
     "by": "claude-visual",
@@ -5195,7 +5195,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "번개 치는 산 아래 돌로 둘러친 경계와 서 있는 백성",
    "review": {
     "by": "claude-visual",
@@ -5224,7 +5224,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "그릇의 피를 돌 제단에 뿌리는 손, 둘레에 돌기둥들",
    "review": {
     "by": "claude-visual",
@@ -5246,7 +5246,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛나는 구름 속으로 지팡이를 짚고 오르는 사람의 실루엣",
    "review": {
     "by": "claude-visual",
@@ -5268,7 +5268,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어둠 속 위에서 빛이 내리는 금 언약궤와 두 그룹, 채",
    "review": {
     "by": "claude-visual",
@@ -5290,7 +5290,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "금 상 위에 두 줄로 놓인 둥근 떡. 떡 모양이 요즘 시골빵처럼 보이나 두 줄 진설은 맞음(경미)",
    "review": {
     "by": "claude-visual",
@@ -5312,7 +5312,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불 켜진 일곱 가지 금 등잔대",
    "review": {
     "by": "claude-visual",
@@ -5334,7 +5334,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "휘장 앞 작은 금 제단에서 피어오르는 향 연기",
    "review": {
     "by": "claude-visual",
@@ -5356,7 +5356,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 널판 벽과 붉은 숫양 가죽·검은 가죽 덮개, 은 받침",
    "review": {
     "by": "claude-visual",
@@ -5378,7 +5378,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "땅에 쌓인 청·자·홍색 실 타래, 가죽, 금붙이와 다가오는 사람들",
    "review": {
     "by": "claude-visual",
@@ -5400,7 +5400,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 마른 땅 위로 금 언약궤를 멘 제사장들, 뒤에 높이 쌓인 물",
    "review": {
     "by": "claude-visual",
@@ -5422,7 +5422,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "망치로 얇은 금판을 두드리는 손",
    "review": {
     "by": "claude-visual",
@@ -5444,7 +5444,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "푸른 겉옷 단에 번갈아 달린 석류와 금방울",
    "review": {
     "by": "claude-visual",
@@ -5466,7 +5466,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "금 테에 물린 여러 빛깔 보석들의 클로즈업",
    "review": {
     "by": "claude-visual",
@@ -5488,7 +5488,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "짠 천 어깨받이에 금 테로 물린 검은 보석(호마노). 이름 새김은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -5510,7 +5510,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불 위 제물 고기를 갈고리로 뒤집는 손. 레위기 번제 여러 곳에 쓰임",
    "review": {
     "by": "claude-visual",
@@ -5532,7 +5532,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야로 염소를 줄에 끌고 가는 사람",
    "review": {
     "by": "claude-visual",
@@ -5561,7 +5561,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "진흙에 박힌 병거와 튀는 흙, 뒤에 강. 진흙에 빠짐은 5:21에 근거한 해석적 연출",
    "review": {
     "by": "claude-visual",
@@ -5596,7 +5596,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛이 내리는 넓은 골짜기 양쪽에 늘어선 군대(작게 보임)",
    "review": {
     "by": "claude-visual",
@@ -5625,7 +5625,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 어스름 속 땅에 버려진 창·방패와 쓰러진 사람",
    "review": {
     "by": "claude-visual",
@@ -5657,7 +5657,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "뾰족 투구·비늘 갑옷의 궁수들이 방패 뒤에서 성을 향해 쏨. 앗수르 부조 양식",
    "review": {
     "by": "claude-visual",
@@ -5692,7 +5692,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤에 불타는 성벽과 들보. 예루살렘 함락 등 여러 본문(kw '불사르/함락'으로 묶임)",
    "review": {
     "by": "claude-visual",
@@ -5714,7 +5714,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "대장간에서 쇠를 망치질하는 장인과 불꽃. 블레셋 철공 본문과 '보습' 예언 본문에 두루 쓰는 생활 연출",
    "review": {
     "by": "claude-visual",
@@ -5740,7 +5740,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "판석 길을 행군하는 로마 군대(붉은 방패, 로마식 투구)",
    "review": {
     "by": "claude-visual",
@@ -5759,7 +5759,7 @@
     "황무하",
     "무너진 성"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "푸른 들판에 무너진 담과 연기. 전쟁 뒤 황폐의 분위기",
    "review": {
     "by": "claude-visual",
@@ -5788,7 +5788,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 지붕 위 나뭇가지 초막들과 앞의 흙 등잔",
    "review": {
     "by": "claude-visual",
@@ -5810,7 +5810,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "보리 이삭·포도·석류·무화과를 담은 광주리와 곁에 선 사람",
    "review": {
     "by": "claude-visual",
@@ -5832,7 +5832,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밀 이삭 위에 놓인 구운 떡 두 덩이",
    "review": {
     "by": "claude-visual",
@@ -5854,7 +5854,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "푸른 바닷가에서 소고를 들고 춤추는 세 여인. 소고에 방울이 달린 요즘 탬버린 모양이고 열대 해변 같은 색감(경미)",
    "review": {
     "by": "claude-visual",
@@ -5876,7 +5876,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 성전 벽 앞에서 제금·비파·수금을 연주하며 노래하는 흰 옷 사람들",
    "review": {
     "by": "claude-visual",
@@ -5898,7 +5898,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "초승달 밤 성벽 위에서 양뿔 나팔을 부는 사람",
    "review": {
     "by": "claude-visual",
@@ -5927,7 +5927,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕길을 줄지어 오르는 가족들, 앞에 아이 손 잡은 부부. 절기 순례의 연출",
    "review": {
     "by": "claude-visual",
@@ -5949,7 +5949,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 강단에서 두루마리를 펼친 사람과 앞에 선 무리. 두루마리의 글자는 흐릿한 가짜 글씨(읽히지 않음)",
    "review": {
     "by": "claude-visual",
@@ -5971,7 +5971,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성벽 위를 줄지어 걸으며 수금을 타는 찬양대",
    "review": {
     "by": "claude-visual",
@@ -5993,7 +5993,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어린 양을 안은 손, 뒤에 연기 오르는 제단과 성전 뜰의 큰 무리. 안은 사람 옷 단에 방울이 달려 있음",
    "review": {
     "by": "claude-visual",
@@ -6025,7 +6025,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "황소 머리 기둥머리의 페르시아식 홀에서 잔칫상 음식을 나눔",
    "review": {
     "by": "claude-visual",
@@ -6054,7 +6054,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "길에 편 겉옷과 종려 가지, 가지를 든 사람들의 발",
    "review": {
     "by": "claude-visual",
@@ -6083,7 +6083,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "손잡이를 쥐고 돌리는 맷돌 클로즈업. 일상 생활 연출(kw '맷돌'로 묶임)",
    "review": {
     "by": "claude-visual",
@@ -6112,7 +6112,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙 화덕 안벽에 붙여 굽는 납작한 떡과 숯불. 생활 연출",
    "review": {
     "by": "claude-visual",
@@ -6141,7 +6141,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "세운 베틀의 날실과 추, 실을 다루는 손. 생활 연출",
    "review": {
     "by": "claude-visual",
@@ -6170,7 +6170,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 뜨는(또는 지는) 성벽 밖 길을 항아리를 이고 걷는 여인들. 창 24:11은 '저녁 때'라 memo의 '새벽'과 다름 — 시간을 특정하지 말 것",
    "review": {
     "by": "claude-visual",
@@ -6199,7 +6199,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "집 문간에 앉아 아이에게 손짓하며 말하는 아버지. 가르침 본문의 생활 연출",
    "review": {
     "by": "claude-visual",
@@ -6212,7 +6212,7 @@
    "relation": "ambient",
    "directness": "D3",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 아래 시장: 나귀·곡식 자루·천칭 저울·군중. 특정 사건 아님. 후보 절: 레 19:36, 잠 11:1, 룻 4:1(성문)",
    "review": {
     "by": "claude-visual",
@@ -6255,7 +6255,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "재를 뒤집어쓴 채 머리를 감싸 쥔 사람(얼굴 안 보임). 특정 인물 아닌 애곡 관습 장면",
    "review": {
     "by": "claude-visual",
@@ -6291,7 +6291,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 무덤 입구의 둥근 굴림돌 클로즈업",
    "review": {
     "by": "claude-visual",
@@ -6320,7 +6320,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바닷가 바위 위에서 그물을 깁는 손 클로즈업",
    "review": {
     "by": "claude-visual",
@@ -6349,7 +6349,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "통나무 작업대 위 끌·대패·나무 부스러기. 목수 직업 표시",
    "review": {
     "by": "claude-visual",
@@ -6362,7 +6362,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙벽 골목을 뛰어가는 두 아이. 생활 분위기 · 분위기(ambient) 그림이라 절 근거를 두지 않음(규칙 ⑥, 2026-11-07 점검)",
    "review": {
     "by": "claude-visual",
@@ -6391,7 +6391,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 천막 앞에 홀로 웅크린 사람. 진영 밖 격리의 관습 장면",
    "review": {
     "by": "claude-visual",
@@ -6404,7 +6404,7 @@
    "relation": "object-place",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 손에 받쳐 든 흙 등잔 클로즈업. 특정 본문 없음(후보: 시 119:105, 마 25:1)",
    "review": {
     "by": "claude-visual",
@@ -6433,7 +6433,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "추수 끝난 밭에서 이삭을 줍는 손",
    "review": {
     "by": "claude-visual",
@@ -6450,7 +6450,7 @@
     "예루살렘",
     "시온"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕 위 세 사람이 성벽 도시를 내려다봄. 예루살렘으로 특정되는 표지는 성벽뿐",
    "review": {
     "by": "claude-visual",
@@ -6483,7 +6483,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "헤롯 성전(흰 돌·금 장식)과 뜰. 헤롯 성전 양식이라 복음서·사도행전 시대",
    "review": {
     "by": "claude-visual",
@@ -6500,7 +6500,7 @@
     "산성",
     "요새"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕 위 성채와 나귀 탄 나그네. 특정 성 아님",
    "review": {
     "by": "claude-visual",
@@ -6532,7 +6532,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강가의 거대한 흙벽돌 성벽과 성문, 무장 병사. 앗수르식 성",
    "review": {
     "by": "claude-visual",
@@ -6552,7 +6552,7 @@
    "eraLock": [
     7
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강가의 지구라트와 청색 성문(이슈타르 문 모양) — 신바벨론 양식",
    "review": {
     "by": "claude-visual",
@@ -6591,7 +6591,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "페르세폴리스식 높은 기둥과 넓은 계단 — 페르시아 궁전",
    "review": {
     "by": "claude-visual",
@@ -6610,7 +6610,7 @@
     "아라바의 바다",
     "소금 땅"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "소금 결정이 가장자리에 앉은 바다와 메마른 산 — 염해 특정",
    "review": {
     "by": "claude-visual",
@@ -6628,7 +6628,7 @@
     "샘물",
     "엘림"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "종려나무 숲 속 샘과 항아리, 오른쪽에 발 일부. 오아시스 표지",
    "review": {
     "by": "claude-visual",
@@ -6641,7 +6641,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "메마른 고원의 바퀴 자국 길과 마른 나무, 해. 중립 풍경",
    "review": {
     "by": "claude-visual",
@@ -6661,7 +6661,7 @@
     "배에 올라",
     "항해"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 항구의 돛배 두 척과 밧줄을 끄는 사람들",
    "review": {
     "by": "claude-visual",
@@ -6677,7 +6677,7 @@
    "requireAny": [
     "우물"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 아래 돌 우물과 항아리",
    "review": {
     "by": "claude-visual",
@@ -6690,7 +6690,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "메마른 언덕 사이 굽이치는 강. 특정 장소 표지 없음, 중립 풍경",
    "review": {
     "by": "claude-visual",
@@ -6703,7 +6703,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바다로 뻗은 산줄기와 해. 중립 풍경",
    "review": {
     "by": "claude-visual",
@@ -6725,7 +6725,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "구유의 아기와 마리아·요셉, 등잔",
    "review": {
     "by": "claude-visual",
@@ -6747,7 +6747,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 들판의 목자들과 양 떼, 하늘의 빛기둥(천사는 빛으로만 표현)",
    "review": {
     "by": "claude-visual",
@@ -6769,7 +6769,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 사막의 낙타·박사들과 보배합, 빛줄기. 본문은 집에 들어가 예물을 드림 — 야외 구도는 연출",
    "review": {
     "by": "claude-visual",
@@ -6791,7 +6791,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 기둥 사이 빛 속에서 아기를 안은 노인",
    "review": {
     "by": "claude-visual",
@@ -6820,7 +6820,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "작업장에서 대패질하는 예수님. 본문은 직업만 언급, 작업 장면은 연출",
    "review": {
     "by": "claude-visual",
@@ -6842,7 +6842,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "물속의 예수님과 요한, 빛 속 비둘기",
    "review": {
     "by": "claude-visual",
@@ -6871,7 +6871,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바닷가 배 곁에서 그물 든 두 어부를 부르시는 예수님",
    "review": {
     "by": "claude-visual",
@@ -6893,7 +6893,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "하인들이 큰 항아리에 물을 붓고 예수님이 지켜보심",
    "review": {
     "by": "claude-visual",
@@ -6915,7 +6915,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 지붕 위 등잔 곁의 니고데모와 예수님. 지붕 장소는 연출",
    "review": {
     "by": "claude-visual",
@@ -6937,7 +6937,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "우물 곁에 앉으신 예수님과 물동이 든 여인",
    "review": {
     "by": "claude-visual",
@@ -6959,7 +6959,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "회당 안에서 두루마리를 펴 든 예수님",
    "review": {
     "by": "claude-visual",
@@ -6981,7 +6981,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "세관 탁자의 세리와 다가오시는 예수님. 탁자 위 제본된 책(코덱스)은 시대에 맞지 않음 · Claude 재검토: 경미하여 사용",
    "review": {
     "by": "claude-visual",
@@ -7003,7 +7003,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕에 앉아 가르치시는 예수님과 둘러앉은 무리",
    "review": {
     "by": "claude-visual",
@@ -7032,7 +7032,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 뜰 무렵 언덕 바위 곁에 무릎 꿇고 기도하심",
    "review": {
     "by": "claude-visual",
@@ -7054,7 +7054,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰 옷 입은 두 사람이 긴 은 나팔을 붊, 뒤에 천막. 흰 머리띠가 다소 현대적이나 허용",
    "review": {
     "by": "claude-visual",
@@ -7098,7 +7098,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤에 횃불을 들고 항아리를 부수는 두 사람",
    "review": {
     "by": "claude-visual",
@@ -7131,7 +7131,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 깃털 투구를 쓴 병사 행렬 — 블레셋(해양 민족) 차림",
    "review": {
     "by": "claude-visual",
@@ -7156,7 +7156,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 뜰 제단에 하늘에서 빛과 불이 내리고 제사장들이 바라봄",
    "review": {
     "by": "claude-visual",
@@ -7188,7 +7188,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어둡고 긴 페르시아식 기둥 회랑",
    "review": {
     "by": "claude-visual",
@@ -7214,7 +7214,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "횃불을 든 로마 군인 상반신(로마식 투구·갑옷)",
    "review": {
     "by": "claude-visual",
@@ -7236,7 +7236,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "수레 위에서 두루마리를 읽는 사람. 수레가 소박한 나무 짐수레 모양",
    "review": {
     "by": "claude-visual",
@@ -7261,7 +7261,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "벽돌에 역청을 바르는 손과 뒤의 탑",
    "review": {
     "by": "claude-visual",
@@ -7286,7 +7286,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "폭풍 바다 위의 상자 모양 방주",
    "review": {
     "by": "claude-visual",
@@ -7311,7 +7311,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감람 잎을 문 비둘기와 산 위의 방주. 잎이 녹색으로 빛나게 강조됨",
    "review": {
     "by": "claude-visual",
@@ -7333,7 +7333,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "상처 난 어깨에 손을 대시는 손 클로즈업(메모의 손 대신 어깨)",
    "review": {
     "by": "claude-visual",
@@ -7355,7 +7355,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "뚫린 지붕으로 줄에 매달려 내려지는 상과 누운 사람",
    "review": {
     "by": "claude-visual",
@@ -7377,7 +7377,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "군중 발 사이로 옷술 달린 겉옷 가에 손을 댐",
    "review": {
     "by": "claude-visual",
@@ -7399,7 +7399,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "누운 소녀의 손을 잡은 손 클로즈업",
    "review": {
     "by": "claude-visual",
@@ -7421,7 +7421,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "큰 무리 앞에서 떡을 들고 하늘을 우러르시는 예수님",
    "review": {
     "by": "claude-visual",
@@ -7443,7 +7443,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "물결 속에서 내민 손을 위에서 붙잡으려는 손",
    "review": {
     "by": "claude-visual",
@@ -7465,7 +7465,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "아이를 무릎에 안고 머리에 손을 얹으신 예수님",
    "review": {
     "by": "claude-visual",
@@ -7487,7 +7487,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "진흙 묻은 눈가와 손가락 클로즈업. 손 주인은 불분명",
    "review": {
     "by": "claude-visual",
@@ -7509,7 +7509,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "가시덤불·돌밭에 씨를 뿌리는 사람 — 비유 내용",
    "review": {
     "by": "claude-visual",
@@ -7531,7 +7531,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "양을 어깨에 멘 목자 — 잃은 양 비유",
    "review": {
     "by": "claude-visual",
@@ -7553,7 +7553,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "길에서 아들을 끌어안는 아버지 — 탕자 비유",
    "review": {
     "by": "claude-visual",
@@ -7604,7 +7604,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛 속에 서신 예수님과 엎드린 제자들(모세·엘리야 없음)",
    "review": {
     "by": "claude-visual",
@@ -7626,7 +7626,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "엎어지는 상, 쏟아지는 동전, 날아가는 비둘기",
    "review": {
     "by": "claude-visual",
@@ -7648,7 +7648,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나귀 타고 겉옷 깔린 길로 들어오시는 예수님, 종려 가지 든 무리",
    "review": {
     "by": "claude-visual",
@@ -7670,7 +7670,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "대야 곁에 무릎 꿇고 발을 씻기심",
    "review": {
     "by": "claude-visual",
@@ -7692,7 +7692,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "식탁에서 무교병을 떼는 손과 잔들(잔이 성배 모양)",
    "review": {
     "by": "claude-visual",
@@ -7721,7 +7721,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 감람나무 숲 바위 곁에 얼굴을 감싸고 엎드려 기도하심",
    "review": {
     "by": "claude-visual",
@@ -7753,7 +7753,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "횃불과 로마식 군인들 사이에서 입맞추는 유다",
    "review": {
     "by": "claude-visual",
@@ -7782,7 +7782,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "뜰의 불 곁에 결박되어 선 예수님과 둘러선 사람들. 예수님이 불 곁에 선 구도는 연출",
    "review": {
     "by": "claude-visual",
@@ -7807,7 +7807,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "높은 재판석의 빌라도와 로마 군인들, 아래에 선 예수님",
    "review": {
     "by": "claude-visual",
@@ -7829,7 +7829,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "군인 손이 가시관을 씌우고 자색 옷 입은 예수님",
    "review": {
     "by": "claude-visual",
@@ -7858,7 +7858,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 하늘 아래 십자가 기둥 밑에 앉은 여인들과 한 남자(가까이 있음)",
    "review": {
     "by": "claude-visual",
@@ -7880,7 +7880,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 무덤 안에서 두 사람이 세마포로 싼 시신을 놓음",
    "review": {
     "by": "claude-visual",
@@ -7902,7 +7902,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛이 드는 빈 무덤, 놓인 세마포와 따로 개어진 수건. 세마포가 몸 모양으로 부풀어 시신처럼 보일 여지",
    "review": {
     "by": "claude-visual",
@@ -7924,7 +7924,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "동산 나무 사이에 서신 예수님과 무릎 꿇은 여인",
    "review": {
     "by": "claude-visual",
@@ -7968,7 +7968,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바닷가 숯불 위 생선과 떡, 물가에 선 예수님",
    "review": {
     "by": "claude-visual",
@@ -7990,7 +7990,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 항아리에 물을 붓는 클로즈업(발과 물줄기)",
    "review": {
     "by": "claude-visual",
@@ -8012,7 +8012,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "못에서 얼굴의 진흙을 씻는 사람",
    "review": {
     "by": "claude-visual",
@@ -8048,7 +8048,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "집 안에서 노인이 두루마리를 읽고 남녀가 둘러앉아 들음",
    "review": {
     "by": "claude-visual",
@@ -8080,7 +8080,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감옥에서 쇠사슬에 매여 두루마리에 쓰는 사람, 뒤에 로마 군인",
    "review": {
     "by": "claude-visual",
@@ -8109,7 +8109,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 길을 걷는 세 사람의 뒷모습",
    "review": {
     "by": "claude-visual",
@@ -8141,7 +8141,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 돌우물 곁에 웅크린 여인(아이 없음)",
    "review": {
     "by": "claude-visual",
@@ -8170,7 +8170,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돛배 갑판 위 곡식 자루들",
    "review": {
     "by": "claude-visual",
@@ -8206,7 +8206,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밀 이삭을 낫으로 베는 손과 곡식 단",
    "review": {
     "by": "claude-visual",
@@ -8224,7 +8224,7 @@
     "문을 열",
     "문이 열"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 아치 안 열린 나무 문틈으로 햇살",
    "review": {
     "by": "claude-visual",
@@ -8240,7 +8240,7 @@
    "requireAny": [
     "이슬"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "이슬 맺힌 아침 풀",
    "review": {
     "by": "claude-visual",
@@ -8253,7 +8253,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "하얗게 빛나는 한낮 광야 협곡. 중립 풍경",
    "review": {
     "by": "claude-visual",
@@ -8270,7 +8270,7 @@
     "그늘",
     "큰 바위"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "큰 바위 그늘 아래 자라는 작은 풀",
    "review": {
     "by": "claude-visual",
@@ -8288,7 +8288,7 @@
     "성벽 위",
     "등불"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 성벽 위에 놓인 등잔",
    "review": {
     "by": "claude-visual",
@@ -8309,7 +8309,7 @@
     "하늘의 별",
     "그 별"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "초저녁 하늘의 별 하나와 산 윤곽",
    "review": {
     "by": "claude-visual",
@@ -8327,7 +8327,7 @@
     "달과 별",
     "해와 달"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "보름달 아래 모래 언덕과 바위",
    "review": {
     "by": "claude-visual",
@@ -8344,7 +8344,7 @@
     "등불",
     "등잔"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 마을에 창 하나만 불 켜짐",
    "review": {
     "by": "claude-visual",
@@ -8358,7 +8358,7 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "group": "storm",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 틈으로 들판에 닿는 빛줄기(폭풍 하늘)",
    "review": {
     "by": "claude-visual",
@@ -8374,7 +8374,7 @@
    "requireAny": [
     "안개"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "산 사이 골짜기를 채운 안개",
    "review": {
     "by": "claude-visual",
@@ -8392,7 +8392,7 @@
     "서리",
     "겨울"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "서리 앉은 돌담과 잎 없는 무화과나무",
    "review": {
     "by": "claude-visual",
@@ -8410,7 +8410,7 @@
     "두 길",
     "이정표"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 갈래 길 사이 돌무더기",
    "review": {
     "by": "claude-visual",
@@ -8427,7 +8427,7 @@
     "층계",
     "감람"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감람나무 사이로 성읍을 향해 오르는 돌계단",
    "review": {
     "by": "claude-visual",
@@ -8445,7 +8445,7 @@
     "내려가는 길",
     "비탈"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "협곡으로 굽이쳐 내려가는 길과 작은 사람",
    "review": {
     "by": "claude-visual",
@@ -8468,7 +8468,7 @@
     9,
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "이정 돌기둥이 선 로마식 포장 돌길 — 로마 시대",
    "review": {
     "by": "claude-visual",
@@ -8487,7 +8487,7 @@
     "나루",
     "얍복"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "맨발로 개울의 징검돌을 건너는 발",
    "review": {
     "by": "claude-visual",
@@ -8501,7 +8501,7 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "group": "galilee",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "노을 진 잔잔한 호수 위 빈 돛배",
    "review": {
     "by": "claude-visual",
@@ -8520,7 +8520,7 @@
     "창수",
     "물이 넘"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 아래 바위 사이 흙탕 급류",
    "review": {
     "by": "claude-visual",
@@ -8538,7 +8538,7 @@
     "굴 속",
     "샘물"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 동굴 안 빛이 드는 물웅덩이와 풀",
    "review": {
     "by": "claude-visual",
@@ -8556,7 +8556,7 @@
     "마른 땅",
     "메마른"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 마른 개울 바닥을 걷는 사람",
    "review": {
     "by": "claude-visual",
@@ -8573,7 +8573,7 @@
     "종려",
     "엘림"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "종려나무 그늘 길과 나귀 끄는 사람",
    "review": {
     "by": "claude-visual",
@@ -8590,7 +8590,7 @@
     "포도원",
     "망대"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌담 포도원과 돌 망대",
    "review": {
     "by": "claude-visual",
@@ -8609,7 +8609,7 @@
     "겨를",
     "쭉정이"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕 위 둥근 타작마당, 곡식 더미와 나무 쇠스랑, 날리는 겨",
    "review": {
     "by": "claude-visual",
@@ -8627,7 +8627,7 @@
     "좁은 문",
     "협착"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 바위 사이 좁은 협곡 길과 사람",
    "review": {
     "by": "claude-visual",
@@ -8646,7 +8646,7 @@
     "낭독",
     "율법책"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔 곁에서 두루마리를 펼쳐 든 두 손(쓰기 아닌 읽기)",
    "review": {
     "by": "claude-visual",
@@ -8665,7 +8665,7 @@
     "문이 열",
     "문을 두드"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙벽돌 집의 열린 나무 문으로 드는 아침 햇살",
    "review": {
     "by": "claude-visual",
@@ -8683,7 +8683,7 @@
     "문을 닫",
     "잠그"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "쇠 빗장 걸린 낡은 나무 문, 문틈 아래로 빛. 특정 사건 표시 없음",
    "review": {
     "by": "claude-visual",
@@ -8703,7 +8703,7 @@
     "식탁",
     "먹고 마시"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 식탁 위 부서진 떡과 토기 잔, 세 사람의 손. 성찬·식사 일반. 21회 사용이 넓으므로 낱말로 제한",
    "review": {
     "by": "claude-visual",
@@ -8722,7 +8722,7 @@
     "발을 씻",
     "항아리"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 방 빛줄기 아래 항아리·놋 대야·수건. 세족(요 13)·정결 본문 연상",
    "review": {
     "by": "claude-visual",
@@ -8742,7 +8742,7 @@
     "기름병",
     "전제로"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "토기 병 주둥이에서 떨어지는 금빛 기름 방울 클로즈업",
    "review": {
     "by": "claude-visual",
@@ -8762,7 +8762,7 @@
     "뿌리는 자",
     "한 알의 밀"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙 묻은 손바닥 위 밀알. 씨 뿌림·밀알 비유 본문용",
    "review": {
     "by": "claude-visual",
@@ -8781,7 +8781,7 @@
     "무릎을 꿇",
     "얼굴을 땅에"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "새벽 바위 언덕에 겉옷 쓴 채 엎드린 사람 뒷모습. 특정 인물 아님",
    "review": {
     "by": "claude-visual",
@@ -8800,7 +8800,7 @@
     "화친",
     "맹세"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "팔뚝을 마주 잡은 두 손. 언약·연합 장면용",
    "review": {
     "by": "claude-visual",
@@ -8817,7 +8817,7 @@
     "성문",
     "성읍 장로"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성벽 안쪽 통로를 따라 놓인 돌 의자들. 성문 재판·장로 모임 본문",
    "review": {
     "by": "claude-visual",
@@ -8834,7 +8834,7 @@
     "망대",
     "파수"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 돌 망대 꼭대기의 작은 기름 등잔",
    "review": {
     "by": "claude-visual",
@@ -8856,7 +8856,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 지성소, 위에서 빛, 마주 보는 두 그룹이 있는 금 궤. 채는 잘 보이지 않음. 출 25 외 언약궤 여러 본문에 공통",
    "review": {
     "by": "claude-visual",
@@ -8878,7 +8878,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "타작마당 바닥 위 양털 뭉치, 빛. 이슬 표시는 약함",
    "review": {
     "by": "claude-visual",
@@ -8900,7 +8900,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "시냇가에서 한 사람은 엎드려 입을 대고 마시고, 앞사람은 손으로 움켜 입에 댐(7:6). 칼 찬 병사",
    "review": {
     "by": "claude-visual",
@@ -8922,7 +8922,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "종려나무 아래 앉은 여인과 그에게 오가는 사람들. 재판받는 장면(4:5)",
    "review": {
     "by": "claude-visual",
@@ -8944,7 +8944,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "장막 입구의 나무 말뚝과 가죽 부대(우유 부대 4:19). 사람 없음, 방망이 안 보임",
    "review": {
     "by": "claude-visual",
@@ -8966,7 +8966,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "집 문 앞 소고를 들고 웃는 딸, 길에서 오는 아버지",
    "review": {
     "by": "claude-visual",
@@ -9010,7 +9010,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 기둥 사이 양팔로 기둥을 민 남자 뒷모습, 위층에 구경하는 사람들(16:27). 상반신 노출은 장면상 허용",
    "review": {
     "by": "claude-visual",
@@ -9032,7 +9032,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙길을 서로 기대어 걷는 두 여인 뒷모습",
    "review": {
     "by": "claude-visual",
@@ -9054,7 +9054,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 곡식 더미 곁에 누운 남자와 조금 떨어져 앉은 여인. 본문은 룻이 발치에 누움(3:7) — 구도상 연출",
    "review": {
     "by": "claude-visual",
@@ -9076,7 +9076,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 앞 장로들 사이에서 신을 건네는 두 손",
    "review": {
     "by": "claude-visual",
@@ -9098,7 +9098,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "작은 등잔 곁에 누워 잠든 소년. 궤·성전 표시는 없음",
    "review": {
     "by": "claude-visual",
@@ -9142,7 +9142,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "석양 들판에 홀로 선 돌",
    "review": {
     "by": "claude-visual",
@@ -9171,7 +9171,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "무릎 꿇은 젊은이 머리에 노인이 뿔에서 기름을 부음. 뿔병은 삼상 16:13과 일치, 사울(10:1 기름병)에도 연출로 가능",
    "review": {
     "by": "claude-visual",
@@ -9193,7 +9193,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 뜰 제단 앞 자색 옷의 왕이 하늘로 손을 폄. 회중은 안 보임",
    "review": {
     "by": "claude-visual",
@@ -9215,7 +9215,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 안으로 짐 실은 낙타 행렬. 여왕은 안 보임",
    "review": {
     "by": "claude-visual",
@@ -9237,7 +9237,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거친 겉옷을 두 손으로 찢는 클로즈업. 본문은 '새 옷'이지만 화면 옷은 낡아 보임(경미)",
    "review": {
     "by": "claude-visual",
@@ -9259,7 +9259,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 돌 제단 위 금송아지, 횃불과 불, 둘러선 사람들",
    "review": {
     "by": "claude-visual",
@@ -9281,7 +9281,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위에 앉은 사람과 떡을 문 까마귀들. 시내라기보다 작은 웅덩이",
    "review": {
     "by": "claude-visual",
@@ -9303,7 +9303,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛줄기 속 빈 가루 통과 나뭇가지 든 손, 작은 기름병",
    "review": {
     "by": "claude-visual",
@@ -9325,7 +9325,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "굴 어귀에 겉옷을 머리까지 덮고 선 사람 뒷모습",
    "review": {
     "by": "claude-visual",
@@ -9347,7 +9347,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "겨릿소와 쟁기 곁 젊은이 위로 날아오는 겉옷. 엘리야는 화면에 없음",
    "review": {
     "by": "claude-visual",
@@ -9369,7 +9369,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌담 포도원과 뒤쪽 성채 같은 왕궁 실루엣",
    "review": {
     "by": "claude-visual",
@@ -9391,7 +9391,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불티 속 땅에 떨어진 겉옷을 붙든 남자. 불수레는 안 보임",
    "review": {
     "by": "claude-visual",
@@ -9413,7 +9413,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "항아리 가득한 방에서 여인이 기름을 붓고 두 아들이 그릇을 가져옴",
    "review": {
     "by": "claude-visual",
@@ -9435,7 +9435,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강물에서 솟아오르는 남자, 뒤에 병거와 종들",
    "review": {
     "by": "claude-visual",
@@ -9457,7 +9457,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 궁 창에서 내려다보는 장식한 여인. 어두운 하늘",
    "review": {
     "by": "claude-visual",
@@ -9479,7 +9479,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛 아래 먼지 앉은 두루마리를 든 손",
    "review": {
     "by": "claude-visual",
@@ -9501,7 +9501,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불타는 성읍과 높은 성전, 무너진 들보",
    "review": {
     "by": "claude-visual",
@@ -9523,7 +9523,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "메마른 땅 그루터기에서 돋은 새싹. 예언 비유의 시각화",
    "review": {
     "by": "claude-visual",
@@ -9545,7 +9545,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거친 바다를 가로지르는 돌길과 구름 사이 빛. 예언의 비유",
    "review": {
     "by": "claude-visual",
@@ -9567,7 +9567,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "물레 위에서 손으로 빚어지는 진흙 그릇. 렘 18 토기장이 집 장면, 사 64·롬 9 비유에도 쓰임",
    "review": {
     "by": "claude-visual",
@@ -9596,7 +9596,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어깨에 가죽끈으로 멘 나무 멍에. 본문은 '목에 걸고'인데 화면은 어깨 가로대(경미)",
    "review": {
     "by": "claude-visual",
@@ -9618,7 +9618,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "토기 항아리에 묶은 두루마리 두 개를 넣는 손",
    "review": {
     "by": "claude-visual",
@@ -9640,7 +9640,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 구덩이로 밧줄과 헝겊을 내리는 손",
    "review": {
     "by": "claude-visual",
@@ -9662,7 +9662,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성을 새긴 토판과 둘레의 흙 진·토성 모형",
    "review": {
     "by": "claude-visual",
@@ -9684,7 +9684,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 문지방 밑에서 흘러나오는 물. 환상 내용",
    "review": {
     "by": "claude-visual",
@@ -9706,7 +9706,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "벽돌 담 곁에 늘어뜨린 다림줄. 환상",
    "review": {
     "by": "claude-visual",
@@ -9728,7 +9728,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "무화과와 포도가 담긴 광주리. 환상(여름 과일)",
    "review": {
     "by": "claude-visual",
@@ -9750,7 +9750,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "폭풍 속 배 위에서 상자를 바다로 던지는 선원들",
    "review": {
     "by": "claude-visual",
@@ -9772,7 +9772,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "시든 잎 달린 나무 그늘막 아래 웅크린 남자, 멀리 성읍",
    "review": {
     "by": "claude-visual",
@@ -9794,7 +9794,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성루 위에서 사막 지평선을 바라보는 겉옷 입은 사람 뒷모습. 파수꾼 본문들(합 2, 겔 3·33) 공용",
    "review": {
     "by": "claude-visual",
@@ -9816,7 +9816,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불 속 도가니의 녹은 금과 찌끼, 막대. 연단 비유(말 3, 사 1·48, 슥 13)",
    "review": {
     "by": "claude-visual",
@@ -9833,7 +9833,7 @@
     "교회",
     "편지를 읽"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔 곁 식탁에서 두루마리를 펴 읽는 사람과 둘러앉은 이들. 가정 교회",
    "review": {
     "by": "claude-visual",
@@ -9849,7 +9849,7 @@
    "requireAny": [
     "회당"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌기둥·아치·돌 의자 사이 빛 아래 조각된 나무 궤(두루마리 장). 다른 종교 상징 없음. 아치가 중세풍이나 시대 특정 어려워 잠그지 않음",
    "review": {
     "by": "claude-visual",
@@ -9870,7 +9870,7 @@
    "eraLock": [
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "신전과 기둥이 선 로마식 광장, 붐비는 사람들, 걷는 발. 로마 도시 건축이라 사도행전·서신 시대로 잠금",
    "review": {
     "by": "claude-visual",
@@ -9891,7 +9891,7 @@
    "eraLock": [
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "신전 계단 아래 피 묻은 나무 상에서 고기를 써는 사람. 그리스·로마식 신전 계단이라 10시대로 잠금",
    "review": {
     "by": "claude-visual",
@@ -9912,7 +9912,7 @@
    "eraLock": [
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "그리스식 돌기둥 받침 위의 초록 잎 관. 운동 경기 상(고전 9:25)이라 10시대로 잠금",
    "review": {
     "by": "claude-visual",
@@ -9935,7 +9935,7 @@
     9,
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "의자 위 로마식 판갑, 투구, 붉은 큰 방패. 로마 군장이라 시대 잠금",
    "review": {
     "by": "claude-visual",
@@ -9951,7 +9951,7 @@
    "requireAny": [
     "접붙"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감람나무 줄기에 끈으로 묶은 어린 가지. 롬 11 접붙임 비유",
    "review": {
     "by": "claude-visual",
@@ -9969,7 +9969,7 @@
     "천막",
     "바늘"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거친 천을 바늘로 꿰매는 손. 바울의 천막 만드는 일(행 18:3)",
    "review": {
     "by": "claude-visual",
@@ -9986,7 +9986,7 @@
     "거울",
     "희미"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "얼굴이 흐릿하게 비친 둥근 청동 거울(고전 13:12, 약 1:23)",
    "review": {
     "by": "claude-visual",
@@ -10003,7 +10003,7 @@
     "닻을",
     "닻 같"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바닷속 바위에 걸린 녹슨 닻과 밧줄(히 6:19 비유, 행 27의 닻)",
    "review": {
     "by": "claude-visual",
@@ -10019,7 +10019,7 @@
    "requireAny": [
     "질그릇"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "금 간 토기 항아리 틈으로 새는 금빛(고후 4:7 비유)",
    "review": {
     "by": "claude-visual",
@@ -10036,7 +10036,7 @@
     "과부",
     "구제"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "늙은 여인에게 떡 그릇을 건네는 손. 구제·과부 돌봄",
    "review": {
     "by": "claude-visual",
@@ -10058,7 +10058,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 동굴 입구 너머 바다와 해안 절벽. 동굴은 전승 연출",
    "review": {
     "by": "claude-visual",
@@ -10080,7 +10080,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어둠 속 일곱 개의 금 기둥 위 등잔 불. 환상(계 1–2)",
    "review": {
     "by": "claude-visual",
@@ -10131,7 +10131,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛 아래 향 연기 오르는 금 대접 셋",
    "review": {
     "by": "claude-visual",
@@ -10153,7 +10153,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰 옷 입고 종려 가지 든 끝없는 무리 뒷모습. 환상 내용",
    "review": {
     "by": "claude-visual",
@@ -10197,7 +10197,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "모은 두 손바닥 위의 작은 두루마리",
    "review": {
     "by": "claude-visual",
@@ -10219,7 +10219,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 포도주 틀 속 포도송이와 붉은 즙, 낫",
    "review": {
     "by": "claude-visual",
@@ -10241,7 +10241,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "배 위에서 바라본, 연기 오르며 불타는 해변 큰 성",
    "review": {
     "by": "claude-visual",
@@ -10263,7 +10263,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거친 돌 사이에 박힌 색색 보석 기초석",
    "review": {
     "by": "claude-visual",
@@ -10285,7 +10285,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "맑은 강 양쪽의 나무들과 빛",
    "review": {
     "by": "claude-visual",
@@ -10307,7 +10307,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "새벽 하늘에 빛나는 별 하나. 화면만으로는 중립 풍경에 가까움",
    "review": {
     "by": "claude-visual",
@@ -10324,7 +10324,7 @@
     "마을",
     "산지"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "계단식 밭 언덕 위 흙집 마을, 연기. 시대 특정 요소 없음",
    "review": {
     "by": "claude-visual",
@@ -10342,7 +10342,7 @@
     "화덕",
     "집 안"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌기둥 집 안뜰, 나귀, 화덕 불, 항아리",
    "review": {
     "by": "claude-visual",
@@ -10360,7 +10360,7 @@
     "기름을 짜",
     "감람 열매"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 확 위 맷돌식 바퀴와 고인 금빛 기름. 감람 기름 짜기",
    "review": {
     "by": "claude-visual",
@@ -10374,7 +10374,7 @@
    "directness": "D3",
    "assignmentPolicy": "broad",
    "group": "shepherd",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "달밤 돌담 양 우리 앞 지팡이 든 목자 실루엣. 기존 묶음 shepherd",
    "review": {
     "by": "claude-visual",
@@ -10400,7 +10400,7 @@
     "물을 길",
     "물동이"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "석양 돌 우물에서 물동이를 이고 돌아가는 여인들",
    "review": {
     "by": "claude-visual",
@@ -10416,7 +10416,7 @@
    "requireAny": [
     "성문"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "아치형 돌 성문 통로 그늘에 앉은 사람들(작게 보임)",
    "review": {
     "by": "claude-visual",
@@ -10435,7 +10435,7 @@
     "파수꾼",
     "적군"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 성벽 위 횃불과 사람, 멀리 적진의 무수한 모닥불",
    "review": {
     "by": "claude-visual",
@@ -10452,7 +10452,7 @@
     "산당",
     "아세라"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕 위 거친 돌 제단과 곁의 나무 기둥, 연기",
    "review": {
     "by": "claude-visual",
@@ -10473,7 +10473,7 @@
     "나귀에 싣",
     "나귀에 실"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "짐 실은 나귀와 해를 향해 걷는 긴 행렬. 포로 귀환 연상이지만 화면만으로는 일반 이주 행렬",
    "review": {
     "by": "claude-visual",
@@ -10492,7 +10492,7 @@
     "불살랐",
     "불탄"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흐린 하늘 아래 불탄 들보가 걸린 무너진 돌 성",
    "review": {
     "by": "claude-visual",
@@ -10510,7 +10510,7 @@
     "학사",
     "두루마리"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "창빛 아래 나무 탁자 위 두루마리, 먹물 통, 갈대 펜. 손 없음이라 writing 묶음 대신 낱말 지정",
    "review": {
     "by": "claude-visual",
@@ -10523,7 +10523,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 바위 협곡 사이 흐르는 시냇물. 특정 장소 표시 없는 중립 풍경",
    "review": {
     "by": "claude-visual",
@@ -10541,7 +10541,7 @@
     "곡식단",
     "추수"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "곡식 단을 어깨에 지고 빛나는 성문으로 들어가는 사람들",
    "review": {
     "by": "claude-visual",
@@ -10563,7 +10563,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "그룹이 수놓인 자색 휘장 앞 금 궤, 채 끝이 보임",
    "review": {
     "by": "claude-visual",
@@ -10585,7 +10585,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "향연 속 속죄소 위로 손가락으로 피를 뿌리는 흰 옷 제사장 손",
    "review": {
     "by": "claude-visual",
@@ -10614,7 +10614,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "날개 편 큰 금 그룹 둘 아래 언약궤",
    "review": {
     "by": "claude-visual",
@@ -10636,7 +10636,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "휘장 틈으로 보이는 궤 모서리와 채 끝",
    "review": {
     "by": "claude-visual",
@@ -10658,7 +10658,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙집 안 언약궤와 문가에서 들여다보는 아이들. 아이들은 '온 집에 복'의 연출",
    "review": {
     "by": "claude-visual",
@@ -10680,7 +10680,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "장막 안 언약궤, 밖 돌 제단에서 오르는 번제 연기와 사람들",
    "review": {
     "by": "claude-visual",
@@ -10702,7 +10702,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밀밭 큰 돌 위 언약궤, 불타는 수레, 쓰러진 사람과 일꾼들. 쓰러진 사람은 6:19 연상",
    "review": {
     "by": "claude-visual",
@@ -10724,7 +10724,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "창빛 드는 집 안 언약궤 곁에 지팡이 들고 선 남자(엘리아살)",
    "review": {
     "by": "claude-visual",
@@ -10746,7 +10746,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언약궤 앞 바닥에 잠든 소년과 작은 등잔",
    "review": {
     "by": "claude-visual",
@@ -10782,7 +10782,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛 아래 언약궤 앞에 꽃 핀 지팡이와 만나 항아리. 히 9:4는 궤 안이라 하므로 그 절은 illustrative",
    "review": {
     "by": "claude-visual",
@@ -10826,7 +10826,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "날아 흩어지는 성벽 돌, 뿔나팔 부는 사람들, 땅에 놓인 언약궤. 궤를 멘 제사장 없음과 폭발식 붕괴는 연출 과장(경미)",
    "review": {
     "by": "claude-visual",
@@ -10848,7 +10848,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언약궤 앞 엎드러진 사람 모양 다곤 상, 머리와 두 손이 떨어져 있음(5:4와 일치)",
    "review": {
     "by": "claude-visual",
@@ -10870,7 +10870,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰 울타리 회막을 가운데 두고 줄지어 친 검은 장막들과 깃발",
    "review": {
     "by": "claude-visual",
@@ -10892,7 +10892,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "휘장·덮개 묶음을 등에 진 두 남자, 뒤에 수레",
    "review": {
     "by": "claude-visual",
@@ -10914,7 +10914,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "포장 덮은 수레들과 소들이 회막 울타리 곁에 늘어섬. 수레·소 수는 정확히 세기 어려움",
    "review": {
     "by": "claude-visual",
@@ -10936,7 +10936,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "장막 안 불 앞에서 머리를 미는 수염 난 남자",
    "review": {
     "by": "claude-visual",
@@ -10958,7 +10958,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛나는 구름 아래 장막을 걷는 사람들, 뒤에 성막",
    "review": {
     "by": "claude-visual",
@@ -10980,7 +10980,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 마른 땅에 머리 쓴 여인이 홀로 앉아 있고 멀리 장막들. 진영 밖에 갇힌 미리암(12:15)을 구도로 연출",
    "review": {
     "by": "claude-visual",
@@ -11002,7 +11002,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 장막 사이에서 등잔 곁에 얼굴을 감싸고 우는 사람들. 14:1 밤새도록 통곡",
    "review": {
     "by": "claude-visual",
@@ -11024,7 +11024,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "동틀 녘 칼을 든 무리가 바위 산길을 오름. 14:40,44 산 꼭대기로 올라감",
    "review": {
     "by": "claude-visual",
@@ -11053,7 +11053,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 지팡이들 가운데 꽃과 살구 열매가 달린 지팡이 하나. 17:8 그대로; 히 9:4 언약궤 속 지팡이 언급에도 쓰임",
    "review": {
     "by": "claude-visual",
@@ -11082,7 +11082,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 위의 재 무더기와 우슬초 가지, 붉은 실. 19:6 백향목·우슬초·홍색 실, 19:9 재를 진영 밖에 둠. 백향목은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -11104,7 +11104,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "좁은 바위 협곡 끝을 군대가 막아섬. 에돔이 길을 막은 20:18–20을 연출. 사람이 작게만 보여 다른 협곡 장면으로 오해될 수 있어 장 범위로 한정",
    "review": {
     "by": "claude-visual",
@@ -11126,7 +11126,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌담 사이 좁은 길에 나귀가 주저앉고 사람이 지팡이를 쳐듦, 오른쪽 벽에 칼 든 형체의 그림자(여호와의 사자 암시). 22:24–27",
    "review": {
     "by": "claude-visual",
@@ -11155,7 +11155,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 위에서 내려다본 광야의 끝없는 장막 진영. 발람이 바위 위에서 진을 본 장면(23:9; 24:2,5). 사람은 없음",
    "review": {
     "by": "claude-visual",
@@ -11177,7 +11177,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰 휘장 앞 회막 입구에 선 다섯 여인의 뒷모습. 27:2 회막 문에 섬. 36장은 같은 인물 후속 단락이라 장 단위 사용 가능",
    "review": {
     "by": "claude-visual",
@@ -11206,7 +11206,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "수금과 제금을 든 수염 난 두 레위인과 무리. 15:16,19",
    "review": {
     "by": "claude-visual",
@@ -11235,7 +11235,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "다듬은 큰 돌, 백향목 재목, 놋 덩이. 다윗의 성전 재료 준비(22:2–4,14)",
    "review": {
     "by": "claude-visual",
@@ -11257,7 +11257,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "제단 위로 불기둥이 내리고 두 사람이 돌바닥에 엎드림. 대하 7:1–3. 왕상 18 갈멜 불에도 맞으나 그쪽은 장면이 다르므로 대하 7에 둠",
    "review": {
     "by": "claude-visual",
@@ -11279,7 +11279,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "방패 든 군대 앞에서 입을 벌려 노래하며 걷는 사람. 20:21. 흰 예복 대신 평상복",
    "review": {
     "by": "claude-visual",
@@ -11301,7 +11301,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 성전 안 빛줄기 아래 향로를 든 자주 옷 노인, 이마에 흰 반점. 왕관은 없음. 26:19",
    "review": {
     "by": "claude-visual",
@@ -11330,7 +11330,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "손이 큰 나무 문을 밀어 열고 빛이 들어오며 바닥에 놋 그릇들. 히스기야가 전 문을 엶(29:3)과 그릇 정결(29:18–19)",
    "review": {
     "by": "claude-visual",
@@ -11352,7 +11352,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 기초 앞에서 얼굴을 감싸 우는 노인과 두 팔 들어 외치는 젊은이. 스 3:12 그대로",
    "review": {
     "by": "claude-visual",
@@ -11381,7 +11381,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "땅에 엎드린 사람과 둘러앉아 우는 무리. 스 10:1 엎드려 울며 기도, 9:3–5 기가 막혀 앉음",
    "review": {
     "by": "claude-visual",
@@ -11403,7 +11403,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "달빛 아래 무너진 돌무더기 사이를 나귀 타고 살피는 사람. 느 2:12–15",
    "review": {
     "by": "claude-visual",
@@ -11425,7 +11425,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌벽을 쌓는 손과 허리에 찬 칼. 느 4:17–18 그대로. 같은 성벽 공사(wallbuild) 카드에도 맞음",
    "review": {
     "by": "claude-visual",
@@ -11447,7 +11447,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 강단 위에서 두루마리를 펴는 사람과 아래에 일어선 큰 무리. 느 8:4–5. 두루마리 글씨는 알아볼 수 없는 흉내 글자라 문제 삼지 않음",
    "review": {
     "by": "claude-visual",
@@ -11469,7 +11469,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰 휘장과 은 고리, 돌기둥, 낮은 상 위의 금 잔들. 에 1:6–7. 본문은 백색·녹색·청색 휘장이나 화면은 흰색만",
    "review": {
     "by": "claude-visual",
@@ -11491,7 +11491,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "왕의 손이 금 규를 내밀고 그 앞에 머리 쓴 여인. 에 5:2",
    "review": {
     "by": "claude-visual",
@@ -11513,7 +11513,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 등잔 곁에서 두루마리를 읽는 사람, 뒤에 누운 형체(왕). 에 6:1",
    "review": {
     "by": "claude-visual",
@@ -11535,7 +11535,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "재 묻은 손이 질그릇 조각을 쥠. 욥 2:8",
    "review": {
     "by": "claude-visual",
@@ -11557,7 +11557,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 벽 앞 땅에 말없이 앉은 세 사람의 뒷모습. 욥 2:13. 욥 본인은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -11579,7 +11579,7 @@
     "쭉정이",
     "키질"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "석양빛 속 나무 갈퀴로 퍼 올린 겨가 바람에 흩날림. 타작·키질·겨 비유 카드용",
    "review": {
     "by": "claude-visual",
@@ -11601,7 +11601,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강가 버드나무 줄기에 걸린 수금. 시 137:1–2",
    "review": {
     "by": "claude-visual",
@@ -11617,7 +11617,7 @@
    "requireAny": [
     "개미"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "마른 땅에서 곡식 알을 끄는 개미 클로즈업. 잠 6:6; 30:25",
    "review": {
     "by": "claude-visual",
@@ -11639,7 +11639,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌기둥이 늘어선 집 안의 낮은 상에 떡과 잔. 지혜의 집(잠 9:1–2) 비유. 기둥 수는 정확히 일곱으로 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -11661,7 +11661,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "꽃 핀 포도원 돌담 아래 굴에 웅크린 여우. 아 2:15",
    "review": {
     "by": "claude-visual",
@@ -11683,7 +11683,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "금 잔과 금 병이 놓인 상 앞에 채소 그릇과 물그릇. 단 1:12. 주황색 당근이 있으나 눈에 크게 띄지 않아 보류하지 않음",
    "review": {
     "by": "claude-visual",
@@ -11712,7 +11712,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "멀리 빛나는 금 신상, 들판에 엎드린 무리, 그 가운데 서 있는 세 사람. 단 3:7,12",
    "review": {
     "by": "claude-visual",
@@ -11734,7 +11734,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔 맞은편 벽에 빛나는 손 모양이 나타남. 본문은 손가락이 글자를 씀이나 화면에는 글자 없이 손 전체",
    "review": {
     "by": "claude-visual",
@@ -11756,7 +11756,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "열린 작은 창 앞에 무릎 꿇은 사람의 뒷모습, 창밖 해. 단 6:10",
    "review": {
     "by": "claude-visual",
@@ -11778,7 +11778,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "강가에 앉은 포로들 위로 모래폭풍과 불빛이 몰려옴. 겔 1:1–4",
    "review": {
     "by": "claude-visual",
@@ -11807,7 +11807,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "위에서 내리는 빛 아래 두 손에 펼친 두루마리, 흉내 글자. 겔 2:9–10; 3:1–3",
    "review": {
     "by": "claude-visual",
@@ -11829,7 +11829,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔 곁에서 행장을 멘 사람이 도끼로 흙벽을 뚫음. 겔 12:5–7(본문은 손으로 뚫음)",
    "review": {
     "by": "claude-visual",
@@ -11851,7 +11851,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먼지 낀 산비탈 바위에 흩어진 양들, 목자 없음. 겔 34:5–6. 일반 산과 양 풍경으로도 보여 장 범위로 한정",
    "review": {
     "by": "claude-visual",
@@ -11873,7 +11873,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 손이 한 나무 막대기를 쥠. 겔 37:17 합한 막대기. 막대기에 글씨는 없음",
    "review": {
     "by": "claude-visual",
@@ -11895,7 +11895,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 뜨는 넓은 들에서 긴 줄을 끄는 사람. 슥 2:1 측량줄 든 사람(환상)",
    "review": {
     "by": "claude-visual",
@@ -11924,7 +11924,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문으로 나귀 타고 들어오는 사람과 종려 가지 든 무리. 종려 가지는 슥 9:9에 없고 요 12:13 입성 장면 요소라 예언 본문에선 성취 장면으로 읽힘. 요 12·마 21 카드에도 맞음",
    "review": {
     "by": "claude-visual",
@@ -11953,7 +11953,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌벽 틈에서 청록 물줄기가 세차게 솟음. 슥 13:1 샘, 겔 47:1 성전 문지방 물. 물빛이 다소 과장되나 허용",
    "review": {
     "by": "claude-visual",
@@ -11975,7 +11975,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 창고 안에 항아리와 곡식 자루가 가득. 말 3:10 창고",
    "review": {
     "by": "claude-visual",
@@ -11997,7 +11997,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "동틀 녘 외양간 문에서 뛰어나오는 송아지 두 마리. 말 4:2 비유",
    "review": {
     "by": "claude-visual",
@@ -12019,7 +12019,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔 곁 나무 상에서 갈대 펜으로 양피지에 쓰는 손. 말 3:16 기념책. 글자는 알아볼 수 없는 얼룩",
    "review": {
     "by": "claude-visual",
@@ -12041,7 +12041,7 @@
     "장마",
     "소나기"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈아엎은 밭 위로 쏟아지는 비. 비가 뚜렷이 보여 비 낱말이 있는 카드로 한정",
    "review": {
     "by": "claude-visual",
@@ -12054,7 +12054,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "비 갠 흙길 물웅덩이, 돌담과 감람나무, 갠 하늘. 특정 사건 표시가 없는 중립 풍경이라 requireAny 없음",
    "review": {
     "by": "claude-visual",
@@ -12070,7 +12070,7 @@
    "requireAny": [
     "무지개"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 사이 희미한 무지개와 마른 들. 무지개가 보여 낱말 한정(창 9 언약 외 겔 1·계 4,10에도 맞음)",
    "review": {
     "by": "claude-visual",
@@ -12092,7 +12092,7 @@
     "눈 곳간",
     "레바논의 눈"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "눈 덮인 높은 산과 서리 앉은 겨울 덤불 들. 헤르몬·눈·겨울 카드로 한정",
    "review": {
     "by": "claude-visual",
@@ -12109,7 +12109,7 @@
     "서리",
     "겨울"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "서리 앉은 돌담과 마른 풀. 서리·겨울 카드로 한정",
    "review": {
     "by": "claude-visual",
@@ -12125,7 +12125,7 @@
    "requireAny": [
     "우박"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 아래 바위 위로 쏟아지는 굵은 우박",
    "review": {
     "by": "claude-visual",
@@ -12146,7 +12146,7 @@
     "시드는",
     "마르고"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙먼지 바람에 휜 메마른 덤불. 뜨거운 바람·가뭄 카드로 한정",
    "review": {
     "by": "claude-visual",
@@ -12159,7 +12159,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 언덕 위 흙벽돌 마을 실루엣과 연기, 종려나무. 특정 사건 없는 중립 풍경",
    "review": {
     "by": "claude-visual",
@@ -12172,7 +12172,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 진 뒤 보랏빛 광야 협곡 능선. 순수 풍경",
    "review": {
     "by": "claude-visual",
@@ -12185,7 +12185,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "평평한 광야 위로 기둥처럼 솟은 흰 구름. 순수 하늘 풍경. 구름 기둥 사건으로 단정되지 않도록 출애굽 카드에서는 관리자 판단 권함",
    "review": {
     "by": "claude-visual",
@@ -12213,7 +12213,7 @@
    "directness": "D4",
    "assignmentPolicy": "broad",
    "group": "shepherd",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "푸른 언덕 멀리 작은 양 떼. 양 떼가 보여 목자 묶음",
    "review": {
     "by": "claude-visual",
@@ -12242,7 +12242,7 @@
     "새들이",
     "공중의 새"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "구름 낀 저녁 하늘에 V자로 나는 큰 새 떼(황새·두루미 류)",
    "review": {
     "by": "claude-visual",
@@ -12258,7 +12258,7 @@
    "requireAny": [
     "독수리"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "협곡 절벽 둥지 위에서 날개를 편 독수리",
    "review": {
     "by": "claude-visual",
@@ -12274,7 +12274,7 @@
    "requireAny": [
     "참새"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙지붕 가장자리에 앉은 참새 두 마리, 뒤로 흙벽 마을",
    "review": {
     "by": "claude-visual",
@@ -12298,7 +12298,7 @@
     "사자 같",
     "우는 사자"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛 드는 덤불 사이에서 걸어 나오는 수사자. \"사자\"는 사자(使者)와 겹쳐 쓰지 않고 구체적 표현만",
    "review": {
     "by": "claude-visual",
@@ -12316,7 +12316,7 @@
     "간구",
     "무릎을 꿇"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "작은 창 빛 아래 두건 쓴 사람이 무릎 꿇고 손 모아 기도",
    "review": {
     "by": "claude-visual",
@@ -12335,7 +12335,7 @@
     "간구",
     "찬송"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 뜰 무렵 언덕에서 두 팔을 높이 든 사람의 뒷모습",
    "review": {
     "by": "claude-visual",
@@ -12353,7 +12353,7 @@
     "엎드리",
     "경배"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌기둥 사이 돌바닥에 엎드린 사람들, 앞사람의 신 바닥이 보임. \"절하\"는 \"간절하\"와 겹쳐 빼고 엎드림 표현만",
    "review": {
     "by": "claude-visual",
@@ -12372,7 +12372,7 @@
     "재를 무릅",
     "애통"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 땅에 거친 옷 입고 무릎을 감싸 웅크린 사람(흑백 톤)",
    "review": {
     "by": "claude-visual",
@@ -12391,7 +12391,7 @@
     "애곡",
     "눈물"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "문설주 곁에서 머리 쓴 여인이 두 손으로 얼굴을 감싸고 욺",
    "review": {
     "by": "claude-visual",
@@ -12411,7 +12411,7 @@
     "장사하",
     "상여"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 밖 흙길로 시신을 멘 상여를 따라가는 긴 행렬. 눅 7:12 등",
    "review": {
     "by": "claude-visual",
@@ -12430,7 +12430,7 @@
     "함께 먹",
     "먹고 마시"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔 아래 세 남자가 웃으며 떡을 떼어 나눔",
    "review": {
     "by": "claude-visual",
@@ -12447,7 +12447,7 @@
     "소고",
     "춤추"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "석양 들판에서 소고를 치며 춤추는 여인들",
    "review": {
     "by": "claude-visual",
@@ -12465,7 +12465,7 @@
     "등잔",
     "횃불"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤에 기름 등잔을 손에 든 사람들이 두 줄로 늘어섬",
    "review": {
     "by": "claude-visual",
@@ -12482,7 +12482,7 @@
     "토기장이",
     "진흙"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 물레 위 진흙 그릇을 빚는 손. 렘 18 토기장이 등",
    "review": {
     "by": "claude-visual",
@@ -12517,7 +12517,7 @@
     "고기를 잡",
     "어부"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "새벽 안개 낀 호숫가에서 두 사람이 배 곁에서 그물을 끎. 갈릴리로 특정할 표시가 없어 galilee 묶음 대신 고기잡이 낱말로 한정",
    "review": {
     "by": "claude-visual",
@@ -12537,7 +12537,7 @@
     "젖먹",
     "아이를 안"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌집 안뜰에서 머리 쓴 어머니가 강보에 싼 아기를 안음",
    "review": {
     "by": "claude-visual",
@@ -12555,7 +12555,7 @@
     "늙은이",
     "백발"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 돌 의자에 앉은 노인과 곁에 선 어린아이",
    "review": {
     "by": "claude-visual",
@@ -12574,7 +12574,7 @@
     "함께 지",
     "메고"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 흙길에서 두 사람이 장대에 짐을 매달아 함께 멤. 민 13:23 포도송이 장면과 비슷한 구도이나 짐은 자루",
    "review": {
     "by": "claude-visual",
@@ -12594,7 +12594,7 @@
    "eraLock": [
     4
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 장막 진영 한가운데 흰 휘장 뜰과 성막, 제단 연기. 광야 시대 진영 구도",
    "review": {
     "by": "claude-visual",
@@ -12611,7 +12611,7 @@
     "제단",
     "번제"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "네 모서리 뿔이 달린 놋 제단 위에서 장작이 탐",
    "review": {
     "by": "claude-visual",
@@ -12631,7 +12631,7 @@
     9,
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거대한 흰 마름돌 벽(헤롯 성전 남쪽 계단 모양) 앞 계단을 오르는 순례자들. 헤롯식 성벽이라 신약 시대로 한정",
    "review": {
     "by": "claude-visual",
@@ -12648,7 +12648,7 @@
     "행각",
     "기둥"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛이 비껴 드는 돌기둥 회랑. 사람 없음. 시대 특정 근거 약함",
    "review": {
     "by": "claude-visual",
@@ -12665,7 +12665,7 @@
     "보좌",
     "왕위"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "백향목 들보 아래 계단 위 빈 흰 보좌와 사자 장식",
    "review": {
     "by": "claude-visual",
@@ -12683,7 +12683,7 @@
     "진을 치",
     "진영"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 바위 협곡 아래 검은 줄무늬 장막들과 화덕 연기",
    "review": {
     "by": "claude-visual",
@@ -12703,7 +12703,7 @@
     9,
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 벤치가 둘린 돌벽 회당 안, 창 빛 아래 펼친 두루마리 상. 회당은 신약 시대 건물이라 한정",
    "review": {
     "by": "claude-visual",
@@ -12720,7 +12720,7 @@
     "시장",
     "장터"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "토기 항아리와 곡식 자루가 늘어선 돌벽 시장 골목",
    "review": {
     "by": "claude-visual",
@@ -12740,7 +12740,7 @@
    "eraLock": [
     9
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감람나무 사이 바위 무덤 입구와 곁에 굴리는 둥근 돌. 굴림돌 무덤은 제2성전기 형태라 복음서로 한정",
    "review": {
     "by": "claude-visual",
@@ -12760,7 +12760,7 @@
     "갇히",
     "결박"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 돌벽 감옥 바닥에 쇠사슬과 족쇄, 작은 창의 한 줄기 빛",
    "review": {
     "by": "claude-visual",
@@ -12779,7 +12779,7 @@
     "나팔",
     "비파"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 위에 놓인 수금, 소고, 양각 나팔",
    "review": {
     "by": "claude-visual",
@@ -12796,7 +12796,7 @@
     "보리떡",
     "물고기"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바구니에 담긴 둥근 떡 여러 개와 작은 물고기 두 마리. 오병이어",
    "review": {
     "by": "claude-visual",
@@ -12814,7 +12814,7 @@
     "가죽 부대",
     "새 부대"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "낮은 나무 상 위의 토기 병, 가죽 부대, 작은 잔",
    "review": {
     "by": "claude-visual",
@@ -12832,7 +12832,7 @@
     "신을 벗",
     "지팡이"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 위에 놓인 거친 겉옷, 가죽 샌들, 끝이 굽은 지팡이",
    "review": {
     "by": "claude-visual",
@@ -12852,7 +12852,7 @@
     "곡식 단",
     "쭉정이"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "석양 타작마당 위 나무 갈퀴와 체, 흩어진 곡식 낟알",
    "review": {
     "by": "claude-visual",
@@ -12874,7 +12874,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "맨발 일꾼의 손이 큰 돌 위에 주춧돌을 놓음. 고전 3:10 터를 닦는 건축자 비유. 엡 2:20에도 맞음",
    "review": {
     "by": "claude-visual",
@@ -12896,7 +12896,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "항아리로 씨 심은 흙에 물을 붓는 손. 고전 3:6 비유",
    "review": {
     "by": "claude-visual",
@@ -12918,7 +12918,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 집에서 등잔을 들고 바닥을 쓸며 살피는 남자. 유월절 전 누룩 찾기 관습으로 고전 5:7 비유를 연출",
    "review": {
     "by": "claude-visual",
@@ -12940,7 +12940,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해진 천막 곁에 선 사람과 멀리 단단한 돌집. 고후 5:1 장막 집과 영원한 집 비유",
    "review": {
     "by": "claude-visual",
@@ -12969,7 +12969,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "나무 상 위에서 여러 사람의 손이 맞닿음. 한 몸 여러 지체 비유",
    "review": {
     "by": "claude-visual",
@@ -12991,7 +12991,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "맨발 곁에 풀려 떨어진 족쇄와 빛 드는 열린 문. 갈 5:1 자유",
    "review": {
     "by": "claude-visual",
@@ -13013,7 +13013,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두루마리를 안고 나무 문 앞에 선 젊은이의 근심 어린 얼굴. 오네시모가 편지를 들고 돌아간 정황을 연출",
    "review": {
     "by": "claude-visual",
@@ -13043,7 +13043,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙먼지 속 돌기둥 쪽으로 달리는 사람과 관중. 경주 비유",
    "review": {
     "by": "claude-visual",
@@ -13069,7 +13069,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "큰 방패 든 로마 병사와 쟁기 끄는 농부. 딤후 2:3–6 비유. 로마 군장이라 시대 한정",
    "review": {
     "by": "claude-visual",
@@ -13094,7 +13094,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "아치가 둘린 돌 원형 경기장 관중석에 가득한 사람들. 히 12:1 비유. 로마식 원형 경기장",
    "review": {
     "by": "claude-visual",
@@ -13138,7 +13138,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "맞물려 쌓인 돌 틈으로 빛이 샘. 벧전 2:5 산 돌 비유",
    "review": {
     "by": "claude-visual",
@@ -13160,7 +13160,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "초승달 뜬 밤 바위 위를 살피며 걷는 사자. 벧전 5:8 비유",
    "review": {
     "by": "claude-visual",
@@ -13182,7 +13182,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 마른 땅에 뿌리째 뽑혀 쓰러진 나무와 흐린 하늘. 유 1:12 비유",
    "review": {
     "by": "claude-visual",
@@ -13204,7 +13204,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "무너진 성문 아치 곁 잿더미에 검은 옷 여인이 홀로 앉음. 애 1:1 의인화된 성. kw \"홀로 앉았는고\"는 개역개정에 없음(1:1 \"적막하게 앉았는고\")",
    "review": {
     "by": "claude-visual",
@@ -13226,7 +13226,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "무너진 성벽을 배경으로 돌 틈에 돋은 새싹과 아침 해. 애 3:22–23",
    "review": {
     "by": "claude-visual",
@@ -13248,7 +13248,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "손바닥의 은 조각과 보리 자루를 건네는 손, 뒤에 머리 숙인 여인. 호 3:2",
    "review": {
     "by": "claude-visual",
@@ -13270,7 +13270,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "이슬 방울 맺힌 흰 백합과 굵은 나무뿌리. 호 14:5 비유",
    "review": {
     "by": "claude-visual",
@@ -13292,7 +13292,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밀밭 위로 메뚜기 떼가 덮쳐 오는 장면. 욜 1:4의 메뚜기 재앙(2:25도 후보)",
    "review": {
     "by": "claude-visual",
@@ -13314,7 +13314,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 협곡 꼭대기 요새. \"바위 틈에 거주하며 높은 곳에 사는 자\"(에돔)를 장소로 연출",
    "review": {
     "by": "claude-visual",
@@ -13350,7 +13350,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "모루 위에서 칼을 두드리는 손. 보습으로 바뀌는지 칼을 만드는지 화면으로 구별되지 않음(미 4:3과 욜 3:10은 방향이 반대) → 카드 문맥 확인 필요",
    "review": {
     "by": "claude-visual",
@@ -13379,7 +13379,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "포도나무 그늘에 기대 쉬는 사람과 마을. 약속(미 4:4)의 그림, 왕상 4:25 평안의 장면에도",
    "review": {
     "by": "claude-visual",
@@ -13401,7 +13401,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 계단밭 위 작은 마을과 양 떼. 베들레헴을 장소로 연출, 지명 표시는 없음",
    "review": {
     "by": "claude-visual",
@@ -13423,7 +13423,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성곽 성문을 무너뜨리며 쏟아지는 물. 니느웨 함락 예언(나 2:6)의 연출",
    "review": {
     "by": "claude-visual",
@@ -13445,7 +13445,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어둠 속에서 등잔을 들고 살피는 남자. 본문은 여호와께서 등불로 찾으심 — 사람으로 그린 비유적 연출",
    "review": {
     "by": "claude-visual",
@@ -13474,7 +13474,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "옛 석축 위에 큰 돌을 지렛대로 올리는 일꾼들과 지팡이 든 노인. 성전 재건과 이전 영광을 본 노인들",
    "review": {
     "by": "claude-visual",
@@ -13496,7 +13496,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "노인들이 지팡이 짚고 앉은 거리에서 소년·소녀들이 뛰노는 모습. 회복 약속의 그림",
    "review": {
     "by": "claude-visual",
@@ -13525,7 +13525,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌담 앞에 손으로 드리운 다림줄. 아모스 환상·스룹바벨의 다림줄",
    "review": {
     "by": "claude-visual",
@@ -13554,7 +13554,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성벽 모퉁이의 다듬은 큰 돌에 두 손을 얹은 일꾼. 모퉁잇돌 은유",
    "review": {
     "by": "claude-visual",
@@ -13576,7 +13576,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "벽에 못 박힌 낡은 문서 위에 굵게 그은 줄. 증서를 지우고 십자가에 못 박으심의 은유. 글자처럼 읽히는 문자는 없음",
    "review": {
     "by": "claude-visual",
@@ -13598,7 +13598,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤 문간에서 등잔 들고 깨어 있는 남자, 뒤쪽 어둠에 도둑 같은 형체. 벧후 3:10도 후보",
    "review": {
     "by": "claude-visual",
@@ -13620,7 +13620,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거친 천을 바늘로 깁는 손과 떡 한 덩이. 바울의 손노동(천막 깁기는 행 18:3의 정보로 연출). 살전 4:11 후보",
    "review": {
     "by": "claude-visual",
@@ -13642,7 +13642,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 방에서 손을 들고 기도하는 사람들의 뒷모습. 권면을 장면으로 옮긴 연출",
    "review": {
     "by": "claude-visual",
@@ -13664,7 +13664,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "소박한 방에서 빈손을 펼친 노인과 떡, 담요. 권면을 인물로 옮긴 연출",
    "review": {
     "by": "claude-visual",
@@ -13686,7 +13686,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 해안에 선 사람과 먼 바다의 옛 돛배. 그레데에 남겨진 디도를 장소로 연출",
    "review": {
     "by": "claude-visual",
@@ -13708,7 +13708,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "창가의 기름 등잔과 밤하늘에 빛나는 별 하나. 등불과 샛별의 은유",
    "review": {
     "by": "claude-visual",
@@ -13730,7 +13730,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 마른 땅 진흙 웅덩이에 누운 돼지. 속담 인용의 그림",
    "review": {
     "by": "claude-visual",
@@ -13752,7 +13752,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 틈에서 빛 쪽으로 걸어 나오는 사람. 빛 가운데 행함의 은유. 요일 2:9–11 후보",
    "review": {
     "by": "claude-visual",
@@ -13781,7 +13781,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 기둥에 기대 멀리 걸어오는 두 사람을 보는 노인. 화면의 \"자녀\"는 어른 둘 — 영적 자녀로 연출",
    "review": {
     "by": "claude-visual",
@@ -13810,7 +13810,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "항아리로 물을 부어 손님의 발을 씻기는 손과 대야, 화덕과 상. 요삼에 발 씻김은 없음 → 손님 대접의 연출",
    "review": {
     "by": "claude-visual",
@@ -13823,7 +13823,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "햇빛이 능선만 붉게 비춘 바위 광야. 특정 표시 없는 중립 풍경",
    "review": {
     "by": "claude-visual",
@@ -13836,7 +13836,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "free-bg",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 사이로 빛줄기가 들판에 떨어지는 하늘. 특정 사건 표시 없는 중립 풍경(신현으로 읽히지 않게 관리자가 주의)",
    "review": {
     "by": "claude-visual",
@@ -13856,7 +13856,7 @@
     "눈 올 때",
     "추위"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "눈이 얇게 쌓인 흙벽돌 마을, 화덕 연기, 걸어가는 두 사람. 눈·겨울이 뚜렷해 날씨 낱말 필요",
    "review": {
     "by": "claude-visual",
@@ -13874,7 +13874,7 @@
     "모래바람",
     "광풍"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "모래바람 속에 웅크린 나귀 한 마리",
    "review": {
     "by": "claude-visual",
@@ -13894,7 +13894,7 @@
     "마른 땅",
     "땅이 갈라"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "거북등처럼 갈라진 땅과 마른 가시 떨기. 가뭄이 뚜렷함",
    "review": {
     "by": "claude-visual",
@@ -13914,7 +13914,7 @@
     "포도를 따",
     "포도 수확"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "계단밭 돌담 앞에서 청포도를 따 바구니에 담는 손",
    "review": {
     "by": "claude-visual",
@@ -13933,7 +13933,7 @@
     "포도주 틀",
     "술틀"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 포도즙틀에서 포도를 밟는 맨발",
    "review": {
     "by": "claude-visual",
@@ -13952,7 +13952,7 @@
     "들의 꽃",
     "들풀"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 아네모네가 덮인 봄 언덕. 꽃이 화면 중심이라 낱말 필요",
    "review": {
     "by": "claude-visual",
@@ -13972,7 +13972,7 @@
     "시들",
     "풀과 같"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바람에 시든 붉은 꽃과 마른 풀",
    "review": {
     "by": "claude-visual",
@@ -13992,7 +13992,7 @@
     "슬피 울",
     "울며"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙바닥에 얼굴을 대고 엎드려 우는 두 사람",
    "review": {
     "by": "claude-visual",
@@ -14010,7 +14010,7 @@
     "춤을",
     "춤으로"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "횃불 아래 손잡고 둥글게 춤추는 무리",
    "review": {
     "by": "claude-visual",
@@ -14031,7 +14031,7 @@
     "보리 추수",
     "밀 추수"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "추수꾼들이 떡과 볶은 곡식 그릇을 나누는 손들",
    "review": {
     "by": "claude-visual",
@@ -14049,7 +14049,7 @@
     "물 길",
     "물을 길"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 우물에서 줄로 물을 긷는 어머니와 항아리 든 아이",
    "review": {
     "by": "claude-visual",
@@ -14079,7 +14079,7 @@
     7,
     8
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌벽 앞에 놓인 청동 칼·창과 가죽 방패. 청동 무기라 구약 시대로 묶음(로마 시대 카드에 쓰지 않게)",
    "review": {
     "by": "claude-visual",
@@ -14103,7 +14103,7 @@
     9,
     10
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "막사 안의 로마식 투구와 곡면 방패 → 로마 시대로 고정 · 2026-10-31: 조건 낱말에서 '로마'를 뺌(로마 성도·로마서처럼 군사와 무관한 로마 언급에 군장 그림이 뜨던 것, GPT 전수검수 T10)",
    "review": {
     "by": "claude-visual",
@@ -14123,7 +14123,7 @@
     "활 쏘",
     "활로"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "해 질 녘 바위 위의 활과 화살통",
    "review": {
     "by": "claude-visual",
@@ -14142,7 +14142,7 @@
     "구렁",
     "물이 없"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "위 구멍에서 빛이 드는 깊은 돌 구덩이, 바닥은 말라 갈라짐",
    "review": {
     "by": "claude-visual",
@@ -14164,7 +14164,7 @@
     "쇠사슬",
     "결박"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감옥 바닥의 나무 차꼬와 쇠고랑, 창살 빛",
    "review": {
     "by": "claude-visual",
@@ -14182,7 +14182,7 @@
     "비파",
     "거문고"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "기름 등잔 곁에서 수금을 뜯는 손",
    "review": {
     "by": "claude-visual",
@@ -14202,7 +14202,7 @@
     "왕좌",
     "궁궐"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "기둥이 늘어선 큰 홀 끝의 보좌. 양식이 특정 시대를 가리키지 않아 eraLock 없음",
    "review": {
     "by": "claude-visual",
@@ -14242,7 +14242,7 @@
     "장막을 치",
     "가죽부대"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "검은 염소털 장막 안의 큰 항아리와 매달린 가죽부대. \"장막\" 단독은 성막과 겹쳐 구체 표현만",
    "review": {
     "by": "claude-visual",
@@ -14261,7 +14261,7 @@
     "장막을 치",
     "진 밖"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "달빛 아래 검은 장막들과 모닥불이 흩어진 진영",
    "review": {
     "by": "claude-visual",
@@ -14282,7 +14282,7 @@
     "장사한",
     "장사하였"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위를 판 무덤 굴 안, 벽감과 입구 빛. \"장사\"는 상업 뜻과 겹쳐 활용형만",
    "review": {
     "by": "claude-visual",
@@ -14303,7 +14303,7 @@
     "기념비",
     "비석"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "언덕 위 돌무더기와 홀로 선 돌기둥",
    "review": {
     "by": "claude-visual",
@@ -14322,7 +14322,7 @@
     "떡을 구",
     "구운 떡"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙 화덕 안 벽에 붙여 굽는 납작한 떡과 숯불",
    "review": {
     "by": "claude-visual",
@@ -14344,7 +14344,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바다 바위 위의 노인이 강한 빛 쪽으로 돌아봄. 음성을 빛줄기로 연출",
    "review": {
     "by": "claude-visual",
@@ -14366,7 +14366,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛 앞에 엎드린 노인의 어깨에 위에서 손이 얹힘",
    "review": {
     "by": "claude-visual",
@@ -14388,7 +14388,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "감옥 바닥 빛줄기 아래 쇠사슬과 푸른 잎 관. 서머나 편지의 옥과 생명의 관",
    "review": {
     "by": "claude-visual",
@@ -14410,7 +14410,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "낡은 나무문을 두드리는 주먹과 문틈의 빛",
    "review": {
     "by": "claude-visual",
@@ -14432,7 +14432,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먼지 속을 달려오는 흰·붉은·검은·청황색 네 말과 두건 쓴 기수들",
    "review": {
     "by": "claude-visual",
@@ -14454,7 +14454,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흐린 하늘 아래 물결 없는 바다와 움직임 없는 나뭇잎. 화면만으로는 일반 바다 풍경 — 바람을 붙잡은 장면임은 카드 글이 줘야 함",
    "review": {
     "by": "claude-visual",
@@ -14476,7 +14476,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "금 촛대 사이 빛 속에 선 흰 옷과 빛나는 청동빛 발(발만 보임)",
    "review": {
     "by": "claude-visual",
@@ -14498,7 +14498,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바다 위 흰빛을 둘러싼 녹색 둥근 무지개(녹보석 같은 무지개, 4:3)와 바라보는 노인",
    "review": {
     "by": "claude-visual",
@@ -14517,7 +14517,7 @@
     "새끼 양",
     "양 한 마리"
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 위에 선 건강한 어린 양, 뒤에 양 몇 마리. 계 5:6(죽임당한 것 같은 어린 양) 장면용 아님 — 계시록 카드에서 \"어린 양\"으로 걸리지 않게 관리자 확인 필요",
    "review": {
     "by": "claude-visual",
@@ -14547,7 +14547,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 굴 입구로 들어오는 자색 옷 입은 왕과 사람들",
    "review": {
     "by": "claude-visual",
@@ -14569,7 +14569,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바람 없는 흐린 새벽 들판의 마른 풀. 하늘의 고요를 땅 풍경으로 옮긴 해석적 연출",
    "review": {
     "by": "claude-visual",
@@ -14591,7 +14591,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "금장식 제단 위 금 향로에서 위의 빛으로 오르는 향연",
    "review": {
     "by": "claude-visual",
@@ -14613,7 +14613,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "하늘을 덮는 검은 연기와 어두워진 해. 황충은 거의 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -14635,7 +14635,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바다 위 빛기둥, 무지개, 바위 위 펼친 두루마리. 천사는 그리지 않음",
    "review": {
     "by": "claude-visual",
@@ -14657,7 +14657,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 곁에서 작은 두루마리를 손에 든 노인(먹는 장면은 아님)",
    "review": {
     "by": "claude-visual",
@@ -14679,7 +14679,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "밤, 감람나무 사이 두 횃불 기둥 앞에 선 거친 옷의 두 사람",
    "review": {
     "by": "claude-visual",
@@ -14701,7 +14701,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "광야 협곡을 걸어가는 여인과 절벽에 드리운 큰 독수리 그림자",
    "review": {
     "by": "claude-visual",
@@ -14723,7 +14723,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불빛 어린 유리 같은 바다 위에 선 흰 옷 입은 사람들이 수금(하프)을 듦",
    "review": {
     "by": "claude-visual",
@@ -14745,7 +14745,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 위 자주·붉은 천, 금잔, 진주 줄",
    "review": {
     "by": "claude-visual",
@@ -14767,7 +14767,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "배 위에서 머리를 감싸고 우는 선원들과 멀리 불타는 성의 연기",
    "review": {
     "by": "claude-visual",
@@ -14789,7 +14789,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "창고에 쌓인 곡식·향품·항아리·금은 자루와 벽에 걸린 쇠사슬 그림자(사람의 영혼=종의 해석)",
    "review": {
     "by": "claude-visual",
@@ -14811,7 +14811,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바다에 떨어져 물보라를 일으키는 큰 맷돌",
    "review": {
     "by": "claude-visual",
@@ -14833,7 +14833,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 빈 방 바닥의 멈춘 맷돌과 꺼진 등잔",
    "review": {
     "by": "claude-visual",
@@ -14877,7 +14877,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "열린 구름 빛 아래 흰 말 탄 이와 멀리 뒤따르는 기병들",
    "review": {
     "by": "claude-visual",
@@ -14899,7 +14899,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 구덩이 어귀 바위의 굵은 쇠사슬과 큰 열쇠. 열쇠 모양이 근세 서양식 — 상징물이라 reviewed 유지",
    "review": {
     "by": "claude-visual",
@@ -14921,7 +14921,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흰빛 앞 바닥에 펼친 두루마리들과 서 있거나 무릎 꿇은 남녀노소",
    "review": {
     "by": "claude-visual",
@@ -14950,7 +14950,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "눈물 흘리는 얼굴의 눈가를 닦는 손",
    "review": {
     "by": "claude-visual",
@@ -14972,7 +14972,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "활짝 열린 큰 성문으로 들어가는 많은 사람들",
    "review": {
     "by": "claude-visual",
@@ -15001,7 +15001,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 샘물을 두 손으로 떠올리는 손",
    "review": {
     "by": "claude-visual",
@@ -15023,7 +15023,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 서리 내린 새벽 들판과 마른 풀대. 첫째와 같은 판단",
    "review": {
     "by": "claude-visual",
@@ -15045,7 +15045,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 금 제단 위 향로에서 빛 속으로 오르는 향연",
    "review": {
     "by": "claude-visual",
@@ -15067,7 +15067,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 붉은 하늘로 솟는 검은 연기 기둥과 날아드는 황충들",
    "review": {
     "by": "claude-visual",
@@ -15089,7 +15089,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 어두운 굴 안 금·은·돌 우상들 앞에 엎드린 사람들. 우상은 본문 그대로라 hold 아님",
    "review": {
     "by": "claude-visual",
@@ -15111,7 +15111,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 바다와 땅에 하나씩 선 두 불기둥(바다·땅을 밟은 두 발), 무지개, 바위 위 두루마리",
    "review": {
     "by": "claude-visual",
@@ -15133,7 +15133,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 노인이 작은 두루마리를 입에 대고 먹음. 피리 부는 모습으로 오해될 여지는 있음",
    "review": {
     "by": "claude-visual",
@@ -15155,7 +15155,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 감람나무 두 그루와 불 켠 두 기둥 사이에 선 두 사람",
    "review": {
     "by": "claude-visual",
@@ -15177,7 +15177,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 붉은 협곡을 오르는 여인과 등에 겹친 큰 독수리 날개 그림자",
    "review": {
     "by": "claude-visual",
@@ -15199,7 +15199,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 붉은 불빛 섞인 바다 가의 흰 옷 무리가 하프를 듦. 하프 모양이 근대 하프에 가까움 — 환상 장면이라 reviewed",
    "review": {
     "by": "claude-visual",
@@ -15221,7 +15221,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 바위 위 자주·붉은 천, 쓰러진 금잔, 진주",
    "review": {
     "by": "claude-visual",
@@ -15243,7 +15243,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 배 위에서 머리를 감싸 쥐고 우는 선원들과 검은 연기",
    "review": {
     "by": "claude-visual",
@@ -15265,7 +15265,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 빈 창고의 자루·항아리와 바닥의 쇠고랑, 쇠사슬 그림자",
    "review": {
     "by": "claude-visual",
@@ -15287,7 +15287,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 바다에 떨어져 물기둥을 일으키는 맷돌",
    "review": {
     "by": "claude-visual",
@@ -15309,7 +15309,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 빈 거리의 깨진 맷돌과 꺼진 등잔, 빈 탁자",
    "review": {
     "by": "claude-visual",
@@ -15331,7 +15331,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 흰 베옷 여인 뒷모습과 긴 잔칫상(떡·석류·포도·잔)",
    "review": {
     "by": "claude-visual",
@@ -15353,7 +15353,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 빛이 열린 먹구름 아래 흰 말 탄 이와 뒤따르는 기병 무리",
    "review": {
     "by": "claude-visual",
@@ -15375,7 +15375,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 갈라진 바위 위 쇠사슬과 큰 열쇠. 열쇠가 근세 서양식 — 상징물이라 reviewed 유지",
    "review": {
     "by": "claude-visual",
@@ -15397,7 +15397,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 흰빛 앞에 선 사람들의 실루엣과 바닥에 펼친 두루마리들",
    "review": {
     "by": "claude-visual",
@@ -15419,7 +15419,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 위 노인이 내려다보는 금빛 성. 다시 그린 그림으로 큰 성전 건물은 보이지 않음 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -15448,7 +15448,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 노인 눈가의 눈물을 닦는 손",
    "review": {
     "by": "claude-visual",
@@ -15470,7 +15470,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 빛으로 열린 거대한 성문 사이로 걸어 들어가는 사람들",
    "review": {
     "by": "claude-visual",
@@ -15499,7 +15499,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "(둘째 그림) 바위 샘물을 두 손으로 떠 마시는 사람",
    "review": {
     "by": "claude-visual",
@@ -15521,7 +15521,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "항구 도시 돌난간 위 기름 등잔 하나와 기둥들. 본문은 금 촛대 — 등잔은 해석적 연출 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -15543,7 +15543,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 해안의 노인 앞으로 구름이 갈라지며 빛이 열림 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -15565,7 +15565,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌 제단 곁 빛 속에서 흰 옷을 받쳐 든 세 사람 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -15587,7 +15587,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바다 건너 여러 곳에서 연기가 오르는 큰 항구 도시. 도시 식별 표지는 없음. 17:18 후보 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -15616,7 +15616,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "아침 해 아래 들판의 흰 옷 큰 무리가 손을 들고 찬송 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -15638,7 +15638,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성문 앞 재 위에 굵은 베옷을 입고 앉은 왕, 엎드린 사람들과 베를 덮은 소들 · 워터마크: 원본은 photo_orig에 보관, 표시용은 아래 띠를 잘라냄(2026-11-07)",
    "review": {
     "by": "claude-visual",
@@ -15667,7 +15667,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "길에 편 겉옷과 종려 가지, 두 손 든 무리 사이로 나귀 타고 오심. 마 21:7–9",
    "review": {
     "by": "claude-visual",
@@ -15689,7 +15689,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "발을 씻기는 두 손과 놋 대야, 바닥의 수건, 등잔. 얼굴 없음. 요 13:4–5",
    "review": {
     "by": "claude-visual",
@@ -15718,7 +15718,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "두 등잔 사이에서 떡을 둘로 떼시는 예수님, 양옆 제자 뒷모습. 떡이 둥근 발효빵처럼 보여 유월절 무교병과는 다름(경미). 잔은 보이지 않음",
    "review": {
     "by": "claude-visual",
@@ -15747,7 +15747,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "어두운 감람나무 숲, 바위에 얼굴을 대고 엎드린 한 사람과 빛줄기. 마 26:39",
    "review": {
     "by": "claude-visual",
@@ -15776,7 +15776,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "eraLock": [
     9
    ],
@@ -15834,7 +15834,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "군인 손들이 자색 옷 입은 예수님 머리에 가시관을 씌움. 요 19:2",
    "review": {
     "by": "claude-visual",
@@ -15863,7 +15863,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌길에 쓰러진 예수님 위의 십자가를 한 남자가 들어 올림. 십자가 아래 쓰러지심은 본문에 없는 전승 연출이고, 시몬이 지게 됨(눅 23:26)이 근거",
    "review": {
     "by": "claude-visual",
@@ -15892,7 +15892,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "먹구름 아래 십자가 기둥을 붙들고 엎드린 여인들과 한 남자. 발만 보임. 요 19:25 \"십자가 곁에\"와 맞고, 마 27:55 \"멀리서\"에는 연출",
    "review": {
     "by": "claude-visual",
@@ -15921,7 +15921,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 무덤 안 돌 위에 세마포로 싼 시신을 누이는 두 사람. 요 19:40–42",
    "review": {
     "by": "claude-visual",
@@ -15943,7 +15943,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "빛이 쏟아지는 빈 무덤, 돌 위의 세마포와 따로 개어 놓은 수건. g23_12와 같이 세마포가 몸 모양으로 부풀어 보일 여지",
    "review": {
     "by": "claude-visual",
@@ -15965,7 +15965,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "아침 빛이 드는 동산 나무 사이, 서신 예수님과 돌아선 여인 뒷모습. 요 20:14–16",
    "review": {
     "by": "claude-visual",
@@ -15987,7 +15987,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "등잔 켠 식탁에서 예수님이 떡을 떼시고 양옆 두 제자가 놀람 — 세 사람, 예수님이 떼심으로 눅 24:30–31과 맞음. g23_14(보류: 넷이 맞잡아 찢음) 대신 씀",
    "review": {
     "by": "claude-visual",
@@ -16009,7 +16009,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바닷가 돌 사이 숯불 위 떡과 생선, 뒤편 물가에 선 예수님. 요 21:9",
    "review": {
     "by": "claude-visual",
@@ -16038,7 +16038,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "바위 사이에 웅크려 밖을 살피는 두 남자. 삼상 13:6(굴과 수풀과 바위틈에 숨음), 삿 6:2(산 구멍·굴)",
    "review": {
     "by": "claude-visual",
@@ -16051,7 +16051,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "물매",
     "용사",
@@ -16087,7 +16087,7 @@
      "basis": "interpretive"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "물과 진흙 속에서 빠진 병거 바퀴와 말 다리. 출 14:25 \"병거 바퀴를 벗겨서\"에 가장 가깝고, 삿 4–5 기손 강은 5:21에 근거한 해석적 연출. 복식 표시 없음",
    "review": {
     "by": "claude-visual",
@@ -16109,7 +16109,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "양뿔 나팔(쇼파르)을 치켜든 손, 깨져 흩어지는 항아리, 아래 골짜기에 흩어진 불빛. 삿 7:19–20. g16_04(보류: 쇠 나팔) 대신 씀",
    "review": {
     "by": "claude-visual",
@@ -16131,7 +16131,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "흙먼지 낀 골짜기 양쪽 비탈에 창 든 군대가 늘어섬. 삼상 17:3 구도이나 복식이 특정되지 않아 여러 전쟁 본문에",
    "review": {
     "by": "claude-visual",
@@ -16160,7 +16160,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 저녁 땅에 피 묻은 가죽 방패와 창, 쓰러진 사람의 옷자락. 삼하 1:21 \"용사의 방패가 버린 바 됨\"",
    "review": {
     "by": "claude-visual",
@@ -16173,7 +16173,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "봉화",
     "깃발을 들",
@@ -16208,7 +16208,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "eraLock": [
     7
    ],
@@ -16224,7 +16224,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "전쟁",
     "싸움",
@@ -16274,7 +16274,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌기둥 사이로 불길에 무너지는 성문 들보. 예루살렘 함락 등 여러 본문(kw 불사르/함락)",
    "review": {
     "by": "claude-visual",
@@ -16303,7 +16303,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "폭풍 구름 속에서 불꽃으로 된 말과 병거가 내려옴, 아래 산. 왕하 2:11; 6:17 — 본문의 실제 사건이라 symbolic 아닌 scene",
    "review": {
     "by": "claude-visual",
@@ -16339,7 +16339,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "모루 위에서 붉게 달군 칼날을 펴는 대장장이, 바닥에 쌓인 창·칼. 칼→보습(사 2:4, 미 4:3) 쪽 장면. 욜 3:10(보습→칼)은 방향이 반대라 카드 문맥 확인. 삼상 13 블레셋 철공에도",
    "review": {
     "by": "claude-visual",
@@ -16361,7 +16361,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "eraLock": [
     9,
     10
@@ -16378,7 +16378,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "황폐",
     "폐허",
@@ -16415,7 +16415,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성벽 밖 바위 사이에 웅크린 두 남자와 뒤의 사람들. 삼상 13:6; 삿 6:2",
    "review": {
     "by": "claude-visual",
@@ -16428,7 +16428,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "용사",
     "군사",
@@ -16484,7 +16484,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "갈라진 마른 골짜기 바닥, 양쪽 언덕에 창 든 군대의 실루엣. 삼상 17:3 구도",
    "review": {
     "by": "claude-visual",
@@ -16513,7 +16513,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "붉은 어스름 들에 버려진 창·방패·겉옷. 사람은 없음",
    "review": {
     "by": "claude-visual",
@@ -16526,7 +16526,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "파수꾼",
     "파수",
@@ -16562,7 +16562,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "eraLock": [
     7
    ],
@@ -16578,7 +16578,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "전쟁",
     "싸움",
@@ -16621,7 +16621,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "불길에 무너진 들보와 돌벽, 앞에 창 든 병사들의 실루엣. 함락 본문 여러 곳",
    "review": {
     "by": "claude-visual",
@@ -16650,7 +16650,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "노을 구름이 말과 병거 모양을 이루고, 아래 산기슭에서 사람들이 손을 들어 가리킴. 왕하 6:17 \"산에 불말과 불병거가 가득\"에 가장 가까움",
    "review": {
     "by": "claude-visual",
@@ -16686,7 +16686,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "모루 위에서 달군 칼날을 펴는 대장장이, 앞에 투구와 칼 더미. 칼→보습(사 2:4, 미 4:3) 쪽. 욜 3:10은 방향이 반대",
    "review": {
     "by": "claude-visual",
@@ -16708,7 +16708,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "eraLock": [
     9,
     10
@@ -16725,7 +16725,7 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "requireAny": [
     "황폐",
     "폐허",
@@ -16753,7 +16753,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "한낮 하늘의 해와 반대편 희미한 낮달, 골짜기의 쫓는 군대(작게), 바위 위에 두 팔 든 사람 뒷모습. 수 10:12–13",
    "review": {
     "by": "claude-visual",
@@ -16775,7 +16775,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "큰 상수리나무 그늘 아래 세운 거친 돌 하나, 지팡이 짚은 노인과 뒤의 백성. 수 24:26–27. 글자 없음",
    "review": {
     "by": "claude-visual",
@@ -16797,7 +16797,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "망대 난간 위 두 손에서 떨어지는 둥근 맷돌 위짝, 아래 투구 쓴 군인들과 불. 맞는 사람·피 없음. 삿 9:52–53",
    "review": {
     "by": "claude-visual",
@@ -16819,7 +16819,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "활 쥔 손 가까이, 들판에 꽂힌 화살과 그쪽으로 뛰는 아이, 앞쪽 돌무더기에 옷자락. 삼상 20:35–38",
    "review": {
     "by": "claude-visual",
@@ -16841,7 +16841,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌길을 오르는 맨발 클로즈업, 뒤에 머리를 가리고 우는 사람들과 멀리 성읍. 삼하 15:30. 왕관 없음",
    "review": {
     "by": "claude-visual",
@@ -16889,7 +16889,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "장막 성소의 어둠 속, 제단 모서리의 뿔을 두 손으로 붙잡은 겁먹은 젊은 남자. 왕상 1:50–51. 출 21:14·왕상 2:28(요압)에도 쓸 수 있으나 요압은 노장이라 연출",
    "review": {
     "by": "claude-visual",
@@ -16918,7 +16918,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "비늘 갑옷 솔기에 꽂힌 화살 클로즈업, 나무 병거 안에서 부축받아 선 왕. 피 없음. 왕상 22:34–35",
    "review": {
     "by": "claude-visual",
@@ -16940,7 +16940,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "열린 나무 덧문 창을 향해 활을 당기는 손, 아침 빛. 선지자의 손이 얹힌 것은 뚜렷하지 않음(16절은 연출로만). 왕하 13:15–17",
    "review": {
     "by": "claude-visual",
@@ -16969,7 +16969,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "돌계단 아래쪽이 다시 햇빛을 받고, 위에 지팡이 짚은 사람들이 내려다봄. 둥근 해시계 없음. 왕하 20:9–11; 사 38:8",
    "review": {
     "by": "claude-visual",
@@ -16991,7 +16991,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "연기 가득한 성전, 부집게에 집힌 붉은 숯이 누운 사람의 입술 가까이. 숯을 든 쪽은 빛 속이라 보이지 않음(천사 없음). 사 6:6–7",
    "review": {
     "by": "claude-visual",
@@ -17013,7 +17013,7 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "성전 기둥 아래 돌바닥의 광주리 둘, 하나는 잘 익은 무화과, 하나는 썩어 곰팡이 핀 무화과. 렘 24:1–3",
    "review": {
     "by": "claude-visual",
@@ -17042,7 +17042,7 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "reviewed",
+   "reviewStatus": "approved",
    "note": "열린 큰 성전 동문으로 쏟아져 들어오는 빛과 구름, 문 앞에 엎드린 작은 실루엣. 환상 내용이라 symbolic. 겔 43:1–5; 44:1–2(닫힌 동문)에는 연출",
    "review": {
     "by": "claude-visual",
@@ -17061,6 +17061,378 @@
     "by": "claude-visual",
     "at": "2026-11-07",
     "basis": "PDF 원본(Gemini Notebook, 57회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 10,
+     "chapter": 18,
+     "fromVerse": 9,
+     "toVerse": 9,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "어두운 숲 큰 상수리나무 가지에 긴 머리털이 얽혀 매달린 젊은 남자(양모 겉옷·허리띠·맨발), 아래로 달아나는 노새. 갑옷·피 없음. g57_06(보류: 로마식 갑옷) 대신 씀",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 10,
+     "chapter": 23,
+     "fromVerse": 15,
+     "toVerse": 17,
+     "basis": "explicit"
+    },
+    {
+     "book": 13,
+     "chapter": 11,
+     "fromVerse": 17,
+     "toVerse": 19,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "바위 굴 앞에서 가죽부대의 물을 땅에 쏟는 남자, 뒤에 가죽 갑옷·둥근 가죽 방패·곧은 칼의 세 용사. g57_07(보류: 그리스·로마식 갑옷) 대신 씀",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_03": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 40,
+     "chapter": 25,
+     "fromVerse": 1,
+     "toVerse": 8,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "앞줄 다섯 토기 등잔은 타고, 뒤의 갈색·줄무늬 수건 쓴 여인 다섯은 꺼져 연기 나는 등잔과 빈 기름병을 들고 당황함, 멀리 횃불 행렬. 비유 내용이라 symbolic. g57_15(보류: 흰 두건) 대신 씀",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_04": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 14,
+     "chapter": 20,
+     "fromVerse": 21,
+     "toVerse": 22,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "흰 아마 옷의 세 사람이 수금과 제금을 들고 노래하며 앞서고 뒤에 둥근 방패·창의 군대. 금관 악기 없음. 세 얼굴이 서로 비슷한 편(경미). g16_10·g55_10·g56_10 보류 대신 씀",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_05": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 5,
+     "chapter": 27,
+     "fromVerse": 12,
+     "toVerse": 13,
+     "basis": "explicit"
+    },
+    {
+     "book": 6,
+     "chapter": 8,
+     "fromVerse": 33,
+     "toVerse": 33,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "마주 선 두 산비탈에 백성이 줄지어 서고(작게), 골짜기 가운데 흰 옷 제사장 몇 사람. 언약궤는 보이지 않음. 신 27:12–13; 수 8:33",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_06": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 6,
+     "chapter": 18,
+     "fromVerse": 6,
+     "toVerse": 10,
+     "basis": "explicit"
+    },
+    {
+     "book": 6,
+     "chapter": 14,
+     "fromVerse": 2,
+     "toVerse": 2,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "노인의 손이 토기 항아리에서 작은 돌 하나를 꺼내 듦, 땅에 막대로 그린 경계, 뒤에 선 사람들. 수 18:6–10. 다른 제비뽑기 본문(민 26:55, 삼상 10:20, 욘 1:7, 행 1:26)에는 낱말로 쓸 수 있음",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 12,
+     "chapter": 11,
+     "fromVerse": 2,
+     "toVerse": 3,
+     "basis": "explicit"
+    },
+    {
+     "book": 14,
+     "chapter": 22,
+     "fromVerse": 11,
+     "toVerse": 12,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "어두운 돌방, 휘장 뒤에서 강보에 싼 아기를 안고 두려워하는 여인과 유모, 열린 문밖 횃불 빛 속 창 든 병사의 실루엣. 왕하 11:2–3",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_08": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 27,
+     "chapter": 10,
+     "fromVerse": 4,
+     "toVerse": 9,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "폭풍 하늘에서 강 위로 번개 같은 빛기둥이 내리고, 강가 바위에 얼굴을 땅에 댄 노인, 멀리 도망치는 사람들. 빛 속에 사람 모습 없음. 단 10:4–9",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_09": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 12,
+     "chapter": 12,
+     "fromVerse": 9,
+     "toVerse": 10,
+     "basis": "explicit"
+    },
+    {
+     "book": 14,
+     "chapter": 24,
+     "fromVerse": 8,
+     "toVerse": 11,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "나무 궤 뚜껑의 구멍에 은 조각을 넣는 손, 둘레에 은 조각과 은 고리, 뒤에 줄 선 사람들(흐림). 글자·얼굴 새긴 동전 없음. 왕하 12:9–10; 대하 24:8–11",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_10": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 24,
+     "chapter": 1,
+     "fromVerse": 11,
+     "toVerse": 13,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "앞쪽에 꽃 핀 살구(아몬드) 가지를 든 손, 뒤에 불 위에서 끓어 넘치며 기울어진 큰 토기 가마, 어두운 하늘. 환상 내용이라 symbolic. 렘 1:11–13",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_11": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 26,
+     "chapter": 24,
+     "fromVerse": 3,
+     "toVerse": 6,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌 화덕 위 안팎에 녹이 슨 큰 청동 가마에 고기와 뼈가 끓고 장작불이 거셈, 옆에 장작. 비유(가마의 노래)라 symbolic. 겔 24:3–6",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_12": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 28,
+     "chapter": 10,
+     "fromVerse": 12,
+     "toVerse": 12,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "묵은 땅",
+    "기경",
+    "쟁기",
+    "밭을 갈",
+    "갈아엎"
+   ],
+   "note": "가시덤불 자란 굳은 땅을 소 두 마리가 끄는 나무 쟁기로 갈아엎는 농부, 비구름 사이의 빛. 비유라 symbolic. 호 10:12(렘 4:3 \"묵은 땅을 갈고\"에도 맞음)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_13": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 42,
+     "chapter": 11,
+     "fromVerse": 5,
+     "toVerse": 8,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "밤 골목, 닫힌 나무 문을 두드리는 남자와 빈 바구니, 문틈의 등잔 빛. 비유 내용이라 symbolic. 눅 11:5–8. 눅 13:25·계 3:20의 문 두드림과는 구별(요청하는 사람이 밖에 있음)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_14": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 44,
+     "chapter": 14,
+     "fromVerse": 19,
+     "toVerse": 20,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "성 밖 흙바닥에서 찢긴 옷으로 일어나려는 남자, 주위의 돌들, 손을 내미는 제자들, 멀리 성문과 흩어지는 무리. 피 없음. 행 14:19–20",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g58_15": {
+   "assetKind": "object",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 59,
+     "chapter": 3,
+     "fromVerse": 4,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "거센 바람에 돛이 부푼 나무 배 뒤쪽, 두 손이 나무 키(조타 노)를 붙듦, 큰 파도. 쇠 타륜 없음. 비유라 figurative. 약 3:4–5. 행 27의 폭풍 항해에는 낱말로만",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-07",
+    "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
    }
   }
  },

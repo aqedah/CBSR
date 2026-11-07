@@ -766,3 +766,18 @@ g57_12|s|23:6|핀 숯/부집게/네 입술에 대며/네 악이 제하여졌고|
 g57_13|s|24:24|무화과 두 광주리/좋은 무화과/나쁜 무화과|figs,baskets,temple,columns|예루살렘|7|warm|50|좋은 무화과와 나쁜 무화과 두 광주리 (렘 24)|||object
 g57_14|s|26:43;26:44|동쪽을 향한 문/여호와의 영광이 동문으로/성전에 가득|gate,light,glory,prostrate||7|bright|50|동문으로 밀려드는 빛과 엎드린 사람 (겔 43)|||symbolic
 g57_15|s|40:25|열 처녀/등을 들고/슬기 있는 자/미련한 자/기름을 준비|lamps,women,night,torches||9|dark|50|등불 든 열 처녀 (마 25)|보류: 흰 두건이 수녀 복장처럼 보임(g50_08과 같은 이유)||scene
+g58_01|s|10:18|압살롬/상수리나무/머리가 그 나무에 걸려/노새|oak,hanging,hair,mule,night||6|dark|50|상수리나무에 머리털이 걸린 압살롬 (삼하 18, 둘째 그림)|||scene
+g58_02|s|10:23;13:11|베들레헴 성문 곁 우물/세 용사/여호와께 부어 드리며|water_skin,pouring,cave,warriors,shield|베들레헴|6|warm|50|우물물을 땅에 붓는 다윗과 세 용사 (삼하 23, 둘째 그림)|||scene
+g58_03|s|40:25|열 처녀/등을 들고/슬기 있는 자/미련한 자/기름을 준비|lamps,women,night,torches||9|dark|50|등불 든 열 처녀 (마 25, 둘째 그림)|||symbolic
+g58_04|s|14:20|노래하는 자들을 군대/찬송하는 자/여호사밧|singers,army,sunrise_light_rays,lyre,cymbals||6|bright|50|군대 앞에서 수금·제금을 든 노래하는 자들 (대하 20, 넷째 그림)|||scene
+g58_05|s|5:27;6:8|그리심 산/에발 산/축복/저주|mountains,valley,people,priests,dust|세겜|5|bright|50|그리심 산과 에발 산 사이에 선 백성과 제사장들 (신 27; 수 8)|||scene
+g58_06|s|6:18;6:14;6:19|제비 뽑/제비를 뽑/제비로|lots,jar,hand,stone,elders|실로|5|warm|50|항아리에서 제비를 뽑는 손 (수 18)|||scene
+g58_07|s|12:11;14:22|요아스/여호세바/여호사브앗/숨겨/침실|baby,woman,hiding,curtain,soldier,torch|예루살렘|7|dark|50|휘장 뒤에 아기를 안고 숨은 여인과 문밖의 병사 (왕하 11)|||scene
+g58_08|s|27:10|힛데겔/큰 강 가/얼굴을 땅에 대고/세마포 옷을 입은|river,prostrate,light,lightning,old_man|힛데겔|7|dark|50|큰 강가에 엎드린 노인과 하늘에서 내린 빛 (단 10)|||scene
+g58_09|s|12:12;14:24|궤 뚜껑에 구멍/궤를 만들어/성전 문 곁|chest,silver,hole,hands,priest|예루살렘|7|warm|50|뚜껑에 구멍 뚫린 궤에 은을 넣는 손 (왕하 12)|||object
+g58_10|s|24:1|살구나무 가지/끓는 가마/북에서부터 기울어|almond_branch,pot,fire,storm||7|dark|50|살구나무 가지를 든 손과 기울어진 끓는 가마 (렘 1)|||symbolic
+g58_11|s|26:24|녹슨 가마/가마에 물을 붓/고기 덩이/뼈|cauldron,rust,fire,bones,wood||7|dark|50|불 위의 녹슨 가마 (겔 24)|||symbolic
+g58_12|s|28:10|묵은 땅을 기경/공의를 심/의를 비처럼|plow,oxen,farmer,fallow,storm,light||7|warm|50|소 두 마리로 묵은 땅을 가는 농부 (호 10)|||symbolic
+g58_13|s|42:11|밤중에/떡 세 덩이/문을 두드리/벗이여|door,knocking,night,basket,lamp||9|dark|50|한밤중에 문을 두드리는 사람 (눅 11)|||symbolic
+g58_14|s|44:14|루스드라/돌로 바울을 쳐서/죽은 줄로 알고/제자들이 둘러섰을 때|stones,fallen,rising,disciples,city_gate|루스드라|10|bright|50|돌에 맞고 다시 일어나는 바울과 손 내민 제자들 (행 14)|||scene
+g58_15|s|59:3|작은 키/큰 배/사공/광풍에 밀려|ship,rudder,hands,storm,sail||10|dark|50|폭풍 속 큰 배의 작은 키를 잡은 손 (약 3)|||object
