@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
- "mode": "observe",
- "notes": "사람이 정한 값만 적습니다. 없는 그림은 legacy-unclassified로 보고 기존 role에서 제안값을 계산합니다(photo_policy.py). hold/out·blockedUses·manual-only·reference는 앱에서 바로 막고, 나머지 분류는 관측(observe)만 합니다. 워터마크(Gemini Notebook)가 있는 그림은 원본을 app/photo_orig/에 그대로 두고, 앱 표시용(site_src/img/g)은 아래 띠를 잘라 씁니다(목사님 결정 2026-11-07).",
+ "mode": "enforce",
+ "notes": "사람이 정한 값만 적습니다. 없는 그림은 legacy-unclassified로 보고 기존 role에서 제안값을 계산합니다(photo_policy.py). hold/out·blockedUses·manual-only·reference는 앱에서 바로 막고, 배정 규칙 2판(v2)은 2026-10-30 목사님 결정에 따라 기본으로 켜져 있어(?phrule=v1로만 옛 규칙) relation·eraLock·requireAny·group·allowChapters·verseAnchors가 실제 배정에 쓰입니다(mode=enforce). 아직 꺼 둔 것: 점수가 낮으면 그림 비우기(규칙 ⑦). 워터마크(Gemini Notebook)가 있는 그림은 원본을 app/photo_orig/에 그대로 두고, 앱 표시용(site_src/img/g)은 아래 띠를 잘라 씁니다(목사님 결정 2026-11-07).",
  "assets": {
   "g01_01": {
    "assetKind": "background",
@@ -6362,17 +6362,8 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "verseAnchors": [
-    {
-     "book": 38,
-     "chapter": 8,
-     "fromVerse": 5,
-     "toVerse": 5,
-     "basis": "illustrative"
-    }
-   ],
    "reviewStatus": "reviewed",
-   "note": "흙벽 골목을 뛰어가는 두 아이. 생활 분위기",
+   "note": "흙벽 골목을 뛰어가는 두 아이. 생활 분위기 · 분위기(ambient) 그림이라 절 근거를 두지 않음(규칙 ⑥, 2026-11-07 점검)",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -16437,15 +16428,6 @@
    "relation": "ambient",
    "directness": "D4",
    "assignmentPolicy": "broad",
-   "verseAnchors": [
-    {
-     "book": 9,
-     "chapter": 22,
-     "fromVerse": 2,
-     "toVerse": 2,
-     "basis": "illustrative"
-    }
-   ],
    "reviewStatus": "reviewed",
    "requireAny": [
     "용사",
@@ -16455,7 +16437,7 @@
     "사백 명",
     "육백 명"
    ],
-   "note": "석양을 등지고 칼·물매·방패를 든 남자들이 걸어옴. 삼상 22:2 다윗을 따른 사람들로 쓸 수 있으나 특정 표시는 없음",
+   "note": "석양을 등지고 칼·물매·방패를 든 남자들이 걸어옴. 삼상 22:2 다윗을 따른 사람들로 쓸 수 있으나 특정 표시는 없음 · 분위기(ambient) 그림이라 절 근거를 두지 않음(규칙 ⑥, 2026-11-07 점검)",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-06",
