@@ -7577,7 +7577,7 @@ function gbDraw(){ document.getElementById("gbPlay")?.remove(); if(!GBV) return;
       body+=`<div class="gbfb ${ok?"ok":A.st==="s"?"sk":"no"}"><b>${ok?"정답입니다":A.st==="s"?"건너뛰고 해설 보기":"본문을 다시 확인해 보세요"}</b>${ok?"":`<p class="gbca">정답 ${oo.indexOf(q.o.indexOf(co))+1}번 · ${esc(co[1])}</p>`}${so?`<p class="gbwhy">${esc(so[2])}</p>`:""}<p>${esc(q.x)}</p>`+
         `<details><summary>다른 보기는 왜 다를까요?</summary>${oo.map((k,n)=>{ const o=q.o[k]; return o[0]===q.a||o[0]===A.sel?"":`<p><b>${n+1}번</b> ${esc(o[2])}</p>`; }).join("")}</details>${(()=>{ const L=gbRefs(q); return L.length>1?`<div class="gbvs">${L.map(x=>`<button class="gbverse" data-gbv="${x.id}">📖 ${esc(x.lab)}</button>`).join("")}</div>`:`<button class="gbverse" data-gbv="${L[0].id}">📖 ${esc(q.r)} 본문 보기</button>`; })()}</div>`;
       foot=`<button class="gbbtn" data-gbnext="1">${c.i+1>=c.ids.length?"결과 보기":"다음 문제"}</button>`; }
-    else foot=`<button class="gbsk" data-gbskip="1">건너뛰고 해설 보기</button><button class="gbbtn" data-gbsub="1"${c.sel?"":" disabled"}>정답 확인</button>`; }
+    else foot=`<button class="gbsk" data-gbskip="1">모르겠어요 · 해설 보기</button>`; }
   else { const lvT=GBLV.find(x=>x[0]===c.lv)[1], st=c.ids.map(id=>(c.ans[id]||{}).st), r=st.filter(x=>x==="r").length, w=st.filter(x=>x==="w").length, s=st.filter(x=>x==="s").length, miss=c.ids.filter(id=>(c.ans[id]||{}).st!=="r");
     top=`<div class="gbtop"><b>성경 골든벨</b>${X}</div>`;
     body=`<div class="gbres"><small>${esc(lvT)}</small><b>${r} / ${c.ids.length}</b><span>오답 ${w} · 건너뜀 ${s}</span></div><ol class="gblist">${c.ids.map(id=>{ const q=GB.q.find(x=>x.id===id), a=c.ans[id]||{}; return `<li class="${a.st||""}"><span>${a.st==="r"?"맞음":a.st==="w"?"틀림":"건너뜀"}</span><p>${esc(q.q)}</p><button class="gbmini" data-gbv="${gbRefId(q)}">${esc(q.r)}</button></li>`; }).join("")}</ol>`;
@@ -7591,7 +7591,7 @@ function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; c
   el.querySelectorAll('input[name="gbsc"]').forEach(x=>x.onchange=()=>{ GBV.scope=x.value; gbDraw(); });
   on("[data-gbstart]",()=>{ if(GBV.lv) gbNew(GBV.lv,GBV.scope); });
   on("[data-gbresume]",()=>{ GBV.s="q"; gbDraw(); });
-  const pickO=v=>{ c.sel=v; save(); const b=el.querySelector("[data-gbsub]"); if(b) b.disabled=false; el.querySelectorAll(".gbo").forEach(l=>{ const i=l.querySelector("input"); i.checked=i.value===v; l.classList.toggle("on",i.value===v); }); };
+  const pickO=v=>{ if(c.ans[(gbQ()||{}).id]) return; c.sel=v; el.querySelectorAll(".gbo").forEach(l=>{ const i=l.querySelector("input"); i.checked=i.value===v; l.classList.toggle("on",i.value===v); }); const q=gbQ(); setTimeout(()=>fin(v===q.a?"r":"w"),160); }; /* 11/7 목사님: 보기를 누르면 바로 채점(정답 확인 단추 없이 한 번에) */
   el.querySelectorAll('input[name="gbo"]').forEach(x=>x.onchange=()=>pickO(x.value));
   el.querySelectorAll(".gbo").forEach(l=>l.onclick=e=>{ const i=l.querySelector("input"); if(!i||i.disabled) return; e.preventDefault(); pickO(i.value); }); /* 11/3: 휴대폰에서 두 번 눌러야 되던 것 — 보기 칸을 누르면 바로 고름 */
   const fin=(st)=>{ const q=gbQ(); c.ans[q.id]={sel:st==="s"?null:c.sel,st}; c.sel=null; g.seen[q.id]=st==="r"?1:st==="w"?2:3; save(); const y=el.querySelector(".gbbody")?.scrollTop||0; gbDraw(); const b2=document.querySelector("#gbPlay .gbbody"); if(b2){ b2.scrollTop=y; const fb=b2.querySelector(".gbfb"); if(fb&&fb.getBoundingClientRect().top>b2.getBoundingClientRect().bottom-40) b2.scrollTop=y+Math.min(fb.getBoundingClientRect().top-b2.getBoundingClientRect().bottom+160, fb.offsetTop); } }; /* 문제는 그대로 두고, 해설이 화면 밖이면 조금만 올림 */
