@@ -13564,13 +13564,12 @@ function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; c
   on("[data-gbretry]",()=>{ const miss=c.ids.filter(id=>(c.ans[id]||{}).st!=="r"); gbNew(c.lv,c.scope,miss); });
   on("[data-gbagain]",()=>gbNew(c.lv,c.scope||"all"));
   on("[data-gbpick]",()=>{ GBV={s:"pick",lv:c.lv,scope:c.scope||"all"}; gbDraw(); });
-  /* 11/7 목사님 휴대폰: 한 번 눌러서는 안 먹고 두 번 눌러야 넘어감 → 손가락을 뗄 때(pointerup) 바로 실행하고, 뒤따르는 click은 버림 */
-  let pd=null; el.addEventListener("pointerdown",e=>{ pd=e.pointerType==="mouse"?null:{x:e.clientX,y:e.clientY,t:e.target}; },{passive:true});
-  el.addEventListener("pointercancel",()=>{ pd=null; },{passive:true});
-  el.addEventListener("pointerup",e=>{ const P=pd; pd=null; if(!P||Math.hypot(e.clientX-P.x,e.clientY-P.y)>12) return;
+    /* 11/8 목사님 갤럭시(웨일) 영상: 손가락이 조금만 움직여도 브라우저가 '스크롤'로 보고 누름을 버림(pointerup·click 둘 다 안 옴) → touchend로 직접 판정 */
+  let pd=null; el.addEventListener("touchstart",e=>{ const T=e.touches[0]; pd=e.touches.length===1?{x:T.clientX,y:T.clientY,t:e.target,at:Date.now()}:null; },{passive:true});
+  el.addEventListener("touchend",e=>{ const P=pd; pd=null; const T=e.changedTouches[0]; if(!P||!T||Date.now()-P.at>800||Math.hypot(T.clientX-P.x,T.clientY-P.y)>14) return;
     const tg=P.t.closest&&P.t.closest(".gbo,.gbl,.gbscope label,button"); if(!tg||tg.disabled||!tg.onclick) return;
     if(tg.matches(".gbo,.gbl,.gbscope label")&&tg.querySelector("input:disabled")) return;
-    window.__gbTapAt=Date.now(); tg.onclick.call(tg,{preventDefault(){},stopPropagation(){},target:tg,currentTarget:tg}); });
+    window.__gbTapAt=Date.now(); tg.onclick.call(tg,{preventDefault(){},stopPropagation(){},target:tg,currentTarget:tg}); },{passive:true});
   if(!window.__gbClickGuard){ window.__gbClickGuard=1; document.addEventListener("click",e=>{ if(Date.now()-(window.__gbTapAt||0)<700&&e.target.closest&&e.target.closest("#gbPlay")&&!e.target.closest("summary,details")){ e.preventDefault(); e.stopPropagation(); } },true); }
   el.addEventListener("keydown",e=>{ if(e.key==="Tab"){ const F=[...el.querySelectorAll("button:not([disabled]),input:not([disabled]),summary")].filter(b=>b.offsetParent||b.type==="radio"); if(!F.length) return; const a=F.indexOf(document.activeElement); const n=e.shiftKey?(a<=0?F.length-1:a-1):(a<0||a===F.length-1?0:a+1); F[n].focus(); e.preventDefault(); } }); }
 /* 11/5 목사님: 도전(·묵상) 머리에도 본문 탭처럼 장 아래 소제목 */
