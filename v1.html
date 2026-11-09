@@ -2048,6 +2048,7 @@ body.wcmon{overflow:hidden}
 .wcbrw button{display:inline-flex;align-items:center;gap:3px}.wcbrw button i{font-style:normal;font-size:13px;opacity:0;color:#E2B874}.wcbrw button.on{box-shadow:inset 0 -2px 0 #E2B874}.wcbrw button.on i{opacity:1}
 .wcpair{display:flex;gap:14px;align-items:center;min-width:0}.wcpair>.wcseg{flex:1;min-width:0}.wcpair>.wcseg[data-k="ff"],.wcpair>.wcseg[data-k="al"]{flex:.8}.wcpair .wcbrk{flex:1;white-space:nowrap}
 .wcmtop>*{box-sizing:border-box;height:38px;display:inline-flex;align-items:center;justify-content:center;line-height:1;padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;flex:none} /* 11/9 목사님: 머리줄 단추 높이·글자 줄 맞춤 */
+.wcsh{display:grid;gap:8px}.wcshim{display:flex;justify-content:center;background:#1c1712;border-radius:12px;min-height:200px;overflow:hidden}.wcshim img{display:block;max-width:100%;max-height:56vh;object-fit:contain}.wcshdel{height:40px;border:0;background:none;color:var(--bad,#A63A31);font-weight:600;font-size:14px;text-decoration:underline;text-underline-offset:3px}
 .wcmtop .wckp{height:38px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3ece0;font-weight:700;font-size:14.5px;margin-left:auto}.wcmtop .wcdel+.wckp{margin-left:4px}.wcmtop .wckp+.wced{margin-left:6px}
 .wcmtop .wcdel{margin-left:auto;height:38px;padding:0 12px;border:0;background:none;color:#d9cdbb;font-size:13.5px;text-decoration:underline;text-underline-offset:3px}.ralk{margin-bottom:12px}.ralk b{font-weight:700;opacity:.6;margin-left:2px}
 .wcmtop .wccx{margin-left:auto;height:38px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3ece0;font-weight:700;font-size:14.5px}
@@ -13296,7 +13297,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   if(!WC_LOOK.some(z=>z[0]===o.look)) o.look="over"; o.text=wcText(o.b,o.c,o.v1,o.v2); if(!o.text) return; o.cands=wcCands(o.b,o.c,o.v1,o.w,o.d,a.ph); o.i=0; o.ph=o.cands[0]||null; o.mineOn=!!a.mine&&o.mineOn!==false;
   const box=document.createElement("div"); box.className="wcm"; box.setAttribute("role","dialog"); box.setAttribute("aria-modal","true"); box.setAttribute("aria-label","말씀 카드");
   const seg=(k,L,cur,c,at)=>`<div class="wcseg ${c||""}" data-k="${k}" ${at||""}>${L.map(z=>`<button class="${z[0]===cur?"on":""}" data-v="${z[0]}">${z[1]}</button>`).join("")}</div>`;
-  box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b>${a.wcid?`<button class="wcdel">지우기</button>`:""}<button class="wckp">보관</button><button class="wced" aria-pressed="false">수정</button><button class="wccx" hidden>취소</button></div>
+  box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b><button class="wckp">보관</button><button class="wced" aria-pressed="false">수정</button><button class="wccx" hidden>취소</button></div>
    <div class="wcstage"><canvas class="wccv"></canvas><div class="wcbox" hidden><i class="wchd l" aria-hidden="true"></i><i class="wchd r" aria-hidden="true"></i></div><div class="wcedh" hidden>글이나 그림을 끌어 옮기고, 두 손가락으로 크기를 바꿉니다</div><button class="wcnav l" aria-label="앞 그림">‹</button><button class="wcnav r" aria-label="다음 그림">›</button></div><div class="wcthumbs" role="listbox" aria-label="그림 고르기"></div>
    <div class="wctabs" role="tablist" hidden>${[["size","비율"],["font","글꼴"],["line","줄"],["hl","칠하기"],["sh","어둡기"]].concat(a.mine?[["mine","내 한 줄"]]:[]).map(([k,t],i)=>`<button role="tab" data-tab="${k}" class="${i?"":"on"}">${t}</button>`).join("")}</div>
    <div class="wcopts"><label data-t="size">비율</label>${seg("size",WC_SIZE.map(z=>[z[0],`<i class="wcrat" style="width:${Math.round(18*z[2]/z[3])}px;height:18px"></i>${z[1]}`]),o.size,"wcratio",'data-t="size"')}<div class="wcpair" data-t="font">${seg("ff",[["serif","명조"],["sans","고딕"]],o.ff)}${seg("fw",[["l","가늘게"],["m","보통"],["b","굵게"]],o.fw)}</div><div class="wcpair" data-t="line">${seg("al",[["left","왼쪽"],["center","가운데"]],o.al)}<button class="wcpaint wcbrk"><span>줄 나누기</span><em></em></button></div><button class="wcpaint" data-t="hl"><span>칠할 낱말 고르기</span><em></em></button>${seg("sh",[["lo","약하게"],["mid","보통"],["hi","진하게"]],o.sh,"",'data-t="sh"')}${a.mine?`<button class="wcmine${o.mineOn?" on":""}" data-t="mine" aria-pressed="${o.mineOn}"><span>${esc(a.mine)}</span><em>${o.mineOn?"넣음":"뺌"}</em></button>`:""}</div>
@@ -13409,7 +13410,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
       if(Math.abs(d)>60) slide(d<0?1:-1); else { cv.style.transition="transform .2s ease-out,opacity .2s"; cv.style.transform=""; cv.style.opacity=""; } };
     stg.addEventListener("touchend",end); stg.addEventListener("touchcancel",end); }
   const close=pop=>{ box.remove(); document.body.classList.remove("wcmon"); if(pop!==true) ovDone(close); if(a.wcid&&view.tab==="record") render(); };
-  const bindDel=()=>{ const dl=box.querySelector(".wcdel"); if(dl) dl.onclick=()=>{ if(dl.dataset.ok!=="1"){ dl.dataset.ok="1"; dl.textContent="한 번 더 누르면 지웁니다"; setTimeout(()=>{ dl.dataset.ok=""; dl.textContent="지우기"; },3000); return; } WCS[a.wcid]={at:Date.now(),del:1}; wcsSave(); toast("카드를 지웠습니다"); close(); }; }; bindDel();
+
   box.querySelector(".wcmx").onclick=()=>close(); ovOpen(close);
   const name=()=>`말씀카드_${PLAN.abbr[o.b-1]}${o.c}-${o.v1}${o.v2>o.v1?"-"+o.v2:""}.png`;
   const blob=()=>new Promise(res=>cv.toBlob(res,"image/png"));
@@ -13417,7 +13418,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   const keepCard=()=>{ const id=a.wcid||("c"+Date.now().toString(36)); a.wcid=id;
     WCS[id]={at:Date.now(),b:o.b,c:o.c,v1:o.v1,v2:o.v2,u:o.ph?o.ph.u:"",fx:o.ph?o.ph.fx||"":"",s:JSON.parse(JSON.stringify({size:o.size,ff:o.ff,fw:o.fw,al:o.al,sh:o.sh,fs:o.fs,dx:o.dx,dy:o.dy,iz:o.iz,ix:o.ix,iy:o.iy,bw:o.bw,br:o.br,hl:o.hl}))}; wcsSave(); };
   /* 11/9 목사님: 사진 저장·보내기는 보관으로 치지 않음 — 머리줄 '보관'을 눌러야 '나 > 말씀 카드 > 내가 만든 카드'에 남음 */
-  box.querySelector(".wckp").onclick=()=>{ const had=!!a.wcid; keepCard(); toast(had?"보관한 카드를 고쳤습니다":"보관했습니다 · 나 › 말씀 카드"); if(!box.querySelector(".wcdel")){ const d=document.createElement("button"); d.className="wcdel"; d.textContent="지우기"; box.querySelector(".wckp").before(d); bindDel(); } };
+  box.querySelector(".wckp").onclick=()=>{ const had=!!a.wcid; keepCard(); toast(had?"보관한 카드를 고쳤습니다":"보관했습니다 · 나 › 말씀 카드"); }; /* 11/9 목사님: 지우기는 '나'의 카드 창에서만 */
   const save=async()=>{ const b=await blob(); if(!b) return; const u=URL.createObjectURL(b), l=document.createElement("a"); l.href=u; l.download=name(); document.body.appendChild(l); l.click(); l.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); toast("사진으로 저장했습니다"); };
   box.querySelector(".wcsave").onclick=save;
   box.querySelector(".wcsend").onclick=async()=>{ const b=await blob(); if(!b) return; const f=new File([b],name(),{type:"image/png"});
@@ -13429,8 +13430,15 @@ function wcFromSel(){ const ids=[...HSEL].map(id=>id.split("-").map(Number)).sor
   const v1=ids[0][2], v2=ids[ids.length-1][2]; if(v2-v1>5) return toast("말씀 카드는 여섯 절까지 담을 수 있습니다");
   document.querySelectorAll(".v.sel").forEach(e=>e.classList.remove("sel")); HSEL.clear(); syncHlBar();
   wcOpen({b,c,v1,v2,w:view.w,d:view.d,src:"read"}); }
-document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-wcid]"); if(!b) return; e.preventDefault(); e.stopPropagation(); const id=b.dataset.wcid, r=WCS[id]; if(!r||r.del) return;
-  wcOpen({b:r.b,c:r.c,v1:r.v1,v2:r.v2,src:"read",wcid:id,pre:r}); });
+/* 11/9 목사님: 내가 만든 카드도 묵상 카드처럼 누르면 떠오르는 창 — 카드 모습 + 고치기·보내기 / 지우기 */
+document.addEventListener("click",async e=>{ const b=e.target.closest&&e.target.closest("[data-wcid]"); if(!b) return; e.preventDefault(); e.stopPropagation(); const id=b.dataset.wcid, r=WCS[id]; if(!r||r.del) return;
+  sheet(wcRefLabel(r.b,r.c,r.v1,r.v2),`<div class="wcsh"><div class="wcshim"><img alt="말씀 카드"></div><button class="wcmk" data-wcgo="1">말씀 카드 고치기 · 보내기</button><button class="wcshdel" data-wcrm="1">이 카드 지우기</button></div>`);
+  const sh=document.getElementById("sheetRoot"), close=()=>sh&&sh.querySelector("#sheetX")?.click();
+  sh.querySelector("[data-wcgo]").onclick=()=>{ close(); wcOpen({b:r.b,c:r.c,v1:r.v1,v2:r.v2,src:"read",wcid:id,pre:r}); };
+  const rm=sh.querySelector("[data-wcrm]"); rm.onclick=()=>{ if(rm.dataset.ok!=="1"){ rm.dataset.ok="1"; rm.textContent="한 번 더 누르면 지웁니다"; setTimeout(()=>{ rm.dataset.ok=""; rm.textContent="이 카드 지우기"; },3000); return; }
+    WCS[id]={at:Date.now(),del:1}; wcsSave(); close(); toast("카드를 지웠습니다"); render(); };
+  try{ const o=Object.assign({look:"over",size:"sq",ff:"serif",al:"left",sh:"mid",fw:"m",fs:1,dx:0,dy:0,iz:1,ix:null,iy:null,bw:0,br:{},hl:{},mineOn:false},JSON.parse(JSON.stringify(r.s||{})),{b:r.b,c:r.c,v1:r.v1,v2:r.v2,ph:r.u?{u:r.u,fx:r.fx}:null});
+    o.text=wcText(o.b,o.c,o.v1,o.v2); const im=await wcLoad(o.ph); await wcFonts(o.text); const cv=document.createElement("canvas"); wcDraw(cv,o,im); const img=sh.querySelector(".wcshim img"); if(img) img.src=cv.toDataURL("image/jpeg",.86); }catch(err){} });
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-wcmk]"); if(!b) return; e.preventDefault(); e.stopPropagation();
   const [w,d]=b.dataset.wcmk.split("-").map(Number), q=mem.qt[keyOf(w,d)]||{}, v=String(q.kv||"").split(":").map(Number); if(v.length!==3) return;
   const sh=document.getElementById("sheetRoot"); if(sh&&sh.contains(b)) sh.querySelector("#sheetX")?.click();
