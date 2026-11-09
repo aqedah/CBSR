@@ -9944,6 +9944,7 @@ const CH_DEF={
  woman:{robe:"#b0567a",trim:"#f2dfb0",head:"scarf",cloth:"#3f6f8f",beard:null},
  woman2:{robe:"#5f8a5a",trim:"#efe0b8",head:"scarf",cloth:"#c9873a",beard:null},
  youth:{robe:"#c08a3e",trim:"#f3e3b8",head:"short",hair:"#3b2616",beard:null},
+ aaron:{robe:"#f7f3ea",trim:"#e6dcc4",sash:"#d9ccb0",head:"cloth",cloth:"#fdfbf5",band:"#e4dac4",beard:"#9a9590"}, /* 대속죄일의 아론: 흰 세마포 옷·관(레 16:4) */
  elder:{robe:"#56606e",trim:"#ddd2b0",head:"cloth",cloth:"#e8e2d0",band:"#56606e",beard:"#eeeeee",prop:"staff"},
  jeremiah:{robe:"#5c4a3a",trim:"#cdb98e",sash:"#3a2e22",head:"cloth",cloth:"#d9cdb0",band:"#5c4a3a",beard:"#8a7a66",prop:"scroll"},
  /* 큰 여정 인물(2026-10-31) */
@@ -12179,6 +12180,8 @@ function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=docum
   <div class="cap" aria-live="polite"><div class="n"><i id="at_cn">1 / 9</i><span id="at_cs"></span></div><h2 id="at_ct"></h2><p id="at_cd"></p><q id="at_cq"></q></div>
   <div class="ctl"><button id="at_prev" aria-label="앞 장면">‹</button><button class="play" id="at_play">이어 보기</button><button id="at_next" aria-label="다음 장면">›</button></div></div>`;
   document.body.appendChild(el); document.body.classList.add("wcmon");
+  /* 11/9 목사님: 프로필은 길을 따라 움직이는 동그라미 — 큰 여정처럼 인물(흰 세마포 옷의 아론)이 걸어감 */
+  { const g0=el.querySelector("#at_me"); try{ const raw=C("aaron").replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="92" '); g0.innerHTML=`<ellipse cx="0" cy="0" rx="8" ry="2.6" fill="rgba(60,40,20,.35)"/><image href="data:image/svg+xml;charset=utf-8,${encodeURIComponent(raw)}" x="-13" y="-38" width="26" height="40"/><text class="pl" x="11" y="-26" style="font-size:9px;font-weight:700;fill:#a5361f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">아론</text>`; }catch(e){} }
 const S=[
  {s:"16:3–4",t:"몸을 씻고 거룩한 옷을 입다",h:"물 · 세마포 옷",d:"화려한 대제사장 예복이 아니라 흰 세마포 옷만 입습니다. 물두멍 곁에서 몸을 씻는 데서 이날이 시작됩니다.",q:"이것들은 거룩한 옷이라 물로 그의 몸을 씻고 입을 것이며",r:"레 16:4",path:[[150,226]],fx:"wash"},
  {s:"16:6, 11",t:"자기와 집안을 위한 수송아지",h:"수송아지",d:"백성보다 먼저 자기 죄를 위해 속죄합니다. 번제단 앞에서 수송아지를 잡습니다.",q:"아론은 자기를 위한 속죄제의 수송아지를 드리되 자기와 집안을 위하여 속죄하고",r:"레 16:6",path:[[150,226],[150,250]],fx:"bull"},
