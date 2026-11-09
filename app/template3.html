@@ -7651,7 +7651,7 @@ function gbBind(){ const el=document.getElementById("gbPlay"); if(!el) return; c
   el.querySelectorAll('input[name="gbsc"]').forEach(x=>x.onchange=()=>{ GBV.scope=x.value; gbDraw(); });
   on("[data-gbstart]",()=>{ if(GBV.lv) gbNew(GBV.lv,GBV.scope); });
   on("[data-gbresume]",()=>{ GBV.s="q"; gbDraw(); });
-  const pickO=v=>{ if(c.ans[(gbQ()||{}).id]||el.__picked) return; el.__picked=1; c.sel=v; el.querySelectorAll(".gbo").forEach(l=>{ const i=l.querySelector("input"); i.checked=i.value===v; l.classList.toggle("on",i.value===v); }); const q=gbQ(); setTimeout(()=>fin(v===q.a?"r":"w"),160); }; /* 11/7 목사님: 보기를 누르면 바로 채점(정답 확인 단추 없이 한 번에) */
+  const pickO=v=>{ if(gbMem().cur!==c){ gbDraw(); const l2=[...document.querySelectorAll("#gbPlay .gbo")].find(l=>l.querySelector("input")?.value===v); if(l2&&l2.onclick) l2.onclick({preventDefault(){}}); return; } /* 옛 상태 객체를 잡고 있으면 새로 그린 뒤 같은 보기를 고름 */ if(c.ans[(gbQ()||{}).id]||el.__picked) return; el.__picked=1; c.sel=v; el.querySelectorAll(".gbo").forEach(l=>{ const i=l.querySelector("input"); i.checked=i.value===v; l.classList.toggle("on",i.value===v); }); const q=gbQ(); setTimeout(()=>fin(v===q.a?"r":"w"),160); }; /* 11/7 목사님: 보기를 누르면 바로 채점(정답 확인 단추 없이 한 번에) */
   el.querySelectorAll('input[name="gbo"]').forEach(x=>x.onchange=()=>pickO(x.value));
   el.querySelectorAll(".gbo").forEach(l=>l.onclick=e=>{ const i=l.querySelector("input"); if(!i||i.disabled) return; e.preventDefault(); pickO(i.value); }); /* 11/3: 휴대폰에서 두 번 눌러야 되던 것 — 보기 칸을 누르면 바로 고름 */
   const fin=(st)=>{ const q=gbQ(); c.ans[q.id]={sel:st==="s"?null:c.sel,st}; c.sel=null; g.seen[q.id]=st==="r"?1:st==="w"?2:3; save(); const y=el.querySelector(".gbbody")?.scrollTop||0; gbDraw(); const b2=document.querySelector("#gbPlay .gbbody"); if(b2){ b2.scrollTop=y; const fb=b2.querySelector(".gbfb"); if(fb&&fb.getBoundingClientRect().top>b2.getBoundingClientRect().bottom-40) b2.scrollTop=y+Math.min(fb.getBoundingClientRect().top-b2.getBoundingClientRect().bottom+160, fb.offsetTop); } }; /* 문제는 그대로 두고, 해설이 화면 밖이면 조금만 올림 */
@@ -8103,7 +8103,9 @@ function mergeBundle(L,R){ if(!R||!Object.keys(R).length) return L; if(!R.v) R={
   return o; }
 function applyBundle(B){ const before=JSON.stringify([mem,HL,PROF]);
   for(const k of ["rj","y365"]) if(B[k]){ try{ localStorage.setItem(LKEYS[k],JSON.stringify(B[k])); }catch(e){} }
-  if(B[MODE]) mem=Object.assign(mem,B[MODE]);
+  const gb0=mem.gb; if(B[MODE]) mem=Object.assign(mem,B[MODE]);
+  /* 11/9 목사님 태블릿 영상: 동기화가 mem.gb를 새 객체로 바꾸면, 열린 골든벨은 옛 객체에 답을 적어 '첫 누름이 사라지는' 일이 생김 → 바뀌었으면 골든벨을 새 객체로 다시 그림 */
+  if(mem.gb!==gb0&&typeof GBV!=="undefined"&&GBV&&document.getElementById("gbPlay")) setTimeout(()=>{ if(GBV&&document.getElementById("gbPlay")){ const y=document.querySelector("#gbPlay .gbbody")?.scrollTop||0; gbDraw(); const b=document.querySelector("#gbPlay .gbbody"); if(b) b.scrollTop=y; } },0);
   /* 다른 기기가 이미 새 회차라면 이 탭도 새 회차로 다시 엽니다 */
   if(MODE==="y365"&&mem.ed&&mem.ed>ED_Y){ try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} setTimeout(()=>location.reload(),300); }
   HL=B.hl||HL; HLDEL=B.hld||HLDEL; PROF=B.prof||PROF;
