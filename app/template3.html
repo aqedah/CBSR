@@ -6222,12 +6222,12 @@ function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=docum
   { const g0=el.querySelector("#at_me"); g0.innerHTML=`<ellipse cx="0" cy="0" rx="8" ry="2.6" fill="rgba(60,40,20,.35)"/><image class="atimg" href="${AIMG.aaron||""}" x="-13" y="-38" width="26" height="40"/><text class="pl" x="11" y="-26" style="font-size:9px;font-weight:700;fill:#a5361f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">아론</text>`; }
   /* 11/9 목사님: 세 동그라미가 무엇인지 모름 → 뜰에서 시중드는 '다른 제사장들'을 인물로(아론이 휘장 안에 있는 동안은 회막에 있지 못함, 16:17) */
   /* 11/9 목사님: 제사장들은 평소 성소에서 등잔과 향단을 돌봄(출 30:7–8, 레 24:3–4). 아론이 휘장 안에 들어가 속죄하는 동안은 누구든지 회막에 있지 못하므로(16:17) 문으로 걸어 나가 기다렸다가, 아론이 나온 뒤 다시 들어감 */
-  const PR_IN=[[124,182],[176,182]], PR_OUT=[[76,176],[80,198]];
+  const PR_IN=[[124,182],[176,182]], PR_OUT=[[94,232],[236,232]]; /* 11/9 목사님: 회막에서 나온 제사장들은 뜰에서 제물(두 염소·숫양) 곁을 지킴 — 16:17은 회막 안만 금하므로 본문에 어긋나지 않는 추론 */
   { const og=el.querySelector("#at_others"), pr=AIMG.priest||AIMG.man||""; og.innerHTML=PR_IN.map(([x,y],k)=>`<g class="atpr" transform="translate(${x} ${y})"><ellipse rx="5" ry="1.8" fill="rgba(60,40,20,.28)"/><image href="${pr}" x="-8" y="-24" width="16" height="25"/></g>`).join("")+`<text id="at_prl" x="150" y="198" text-anchor="middle" style="font:600 8px &quot;Noto Serif KR&quot;,serif;fill:#6b5232;paint-order:stroke;stroke:#ecdcb4;stroke-width:2.5px">등잔·향단을 돌보는 제사장들</text>`; }
   const prG=()=>[...el.querySelectorAll("#at_others .atpr")], prL=()=>el.querySelector("#at_prl");
-  const prSet=w=>{ const P=w==="out"?PR_OUT:PR_IN; prG().forEach((g,k)=>g.setAttribute("transform",`translate(${P[k][0]} ${P[k][1]})`)); const l=prL(); if(w==="out"){ l.setAttribute("x",78); l.setAttribute("y",150); l.textContent="회막 밖에서 기다림 (16:17)"; } else { l.setAttribute("x",150); l.setAttribute("y",198); l.textContent="등잔·향단을 돌보는 제사장들"; } };
+  const prSet=w=>{ const P=w==="out"?PR_OUT:PR_IN; prG().forEach((g,k)=>g.setAttribute("transform",`translate(${P[k][0]} ${P[k][1]})`)); const l=prL(); if(w==="out"){ l.setAttribute("x",150); l.setAttribute("y",312); l.textContent="제사장들은 회막 밖 제물 곁에서 기다림 (16:17)"; } else { l.setAttribute("x",150); l.setAttribute("y",198); l.textContent="등잔·향단을 돌보는 제사장들"; } };
   const prMove=async(w,my)=>{ const A=w==="out"?PR_IN:PR_OUT, B=w==="out"?PR_OUT:PR_IN, l=prL(); l.style.opacity=0;
-    const way=k=>[[150+(k?6:-6),204],[150+(k?6:-6),214],[96,216+k*6]], paths=A.map((a,k)=>w==="out"?[a,...way(k),B[k]]:[a,...way(k).reverse(),B[k]]); const n=60;
+    const way=k=>[[150+(k?6:-6),204],[150+(k?6:-6),214],[k?200:100,222]], paths=A.map((a,k)=>w==="out"?[a,...way(k),B[k]]:[a,...way(k).reverse(),B[k]]); const n=60;
     for(let seg=1;seg<5;seg++){ for(let t=1;t<=n/4;t++){ if(my!==tok) return false; prG().forEach((g,k)=>{ const [x0,y0]=paths[k][seg-1],[x1,y1]=paths[k][seg], f=t/(n/4); g.setAttribute("transform",`translate(${x0+(x1-x0)*f} ${y0+(y1-y0)*f})`); }); await sleep(30); } }
     prSet(w); l.style.opacity=""; return true; };
 
