@@ -77,7 +77,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .two{display:flex;gap:4mm;align-items:stretch}
 .pg .two .c1{flex:0 0 60mm;display:flex;flex-direction:column} .pg .two .c1 .box{flex:1 1 auto;margin-bottom:0} .pg .two .c2{flex:1 1 auto;display:flex;min-width:0}
 .pg .map{border:0.15mm solid #bbb;background:#fff;margin-top:0.5mm;display:flex;flex-direction:column;width:100%} .pg .map svg{flex:1 1 auto;width:100%;height:auto;min-height:0;display:block;max-height:49mm}
-.pg .map .cap{font-size:7.8pt;color:#444;padding:0.6mm 1.4mm 0.8mm;line-height:1.25;border-top:0.15mm solid #ddd}
+.pg .pic{border:0.15mm solid #bbb;background:#fff;margin-top:0.5mm;display:flex;flex-direction:column;width:100%;min-height:0} .pg .pic .im{flex:1 1 auto;min-height:0;height:0;background:var(--main);display:flex} .pg .pic img{width:100%;height:100%;min-height:0;object-fit:cover;display:block;filter:grayscale(1) contrast(1.1) brightness(1.08);mix-blend-mode:screen;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pg .map .cap,.pg .pic .cap{font-size:7.8pt;color:#444;padding:0.6mm 1.4mm 0.8mm;line-height:1.25;border-top:0.15mm solid #ddd}
 .pg .after{position:absolute;left:14mm;right:14mm;bottom:10mm;background:var(--mainL);border-top:0.5mm solid var(--main);padding:1.1mm 2.2mm 1.1mm}
 .pg .after .h{font-size:9.5pt;font-weight:700;margin:0 0 1mm;color:var(--main)}
 .pg .after p{font-size:9.7pt;line-height:1.42;margin:0 0 0.8mm;text-align:justify}
@@ -143,6 +144,9 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
     </fieldset>
     <fieldset><legend><span class="n">3</span>나의 묵상 (오른쪽에 인쇄되는 질문)</legend>
       <label class="f"><span class="k"><b>관찰 질문</b> <span class="cnt" data-for="q"></span></span><textarea id="q" data-max="85"></textarea></label>
+      <label class="f"><span class="k"><b>그림 (지도 없는 날만)</b> 그림 번호</span><input type="text" id="p_id" placeholder="예: g12_01 — 앱 그림 라이브러리 번호"></label>
+      <label class="f"><span class="k">그림 설명 한 줄</span><input type="text" id="p_cap" placeholder="예: 빛이 드는 동산과 강"></label>
+      <div class="hint">지도가 있으면 지도가 우선이고 그림은 쓰이지 않습니다. 지도 자리에 단색으로 들어갑니다.</div>
       <div class="hint">본문의 말로 답할 수 있는 것. 절 주소 포함. "내가 본 것" 칸 위에 인쇄.</div>
       <label class="f"><span class="k"><b>적용 질문</b> <span class="cnt" data-for="apply"></span></span><textarea id="apply" data-max="105"></textarea></label>
       <div class="hint">앞 문장 = 본문의 사실(절 주소), 뒤 문장 = 나에게 묻는 질문 하나. 질문은 **별표 둘**로 감싸면 굵게.</div>
@@ -199,6 +203,7 @@ function readForm(){
   qt.obs.pair=$('pair').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{const m=s.match(/^(\S+\s\S+)\s+(.*)$/);return m?[m[1],m[2]]:['',s]});
   qt.apply=$('apply').value.trim(); qt.note=$('note').value.trim(); qt.pray=$('pray').value.trim();
   const g=$('god').value.trim(); if(g) qt.god=g;
+  const pi=$('p_id').value.trim(); if(pi) qt.img={id:pi,cap:$('p_cap').value.trim()};
   const e=$('m_emph').value.trim();
   qt.map=e?{emph:e,show:$('m_show').value.trim(),route:$('m_route').value.trim(),cap:$('m_cap').value.trim()}:null;
   return qt;
@@ -209,7 +214,7 @@ function fillForm(qt){
   $('sub').value=qt.sub||''; $('today').value=qt.guide.today||''; $('find').value=qt.guide.find||''; $('word').value=qt.guide.word||'';
   $('q').value=qt.obs.q||''; [1,2,3].forEach(i=>{const l=(qt.obs.look||[])[i-1]||['',''];$('r'+i).value=l[0]||'';$('t'+i).value=l[1]||''});
   $('pair').value=(qt.obs.pair||[]).map(x=>(x[0]+' '+x[1]).trim()).join('\n');
-  $('apply').value=qt.apply||''; $('note').value=qt.note||''; $('pray').value=qt.pray||''; $('god').value=qt.god||'';
+  $('apply').value=qt.apply||''; $('note').value=qt.note||''; $('pray').value=qt.pray||''; $('god').value=qt.god||''; $('p_id').value=(qt.img&&qt.img.id)||''; $('p_cap').value=(qt.img&&qt.img.cap)||'';
   const m=qt.map||{}; $('m_emph').value=m.emph||''; $('m_show').value=m.show||''; $('m_route').value=m.route||''; $('m_cap').value=m.cap||'';
   counters();
 }
@@ -279,10 +284,11 @@ function pageL(p,qt){
   const q='q'+qOf(p);
   const look=(qt.obs.look||[]).filter(x=>x[0]);
   const pair=(qt.obs.pair||[]);
-  const hasMap=qt.map&&qt.map.emph;
+  const hasMap=qt.map&&qt.map.emph; const hasPic=!hasMap&&qt.img&&qt.img.id;
   const refs=look.map(([r,t])=>`<p class="ref"><b>${esc(r)}</b>&nbsp; ${esc(t)}</p>`).join('');
   const box=pair.length?`<div class="box sans"><div class="h">다시 볼 곳</div>${pair.map(([s,t])=>`<div class="i"><b>${esc(s)}</b>&nbsp; ${esc(t)}</div>`).join('')}</div>`:'';
-  const sec2=hasMap?`<div class="two"><div class="c1">${refs}${box}</div><div class="c2">${svgMap(qt.map,56)}</div></div>`:refs+box;
+  const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${esc(qt.img.cap||'')}</div></div>`:'';
+  const sec2=hasMap?`<div class="two"><div class="c1">${refs}${box}</div><div class="c2">${svgMap(qt.map,56)}</div></div>`:hasPic?`<div class="two"><div class="c1">${refs}${box}</div><div class="c2">${pic}</div></div>`:refs+box;
   return `<div class="pg ${q}">
 <p class="date sans">${p.m}월 ${p.d}일 · ${p.no}일째 · ${p.nch}장 ${p.vv}절 · 성경 읽기 약 ${p.min}분${hasMap?' · 지도는 왼쪽 아래':''}</p>
 <p class="title sans">${esc(p.t)}</p>
@@ -317,6 +323,7 @@ function pageR(p,qt){
 function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</div>`}
 
 /* ── 미리보기와 맞춤 검사 ── */
+function fillHeard(root,s){root.querySelectorAll('.pg').forEach(pg=>{const h=pg.querySelector('.heard');if(!h)return;const ht=h.getBoundingClientRect().top;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});const slack=(ht-mb)/s/MM;const n=Math.min(7,Math.floor((slack-2)/6.3));for(let i=0;i<n;i++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}})}
 function mmpx(){const d=document.createElement('div');d.style.cssText='position:absolute;width:100mm;height:0;visibility:hidden';document.body.appendChild(d);const w=d.getBoundingClientRect().width/100;d.remove();return w}
 const MM=mmpx();
 function render(){
@@ -327,6 +334,7 @@ function render(){
   sc.innerHTML=spread(p,qt);
   // 맞춤: 각 쪽에서 아래 고정 상자 위 여유
   const res=[]; sc.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});res.push((abt-mb)/s/MM)});
+  fillHeard(sc,s);
   const f=$('fit'); const worst=Math.min(...res);
   const over=Object.keys(LIM).filter(k=>$(k)&&($(k).value||'').replace(/\*\*/g,'').length>LIM[k]).length;
   const fitTxt=worst<0?`지면 넘침 ${res[0]<0?'왼쪽 ':''}${res[1]<0?'오른쪽 ':''}${Math.abs(worst).toFixed(1)}mm — 해설·다시 볼 곳부터 줄이기`:`지면 들어감 (여유 왼 ${res[0].toFixed(0)}mm · 오른 ${res[1].toFixed(0)}mm)`;
@@ -371,9 +379,9 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
     if(mode==='day'&&!list.length) list=[p];
     $('printroot').innerHTML=list.map(x=>pageL(x,get(x.no)||blank())+pageR(x,get(x.no)||blank())).join('');
     // 모든 날 맞춤 검사(숨겨 그려 잼)
-    const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[];
-    list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`)})});
-    probe.remove();
+    const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[]; const heardN=[];
+    list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
+    probe.remove(); $('printroot').querySelectorAll('.pg .heard').forEach((h,i)=>{for(let k=0;k<(heardN[i]||0);k++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}});
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
     $('status').textContent=list.length+'일치 · '+(list.length*2)+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음, 배경 그래픽 켜기';
     setTimeout(()=>window.print(),150);
