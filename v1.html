@@ -13367,7 +13367,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
     if(e.target.closest("[data-lib]")){ e.stopPropagation(); wclOpen(o,ph=>{ let j=o.cands.findIndex(c=>c.u===ph.u); if(j<0){ o.cands.push(ph); j=o.cands.length-1; } dots.innerHTML=""; o.i=j; o.ph=o.cands[j]; o.iz=1; o.ix=null; o.iy=null; draw(); }); } },true);
   dots.onclick=e=>{ const b=e.target.closest("[data-i]"); if(!b) return; const j=+b.dataset.i; if(j!==o.i) slide(j>o.i?1:-1,j); };
   box.querySelector(".wcnav.l").onclick=()=>step(-1); box.querySelector(".wcnav.r").onclick=()=>step(1);
-  let sx=null; cv.addEventListener("pointerdown",e=>{ sx=e.pointerType==="mouse"&&!EDIT?e.clientX:null; }); cv.addEventListener("pointerup",e=>{ if(sx==null) return; const dx=e.clientX-sx; sx=null; if(Math.abs(dx)>36) step(dx<0?1:-1); });
+  let sx=null; cv.addEventListener("pointerdown",e=>{ sx=e.pointerType==="mouse"&&!EDIT&&!hitText(e.clientX,e.clientY)?e.clientX:null; }); cv.addEventListener("pointerup",e=>{ if(sx==null) return; const dx=e.clientX-sx; sx=null; if(Math.abs(dx)>36) step(dx<0?1:-1); });
   /* 11/9 목사님: 말씀 글을 원하는 자리로 끌어 놓기 */
   const sc=()=>{ const r=cv.getBoundingClientRect(); return {r,k:cv.width/(r.width||1)}; };
   const hitText=(cx,cy)=>{ const b=o.tb; if(!b) return false; const {r,k}=sc(), px=(cx-r.left)*k, py=(cy-r.top)*k; return px>=b.x&&px<=b.x+b.w&&py>=b.y&&py<=b.y+b.h; };
@@ -13401,20 +13401,21 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
     const mv=ev=>{ const {k}=sc(), d=(ev.clientX-x0)*k*side, cen=o.al==="center"; o.bw=Math.round(Math.max(300,b0+(cen?2*d:d))); if(!cen&&side<0) o.dx=Math.round(ox0-(o.bw-b0)); redraw(); };
     const up=()=>{ removeEventListener("pointermove",mv); removeEventListener("pointerup",up); endText(); }; addEventListener("pointermove",mv); addEventListener("pointerup",up); }));
   cv.addEventListener("click",e=>{ if(EDIT&&TAB==="hl"&&!("ontouchstart" in window)) paintAt(e.clientX,e.clientY); });
-  { let MD=null; cv.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse"||!EDIT||TAB==="hl"||!hitText(e.clientX,e.clientY)) return; MD={x:e.clientX,y:e.clientY,ox:o.dx||0,oy:o.dy||0}; sx=null; e.preventDefault(); });
+  { let MD=null; cv.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse"||(EDIT&&TAB==="hl")||!hitText(e.clientX,e.clientY)) return; MD={x:e.clientX,y:e.clientY,ox:o.dx||0,oy:o.dy||0}; sx=null; e.preventDefault(); });
     addEventListener("pointermove",e=>{ if(MD) moveText(MD,e.clientX-MD.x,e.clientY-MD.y); }); addEventListener("pointerup",()=>{ if(MD){ MD=null; endText(); } }); }
   { const stg=box.querySelector(".wcstage"); let T=null;
     const dist=e=>Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     stg.addEventListener("touchstart",e=>{ if(busy||e.target.closest(".wcnav")){ T=null; return; }
-      if(e.touches.length===2&&!EDIT){ if(T&&T.lock==="x"){ cv.style.transition="transform .2s ease-out,opacity .2s"; cv.style.transform=""; cv.style.opacity=""; } T=null; return; } /* 11/9 목사님: 옮기기·크기는 수정을 눌렀을 때만 */
+      /* 11/9 목사님: 꾸미기 전에도 최소한의 수정 — 글 끌기·두 손가락 글 크기, 그림 벌려 키우기·(키운 뒤) 끌어 옮기기. 그림 넘기기는 키우지 않았을 때 옆으로 밀기 */
       if(e.touches.length===2){ if(T&&T.lock==="x"){ cv.style.transition="none"; cv.style.transform=""; cv.style.opacity=""; }
         const mx=(e.touches[0].clientX+e.touches[1].clientX)/2, my=(e.touches[0].clientY+e.touches[1].clientY)/2;
         T=(picOK()&&!hitText(mx,my))?{zoom:1,d0:dist(e)||1,z0:o.iz||1}:{pinch:1,d0:dist(e)||1,f0:o.fs||1}; return; }
       if(e.touches.length>2){ T=null; return; } const t=e.touches[0];
       if(EDIT&&TAB==="hl"){ T={x:t.clientX,y:t.clientY,paint:1}; return; }
       const hd=e.target.closest&&e.target.closest(".wchd"); if(EDIT&&hd&&o.tb){ T={x:t.clientX,y:t.clientY,bwd:1,side:hd.classList.contains("l")?-1:1,b0:o.tb.lw,ox0:o.dx||0}; return; }
-      if(EDIT&&!hitText(t.clientX,t.clientY)&&picOK()){ const [ix0,iy0]=fxy(); T={x:t.clientX,y:t.clientY,pan:1,ix0,iy0}; return; }
-      if(EDIT){ T={x:t.clientX,y:t.clientY,text:1,ox:o.dx||0,oy:o.dy||0}; return; }
+      const onTx=hitText(t.clientX,t.clientY);
+      if(!onTx&&picOK()&&(EDIT||(o.iz||1)>1.01)){ const [ix0,iy0]=fxy(); T={x:t.clientX,y:t.clientY,pan:1,ix0,iy0}; return; }
+      if(EDIT||onTx){ T={x:t.clientX,y:t.clientY,text:1,ox:o.dx||0,oy:o.dy||0}; return; }
       if(nop()){ T=null; return; } T={x:t.clientX,y:t.clientY,dx:0,lock:null}; },{passive:true});
     stg.addEventListener("touchmove",e=>{ if(!T) return;
       if(T.zoom){ if(e.cancelable) e.preventDefault(); if(e.touches.length<2) return; if(o.ix==null||o.iy==null){ const [a,b]=fxy(); o.ix=a; o.iy=b; } o.iz=Math.round(Math.max(1,Math.min(3,T.z0*dist(e)/T.d0))*100)/100; redraw(); return; }
