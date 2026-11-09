@@ -13874,6 +13874,7 @@ function chSave(key,k,res){ const R=chRec(key), old=R[k]; if(!old||GSTAR(res)>=G
 const chFuture=(w,d)=>dayDiff(today0(),dateOf(w,d))>0;
 /* 앞날: 본문은 미리 읽을 수 있고, 통독 완료·스토리 QT·QT·도전은 그날 열립니다(목사님 결정 2026-10-29). 검토 링크(?day=, ?review=)는 예외 */
 const FUT_OK=(()=>{ try{ const q=new URLSearchParams(location.search); return q.has("day")||q.has("review"); }catch(e){ return false; } })();
+/* 날짜별 열림 원칙(목사님 2026-11-09 확정): 지난 날·오늘 = 본문·스토리·묵상 모두 열림(오늘은 본문 먼저 권함, 막지 않음) / 내일부터 = 본문만 열림, 스토리·묵상·도전은 그날 열림 */
 const futLock=(w,d)=>!!window.CBSR_V2&&!TRY&&!FUT_OK&&chFuture(w,d);
 const futMsg=(w,d)=>`${fmt(dateOf(w,d),{month:"long",day:"numeric"})}에 열립니다`;
 /* 열릴 때까지 남은 시간: 플립 시계 */
