@@ -2041,7 +2041,7 @@ button.bk{font-family:inherit;cursor:pointer}
 /* 말씀 카드 만들기(11/5) */
 body.wcmon{overflow:hidden}
 .wcm{position:fixed;inset:0;z-index:100000;background:#1d1813;color:#f3ece0;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));font-family:var(--f-ui)}
-.wcmtop{display:flex;align-items:center;gap:10px;height:54px;flex:none}.wcmtop b{font:700 17px/1 "Noto Serif KR","Gowun Batang",serif}.wcmtop span{margin-left:auto;font-size:13px;color:#c9b99f}
+.wcmtop{display:flex;align-items:center;gap:10px;height:54px;flex:none}.wcmtop b{font:700 17px/1 "Noto Serif KR","Gowun Batang",serif}.wcmtop .wced{margin-left:auto;height:36px;padding:0 18px;border-radius:999px;border:1px solid rgba(226,184,116,.7);background:transparent;color:#E2B874;font-weight:700;font-size:14.5px}.wcmtop .wced.on{background:#E2B874;color:#2a2119}.wcratio button{display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:flex-end}.wcrat{display:block;border:1.5px solid currentColor;border-radius:2px;opacity:.85}.wcedh{transition:opacity .4s}.wcedh.out{opacity:0}.wcfs .wcrst{width:auto;padding:0 16px}
 .wcmx{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:transparent;color:#f3ece0;font-size:16px}
 .wcstage{position:relative;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;touch-action:pan-y;overflow:hidden}
 .wccv.wcdrag{cursor:grabbing}.wcopts:not(.ed) .e2,.wcopts.ed .e1{display:none!important}.wcbox{position:absolute;border:2px dashed rgba(226,184,116,.95);border-radius:8px;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,.08)}.wcedh{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);background:rgba(20,15,10,.82);color:#f3ece0;font-size:13px;line-height:1.4;padding:7px 12px;border-radius:999px;pointer-events:none;text-align:center;white-space:normal}.wcstage.edit .wcnav{display:none}.wcfs .wced{width:auto;padding:0 16px}.wcfs .wced.on{background:#E2B874;color:#2a2119;border-color:#E2B874}.wcfs .wcrst{white-space:nowrap;width:auto;padding:0 12px;margin-left:auto}.wccv{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:6px;box-shadow:0 18px 40px rgba(0,0,0,.45);user-select:none;-webkit-user-select:none}
@@ -13175,7 +13175,7 @@ const WCM={}, WC_IMG={};
 /* 글자 색: [그림 위(어두운 바탕), 종이(밝은 바탕)] */
 const WC_TC={y:["#F5C451","#A86A00"],r:["#FF8A7A","#B3261E"],g:["#8EDB9C","#2E7D4A"],b:["#8CC8FF","#2560A8"]};
 const WC_HLC={y:"#F5C451",r:"#FF8A7A",g:"#8EDB9C",b:"#86BFEA"}, WC_TN={y:"금색",r:"빨강",g:"초록",b:"파랑"};
-const WC_SIZE=[["sq","카톡·밴드",1080,1080],["pt","인스타",1080,1350],["st","배경화면",1080,1920]];
+const WC_SIZE=[["sq","1:1",1080,1080],["pt","3:4",1080,1440],["st","9:16",1080,1920],["xl","9:20",1080,2400]]; /* 11/9 목사님: 쓸 곳 → 비율 */
 const WC_LOOK=[["over","그림 위에"],["paper","종이"]]; /* 11/6 목사님: 책갈피 꼴 뺌 */
 function wcRefLabel(b,c,v1,v2){ return `${PLAN.full[b-1]} ${c}:${v1}${v2&&v2>v1?"–"+v2:""}`; }
 function wcText(b,c,v1,v2){ const L=[]; for(let v=v1;v<=(v2||v1);v++){ const t=vtxt([b,c,v]); if(t) L.push(t); } return L.join(" ").replace(/\s+/g," ").trim(); }
@@ -13276,9 +13276,9 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   if(!WC_LOOK.some(z=>z[0]===o.look)) o.look="over"; o.text=wcText(o.b,o.c,o.v1,o.v2); if(!o.text) return; o.cands=wcCands(o.b,o.c,o.v1,o.w,o.d,a.ph); o.i=0; o.ph=o.cands[0]||null; o.mineOn=!!a.mine&&o.mineOn!==false;
   const box=document.createElement("div"); box.className="wcm"; box.setAttribute("role","dialog"); box.setAttribute("aria-modal","true"); box.setAttribute("aria-label","말씀 카드");
   const seg=(k,L,cur,c)=>`<div class="wcseg ${c||""}" data-k="${k}">${L.map(z=>`<button class="${z[0]===cur?"on":""}" data-v="${z[0]}">${z[1]}</button>`).join("")}</div>`;
-  box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b><span>${esc(wcRefLabel(o.b,o.c,o.v1,o.v2))}</span></div>
+  box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b><button class="wced" aria-pressed="false">수정</button></div>
    <div class="wcstage"><canvas class="wccv"></canvas><div class="wcbox" hidden></div><div class="wcedh" hidden>글이나 그림을 끌어 옮기고, 두 손가락으로 크기를 바꿉니다</div><button class="wcnav l" aria-label="앞 그림">‹</button><button class="wcnav r" aria-label="다음 그림">›</button></div><div class="wcthumbs" role="listbox" aria-label="그림 고르기"></div>
-   <div class="wcopts"><label class="e1">꼴</label>${seg("look",WC_LOOK,o.look,"e1")}<label class="e1">쓸 곳</label>${seg("size",WC_SIZE,o.size,"e1")}<label class="e2">글꼴</label>${seg("ff",[["serif","명조"],["sans","고딕"]],o.ff,"e2")}<label class="e2">줄맞춤</label>${seg("al",[["left","왼쪽"],["center","가운데"]],o.al,"e2")}<label class="e2 wcshl">어둡기</label>${seg("sh",[["lo","약하게"],["mid","보통"],["hi","진하게"]],o.sh,"e2")}<label class="e1">칠하기</label><button class="wcpaint e1"><span>칠할 낱말 고르기</span><em></em></button><label>글</label><div class="wcfs"><button class="wced" aria-pressed="false">글 고치기</button><button class="wcrst" hidden>제자리로</button></div>${a.mine?`<label class="e1">내 한 줄</label><button class="e1 wcmine${o.mineOn?" on":""}" aria-pressed="${o.mineOn}"><span>${esc(a.mine)}</span><em>${o.mineOn?"넣음":"뺌"}</em></button>`:""}</div>
+   <div class="wcopts"><label class="e1">꼴</label>${seg("look",WC_LOOK,o.look,"e1")}<label class="e1">비율</label>${seg("size",WC_SIZE.map(z=>[z[0],`<i class="wcrat" style="width:${Math.round(18*z[2]/z[3])}px;height:18px"></i>${z[1]}`]),o.size,"e1 wcratio")}<label class="e2">글꼴</label>${seg("ff",[["serif","명조"],["sans","고딕"]],o.ff,"e2")}<label class="e2">줄맞춤</label>${seg("al",[["left","왼쪽"],["center","가운데"]],o.al,"e2")}<label class="e2 wcshl">어둡기</label>${seg("sh",[["lo","약하게"],["mid","보통"],["hi","진하게"]],o.sh,"e2")}<label class="e1">칠하기</label><button class="wcpaint e1"><span>칠할 낱말 고르기</span><em></em></button><label class="wcrstl" hidden></label><div class="wcfs wcrstw" hidden><button class="wcrst">초기화</button></div>${a.mine?`<label class="e1">내 한 줄</label><button class="e1 wcmine${o.mineOn?" on":""}" aria-pressed="${o.mineOn}"><span>${esc(a.mine)}</span><em>${o.mineOn?"넣음":"뺌"}</em></button>`:""}</div>
    <div class="wcact"><button class="wcsave">사진으로 저장</button><button class="wcsend">보내기</button></div>`;
   document.body.appendChild(box); document.body.classList.add("wcmon");
   const cv=box.querySelector(".wccv"), dots=box.querySelector(".wcthumbs"); let tok=0, lastIm=null; o.fs=o.fs||1; o.dx=0; o.dy=0; o.iz=1; o.ix=null; o.iy=null;
@@ -13318,10 +13318,10 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   const hitText=(cx,cy)=>{ const b=o.tb; if(!b) return false; const {r,k}=sc(), px=(cx-r.left)*k, py=(cy-r.top)*k; return px>=b.x&&px<=b.x+b.w&&py>=b.y&&py<=b.y+b.h; };
   /* 11/9 목사님: 핀치로 글 크기, '글 고치기' 단추 하나 + 한 줄 설명(가−/가+ 뺌) */
   let EDIT=false; const FSMIN=.6, FSMAX=1.6;
-  function rstShow(){ const rb=box.querySelector(".wcrst"); if(rb) rb.hidden=!(o.dx||o.dy||Math.abs((o.fs||1)-1)>.02||(o.iz||1)>1.01||o.ix!=null||o.iy!=null); }
+  function rstShow(){ const rb=box.querySelector(".wcrstw"); if(rb){ rb.hidden=!(o.dx||o.dy||Math.abs((o.fs||1)-1)>.02||(o.iz||1)>1.01||o.ix!=null||o.iy!=null); box.querySelector(".wcrstl").hidden=rb.hidden; } }
   function boxShow(){ const bx=box.querySelector(".wcbox"); if(!bx) return; if(!EDIT||!o.tb){ bx.hidden=true; return; } const st=box.querySelector(".wcstage").getBoundingClientRect(), {r,k}=sc(), b=o.tb;
     bx.hidden=false; bx.style.left=(r.left-st.left+b.x/k)+"px"; bx.style.top=(r.top-st.top+b.y/k)+"px"; bx.style.width=(b.w/k)+"px"; bx.style.height=(b.h/k)+"px"; }
-  const setEdit=on=>{ EDIT=on; const b=box.querySelector(".wced"); b.textContent=on?"다 됐어요":"글 고치기"; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); box.querySelector(".wcedh").hidden=!on; box.querySelector(".wcopts").classList.toggle("ed",on); box.querySelector(".wcstage").classList.toggle("edit",on); boxShow(); };
+  const setEdit=on=>{ EDIT=on; const b=box.querySelector(".wced"); b.textContent=on?"완료":"수정"; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); const hh=box.querySelector(".wcedh"); clearTimeout(hh._t); hh.hidden=!on; hh.classList.remove("out"); if(on) hh._t=setTimeout(()=>{ hh.classList.add("out"); hh._t=setTimeout(()=>{ hh.hidden=true; },400); },3200); box.querySelector(".wcopts").classList.toggle("ed",on); box.querySelector(".wcstage").classList.toggle("edit",on); boxShow(); };
   box.querySelector(".wced").onclick=()=>setEdit(!EDIT);
   let raf=0; const redraw=()=>{ if(!raf) raf=requestAnimationFrame(()=>{ raf=0; wcDraw(cv,o,o.look==="paper"?null:lastIm); boxShow(); }); };
   const moveText=(D,dx,dy)=>{ const {k}=sc(); o.dx=Math.round(D.ox+dx*k); o.dy=Math.round(D.oy+dy*k); cv.classList.add("wcdrag"); redraw(); };
@@ -13365,7 +13365,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   box.querySelector(".wcsend").onclick=async()=>{ const b=await blob(); if(!b) return; const f=new File([b],name(),{type:"image/png"});
     try{ if(navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f]}); return; } }catch(e){ if(e&&e.name==="AbortError") return; }
     save(); };
-  draw().then(()=>{ const st=box.querySelector(".wcstage"); if(o.cands.length>1&&o.look!=="paper"&&!coachSeen("wc-swipe")) coach("wc-swipe",st,"그림을 옆으로 밀면 다른 그림이 나옵니다",{swipe:1,at:"mid"}); else coach("wc-edit",box.querySelector(".wced"),"글 고치기: 글을 끌어 옮기고, 두 손가락으로 크기를 바꿉니다",{ms:4200}); }); }
+  draw().then(()=>{ const st=box.querySelector(".wcstage"); if(o.cands.length>1&&o.look!=="paper"&&!coachSeen("wc-swipe")) coach("wc-swipe",st,"그림을 옆으로 밀면 다른 그림이 나옵니다",{swipe:1,at:"mid"}); else coach("wc-edit",box.querySelector(".wced"),"수정: 글·그림 옮기기, 크기, 글꼴, 줄맞춤",{at:"below",ms:4200}); }); }
 function wcFromSel(){ const ids=[...HSEL].map(id=>id.split("-").map(Number)).sort((x,y)=>x[2]-y[2]); if(!ids.length) return; const [b,c]=ids[0];
   if(ids.some(z=>z[0]!==b||z[1]!==c)) return toast("말씀 카드는 한 장 안의 절로 만들 수 있습니다");
   const v1=ids[0][2], v2=ids[ids.length-1][2]; if(v2-v1>5) return toast("말씀 카드는 여섯 절까지 담을 수 있습니다");
