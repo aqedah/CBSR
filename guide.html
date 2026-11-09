@@ -49,6 +49,7 @@ textarea{min-height:52px}
 #scaled{transform-origin:0 0}
 .spread{display:flex;gap:0;background:#8a8a8a;padding:0}
 dialog{border:1px solid var(--line);border-radius:10px;padding:18px;max-width:560px;width:92vw}
+.conf{border-top:1px solid var(--line);padding:8px 0} .conf label{display:block;font-size:13px;margin:3px 0 0 8px} #confList{max-height:50vh;overflow:auto}
 dialog textarea{min-height:200px;font-family:ui-monospace,monospace;font-size:12px}
 dialog h3{margin:0 0 10px;font-size:15px}
 dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
@@ -168,6 +169,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 <div id="printroot"></div>
 
 <dialog id="dlgJson"><h3 id="dlgTitle">JSON</h3><textarea id="dlgText"></textarea><div class="btns"><button id="dlgCopy">복사</button><button id="dlgDl">파일로 내려받기</button><button id="dlgApply" class="pri">가져오기(붙여넣은 내용 적용)</button><button id="dlgClose">닫기</button></div><p class="small">가져오기: 같은 날 번호가 있으면 덮어씁니다. 파일을 고르려면 <input type="file" id="fileIn" accept="application/json"></p></dialog>
+<dialog id="dlgConf"><h3>양쪽에서 같은 날을 고쳤습니다</h3><p class="small">이 기기와 GitHub의 내용이 다릅니다. 날마다 남길 쪽을 고르세요.</p><div id="confList"></div><div class="btns"><button id="confAllL">모두 이 기기 것</button><button id="confAllR">모두 GitHub 것</button><button id="confOk" class="pri">고른 대로</button></div></dialog>
 <dialog id="dlgGit"><h3>GitHub에 저장 / 불러오기</h3>
 <label class="f"><span class="k"><b>저장소</b></span><input type="text" id="g_repo" placeholder="aqedah/CBSR"></label>
 <label class="f"><span class="k"><b>파일 경로</b></span><input type="text" id="g_path" placeholder="app/site_src/guide_qt.json"></label>
@@ -186,7 +188,32 @@ const FRONT=11; // 책 머리 쪽수(속표지~차례). 하루 펼침면은 FRON
 function pageNo(p){const qs=PLAN.filter(x=>qOf(x)===qOf(p));const i=qs.findIndex(x=>x.no===p.no);return FRONT+1+2*i}
 // 날짜별 합치기: 수정 시각 u가 더 새로운 쪽이 남는다. u가 없는(옛) 원고는 0으로 본다.
 function mergeInto(local, remote){ let n=0, conf=[]; Object.keys(remote).forEach(k=>{ if(!/^\d+$/.test(k)) return; const r=remote[k], l=local[k]; const ru=r.u||0, lu=l?(l.u||0):-1; if(!l){local[k]=r;n++} else if(ru>lu){ if(lu>0&&JSON.stringify({...l,u:0})!==JSON.stringify({...r,u:0})) conf.push(k); local[k]=r; n++ } }); return {n,conf} }
-function cleanOut(data){ const o={}; Object.keys(data).forEach(k=>{ if(!data[k].del) o[k]=data[k] }); return o }
+function cleanOut(data){ const o={}; Object.keys(data).forEach(k=>{ if(!/^\d+$/.test(k)) return; o[k]=data[k].del?{del:1,u:data[k].u||0}:data[k] }); return o }
+/* 기준본(BASE): 마지막으로 GitHub과 맞춘 원고. 이 기기에서 고친 날 = DATA와 BASE가 다른 날 */
+let BASE={}; try{BASE=JSON.parse(localStorage.getItem('cbsr_guide_base')||'{}')}catch(e){BASE={}}
+function norm(x){ if(!x) return 'null'; if(x.del) return 'del'; const {u,...rest}=x; return JSON.stringify(rest) }
+function eq(a,b){ return norm(a)===norm(b) }
+/* 3-way 합치기: 양쪽 다 고친 날은 conflicts로 돌려주고(기본은 이 기기 것 유지), 나머지는 자동 */
+function merge3(remote){ const changed=[], conflicts=[]; const keys=new Set([...Object.keys(DATA),...Object.keys(remote)].filter(k=>/^\d+$/.test(k)));
+  if(!Object.keys(BASE).length){ keys.forEach(k=>{ const L=DATA[k], R=remote[k]; if(!R||eq(L,R)) return; if(!L||(R.u||0)>=(L.u||0)){ DATA[k]=R; changed.push(k) } }); return {changed,conflicts} } // 처음 맞출 때는 수정 시각으로
+  keys.forEach(k=>{ const L=DATA[k], B=BASE[k], R=remote[k]; const lc=!eq(L,B), rc=!eq(R,B);
+    if(!rc) return; if(eq(L,R)) return;
+    if(!lc){ if(R) DATA[k]=R; else delete DATA[k]; changed.push(k); }
+    else conflicts.push({k,L,R}); });
+  return {changed,conflicts} }
+function setBase(remote){ BASE={}; Object.keys(remote).forEach(k=>{ if(/^\d+$/.test(k)) BASE[k]=remote[k] }); localStorage.setItem('cbsr_guide_base',JSON.stringify(BASE)) }
+function dayLabel(k){ const p=PLAN.find(x=>String(x.no)===k); return p?`${p.m}/${p.d} ${p.t}`:k }
+function brief(x){ if(!x) return '(없음)'; if(x.del) return '(지움)'; const t=(x.sub||x.guide&&x.guide.today||'').slice(0,40); return (t||'(내용 없음)')+(x.u?' · '+new Date(x.u).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'') }
+/* 충돌 고르기 창: 날마다 '이 기기' 또는 'GitHub' 선택 */
+function resolveConflicts(conf){ return new Promise(res=>{ if(!conf.length){res();return}
+  const box=$('confList'); box.innerHTML=conf.map((c,i)=>`<div class="conf"><b>${dayLabel(c.k)}</b><label><input type="radio" name="c${i}" value="L" checked> 이 기기: ${esc(brief(c.L))}</label><label><input type="radio" name="c${i}" value="R"> GitHub: ${esc(brief(c.R))}</label></div>`).join('');
+  const d=$('dlgConf'); d.showModal();
+  $('confOk').onclick=()=>{ conf.forEach((c,i)=>{ const v=box.querySelector(`input[name=c${i}]:checked`).value; if(v==='R'){ if(c.R) DATA[c.k]=c.R; else delete DATA[c.k]; } else if(DATA[c.k]) DATA[c.k]={...DATA[c.k],u:Date.now()}; }); d.close(); res(); };
+  $('confAllL').onclick=()=>{ conf.forEach(c=>{ if(DATA[c.k]) DATA[c.k]={...DATA[c.k],u:Date.now()} }); d.close(); res(); };
+  $('confAllR').onclick=()=>{ conf.forEach(c=>{ if(c.R) DATA[c.k]=c.R; else delete DATA[c.k]; }); d.close(); res(); }; }) }
+async function takeRemote(remote,label){ const m=merge3(remote); await resolveConflicts(m.conflicts); setBase(remote); localStorage.setItem('cbsr_guide_qt',JSON.stringify(DATA)); fillForm(get(PLAN[cur].no)); fillDays(); $('selD').value=cur; render();
+  const mine=Object.keys(DATA).filter(k=>/^\d+$/.test(k)&&!eq(DATA[k],BASE[k])).length;
+  $('status').textContent=`${label}에서 ${m.changed.length}일치 받음`+(m.conflicts.length?` · 양쪽 다 고친 날 ${m.conflicts.length}일은 고른 대로`:'')+(mine?` · 이 기기에서 고친 ${mine}일은 아직 GitHub에 없음`:''); return m }
 let DATA={};
 try{DATA=JSON.parse(localStorage.getItem('cbsr_guide_qt')||'{}')}catch(e){DATA={}}
 if(!Object.keys(DATA).length){DATA=JSON.parse(JSON.stringify(SEED))}
@@ -211,7 +238,7 @@ function readForm(){
   qt.map=e?{emph:e,show:$('m_show').value.trim(),route:$('m_route').value.trim(),cap:$('m_cap').value.trim()}:null;
   return qt;
 }
-function isEmpty(qt){return !qt||qt.del||!(qt.sub||qt.guide.today||qt.guide.find||qt.obs.q||qt.apply||qt.note||qt.pray||qt.obs.look.some(x=>x[0]))}
+function isEmpty(qt){return !qt||qt.del||!(qt.sub||qt.guide.today||qt.guide.find||qt.guide.word||qt.obs.q||qt.apply||qt.note||qt.pray||qt.god||(qt.img&&qt.img.id)||(qt.map&&qt.map.emph)||(qt.obs.pair&&qt.obs.pair.length)||qt.obs.look.some(x=>x[0]))}
 function fillForm(qt){
   qt=qt||blank();
   $('sub').value=qt.sub||''; $('today').value=qt.guide.today||''; $('find').value=qt.guide.find||''; $('word').value=qt.guide.word||'';
@@ -357,7 +384,7 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
   document.querySelectorAll('#form textarea,#form input[type=text]').forEach(el=>el.addEventListener('input',()=>{counters();render();$('status').textContent='저장 중…';clearTimeout(saveT);saveT=setTimeout(()=>{save();saveT=null;fillDays();$('selD').value=cur},600)}));
   window.addEventListener('resize',render);
   fillForm(get(PLAN[cur].no)); render();
-  fetch('guide_qt.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;const q=j.qt||j;const {n,conf}=mergeInto(DATA,q);if(n){try{localStorage.setItem('cbsr_guide_qt',JSON.stringify(DATA))}catch(e){};fillForm(get(PLAN[cur].no));fillDays();$('selD').value=cur;render();$('status').textContent='공개 원고에서 '+n+'일치 받음'+(conf.length?' (이 기기 것보다 새로워 바꾼 날: '+conf.map(k=>{const p=PLAN.find(x=>String(x.no)===k);return p?p.m+'/'+p.d:k}).join(', ')+')':'')}}).catch(()=>{});
+  fetch('guide_qt.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;takeRemote(j.qt||j,'공개 원고')}).catch(()=>{});
   /* JSON */
   $('btnJson').onclick=()=>{$('dlgTitle').textContent='JSON 내보내기 — 원고 '+Object.keys(DATA).length+'일치';$('dlgText').value=JSON.stringify({plan:'2027-365',updated:new Date().toISOString(),qt:cleanOut(DATA)},null,1);$('dlgJson').showModal()};
   $('btnImport').onclick=()=>{$('dlgTitle').textContent='가져오기 — JSON을 붙여넣거나 파일을 고르세요';$('dlgText').value='';$('dlgJson').showModal()};
@@ -374,9 +401,9 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
   const api=c=>`https://api.github.com/repos/${c.repo}/contents/${c.path}?ref=${c.branch}`;
   const hdr=c=>({'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json'});
   const b64=s=>btoa(unescape(encodeURIComponent(s))), unb64=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
-  $('gLoad').onclick=async()=>{const c=gcfg();try{const r=await fetch(api(c),{headers:c.token?hdr(c):{}});if(!r.ok)throw new Error(r.status);const j=await r.json();const src=JSON.parse(unb64(j.content));const q=src.qt||src;const m=mergeInto(DATA,q);localStorage.setItem('cbsr_guide_qt',JSON.stringify(DATA));fillForm(get(PLAN[cur].no));fillDays();$('selD').value=cur;render();$('status').textContent='GitHub에서 '+m.n+'일치 받음'+(m.conf.length?' · 이 기기 것을 바꾼 날 '+m.conf.length:'');$('dlgGit').close()}catch(e){$('status').textContent='불러오기 실패: '+e.message}};
-  $('gSave').onclick=async()=>{const c=gcfg();if(!c.token){$('status').textContent='토큰이 필요합니다';return}try{let sha;const r0=await fetch(api(c),{headers:hdr(c)});if(r0.ok){const j0=await r0.json();sha=j0.sha;try{const rq=JSON.parse(unb64(j0.content));const m=mergeInto(DATA,rq.qt||rq);if(m.n){localStorage.setItem('cbsr_guide_qt',JSON.stringify(DATA));fillForm(get(PLAN[cur].no));fillDays();$('selD').value=cur;render()}}catch(e){}}
-      const body={message:'가이드북 원고 '+new Date().toISOString().slice(0,16),content:b64(JSON.stringify({plan:'2027-365',updated:new Date().toISOString(),qt:cleanOut(DATA)},null,1)),branch:c.branch};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${c.repo}/contents/${c.path}`,{method:'PUT',headers:{...hdr(c),'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,80));$('status').textContent='GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});$('dlgGit').close()}catch(e){$('status').textContent='저장 실패: '+e.message}};
+  $('gLoad').onclick=async()=>{const c=gcfg();try{const r=await fetch(api(c),{headers:c.token?hdr(c):{}});if(!r.ok)throw new Error(r.status);const j=await r.json();const src=JSON.parse(unb64(j.content));await takeRemote(src.qt||src,'GitHub');$('dlgGit').close()}catch(e){$('status').textContent='불러오기 실패: '+e.message}};
+  $('gSave').onclick=async()=>{const c=gcfg();if(!c.token){$('status').textContent='토큰이 필요합니다';return}try{let sha;const r0=await fetch(api(c),{headers:hdr(c)});if(r0.ok){const j0=await r0.json();sha=j0.sha;try{const rq=JSON.parse(unb64(j0.content));const m=merge3(rq.qt||rq);await resolveConflicts(m.conflicts);localStorage.setItem('cbsr_guide_qt',JSON.stringify(DATA));fillForm(get(PLAN[cur].no));fillDays();$('selD').value=cur;render()}catch(e){}}
+      const body={message:'가이드북 원고 '+new Date().toISOString().slice(0,16),content:b64(JSON.stringify({plan:'2027-365',updated:new Date().toISOString(),qt:cleanOut(DATA)},null,1)),branch:c.branch};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${c.repo}/contents/${c.path}`,{method:'PUT',headers:{...hdr(c),'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,80));setBase(cleanOut(DATA));$('status').textContent='GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});$('dlgGit').close()}catch(e){$('status').textContent='저장 실패: '+e.message}};
   /* 인쇄 */
   $('btnPrint').onclick=()=>{
     if(saveT){clearTimeout(saveT);save();saveT=null}
