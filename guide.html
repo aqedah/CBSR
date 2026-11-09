@@ -44,6 +44,7 @@ textarea{min-height:52px}
 #fit{font-size:12px;padding:6px 10px;border-radius:6px;background:#eee;display:inline-block;margin-bottom:10px}
 #fit.bad{background:#FBE9E9;color:var(--warn)}
 #fit.good{background:#E6F2EA;color:var(--ok)}
+#fit.warn{background:#FFF4DC;color:#7A5200}
 #scalebox{position:relative}
 #scaled{transform-origin:0 0}
 .spread{display:flex;gap:0;background:#8a8a8a;padding:0}
@@ -59,8 +60,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg.q1{--main:var(--q1);--mainL:var(--q1L)} .pg.q2{--main:var(--q2);--mainL:var(--q2L)} .pg.q3{--main:var(--q3);--mainL:var(--q3L)} .pg.q4{--main:var(--q4);--mainL:var(--q4L)}
 .pg .sans{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .date{font-size:8.8pt;color:var(--main);margin:0 0 1mm;font-weight:700}
-.pg::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3mm;background:var(--main)}
-.pg.r::before{left:auto;right:0}
+.pg .pn{position:absolute;bottom:5.5mm;left:14mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-size:8pt;color:#777;letter-spacing:0.02em}
+.pg.r .pn{left:auto;right:14mm}
 .pg .title{font-size:16pt;font-weight:700;letter-spacing:-0.3px;border-bottom:0.7mm solid var(--main);padding-bottom:0.4mm;margin:0 0 1mm}
 .pg .sub{font-size:10.5pt;font-weight:700;margin:0 0 2.2mm;color:#333}
 .pg .sec{font-size:9.5pt;font-weight:700;letter-spacing:0.3px;border-bottom:0.3mm solid var(--gyb);padding-bottom:0.3mm;margin:3mm 0 1.6mm;color:var(--ink)}
@@ -181,6 +182,8 @@ const PLACES={"기브아":[31.82,35.23],"놉":[31.79,35.24],"베들레헴":[31.7
 const SEED={};
 const LIM={sub:30,today:125,find:100,word:40,q:85,apply:105,note:176,pray:60,pair:240,god:45};
 const QLAB=['','1권 1–3월','2권 4–6월','3권 7–9월','4권 10–12월'];
+const FRONT=11; // 책 머리 쪽수(속표지~차례). 하루 펼침면은 FRONT+1(짝수)에서 시작
+function pageNo(p){const qs=PLAN.filter(x=>qOf(x)===qOf(p));const i=qs.findIndex(x=>x.no===p.no);return FRONT+1+2*i}
 // 날짜별 합치기: 수정 시각 u가 더 새로운 쪽이 남는다. u가 없는(옛) 원고는 0으로 본다.
 function mergeInto(local, remote){ let n=0, conf=[]; Object.keys(remote).forEach(k=>{ if(!/^\d+$/.test(k)) return; const r=remote[k], l=local[k]; const ru=r.u||0, lu=l?(l.u||0):-1; if(!l){local[k]=r;n++} else if(ru>lu){ if(lu>0&&JSON.stringify({...l,u:0})!==JSON.stringify({...r,u:0})) conf.push(k); local[k]=r; n++ } }); return {n,conf} }
 function cleanOut(data){ const o={}; Object.keys(data).forEach(k=>{ if(!data[k].del) o[k]=data[k] }); return o }
@@ -302,6 +305,7 @@ ${qt.guide.word?`<p class="b"><b>말뜻</b>&nbsp; ${esc(qt.guide.word)}</p>`:''}
 ${sec2}
 <p class="go sans">▶ 오른쪽에 씁니다.</p>
 <div class="heard sans">들은 말씀 — 설교를 들은 날<div class="ln"></div></div>
+<div class="pn">${pageNo(p)}</div>
 </div>`;
 }
 function pageR(p,qt){
@@ -318,12 +322,13 @@ function pageR(p,qt){
 <p class="lab sans">나의 기도 <span class="sm">— 붙잡은 말씀으로</span></p>${ln(2)}
 <div class="after"><p class="h sans"><span class="n">4</span>쓴 뒤에 읽기 — 해설과 기도</p>
 <p>${esc(qt.note)}</p><p><b>기도</b>&nbsp; ${esc(qt.pray)}</p></div>
+<div class="pn">${pageNo(p)+1}</div>
 </div>`;
 }
 function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</div>`}
 
 /* ── 미리보기와 맞춤 검사 ── */
-function fillHeard(root,s){root.querySelectorAll('.pg').forEach(pg=>{const h=pg.querySelector('.heard');if(!h)return;const ht=h.getBoundingClientRect().top;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});const slack=(ht-mb)/s/MM;const n=Math.min(7,Math.floor((slack-2)/6.3));for(let i=0;i<n;i++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}})}
+function fillHeard(root,s){root.querySelectorAll('.pg').forEach(pg=>{const h=pg.querySelector('.heard');if(!h)return;const ht=h.getBoundingClientRect().top;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});const slack=(ht-mb)/s/MM;const n=Math.min(7,Math.floor((slack-2)/6.3));for(let i=0;i<n;i++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}})}
 function mmpx(){const d=document.createElement('div');d.style.cssText='position:absolute;width:100mm;height:0;visibility:hidden';document.body.appendChild(d);const w=d.getBoundingClientRect().width/100;d.remove();return w}
 const MM=mmpx();
 function render(){
@@ -333,12 +338,13 @@ function render(){
   const sc=$('scaled'); sc.style.transform=`scale(${s})`; sc.style.width=full+'px'; box.style.height=(210*MM*s)+'px';
   sc.innerHTML=spread(p,qt);
   // 맞춤: 각 쪽에서 아래 고정 상자 위 여유
-  const res=[]; sc.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});res.push((abt-mb)/s/MM)});
+  const res=[]; sc.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});res.push((abt-mb)/s/MM)});
   fillHeard(sc,s);
   const f=$('fit'); const worst=Math.min(...res);
-  const over=Object.keys(LIM).filter(k=>$(k)&&($(k).value||'').replace(/\*\*/g,'').length>LIM[k]).length;
+  const NM={sub:'소제목',today:'흐름',find:'초점',word:'말뜻',q:'관찰',apply:'적용',note:'해설',pray:'기도',pair:'다시 볼 곳',god:'보조 문구'};
+  const overL=Object.keys(LIM).filter(k=>$(k)&&($(k).value||'').replace(/\*\*/g,'').length>LIM[k]).map(k=>`${NM[k]||k} ${($(k).value||'').replace(/\*\*/g,'').length}/${LIM[k]}`); const over=overL.length;
   const fitTxt=worst<0?`지면 넘침 ${res[0]<0?'왼쪽 ':''}${res[1]<0?'오른쪽 ':''}${Math.abs(worst).toFixed(1)}mm — 해설·다시 볼 곳부터 줄이기`:`지면 들어감 (여유 왼 ${res[0].toFixed(0)}mm · 오른 ${res[1].toFixed(0)}mm)`;
-  f.className=(worst<0||over)?'bad':'good'; f.textContent=fitTxt+' · '+(over?`분량 ${over}항목 초과`:'분량 안');
+  f.className=worst<0?'bad':over?'warn':'good'; f.textContent=fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
 }
 function gotoDay(i){ if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); render(); }
 function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML=''; PLAN.forEach((p,i)=>{if(p.m!==m)return;const o=document.createElement('option');o.value=i;o.textContent=`${p.d}일 · ${p.t}${get(p.no)?' ✓':''}`;s.appendChild(o)})}
@@ -380,7 +386,7 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
     $('printroot').innerHTML=list.map(x=>pageL(x,get(x.no)||blank())+pageR(x,get(x.no)||blank())).join('');
     // 모든 날 맞춤 검사(숨겨 그려 잼)
     const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[]; const heardN=[];
-    list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
+    list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
     probe.remove(); $('printroot').querySelectorAll('.pg .heard').forEach((h,i)=>{for(let k=0;k<(heardN[i]||0);k++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}});
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
     $('status').textContent=list.length+'일치 · '+(list.length*2)+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음, 배경 그래픽 켜기';
