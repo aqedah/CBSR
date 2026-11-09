@@ -3987,6 +3987,7 @@ const CH_DEF={
  woman:{robe:"#b0567a",trim:"#f2dfb0",head:"scarf",cloth:"#3f6f8f",beard:null},
  woman2:{robe:"#5f8a5a",trim:"#efe0b8",head:"scarf",cloth:"#c9873a",beard:null},
  youth:{robe:"#c08a3e",trim:"#f3e3b8",head:"short",hair:"#3b2616",beard:null},
+ priest:{robe:"#efe8d8",trim:"#d8ccb0",sash:"#4a6aa0",head:"cloth",cloth:"#f6f1e4",band:"#c9b68a"}, /* 일반 제사장: 흰 옷·관(출 28:40) */
  aaronhp:{robe:"#2c4f8f",trim:"#d9a92e",sash:"#9b2f3f",head:"cloth",cloth:"#fbf8f0",band:"#d9a92e",beard:"#9a9590"}, /* 평소 대제사장 옷: 청색 겉옷·금빛 띠(출 28) */
  aaron:{robe:"#f7f3ea",trim:"#e6dcc4",sash:"#d9ccb0",head:"cloth",cloth:"#fdfbf5",band:"#e4dac4",beard:"#9a9590"}, /* 대속죄일의 아론: 흰 세마포 옷·관(레 16:4) */
  elder:{robe:"#56606e",trim:"#ddd2b0",head:"cloth",cloth:"#e8e2d0",band:"#56606e",beard:"#eeeeee",prop:"staff"},
@@ -6198,7 +6199,7 @@ function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=docum
     <circle class="bronze" cx="150" cy="238" r="8"/><text class="pl m" x="161" y="241">물두멍</text>
     <rect class="bronze" x="132" y="258" width="36" height="36"/><text class="pl m" x="172" y="290">번제단</text>
     <!-- 다른 제사장들 -->
-    <g id="at_others" class="fade"><circle cx="92" cy="282" r="3.6" fill="#5a3c1c"/><circle cx="208" cy="270" r="3.6" fill="#5a3c1c"/><circle cx="214" cy="300" r="3.6" fill="#5a3c1c"/></g>
+    <g id="at_others" class="fade"></g>
     <!-- 두 염소: 왼쪽=여호와께, 오른쪽=아사셀에게 -->
     <g id="at_goats" opacity="0" class="fade">
       <text id="at_g1" class="goat" x="70" y="220">🐐</text><text id="at_g2" class="goat" x="214" y="220">🐐</text>
@@ -6215,8 +6216,10 @@ function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=docum
    <p class="bmthint">‹ › 장면 넘기기 · ❚❚ 멈춤</p>`;
   document.body.appendChild(el); document.body.style.overflow="hidden";
   /* 11/9 목사님: 옷 갈아입는 연출 — 평소 대제사장 옷(청색·금) ↔ 거룩한 세마포 옷(16:4, 23–24) */
-  const AIMG={}; ["aaron","aaronhp","man"].forEach(k=>{ try{ AIMG[k]="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(C(k).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="92" ')); }catch(e){} });
+  const AIMG={}; ["aaron","aaronhp","man","priest"].forEach(k=>{ try{ AIMG[k]="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(C(k).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="92" ')); }catch(e){} });
   { const g0=el.querySelector("#at_me"); g0.innerHTML=`<ellipse cx="0" cy="0" rx="8" ry="2.6" fill="rgba(60,40,20,.35)"/><image class="atimg" href="${AIMG.aaron||""}" x="-13" y="-38" width="26" height="40"/><text class="pl" x="11" y="-26" style="font-size:9px;font-weight:700;fill:#a5361f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">아론</text>`; }
+  /* 11/9 목사님: 세 동그라미가 무엇인지 모름 → 뜰에서 시중드는 '다른 제사장들'을 인물로(아론이 휘장 안에 있는 동안은 회막에 있지 못함, 16:17) */
+  { const og=el.querySelector("#at_others"), pr=AIMG.priest||AIMG.man||""; og.innerHTML=[[86,300],[214,286],[222,310]].map(([x,y])=>`<g transform="translate(${x} ${y})"><ellipse rx="5" ry="1.8" fill="rgba(60,40,20,.28)"/><image href="${pr}" x="-8" y="-24" width="16" height="25"/></g>`).join("")+`<text x="226" y="262" text-anchor="middle" style="font:600 8px &quot;Noto Serif KR&quot;,serif;fill:#6b5232">다른 제사장들</text>`; }
   let DRESS="aaron"; const dress=k=>{ DRESS=k; const im=el.querySelector("#at_me .atimg"); if(im) im.setAttribute("href",AIMG[k]||AIMG.aaron); };
 const S=[
  {s:"16:3–4",t:"몸을 씻고 거룩한 옷을 입다",h:"물 · 세마포 옷",d:"화려한 대제사장 예복이 아니라 흰 세마포 옷만 입습니다. 물두멍 곁에서 몸을 씻는 데서 이날이 시작됩니다.",q:"이것들은 거룩한 옷이라 물로 그의 몸을 씻고 입을 것이며",r:"레 16:4",path:[[150,206],[150,226]],fx:"wash"},
@@ -6227,7 +6230,7 @@ const S=[
  {s:"16:15–16",t:"백성을 위한 염소의 피",h:"염소 피",d:"여호와께 뽑힌 염소를 잡아 그 피를 들고 다시 휘장 안으로 들어갑니다. 이번에는 이스라엘 온 회중을 위해서입니다.",q:"또 백성을 위한 속죄제 염소를 잡아 그 피를 가지고 휘장 안에 들어가서",r:"레 16:15",path:[[150,98],[154,206],[84,214],[154,206],[154,100],[150,98]],fx:"blood7b"},
  {s:"16:18–19",t:"나와서 제단을 성결하게",h:"수송아지 피 · 염소 피",d:"지성소와 회막을 위해 속죄한 뒤 밖으로 나와, 번제단 네 뿔에 피를 바르고 일곱 번 뿌립니다.",q:"그는 여호와 앞 제단으로 나와서 그것을 위하여 속죄할지니",r:"레 16:18",path:[[150,98],[150,206],[150,250]],fx:"horns"},
  {s:"16:20–22",t:"죄를 지고 광야로 가는 염소",h:"두 손 안수",d:"살아 있는 염소 머리에 두 손을 얹고 이스라엘의 모든 죄를 고백합니다. 미리 정한 사람이 그 염소를 끌고 뜰 문을 나가 광야로 갑니다.",q:"염소가 그들의 모든 불의를 지고 접근하기 어려운 땅에 이르거든",r:"레 16:22",path:[[150,250],[200,226],[208,222]],fx:"azazel"},
- {s:"16:23–25",t:"옷을 벗고 씻고, 번제",h:"자기 옷",d:"회막에 들어가 세마포 옷을 벗어 두고, 다시 몸을 씻은 뒤 자기 옷을 입고 나와 번제를 드립니다. 일 년에 한 번 있는 날입니다.",q:"자기 옷을 입고 나와서 자기의 번제와 백성의 번제를 드려 자기와 백성을 위하여 속죄하고",r:"레 16:24",path:[[208,222],[150,190]],fx:"end"},
+ {s:"16:23–25",t:"옷을 벗고 씻고, 번제",h:"자기 옷",d:"회막에 들어가 세마포 옷을 벗어 두고, 다시 몸을 씻은 뒤 자기 옷을 입고 나와 번제를 드립니다. 일 년에 한 번 있는 날입니다.",q:"자기 옷을 입고 나와서 자기의 번제와 백성의 번제를 드려 자기와 백성을 위하여 속죄하고",r:"레 16:24",path:[[208,222],[150,214],[150,206],[150,190]],fx:"end"},
  {s:"16:26, 30",t:"염소를 보낸 사람이 씻고 진영으로",h:"자기 옷 · 번제",d:"아사셀 염소를 광야에 두고 온 사람은 옷을 빨고 물로 몸을 씻은 뒤에야 진영에 들어갑니다. 이렇게 이날 이스라엘이 여호와 앞에 정결하게 됩니다.",q:"염소를 아사셀에게 보낸 자는 그의 옷을 빨고 물로 그의 몸을 씻은 후에 진영에 들어갈 것이며",r:"레 16:26",path:[[150,250]],fx:"return"}
 ];
 const $=id=>el.querySelector("#"+id), NS="http://www.w3.org/2000/svg", me=$("at_me"), trail=$("at_trail"); let fx=$("at_fx");
