@@ -2055,7 +2055,8 @@ body.wcmon{overflow:hidden}
 .wcbrta{flex:1;min-height:120px;width:100%;box-sizing:border-box;resize:none;border:1px solid rgba(255,255,255,.18);border-radius:10px;background:rgba(255,255,255,.05);color:#f3ece0;font:700 17px/1.7 "Noto Serif KR","Gowun Batang",serif;padding:10px 12px;margin:4px 0 8px}.wcbrm{margin:0 0 8px;color:#FF9A8A;font-size:13px}
 .wcact2 .wcrst{border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3ece0}.wcact2 .wcrst:disabled{opacity:.4}.wcact2 .wcdone{flex:1.4!important;border:0;background:#E2B874;color:#2a1d0c}.wcbox{position:absolute;border:2px dashed rgba(226,184,116,.95);border-radius:8px;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,.08)}.wcedh{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);background:rgba(20,15,10,.82);color:#f3ece0;font-size:13px;line-height:1.4;padding:7px 12px;border-radius:999px;pointer-events:none;text-align:center;white-space:normal}.wcstage.edit .wcnav{z-index:3} /* 11/9 목사님: 수정 중에도 ‹ ›로 그림 고르기 */.wcfs .wced{width:auto;padding:0 16px}.wcfs .wced.on{background:#E2B874;color:#2a2119;border-color:#E2B874}.wcfs .wcrst{white-space:nowrap;width:auto;padding:0 12px;margin-left:auto}.wccv{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:6px;box-shadow:0 18px 40px rgba(0,0,0,.45);user-select:none;-webkit-user-select:none}
 .wcnav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:52px;border:0;background:rgba(0,0,0,.25);color:#fff;font-size:24px;border-radius:8px}.wcnav.l{left:0}.wcnav.r{right:0}.wcstage.nopic .wcnav{display:none}
-.wcthumbs{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 4px;flex:none;scrollbar-width:none}.wcthumbs::-webkit-scrollbar{display:none}.wcthumbs button{flex:none;width:52px;height:52px;padding:0;border:2px solid transparent;border-radius:9px;overflow:hidden;background:#2a2119;opacity:.6}.wcthumbs button.on{border-color:#E2B874;opacity:1}.wcthumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.wcthumbs{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 4px;flex:none;scrollbar-width:none}.wcthumbs::-webkit-scrollbar{display:none}.wcthumbs button{flex:none;width:52px;height:52px;padding:0;border:2px solid transparent;border-radius:9px;overflow:hidden;background:#2a2119;opacity:.6}.wcthumbs button.on{border-color:#E2B874;opacity:1}.wcthumbs .wcadd{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;opacity:1;border:1.5px dashed rgba(226,184,116,.7);background:transparent;color:#E2B874}.wcadd b{font-size:20px;line-height:1;font-weight:400}.wcadd small{font-size:10.5px;font-weight:700}
+.wcthumbs img{width:100%;height:100%;object-fit:cover;display:block}
 .wcfs{display:flex;align-items:center;gap:10px}.wcfs button{width:52px;height:36px;border-radius:9px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#f3ece0;font-weight:700}.wcfsv{min-width:46px;text-align:center;font-size:13.5px;color:#c9b99f}
 .wcopts{display:grid;grid-template-columns:auto 1fr;gap:10px 12px;align-items:center;padding:8px 0 12px;flex:none}.wcopts label{font-size:13px;color:#c9b99f;font-weight:600}
 .wcseg{display:flex;border-bottom:1px solid rgba(255,255,255,.14)}.wcseg button{flex:1;border:0;background:none;color:#c9b99f;padding:8px 2px 9px;font-size:14.5px;font-weight:600;border-bottom:2px solid transparent;margin-bottom:-1px}.wcseg button.on{color:#fff;border-bottom-color:#E2B874}
@@ -8651,6 +8652,11 @@ const HSEL=new Set();
 let HLDEL={}; try{HLDEL=JSON.parse(localStorage.getItem("cbsr-hl-del")||"{}")||{};}catch(e){}
 /* 11/9 목사님: 본문을 읽다 내가 만든 말씀 카드 — '나 > 말씀 카드'에 보관(기기 간 동기화). {id:{at,b,c,v1,v2,u,fx,s:{설정}} | {at,del:1}} */
 let WCS={}; try{WCS=JSON.parse(localStorage.getItem("cbsr-wcs")||"{}")||{};}catch(e){}
+/* 내 사진(단말기 사진)은 동기화하지 않고 이 기기 IndexedDB에만 둠 */
+const WCIDB=(()=>{ let dbp=null; const db=()=>dbp||(dbp=new Promise((res,rej)=>{ try{ const r=indexedDB.open("cbsr-wc",1); r.onupgradeneeded=()=>r.result.createObjectStore("img"); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }catch(e){ rej(e); } }));
+  return { put:(k,v)=>db().then(d=>new Promise(r=>{ const t=d.transaction("img","readwrite"); t.objectStore("img").put(v,k); t.oncomplete=()=>r(1); t.onerror=()=>r(0); })).catch(()=>0),
+           get:k=>db().then(d=>new Promise(r=>{ const q=d.transaction("img").objectStore("img").get(k); q.onsuccess=()=>r(q.result||null); q.onerror=()=>r(null); })).catch(()=>null) }; })();
+function wcIdbFill(root){ (root||document).querySelectorAll("img[data-idb]").forEach(im=>{ const k=im.dataset.idb; im.removeAttribute("data-idb"); WCIDB.get(k).then(v=>{ if(v) im.src=v; }); }); }
 function wcsSave(){ try{ localStorage.setItem("cbsr-wcs",JSON.stringify(WCS)); }catch(e){} if(typeof syncSoon==="function") syncSoon(); }
 const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem("cbsr-hl-del",JSON.stringify(HLDEL));}catch(e){} if(typeof syncSoon==="function") syncSoon();};
 const HLC={y:"노랑",g:"초록",p:"분홍",b:"파랑"};
@@ -11375,7 +11381,7 @@ function recAlbum(){ const L=Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q
 /* 11/9 목사님: 말씀 카드 두 갈래 — 묵상을 마치면 저절로 생기는 카드 / 본문을 읽다 내가 만든 카드 */
 function recMine(){ const L=Object.entries(WCS).filter(([id,r])=>r&&!r.del&&r.b).map(([id,r])=>({id,r,t:wcText(r.b,r.c,r.v1,r.v2)||""})).filter(x=>x.t).sort((a,b)=>(b.r.at||0)-(a.r.at||0));
   if(!L.length) return {n:0,html:`<p class="lead">말씀 카드를 만들고 위쪽의 '보관'을 누르면 여기에 모입니다.</p>`};
-  return {n:L.length,html:`<div class="ralb">${L.map(({id,r,t})=>{ const tt=t.length>54?t.slice(0,52)+"…":t; return `<button class="ralc" data-wcid="${esc(id)}">${phImg(r.u?{u:r.u,fx:r.fx}:null,"ralbg")}<em>${esc(fmt(new Date(r.at),{month:"long",day:"numeric"}))}</em><span><q>${esc(tt)}</q><small>${esc(wcRefLabel(r.b,r.c,r.v1,r.v2))}</small></span></button>`; }).join("")}</div>`}; }
+  return {n:L.length,html:`<div class="ralb">${L.map(({id,r,t})=>{ const tt=t.length>54?t.slice(0,52)+"…":t; return `<button class="ralc" data-wcid="${esc(id)}">${String(r.u||"").startsWith("idb:")?`<img class="ralbg" alt="" data-idb="${esc(r.u.slice(4))}" style="object-position:${esc(r.fx||"50% 50%")}">`:phImg(r.u?{u:r.u,fx:r.fx}:null,"ralbg")}<em>${esc(fmt(new Date(r.at),{month:"long",day:"numeric"}))}</em><span><q>${esc(tt)}</q><small>${esc(wcRefLabel(r.b,r.c,r.v1,r.v2))}</small></span></button>`; }).join("")}</div>`}; }
 /* 기록 탭 v4(GPT 간소화 지시 2026-10-30): 첫 화면은 '얼마나 읽었나 · 무슨 말씀을 붙잡았나'만.
    책장·돌·월별 앨범·날짜별 기록·교회·설정은 한 줄 진입점 → 상세 화면(view.recD). 데이터·저장 구조는 그대로 */
 function recBack(){ if(!view.recD) return; if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); }
@@ -11408,7 +11414,7 @@ function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.ta
   /* 11/5 목사님: 말씀 카드를 따로 떼어 냄 */
   if(D==="cards"){ const AL=recAlbum(), MY=recMine(), K=view.alK?view.alK:(!AL.n&&MY.n?"mine":"qt");
     const sw=`<div class="rseg ralk" role="tablist"><button role="tab" aria-selected="${K==="qt"}" class="${K==="qt"?"on":""}" data-alk="qt">묵상 카드 <b>${AL.n}</b></button><button role="tab" aria-selected="${K==="mine"}" class="${K==="mine"?"on":""}" data-alk="mine">내가 만든 카드 <b>${MY.n}</b></button></div>`;
-    return head("말씀 카드")+`<section class="sec rsec">${sw}${K==="mine"?MY.html:AL.html}</section>`; }
+    if(K==="mine") setTimeout(()=>wcIdbFill(),0); return head("말씀 카드")+`<section class="sec rsec">${sw}${K==="mine"?MY.html:AL.html}</section>`; }
   if(D==="records"){ if(view.recSeg==="cards"){ view.recSeg=null; const AL=recAlbum(); return head("말씀 카드")+`<section class="sec rsec">${AL.html}</section>`; }
     return head("아멘 · 형광펜 · 노트")+`<section class="sec rsec">${recTimeline()}</section>`; }
   if(D==="church"){ const ch=byLab("우리 교회 함께 읽기"); return head("우리 교회 함께 읽기")+`<section class="sec rsec"><p class="lead rnote">교회 통독 일정으로는 오늘까지 성경의 ${pct1(sch,TOTAL_CH)}%를 읽을 차례입니다(예정 진도). 개인 기록과는 따로 셉니다.</p></section>`+(ch?ch.outerHTML:""); }
@@ -13304,13 +13310,14 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
    <div class="wcact"><button class="wcsave">사진으로 저장</button><button class="wcsend">보내기</button></div><div class="wcact wcact2" hidden><button class="wcrst" disabled>초기화</button><button class="wcdone">완료</button></div>`;
   document.body.appendChild(box); document.body.classList.add("wcmon");
   const cv=box.querySelector(".wccv"), dots=box.querySelector(".wcthumbs"); let tok=0, lastIm=null; o.fs=o.fs||1; o.dx=0; o.dy=0; o.iz=1; o.ix=null; o.iy=null; o.bw=0; o.br={};
-  if(a.pre){ Object.assign(o,JSON.parse(JSON.stringify(a.pre.s||{}))); if(a.pre.u){ let j=o.cands.findIndex(c=>c.u===a.pre.u); if(j<0){ o.cands.unshift({u:a.pre.u,fx:a.pre.fx}); j=0; } o.i=j; o.ph=o.cands[j]; } }
+  if(a.pre&&String(a.pre.u||"").startsWith("idb:")){ const c={u:"",fx:a.pre.fx||"50% 50%",own:1,idb:a.pre.u.slice(4)}; o.cands.unshift(c); WCIDB.get(c.idb).then(v=>{ if(v){ c.u=v; dots.innerHTML=""; draw(); } }); a.pre=Object.assign({},a.pre,{u:""}); o.i=0; o.ph=c; Object.assign(o,JSON.parse(JSON.stringify(a.pre.s||{}))); }
+  else if(a.pre){ Object.assign(o,JSON.parse(JSON.stringify(a.pre.s||{}))); if(a.pre.u){ let j=o.cands.findIndex(c=>c.u===a.pre.u); if(j<0){ o.cands.unshift({u:a.pre.u,fx:a.pre.fx}); j=0; } o.i=j; o.ph=o.cands[j]; } }
   const keep=()=>{ try{ localStorage.setItem("cbsr-wc",JSON.stringify({look:o.look,size:o.size,mineOn:o.mineOn,fs:o.fs,ff:o.ff,al:o.al,sh:o.sh,fw:o.fw})); }catch(e){} };
   const draw=async()=>{ const my=++tok; const im=await wcLoad(o.ph); await wcFonts(o.text+(o.mine||"")); if(my!==tok) return; lastIm=im; wcDraw(cv,o,o.look==="paper"?null:im); rstShow(); boxShow();
     box.querySelector(".wcstage").classList.toggle("nopic",o.look==="paper"||o.cands.length<2);
-    const nop=o.look==="paper"||o.cands.length<2; dots.hidden=nop;
-    if(!nop){ if(!dots.children.length) dots.innerHTML=o.cands.map((c,j)=>`<button role="option" data-i="${j}" aria-label="그림 ${j+1}"><img src="${esc(c.u)}" alt="" loading="lazy" style="object-position:${esc(c.fx||"50% 50%")}"></button>`).join("");
-      dots.querySelectorAll("button").forEach((b,j)=>{ b.classList.toggle("on",j===o.i); b.setAttribute("aria-selected",j===o.i); }); const on=dots.children[o.i]; if(on) on.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"}); } };
+    dots.hidden=false; /* 11/9 목사님: 그림 줄 끝에 '내 사진' — 단말기 사진으로 카드 만들기 */
+    { if(!dots.children.length) dots.innerHTML=o.cands.map((c,j)=>`<button role="option" data-i="${j}" aria-label="그림 ${j+1}"><img src="${esc(c.u)}" alt="" loading="lazy" style="object-position:${esc(c.fx||"50% 50%")}"></button>`).join("")+`<button class="wcadd" data-add="1" aria-label="내 사진 고르기"><b>＋</b><small>내 사진</small></button>`;
+      dots.querySelectorAll("[data-i]").forEach((b,j)=>{ b.classList.toggle("on",j===o.i); b.setAttribute("aria-selected",j===o.i); }); const on=dots.children[o.i]; if(on) on.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"}); } };
   /* 11/8 목사님: 넘어가는 모션이 안 보여 헷갈림 → 손가락을 따라 카드가 움직이고, 밀어낸 쪽으로 빠지고 새 카드가 반대쪽에서 들어옴 */
   let busy=false; const nop=()=>o.look==="paper"||o.cands.length<2, wait=ms=>new Promise(r=>setTimeout(r,ms));
   const slide=async(n,to)=>{ if(nop()||busy) return; busy=true; const W=cv.getBoundingClientRect().width+40; const bx0=box.querySelector(".wcbox"); if(bx0) bx0.hidden=true; /* 11/9: 넘어가는 동안 점선 상자를 숨겨 화면 밖으로 튀지 않게 */
@@ -13346,6 +13353,9 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
     ta.onblur=()=>{ if(!msg.hidden){ ta.value=brText(); msg.hidden=true; } };
     pn.querySelector(".wcclr").onclick=()=>{ o.br={}; ta.value=brText(); msg.hidden=true; brNum(); rstShow(); draw(); };
     pn.querySelector(".wcok").onclick=()=>{ if(!msg.hidden) ta.value=brText(); pn.remove(); }; setTimeout(()=>ta.focus(),50); };
+  const fin=document.createElement("input"); fin.type="file"; fin.accept="image/*"; fin.hidden=true; box.appendChild(fin);
+  fin.onchange=()=>{ const f=fin.files&&fin.files[0]; fin.value=""; if(!f) return; const c={u:URL.createObjectURL(f),fx:"50% 50%",own:1}; o.cands.push(c); dots.innerHTML=""; o.i=o.cands.length-1; o.ph=c; o.iz=1; o.ix=null; o.iy=null; draw(); };
+  dots.addEventListener("click",e=>{ if(e.target.closest("[data-add]")){ e.stopPropagation(); fin.click(); } },true);
   dots.onclick=e=>{ const b=e.target.closest("[data-i]"); if(!b) return; const j=+b.dataset.i; if(j!==o.i) slide(j>o.i?1:-1,j); };
   box.querySelector(".wcnav.l").onclick=()=>step(-1); box.querySelector(".wcnav.r").onclick=()=>step(1);
   let sx=null; cv.addEventListener("pointerdown",e=>{ sx=e.pointerType==="mouse"&&!EDIT?e.clientX:null; }); cv.addEventListener("pointerup",e=>{ if(sx==null) return; const dx=e.clientX-sx; sx=null; if(Math.abs(dx)>36) step(dx<0?1:-1); });
@@ -13415,8 +13425,9 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   const name=()=>`말씀카드_${PLAN.abbr[o.b-1]}${o.c}-${o.v1}${o.v2>o.v1?"-"+o.v2:""}.png`;
   const blob=()=>new Promise(res=>cv.toBlob(res,"image/png"));
   /* 내가 만든 카드 보관: 본문에서 고른 절로 만든 카드(또는 보관한 카드를 다시 연 것)를 저장·보내기 하면 '나 > 말씀 카드'에 남김 */
-  const keepCard=()=>{ const id=a.wcid||("c"+Date.now().toString(36)); a.wcid=id;
-    WCS[id]={at:Date.now(),b:o.b,c:o.c,v1:o.v1,v2:o.v2,u:o.ph?o.ph.u:"",fx:o.ph?o.ph.fx||"":"",s:JSON.parse(JSON.stringify({size:o.size,ff:o.ff,fw:o.fw,al:o.al,sh:o.sh,fs:o.fs,dx:o.dx,dy:o.dy,iz:o.iz,ix:o.ix,iy:o.iy,bw:o.bw,br:o.br,hl:o.hl}))}; wcsSave(); };
+  const keepCard=()=>{ const id=a.wcid||("c"+Date.now().toString(36)); a.wcid=id; let U=o.ph?o.ph.u:"";
+    if(o.ph&&o.ph.own){ const key=o.ph.idb||id; U="idb:"+key; if(!o.ph.idb&&lastIm){ try{ const k=Math.min(1,1600/Math.max(lastIm.width,lastIm.height)), c2=document.createElement("canvas"); c2.width=Math.round(lastIm.width*k); c2.height=Math.round(lastIm.height*k); c2.getContext("2d").drawImage(lastIm,0,0,c2.width,c2.height); WCIDB.put(key,c2.toDataURL("image/jpeg",.85)); o.ph.idb=key; }catch(e){} } }
+    WCS[id]={at:Date.now(),b:o.b,c:o.c,v1:o.v1,v2:o.v2,u:U,fx:o.ph?o.ph.fx||"":"",s:JSON.parse(JSON.stringify({size:o.size,ff:o.ff,fw:o.fw,al:o.al,sh:o.sh,fs:o.fs,dx:o.dx,dy:o.dy,iz:o.iz,ix:o.ix,iy:o.iy,bw:o.bw,br:o.br,hl:o.hl}))}; wcsSave(); };
   /* 11/9 목사님: 사진 저장·보내기는 보관으로 치지 않음 — 머리줄 '보관'을 눌러야 '나 > 말씀 카드 > 내가 만든 카드'에 남음 */
   box.querySelector(".wckp").onclick=()=>{ const had=!!a.wcid; keepCard(); toast(had?"보관한 카드를 고쳤습니다":"보관했습니다 · 나 › 말씀 카드"); }; /* 11/9 목사님: 지우기는 '나'의 카드 창에서만 */
   const save=async()=>{ const b=await blob(); if(!b) return; const u=URL.createObjectURL(b), l=document.createElement("a"); l.href=u; l.download=name(); document.body.appendChild(l); l.click(); l.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); toast("사진으로 저장했습니다"); };
@@ -13437,7 +13448,7 @@ document.addEventListener("click",async e=>{ const b=e.target.closest&&e.target.
   sh.querySelector("[data-wcgo]").onclick=()=>{ close(); wcOpen({b:r.b,c:r.c,v1:r.v1,v2:r.v2,src:"read",wcid:id,pre:r}); };
   const rm=sh.querySelector("[data-wcrm]"); rm.onclick=()=>{ if(rm.dataset.ok!=="1"){ rm.dataset.ok="1"; rm.textContent="한 번 더 누르면 지웁니다"; setTimeout(()=>{ rm.dataset.ok=""; rm.textContent="이 카드 지우기"; },3000); return; }
     WCS[id]={at:Date.now(),del:1}; wcsSave(); close(); toast("카드를 지웠습니다"); render(); };
-  try{ const o=Object.assign({look:"over",size:"sq",ff:"serif",al:"left",sh:"mid",fw:"m",fs:1,dx:0,dy:0,iz:1,ix:null,iy:null,bw:0,br:{},hl:{},mineOn:false},JSON.parse(JSON.stringify(r.s||{})),{b:r.b,c:r.c,v1:r.v1,v2:r.v2,ph:r.u?{u:r.u,fx:r.fx}:null});
+  try{ const o=Object.assign({look:"over",size:"sq",ff:"serif",al:"left",sh:"mid",fw:"m",fs:1,dx:0,dy:0,iz:1,ix:null,iy:null,bw:0,br:{},hl:{},mineOn:false},JSON.parse(JSON.stringify(r.s||{})),{b:r.b,c:r.c,v1:r.v1,v2:r.v2,ph:r.u?{u:r.u,fx:r.fx}:null}); if(String(r.u||"").startsWith("idb:")){ const v=await WCIDB.get(r.u.slice(4)); o.ph=v?{u:v,fx:r.fx}:null; }
     o.text=wcText(o.b,o.c,o.v1,o.v2); const im=await wcLoad(o.ph); await wcFonts(o.text); const cv=document.createElement("canvas"); wcDraw(cv,o,im); const img=sh.querySelector(".wcshim img"); if(img) img.src=cv.toDataURL("image/jpeg",.86); }catch(err){} });
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-wcmk]"); if(!b) return; e.preventDefault(); e.stopPropagation();
   const [w,d]=b.dataset.wcmk.split("-").map(Number), q=mem.qt[keyOf(w,d)]||{}, v=String(q.kv||"").split(":").map(Number); if(v.length!==3) return;
