@@ -2049,6 +2049,7 @@ body.wcmon{overflow:hidden}
 .wchd{position:absolute;top:auto;bottom:-13px;width:22px;height:40px;margin-top:0;border-radius:11px;background:#E2B874;box-shadow:0 2px 8px rgba(0,0,0,.4);pointer-events:auto;touch-action:none;cursor:ew-resize}.wchd.l{left:-12px}.wchd.r{right:-12px} /* 손잡이는 아래 모서리 — 가운데의 ‹ ›와 겹치지 않게 */.wchd::after{content:"";position:absolute;left:9px;top:12px;width:4px;height:20px;border-left:2px solid #6b4a17;border-right:2px solid #6b4a17;box-sizing:border-box}
 .wcbrw button{display:inline-flex;align-items:center;gap:3px}.wcbrw button i{font-style:normal;font-size:13px;opacity:0;color:#E2B874}.wcbrw button.on{box-shadow:inset 0 -2px 0 #E2B874}.wcbrw button.on i{opacity:1}
 .wcpair{display:flex;gap:14px;align-items:center;min-width:0}.wcpair>.wcseg{flex:1;min-width:0}.wcpair>.wcseg[data-k="ff"],.wcpair>.wcseg[data-k="al"]{flex:.8}.wcpair .wcbrk{flex:1;white-space:nowrap}
+.wcmtop .wcdel{margin-left:auto;height:38px;padding:0 12px;border:0;background:none;color:#d9cdbb;font-size:13.5px;text-decoration:underline;text-underline-offset:3px}.wcmtop .wcdel+.wced{margin-left:6px}.ralk{margin-bottom:12px}.ralk b{font-weight:700;opacity:.6;margin-left:2px}
 .wcmtop .wccx{margin-left:auto;height:38px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3ece0;font-weight:700;font-size:14.5px}
 .wcbrta{flex:1;min-height:120px;width:100%;box-sizing:border-box;resize:none;border:1px solid rgba(255,255,255,.18);border-radius:10px;background:rgba(255,255,255,.05);color:#f3ece0;font:700 17px/1.7 "Noto Serif KR","Gowun Batang",serif;padding:10px 12px;margin:4px 0 8px}.wcbrm{margin:0 0 8px;color:#FF9A8A;font-size:13px}
 .wcact2 .wcrst{border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3ece0}.wcact2 .wcrst:disabled{opacity:.4}.wcact2 .wcdone{flex:1.4!important;border:0;background:#E2B874;color:#2a1d0c}.wcbox{position:absolute;border:2px dashed rgba(226,184,116,.95);border-radius:8px;pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,.08)}.wcedh{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);background:rgba(20,15,10,.82);color:#f3ece0;font-size:13px;line-height:1.4;padding:7px 12px;border-radius:999px;pointer-events:none;text-align:center;white-space:normal}.wcstage.edit .wcnav{z-index:3} /* 11/9 목사님: 수정 중에도 ‹ ›로 그림 고르기 */.wcfs .wced{width:auto;padding:0 16px}.wcfs .wced.on{background:#E2B874;color:#2a2119;border-color:#E2B874}.wcfs .wcrst{white-space:nowrap;width:auto;padding:0 12px;margin-left:auto}.wccv{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:6px;box-shadow:0 18px 40px rgba(0,0,0,.45);user-select:none;-webkit-user-select:none}
@@ -8642,6 +8643,9 @@ let HL={}; try{HL=JSON.parse(localStorage.getItem(HLKEY)||"{}")||{};}catch(e){}
 const HSEL=new Set();
 /* 지운 형광펜도 지운 시각을 남겨, 기기 연동 때 다른 기기의 옛 기록이 되살리지 않게 합니다 */
 let HLDEL={}; try{HLDEL=JSON.parse(localStorage.getItem("cbsr-hl-del")||"{}")||{};}catch(e){}
+/* 11/9 목사님: 본문을 읽다 내가 만든 말씀 카드 — '나 > 말씀 카드'에 보관(기기 간 동기화). {id:{at,b,c,v1,v2,u,fx,s:{설정}} | {at,del:1}} */
+let WCS={}; try{WCS=JSON.parse(localStorage.getItem("cbsr-wcs")||"{}")||{};}catch(e){}
+function wcsSave(){ try{ localStorage.setItem("cbsr-wcs",JSON.stringify(WCS)); }catch(e){} if(typeof syncSoon==="function") syncSoon(); }
 const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem("cbsr-hl-del",JSON.stringify(HLDEL));}catch(e){} if(typeof syncSoon==="function") syncSoon();};
 const HLC={y:"노랑",g:"초록",p:"분홍",b:"파랑"};
 function toggleSel(id){
@@ -11362,6 +11366,10 @@ function recAlbum(){ const L=Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q
   const cards=L.filter(x=>x.m===cur).map(x=>{ let ph=null; try{ ph=wordCardPh(x.w,x.d,x.q); }catch(e){} const t=x.t.length>54?x.t.slice(0,52)+"…":x.t;
     return `<button class="ralc" data-wck="${esc(x.k)}">${phImg(ph,"ralbg")}<em>${esc(fmt(x.dt,{month:"long",day:"numeric"}))}</em><span><q>${esc(t)}</q><small>${esc(PLAN.abbr[x.v[0]-1])} ${x.v[1]}:${x.v[2]}</small></span></button>`; }).join("");
   return {n:L.length,html:tabs+`<div class="ralb">${cards}</div>`}; }
+/* 11/9 목사님: 말씀 카드 두 갈래 — 묵상을 마치면 저절로 생기는 카드 / 본문을 읽다 내가 만든 카드 */
+function recMine(){ const L=Object.entries(WCS).filter(([id,r])=>r&&!r.del&&r.b).map(([id,r])=>({id,r,t:wcText(r.b,r.c,r.v1,r.v2)||""})).filter(x=>x.t).sort((a,b)=>(b.r.at||0)-(a.r.at||0));
+  if(!L.length) return {n:0,html:`<p class="lead">본문을 읽다가 절을 누르고 '말씀 카드'로 만든 뒤 저장하거나 보내면 여기에 모입니다.</p>`};
+  return {n:L.length,html:`<div class="ralb">${L.map(({id,r,t})=>{ const tt=t.length>54?t.slice(0,52)+"…":t; return `<button class="ralc" data-wcid="${esc(id)}">${phImg(r.u?{u:r.u,fx:r.fx}:null,"ralbg")}<em>${esc(fmt(new Date(r.at),{month:"long",day:"numeric"}))}</em><span><q>${esc(tt)}</q><small>${esc(wcRefLabel(r.b,r.c,r.v1,r.v2))}</small></span></button>`; }).join("")}</div>`}; }
 /* 기록 탭 v4(GPT 간소화 지시 2026-10-30): 첫 화면은 '얼마나 읽었나 · 무슨 말씀을 붙잡았나'만.
    책장·돌·월별 앨범·날짜별 기록·교회·설정은 한 줄 진입점 → 상세 화면(view.recD). 데이터·저장 구조는 그대로 */
 function recBack(){ if(!view.recD) return; if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); }
@@ -11392,7 +11400,9 @@ function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.ta
   if(D==="stones"){ const bs=byLab("모은 배지"); const B=bs?[...bs.querySelectorAll(".bdg")].map(b=>({on:b.classList.contains("on"),i:(b.querySelector("i")||{}).textContent||"",t:b.textContent.replace((b.querySelector("i")||{}).textContent||"","").trim()})):[];
     return head("에벤에셀 돌")+`<section class="sec rsec"><p class="lead rnote">지나온 길을 기념하는 돌입니다. 돌을 누르면 받는 방법이 나옵니다. “사무엘이 돌을 취하여 … 이르되 여호와께서 여기까지 우리를 도우셨다 하고”(삼상 7:12).</p><div class="rstg">${[...B.filter(b=>b.on),...B.filter(b=>!b.on)].map(b=>`<button class="rst${b.on?"":" off"}" data-bdg="${esc(b.t)}">${STONE(b.on,b.i)}<small>${esc(b.t)}</small></button>`).join("")}</div></section>`; }
   /* 11/5 목사님: 말씀 카드를 따로 떼어 냄 */
-  if(D==="cards"){ const AL=recAlbum(); return head("말씀 카드")+`<section class="sec rsec">${AL.html}</section>`; }
+  if(D==="cards"){ const AL=recAlbum(), MY=recMine(), K=view.alK?view.alK:(!AL.n&&MY.n?"mine":"qt");
+    const sw=`<div class="rseg ralk" role="tablist"><button role="tab" aria-selected="${K==="qt"}" class="${K==="qt"?"on":""}" data-alk="qt">묵상 카드 <b>${AL.n}</b></button><button role="tab" aria-selected="${K==="mine"}" class="${K==="mine"?"on":""}" data-alk="mine">내가 만든 카드 <b>${MY.n}</b></button></div>`;
+    return head("말씀 카드")+`<section class="sec rsec">${sw}${K==="mine"?MY.html:AL.html}</section>`; }
   if(D==="records"){ if(view.recSeg==="cards"){ view.recSeg=null; const AL=recAlbum(); return head("말씀 카드")+`<section class="sec rsec">${AL.html}</section>`; }
     return head("아멘 · 형광펜 · 노트")+`<section class="sec rsec">${recTimeline()}</section>`; }
   if(D==="church"){ const ch=byLab("우리 교회 함께 읽기"); return head("우리 교회 함께 읽기")+`<section class="sec rsec"><p class="lead rnote">교회 통독 일정으로는 오늘까지 성경의 ${pct1(sch,TOTAL_CH)}%를 읽을 차례입니다(예정 진도). 개인 기록과는 따로 셉니다.</p></section>`+(ch?ch.outerHTML:""); }
@@ -12248,7 +12258,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   let h=topBanners("record")+`<section class="ryprof rprof">${av?av.outerHTML:""}<div class="rpname"><b>${esc(PROF.nick||"내 통독 기록")}</b><small>${st} · ${esc(PI.name)}</small></div><button class="rygear" data-recgo="more" aria-label="설정 · 더 보기">${ic("gear")}</button></section>`;
   const row=(go,k,t)=>`<button class="ryrow" data-recgo="${go}"><span class="ryico ${k}">${ic(k)}</span><b>${t}</b><svg class="ych" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
   /* 첫 방문(기록 없음, 2026-11-02): 0이 늘어선 숫자판 대신 할 일 하나 */
-  if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen||x.obs||x.med||x.pray))){ const tp=dayPlan(here.w,here.d);
+  if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!recMine().n&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen||x.obs||x.med||x.pray))){ const tp=dayPlan(here.w,here.d);
     h+=`<section class="rybox"><p class="ryfirst">오늘 본문을 읽고 묵상 노트를 마치면, 읽은 날과 붙잡은 말씀, 아멘이 여기에 모입니다.</p>${tp?`<button class="ryfirstb" data-tab-go="read" data-today="1"><b>오늘 본문 열기</b><small>${esc(fmt(dateOf(here.w,here.d),{month:"long",day:"numeric"}))} · ${esc(tp.label)}</small></button>`:""}</section>`;
     h+=`<section class="rybox rymenu">${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`; return h; }
   /* 2) 통독 요약: 큰 숫자 + 막대 + 이번 주 */
@@ -12260,7 +12270,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   if(wk) h+=`<section class="rybox rycal">${wk}</section>`;
   /* 3) 숫자 넷: 2×2 칸 */
   const tile=(k,v,u,t)=>`<button class="rytile" data-rinfo="${k}"><span class="ryico ${k}">${ic(k)}</span><small>${t}</small><b>${v}<em>${u}</em></b></button>`;
-  h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length,"장","말씀 카드")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
+  h+=`<section class="rygrid">${tile("read",doneN,"일","읽은 날")}${tile("qt",qtDays,"일","QT 한 날")}${tile("cards",CD.length+recMine().n,"장","말씀 카드")}${tile("stones",stOn,"개","에벤에셀 돌")}</section>`;
   /* 11/3 UI v3: 내 노트 — 최근에 붙잡은 말씀과 내가 쓴 한 줄(이 탭의 주인공) */
   { const it=noteAll().slice(0,3).map(x=>noteCard(x)).join("");
     if(it) h+=`<section class="rybox">${hd("내 노트","notes","모두 보기")}<div class="mynotes">${it}</div></section>`; }
@@ -13281,13 +13291,14 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   if(!WC_LOOK.some(z=>z[0]===o.look)) o.look="over"; o.text=wcText(o.b,o.c,o.v1,o.v2); if(!o.text) return; o.cands=wcCands(o.b,o.c,o.v1,o.w,o.d,a.ph); o.i=0; o.ph=o.cands[0]||null; o.mineOn=!!a.mine&&o.mineOn!==false;
   const box=document.createElement("div"); box.className="wcm"; box.setAttribute("role","dialog"); box.setAttribute("aria-modal","true"); box.setAttribute("aria-label","말씀 카드");
   const seg=(k,L,cur,c,at)=>`<div class="wcseg ${c||""}" data-k="${k}" ${at||""}>${L.map(z=>`<button class="${z[0]===cur?"on":""}" data-v="${z[0]}">${z[1]}</button>`).join("")}</div>`;
-  box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b><button class="wced" aria-pressed="false">수정</button><button class="wccx" hidden>취소</button></div>
+  box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b>${a.wcid?`<button class="wcdel">지우기</button>`:""}<button class="wced" aria-pressed="false">수정</button><button class="wccx" hidden>취소</button></div>
    <div class="wcstage"><canvas class="wccv"></canvas><div class="wcbox" hidden><i class="wchd l" aria-hidden="true"></i><i class="wchd r" aria-hidden="true"></i></div><div class="wcedh" hidden>글이나 그림을 끌어 옮기고, 두 손가락으로 크기를 바꿉니다</div><button class="wcnav l" aria-label="앞 그림">‹</button><button class="wcnav r" aria-label="다음 그림">›</button></div><div class="wcthumbs" role="listbox" aria-label="그림 고르기"></div>
    <div class="wctabs" role="tablist" hidden>${[["size","비율"],["font","글꼴"],["line","줄"],["hl","칠하기"],["sh","어둡기"]].concat(a.mine?[["mine","내 한 줄"]]:[]).map(([k,t],i)=>`<button role="tab" data-tab="${k}" class="${i?"":"on"}">${t}</button>`).join("")}</div>
    <div class="wcopts"><label data-t="size">비율</label>${seg("size",WC_SIZE.map(z=>[z[0],`<i class="wcrat" style="width:${Math.round(18*z[2]/z[3])}px;height:18px"></i>${z[1]}`]),o.size,"wcratio",'data-t="size"')}<div class="wcpair" data-t="font">${seg("ff",[["serif","명조"],["sans","고딕"]],o.ff)}${seg("fw",[["l","가늘게"],["m","보통"],["b","굵게"]],o.fw)}</div><div class="wcpair" data-t="line">${seg("al",[["left","왼쪽"],["center","가운데"]],o.al)}<button class="wcpaint wcbrk"><span>줄 나누기</span><em></em></button></div><button class="wcpaint" data-t="hl"><span>칠할 낱말 고르기</span><em></em></button>${seg("sh",[["lo","약하게"],["mid","보통"],["hi","진하게"]],o.sh,"",'data-t="sh"')}${a.mine?`<button class="wcmine${o.mineOn?" on":""}" data-t="mine" aria-pressed="${o.mineOn}"><span>${esc(a.mine)}</span><em>${o.mineOn?"넣음":"뺌"}</em></button>`:""}</div>
    <div class="wcact"><button class="wcsave">사진으로 저장</button><button class="wcsend">보내기</button></div><div class="wcact wcact2" hidden><button class="wcrst" disabled>초기화</button><button class="wcdone">완료</button></div>`;
   document.body.appendChild(box); document.body.classList.add("wcmon");
   const cv=box.querySelector(".wccv"), dots=box.querySelector(".wcthumbs"); let tok=0, lastIm=null; o.fs=o.fs||1; o.dx=0; o.dy=0; o.iz=1; o.ix=null; o.iy=null; o.bw=0; o.br={};
+  if(a.pre){ Object.assign(o,JSON.parse(JSON.stringify(a.pre.s||{}))); if(a.pre.u){ let j=o.cands.findIndex(c=>c.u===a.pre.u); if(j<0){ o.cands.unshift({u:a.pre.u,fx:a.pre.fx}); j=0; } o.i=j; o.ph=o.cands[j]; } }
   const keep=()=>{ try{ localStorage.setItem("cbsr-wc",JSON.stringify({look:o.look,size:o.size,mineOn:o.mineOn,fs:o.fs,ff:o.ff,al:o.al,sh:o.sh,fw:o.fw})); }catch(e){} };
   const draw=async()=>{ const my=++tok; const im=await wcLoad(o.ph); await wcFonts(o.text+(o.mine||"")); if(my!==tok) return; lastIm=im; wcDraw(cv,o,o.look==="paper"?null:im); rstShow(); boxShow();
     box.querySelector(".wcstage").classList.toggle("nopic",o.look==="paper"||o.cands.length<2);
@@ -13306,7 +13317,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   box.querySelectorAll(".wcseg").forEach(s=>s.onclick=e=>{ const b=e.target.closest("button"); if(!b) return; o[s.dataset.k]=b.dataset.v; s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); keep(); draw(); });
   const mb=box.querySelector(".wcmine"); if(mb) mb.onclick=()=>{ o.mineOn=!o.mineOn; mb.classList.toggle("on",o.mineOn); mb.setAttribute("aria-pressed",o.mineOn); mb.querySelector("em").textContent=o.mineOn?"넣음":"뺌"; keep(); draw(); };
   /* 11/5 목사님: 말씀 카드에서 내가 칠하고 싶은 말씀을 색칠 */
-  o.hl={}; let hc="y"; const pb=box.querySelector('.wcpaint[data-t="hl"]');
+  o.hl=(a.pre&&a.pre.s&&a.pre.s.hl)?JSON.parse(JSON.stringify(a.pre.s.hl)):{}; let hc="y"; const pb=box.querySelector('.wcpaint[data-t="hl"]');
   const pnum=()=>{ const n=Object.keys(o.hl).length; pb.querySelector("em").textContent=n?`${n}낱말`:""; };
   pb.onclick=()=>{ const ws=o.text.split(" "); const pn=document.createElement("div"); pn.className="wcpanel";
     pn.innerHTML=`<div class="wcphd"><b>색을 고르고 낱말을 누르세요</b><span class="wcsw">${Object.keys(WC_HLC).map(k=>`<button data-c="${k}" class="${k===hc?"on":""}" style="--c:${WC_HLC[k]}" aria-label="${WC_TN[k]}"></button>`).join("")}</span></div><div class="wcwords">${ws.map((t,i)=>`<button data-w="${i}"${o.hl[i]?` style="--c:${WC_HLC[o.hl[i]]}" class="on"`:""}>${esc(t)}</button>`).join("")}</div><div class="wcpft"><button class="wcclr">모두 지우기</button><button class="wcok">다 됐어요</button></div>`;
@@ -13341,7 +13352,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   function boxShow(){ const bx=box.querySelector(".wcbox"); if(!bx) return; if(!EDIT||!o.tb||busy){ bx.hidden=true; return; } const st=box.querySelector(".wcstage").getBoundingClientRect(), {r,k}=sc(), b=o.tb;
     bx.hidden=false; bx.style.left=(r.left-st.left+b.x/k)+"px"; bx.style.top=(r.top-st.top+b.y/k)+"px"; bx.style.width=(b.w/k)+"px"; bx.style.height=(b.h/k)+"px"; }
   const SNK=["dx","dy","fs","iz","ix","iy","bw","br","ff","fw","al","sh","size","hl","mineOn"]; let SNAP=null;
-  const setEdit=on=>{ if(on) SNAP=JSON.parse(JSON.stringify(SNK.reduce((m,k)=>(m[k]=o[k],m),{}))); EDIT=on; box.querySelector(".wccx").hidden=!on; const b=box.querySelector(".wced"); b.hidden=on; b.setAttribute("aria-pressed",on); const hh=box.querySelector(".wcedh"); clearTimeout(hh._t); hh.hidden=!on; hh.classList.remove("out"); if(on) hh._t=setTimeout(()=>{ hh.classList.add("out"); hh._t=setTimeout(()=>{ hh.hidden=true; },400); },3200);
+  const setEdit=on=>{ { const d2=box.querySelector(".wcdel"); if(d2) d2.hidden=on; } if(on) SNAP=JSON.parse(JSON.stringify(SNK.reduce((m,k)=>(m[k]=o[k],m),{}))); EDIT=on; box.querySelector(".wccx").hidden=!on; const b=box.querySelector(".wced"); b.hidden=on; b.setAttribute("aria-pressed",on); const hh=box.querySelector(".wcedh"); clearTimeout(hh._t); hh.hidden=!on; hh.classList.remove("out"); if(on) hh._t=setTimeout(()=>{ hh.classList.add("out"); hh._t=setTimeout(()=>{ hh.hidden=true; },400); },3200);
     box.querySelector(".wcopts").classList.toggle("ed",on); box.querySelector(".wctabs").hidden=!on; box.querySelector(".wcact:not(.wcact2)").hidden=on; box.querySelector(".wcact2").hidden=!on; box.querySelector(".wcstage").classList.toggle("edit",on); setTab(TAB); rstShow(); boxShow(); };
   let TAB="size"; const setTab=t=>{ TAB=t; box.querySelectorAll(".wctabs [data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t)); box.querySelectorAll(".wcopts [data-t]").forEach(x=>x.classList.toggle("cur",x.dataset.t===t)); };
   box.querySelector(".wctabs").onclick=e=>{ const b=e.target.closest("[data-tab]"); if(!b) return; setTab(b.dataset.tab); b.scrollIntoView({inline:"nearest",block:"nearest"}); };
@@ -13390,13 +13401,17 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
     const end=e=>{ if(!T) return; if(T.bwd){ T=null; endText(); return; } if(T.zoom||T.pan){ if(e&&e.touches&&e.touches.length) return; T=null; rstShow(); return; } if(T.pinch){ if(e&&e.touches&&e.touches.length) return; T=null; endText(); return; } if(T.text){ T=null; endText(); return; } const d=T.dx, L=T.lock; T=null; if(L!=="x") return;
       if(Math.abs(d)>60) slide(d<0?1:-1); else { cv.style.transition="transform .2s ease-out,opacity .2s"; cv.style.transform=""; cv.style.opacity=""; } };
     stg.addEventListener("touchend",end); stg.addEventListener("touchcancel",end); }
-  const close=pop=>{ box.remove(); document.body.classList.remove("wcmon"); if(pop!==true) ovDone(close); };
+  const close=pop=>{ box.remove(); document.body.classList.remove("wcmon"); if(pop!==true) ovDone(close); if(a.wcid&&view.tab==="record") render(); };
+  const dl=box.querySelector(".wcdel"); if(dl) dl.onclick=()=>{ if(dl.dataset.ok!=="1"){ dl.dataset.ok="1"; dl.textContent="한 번 더 누르면 지웁니다"; setTimeout(()=>{ dl.dataset.ok=""; dl.textContent="지우기"; },3000); return; } WCS[a.wcid]={at:Date.now(),del:1}; wcsSave(); toast("카드를 지웠습니다"); close(); };
   box.querySelector(".wcmx").onclick=()=>close(); ovOpen(close);
   const name=()=>`말씀카드_${PLAN.abbr[o.b-1]}${o.c}-${o.v1}${o.v2>o.v1?"-"+o.v2:""}.png`;
   const blob=()=>new Promise(res=>cv.toBlob(res,"image/png"));
-  const save=async()=>{ const b=await blob(); if(!b) return; const u=URL.createObjectURL(b), l=document.createElement("a"); l.href=u; l.download=name(); document.body.appendChild(l); l.click(); l.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); toast("사진으로 저장했습니다"); };
+  /* 내가 만든 카드 보관: 본문에서 고른 절로 만든 카드(또는 보관한 카드를 다시 연 것)를 저장·보내기 하면 '나 > 말씀 카드'에 남김 */
+  const keepCard=()=>{ if(a.src!=="read"&&!a.wcid) return; const id=a.wcid||("c"+Date.now().toString(36)); a.wcid=id;
+    WCS[id]={at:Date.now(),b:o.b,c:o.c,v1:o.v1,v2:o.v2,u:o.ph?o.ph.u:"",fx:o.ph?o.ph.fx||"":"",s:JSON.parse(JSON.stringify({size:o.size,ff:o.ff,fw:o.fw,al:o.al,sh:o.sh,fs:o.fs,dx:o.dx,dy:o.dy,iz:o.iz,ix:o.ix,iy:o.iy,bw:o.bw,br:o.br,hl:o.hl}))}; wcsSave(); };
+  const save=async()=>{ keepCard(); const b=await blob(); if(!b) return; const u=URL.createObjectURL(b), l=document.createElement("a"); l.href=u; l.download=name(); document.body.appendChild(l); l.click(); l.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); toast("사진으로 저장했습니다"); };
   box.querySelector(".wcsave").onclick=save;
-  box.querySelector(".wcsend").onclick=async()=>{ const b=await blob(); if(!b) return; const f=new File([b],name(),{type:"image/png"});
+  box.querySelector(".wcsend").onclick=async()=>{ keepCard(); const b=await blob(); if(!b) return; const f=new File([b],name(),{type:"image/png"});
     try{ if(navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f]}); return; } }catch(e){ if(e&&e.name==="AbortError") return; }
     save(); };
   draw().then(()=>{ const st=box.querySelector(".wcstage"); if(o.cands.length>1&&o.look!=="paper"&&!coachSeen("wc-swipe")) coach("wc-swipe",st,"그림을 옆으로 밀면 다른 그림이 나옵니다",{swipe:1,at:"mid"}); else coach("wc-edit",box.querySelector(".wced"),"수정: 글·그림 옮기기, 크기, 글꼴, 줄맞춤",{at:"below",ms:4200}); }); }
@@ -13404,7 +13419,9 @@ function wcFromSel(){ const ids=[...HSEL].map(id=>id.split("-").map(Number)).sor
   if(ids.some(z=>z[0]!==b||z[1]!==c)) return toast("말씀 카드는 한 장 안의 절로 만들 수 있습니다");
   const v1=ids[0][2], v2=ids[ids.length-1][2]; if(v2-v1>5) return toast("말씀 카드는 여섯 절까지 담을 수 있습니다");
   document.querySelectorAll(".v.sel").forEach(e=>e.classList.remove("sel")); HSEL.clear(); syncHlBar();
-  wcOpen({b,c,v1,v2,w:view.w,d:view.d}); }
+  wcOpen({b,c,v1,v2,w:view.w,d:view.d,src:"read"}); }
+document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-wcid]"); if(!b) return; e.preventDefault(); e.stopPropagation(); const id=b.dataset.wcid, r=WCS[id]; if(!r||r.del) return;
+  wcOpen({b:r.b,c:r.c,v1:r.v1,v2:r.v2,src:"read",wcid:id,pre:r}); });
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-wcmk]"); if(!b) return; e.preventDefault(); e.stopPropagation();
   const [w,d]=b.dataset.wcmk.split("-").map(Number), q=mem.qt[keyOf(w,d)]||{}, v=String(q.kv||"").split(":").map(Number); if(v.length!==3) return;
   const sh=document.getElementById("sheetRoot"); if(sh&&sh.contains(b)) sh.querySelector("#sheetX")?.click();
@@ -13781,6 +13798,7 @@ function render(){
   if(window.CBSR_V2&&view.tab==="record"){ const keep=f=>()=>{ f(); const y=window.scrollY; render(); window.scrollTo({top:y}); };
     m.querySelectorAll("[data-tlf]").forEach(b=>b.onclick=keep(()=>{ view.tlF=b.dataset.tlf; view.tlAll=false; }));
     m.querySelectorAll("[data-alm]").forEach(b=>b.onclick=keep(()=>{ view.alM=+b.dataset.alm; }));
+    m.querySelectorAll("[data-alk]").forEach(b=>b.onclick=keep(()=>{ view.alK=b.dataset.alk; }));
     const ta=m.querySelector("#tlAll"); if(ta) ta.onclick=keep(()=>{ view.tlAll=!view.tlAll; });
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
   if(window.CBSR_V2&&view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
@@ -14087,7 +14105,7 @@ if(NOWOFF&&!DEMO){ try{ const s=sessionStorage.getItem("cbsr-now"); const bd=doc
 /* ===== 여러 기기 기록 잇기: 이름+숫자 4자리 열쇠 하나에 두 통독표·형광펜·프로필을 함께 저장 ===== */
 const LKEYS={rj:"rjnote:v2",y365:"rjnote:y365"};
 function localBundle(){ const g=k=>{ try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; } };
-  return {v:2,rj:MODE==="rj"?mem:g(LKEYS.rj),y365:MODE==="y365"?mem:g(LKEYS.y365),hl:HL,hld:HLDEL,prof:PROF}; }
+  return {v:2,rj:MODE==="rj"?mem:g(LKEYS.rj),y365:MODE==="y365"?mem:g(LKEYS.y365),hl:HL,hld:HLDEL,prof:PROF,wcs:WCS}; }
 function mergeBundle(L,R){ if(!R||!Object.keys(R).length) return L; if(!R.v) R={v:2,rj:R};
   const o={v:2};
   { const to=Math.max(ED_Y,(L.y365&&L.y365.ed)||0,(R.y365&&R.y365.ed)||0); if(L.y365) L.y365=rollY(L.y365,to); if(R.y365) R.y365=rollY(R.y365,to); }
@@ -14100,6 +14118,7 @@ function mergeBundle(L,R){ if(!R||!Object.keys(R).length) return L; if(!R.v) R={
       if(td&&td>=tb) o.hld[id]=td; else if(best) o.hl[id]=best; } }
   const a=L.prof||{}, b=R.prof||{}; o.prof=Object.assign({},b,a); if(!a.photo&&b.photo) o.prof.photo=b.photo; if(!a.nick&&b.nick) o.prof.nick=b.nick;
   if(a.since&&b.since) o.prof.since=a.since<b.since?a.since:b.since;
+  { const x=L.wcs||{}, y=R.wcs||{}; o.wcs={}; for(const id of new Set([...Object.keys(x),...Object.keys(y)])){ const p=x[id], q=y[id]; o.wcs[id]=!p?q:!q?p:((q.at||0)>(p.at||0)?q:p); } }
   return o; }
 function applyBundle(B){ const before=JSON.stringify([mem,HL,PROF]);
   for(const k of ["rj","y365"]) if(B[k]){ try{ localStorage.setItem(LKEYS[k],JSON.stringify(B[k])); }catch(e){} }
@@ -14108,7 +14127,7 @@ function applyBundle(B){ const before=JSON.stringify([mem,HL,PROF]);
   if(mem.gb!==gb0&&typeof GBV!=="undefined"&&GBV&&document.getElementById("gbPlay")) setTimeout(()=>{ if(GBV&&document.getElementById("gbPlay")){ const y=document.querySelector("#gbPlay .gbbody")?.scrollTop||0; gbDraw(); const b=document.querySelector("#gbPlay .gbbody"); if(b) b.scrollTop=y; } },0);
   /* 다른 기기가 이미 새 회차라면 이 탭도 새 회차로 다시 엽니다 */
   if(MODE==="y365"&&mem.ed&&mem.ed>ED_Y){ try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} setTimeout(()=>location.reload(),300); }
-  HL=B.hl||HL; HLDEL=B.hld||HLDEL; PROF=B.prof||PROF;
+  HL=B.hl||HL; HLDEL=B.hld||HLDEL; PROF=B.prof||PROF; if(B.wcs){ WCS=B.wcs; try{ localStorage.setItem("cbsr-wcs",JSON.stringify(WCS)); }catch(e){} }
   try{ localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem("cbsr-hl-del",JSON.stringify(HLDEL)); localStorage.setItem(PROFKEY,JSON.stringify(PROF)); }catch(e){}
   return before!==JSON.stringify([mem,HL,PROF]); }
 let syncT=null, syncBusy=false;
