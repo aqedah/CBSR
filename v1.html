@@ -2105,6 +2105,12 @@ body.wcmon{overflow:hidden}
 .atn *{transition:none!important;animation:none!important}
 .atn{position:fixed;inset:0;z-index:100000;background:var(--bg);color:var(--ink);overflow-y:auto;overscroll-behavior:contain;font-family:"IBM Plex Sans KR",system-ui,sans-serif}.atn .wrap{padding-top:calc(10px + env(safe-area-inset-top,0px))}.atn .atx{margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--ink);font-size:15px;flex:none}.atn .top{align-items:center;gap:8px}.atn .top span{white-space:nowrap}
 .atn svg.map{max-height:58vh}
+.bmt2.atn{overflow:hidden;background:#1b1f1d;z-index:9960}.atn .atmap{background:radial-gradient(120% 80% at 50% 45%,#f3e6c4 0%,#ecdcb4 55%,#d9c08a 100%);padding:calc(env(safe-area-inset-top,0px) + 160px) 8px 178px;box-sizing:border-box}
+.atn .atmap::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(17deg,rgba(120,90,40,.035) 0 2px,transparent 2px 7px)}
+.atn .atmap svg.map{display:block;width:100%;height:100%;max-height:none;margin:0}
+.atn .bmtbars span{background:rgba(60,40,20,.25)}.atn .bmtbars i{background:#a5361f;box-shadow:none}
+.atn .athold{margin:6px 0 0;font-size:13px;color:#E2B874;font-weight:700}.atn .athold em{font-style:normal;color:#fff;background:rgba(226,184,116,.2);border-radius:999px;padding:2px 9px;margin-left:4px}
+.atn .bmttop b{color:#2a1d0c;text-shadow:none}.atn .bmthint{color:#5a4630}
 .wcl{position:fixed;inset:0;z-index:100002;background:#1c1712;color:#f3ece0;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) max(14px,env(safe-area-inset-right,0px)) 0 max(14px,env(safe-area-inset-left,0px));max-width:760px;margin:0 auto}
 .wclt{display:flex;align-items:center;gap:10px;height:54px;flex:none}.wclt b{font:700 17px/1 "Noto Serif KR","Gowun Batang",serif}.wclt span{margin-left:auto;font-size:13px;color:#c9b99f}.wclx{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:transparent;color:#f3ece0;font-size:16px}
 .wcltab{display:flex;gap:4px;border-bottom:1px solid rgba(255,255,255,.14);flex:none}.wcltab button{flex:1;border:0;background:none;color:#c9b99f;padding:10px 2px;font-size:15px;font-weight:600;border-bottom:2px solid transparent;margin-bottom:-1px}.wcltab button.on{color:#fff;border-bottom-color:#E2B874}
@@ -12116,20 +12122,10 @@ function rrFit(m){ (m||document).querySelectorAll(".rroad").forEach(rd=>{ const 
   (m||document).querySelectorAll(".rrsc").forEach(sc=>{ if(sc.dataset.sx) return; const me=sc.querySelector(".rrme"); if(!me||!sc.clientWidth) return; sc.dataset.sx=1; sc.scrollLeft=Math.max(0,me.offsetLeft-sc.clientWidth/2); }); }
 addEventListener("resize",()=>{ clearTimeout(rrFit.t); rrFit.t=setTimeout(()=>rrFit(),150); });
 
-/* ===== 대속죄일 · 대제사장의 길(목사님 2026-11-09): 레위기 16장, 세로 양피지 성막 평면도(위 서·아래 동) 위 9장면. 인용은 개역개정 그대로 ===== */
-function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=document.createElement("div"); el.className="atn"; el.setAttribute("role","dialog"); el.setAttribute("aria-label","대속죄일 대제사장의 길");
-  el.innerHTML=`<div class="wrap"><div class="top"><h1>대속죄일 · 대제사장의 길</h1><span>레위기 16장</span><button class="atx" aria-label="닫기">✕</button></div>
-  <div class="who" aria-label="인물"><svg viewBox="0 0 60 60" aria-hidden="true">
-      <circle cx="30" cy="30" r="30" fill="#3a2e22"/>
-      <path d="M12 60 q2-20 18-22 q16 2 18 22z" fill="#f4efe4" stroke="#cdbfa6" stroke-width="1"/>
-      <path d="M26 39 l4 14 l4-14" fill="none" stroke="#cdbfa6" stroke-width="1"/>
-      <rect x="15" y="47" width="30" height="3" rx="1.5" fill="#e9e1cf"/>
-      <circle cx="30" cy="27" r="9" fill="#c99a6b"/>
-      <path d="M21 31 q9 12 18 0 q-2 10-9 12 q-7-2-9-12z" fill="#6b5a4a"/>
-      <path d="M19.5 24 q0-10 10.5-11 q10.5 1 10.5 11 q-10.5-4-21 0z" fill="#fbf7ee" stroke="#cdbfa6" stroke-width="1"/>
-      <path d="M20 22 q10-3 20 0" fill="none" stroke="#e2d8c2" stroke-width="1.2"/>
-    </svg><div class="t"><b>아론<small>대제사장 · 레위 지파 · 모세의 형</small></b><p>일 년에 한 번, 이날만 흰 세마포 옷을 입고 홀로 지성소에 들어갑니다.</p><div class="hold">손에 든 것 <em id="at_hold">물 · 세마포 옷</em></div></div></div>
-  <div class="atparch"><svg class="map" id="at_map" viewBox="0 0 300 430" role="img" aria-label="성막 평면도(위가 서쪽, 아래가 동쪽)와 대제사장의 길">
+/* ===== 대속죄일 · 대제사장의 길(목사님 2026-11-09): 레위기 16장, 세로 양피지 성막 평면도(위 서·아래 동) 위 9장면. 인용은 개역개정 그대로.
+   11/9 목사님: 다른 큰 여정과 같은 틀(전체 화면 지도 · 위 진행 막대와 단추 · 위 말씀 카드 · 아래 장면 카드)로 ===== */
+function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=document.createElement("div"); el.className="bmt2 atn"; el.setAttribute("role","dialog"); el.setAttribute("aria-label","대속죄일 대제사장의 길");
+  el.innerHTML=`<div class="bmtmap atmap"><svg class="map" id="at_map" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 430" role="img" aria-label="성막 평면도(위가 서쪽, 아래가 동쪽)와 대제사장의 길">
     <defs>
       <radialGradient id="at_smk"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
       <filter id="at_blur"><feGaussianBlur stdDeviation="2.4"/></filter>
@@ -12175,12 +12171,11 @@ function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=docum
     <g id="at_fx"></g>
     <path id="at_trailOld" class="route" d="" style="opacity:.28"/><path id="at_trail" class="route" d=""/>
     <g id="at_me"><circle r="7" fill="#fffaf0" stroke="#a5361f" stroke-width="2.4"/><path d="M-4 -1.5 q0-4.5 4-5 q4 .5 4 5 q-4-1.6-8 0z" fill="#a5361f"/></g>
-  </svg></div>
-  <div class="dots" id="at_dots"></div>
-  <div class="cap" aria-live="polite"><div class="n"><i id="at_cn">1 / 9</i><span id="at_cs"></span></div><h2 id="at_ct"></h2><p id="at_cd"></p><q id="at_cq"></q></div>
-  <div class="ctl"><button id="at_prev" aria-label="앞 장면">‹</button><button class="play" id="at_play">이어 보기</button><button id="at_next" aria-label="다음 장면">›</button></div></div>`;
-  document.body.appendChild(el); document.body.classList.add("wcmon");
-  /* 11/9 목사님: 프로필은 길을 따라 움직이는 동그라미 — 큰 여정처럼 인물(흰 세마포 옷의 아론)이 걸어감 */
+  </svg></div><div class="bmtbars">${Array.from({length:9},()=>`<span><i></i></span>`).join("")}</div>
+   <div class="bmttop"><b>대속죄일 · 대제사장의 길</b><button class="bmtic" data-t="prev" aria-label="이전 장면">‹</button><button class="bmtic" data-t="pause" aria-label="멈춤">❚❚</button><button class="bmtic" data-t="nextS" aria-label="다음 장면">›</button><button class="bmtic" data-t="x" aria-label="닫기">✕</button></div>
+   <div class="bmtp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><p class="athold"></p><div class="bmtend" hidden><button class="btn bmtag" data-t="again">↺ 처음부터</button><button class="btn bmtcl" data-t="x">닫기</button></div></div>
+   <p class="bmthint">‹ › 장면 넘기기 · ❚❚ 멈춤</p>`;
+  document.body.appendChild(el); document.body.style.overflow="hidden";
   { const g0=el.querySelector("#at_me"); try{ const raw=C("aaron").replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="92" '); g0.innerHTML=`<ellipse cx="0" cy="0" rx="8" ry="2.6" fill="rgba(60,40,20,.35)"/><image href="data:image/svg+xml;charset=utf-8,${encodeURIComponent(raw)}" x="-13" y="-38" width="26" height="40"/><text class="pl" x="11" y="-26" style="font-size:9px;font-weight:700;fill:#a5361f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">아론</text>`; }catch(e){} }
 const S=[
  {s:"16:3–4",t:"몸을 씻고 거룩한 옷을 입다",h:"물 · 세마포 옷",d:"화려한 대제사장 예복이 아니라 흰 세마포 옷만 입습니다. 물두멍 곁에서 몸을 씻는 데서 이날이 시작됩니다.",q:"이것들은 거룩한 옷이라 물로 그의 몸을 씻고 입을 것이며",r:"레 16:4",path:[[150,226]],fx:"wash"},
@@ -12194,16 +12189,17 @@ const S=[
  {s:"16:23–24, 30",t:"옷을 벗고 씻고, 번제",h:"자기 옷",d:"회막에 들어가 세마포 옷을 벗어 두고, 다시 몸을 씻은 뒤 자기 옷을 입고 나와 번제를 드립니다. 일 년에 한 번 있는 날입니다.",q:"이 날에 너희를 위하여 속죄하여 너희를 정결하게 하리니 너희의 모든 죄에서 너희가 여호와 앞에 정결하리라",r:"레 16:30",path:[[208,222],[150,190],[150,226],[150,250]],fx:"end"}
 ];
 const $=id=>el.querySelector("#"+id), NS="http://www.w3.org/2000/svg", me=$("at_me"), trail=$("at_trail"), fx=$("at_fx");
-let cur=0, playing=false, tok=0, pts=[], old=[];
+let cur=0, paused=false, tok=0, pts=[], old=[];
 const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep=ms=>new Promise(r=>setTimeout(r,RM?0:ms));
 const mk=(tag,attrs,par=fx)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);par.appendChild(e);return e;};
-$("at_dots").innerHTML=S.map(()=>"<b></b>").join("");
-function cap(i){const s=S[i];$("at_cn").textContent=`${i+1} / ${S.length}`;$("at_cs").textContent="레 "+s.s;$("at_ct").textContent=s.t;$("at_cd").textContent=s.d;$("at_cq").innerHTML=`${s.q}<small>${s.r}</small>`;$("at_hold").textContent=s.h;[...$("at_dots").children].forEach((b,j)=>b.classList.toggle("on",j===i));}
+const bars=[...el.querySelectorAll(".bmtbars i")];
+function cap(i){ const s=S[i]; el.querySelector(".bmtk").textContent=`${i+1} / ${S.length} · 레 ${s.s}`; el.querySelector(".bmth").textContent=s.t; el.querySelector(".bmtn").textContent=s.d; el.querySelector(".athold").innerHTML=`손에 든 것 <em>${esc(s.h)}</em>`;
+  bars.forEach((b,j)=>{ b.style.transition="none"; b.style.width=j<i?"100%":"0"; }); el.querySelector(".bmtend").hidden=true; }
 function setMe(x,y){me.setAttribute("transform",`translate(${x} ${y})`);}
 const D=a=>a.length?"M"+a.map(p=>p.join(" ")).join(" L"):"";
 function drawTrail(){trail.setAttribute("d",D(pts));$("at_trailOld").setAttribute("d",D(old));}
-async function walk(path,my){for(let i=1;i<path.length;i++){const [x0,y0]=path[i-1],[x1,y1]=path[i];const n=Math.max(1,Math.round(Math.hypot(x1-x0,y1-y0)/2.4));for(let k=1;k<=n;k++){if(my!==tok)return false;const x=x0+(x1-x0)*k/n,y=y0+(y1-y0)*k/n;setMe(x,y);pts.push([+x.toFixed(1),+y.toFixed(1)]);drawTrail();await sleep(16);}}return true;}
+async function walk(path,my){for(let i=1;i<path.length;i++){const [x0,y0]=path[i-1],[x1,y1]=path[i];const n=Math.max(1,Math.round(Math.hypot(x1-x0,y1-y0)/2.4));for(let k=1;k<=n;k++){if(my!==tok)return false;while(paused&&my===tok)await sleep(120);const x=x0+(x1-x0)*k/n,y=y0+(y1-y0)*k/n;setMe(x,y);pts.push([+x.toFixed(1),+y.toFixed(1)]);drawTrail();await sleep(16);}}return true;}
 function others(on){$("at_others").style.opacity=on?1:0;}
 async function effect(f,my){
   if(f==="wash"){for(let r=0;r<3;r++){const c=mk("circle",{cx:150,cy:238,r:8,fill:"none",stroke:"#5b8fa8","stroke-width":1.6});c.animate([{r:8,opacity:.9},{r:22,opacity:0}],{duration:1200,delay:r*350,fill:"forwards"});}}
@@ -12220,19 +12216,26 @@ async function effect(f,my){
   if(f==="end"){const c=mk("circle",{cx:150,cy:276,r:6,fill:"#e98a2b"});c.animate([{r:5,opacity:.4},{r:11,opacity:1},{r:7,opacity:.8}],{duration:1600,iterations:3});const sm=mk("circle",{cx:150,cy:262,r:7,fill:"url(#at_smk)",filter:"url(#at_blur)"});sm.animate([{cy:264,opacity:.8},{cy:236,opacity:0}],{duration:2200,iterations:2});}
 }
 function reset(){fx.innerHTML="";pts=[];old=[];others(true);$("at_goats").style.opacity=0;$("at_lot1").setAttribute("opacity",0);$("at_lot2").setAttribute("opacity",0);$("at_g1").setAttribute("opacity",1);const g2=$("at_g2");g2.setAttribute("x",214);g2.setAttribute("y",220);g2.getAnimations().forEach(a=>a.cancel());g2.setAttribute("opacity",1);}
-async function go(i){const my=++tok;cur=Math.max(0,Math.min(S.length-1,i));cap(cur);reset();
-  for(let j=0;j<cur;j++){S[j].path.forEach(q=>old.push(q));if(j>=2){$("at_goats").style.opacity=1;$("at_lot1").setAttribute("opacity",1);$("at_lot2").setAttribute("opacity",1);} if(S[j].fx==="azazel"){$("at_g2").setAttribute("opacity",0);$("at_g1").setAttribute("opacity",.35);$("at_lot2").setAttribute("opacity",0);} }
-  if(cur>=3&&cur<=5) others(false);
-  const p=S[cur].path;setMe(...p[0]);pts=[p[0]];drawTrail();
-  if(!(await walk(p,my)))return false; await effect(S[cur].fx,my); return my===tok;}
-async function playAll(){playing=true;$("at_play").textContent="멈춤";for(let i=cur;i<S.length&&playing;i++){const ok=await go(i);if(!ok||!playing)break;await sleep(2600);}playing=false;$("at_play").textContent="이어 보기";}
-const stop=()=>{playing=false;$("at_play").textContent="이어 보기";};
-$("at_prev").onclick=()=>{stop();go(cur-1);};
-$("at_next").onclick=()=>{stop();go(cur+1);};
-$("at_play").onclick=()=>{if(playing){stop();tok++;return;} if(cur===S.length-1)cur=0;playAll();};
-  const close=pop=>{ tok++; playing=false; el.remove(); document.body.classList.remove("wcmon"); if(pop!==true) ovDone(close); }; ovOpen(close);
-  el.querySelector(".atx").onclick=()=>close();
-  go(Math.max(0,Math.min(S.length-1,+s0||0))); }
+
+  const vOf=s=>+(s.r.match(/16:(\d+)/)||[0,1])[1];
+  async function go(i){ const my=++tok; cur=Math.max(0,Math.min(S.length-1,i)); cap(cur); reset(); el.querySelectorAll(":scope>.mvnar").forEach(n=>{ if(n._c) n._c(); n.classList.remove("on"); });
+    for(let j=0;j<cur;j++){S[j].path.forEach(q=>old.push(q));if(j>=2){$("at_goats").style.opacity=1;$("at_lot1").setAttribute("opacity",1);$("at_lot2").setAttribute("opacity",1);} if(S[j].fx==="azazel"){$("at_g2").setAttribute("opacity",0);$("at_g1").setAttribute("opacity",.35);$("at_lot2").setAttribute("opacity",0);} }
+    if(cur>=3&&cur<=5) others(false);
+    const st=S[cur], p=st.path; setMe(...p[0]); pts=[p[0]]; drawTrail();
+    const hold=Math.max(5200,Math.min(11000,1800+st.q.length*95)), b=bars[cur]; b.style.transition="none"; b.style.width="0"; void b.offsetWidth;
+    if(!(await walk(p,my))) return false;
+    mvNar(el,st.q,[3,16,vOf(st)],66,hold);
+    await effect(st.fx,my); if(my!==tok) return false;
+    b.style.transition=`width ${hold}ms linear`; b.style.width="100%";
+    let t=0; while(t<hold){ if(my!==tok) return false; if(!paused) t+=150; else b.style.transition="none"; await sleep(150); }
+    return my===tok; }
+  async function run(i){ for(let k=i;k<S.length;k++){ const ok=await go(k); if(!ok) return; } el.querySelector(".bmtend").hidden=false; }
+  const setPause=v=>{ paused=v; const pb=el.querySelector('[data-t="pause"]'); pb.textContent=v?"▶":"❚❚"; pb.setAttribute("aria-label",v?"이어 보기":"멈춤"); };
+  const close=pop=>{ tok++; el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
+  el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; const k=t.dataset.t;
+    if(k==="x") close(); else if(k==="prev"){ setPause(false); run(Math.max(0,cur-1)); } else if(k==="nextS"){ setPause(false); run(Math.min(S.length-1,cur+1)); }
+    else if(k==="pause") setPause(!paused); else if(k==="again"){ setPause(false); run(0); } });
+  run(Math.max(0,Math.min(S.length-1,+s0||0))); }
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-atone]"); if(!b) return; e.preventDefault(); e.stopPropagation(); try{ document.querySelector("#sheetX")?.click(); }catch(e2){} atoneOpen(); });
 const ATONE_CARD=`<button class="bmtc" data-atone="1"><i>▶</i><b>대속죄일</b><small><span>레위기 16장 · 성막 안에서 대제사장 아론의 하루</span></small><em>9장면 따라가기</em></button>`;
 /* ===== 성경 지도 라이브러리(목사님 2026-10-31): 지도가 화면을 차지해 답답하다 → 위에는 주인공 픽셀 배지, 누르면 아래에 그 주인공의 여정 목록.
