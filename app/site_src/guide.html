@@ -70,7 +70,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg p.b{font-size:10.5pt;line-height:1.48;margin:0 0 1.4mm;text-align:justify}
 .pg p.b b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;color:var(--ink)}
 .pg .go{font-size:9.5pt;font-weight:700;margin:1.8mm 0 1mm;padding-left:0.5mm;color:var(--main)}
-.pg .ref{font-size:9.5pt;color:#222;line-height:1.45;margin:0 0 0.7mm 4mm;text-indent:-4mm}
+.pg .ref{font-size:9.5pt;color:#222;line-height:1.45;margin:0 0 0.7mm 4mm;text-indent:-4mm;word-break:keep-all;overflow-wrap:anywhere}
 .pg .ref b{color:#000;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .box{background:var(--gy);border:0.1mm solid var(--gyb);padding:1.1mm 2.2mm;font-size:9pt;line-height:1.4;margin:1.6mm 0 1.2mm}
 .pg .box .h{font-weight:700;font-size:8.6pt;color:var(--ink);margin-bottom:0.6mm}
@@ -331,7 +331,7 @@ ${qt.guide.word?`<p class="b"><b>말뜻</b>&nbsp; ${esc(qt.guide.word)}</p>`:''}
 <p class="sec sans"><span class="n">2</span>읽은 뒤 — 다시 읽을 곳</p>
 ${sec2}
 <p class="go sans">▶ 오른쪽에 씁니다.</p>
-<div class="heard sans">들은 말씀 — 설교를 들은 날<div class="ln"></div></div>
+<div class="heard sans">메모<div class="ln"></div></div>
 <div class="pn">${pageNo(p)}</div>
 </div>`;
 }
@@ -355,6 +355,16 @@ function pageR(p,qt){
 function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</div>`}
 
 /* ── 미리보기와 맞춤 검사 ── */
+/* 한두 글자만 다음 줄로 내려오는 줄은 자간·글자 크기를 조금 줄여 한 줄에 넣는다(최대 7%) */
+function tighten(root){ root.querySelectorAll('.pg .ref, .pg .box .i').forEach(el=>{
+  const lh=parseFloat(getComputedStyle(el).lineHeight); if(!(el.getBoundingClientRect().height>lh*1.5)) return;
+  const probe=document.createElement('span'); probe.style.cssText='position:absolute;white-space:nowrap;visibility:hidden;left:-9999px'; probe.className=el.className; probe.innerHTML=el.innerHTML; probe.style.font=getComputedStyle(el).font; el.parentNode.appendChild(probe);
+  const need=probe.getBoundingClientRect().width, have=el.getBoundingClientRect().width+ (parseFloat(getComputedStyle(el).textIndent)||0)*-1*0; probe.remove();
+  const ratio=need/el.clientWidth; if(ratio>1.07) return;
+  const steps=[[-0.01,1],[-0.02,1],[-0.03,1],[-0.03,0.97],[-0.035,0.95],[-0.04,0.93]];
+  const fs=parseFloat(getComputedStyle(el).fontSize);
+  for(const [ls,f] of steps){ el.style.letterSpacing=ls+'em'; el.style.fontSize=(fs*f)+'px'; if(el.getBoundingClientRect().height<lh*1.5) return; }
+  el.style.letterSpacing=''; el.style.fontSize=''; }) }
 function fillHeard(root,s){root.querySelectorAll('.pg').forEach(pg=>{const h=pg.querySelector('.heard');if(!h)return;const ht=h.getBoundingClientRect().top;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});const slack=(ht-mb)/s/MM;const n=Math.min(7,Math.floor((slack-2)/6.3));for(let i=0;i<n;i++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}})}
 function mmpx(){const d=document.createElement('div');d.style.cssText='position:absolute;width:100mm;height:0;visibility:hidden';document.body.appendChild(d);const w=d.getBoundingClientRect().width/100;d.remove();return w}
 const MM=mmpx();
@@ -363,7 +373,7 @@ function render(){
   $('dh_t').textContent=`${p.m}월 ${p.d}일 · ${p.t}`; $('dh_s').textContent=`${p.no}일째 · ${qt.sub||p.sub} · ${QLAB[qOf(p)]}${(p.end&&p.end.length)?' · '+p.end.join('·')+' 마치는 날':''}`;
   const box=$('scalebox'); const avail=box.clientWidth; const full=296*MM; const s=Math.min(1,avail/full);
   const sc=$('scaled'); sc.style.transform=`scale(${s})`; sc.style.width=full+'px'; box.style.height=(210*MM*s)+'px';
-  sc.innerHTML=spread(p,qt);
+  sc.innerHTML=spread(p,qt); tighten(sc);
   // 맞춤: 각 쪽에서 아래 고정 상자 위 여유
   const res=[]; sc.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});res.push((abt-mb)/s/MM)});
   fillHeard(sc,s);
@@ -410,11 +420,11 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
     const mode=$('selPrint').value, p=PLAN[cur];
     let list=PLAN.filter((x,i)=>mode==='day'?i===cur:mode==='month'?x.m===p.m:mode==='quarter'?qOf(x)===qOf(p):true).filter(x=>get(x.no));
     if(mode==='day'&&!list.length) list=[p];
-    $('printroot').innerHTML=list.map(x=>pageL(x,get(x.no)||blank())+pageR(x,get(x.no)||blank())).join('');
+    const parts=[];
     // 모든 날 맞춤 검사(숨겨 그려 잼)
     const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[]; const heardN=[];
-    list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
-    probe.remove(); $('printroot').querySelectorAll('.pg .heard').forEach((h,i)=>{for(let k=0;k<(heardN[i]||0);k++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}});
+    list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); parts.push(probe.innerHTML); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
+    probe.remove(); $('printroot').innerHTML=parts.join(''); $('printroot').querySelectorAll('.pg .heard').forEach((h,i)=>{for(let k=0;k<(heardN[i]||0);k++){const d=document.createElement('div');d.className='ln';h.appendChild(d)}});
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
     $('status').textContent=list.length+'일치 · '+(list.length*2)+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음, 배경 그래픽 켜기';
     setTimeout(()=>window.print(),150);
