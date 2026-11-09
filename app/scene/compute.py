@@ -7,7 +7,8 @@ def days():
         for d,dd in enumerate(wk): yield 'rj',f"{w}-{d}",dd['ch'],dd['label']
     for i,dd in enumerate(P365): yield 'y365',f"{i//7+1}-{i%7}",dd['ch'],dd['label']
 EYE={}
-for k,v in json.load(open(R+'srj/all.json')).items():
+import os
+for k,v in (json.load(open(R+'srj/all.json')) if os.path.exists(R+'srj/all.json') else {}).items():
     w,d=map(int,k.split('-')); EYE[('rj',f"{w}-{d-1}")]=v['e']
 A=json.load(open(R+'s365b/all.json'))
 for i,dd in enumerate(P365):

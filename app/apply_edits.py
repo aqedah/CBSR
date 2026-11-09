@@ -8,7 +8,7 @@ from edit_targets import FILES
 R=os.path.dirname(os.path.abspath(__file__)); os.chdir(R)
 IN=sorted(glob.glob('edits/inbox/*.json'))
 if not IN: raise SystemExit(0)
-FMT={'ux/story_rj.json':dict(indent=1),'ux/story_cards.json':dict(indent=1),'srj/all.json':{},'s365b/all.json':{}}
+FMT={'ux/story_cards.json':dict(indent=1),'s365b/all.json':{}}
 raw={f:open(f,encoding='utf-8').read() for f in FILES if os.path.exists(f)}
 NL={f:r.endswith('\n') for f,r in raw.items()}
 dirty=set()
@@ -51,7 +51,7 @@ def apply_img(e):
         cards[ci]['img']=e['img']; raw[f]=json.dumps(o,ensure_ascii=False,**FMT[f]); dirty.add(f); return f'반영: {f} 카드 {ci+1} 그림 {e["img"]}'
     return '못 찾음(그날 원고 없음)'
 def apply_status(e):
-    pl=e.get('plan') or 'rj'; d=str(e.get('day'))
+    pl=e.get('plan') or 'y365'; d=str(e.get('day'))
     if e.get('st'): status.setdefault(pl,{})[d]={'st':e['st'],'memo':e.get('memo',''),'at':time.strftime('%Y-%m-%d')}
     else: status.get(pl,{}).pop(d,None)
     return '반영: 상태 '+(e.get('st') or '지움')

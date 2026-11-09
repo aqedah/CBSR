@@ -29,7 +29,7 @@ if os.path.exists('site/index.html'):
   bad=[i for i,e in E.items() if e['reviewStatus'] in ('hold','out') and i in ids]
   P(f'- 앱 그림 목록(PHOTOS) {len(ids)}장 가운데 보류·제외 그림: **{len(bad)}장** {"✓" if not bad else "✗ "+", ".join(bad)}')
 fixed=[]
-for f in ('ux/story_cards.json','ux/story_rj.json'):
+for f in ('ux/story_cards.json',):
   for m in re.finditer(r'"img":\s*"(g\d\d_\d\d)"',open(f).read()):
     i=m.group(1)
     if i in E and E[i]['reviewStatus'] in ('hold','out'): fixed.append((f.split('/')[-1],i))

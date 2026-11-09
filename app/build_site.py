@@ -87,7 +87,7 @@ for i in range(0,len(P365),7):
     tt=f"{AB[a[0]-1]} {a[1]}–{b[1]}" if a[0]==b[0] else f"{AB[a[0]-1]} {a[1]} – {AB[b[0]-1]} {b[1]}"
     WK.append({"t":tt,"story":"","christ":""})
 J=lambda o:json.dumps(o,ensure_ascii=False,separators=(',',':'))
-data+='const PLAN_INFO={rj:{name:"리딩지저스 45주",short:"45주",src:"리딩지저스 45주 성경통독표(웨스트민스터코리아)",start:"2026-02-23"},y365:{name:"365 성경통독",short:"365일",src:"2026 365일 성경통독표",start:"2026-01-01"}};\n'
+data+='const PLAN_INFO={y365:{name:"365 성경통독",short:"365일",src:"2026 365일 성경통독표",start:"2026-01-01"}};\n'
 _P27=json.load(open('plan365_2027.json')); _D27={}
 for _i,(_x,_y) in enumerate(zip(P365,_P27)):
     if _x['ch']!=_y['ch'] or _x['label']!=_y['label']: _D27[_i+1]={"spec":spec365(_y['ch']),"label":_y['label'],"ch":_y['ch'],"topic":_y.get('topic','')}
@@ -100,25 +100,20 @@ for i,d in enumerate(P365):
     if not v: continue
     GD[f"{w}-{j}"]=v['g']; EY[f"{w}-{j}"]=v['e']
     CQ[f"{w}-{j+1}"]=[{k:q[k] for k in ('t','kind','q','o','a','h','ref')} for q in v['qz']]
-# 리딩지저스에서 손으로 다듬은 QT 질문(요 3–4장: 니고데모·사마리아 여자, 범위·붙잡을 구절 포함)을 365 같은 범위 날에 옮김
-_RJ=json.load(open('srj/all.json'))
+# 요 3–4장 QT 질문은 s365b/all.json 308일에 옮겨 둠(리딩지저스 삭제 2026-11-10). 읽기 도구(TOOLX)만 옛 열쇠에서 가져옴
+Y_TOOL_FROM={}
 for _i,_d in enumerate(P365):
-    if [tuple(x) for x in _d['ch']]==[(43,3),(43,4)]: EY[f"{_i//7+1}-{_i%7}"]=_RJ['35-1']['e']; Y_TOOL_FROM={f"y365:{_i//7+1}-{_i%7}":"rj:35-0"}
+    if [tuple(x) for x in _d['ch']]==[(43,3),(43,4)]: Y_TOOL_FROM={f"y365:{_i//7+1}-{_i%7}":"rj:35-0"}
 TRV=hashlib.sha1((open('bible_snb.b64').read()[:3000]+open('bible_shg.b64').read()[:3000]).encode()).hexdigest()[:8] if os.path.exists('bible_snb.b64') else '1'
 data+='window.TR_VER="'+TRV+'";\n'
 data+='const BOOKINFO='+open('books/all.json').read()+';\n'
 data+='const RJ_PLAN=PLAN.plan, RJ_WEEKS=WEEKS.slice(), GUIDE={}, EYE={};\n'
 data+='/* 시편은 "편" */ PLAN.plan.forEach(w=>w.forEach(d=>{ d.label=d.label.replace(/시편 ([0-9–\\-]+)장/g,"시편 $1편"); }));\n'
 data+='window.STUDY_V="0";\n'  # 원문 연구는 MILALWV로 옮김(2026-10-23)
-data+='window.CBSR_MODE=(()=>{try{const u=new URLSearchParams(location.search).get("p"); if(u==="rj"||u==="365"){const m=u==="rj"?"rj":"y365"; localStorage.setItem("cbsr-mode",m); return m;} return localStorage.getItem("cbsr-mode")==="y365"?"y365":"rj";}catch(e){return "rj";}})();\nconst DAYC={};\n'
+data+='/* 리딩지저스 삭제(목사님 2026-11-10): 365 통독만 */ window.CBSR_MODE="y365"; try{ localStorage.setItem("cbsr-mode","y365"); }catch(e){}\nconst DAYC={};\n'
 data+='if(window.CBSR_MODE==="y365"){const R=(o,n)=>{for(const k in o)delete o[k];Object.assign(o,n);};\n'
 data+=f'PLAN.plan={J(W365)};SUMMARY.length=0;SUMMARY.push(...{J(SW)});WEEKS.length=0;WEEKS.push(...{J(WK)});\n'
 data+=f'R(LEITWORT,{open("leitwort365.json").read()});R(EMPH,{open("emph365.json").read()});R(INCL,{open("incl365.json").read()});PLAN.plan.forEach(w=>w.forEach(d=>{{ d.label=d.label.replace(/시편 ([0-9–\\-]+)장/g,"시편 $1편"); }}));R(DETAIL,{{}});R(CURATED,{J(CQ)});Object.assign(GUIDE,{J(GD)});Object.assign(EYE,{J(EY)});ARC_LIST.length=0;Object.assign(DAYC,{J(DC)});}}\n'
-ARJ=json.load(open('srj/all.json')); GR={};ER={};CR={}
-for k,v in ARJ.items():
-    w,d=map(int,k.split('-')); GR[f"{w}-{d-1}"]=v['g']; ER[f"{w}-{d-1}"]=v['e']
-    if v['qz']: CR[k]=[{kk:q[kk] for kk in ('t','kind','q','o','a','h','ref')} for q in v['qz']]
-data+=f'if(window.CBSR_MODE!=="y365"){{Object.assign(GUIDE,{J(GR)});Object.assign(EYE,{J(ER)});const CR={J(CR)};for(const k in CR) if(!CURATED[k]) CURATED[k]=CR[k];}}\n'
 import glob as _g
 CK=json.load(open('ux/christ_out.json')); MN=json.load(open('ux/mean_out.json')); GF={}
 for f in sorted(_g.glob('ux/guide_out*.json')): GF.update(json.load(open(f)))
@@ -134,12 +129,7 @@ data+='const PARA='+open('para/all.json').read()+';\n'
 data+='const SCX='+open('scene/scx.json').read()+';\n'
 data+='const TOOLX='+(open('tools/toolx.json').read() if os.path.exists('tools/toolx.json') else '{}')+';\n'
 data+='if(window.CBSR_MODE==="y365"){const F='+J(Y_TOOL_FROM)+';for(const k in F) if(TOOLX[F[k]]) TOOLX[k]=TOOLX[F[k]];}\n'
-data+='const RJDESC='+(open('rjdesc/rjdesc.json').read() if os.path.exists('rjdesc/rjdesc.json') else '{}')+';\n'
 data+='const CHRIST_K='+J({k:v['k'] for k,v in CK.items()})+';\n'
-FIXD={"35-1":{"god":"밤에 예수님을 찾아온 유대인의 지도자 니고데모와 우물가에서 예수님의 말씀을 듣게 된 사마리아 여자는 서로 다른 자리에서 예수님을 만납니다. 니고데모는 먼저 예수님을 찾아왔고(3:2), 사마리아 여자에게는 예수님이 먼저 말을 거셨습니다(4:7). 예수님은 니고데모에게 인자가 들려야 하며 믿는 자가 영생을 얻는다고 말씀하시고(3:14–15), 사마리아 여자에게는 자신이 메시아이심을 밝히십니다(4:25–26). 여자의 증언으로 많은 사람이 예수님을 믿고(4:39), 이어 예수님의 말씀을 직접 듣고 그분을 세상의 구주로 고백합니다(4:41–42). 서로 다른 사람들에게 자신을 드러내시고 생명의 말씀을 전하시는 예수님을 봅니다.","christ":"요한복음은 창세기처럼 '태초에'라는 말로 시작합니다(요 1:1; 창 1:1). 만물이 말씀으로 말미암아 지은 바 되었고(1:3), 그 말씀이 육신이 되어 우리 가운데 거하셨습니다(1:14). 니고데모에게 말씀하신 거듭남(3:3)과 사마리아 여자에게 약속하신 샘물(4:14)은 서로 다른 그림이지만, 둘 다 사람이 스스로 만들어 낼 수 없는 생명을 가리킵니다. 창조의 말씀이신 예수님이 사람들에게 생명을 주시는 분으로 나타나십니다."}}
-RJDAY=json.load(open('ux/christ_rjday.json'))
-data+='if(window.CBSR_MODE!=="y365"){const RD='+J(RJDAY)+';for(const k in RD){ if(!DAYC[k]) DAYC[k]=RD[k].t; if(!CHRIST_K["rjd:"+k]) CHRIST_K["rjd:"+k]=RD[k].k; }}\n'
-data+='if(window.CBSR_MODE!=="y365"){const FX='+J(FIXD)+';for(const k in FX) DETAIL[k]=Object.assign({},DETAIL[k]||{},FX[k]); CHRIST_K["rjd:35-0"]="흐름";}\n'
 
 data+='(()=>{ const FX='+J({k:v['fix'] for k,v in CK.items() if v.get('fix')})+', MN='+J(MN)+', GF='+J(GF)+';\n'
 data+=""" const M=window.CBSR_MODE==="y365"?"y365":"rj";
@@ -170,9 +160,6 @@ _FXA=json.load(open('ux/photo_fx.json')) if os.path.exists('ux/photo_fx.json') e
 for _p in _PH:
     if _p['id'] in _FXA: _p['fx']=_FXA[_p['id']]  # 11/4: 세로 화면에서 인물 얼굴이 잘리지 않게(ux/photo_fx_auto.py)  # 보류·제외는 자동·지정·고정 어느 길로도 앱에 나오지 않음
 data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags','fx','mood','set','sets','scope','refs','kw','deny','role','tm','ak','ap','rs','va','bu','au','rl','er','rq','ac','gp')} for p in _PH])+';\nconst STORYC='+J({k:v for k,v in _SC.items() if not k.startswith('_')})+';\n'
-_SRJ=json.load(open('ux/story_rj.json')) if os.path.exists('ux/story_rj.json') else {}
-_SRJ={k:v for k,v in _SRJ.items() if not k.startswith('_')}
-data+='const STORYC_RJ='+J(_SRJ)+';\n'
 data+='const DSTATUS='+(open('edits/status.json',encoding='utf-8').read() if os.path.exists('edits/status.json') else '{}')+';\n'  # 날짜별 승인 상태(관리자 상태판)
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
@@ -246,7 +233,7 @@ SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="
 shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
 open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
-VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('Object.defineProperty(window,"localStorage"','/* v1 기록 가져오기: v2를 처음 열 때 한 번, v1(앞머리 없는 기록)을 v2: 쪽에 복사(이미 있는 v2 기록은 그대로) */if(!L.getItem("v2:cbsr-v1import")){var K=[];for(var i=0;i<L.length;i++){var k=L.key(i);if(k&&/^(cbsr-|rjnote:)/.test(k))K.push(k);}K.forEach(function(k){if(L.getItem("v2:"+k)==null)L.setItem("v2:"+k,L.getItem(k));});L.setItem("v2:cbsr-v1import",new Date().toISOString()+" "+K.length);}try{for(var j=0;j<L.length;j++){var kk=L.key(j);if(kk&&/^(cbsr-|rjnote:)/.test(kk)&&kk!=="cbsr-login-v1"){window.CBSR_HADV1=1;break;}}}catch(e){}window.__rawLS=L;Object.defineProperty(window,"localStorage"',1).replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search))S.setItem("cbsr-mode","y365");else if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","rj");if(0)')
+VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('Object.defineProperty(window,"localStorage"','/* v1 기록 가져오기: v2를 처음 열 때 한 번, v1(앞머리 없는 기록)을 v2: 쪽에 복사(이미 있는 v2 기록은 그대로) */if(!L.getItem("v2:cbsr-v1import")){var K=[];for(var i=0;i<L.length;i++){var k=L.key(i);if(k&&/^(cbsr-|rjnote:)/.test(k))K.push(k);}K.forEach(function(k){if(L.getItem("v2:"+k)==null)L.setItem("v2:"+k,L.getItem(k));});L.setItem("v2:cbsr-v1import",new Date().toISOString()+" "+K.length);}try{for(var j=0;j<L.length;j++){var kk=L.key(j);if(kk&&/^(cbsr-|rjnote:)/.test(kk)&&kk!=="cbsr-login-v1"){window.CBSR_HADV1=1;break;}}}catch(e){}window.__rawLS=L;Object.defineProperty(window,"localStorage"',1).replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search))S.setItem("cbsr-mode","y365");else if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","y365");if(0)')
 exec(open('review_build.py').read())
 open(OUT+'/demo.html','w').write(open('site_src/demo.html').read().replace('<!--FB-->',_GFB))  # 스토리 QT 체험판(2026-10-30)
 import base64 as _b64,gzip as _gz

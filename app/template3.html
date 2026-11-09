@@ -5138,7 +5138,7 @@ function acctHTML(){
   /* 미리 보기 날짜를 쓰는 동안에는 연동이 꺼져 있음 — 예전에는 '새로 등록했습니다'라고 잘못 알렸음(11/2) */
   if(NOWOFF&&!DEMO) return `<div class="acct"><p><b>지금은 미리 보기 날짜(${esc(sessionStorage.getItem("cbsr-now")||"")})로 보고 있어 연동이 꺼져 있습니다.</b></p><p class="lead">미리 보기 중에 남긴 기록은 이 기기의 임시 사본에만 있고 다른 기기로 넘어가지 않습니다. 연동하려면 미리 보기를 끄고 다시 여세요.</p><div class="row"><button class="btn small" id="acctNowOff">미리 보기 끄기</button></div></div>`;
   if(SYNC.loggedIn()){ const t=SYNC.lastSaved();
-    return `<div class="acct"><p><b>${esc(SYNC.name())}</b> 이름으로 기록이 이어지고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰·태블릿·컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 그대로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 연동 끊기</button></div></div>`; }
+    return `<div class="acct"><p><b>${esc(SYNC.name())}</b> 이름으로 기록이 이어지고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰·태블릿·컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 그대로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 통독 기록이 모두 함께 옮겨집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 연동 끊기</button></div></div>`; }
   return `<div class="acct"><p>휴대폰·태블릿·컴퓨터에서 <b>같은 이름과 숫자 4자리</b>를 넣으면 기록이 하나로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다. 회원 가입은 필요 없습니다.</p>
    <div class="acctform"><input id="acctName" type="text" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name"><input id="acctPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리"><button class="btn small" id="acctIn">시작하기</button></div>${window.CBSR_V2&&SYNC.together?`<label class="tgchk"><input type="checkbox" id="acctShare"${PROF.share?" checked":""}> 함께 읽기에 내 이름 보이기 <small>(스토리 QT에서 교우들이 내 별명과 '아멘'을 봅니다. 나중에 메뉴에서 바꿀 수 있습니다)</small></label>`:""}
    <p class="lead">같은 이름을 쓰는 분이 있을 수 있으니, 숫자는 생일처럼 남이 짐작하기 쉬운 것은 피해 주세요. 이름과 숫자를 잊으면 기록을 다시 찾을 수 없습니다.</p><p class="lead" id="acctMsg" role="status"></p></div>`; }
@@ -6825,7 +6825,7 @@ function renderDash(){ document.documentElement.classList.add("admwide"); const 
   let h=`<section class="sec dash"><div class="dhd"><button class="linkbtn" id="adminBack">‹ 돌아가기</button><h2>관리자</h2><div class="dtabs">${tabs}</div></div><div id="edBox"></div>`;
   if(T==="board"){ const rows=dashRows(), F=view.admF||"all", has=rows.filter(r=>r.C).length, ok=rows.filter(r=>r.st&&r.st.st==="승인").length;
     const fl=r=>F==="all"||(F==="has"&&r.C)||(F==="none"&&!r.C)||(F==="todo"&&r.C&&!(r.st&&r.st.st==="승인"))||(F==="hold"&&r.st&&r.st.st==="보류");
-    h+=`<div class="dsum"><b>${esc(PI.name)}</b> · 날 ${rows.length} · 원고 있음 ${has} · 승인 ${ok}<span class="dplan">${MODE==="rj"?`<a href="?p=365&admin=1">365 통독으로</a>`:`<a href="?p=rj&admin=1">리딩지저스로</a>`}${MODE==="y365"?` · <a href="?p=365&admin=1&pv=${PV()==="A"?"B":"A"}">${PV()==="A"?"2028판(B) 보기":"2027판(A) 보기"}</a>`:""}</span></div>
+    h+=`<div class="dsum"><b>${esc(PI.name)}</b> · 날 ${rows.length} · 원고 있음 ${has} · 승인 ${ok}<span class="dplan">${MODE==="y365"?`<a href="?p=365&admin=1&pv=${PV()==="A"?"B":"A"}">${PV()==="A"?"2028판(B) 보기":"2027판(A) 보기"}</a>`:""}</span></div>
      <div class="dfilt"><button class="chip" data-dmall="0">모두 펼치기</button><button class="chip" data-dmall="1">모두 접기</button> · ${[["all","전체"],["has","원고 있음"],["none","원고 없음"],["todo","승인 전"],["hold","보류"]].map(([k,l])=>`<button class="chip${F===k?" on":""}" data-df="${k}">${l}</button>`).join("")}</div>
      <table class="dtab2"><thead><tr><th>날</th><th>날짜</th><th>본문</th><th>원고</th><th>상태</th></tr></thead><tbody>${(()=>{ /* 달마다 접기(목사님 2026-10-30): 처음에는 이번 달(또는 열어 둔 날의 달)만 펼침 */
        const mk=r=>{ const t=dateOf(r.w,r.d); return t.getFullYear()+"-"+(t.getMonth()+1); }, FR=rows.filter(fl), now=NOW(), cur=now.getFullYear()+"-"+(now.getMonth()+1);
@@ -6868,9 +6868,9 @@ function bindDash(m){ if(!m.querySelector(".dash")) return;
       view.w=vw; view.d=vd; }; }); }
 /* 관리자: 꼭 필요한 주소 모음 */
 function adminLinks(){
-  const G=[["지금 쓰는 앱",[["./","v2 · 첫 화면(2026-10-29부터)","리딩지저스 2026 → 2027년 1월 4일부터 365 통독"],["v1.html","v1 · 이전 화면","옛 기록 확인용으로 남겨 둠"]]],
-    ["미리 보기",[["v2.html?now=2027-01-01","v2를 2027년 1월 1일로 열기","날짜를 바꿔 본 뒤에는 아래 '오늘 날짜로 되돌리기'"],["v2.html?pv=B","v2 · 2028판 카드","2028년에 쓸 B판"],["v2.html?p=rj","v2 · 리딩지저스","2027년에는 메뉴에서 숨김, 이 주소로만 열림"],["v2.html?now=0","오늘 날짜로 되돌리기",""]]],
-    ["검토할 것",[["rj.html","리딩지저스 카드 (36–45주)","2026-10-29 남은 본문까지 모두 승인"],["review.html","365 카드 검토 (날마다 중심 한 줄·카드 흐름)",""],["gallery.html","그림 목록","그림마다 어느 카드에 쓰였는지"]]]];
+  const G=[["지금 쓰는 앱",[["./","v2 · 첫 화면(2026-10-29부터)","365 통독"],["v1.html","v1 · 이전 화면","옛 기록 확인용으로 남겨 둠"]]],
+    ["미리 보기",[["v2.html?now=2027-01-01","v2를 2027년 1월 1일로 열기","날짜를 바꿔 본 뒤에는 아래 '오늘 날짜로 되돌리기'"],["v2.html?pv=B","v2 · 2028판 카드","2028년에 쓸 B판"],["v2.html?now=0","오늘 날짜로 되돌리기",""]]],
+    ["검토할 것",[["review.html","365 카드 검토 (날마다 중심 한 줄·카드 흐름)",""],["gallery.html","그림 목록","그림마다 어느 카드에 쓰였는지"]]]];
   return `<h2>주소 모음</h2><div class="admlinks">${G.map(([h,L])=>`<p class="admlh">${h}</p>`+L.map(([u,t,d])=>`<a class="admlk" href="${u}" target="_blank" rel="noopener"><b>${t}</b>${d?`<span>${d}</span>`:""}</a>`).join("")).join("")}</div>`; }
 /* 관리자 */
 function renderAdmin(){ if(window.CBSR_V2) return renderDash(); setTimeout(loadAdmin,0); setTimeout(edPanel,0);
@@ -8375,7 +8375,7 @@ const TOUR=window.CBSR_V2?[
  {sel:"#menuBtn",t:"메뉴",d:"통독표와 성경 번역, 화면 설정을 바꿉니다. 둘러보기와 의견 보내기도 여기에 있습니다."}]:[
  {sel:"#strip",t:"날짜",d:"날짜 칸을 누르면 그날 본문으로 갑니다. 위의 주차 제목을 누르면 다른 주를 고르거나 장으로 찾을 수 있습니다."},
  {sel:"#openText, #bible",t:"오늘 본문",d:"여기서 오늘 본문을 펼쳐 읽습니다. 절을 누르면 형광펜을 칠할 수 있고, 점선 밑줄 친 말을 누르면 풀이가 나옵니다."},
- {sel:".rjsum,.help30",t:"오늘 이야기 · 읽기 전 도움",d:"리딩지저스 교재가 있는 날은 오늘 본문 요약이 세 줄 보이고, 더 보기를 누르면 전부 나옵니다. 없는 날은 지금 어디쯤인지, 지난 이야기, 읽으면서 찾을 것이 접혀 있습니다."},
+ {sel:".rjsum,.help30",t:"오늘 이야기 · 읽기 전 도움",d:"지금 어디쯤인지, 지난 이야기, 읽으면서 찾을 것이 접혀 있습니다."},
  {sel:".helpzone",t:"읽은 뒤에",d:"본문 요약, 오늘 알아둘 인물·곳·말, 지도가 모여 있습니다."},
  {sel:"#quizSec",t:"퀴즈",d:"읽은 내용을 퀴즈로 확인합니다. 틀리면 힌트가 나오고 본문으로 돌아가 다시 찾습니다."},
  {sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 '오늘 통독 완료'를 누릅니다. 진행률이 올라갑니다."},
@@ -8424,7 +8424,8 @@ if(window.SYNC&&SYNC.available&&SYNC.photos) setTimeout(()=>SYNC.photos.get().th
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&MODE==="y365"&&Math.max(2026,NOW().getFullYear())>ED_Y){ try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} location.reload(); } });
 /* 2027년부터 v2는 365 통독만 둡니다(목사님 결정 2026-10-28). 리딩지저스 마지막 주(2027-01-03)가 지나면 365로 옮기고 메뉴에서 감춥니다. 지난 기록은 ?p=rj 로 볼 수 있습니다 */
 /* 11/4 목사님: 2027 통독은 1/1(금)부터 — 앱도 그날 바꿈 */
-const RJ_OFF=()=>!!window.CBSR_V2&&NOW()>=new Date("2027-01-01T00:00:00");
+/* 2026-11-10 목사님: 리딩지저스 삭제 — 365 통독만 둠(원고 파일도 지움) */
+const RJ_OFF=()=>true;
 /* 11/4 목사님: 1/1 정식 출시부터 리딩지저스·옛 365판은 없앰(최신 통독표만). 기기에 저장된 기록은 지우지 않음 */
 if(RJ_OFF()&&MODE==="rj"){ try{ localStorage.setItem("cbsr-mode","y365"); }catch(e){} const u=new URL(location.href); u.searchParams.set("p","365"); location.replace(u.toString()); }
 if(window.CBSR_V2) v2Nav(); if(window.CBSR_V2) setTimeout(()=>{ switchNotice(); welcomeTour(); },1200);
