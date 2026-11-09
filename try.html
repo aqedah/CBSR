@@ -2066,6 +2066,8 @@ body.wcmon{overflow:hidden}
 .wclg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}@media(min-width:600px){.wclg{grid-template-columns:repeat(5,1fr)}}.wclg button{padding:0;border:0;aspect-ratio:1;background:#2a2119;border-radius:6px;overflow:hidden}.wclg img{width:100%;height:100%;object-fit:cover;display:block}
 .wclc{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:2px 0 10px}.wclc::-webkit-scrollbar{display:none}.wclc button{flex:none;border:1px solid rgba(255,255,255,.18);background:transparent;color:#d9cdbb;border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:600}.wclc button.on{background:#f3ece0;color:#2a2119;border-color:#f3ece0}
 .wclq{width:100%;box-sizing:border-box;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#f3ece0;font-size:16px;padding:0 12px;margin:2px 0 12px}.wcle{color:#a99a85;font-size:14px;margin:18px 2px}
+.wchlrow{display:flex;align-items:center;gap:10px;min-width:0}.wchlrow .wcsw{display:flex;gap:8px}.wchlrow .wcsw button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.25)}.wchlrow .wcsw button.on{border-color:#fff;box-shadow:0 0 0 2px var(--c)}.wchlrow small{flex:1;min-width:0;font-size:12.5px;color:#c9b99f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wchlclr{flex:none;height:34px;padding:0 12px;border-radius:9px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#f3ece0;font-size:13px;font-weight:600}
+.wcstage.paint .wcbox{border-style:solid;border-color:rgba(226,184,116,.55)}.wcstage.paint .wchd{display:none}.wcstage.paint .wccv{cursor:pointer}
 .wcthumbs .wcadd{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;opacity:1;border:1.5px dashed rgba(226,184,116,.7);background:transparent;color:#E2B874}.wcadd b{font-size:20px;line-height:1;font-weight:400}.wcadd small{font-size:10.5px;font-weight:700}
 .wcthumbs img{width:100%;height:100%;object-fit:cover;display:block}
 .wcfs{display:flex;align-items:center;gap:10px}.wcfs button{width:52px;height:36px;border-radius:9px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#f3ece0;font-weight:700}.wcfsv{min-width:46px;text-align:center;font-size:13.5px;color:#c9b99f}
@@ -13249,11 +13251,11 @@ function wcDraw(cv,o,im){ const [,,W,H]=WC_SIZE.find(z=>z[0]===o.size), x=cv.get
     const lw=o.bw?BW:Math.max(...F.L.map(l=>x.measureText(l).width),260), X0=CEN?(W-lw)/2:M, bTop=ty-40, bBot=ty+tH+10+40+12+(mineL.length?40+(mineL.length-1)*48+36:0);
     const E=o.look==="paper"?76:56, ox=Math.max(E-X0,Math.min(W-E-X0-lw,o.dx||0)), oy=Math.max(E-bTop,Math.min(H-E-bBot,o.dy||0));
     o.tb={x:X0+ox-20,y:bTop+oy-20,w:lw+40,h:bBot-bTop+40,top:bTop+oy,bot:bBot+oy,ox,oy,lw}; if(dry) return o.tb;
-    x.save(); x.translate(ox,oy); const mid=X0+lw/2; if(bar){ x.fillStyle=bar; x.fillRect(CEN?mid-36:M,ty-26,72,4); }
+    o._wr=[]; x.save(); x.translate(ox,oy); const mid=X0+lw/2; if(bar){ x.fillStyle=bar; x.fillRect(CEN?mid-36:M,ty-26,72,4); }
     x.font=`${FW} ${F.s}px ${FF}`;
     F.L.forEach((l,i)=>{ const by=ty+F.s*1.12+i*F.s*1.62; let cx=CEN?mid-x.measureText(l).width/2:X0; const ws=l.split(" ");
       ws.forEach((wd,j)=>{ const ww=x.measureText(wd).width, c=o.hl&&o.hl[k];
-        x.fillStyle=c?(o.look==="over"?WC_TC[c][0]:WC_TC[c][1]):col; x.fillText(wd,cx,by); cx+=ww+sp; k++; }); }); /* 11/5 목사님: 칠하기는 글자 색 */
+        x.fillStyle=c?(o.look==="over"?WC_TC[c][0]:WC_TC[c][1]):col; x.fillText(wd,cx,by); if(o._wr) o._wr.push({k,x:cx+ox,y:by-F.s*.95+oy,w:ww,h:F.s*1.25}); cx+=ww+sp; k++; }); }); /* 11/5 목사님: 칠하기는 글자 색 */
     let ry=ty+tH+10+40; x.fillStyle=refCol; x.font=`600 32px "IBM Plex Sans KR",sans-serif`; if(CEN){ x.textAlign="center"; x.fillText(ref,mid,ry); x.textAlign="left"; } else x.fillText(ref,M,ry);
     if(mineL.length){ let my=ry+40; x.font=`500 32px "IBM Plex Sans KR",sans-serif`; if(CEN){ x.fillStyle=mineCol; x.textAlign="center"; mineL.forEach((l,i)=>x.fillText(l,mid,my+36+i*48)); x.textAlign="left"; } else { x.fillStyle=refCol; x.fillRect(M,my+6,4,mineL.length*48-14); x.fillStyle=mineCol; mineL.forEach((l,i)=>x.fillText(l,M+28,my+36+i*48)); } }
     x.restore(); return o.tb; };
@@ -13312,7 +13314,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   box.innerHTML=`<div class="wcmtop"><button class="wcmx" aria-label="닫기">✕</button><b>말씀 카드</b><button class="wckp${a.wcid?" kept":""}">${a.wcid?"보관됨 ✓":"보관"}</button><button class="wced" aria-pressed="false">꾸미기</button><button class="wccx" hidden>취소</button></div>
    <div class="wcstage"><canvas class="wccv"></canvas><div class="wcbox" hidden><i class="wchd l" aria-hidden="true"></i><i class="wchd r" aria-hidden="true"></i></div><div class="wcedh" hidden>글이나 그림을 끌어 옮기고, 두 손가락으로 크기를 바꿉니다</div><button class="wcnav l" aria-label="앞 그림">‹</button><button class="wcnav r" aria-label="다음 그림">›</button></div><div class="wcthumbs" role="listbox" aria-label="그림 고르기"></div>
    <div class="wctabs" role="tablist" hidden>${[["size","비율"],["font","글꼴"],["line","줄"],["hl","칠하기"],["sh","어둡기"]].concat(a.mine?[["mine","내 한 줄"]]:[]).map(([k,t],i)=>`<button role="tab" data-tab="${k}" class="${i?"":"on"}">${t}</button>`).join("")}</div>
-   <div class="wcopts"><label data-t="size">비율</label>${seg("size",WC_SIZE.map(z=>[z[0],`<i class="wcrat" style="width:${Math.round(18*z[2]/z[3])}px;height:18px"></i>${z[1]}`]),o.size,"wcratio",'data-t="size"')}<div class="wcpair" data-t="font">${seg("ff",[["serif","명조"],["sans","고딕"]],o.ff)}${seg("fw",[["l","가늘게"],["m","보통"],["b","굵게"]],o.fw)}</div><div class="wcpair" data-t="line">${seg("al",[["left","왼쪽"],["center","가운데"]],o.al)}<button class="wcpaint wcbrk"><span>줄 나누기</span><em></em></button></div><button class="wcpaint" data-t="hl"><span>칠할 낱말 고르기</span><em></em></button>${seg("sh",[["lo","약하게"],["mid","보통"],["hi","진하게"]],o.sh,"",'data-t="sh"')}${a.mine?`<button class="wcmine${o.mineOn?" on":""}" data-t="mine" aria-pressed="${o.mineOn}"><span>${esc(a.mine)}</span><em>${o.mineOn?"넣음":"뺌"}</em></button>`:""}</div>
+   <div class="wcopts"><label data-t="size">비율</label>${seg("size",WC_SIZE.map(z=>[z[0],`<i class="wcrat" style="width:${Math.round(18*z[2]/z[3])}px;height:18px"></i>${z[1]}`]),o.size,"wcratio",'data-t="size"')}<div class="wcpair" data-t="font">${seg("ff",[["serif","명조"],["sans","고딕"]],o.ff)}${seg("fw",[["l","가늘게"],["m","보통"],["b","굵게"]],o.fw)}</div><div class="wcpair" data-t="line">${seg("al",[["left","왼쪽"],["center","가운데"]],o.al)}<button class="wcpaint wcbrk"><span>줄 나누기</span><em></em></button></div><div class="wchlrow" data-t="hl"><span class="wcsw">${Object.keys(WC_HLC).map((k,i)=>`<button data-c="${k}" class="${i?"":"on"}" style="--c:${WC_HLC[k]}" aria-label="${WC_TN[k]}"></button>`).join("")}</span><small>카드의 낱말을 누르세요</small><button class="wchlclr">지우기</button></div>${seg("sh",[["lo","약하게"],["mid","보통"],["hi","진하게"]],o.sh,"",'data-t="sh"')}${a.mine?`<button class="wcmine${o.mineOn?" on":""}" data-t="mine" aria-pressed="${o.mineOn}"><span>${esc(a.mine)}</span><em>${o.mineOn?"넣음":"뺌"}</em></button>`:""}</div>
    <div class="wcact"><button class="wcsave">사진으로 저장</button><button class="wcsend">보내기</button></div><div class="wcact wcact2" hidden><button class="wcrst" disabled>초기화</button><button class="wcdone">완료</button></div>`;
   document.body.appendChild(box); document.body.classList.add("wcmon");
   const cv=box.querySelector(".wccv"), dots=box.querySelector(".wcthumbs"); let tok=0, lastIm=null; o.fs=o.fs||1; o.dx=0; o.dy=0; o.iz=1; o.ix=null; o.iy=null; o.bw=0; o.br={};
@@ -13336,15 +13338,12 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   box.querySelectorAll(".wcseg").forEach(s=>s.onclick=e=>{ const b=e.target.closest("button"); if(!b) return; o[s.dataset.k]=b.dataset.v; s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); keep(); draw(); });
   const mb=box.querySelector(".wcmine"); if(mb) mb.onclick=()=>{ o.mineOn=!o.mineOn; mb.classList.toggle("on",o.mineOn); mb.setAttribute("aria-pressed",o.mineOn); mb.querySelector("em").textContent=o.mineOn?"넣음":"뺌"; keep(); draw(); };
   /* 11/5 목사님: 말씀 카드에서 내가 칠하고 싶은 말씀을 색칠 */
-  o.hl=(a.pre&&a.pre.s&&a.pre.s.hl)?JSON.parse(JSON.stringify(a.pre.s.hl)):{}; let hc="y"; const pb=box.querySelector('.wcpaint[data-t="hl"]');
-  const pnum=()=>{ const n=Object.keys(o.hl).length; pb.querySelector("em").textContent=n?`${n}낱말`:""; };
-  pb.onclick=()=>{ const ws=o.text.split(" "); const pn=document.createElement("div"); pn.className="wcpanel";
-    pn.innerHTML=`<div class="wcphd"><b>색을 고르고 낱말을 누르세요</b><span class="wcsw">${Object.keys(WC_HLC).map(k=>`<button data-c="${k}" class="${k===hc?"on":""}" style="--c:${WC_HLC[k]}" aria-label="${WC_TN[k]}"></button>`).join("")}</span></div><div class="wcwords">${ws.map((t,i)=>`<button data-w="${i}"${o.hl[i]?` style="--c:${WC_HLC[o.hl[i]]}" class="on"`:""}>${esc(t)}</button>`).join("")}</div><div class="wcpft"><button class="wcclr">모두 지우기</button><button class="wcok">다 됐어요</button></div>`;
-    box.appendChild(pn);
-    const paint=()=>{ pn.querySelectorAll("[data-w]").forEach(b=>{ const c=o.hl[b.dataset.w]; b.classList.toggle("on",!!c); b.style.setProperty("--c",c?WC_HLC[c]:"transparent"); }); pnum(); draw(); };
-    pn.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ hc=b.dataset.c; pn.querySelectorAll("[data-c]").forEach(x=>x.classList.toggle("on",x===b)); });
-    pn.querySelector(".wcwords").onclick=e=>{ const b=e.target.closest("[data-w]"); if(!b) return; const i=b.dataset.w; if(o.hl[i]===hc) delete o.hl[i]; else o.hl[i]=hc; paint(); };
-    pn.querySelector(".wcclr").onclick=()=>{ o.hl={}; paint(); }; pn.querySelector(".wcok").onclick=()=>pn.remove(); };
+  o.hl=(a.pre&&a.pre.s&&a.pre.s.hl)?JSON.parse(JSON.stringify(a.pre.s.hl)):{}; let hc="y"; const pnum=()=>{};
+  /* 11/9 목사님: '칠할 낱말 고르기'가 설명처럼 보여 카드의 낱말을 직접 누름 → 칠하기 탭에서는 카드 낱말을 눌러 바로 칠함 */
+  const hr=box.querySelector(".wchlrow");
+  hr.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ hc=b.dataset.c; hr.querySelectorAll("[data-c]").forEach(x=>x.classList.toggle("on",x===b)); });
+  hr.querySelector(".wchlclr").onclick=()=>{ o.hl={}; rstShow(); draw(); };
+  const paintAt=(cx,cy)=>{ const {r,k}=sc(), px=(cx-r.left)*k, py=(cy-r.top)*k; const w=(o._wr||[]).find(q=>px>=q.x-6&&px<=q.x+q.w+6&&py>=q.y&&py<=q.y+q.h); if(!w) return false; if(o.hl[w.k]===hc) delete o.hl[w.k]; else o.hl[w.k]=hc; wcDraw(cv,o,o.look==="paper"?null:lastIm); boxShow(); markDirty(); return true; };
   /* 11/9 목사님: 줄바꿈을 사용자가 — 낱말을 누르면 그 뒤에서 줄이 나뉨 */
   const bb=box.querySelector(".wcbrk"); const brNum=()=>{ const n=Object.keys(o.br).length; bb.querySelector("em").textContent=n?`${n}곳`:""; };
   /* 11/9 목사님: 줄 나누기는 글 상자에서 Enter로 — 글자는 못 바꾸고 줄만 나눔 */
@@ -13377,7 +13376,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   const SNK=["dx","dy","fs","iz","ix","iy","bw","br","ff","fw","al","sh","size","hl","mineOn"]; let SNAP=null;
   const setEdit=on=>{ { const d2=box.querySelector(".wcdel"); if(d2) d2.hidden=on; box.querySelector(".wckp").hidden=on; } if(on) SNAP=JSON.parse(JSON.stringify(SNK.reduce((m,k)=>(m[k]=o[k],m),{}))); EDIT=on; box.querySelector(".wccx").hidden=!on; const b=box.querySelector(".wced"); b.hidden=on; b.setAttribute("aria-pressed",on); const hh=box.querySelector(".wcedh"); clearTimeout(hh._t); hh.hidden=!on; hh.classList.remove("out"); if(on) hh._t=setTimeout(()=>{ hh.classList.add("out"); hh._t=setTimeout(()=>{ hh.hidden=true; },400); },3200);
     box.querySelector(".wcopts").classList.toggle("ed",on); box.querySelector(".wctabs").hidden=!on; box.querySelector(".wcact:not(.wcact2)").hidden=on; box.querySelector(".wcact2").hidden=!on; box.querySelector(".wcstage").classList.toggle("edit",on); setTab(TAB); rstShow(); boxShow(); };
-  let TAB="size"; const setTab=t=>{ TAB=t; box.querySelectorAll(".wctabs [data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t)); box.querySelectorAll(".wcopts [data-t]").forEach(x=>x.classList.toggle("cur",x.dataset.t===t)); };
+  let TAB="size"; const setTab=t=>{ TAB=t; box.querySelector(".wcstage").classList.toggle("paint",t==="hl"); box.querySelectorAll(".wctabs [data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===t)); box.querySelectorAll(".wcopts [data-t]").forEach(x=>x.classList.toggle("cur",x.dataset.t===t)); };
   box.querySelector(".wctabs").onclick=e=>{ const b=e.target.closest("[data-tab]"); if(!b) return; setTab(b.dataset.tab); b.scrollIntoView({inline:"nearest",block:"nearest"}); };
   box.querySelector(".wcdone").onclick=()=>{ keep(); setEdit(false); };
   /* 11/9 태블릿 영상: 글 상자(키보드)가 올라와 카드 크기가 바뀌면 점선 상자가 어긋남 → 크기가 바뀔 때마다 다시 맞춤 */
@@ -13398,7 +13397,8 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
   box.querySelectorAll(".wchd").forEach(h=>h.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse"||!EDIT||!o.tb) return; e.preventDefault(); e.stopPropagation(); const side=h.classList.contains("l")?-1:1, x0=e.clientX, b0=o.tb.lw, ox0=o.dx||0;
     const mv=ev=>{ const {k}=sc(), d=(ev.clientX-x0)*k*side, cen=o.al==="center"; o.bw=Math.round(Math.max(300,b0+(cen?2*d:d))); if(!cen&&side<0) o.dx=Math.round(ox0-(o.bw-b0)); redraw(); };
     const up=()=>{ removeEventListener("pointermove",mv); removeEventListener("pointerup",up); endText(); }; addEventListener("pointermove",mv); addEventListener("pointerup",up); }));
-  { let MD=null; cv.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse"||!EDIT||!hitText(e.clientX,e.clientY)) return; MD={x:e.clientX,y:e.clientY,ox:o.dx||0,oy:o.dy||0}; sx=null; e.preventDefault(); });
+  cv.addEventListener("click",e=>{ if(EDIT&&TAB==="hl"&&!("ontouchstart" in window)) paintAt(e.clientX,e.clientY); });
+  { let MD=null; cv.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse"||!EDIT||TAB==="hl"||!hitText(e.clientX,e.clientY)) return; MD={x:e.clientX,y:e.clientY,ox:o.dx||0,oy:o.dy||0}; sx=null; e.preventDefault(); });
     addEventListener("pointermove",e=>{ if(MD) moveText(MD,e.clientX-MD.x,e.clientY-MD.y); }); addEventListener("pointerup",()=>{ if(MD){ MD=null; endText(); } }); }
   { const stg=box.querySelector(".wcstage"); let T=null;
     const dist=e=>Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
@@ -13408,12 +13408,14 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
         const mx=(e.touches[0].clientX+e.touches[1].clientX)/2, my=(e.touches[0].clientY+e.touches[1].clientY)/2;
         T=(picOK()&&!hitText(mx,my))?{zoom:1,d0:dist(e)||1,z0:o.iz||1}:{pinch:1,d0:dist(e)||1,f0:o.fs||1}; return; }
       if(e.touches.length>2){ T=null; return; } const t=e.touches[0];
+      if(EDIT&&TAB==="hl"){ T={x:t.clientX,y:t.clientY,paint:1}; return; }
       const hd=e.target.closest&&e.target.closest(".wchd"); if(EDIT&&hd&&o.tb){ T={x:t.clientX,y:t.clientY,bwd:1,side:hd.classList.contains("l")?-1:1,b0:o.tb.lw,ox0:o.dx||0}; return; }
       if(EDIT&&!hitText(t.clientX,t.clientY)&&picOK()){ const [ix0,iy0]=fxy(); T={x:t.clientX,y:t.clientY,pan:1,ix0,iy0}; return; }
       if(EDIT){ T={x:t.clientX,y:t.clientY,text:1,ox:o.dx||0,oy:o.dy||0}; return; }
       if(nop()){ T=null; return; } T={x:t.clientX,y:t.clientY,dx:0,lock:null}; },{passive:true});
     stg.addEventListener("touchmove",e=>{ if(!T) return;
       if(T.zoom){ if(e.cancelable) e.preventDefault(); if(e.touches.length<2) return; if(o.ix==null||o.iy==null){ const [a,b]=fxy(); o.ix=a; o.iy=b; } o.iz=Math.round(Math.max(1,Math.min(3,T.z0*dist(e)/T.d0))*100)/100; redraw(); return; }
+      if(T.paint){ if(e.cancelable) e.preventDefault(); return; }
       if(T.bwd){ if(e.cancelable) e.preventDefault(); const {k}=sc(), d=(e.touches[0].clientX-T.x)*k*T.side, cen=o.al==="center"; o.bw=Math.round(Math.max(300,T.b0+(cen?2*d:d)));
         if(!cen&&T.side<0){ o.dx=Math.round(T.ox0-(o.bw-T.b0)); } cv.classList.add("wcdrag"); redraw(); return; } /* 11/9 목사님: 성구 상자 너비를 손잡이로 */
       if(T.pan){ if(e.cancelable) e.preventDefault(); panPic(T,e.touches[0].clientX-T.x,e.touches[0].clientY-T.y); return; }
@@ -13423,7 +13425,7 @@ function wcOpen(a){ /* a: {b,c,v1,v2,w,d,ph,mine} */
       if(!T.lock&&(Math.abs(dx)>8||Math.abs(dy)>8)) T.lock=Math.abs(dx)>Math.abs(dy)?"x":"y"; if(T.lock!=="x") return;
       if(e.cancelable) e.preventDefault(); T.dx=dx; const W=cv.getBoundingClientRect().width||300;
       cv.style.transition="none"; cv.style.transform=`translateX(${dx}px) rotate(${dx/W*4}deg)`; cv.style.opacity=String(1-Math.min(.6,Math.abs(dx)/W*.8)); },{passive:false});
-    const end=e=>{ if(!T) return; if(T.bwd){ T=null; endText(); return; } if(T.zoom||T.pan){ if(e&&e.touches&&e.touches.length) return; T=null; rstShow(); markDirty(); return; } if(T.pinch){ if(e&&e.touches&&e.touches.length) return; T=null; endText(); return; } if(T.text){ T=null; endText(); return; } const d=T.dx, L=T.lock; T=null; if(L!=="x") return;
+    const end=e=>{ if(!T) return; if(T.paint){ const P=T; T=null; const c=e&&e.changedTouches&&e.changedTouches[0]; if(c&&Math.hypot(c.clientX-P.x,c.clientY-P.y)<14) paintAt(c.clientX,c.clientY); return; } if(T.bwd){ T=null; endText(); return; } if(T.zoom||T.pan){ if(e&&e.touches&&e.touches.length) return; T=null; rstShow(); markDirty(); return; } if(T.pinch){ if(e&&e.touches&&e.touches.length) return; T=null; endText(); return; } if(T.text){ T=null; endText(); return; } const d=T.dx, L=T.lock; T=null; if(L!=="x") return;
       if(Math.abs(d)>60) slide(d<0?1:-1); else { cv.style.transition="transform .2s ease-out,opacity .2s"; cv.style.transform=""; cv.style.opacity=""; } };
     stg.addEventListener("touchend",end); stg.addEventListener("touchcancel",end); }
   const close=pop=>{ box.remove(); document.body.classList.remove("wcmon"); if(pop!==true) ovDone(close); if(a.wcid&&view.tab==="record") render(); };
