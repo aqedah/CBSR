@@ -12175,7 +12175,7 @@ function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=docum
    <p class="bmthint">‹ › 장면 넘기기 · ❚❚ 멈춤</p>`;
   document.body.appendChild(el); document.body.style.overflow="hidden";
   /* 11/9 목사님: 옷 갈아입는 연출 — 평소 대제사장 옷(청색·금) ↔ 거룩한 세마포 옷(16:4, 23–24) */
-  const AIMG={}; ["aaron","aaronhp"].forEach(k=>{ try{ AIMG[k]="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(C(k).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="92" ')); }catch(e){} });
+  const AIMG={}; ["aaron","aaronhp","man"].forEach(k=>{ try{ AIMG[k]="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(C(k).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="92" ')); }catch(e){} });
   { const g0=el.querySelector("#at_me"); g0.innerHTML=`<ellipse cx="0" cy="0" rx="8" ry="2.6" fill="rgba(60,40,20,.35)"/><image class="atimg" href="${AIMG.aaron||""}" x="-13" y="-38" width="26" height="40"/><text class="pl" x="11" y="-26" style="font-size:9px;font-weight:700;fill:#a5361f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">아론</text>`; }
   let DRESS="aaron"; const dress=k=>{ DRESS=k; const im=el.querySelector("#at_me .atimg"); if(im) im.setAttribute("href",AIMG[k]||AIMG.aaron); };
 const S=[
@@ -12215,14 +12215,17 @@ async function effect(f,my){
   if(f==="blood7"||f==="blood7b"){for(let k=0;k<7;k++){if(my!==tok)return;const c=mk("circle",{cx:136+k*4.6,cy:94+((k%2)?1.5:-1),r:1.7,fill:f==="blood7"?"#8f1d0f":"#b2321a"});c.animate([{opacity:0},{opacity:1}],{duration:200,fill:"forwards"});await sleep(260);} }
   if(f==="horns"){others(true);for(const [x,y] of [[133,259],[167,259],[133,293],[167,293]]){const c=mk("circle",{cx:x,cy:y,r:2.6,fill:"#8f1d0f"});c.animate([{opacity:0},{opacity:1}],{duration:300,fill:"forwards"});await sleep(250);} for(let k=0;k<7;k++){const c=mk("circle",{cx:140+k*3.4,cy:276,r:1.4,fill:"#8f1d0f"});c.animate([{opacity:0},{opacity:1}],{duration:150,fill:"forwards"});await sleep(140);} }
   if(f==="azazel"){mk("text",{x:206,y:206,class:"pl m"}).textContent="✋✋";await sleep(1200);if(my!==tok)return;
-    $("at_g1").setAttribute("opacity",.35);$("at_lot1").setAttribute("opacity",.35);$("at_lot2").setAttribute("opacity",0);const g=$("at_g2"),man=mk("circle",{cx:222,cy:216,r:3.8,fill:"#5a3c1c"});const P=[[214,220],[214,300],[160,318],[160,350],[238,416]];
-    for(let i=1;i<P.length;i++){const [x0,y0]=P[i-1],[x1,y1]=P[i];const n=Math.round(Math.hypot(x1-x0,y1-y0)/2);for(let k=1;k<=n;k++){if(my!==tok)return;const x=x0+(x1-x0)*k/n,y=y0+(y1-y0)*k/n;g.setAttribute("x",x);g.setAttribute("y",y);man.setAttribute("cx",x-6);man.setAttribute("cy",y-12);await sleep(18);}}
-    g.animate([{opacity:1},{opacity:0}],{duration:1400,fill:"forwards"});mk("text",{x:292,y:424,class:"pl m","text-anchor":"end"}).textContent="접근하기 어려운 땅";}
+    $("at_g1").setAttribute("opacity",.35);$("at_lot1").setAttribute("opacity",.35);$("at_lot2").setAttribute("opacity",0);const g=$("at_g2"),man=mk("g",{}) /* 11/9 목사님: 미리 정한 사람을 인물로 */; man.innerHTML=`<ellipse cx="0" cy="0" rx="6" ry="2" fill="rgba(60,40,20,.3)"/><image href="${AIMG.man||""}" x="-10" y="-30" width="20" height="31"/><text x="9" y="-22" style="font:700 8.5px &quot;Noto Serif KR&quot;,serif;fill:#3e2a12;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">미리 정한 사람</text>`; man.setAttribute("transform","translate(206 222)");const P=[[214,220],[214,300],[160,318],[160,350],[238,416]];
+    for(let i=1;i<P.length;i++){const [x0,y0]=P[i-1],[x1,y1]=P[i];const n=Math.round(Math.hypot(x1-x0,y1-y0)/2);for(let k=1;k<=n;k++){if(my!==tok)return;const x=x0+(x1-x0)*k/n,y=y0+(y1-y0)*k/n;g.setAttribute("x",x);g.setAttribute("y",y);man.setAttribute("transform",`translate(${x-12} ${y+2})`);await sleep(18);}}
+    g.animate([{opacity:1},{opacity:0}],{duration:1400,fill:"forwards"}); man.animate([{opacity:1},{opacity:0}],{duration:1600,delay:300,fill:"forwards"});mk("text",{x:292,y:424,class:"pl m","text-anchor":"end"}).textContent="접근하기 어려운 땅";}
   if(f==="end"){ await change("aaronhp","세마포 옷을 벗고 · 씻고 · 자기 옷",my); if(my!==tok) return; await sleep(700); if(!(await walk([[150,190],[150,226],[150,250]],my))) return; const c=mk("circle",{cx:150,cy:276,r:6,fill:"#e98a2b"});c.animate([{r:5,opacity:.4},{r:11,opacity:1},{r:7,opacity:.8}],{duration:1600,iterations:3});const sm=mk("circle",{cx:150,cy:262,r:7,fill:"url(#at_smk)",filter:"url(#at_blur)"});sm.animate([{cy:264,opacity:.8},{cy:236,opacity:0}],{duration:2200,iterations:2});}
 }
 function reset(){fx.innerHTML="";pts=[];old=[];others(true);$("at_goats").style.opacity=0;$("at_lot1").setAttribute("opacity",0);$("at_lot2").setAttribute("opacity",0);$("at_g1").setAttribute("opacity",1);const g2=$("at_g2");g2.setAttribute("x",214);g2.setAttribute("y",220);g2.getAnimations().forEach(a=>a.cancel());g2.setAttribute("opacity",1);}
 
   const vOf=s=>+(s.r.match(/16:(\d+)/)||[0,1])[1];
+  const PRAY=new Set([1,4,5,6,7,8]); /* 2 자기 속죄 · 5·6 피 뿌려 속죄 · 7 제단 속죄 · 8 죄 고백 · 9 번제로 속죄 */
+  const pray=()=>{ const g=el.querySelector("#at_me"), m=(g.getAttribute("transform")||"").match(/translate\(([-\d.]+) ([-\d.]+)\)/); if(!m) return; const x=+m[1], y=+m[2];
+    const t=mk("text",{x:x,y:y-44,"text-anchor":"middle",style:"font-size:15px"}); t.textContent="🙏"; t.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none",offset:.15},{opacity:1,offset:.85},{opacity:0,transform:"translateY(-6px)"}],{duration:3600,fill:"forwards"}); };
   async function go(i){ const my=++tok; cur=Math.max(0,Math.min(S.length-1,i)); cap(cur); reset(); el.querySelectorAll(":scope>.mvnar").forEach(n=>{ if(n._c) n._c(); n.classList.remove("on"); });
     for(let j=0;j<cur;j++){S[j].path.forEach(q=>old.push(q));if(j>=2){$("at_goats").style.opacity=1;$("at_lot1").setAttribute("opacity",1);$("at_lot2").setAttribute("opacity",1);} if(S[j].fx==="azazel"){$("at_g2").setAttribute("opacity",0);$("at_g1").setAttribute("opacity",.35);$("at_lot2").setAttribute("opacity",0);} }
     if(cur>=3&&cur<=5) others(false);
@@ -12230,7 +12233,8 @@ function reset(){fx.innerHTML="";pts=[];old=[];others(true);$("at_goats").style.
     const hold=Math.max(5200,Math.min(11000,1800+st.q.length*95)), b=bars[cur]; b.style.transition="none"; b.style.width="0"; void b.offsetWidth;
     if(!(await walk(p,my))) return false;
     mvNar(el,st.q,[3,16,vOf(st)],66,hold);
-    await effect(st.fx,my); if(my!==tok) return false;
+    if(PRAY.has(cur)&&cur!==S.length-1) pray(); /* 11/9 목사님: 속죄하는 장면에서는 기도 표시 */
+    await effect(st.fx,my); if(my!==tok) return false; if(cur===S.length-1) pray();
     b.style.transition=`width ${hold}ms linear`; b.style.width="100%";
     let t=0; while(t<hold){ if(my!==tok) return false; if(!paused) t+=150; else b.style.transition="none"; await sleep(150); }
     return my===tok; }
@@ -12240,7 +12244,13 @@ function reset(){fx.innerHTML="";pts=[];old=[];others(true);$("at_goats").style.
   el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; const k=t.dataset.t;
     if(k==="x") close(); else if(k==="prev"){ setPause(false); run(Math.max(0,cur-1)); } else if(k==="nextS"){ setPause(false); run(Math.min(S.length-1,cur+1)); }
     else if(k==="pause") setPause(!paused); else if(k==="again"){ setPause(false); run(0); } });
-  run(Math.max(0,Math.min(S.length-1,+s0||0))); }
+  /* 11/9 목사님: 다른 큰 여정처럼 첫 설명을 보여 주고 가운데 ▶ 시작을 눌러야 시작 */
+  el.querySelector(".bmtk").textContent="레위기 16장 · 성막 안에서"; el.querySelector(".bmth").textContent="대속죄일 · 대제사장의 길"; el.querySelector(".bmtn").textContent="일 년에 한 번, 대제사장 아론이 홀로 지성소에 들어가 자기와 온 이스라엘을 위해 속죄하는 날입니다. 위가 서쪽(지성소), 아래가 동쪽(뜰 문·광야)입니다."; el.querySelector(".athold").innerHTML="";
+  dress("aaronhp"); setMe(150,206); bars.forEach(b=>{ b.style.width="0"; });
+  { const st0=Math.max(0,Math.min(S.length-1,+s0||0)), b=document.createElement("button"); b.className="bmtgo0"; b.setAttribute("aria-label",st0?`${st0+1}번째 장면부터 시작`:"시작"); b.innerHTML=`<i>▶</i><span>${st0?`${st0+1}번째 장면부터`:"시작"}</span>`; el.appendChild(b); setTimeout(()=>b.focus(),30);
+    b.onclick=e=>{ e.stopPropagation(); b.remove(); run(st0); }; }
+  /* 지도 왼쪽을 누르면 앞 장면, 오른쪽은 다음 장면(큰 여정과 같게) */
+  el.querySelector(".atmap").addEventListener("click",e=>{ if(el.querySelector(".bmtgo0")) return; setPause(false); if(e.clientX<el.clientWidth*.3) run(Math.max(0,cur-1)); else if(cur<S.length-1) run(cur+1); }); }
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-atone]"); if(!b) return; e.preventDefault(); e.stopPropagation(); try{ document.querySelector("#sheetX")?.click(); }catch(e2){} atoneOpen(); });
 const ATONE_CARD=`<button class="bmtc" data-atone="1"><i>▶</i><b>대속죄일</b><small><span>레위기 16장 · 성막 안에서 대제사장 아론의 하루</span></small><em>9장면 따라가기</em></button>`;
 /* ===== 성경 지도 라이브러리(목사님 2026-10-31): 지도가 화면을 차지해 답답하다 → 위에는 주인공 픽셀 배지, 누르면 아래에 그 주인공의 여정 목록.
