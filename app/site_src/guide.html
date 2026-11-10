@@ -342,7 +342,7 @@ function pageL(p,qt){
   const sec2=hasMap?`<div class="two"><div class="c1">${box}</div><div class="c2" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,56)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
   const whole=qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd">${chip(qt.obs.christ)}</p>`:'';
   return `<div class="pg ${q}">
-<p class="date sans">${p.m}월 ${p.d}일 · ${p.no}일째 · ${p.nch}장 ${p.vv}절 · 성경 읽기 약 ${p.min}분</p>
+<p class="date sans">${p.m}월 ${p.d}일 · ${p.no}일째 · 성경 읽기 약 ${p.min}분</p>
 <p class="title sans">${esc(p.t)}</p>
 <p class="sub">${esc(qt.sub||p.sub)}</p>
 <p class="sec sans"><span class="n">1</span>읽기 전</p>
