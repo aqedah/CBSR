@@ -8038,7 +8038,7 @@ function qtApplyBasis(t,w,d){ const R=qtRefs(t,w,d); if(R.length) return R[0]; c
   const kw=(String(t).match(/[가-힣]{2,}/g)||[]).map(x=>x.slice(0,2)); let best=null;
   for(const [b,c] of p.ch){ const C=(BIBLE[b-1]||[])[c-1]||[]; C.forEach((tx,i)=>{ if(!tx||!nm.some(n=>tx.includes(n))) return; const sc=kw.filter(k=>tx.includes(k)).length; if(!best||sc>best[0]) best=[sc,[b,c,i+1,i+1]]; }); }
   return best?best[1]:null; }
-function qtPrayMine(q,key){ const L=[]; if(q.obs) L.push(["본문에서 본 것",q.obs]); if(q.med) L.push(["적용",q.med]); ["l0","l1","l2","gap"].forEach(f=>{ if(q[f]) L.push(["생각",q[f]]); });
+function qtPrayMine(q,key){ const L=[]; if(q.obs) L.push(["본문에서 본 것",q.obs]); if(q.god) L.push(["내가 본 하나님",q.god]); if(q.med) L.push(["적용",q.med]); ["l0","l1","l2","gap"].forEach(f=>{ if(q[f]) L.push(["생각",q[f]]); });
   lnAll().filter(x=>x.k===key).forEach(x=>L.push([lnRef(x.v).lab,x.t])); if(!L.length) return "";
   return `<div class="prmine"><small>오늘 내가 남긴 글</small>${L.map(([a,b])=>`<p><b>${esc(a)}</b>${esc(b)}</p>`).join("")}</div>`; }
 /* 묵상 노트 '성경 전체로'(v2, 2026-11-02 목사님 "비교만 있고 뜻 풀이가 없다"):
@@ -8066,6 +8066,10 @@ function christSecV2(w,d,t,ck,det){ if(!t) return ""; const R=christRefs(t,w,d),
    ${pair}${pair?"":`<div class="qcard"><p>${esc(t)}</p></div>`}${otCards}
    ${role||(pair?`<div class="qcard chtx"><p>${esc(t)}</p></div>`:"")}
    ${det&&det.cm?`<div class="qcard chcm"><span class="label">무슨 뜻일까</span><p>${esc(det.cm)}</p></div>`:""}</section>`; }
+/* 11-10 목사님: '성경 전체로'는 참고·부록 → 본문 탭의 더 보기(요약·인물·지도 옆)에 둠 */
+function christHelp(w,d){ const det=DETAIL[w+"-"+(d+1)], key=keyOf(w,d), PVK=PVQ.has(key);
+  const s=PVK?(det&&det.christ?christSecV2(w,d,det.christ,det.ck==="quote"?"인용":CHRIST_K[christKey(w,d)],det):""):christSecV2(w,d,det&&det.christ?det.christ:(DAYC[key]||(WEEKS[w-1]||{}).christ||""),CHRIST_K[christKey(w,d)],det);
+  return s.replace('<div class="stage"><b>3</b><span>성경 전체로</span></div>','<span class="label">성경 전체로 · 참고</span>'); }
 /* 묵상 노트 한 장씩(v2, 목사님 2026-11-02): 본문 관찰 · 하나님의 성품 · 붙잡을 한 구절 · 기도를 한 장에 하나, 아래 '다음' 하나 */
 function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done||FB_ON){ qtDoneLook(m); return; }
   if(!view.qsUrl){ view.qsUrl=1; try{ const n=+new URLSearchParams(location.search).get("qs"); if(n>0){ view.qtStepK=key; view.qtStep=n-1; } }catch(e){} }
@@ -8904,6 +8908,7 @@ function renderRead(){
   h+=knowSection(p,A,b0);
   h+=moreSection(p,A,b0,w,d);
   h+=renderMapBox(A);
+  if(window.CBSR_V2) h+=christHelp(w,d);
   h+=`</div>`;
   // 5 퀴즈
   if(!window.CBSR_V2) h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
@@ -9016,7 +9021,7 @@ function qtDoneCard(w,d,kv,q){
   const stamps=Array.from({length:nd(w)},(_,i)=>i).map(i=>{const on=(mem.qt[keyOf(w,i)]||{}).done; return `<span class="stamp${on?" on":""}${i===d?" me":""}" title="${i+1}일째">${on?"✓":i+1}</span>`;}).join("");
   /* 말씀과 내가 남긴 글을 먼저, 도장·기록은 그 아래 */
   return `<div class="qtdone${view.qtJust?" pop":""}" id="qtDoneCard"><div class="qtd-seal" aria-hidden="true">✓</div><div class="qtd-title">오늘 QT를 마쳤습니다</div>
-  ${q.obs?`<p class="mine"><b>오늘 내가 본문에서 본 것</b>${esc(q.obs)}</p>`:""}
+  ${q.obs?`<p class="mine"><b>오늘 내가 본문에서 본 것</b>${esc(q.obs)}</p>`:""}${q.god?`<p class="mine"><b>내가 본 하나님</b>${esc(q.god)}</p>`:""}
   ${kv?`<div class="keyv"><small>오늘 붙잡은 말씀 · ${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small>${esc(kv.t)}</div>`:""}
   ${q.med?`<p class="mine"><b>나의 묵상</b>${esc(q.med)}</p>`:""}
   ${q.pray?`<p class="mine"><b>나의 기도</b>${esc(q.pray)}</p>`:""}
@@ -9269,17 +9274,20 @@ function renderQT(){
   if(!PVQ.has(key)) h+=`<section class="sec deepsec">${dp}</section>`;
   // 2 하나님은 어떤 분
   h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span>${V2Q?"":"<small>이 본문에서 하나님은 어떤 분인가</small>"}</div>`;
-  if(det&&det.god) h+=`<div class="qcard"><p>${V2Q?godMark(det.god):esc(det.god)}</p></div>`+(V2Q?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">이 장면에서 주께서 하신 일</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
-  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); h+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${window.CBSR_V2?`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`:""}</div>`;});
-  else if(!det) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
-  h+=moreTraits+`</section>`;
+  /* 11-10 목사님: 가이드북과 같게 — 성품도 내가 먼저 쓰고(god), 해설은 맨 끝 '쓴 뒤에 읽기'에서 */
+  if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">본문에서 본 하나님은 어떤 분입니까?</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
+  else if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
+  let tH=""; /* 성품 이름+아멘: v2에서는 쓴 뒤에 읽기로 */
+  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); tH+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${window.CBSR_V2?`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`:""}</div>`;});
+  else if(!det&&!V2Q) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
+  h+=(V2Q?"":tH+moreTraits)+`</section>`;
   // 읽다가 궁금한 점(이름·숫자 차이 등): 접어 두는 짧은 설명. 문제가 생기면 QA_ON을 false로
   { const SDQ=(typeof dayNo==="function")?storyDay(dayNo(w,d)):null; if(QA_ON&&SDQ&&SDQ.qa&&SDQ.qa.length) h+=`<section class="sec"><details class="qa"><summary>읽다가 궁금한 점</summary>${SDQ.qa.map(x=>`<p class="qaq">${esc(x.q)}</p><p class="qaa">${esc(x.a)}</p>`).join("")}</details></section>`; }
   // 3 그리스도께로
   const PVK=PVQ.has(key), PCK={quote:"성경 인용",mention:"성경 사건·말씀 언급",repeat:"표현의 되풀이",phrase:"표현의 되풀이",self:"본문 스스로의 지시"};
-  if(PVK&&V2Q){ if(det&&det.christ) h+=christSecV2(w,d,det.christ,det.ck==="quote"?"인용":CHRIST_K[christKey(w,d)],det); }
+  if(V2Q){ /* 11-10 목사님: 성경 전체로는 참고·부록 → 본문 탭 더 보기로 옮김(christHelp) */ }
+  else if(PVK&&V2Q){ if(det&&det.christ) h+=christSecV2(w,d,det.christ,det.ck==="quote"?"인용":CHRIST_K[christKey(w,d)],det); }
   else if(PVK){ if(det&&det.christ) h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span>${V2Q?"":"<small>성경 전체와 그리스도 안에서 보기</small>"}</div>${!V2Q&&det.ck&&PCK[det.ck]?`<span class="ckind">${PCK[det.ck]}</span>`:""}<div class="qcard"><p>${esc(det.christ)}</p></div></section>`; }
-  else if(V2Q) h+=christSecV2(w,d,det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||""),CHRIST_K[christKey(w,d)],det);
   else h+=`<section class="sec"><div class="stage"><b>3</b><span>성경 전체로</span>${V2Q?"":"<small>성경 전체와 그리스도 안에서 보기</small>"}</div>${(()=>{const ck=CHRIST_K[christKey(w,d)]; return ck&&!V2Q?`<span class="ckind">${CK_L[ck]||ck}</span>`:"";})()}<div class="qcard"><p>${esc(det&&det.christ?det.christ:(DAYC[keyOf(w,d)]||WEEKS[w-1].christ||"오늘 본문이 예수 그리스도의 이야기와 어떻게 이어지는지 생각해 보세요."))}</p></div>${echoBox(w,d)}</section>`;
   // 4 한 구절: 중심 범위의 후보 2~3개 + 본문에서 직접 고르기
   const vs=qtCands(A,traits,R,w+"-"+(d+1));
@@ -9287,7 +9295,7 @@ function renderQT(){
   const opts=kv&&!vs.includes(kv)?[kv,...vs]:vs; view.kvShown=vId(kv);
   const medQ=PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q);
   if(V2Q){
-    h+=`<section class="sec"><div class="stage"><b>${PVK&&!(det&&det.christ)?3:4}</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${kv?`<div class="kvsel"><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small><q>${esc(kv.t)}</q></div>`:""}<button class="qtlnk" id="qtSwapV">구절 바꾸기 ›</button>${(()=>{ const r=qtApplyBasis(medQ,w,d); return r&&!(kv&&kv.b===r[0]&&kv.c===r[1]&&kv.v===r[2])?qEvi(r,"이 질문이 나온 자리",1):""; })()}<div class="oneline med"><label for="qt-med">${esc(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.med||"")}</textarea></div></section>`;
+    h+=`<section class="sec"><div class="stage"><b>3</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${kv?`<div class="kvsel"><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small><q>${esc(kv.t)}</q></div>`:""}<button class="qtlnk" id="qtSwapV">구절 바꾸기 ›</button>${(()=>{ const r=qtApplyBasis(medQ,w,d); return r&&!(kv&&kv.b===r[0]&&kv.c===r[1]&&kv.v===r[2])?qEvi(r,"이 질문이 나온 자리",1):""; })()}<div class="oneline med"><label for="qt-med">${esc(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.med||"")}</textarea></div></section>`;
     view.kvOpts=opts; view.kvCur=kv;
   } else {
   h+=`<section class="sec"><div class="stage"><b>${PVK&&!(det&&det.christ)?3:4}</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${V2Q?`<p class="fieldhint">하나를 고르세요. 고른 구절은 오늘의 말씀 카드에 들어갑니다.</p>`:""}`;
@@ -9301,11 +9309,17 @@ function renderQT(){
   if(!V2Q) h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
   // 6 기도
   const pray=prayEnd((det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits));
-  h+=`<section class="sec"><span class="label">오늘의 기도</span>${V2Q&&kv?`<p class="prkv"><b>붙잡은 말씀 · ${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</b>${esc(kv.t)}</p>`:""}<p class="prayer">${esc(pray)}</p>${V2Q?qtPrayMine(q,key):""}<details class="mine"${q.pray?" open":""}><summary>${V2Q?"내 기도 더하기":"내 기도 한 줄 더하기"}</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
-  { const SDE=storyDay(dayNo(w,d)); if(SDE&&SDE.endnote) h+=`<section class="sec"><p class="lead" style="text-align:center">${esc(SDE.endnote)}</p></section>`; }
+  if(V2Q){
+    h+=`<section class="sec"><span class="label">오늘의 기도</span>${kv?`<p class="prkv"><b>붙잡은 말씀 · ${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</b>${esc(kv.t)}</p>`:""}<div class="oneline prw"><label for="qt-pray">오늘 본 하나님께, 내 말로 기도해 보세요</label><textarea id="qt-pray" data-qt="pray" rows="4" placeholder="나의 기도">${esc(q.pray||"")}</textarea></div>${qtPrayMine(q,key)}</section>`;
+    /* 쓴 뒤에 읽기(가이드북 ④): 성품 해설 + 기도문. 다음으로 넘어와 읽고, [오늘 묵상 마침]을 눌러 마침 */
+    const SDE=storyDay(dayNo(w,d));
+    h+=`<section class="sec qtafter"><span class="label">쓴 뒤에 읽기 — 해설과 기도</span><p class="lead">내가 쓴 것과 견주어 읽어 보세요.</p>${det&&det.god?`<div class="qcard"><span class="k">해설</span><p>${godMark(det.god)}</p></div>`:""}${tH||moreTraits?`<div class="qtaftr">${tH}${moreTraits}</div>`:""}<div class="qcard"><span class="k">기도</span><p class="prayer">${esc(pray)}</p></div>${SDE&&SDE.endnote?`<p class="lead" style="text-align:center">${esc(SDE.endnote)}</p>`:""}</section>`;
+  } else {
+  h+=`<section class="sec"><span class="label">오늘의 기도</span><p class="prayer">${esc(pray)}</p><details class="mine"${q.pray?" open":""}><summary>내 기도 한 줄 더하기</summary><textarea id="qt-pray" data-qt="pray" rows="2" placeholder="나의 기도">${esc(q.pray||"")}</textarea></details></section>`;
+  { const SDE=storyDay(dayNo(w,d)); if(SDE&&SDE.endnote) h+=`<section class="sec"><p class="lead" style="text-align:center">${esc(SDE.endnote)}</p></section>`; } }
   // QT 완료: 맨 마지막에만
   if(FB_ON){ const fr=fbAll()[fbKey("qt")]; h+=`<section class="sec qtfb"><span class="label">검토 메모 · 이 날 QT</span><p class="lead">관찰 질문, 성품, 성경 전체로, 묵상, 기도에 대해 고칠 점을 적습니다.</p>${fr?`<p class="qtfbn">${esc(fr.n)}</p>`:""}<div class="row"><button class="btn ghost small" id="qtFb">${fr?"메모 고치기":"메모 쓰기"}</button><button class="btn ghost small" id="qtFbCopy">검토 메모 모아 복사 (${Object.keys(fbAll()).length}개)</button></div></section>`; }
-  h+=q.done?`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`:`<section class="sec"><div class="row"><button class="btn" id="qtDone" style="width:100%;padding:15px">${V2Q?"묵상 노트 마치기":"QT 완료"}</button></div><p class="lead" id="qtSaved" style="text-align:center"></p></section>`;
+  h+=q.done?`<section class="sec" id="qtDoneSec">${qtDoneCard(w,d,kv,q)}</section>`:`<section class="sec"><div class="row"><button class="btn" id="qtDone" style="width:100%;padding:15px">${V2Q?"오늘 묵상 마침":"QT 완료"}</button></div><p class="lead" id="qtSaved" style="text-align:center"></p></section>`;
   view.qtJust=false;
   return h;
 }
@@ -10628,7 +10642,7 @@ function bindQT(m){
     SR.querySelectorAll("[data-kvs]").forEach(b=>b.onclick=()=>{ const q=cur(); q.kv=b.dataset.kvs; touchQ(q,"kv"); save(); document.getElementById("sheetClose").click(); const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const al=document.getElementById("kvsAll"); if(al) al.onclick=()=>pickVerseSheet(key,cur); };
   const lm=document.getElementById("lookMore"); if(lm) lm.ontoggle=()=>{view.lookOpen=lm.open;};
-  const hp=document.getElementById("qtHelp"); if(hp) hp.onclick=()=>{ const det=DETAIL[view.w+"-"+(view.d+1)], hc=PVQ.has(key)?!!(det&&det.christ):true, st=["본문 관찰","하나님의 성품",...(hc?["성경 전체로"]:[]),"적용"];
+  const hp=document.getElementById("qtHelp"); if(hp) hp.onclick=()=>{ const det=DETAIL[view.w+"-"+(view.d+1)], hc=PVQ.has(key)?!!(det&&det.christ):true, st=window.CBSR_V2?["본문 관찰","하나님의 성품","적용","오늘의 기도"]:["본문 관찰","하나님의 성품",...(hc?["성경 전체로"]:[]),"적용"];
     sheet("묵상 노트는 이렇게",`<p><b>${st.join(" → ")}</b> 순서로 갑니다. 마지막에 기도로 마칩니다.</p><p>정답을 고르는 문제가 아닙니다. 질문을 읽고 본문을 다시 본 뒤 <b>내 말로 한 줄</b> 적습니다.</p><p>막히면 '본문 열기'로 그 장면을 다시 읽거나, '다른 부분도 살펴보기'에서 작은 질문을 따라가 보세요.</p><p>적는 칸은 비워 두어도 마칠 수 있습니다. 적은 답은 '기록 → 관찰 기록'에 모입니다.</p><p>스토리와 묵상 노트의 말씀은 개역개정입니다.</p>`); };
   const np=document.getElementById("qtNextP"); if(np) np.onclick=()=>{const q=cur(); q.pv=(q.pv||0)+1; touchQ(q,"pv"); save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
   m.querySelectorAll("[data-amen]").forEach(b=>b.onclick=()=>{ const k=keyOf(view.w,view.d); const q=(mem.qt[k] ||= {}); q.amen ||= {}; const n=b.dataset.amen;
@@ -14508,6 +14522,7 @@ function bind(){
   m.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>showClue(+b.dataset.clue));
   bindAccount(m); bindInstall(); if(view.tab==="read") churchCounts();
   { const ts=document.getElementById("toStory"); if(ts) ts.onclick=()=>storyOpen(0); }
+  document.querySelectorAll(".helpzone .chsec [data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
   if(window.CBSR_V2) bindBanners(m);
   if(window.CBSR_V2){ if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>gpOpen(x.dataset.gplay)); document.querySelectorAll("[data-gbopen]").forEach(x=>x.onclick=()=>gbOpen()); document.querySelectorAll("[data-rgm]").forEach(x=>x.onclick=()=>rgmOpen(view.w,view.d,0)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const chh=document.getElementById("chHelp"); if(chh) chh.onclick=()=>sheet("도전은 이렇게",`<p>오늘 읽은 본문으로 네 가지를 해 봅니다. 하나를 마칠 때마다 위의 막대가 한 칸씩 찹니다.</p><p><b>본문에서 찾기</b> · 질문을 읽고 본문에서 답이 되는 절을 누릅니다.</p><p><b>이동 경로 맞추기</b> · 오늘 이야기의 인물이 지나간 곳을 순서대로 놓습니다.</p><p><b>본문 퀴즈</b> · O/X와 4지선다로 읽은 내용을 확인합니다.</p><p><b>빈칸 채우기</b> · 묵상 노트에서 붙잡은 구절의 빈칸을 채웁니다.</p><p>성경 골든벨은 매일 하는 것이 아니라 언제든 풀 수 있습니다.</p>`); const gq=document.getElementById("gQuizGo"); if(gq) gq.onclick=()=>{ view.quizOpen=!view.quizOpen; render(); if(view.quizOpen){ const qs=document.querySelector("#quizSec [data-qstart]"); if(qs) qs.click(); } if(view.quizOpen) requestAnimationFrame(()=>document.getElementById("quizSec")?.scrollIntoView({block:"start",behavior:"smooth"})); }; document.querySelectorAll("[data-cwd]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.cwd.split("-").map(Number); view.w=w; view.d=d; view.game=null; view.quizOpen=false; render(); }); } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge"||view.tab==="qt"||view.tab==="today") bindDayRing(); flipStart(); }
   bindQT(m);
