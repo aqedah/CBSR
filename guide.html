@@ -45,8 +45,25 @@ textarea{min-height:90px;resize:vertical;overflow:hidden}
 #fit.bad{background:#FBE9E9;color:var(--warn)}
 #fit.good{background:#E6F2EA;color:var(--ok)}
 #fit.warn{background:#FFF4DC;color:#7A5200}
-#scalebox{position:relative}
-#scaled{transform-origin:0 0}
+#prev{display:flex;flex-direction:column;align-items:center}
+#bookbar{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-size:13px;color:#555;user-select:none}
+#bookbar button{width:34px;height:34px;border-radius:50%;font-size:17px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center}
+#bookbar button:disabled{opacity:.3;cursor:default}
+#bkLab{font-weight:700;color:#222;min-width:220px;text-align:center}
+#bkNo{color:#999;font-variant-numeric:tabular-nums}
+#scalebox{position:relative;perspective:2600px;perspective-origin:50% 50%}
+#scaled{transform-origin:0 0;box-shadow:0 10px 34px rgba(0,0,0,.18)}
+#flip{position:absolute;top:0;display:none;transform-origin:0 0;pointer-events:none;z-index:5}
+.fsheet{position:relative;width:148mm;height:210mm;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.4,.05,.3,1)}
+.fsheet.fwd{transform-origin:left center}
+.fsheet.bwd{transform-origin:right center}
+.fsheet .fface,.fsheet .fback{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.fsheet .fback{transform:rotateY(180deg)}
+.fsheet .fsh{position:absolute;inset:0;background:linear-gradient(to left,rgba(0,0,0,.18),rgba(0,0,0,0) 45%);opacity:0;transition:opacity .62s}
+.fsheet.bwd .fsh{background:linear-gradient(to right,rgba(0,0,0,.18),rgba(0,0,0,0) 45%)}
+.fsheet.fwd.go{transform:rotateY(-180deg)}
+.fsheet.bwd.go{transform:rotateY(180deg)}
+.fsheet.go .fsh{opacity:1}
 .spread{display:flex;gap:0;background:#8a8a8a;padding:0}
 dialog{border:1px solid var(--line);border-radius:10px;padding:18px;max-width:560px;width:92vw}
 .conf{border-top:1px solid var(--line);padding:8px 0} .conf label{display:block;font-size:13px;margin:3px 0 0 8px} #confList{max-height:50vh;overflow:auto}
@@ -72,8 +89,54 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .go{font-size:9.5pt;font-weight:700;margin:1.8mm 0 1mm;padding-left:0.5mm;color:var(--main)}
 .pg .ref{font-size:10pt;color:#222;line-height:1.45;margin:0 0 0.7mm 4mm;text-indent:-4mm;word-break:keep-all;overflow-wrap:anywhere}
 .pg .hint2{font-size:8.6pt;color:#666;margin:-0.6mm 0 1.2mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
-.pg .vs{background:color-mix(in srgb,var(--main) 13%,#fff);border-radius:0.6mm;padding:0 0.5mm;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.pg .after .vs{background:color-mix(in srgb,var(--main) 24%,#fff)}
+.pg .vs{color:var(--main)}
+.pg.cv{padding:0;display:flex;flex-direction:column;justify-content:flex-end;background:var(--main);color:#fff;overflow:hidden}
+.pg.cv .cvfield{position:absolute;inset:0;background:linear-gradient(160deg,color-mix(in srgb,var(--main) 82%,#000) 0%,var(--main) 55%,color-mix(in srgb,var(--main) 62%,#fff) 100%)}
+.pg.cv .cvbox{position:relative;margin-top:auto;padding:0 16mm;margin-bottom:30mm}
+.pg .cvk{font-family:"Noto Sans KR",sans-serif;font-size:10pt;opacity:.85;margin:0 0 3mm}
+.pg .cvt{font-family:"Noto Sans KR",sans-serif;font-size:30pt;font-weight:800;line-height:1.18;margin:0}
+.pg .cvs{font-family:"Noto Sans KR",sans-serif;font-size:12pt;margin:5mm 0 0;opacity:.92}
+.pg .cvch{position:relative;font-family:"Noto Sans KR",sans-serif;font-size:9.5pt;padding:0 16mm 14mm;opacity:.85;margin:0}
+.pg.cv.back{justify-content:flex-start}
+.pg .cvbox2{position:relative;padding:26mm 16mm 0;margin-bottom:auto}
+.pg .bkt{font-family:"Noto Sans KR",sans-serif;font-size:13pt;font-weight:700;margin:0 0 6mm}
+.pg .bkp{font-size:10pt;line-height:1.62;margin:0 0 4mm;opacity:.95}
+.pg.ep{background:color-mix(in srgb,var(--mainL) 70%,#fff)}
+.pg.fm{font-size:10pt;line-height:1.5}
+.pg .fh{font-family:"Noto Sans KR",sans-serif;font-size:15pt;font-weight:800;color:var(--main);margin:0 0 4mm;padding-bottom:1.6mm;border-bottom:0.4mm solid var(--main)}
+.pg .fh2{font-family:"Noto Sans KR",sans-serif;font-size:12pt;font-weight:700;color:var(--main);margin:0 0 2.4mm}
+.pg .fp{margin:0 0 3mm;text-align:justify}
+.pg .fp.sm{font-size:9pt;color:#444;margin-bottom:2.2mm}
+.pg .fsig{margin-top:6mm;text-align:right;font-size:10pt}
+.pg .fmmid{position:absolute;left:14mm;right:14mm;top:62mm;text-align:center}
+.pg .ftk{font-family:"Noto Sans KR",sans-serif;font-size:9.5pt;color:#666;margin:0 0 3mm}
+.pg .ftt{font-family:"Noto Sans KR",sans-serif;font-size:22pt;font-weight:800;margin:0;color:var(--main)}
+.pg .fts{font-family:"Noto Sans KR",sans-serif;font-size:11pt;margin:4mm 0 0;color:#444}
+.pg .ftc{font-family:"Noto Sans KR",sans-serif;font-size:10pt;margin:16mm 0 0;color:#666}
+.pg .fmbot{position:absolute;left:14mm;right:14mm;bottom:18mm}
+.pg .cp{font-size:8.6pt;line-height:1.55;margin:0 0 1.2mm;color:#333}
+.pg .st4{margin:0 0 2.6mm;line-height:1.5}
+.pg .stn{display:inline-block;background:var(--main);color:#fff;border-radius:50%;width:4.6mm;height:4.6mm;line-height:4.6mm;text-align:center;font-size:8pt;margin-right:1.6mm;font-family:"Noto Sans KR",sans-serif}
+.pg ol.rules{margin:0;padding-left:5mm}
+.pg ol.rules li{margin:0 0 1.8mm;line-height:1.5}
+.pg table.symt{width:100%;border-collapse:collapse;font-size:9.2pt}
+.pg table.symt td{vertical-align:top;padding:1.3mm 0;border-bottom:0.1mm solid #e4e4e4;line-height:1.42}
+.pg table.symt td.sc{width:21mm;white-space:nowrap}
+.pg table.symt td.sc2{width:46mm;color:var(--main);font-weight:700;font-family:"Noto Sans KR",sans-serif;font-size:9pt;line-height:1.35}
+.pg table.symt .ex{color:#555;font-size:8.6pt}
+.pg table.bkt2{width:100%;border-collapse:collapse;font-size:10pt}
+.pg table.bkt2 th{text-align:left;font-family:"Noto Sans KR",sans-serif;font-size:9pt;color:#666;border-bottom:0.3mm solid var(--main);padding:0 0 1.2mm}
+.pg table.bkt2 td{padding:1.7mm 0;border-bottom:0.1mm solid #e8e8e8}
+.pg table.toc{width:100%;border-collapse:collapse;font-size:7.9pt;table-layout:fixed}
+.pg table.toc td{padding:0.5mm 0;border-bottom:0.1mm solid #eee;vertical-align:top;line-height:1.3}
+.pg table.toc td.dt{width:10mm;color:#666;white-space:nowrap}
+.pg table.toc td.tx{width:23mm;padding-right:2mm;white-space:nowrap}
+.pg table.toc td.sb{color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg table.toc td.pgn{width:6.5mm;text-align:right;color:#666}
+.pg table.toc tr.band td{background:var(--mainL);color:var(--main);font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:8.6pt;padding:0.9mm 1.4mm;border:0}
+.pg .mini{border:0.15mm solid #ccc;background:#fafafa;padding:2mm;margin:1mm 0 2mm;overflow:hidden;height:118mm}
+.pg .miniin{transform:scale(0.385);transform-origin:top left;width:296mm}
+.pg .fcap{font-size:8.4pt;color:#666;margin:0}
 .pg .chip{display:inline-block;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-size:7.8pt;font-weight:700;color:var(--main);border:0.25mm solid var(--main);border-radius:1.2mm;padding:0 1.3mm;line-height:1.55;margin-right:1.2mm;vertical-align:0.3mm;white-space:nowrap}
 .pg .ref b{color:#000;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .box{padding:0;font-size:10pt;line-height:1.38;margin:0;font-family:"Noto Serif KR","Noto Serif CJK KR",serif}
@@ -129,7 +192,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   <button id="btnJson">JSON 내보내기</button>
   <button id="btnImport">가져오기</button>
   <button id="btnGit">GitHub</button>
-  <select id="selPrint"><option value="day">이 날</option><option value="month">이달</option><option value="quarter">이 분기(권)</option><option value="all">원고 있는 날 전체</option></select>
+  <select id="selPrint"><option value="day">이 날</option><option value="month">이달</option><option value="quarter">이 분기(권)</option><option value="all">원고 있는 날 전체</option><option value="front">책 머리만</option><option value="book">이 분기(권) — 책 머리 + 하루</option></select>
   <button id="btnPrint" class="pri">인쇄 · PDF</button>
 </header>
 <main>
@@ -140,7 +203,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <fieldset><legend><span class="n">1</span>읽기 전</legend>
       <label class="f"><span class="k"><b>오늘의 흐름</b> <span class="cnt" data-for="today"></span></span><textarea id="today" data-max="125"></textarea></label>
       <div class="hint">장 순서대로 무슨 일이 일어나는지. 지명을 넣습니다(지도와 연결). 해석·평가 없음.</div>
-      <label class="f"><span class="k"><b>읽으며 둘 초점</b> <span class="cnt" data-for="find"></span></span><textarea id="find" data-max="100"></textarea></label>
+      <label class="f"><span class="k"><b>읽으며 둘 초점</b> <span class="cnt" data-for="find"></span></span><textarea id="find" data-max="150"></textarea></label>
       <div class="hint">● 이끎말 ◇ 대조 ◆ 반복 □ 틀 ▲ 전환 ○ 속말 ◎ 침묵 ⋯ 공백 ?! 아이러니 — 기호는 하나, 층은 설명 첫머리로 가른다: 언어적 "뜻과 반대로 말합니다" / 상황적 "뜻한 것과 정반대의 결과가 옵니다" / 구조적 "읽는 사람은 아는데 ○○는 모릅니다". 본문에 실제로 있는 것만, 개수 제한 없음. ⋯ 공백은 "없다"까지만 적는다 — 왜 없는지는 본문이 말할 때만 적고, 행간을 채우지 않는다. 오른쪽 관찰 질문과 같은 줄기. 100자 안.</div>
       <label class="f"><span class="k"><b>말뜻 (선택)</b> <span class="cnt" data-for="word"></span></span><input type="text" id="word" data-max="40"></label>
     </fieldset>
@@ -183,7 +246,8 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <p class="small">원고는 이 브라우저에 자동 저장됩니다. 다른 곳에서도 쓰려면 JSON 내보내기 또는 GitHub 저장을 쓰세요. 칸을 비우면 그 자리는 인쇄되지 않습니다.</p>
   </section>
   <section id="prev">
-    <div id="scalebox"><div id="scaled"></div></div>
+    <div id="bookbar"><button id="bkPrev" title="앞 장 (←)">‹</button><span id="bkLab"></span><button id="bkNext" title="다음 장 (→)">›</button><span id="bkNo"></span></div>
+    <div id="scalebox"><div id="scaled"></div><div id="flip"></div></div>
   </section>
 </main>
 <div id="printroot"></div>
@@ -410,6 +474,192 @@ function pageR(p,qt){
 <div class="pn">${pageNo(p)+1}</div>
 </div>`;
 }
+/* ── 책 머리(겉표지·속지·1–11쪽) ── */
+const CHURCH='중앙성서교회 청년부';
+const SYMDOC=[
+ ['● 이끎말','한 낱말이 본문 전체를 끌고 갑니다. 그 말이 나올 때마다 표시해 두면 줄기가 보입니다.','창 29–31장의 ‘섬기다·일하다’ — 야곱의 20년이 이 말로 세어집니다.'],
+ ['◆ 반복','같은 말이나 장면이 거듭됩니다. 거듭될 때마다 무엇이 달라지는지가 핵심입니다.','창 5장의 "죽었더라" 여덟 번.'],
+ ['◇ 대조','두 자리를 나란히 놓아 갈라 보입니다. 무엇과 무엇을 견주는지 먼저 찾습니다.','출 1:12 바로의 계획과 그 결과.'],
+ ['□ 틀','처음과 끝이 맞물려 한 덩어리로 묶입니다. 묶인 안쪽이 그 단락입니다.','룻 1:1 "사사들이 치리하던 때에" ↔ 4:17 다윗.'],
+ ['▲ 전환','흐름이 여기서 돌아섭니다. 교차대구로 짜인 본문에서는 한가운데가 그 자리입니다.','창 8:1 "하나님이 노아를 기억하사".'],
+ ['○ 속말','화자가 인물의 속마음을 열어 보입니다. 겉으로 한 말과 견주어 읽습니다.','삼상 18:11 "그가 스스로 이르기를".'],
+ ['◎ 침묵','말해야 할 사람이 말하지 않습니다. 대답이 없다는 것까지만 봅니다.','레 10:3 "아론이 잠잠하니".'],
+ ['⋯ 공백','있어야 할 것이 본문에 없습니다. 왜 없는지는 본문이 말할 때만 따라갑니다.','창 1장 둘째 날에만 "좋았더라"가 없습니다.'],
+ ['?! 아이러니','겉과 속이 어긋납니다. 세 가지가 있습니다(오른쪽 쪽).','삿 6:12 포도주 틀에 숨은 이를 "큰 용사여".']
+];
+const IRONY=[
+ ['뜻과 반대로 말합니다','소풍 가는 날 비가 오는데 "날씨 참 좋다"','삼상 26:15 다윗이 아브넬에게 "네가 용사가 아니냐".'],
+ ['뜻한 것과 정반대의 결과가 옵니다','여행을 계획했는데 그날 비가 내린다','출 1:22 나일 강에 던지라던 명령이 모세를 왕궁에 들여놓습니다.'],
+ ['읽는 사람은 아는데 ○○는 모릅니다','욥의 고통은 사탄의 내기 때문인데 욥은 하나님을 탓한다','창 22:1 "하나님이 아브라함을 시험하시려고".']
+];
+const WHOLE5=[
+ ['인용','뒤의 성경이 이 본문을 그대로 끌어다 씁니다.'],
+ ['약속','여기서 하신 약속이 어디서 이루어지는지 봅니다.'],
+ ['주제','같은 주제가 성경 전체에 어떻게 이어지는지 봅니다.'],
+ ['모형','이 사람이나 이 일이 뒤의 무엇을 미리 보입니다.'],
+ ['흐름','구원의 줄거리에서 이 본문이 어디쯤인지 봅니다.']
+];
+const ABBR={'창세기':'창','출애굽기':'출','레위기':'레','민수기':'민','신명기':'신','여호수아':'수','사사기':'삿','룻기':'룻','사무엘상':'삼상','사무엘하':'삼하','열왕기상':'왕상','열왕기하':'왕하','역대상':'대상','역대하':'대하','에스라':'스','느헤미야':'느','에스더':'에','욥기':'욥','시편':'시','잠언':'잠','전도서':'전','아가':'아','이사야':'사','예레미야애가':'애','예레미야':'렘','에스겔':'겔','다니엘':'단','호세아':'호','요엘':'욜','아모스':'암','오바댜':'옵','요나':'욘','미가':'미','나훔':'나','하박국':'합','스바냐':'습','학개':'학','스가랴':'슥','말라기':'말','마태복음':'마','마가복음':'막','누가복음':'눅','요한복음':'요','사도행전':'행','로마서':'롬','고린도전서':'고전','고린도후서':'고후','갈라디아서':'갈','에베소서':'엡','빌립보서':'빌','골로새서':'골','데살로니가전서':'살전','데살로니가후서':'살후','디모데전서':'딤전','디모데후서':'딤후','디도서':'딛','빌레몬서':'몬','히브리서':'히','야고보서':'약','베드로전서':'벧전','베드로후서':'벧후','요한일서':'요일','요한이서':'요이','요한삼서':'요삼','유다서':'유','요한계시록':'계'};
+function shortRef(t){ let r=String(t); Object.keys(ABBR).forEach(k=>{ r=r.split(k).join(ABBR[k]) }); return r.replace(/장/g,'') }
+function qDays(q){ return PLAN.filter(x=>qOf(x)===q) }
+function bookOf(t){ return String(t).split(' · ').map(s=>s.replace(/\s*\d+\s*[–\-]?\s*\d*\s*(장|편).*$/,'').trim()) }
+function bookList(q){
+  const ds=qDays(q); const out=[];
+  ds.forEach((p,i)=>{ bookOf(p.t).forEach(b=>{ if(!b) return; const last=out[out.length-1];
+    if(last&&last.b===b){ last.n++; last.to=p } else out.push({b, from:p, to:p, n:1}) }) });
+  const merged=[]; out.forEach(o=>{ const f=merged.find(x=>x.b===o.b); if(f){f.n+=o.n; f.to=o.to} else merged.push(o) });
+  return merged;
+}
+function pgOfDay(p){ return pageNo(p) }
+function coverFront(q){
+  return `<div class="pg cv q${q}">
+<div class="cvfield"></div>
+<div class="cvbox">
+<p class="cvk">성경을 이야기로 읽는</p>
+<p class="cvt">성경통독<br>가이드북</p>
+<p class="cvs">${esc(QLAB[q].replace('권 ','권 · '))}</p>
+</div>
+<p class="cvch">${esc(CHURCH)}</p>
+</div>`;
+}
+function coverBack(q){
+  return `<div class="pg cv back q${q}">
+<div class="cvbox2">
+<p class="bkt">성경책을 펴 놓고 쓰는 책입니다</p>
+<p class="bkp">이 책에는 성경 본문이 한 절도 실려 있지 않습니다. 날마다 왼쪽 쪽을 읽고, 성경책을 펴서 그날의 본문을 읽고, 오른쪽 쪽에 손으로 씁니다.</p>
+<p class="bkp">되풀이되는 낱말, 나란히 놓인 두 자리, 흐름이 돌아서는 자리, 비어 있는 자리 — 석 달이면 이 연장들이 손에 익습니다. 그러면 가이드북이 없는 본문 앞에서도 스스로 읽게 됩니다.</p>
+<p class="bkp">성경책에 밑줄을 긋고 형광펜으로 표시하십시오. 해마다 쌓이면 평생 함께 가는 성경책이 됩니다.</p>
+</div>
+<p class="cvch">${esc(CHURCH)} · 통독 앱 CBSR과 함께 씁니다</p>
+</div>`;
+}
+function endPaper(q){ return `<div class="pg ep q${q}"></div>` }
+function blankPage(q){ return `<div class="pg q${q}"></div>` }
+function pTitle(q){
+  return `<div class="pg fm q${q}">
+<div class="fmmid">
+<p class="ftk">성경을 이야기로 읽는</p>
+<p class="ftt">성경통독 가이드북</p>
+<p class="fts">${esc(QLAB[q].replace('권 ','권 · '))}</p>
+<p class="ftc">${esc(CHURCH)}</p>
+</div>
+<div class="pn">1</div></div>`;
+}
+function pCopy(q){
+  return `<div class="pg fm q${q}">
+<div class="fmbot">
+<p class="cp"><b>성경통독 가이드북</b> ${esc(QLAB[q].replace('권 ','권 · '))}</p>
+<p class="cp">기획·총괄 이삭 목사</p>
+<p class="cp">펴낸 곳 ${esc(CHURCH)}</p>
+<p class="cp">&nbsp;</p>
+<p class="cp">이 책에는 성경 본문을 싣지 않았습니다. 본문을 인용한 자리는 대한성서공회 「성경전서 개역개정판」을 따랐습니다.</p>
+<p class="cp">통독 앱 CBSR과 같은 흐름으로 만들었습니다.</p>
+<p class="cp">교회 안에서 쓰기 위해 만든 책이며, 팔지 않습니다.</p>
+</div>
+<div class="pn">2</div></div>`;
+}
+function pPreface(q){
+  return `<div class="pg fm q${q}">
+<p class="fh">왜 이렇게 읽습니까</p>
+<p class="fp">성경의 절반이 넘는 분량이 이야기입니다. 이야기는 교리를 요약해 놓은 글이 아닙니다. 누가 무엇을 했고 하나님이 어떻게 하셨는지를 장면으로 보여 주는 글입니다. 그래서 이야기는 이야기로 읽어야 합니다.</p>
+<p class="fp">이 책은 성경을 대신하지 않습니다. 성경책을 옆에 펴 놓고 쓰는 책입니다. 본문은 한 절도 싣지 않았습니다.</p>
+<p class="fp">하루는 네 걸음입니다. <b>①</b> 읽기 전에 오늘의 흐름과 오늘 쓸 도구를 받습니다. <b>②</b> 성경책을 읽고 돌아와 눈여겨볼 것을 확인합니다. <b>③</b> 본 것을 내 말로 씁니다. <b>④</b> 다 쓴 뒤에 해설과 기도를 읽습니다. 해설을 먼저 읽으면 ③에 쓸 말이 남지 않습니다. 이 순서만은 지켜 주십시오.</p>
+<p class="fp">도구는 외우는 지식이 아니라 손에 쥐는 연장입니다. 되풀이되는 낱말, 나란히 놓인 두 자리, 처음과 끝이 맞물리는 틀, 흐름이 돌아서는 자리, 인물의 속마음, 말하지 않는 사람, 비어 있는 자리, 겉과 속이 어긋나는 자리. 석 달을 지나면 이 연장들이 손에 익습니다. 그러면 가이드북이 없는 본문 앞에서도 스스로 읽게 됩니다. 그것이 이 책의 목적입니다.</p>
+<p class="fp">성경책에 밑줄을 긋고 형광펜으로 표시하십시오. 해마다 쌓이면 그 성경책이 평생 함께 가는 책이 됩니다.</p>
+<p class="fsig">이삭 목사</p>
+<div class="pn">3</div></div>`;
+}
+function pHow1(q,sample){
+  return `<div class="pg fm q${q}">
+<p class="fh">이 책 쓰는 법</p>
+<p class="fp">하루에 펼침면 하나입니다. 왼쪽은 읽고, 오른쪽은 씁니다.</p>
+<div class="mini"><div class="miniin">${sample}</div></div>
+<p class="fcap">실제 하루 펼침면을 줄여 놓은 것입니다.</p>
+<div class="pn">4</div></div>`;
+}
+function pHow2(q){
+  const items=[
+   ['①','읽기 전','오늘의 흐름으로 줄거리를 잡고, <b>읽으며 둘 초점</b>의 기호로 오늘 쓸 연장을 받습니다. 말뜻은 낯선 낱말 하나를 풀어 줍니다.'],
+   ['②','읽은 뒤','성경책을 다 읽고 돌아와서 봅니다. 눈여겨볼 것은 답이 아니라 확인입니다. 내가 본 것과 견주어 보십시오.'],
+   ['③','나의 묵상','손으로 쓰는 자리입니다. 본문 관찰 · 하나님의 성품 · 적용 · 오늘의 기도. 칸마다 한두 문장이면 넉넉합니다.'],
+   ['④','쓴 뒤에 읽기','쪽 아래 띠입니다. <b>③을 다 쓴 뒤에</b> 읽습니다.']
+  ];
+  const rules=[
+   '성경책과 나란히 놓고 씁니다. 이 책만 읽는 것은 통독이 아닙니다.',
+   '④ 해설은 반드시 다 쓴 뒤에 읽습니다.',
+   '초점의 기호가 그날의 연장입니다. <b>설명이 붙지 않은 기호는 스스로 찾아보라는 뜻</b>입니다.',
+   '마음에 걸린 구절은 이 책에 옮겨 적지 말고 <b>성경책에 바로 밑줄을 긋거나 형광펜으로 표시</b>하십시오.',
+   '하루를 건너뛰어도 다음 날부터 이어 가면 됩니다. 밀린 날은 주일 오후에 몰아 읽습니다.',
+   '글씨가 들어갈 자리는 넉넉히 잡았습니다. 다 채우지 못해도 괜찮습니다.'
+  ];
+  return `<div class="pg fm q${q}">
+<p class="fh2">네 걸음</p>
+${items.map(([n,t,d])=>`<p class="st4"><span class="stn">${n}</span><b>${t}</b> — ${d}</p>`).join('')}
+<p class="fh2" style="margin-top:4mm">여섯 가지 약속</p>
+<ol class="rules">${rules.map(r=>`<li>${r}</li>`).join('')}</ol>
+<div class="pn">5</div></div>`;
+}
+function pSym(q){
+  return `<div class="pg fm q${q}">
+<p class="fh">기호 — 아홉 가지 연장</p>
+<p class="fp sm">본문에 있을 때만 꺼냅니다. 하루에 몇 개가 나오든 상관없습니다. <b>본문이 먼저입니다.</b></p>
+<table class="symt">${SYMDOC.map(([s,d,e])=>`<tr><td class="sc">${chipSym(s)}</td><td>${d}<br><span class="ex">${vs(e)}</span></td></tr>`).join('')}</table>
+<div class="pn">6</div></div>`;
+}
+function pSym2(q){
+  return `<div class="pg fm q${q}">
+<p class="fh2">?! 아이러니의 세 가지</p>
+<p class="fp sm">기호는 하나입니다. 어떤 아이러니인지는 설명 첫머리로 알 수 있습니다.</p>
+<table class="symt">${IRONY.map(([a,b,c])=>`<tr><td class="sc2">“${a}”</td><td><span class="ex">보기: ${b}</span><br>${vs(c)}</td></tr>`).join('')}</table>
+<p class="fh2" style="margin-top:3.5mm">‘성경 전체로’의 다섯 갈래</p>
+<p class="fp sm">왼쪽 쪽 아래에 붙는 줄입니다. 관찰 도구와는 다른 갈래입니다.</p>
+<table class="symt">${WHOLE5.map(([a,b])=>`<tr><td class="sc"><span class="chip">${a}</span></td><td>${b}</td></tr>`).join('')}</table>
+<p class="fh2" style="margin-top:3.5mm">공백을 다룰 때</p>
+<p class="fp sm">비어 있는 자리는 저자가 남겨 둔 자리입니다. 없다는 것까지만 보고, 왜 없는지는 본문이 말할 때만 따라갑니다. 행간을 억지로 채우지 않습니다.</p>
+<div class="pn">7</div></div>`;
+}
+function pBooks(q){
+  const bl=bookList(q); const ds=qDays(q);
+  return `<div class="pg fm q${q}">
+<p class="fh">이 권에서 읽는 책들</p>
+<p class="fp sm">${ds.length}일 · ${esc(ds[0].m)}월 ${esc(ds[0].d)}일부터 ${esc(ds[ds.length-1].m)}월 ${esc(ds[ds.length-1].d)}일까지</p>
+<table class="bkt2"><tr><th>책</th><th>시작</th><th>날수</th></tr>
+${bl.map(o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일</td><td>${o.n}일</td></tr>`).join('')}</table>
+<div class="pn">8</div></div>`;
+}
+function pToc(q,part){
+  const ds=qDays(q); const per=Math.ceil(ds.length/3);
+  const seg=ds.slice(part*per,(part+1)*per);
+  let last='';
+  const rows=seg.map(p=>{
+    const b=bookOf(p.t)[0]; let band='';
+    if(b!==last){ band=`<tr class="band"><td colspan="4">${esc(b)}</td></tr>`; last=b }
+    const qt=(typeof get==='function')?get(p.no):null;
+    return band+`<tr><td class="dt">${p.m}/${p.d}</td><td class="tx">${esc(shortRef(p.t))}</td><td class="sb">${esc((qt&&qt.sub)||p.sub||'')}</td><td class="pgn">${pgOfDay(p)}</td></tr>`;
+  }).join('');
+  return `<div class="pg fm q${q}">
+${part===0?'<p class="fh">통독표 · 차례</p>':'<p class="fh2">통독표 · 차례</p>'}
+<table class="toc">${rows}</table>
+<div class="pn">${9+part}</div></div>`;
+}
+function frontSpreads(q,sample){
+  const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
+  return [
+    sp(blankPage(q),coverFront(q)),
+    sp(endPaper(q),endPaper(q)),
+    sp(blankPage(q),pTitle(q)),
+    sp(pCopy(q),pPreface(q)),
+    sp(pHow1(q,sample),pHow2(q)),
+    sp(pSym(q),pSym2(q)),
+    sp(pBooks(q),pToc(q,0)),
+    sp(pToc(q,1),pToc(q,2))
+  ];
+}
+function backSpreads(q){
+  const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
+  return [ sp(endPaper(q),endPaper(q)), sp(coverBack(q),blankPage(q)) ];
+}
+
 function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</div>`}
 
 /* ── 미리보기와 맞춤 검사 ── */
@@ -453,8 +703,61 @@ function render(){
   const fitTxt=worst<0?`지면 넘침 ${res[0]<0?'왼쪽 ':''}${res[1]<0?'오른쪽 ':''}${Math.abs(worst).toFixed(1)}mm — 해설·눈여겨볼 것부터 줄이기`:`지면 들어감 (여유 왼 ${res[0].toFixed(0)}mm · 오른 ${res[1].toFixed(0)}mm)`;
   f.className=worst<0?'bad':over?'warn':'good'; f.textContent=fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
 }
-function gotoDay(i){ if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); render(); }
+function gotoDay(i){ if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } }
 function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML=''; PLAN.forEach((p,i)=>{if(p.m!==m)return;const o=document.createElement('option');o.value=i;o.textContent=`${p.d}일 · ${p.t}${get(p.no)?' ✓':''}`;s.appendChild(o)})}
+/* ── 전자책처럼 넘겨 보기 ── */
+const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','기호 설명','이 권의 책들 · 통독표','통독표'];
+const BLAB=['면지','뒤표지'];
+let VIEWS=[], VI=0, ANIM=false;
+function curScale(){ const box=$('scalebox'); return Math.min(1,box.clientWidth/(296*MM)) }
+function buildViews(){
+  const q=qOf(PLAN[cur]); const ds=qDays(q);
+  const sd=ds.find(p=>get(p.no))||ds[0];
+  const sample=spread(sd,get(sd.no)||blank());
+  const fs=frontSpreads(q,sample).map((h,i)=>({t:'s',h,lab:FLAB[i]||'책 머리'}));
+  const dv=ds.map(p=>({t:'d',i:PLAN.indexOf(p)}));
+  const bs=backSpreads(q).map((h,i)=>({t:'s',h,lab:BLAB[i]||'책 끝'}));
+  VIEWS=fs.concat(dv,bs);
+}
+function viewOfDay(i){ return VIEWS.findIndex(v=>v.t==='d'&&v.i===i) }
+function viewHTML(v){ if(v.t==='s') return v.h; const p=PLAN[v.i]; return spread(p, v.i===cur?readForm():(get(p.no)||blank())) }
+function viewLabel(v){ if(v.t==='s') return v.lab; const p=PLAN[v.i]; return `${p.m}월 ${p.d}일 · ${p.t}` }
+function drawStatic(html){
+  const s=curScale(), sc=$('scaled'), box=$('scalebox');
+  sc.style.transform=`scale(${s})`; sc.style.width=(296*MM)+'px'; box.style.height=(210*MM*s)+'px';
+  sc.innerHTML=html; tighten(sc); matchMedia(sc,s);
+  $('fit').className='good'; $('fit').textContent='책 머리 — 원고 칸이 아닙니다';
+}
+function updateBar(){
+  const v=VIEWS[VI]; if(!v) return;
+  $('bkLab').textContent=viewLabel(v);
+  $('bkNo').textContent=(VI+1)+' / '+VIEWS.length;
+  $('bkPrev').disabled=VI<=0; $('bkNext').disabled=VI>=VIEWS.length-1;
+}
+function showView(k,noAnim){
+  k=Math.max(0,Math.min(VIEWS.length-1,k)); VI=k; const v=VIEWS[k];
+  if(v.t==='d'){ if(cur!==v.i){ if(saveT){clearTimeout(saveT);save()} cur=v.i; const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); } render(); }
+  else drawStatic(v.h);
+  updateBar();
+}
+function halfOf(html,side){ const d=document.createElement('div'); d.innerHTML=html; const pgs=d.querySelectorAll('.pg'); const e=pgs[side?1:0]; return e?e.outerHTML:'' }
+function flip(dir){
+  if(ANIM) return; const k=VI+dir; if(k<0||k>=VIEWS.length) return;
+  const s=curScale(); const from=viewHTML(VIEWS[VI]), to=viewHTML(VIEWS[k]);
+  const face=dir>0?halfOf(from,1):halfOf(from,0);
+  const back=dir>0?halfOf(to,0):halfOf(to,1);
+  if(!face||!back){ showView(k); return }
+  ANIM=true;
+  const wrap=$('flip'); wrap.style.display='block';
+  wrap.style.transform=`scale(${s})`;
+  wrap.style.left=(dir>0?148*MM*s:0)+'px';
+  wrap.innerHTML=`<div class="fsheet ${dir>0?'fwd':'bwd'}"><div class="fface">${face}</div><div class="fback">${back}</div><div class="fsh"></div></div>`;
+  showView(k,true);
+  const sh=wrap.querySelector('.fsheet');
+  requestAnimationFrame(()=>{ sh.classList.add('go') });
+  setTimeout(()=>{ wrap.style.display='none'; wrap.innerHTML=''; ANIM=false }, 640);
+}
+
 (function init(){
   const sm=$('selM'); for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'월';sm.appendChild(o)}
   sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur;
@@ -464,6 +767,9 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
   document.querySelectorAll('#form textarea,#form input[type=text]').forEach(el=>el.addEventListener('input',()=>{counters();render();$('status').textContent='저장 중…';clearTimeout(saveT);saveT=setTimeout(()=>{save();saveT=null;fillDays();$('selD').value=cur},600)}));
   window.addEventListener('resize',render);
   fillForm(get(PLAN[cur].no)); render();
+  buildViews(); const k0=viewOfDay(cur); showView(k0>=0?k0:0);
+  $('bkPrev').onclick=()=>flip(-1); $('bkNext').onclick=()=>flip(1);
+  document.addEventListener('keydown',e=>{ if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return; if(e.key==='ArrowLeft'){e.preventDefault();flip(-1)} if(e.key==='ArrowRight'){e.preventDefault();flip(1)} });
   fetch('guide_qt.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;takeRemote(j.qt||j,'공개 원고')}).catch(()=>{});
   /* JSON */
   $('btnJson').onclick=()=>{$('dlgTitle').textContent='JSON 내보내기 — 원고 '+Object.keys(DATA).length+'일치';$('dlgText').value=JSON.stringify({plan:'2027-365',updated:new Date().toISOString(),qt:cleanOut(DATA)},null,1);$('dlgJson').showModal()};
@@ -488,12 +794,16 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
   $('btnPrint').onclick=()=>{
     if(saveT){clearTimeout(saveT);save();saveT=null}
     const mode=$('selPrint').value, p=PLAN[cur];
-    let list=PLAN.filter((x,i)=>mode==='day'?i===cur:mode==='month'?x.m===p.m:mode==='quarter'?qOf(x)===qOf(p):true).filter(x=>get(x.no));
+    let list=PLAN.filter((x,i)=>mode==='day'?i===cur:mode==='month'?x.m===p.m:(mode==='quarter'||mode==='book')?qOf(x)===qOf(p):mode==='front'?false:true).filter(x=>get(x.no));
     if(mode==='day'&&!list.length) list=[p];
+    if(mode==='front') list=[];
     const parts=[];
+    if(mode==='front'||mode==='book'){ const q=qOf(p); const ds=qDays(q); const sd=ds.find(x=>get(x.no))||ds[0];
+      frontSpreads(q,spread(sd,get(sd.no)||blank())).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
     // 모든 날 맞춤 검사(숨겨 그려 잼)
     const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[]; const heardN=[];
     list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); matchMedia(probe,1); parts.push(probe.innerHTML); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
+    if(mode==='book'){ const q=qOf(p); backSpreads(q).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
     probe.remove(); $('printroot').innerHTML=parts.join('');
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
     $('status').textContent=list.length+'일치 · '+(list.length*2)+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음';
