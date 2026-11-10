@@ -5,16 +5,16 @@ const SPACES={};
 function spaceReg(sp){ SPACES[sp.id]=sp; return sp; }
 function spaceCard(id){ const p=SPACES[id]; if(!p) return ""; const n=p.places.reduce((a,x)=>a+(x.ev||[]).length,0); return `<button class="bmtc" data-space="${id}"><i>▶</i><b>${esc(p.card||p.title)}</b><small><span>${esc(p.sub||"")}</span></small><em>장소 ${p.places.length} · 본문 ${n}</em></button>`; }
 function spaceHere(p){ if(!p) return []; const has=(b,c)=>p.ch.some(x=>x[0]===b&&x[1]===c); const out=[];
-  for(const id in SPACES){ const sp=SPACES[id]; let hit=null; for(const pl of sp.places){ const e=(pl.ev||[]).find(ev=>has(ev.r[0],ev.r[1])); if(e){ hit=[pl,e]; break; } } if(!hit) continue;
-    out.push(`<button class="tourhere" data-space="${id}" data-pl="${hit[0].id}"><i>▶</i><span><b>${esc(sp.title)}</b><small>오늘 본문의 자리: ${esc(hit[0].n)} · ${esc(hit[1].t)}</small></span></button>`); }
+  for(const id in SPACES){ const sp=SPACES[id]; let hit=null; for(const pl of sp.places){ const k=(pl.ev||[]).findIndex(ev=>has(ev.r[0],ev.r[1])); if(k>=0){ hit=[pl,pl.ev[k],k]; break; } } if(!hit) continue;
+    out.push(`<button class="tourhere" data-space="${id}" data-pl="${hit[0].id}" data-ev="${hit[2]}"><i>▶</i><span><b>${esc(sp.title)}</b><small>오늘 본문의 자리: ${esc(hit[0].n)} · ${esc(hit[1].t)}</small></span></button>`); }
   return out; }
-document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-space]"); if(!b) return; e.preventDefault(); e.stopPropagation(); try{ document.querySelector("#sheetX")?.click(); }catch(e2){} spaceOpen(b.dataset.space,b.dataset.pl||""); });
-function spaceOpen(id,pl0){ const SP=SPACES[id]; if(!SP) return; document.querySelector(".atn")?.remove();
+document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-space]"); if(!b) return; e.preventDefault(); e.stopPropagation(); try{ document.querySelector("#sheetX")?.click(); }catch(e2){} spaceOpen(b.dataset.space,b.dataset.pl||"",b.dataset.ev); });
+function spaceOpen(id,pl0,ev0){ const SP=SPACES[id]; if(!SP) return; document.querySelector(".atn")?.remove();
   const el=document.createElement("div"); el.className="bmt2 atn pln spc"; el.setAttribute("role","dialog"); el.setAttribute("aria-label",SP.title); const VB=SP.vb||[300,430];
   el.innerHTML=`<div class="bmtmap atmap"><svg class="map" id="sp_svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 ${VB[0]} ${VB[1]}" role="img" aria-label="${esc(SP.title)}">
     <defs><radialGradient id="pl_glow"><stop offset="0" stop-color="#fff3c0" stop-opacity=".98"/><stop offset=".55" stop-color="#ffd978" stop-opacity=".55"/><stop offset="1" stop-color="#ffd978" stop-opacity="0"/></radialGradient></defs>
     <g id="sp_base">${SP.svg}</g><g id="sp_hl"></g>
-    <g id="sp_hot">${SP.places.map(p=>`<g class="sphot" data-pl="${p.id}" role="button" tabindex="0" aria-label="${esc(p.n)}"><rect x="${p.box[0]}" y="${p.box[1]}" width="${p.box[2]}" height="${p.box[3]}" rx="4" fill="rgba(165,54,31,0)" stroke="rgba(165,54,31,0)" stroke-width="1.5"/><text class="pl" x="${p.lx??(p.box[0]+p.box[2]/2)}" y="${p.ly??(p.box[1]+p.box[3]/2+3)}" text-anchor="middle" style="font-size:${p.fs||8.5}px;fill:#8f1d0f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">${esc(p.n)}${(p.ev||[]).length?` <tspan style="font-size:7px;fill:#6b4a24">${p.ev.length}</tspan>`:""}</text></g>`).join("")}</g>
+    <g id="sp_hot">${SP.places.map(p=>`<g class="sphot" data-pl="${p.id}" role="button" tabindex="0" aria-label="${esc(p.n)}"><rect class="hit" x="${Math.min(p.box[0],p.box[0]+p.box[2]/2-24)}" y="${Math.min(p.box[1],p.box[1]+p.box[3]/2-18)}" width="${Math.max(p.box[2],48)}" height="${Math.max(p.box[3],36)}" fill="rgba(0,0,0,0)"/><rect x="${p.box[0]}" y="${p.box[1]}" width="${p.box[2]}" height="${p.box[3]}" rx="4" fill="rgba(165,54,31,0)" stroke="rgba(165,54,31,0)" stroke-width="1.5"/><text class="pl" x="${p.lx??(p.box[0]+p.box[2]/2)}" y="${p.ly??(p.box[1]+p.box[3]/2+3)}" text-anchor="middle" style="font-size:${p.fs||8.5}px;fill:#8f1d0f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">${esc(p.n)}${(p.ev||[]).length?` <tspan style="font-size:7px;fill:#6b4a24">${p.ev.length}</tspan>`:""}</text></g>`).join("")}</g>
   </svg></div>
    <div class="bmttop"><b>${esc(SP.title)}</b><button class="bmtic" data-t="back" aria-label="장소 목록">☰</button><button class="bmtic" data-t="x" aria-label="닫기">✕</button></div>
    <div class="bmtp spcp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><div class="spev"></div>${SP.note?`<p class="plnote">${esc(SP.note)}</p>`:""}</div>
@@ -33,7 +33,7 @@ function spaceOpen(id,pl0){ const SP=SPACES[id]; if(!SP) return; document.queryS
   el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(t){ if(t.dataset.t==="x") close(); else if(t.dataset.t==="back") home(); return; }
     const ev=e.target.closest("[data-ev]"); if(ev&&cur){ show(cur.id,+ev.dataset.ev); return; } const pl=e.target.closest("[data-pl]"); if(pl){ show(pl.dataset.pl,0); } });
   el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ const pl=e.target.closest&&e.target.closest(".sphot"); if(pl){ e.preventDefault(); show(pl.dataset.pl,0); } } });
-  if(pl0&&SP.places.some(p=>p.id===pl0)) show(pl0,0); else home(); }
+  if(pl0&&SP.places.some(p=>p.id===pl0)) show(pl0,ev0!=null&&ev0!==""?+ev0:0); else home(); } /* 2차 검수 P1-2: 오늘 본문의 사건부터 */
 try{ window.spaceOpen=spaceOpen; window.SPACES=SPACES; }catch(e){}
 
 /* ── 헤롯 성전 뜰 ── 위가 북. 바깥(이방인의 뜰)에서 안(지성소)으로 들어갈수록 높아짐. 짜임은 요세푸스·미쉬나에 따른 복원도 */

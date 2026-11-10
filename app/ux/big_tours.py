@@ -778,6 +778,8 @@ for _t in T:
     _comp=_comp+[c[0] for c in _a]
     _d=[_s['drop']] if isinstance(_s.get('drop'),str) else (_s.get('drop') or [])
     _comp=[c for c in _comp if c not in _d]
+# 사사 시대 큰 여정(2026-11-10): 따로 둔 파일을 읽어 T에 붙임. 장면 ID 부여보다 앞에 둠(2차 검수 P1-1)
+import os as _osj; exec(open(_osj.path.join(_osj.path.dirname(_osj.path.abspath(__file__)),'big_tours_judges.py'),encoding='utf-8').read())
 # 장면 고유 ID(원칙 C04·9.6, 2026-11-03): 순서·제목과 따로 유지. scene_ids.json에 한 번 정한 ID를 보관하고, 새 장면만 새 번호.
 #  제목을 바꾸면 scene_ids.json의 그 제목 키도 함께 바꿀 것(안 바꾸면 새 ID가 생기고 옛 ID는 '대응 없음' 경고)
 import json, os as _os
@@ -797,8 +799,6 @@ json.dump(_ID,open(_IDP,'w'),ensure_ascii=False,indent=1)
 for _w in _W: print("[여정 검사]",_w)
 # 물 위를 걸어가는 직선 고침(11/4 목사님: 마가 여정에서 바다 위 횡단). ux/landroute.py가 지형 그림의 물빛으로 육지 길을 찾아 ux/landpath.json에 경유점을 둠.
 #  여기서는 그 경유점을 육지 이동 구간 앞에 넣기만 함(그림 파일 없이도 빌드됨). 경로를 고친 뒤 다시 만들 때: NO_LANDPATH=1 python3 ux/big_tours.py && python3 ux/landroute.py
-# 사사 시대 큰 여정(2026-11-10): 따로 둔 파일을 읽어 T에 붙임
-import os as _osj; exec(open(_osj.path.join(_osj.path.dirname(_osj.path.abspath(__file__)),'big_tours_judges.py'),encoding='utf-8').read())
 import os as _os2
 if not _os2.environ.get('NO_LANDPATH'):
   _LP=json.load(open(_os2.path.join(_os2.path.dirname(_os2.path.abspath(__file__)),'landpath.json'))); _used=set()

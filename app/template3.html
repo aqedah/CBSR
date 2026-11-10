@@ -1420,6 +1420,8 @@ body.wcmon{overflow:hidden}
 /* 공용 평면도 여정(2026-11-10): 정보 성격 표시 k — i 추론(점선·?) r 복원도(회색) u 위치 미상(흐림) v 환상(보라) */
 .pln .pk-i{fill:#6b4a24;font-style:italic}.pln .pk-r{fill:#8a7a62}.pln .pk-u{fill:#8a7a62;opacity:.6}.pln .pk-v{fill:#6a2a8a}
 .pln path.pk-i,.pln line.pk-i{stroke-dasharray:3 4}.pln .pk-v-box{fill:none;stroke:#6a2a8a;stroke-width:2.5;stroke-dasharray:8 5}
+.pln #pl_base > g.pldim{opacity:.32;transition:opacity .6s}.pln #pl_base > g{transition:opacity .6s}
+.spc .sphot rect.hit{cursor:pointer}
 .pln .pwalk{animation:plwalk .5s steps(2) infinite}@keyframes plwalk{0%{transform:translateY(0)}50%{transform:translateY(-1.5px)}100%{transform:translateY(0)}}
 .pln .plnote{margin:5px 0 0;font-size:11px;line-height:1.45;color:#a89a84}
 .spc .sphot rect{cursor:pointer;transition:fill .3s,stroke .3s}.spc .sphot:hover rect,.spc .sphot:focus rect{fill:rgba(165,54,31,.08);stroke:rgba(165,54,31,.6)}.spc .sphot.on rect{stroke:rgba(165,54,31,.9)}.spc .sphot text{cursor:pointer}
@@ -5902,7 +5904,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   const chm=m=>m&&m.getElement&&m.getElement()&&m.getElement().querySelector(".chm");
   function emo(m,e,force){ const x=m&&m.getElement&&m.getElement(); if(!x||!e) return; if(!force&&VB.some(v=>!v.classList.contains("old"))) return; /* 말풍선이 떠 있는 동안은 감정 표시를 쉼(GPT 2차) */ const b=document.createElement("span"); b.className="mvemo"; b.textContent=e; x.appendChild(b); setTimeout(()=>b.remove(),1700); }
   const EMO=st=>[...(st.mood||"")].filter(c=>c.trim()&&c!=="️");
-  function label(q){ if(!q||!q[0]||shown.has(q[0])) return; shown.add(q[0]); const est=/\?$/.test(q[0]), nm=q[0].replace(/\?$/,""), rg=!est&&(PLACE.get(nm)||[])[3]==="r"; /* 원칙 2.5: 땅·광야 같은 지역 이름은 한 점이 아니라 그 일대 */ /* 3차 R3-18: 이름 끝 ?는 자리를 추정한 곳 */ L.marker(LL(q),{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl${est?" est":""}${rg?" rg":""}">${esc(nm)}${est?"<small>추정</small>":rg?"<small>일대</small>":""}</span>`,iconSize:[0,0],iconAnchor:[-6,8]})}).addTo(labs); clutLater(); }
+  function label(q){ if(!q||!q[0]||shown.has(q[0])) return; shown.add(q[0]); const est=/\?$/.test(q[0]), nm=q[0].replace(/\?$/,""), rg=!est&&(PLACE.get(nm)||[])[3]==="r"; /* 원칙 2.5: 땅·광야 같은 지역 이름은 한 점이 아니라 그 일대 */ /* 3차 R3-18: 이름 끝 ?는 자리를 추정한 곳 */ if(est) L.circle(LL(q),{radius:9000,color:"#e2b874",weight:1.2,dashArray:"4 5",fillColor:"#e2b874",fillOpacity:.12,interactive:false}).addTo(labs); /* 2차 검수 P1-5: 추정 자리는 점이 아니라 흐린 일대(반지름 9km) */ L.marker(LL(q),{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl${est?" est":""}${rg?" rg":""}">${esc(nm)}${est?"<small>추정</small>":rg?"<small>일대</small>":""}</span>`,iconSize:[0,0],iconAnchor:[-6,8]})}).addTo(labs); clutLater(); }
   /* 이름표 겹침 풀기(2026-11-01): 나중에 지난 곳을 먼저 살리고, 겹치면 점 왼쪽으로, 그래도 겹치면 잠시 숨김 */
   let clutT=0; function clutLater(){ clearTimeout(clutT); clutT=setTimeout(declutter,60); }
   function declutter(){ if(!labs) return; const ms=[]; labs.eachLayer(m=>ms.push(m)); const R=[], ov=r=>R.some(q=>!(r.right<q.left-2||q.right<r.left-2||r.bottom<q.top-1||q.bottom<r.top-1));
@@ -6069,7 +6071,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   const FXR=new Set(["fire","light"]); /* 효과가 st.r을 직접 띄우는 것 */
   const FXP={
     /* 사사기 되풀이 카드(목사님 2026-11-10 승인, GPT 검토 §4-1): 다섯 요소(악·넘기심·부르짖음·구원자·평안)를 동그라미로, 있으면 채우고 없으면 비움 */
-    cycle:async(st,my)=>{ const C=st.cycle||[1,1,1,1,1], N=["악을 행함","넘기심","부르짖음","구원자","평안"]; el.querySelectorAll(":scope>.mvcycle").forEach(x=>x.remove()); const d=document.createElement("div"); d.className="mvcycle"; d.innerHTML=`<b>${esc(st.cyc||"사사기의 틀")}</b><div class="mvcyr">${N.map((n,k)=>`<span class="${C[k]?"on":"off"}"><i>${C[k]?"●":"○"}</i>${n}</span>`).join('<em>→</em>')}</div>${C.includes(0)?`<small>빠진 것: ${N.filter((n,k)=>!C[k]).join(" · ")}</small>`:`<small>다섯 요소가 모두 있음</small>`}`; el.appendChild(d); requestAnimationFrame(()=>d.classList.add("on"));
+    cycle:async(st,my)=>{ const C=st.cycle||[1,1,1,1,1], N=["악을 행함","넘기심","부르짖음","구원자","평안"]; el.querySelectorAll(":scope>.mvcycle").forEach(x=>x.remove()); const d=document.createElement("div"); d.className="mvcycle"; d.innerHTML=`<b>${esc(st.cyc||"사사기의 틀")}</b><div class="mvcyr">${N.map((n,k)=>`<span class="${C[k]?"on":"off"}"><i>${C[k]?"●":"○"}</i>${n}</span>`).join('<em>→</em>')}</div>${C.includes(0)?`<small>이 이야기에 기록되지 않은 것: ${N.filter((n,k)=>!C[k]).join(" · ")}</small>`:`<small>다섯 요소가 모두 있음</small>`}`; el.appendChild(d); requestAnimationFrame(()=>d.classList.add("on"));
       const ok=await sleep(6600,my); d.classList.remove("on"); setTimeout(()=>d.remove(),700); return ok; },
     /* 행 8:29–31: 수레가 예루살렘 쪽에서 내려오고, 빌립이 달려가 함께 탐 */
     meetcart:async(st,my)=>{ if(!main) return true; const c=main.getLatLng(), P=map.latLngToContainerPoint(c), at=(x,y)=>map.containerPointToLatLng(P.add(L.point(x,y)));

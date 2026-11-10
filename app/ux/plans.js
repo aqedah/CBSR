@@ -14,7 +14,7 @@ const PLAN_K={t:"",i:"pk-i",r:"pk-r",u:"pk-u",v:"pk-v"};
 function planCard(id){ const p=PLANS[id]; if(!p) return ""; return `<button class="bmtc" data-plan="${id}"><i>▶</i><b>${esc(p.card||p.title)}</b><small><span>${esc(p.sub||p.kicker||"")}</span></small><em>${p.scenes.length}장면 따라가기</em></button>`; }
 /* 오늘 읽는 장에 걸린 평면도 여정 단추(tourHere에서 부름) */
 function planHere(p){ if(!p) return []; const has=(b,c)=>p.ch.some(x=>x[0]===b&&x[1]===c); const out=[];
-  for(const id in PLANS){ const sp=PLANS[id]; if(!sp.open) continue; const si=sp.scenes.findIndex(sc=>sc.r&&has(sc.r[0],sc.r[1])); const hit=si>=0||sp.open.some(([b,c])=>has(b,c)); if(!hit) continue;
+  for(const id in PLANS){ const sp=PLANS[id]; if(!sp.open) continue; const si=sp.scenes.findIndex(sc=>(sc.r&&has(sc.r[0],sc.r[1]))||(sc.chs||[]).some(([b,c])=>has(b,c))); const hit=si>=0||sp.open.some(([b,c])=>has(b,c)); if(!hit) continue; /* 2차 검수 P1-3: 장면의 chs(다루는 장)로도 찾음 */
     out.push(`<button class="tourhere" data-plan="${id}" data-s="${Math.max(0,si)}"><i>▶</i><span><b>${esc(sp.title)}</b><small>${esc(sp.here||sp.kicker||"")} · ${sp.scenes.length}장면${si>0?` · ${si+1}번째 장면부터`:""}</small></span></button>`); }
   return out; }
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-plan]"); if(!b) return; e.preventDefault(); e.stopPropagation(); try{ document.querySelector("#sheetX")?.click(); }catch(e2){} planOpen(b.dataset.plan,+(b.dataset.s||0)); });
@@ -48,7 +48,7 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
   const D=a=>a.length>1?"M"+a.map(p=>p.join(" ")).join(" L"):"";
   const bars=[...el.querySelectorAll(".bmtbars i")], RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
   let cur=0, paused=false, tok=0;
-  const sleep=async ms=>{ if(RM) ms=0; let t=0; while(t<ms){ const d=Math.min(60,ms-t); await new Promise(r=>setTimeout(r,d)); if(!paused) t+=d; } };
+  const sleep=async ms=>{ if(RM) ms=Math.min(ms,80); let t=0; do{ const d=Math.max(1,Math.min(60,ms-t)); await new Promise(r=>setTimeout(r,d)); if(!paused) t+=d; }while(t<ms||paused); }; /* 2차 검수 P2-1: 멈춤 중에도 항상 타이머로 양보(감소 모션에서 바쁜 반복 막음) */
   async function walk(k,path,my,spd){ const a=actor(k); if(!a.at&&path.length){ setAt(k,...path[0]); } a.pts=[a.at?a.at.slice():path[0]]; const im=a.g.querySelector(".pimg"); if(im) im.classList.add("pwalk");
     for(let i=0;i<path.length;i++){ const [x0,y0]=a.at||path[0], [x1,y1]=path[i]; const n=Math.max(1,Math.round(Math.hypot(x1-x0,y1-y0)/(spd||2.4)));
       for(let j=1;j<=n;j++){ if(my!==tok){ if(im) im.classList.remove("pwalk"); return false; } while(paused&&my===tok) await sleep(120); const x=x0+(x1-x0)*j/n, y=y0+(y1-y0)*j/n; setAt(k,x,y); a.pts.push([+x.toFixed(1),+y.toFixed(1)]); a.tr.setAttribute("d",D(a.pts)); await sleep(16); } }
@@ -91,11 +91,12 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
     let night=false; for(let j=0;j<=i;j++) if("night" in S[j]) night=!!S[j].night; $("pl_night").setAttribute("opacity",night?.42:0); }
   async function go(i){ const my=++tok; cur=Math.max(0,Math.min(S.length-1,i)); cap(cur); build(cur); el.querySelectorAll(":scope>.mvnar").forEach(n=>{ if(n._c) n._c(); n.classList.remove("on"); });
     const st=S[cur]; (st.at||[]).forEach(([k,x,y])=>setAt(k,x,y)); (st.gone||[]).forEach(k=>hideA(k));
-    const hold=st.hold||Math.max(5200,Math.min(11000,1800+((st.q||"").length+(st.d||"").length*.4)*95)), b=bars[cur]; b.style.transition="none"; b.style.width="0"; void b.offsetWidth;
+    const hold=st.hold||Math.max(6000,Math.min(16000,2500+((st.q||st.say||"").length*90)+((st.d||"").length*45))), b=bars[cur]; /* 2차 검수: 인용 90ms/자, 풀이 45ms/자, 6–16초 */ b.style.transition="none"; b.style.width="0"; void b.offsetWidth;
+    if(st.focus){ svg.querySelectorAll("#pl_base > g[id]").forEach(g=>g.classList.toggle("pldim",!st.focus.includes(g.id))); } else svg.querySelectorAll("#pl_base > g.pldim").forEach(g=>g.classList.remove("pldim")); /* 2차 검수 UX: focus에 든 자리만 또렷이 */
     (st.show||[]).forEach(id=>vis(id,true,900)); (st.hide||[]).forEach(id=>vis(id,false,900)); (st.label||[]).forEach(([x,y,t,k,an])=>FX.label(x,y,t,k,an));
     if(st.pre) await runFx(st.pre,my,st); if(my!==tok) return false;
     const mv=Object.assign({},st.moves||{}); if(st.path) mv[st.who||"me"]=st.path; const ks=Object.keys(mv); if(ks.length){ const rs=await Promise.all(ks.map(k=>walk(k,mv[k],my,st.spd))); if(rs.some(x=>!x)) return false; }
-    const NT=SP.parts?106:66; if(st.q) mvNar(el,st.q,st.r,NT,hold,st.god?(st.godn||"여호와"):undefined); else if(st.say) mvNar(el,st.say,st.r,NT,hold,st.sayer?st.sayer:undefined);
+    const NT=SP.parts?106:66, PQ=t=>st.part?((st.part==="pre"||st.part==="mid")?"… ":"")+t+((st.part==="post"||st.part==="mid")?" …":""):t; /* part: 절의 일부만 인용할 때 … 표시(검사기 plans_check.py가 강제) */ if(st.q) mvNar(el,PQ(st.q),st.r,NT,hold,st.god?(st.godn||"여호와"):undefined); else if(st.say) mvNar(el,PQ(st.say),st.r,NT,hold,st.sayer?st.sayer:undefined);
     if(st.pray){ const a=actor(st.who||"me"); if(a.at) FX.emo(a.at[0],a.at[1]-44,"🙏"); }
     if(!(await runFx(st.fx,my,st))) return false;
     let t=0; while(t<hold){ if(my!==tok) return false; await new Promise(r=>setTimeout(r,150)); if(!paused){ t+=150; b.style.width=Math.min(100,t/hold*100)+"%"; } } return my===tok; }
