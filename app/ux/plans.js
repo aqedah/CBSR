@@ -32,7 +32,7 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
   </svg></div><div class="bmtbars">${S.map(()=>`<span><i></i></span>`).join("")}</div>
    ${SP.parts?`<div class="bmtparts"><div class="bmtpc">${SP.parts.map((p,k)=>`<button data-t="part" data-k="${k}">${esc(p.t)}</button>`).join("")}</div></div>`:""}
    <div class="bmttop"><b>${esc(SP.title)}</b><button class="bmtic" data-t="prev" aria-label="이전 장면">‹</button><button class="bmtic" data-t="pause" aria-label="멈춤">❚❚</button><button class="bmtic" data-t="nextS" aria-label="다음 장면">›</button><button class="bmtic" data-t="x" aria-label="닫기">✕</button></div>
-   <div class="bmtp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><p class="athold"></p>${SP.note?`<p class="plnote">${esc(SP.note)}</p>`:""}<div class="bmtend" hidden><button class="btn bmtag" data-t="again">↺ 처음부터</button><button class="btn bmtcl" data-t="x">닫기</button></div></div>
+   <div class="bmtp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><p class="athold"></p><div class="bmtgo" hidden><button data-t="verse">📖 본문 펼치기</button></div>${SP.note?`<p class="plnote">${esc(SP.note)}</p>`:""}<div class="bmtend" hidden><button class="btn bmtag" data-t="again">↺ 처음부터</button><button class="btn bmtcl" data-t="x">닫기</button></div></div>
    <p class="bmthint">‹ › 장면 넘기기 · ❚❚ 멈춤</p>`;
   document.body.appendChild(el); document.body.style.overflow="hidden";
   const $=i=>el.querySelector("#"+i), NS="http://www.w3.org/2000/svg", svg=$("pl_svg"); let fx=$("pl_fx");
@@ -47,8 +47,8 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
   const hideA=k=>{ const a=actor(k); a.g.setAttribute("opacity",0); };
   const D=a=>a.length>1?"M"+a.map(p=>p.join(" ")).join(" L"):"";
   const bars=[...el.querySelectorAll(".bmtbars i")], RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let cur=0, paused=false, tok=0;
-  const sleep=async ms=>{ if(RM) ms=Math.min(ms,80); let t=0; do{ const d=Math.max(1,Math.min(60,ms-t)); await new Promise(r=>setTimeout(r,d)); if(!paused) t+=d; }while(t<ms||paused); }; /* 2차 검수 P2-1: 멈춤 중에도 항상 타이머로 양보(감소 모션에서 바쁜 반복 막음) */
+  let cur=0, paused=false, tok=0, dead=false;
+  const sleep=async ms=>{ if(RM) ms=Math.min(ms,80); let t=0; do{ const d=Math.max(1,Math.min(60,ms-t)); await new Promise(r=>setTimeout(r,d)); if(!paused) t+=d; }while((t<ms||paused)&&!dead); }; /* 3차 검수 P1: 닫으면(dead) 멈춤 중이던 대기도 끝남 */ /* 2차 검수 P2-1: 멈춤 중에도 항상 타이머로 양보(감소 모션에서 바쁜 반복 막음) */
   async function walk(k,path,my,spd){ const a=actor(k); if(!a.at&&path.length){ setAt(k,...path[0]); } a.pts=[a.at?a.at.slice():path[0]]; const im=a.g.querySelector(".pimg"); if(im) im.classList.add("pwalk");
     for(let i=0;i<path.length;i++){ const [x0,y0]=a.at||path[0], [x1,y1]=path[i]; const n=Math.max(1,Math.round(Math.hypot(x1-x0,y1-y0)/(spd||2.4)));
       for(let j=1;j<=n;j++){ if(my!==tok){ if(im) im.classList.remove("pwalk"); return false; } while(paused&&my===tok) await sleep(120); const x=x0+(x1-x0)*j/n, y=y0+(y1-y0)*j/n; setAt(k,x,y); a.pts.push([+x.toFixed(1),+y.toFixed(1)]); a.tr.setAttribute("d",D(a.pts)); await sleep(16); } }
@@ -78,7 +78,7 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
       const [n,...a]=it; if(n==="wait"){ await sleep(a[0]||800); continue; } if(n==="walk"){ if(!(await walk(a[0],a[1],my,a[2]))) return false; continue; } if(n==="at"){ setAt(a[0],a[1],a[2]); continue; } if(n==="hideA"){ hideA(a[0]); continue; } if(n==="show"){ vis(a[0],true,a[1]||700); continue; } if(n==="hide"){ vis(a[0],false,a[1]||700); continue; }
       if(SP.fx&&SP.fx[n]){ if((await SP.fx[n]({el,svg,fx,mk,FX,actor,setAt,hideA,walk,sleep,vis,LBL,my,tok:()=>tok,sc,SP,img,NS},...a))===false) return false; continue; } if(FX[n]) FX[n](...a); }
     return my===tok; };
-  function cap(i){ const s=S[i]; const bk=s.r?PLAN.abbr[s.r[0]-1]:(SP.abbr||""); el.querySelector(".bmtk").textContent=`${i+1} / ${S.length} · ${bk} ${s.s||""}`; el.querySelector(".bmth").textContent=s.t; el.querySelector(".bmtn").textContent=s.d||""; el.querySelector(".athold").innerHTML=s.h?`<em>${esc(s.h)}</em>`:""; bars.forEach((b,j)=>{ b.style.transition="none"; b.style.width=j<i?"100%":"0"; }); el.querySelector(".bmtend").hidden=true;
+  function cap(i){ const s=S[i]; const bk=s.r?PLAN.abbr[s.r[0]-1]:(SP.abbr||""); el.querySelector(".bmtk").textContent=`${i+1} / ${S.length} · ${bk} ${s.s||""}`; el.querySelector(".bmth").textContent=s.t; el.querySelector(".bmtn").textContent=s.d||""; el.querySelector(".athold").innerHTML=s.h?`<em>${esc(s.h)}</em>`:""; el.querySelector(".bmtgo").hidden=!s.r; bars.forEach((b,j)=>{ b.style.transition="none"; b.style.width=j<i?"100%":"0"; }); el.querySelector(".bmtend").hidden=true;
     if(SP.parts){ let a=0; SP.parts.forEach((p,k)=>{ if(p.at<=i) a=k; }); el.querySelectorAll(".bmtpc button").forEach((b,k)=>b.classList.toggle("on",k===a)); } }
   /* 상태 재구성: 0..i-1 장면의 show/hide·위치·지도·밤을 합산 */
   function build(i){ { const nf=fx.cloneNode(false); fx.replaceWith(nf); fx=nf; } let mp=map0; for(let j=0;j<=i;j++) if(S[j].map) mp=S[j].map; setMap(mp);
@@ -96,17 +96,17 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
     (st.show||[]).forEach(id=>vis(id,true,900)); (st.hide||[]).forEach(id=>vis(id,false,900)); (st.label||[]).forEach(([x,y,t,k,an])=>FX.label(x,y,t,k,an));
     if(st.pre) await runFx(st.pre,my,st); if(my!==tok) return false;
     const mv=Object.assign({},st.moves||{}); if(st.path) mv[st.who||"me"]=st.path; const ks=Object.keys(mv); if(ks.length){ const rs=await Promise.all(ks.map(k=>walk(k,mv[k],my,st.spd))); if(rs.some(x=>!x)) return false; }
-    const NT=SP.parts?106:66, PQ=t=>st.part?((st.part==="pre"||st.part==="mid")?"… ":"")+t+((st.part==="post"||st.part==="mid")?" …":""):t; /* part: 절의 일부만 인용할 때 … 표시(검사기 plans_check.py가 강제) */ if(st.q) mvNar(el,PQ(st.q),st.r,NT,hold,st.god?(st.godn||"여호와"):undefined); else if(st.say) mvNar(el,PQ(st.say),st.r,NT,hold,st.sayer?st.sayer:undefined);
+    const NT=SP.parts?106:66, PQ=t=>st.part?((st.part==="pre"||st.part==="mid")?"… ":"")+t+((st.part==="post"||st.part==="mid")?" …":""):t; /* part: 절의 일부만 인용할 때 … 표시(검사기 plans_check.py가 강제) */ if(st.q) mvNar(el,PQ(st.q),st.r,NT,hold,st.god?(st.godn||"여호와"):undefined); else if(st.say) mvNar(el,PQ(st.say),st.r,NT,hold,st.sayer?{who:st.sayer}:undefined);
     if(st.pray){ const a=actor(st.who||"me"); if(a.at) FX.emo(a.at[0],a.at[1]-44,"🙏"); }
     if(!(await runFx(st.fx,my,st))) return false;
     let t=0; while(t<hold){ if(my!==tok) return false; await new Promise(r=>setTimeout(r,150)); if(!paused){ t+=150; b.style.width=Math.min(100,t/hold*100)+"%"; } } return my===tok; }
   async function run(i){ for(let k=i;k<S.length;k++){ const ok=await go(k); if(!ok) return; } if(SP.end){ el.querySelector(".bmtn").textContent=SP.end; } el.querySelector(".bmtend").hidden=false; }
   const setPause=v=>{ paused=v; el.classList.toggle("paused",v); try{ document.getAnimations().forEach(a=>{ const tg=a.effect&&a.effect.target; if(tg&&el.contains(tg)) v?a.pause():a.play(); }); }catch(e){} const pb=el.querySelector('[data-t="pause"]'); pb.textContent=v?"▶":"❚❚"; pb.setAttribute("aria-label",v?"이어 보기":"멈춤"); };
-  const close=pop=>{ tok++; el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
+  const close=pop=>{ tok++; dead=true; paused=false; el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
   el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; const k=t.dataset.t;
-    if(k==="x") close(); else if(k==="prev") run(Math.max(0,cur-1)); else if(k==="nextS") run(Math.min(S.length-1,cur+1)); else if(k==="pause") setPause(!paused); else if(k==="again"){ setPause(false); run(0); } else if(k==="part"){ el.querySelector(".bmtgo0")?.remove(); run(SP.parts[+t.dataset.k].at); } });
+    if(k==="x") close(); else if(k==="verse"){ const st=S[cur], r=st&&st.r; if(!r) return; const was=paused; setPause(true); sVerseSheet(`${r[0]}-${r[1]}-${r[2]}-${st.re||r[2]}`,()=>{ if(!was&&!dead) setPause(false); el.querySelector('[data-t="verse"]')?.focus(); }); } /* 3차 검수: 본문을 펼친 동안 자동 진행 멈춤 */ else if(k==="prev") run(Math.max(0,cur-1)); else if(k==="nextS") run(Math.min(S.length-1,cur+1)); else if(k==="pause") setPause(!paused); else if(k==="again"){ setPause(false); run(0); } else if(k==="part"){ el.querySelector(".bmtgo0")?.remove(); run(SP.parts[+t.dataset.k].at); } });
   /* 첫 화면: 설명을 보여 주고 가운데 ▶ 시작 */
-  el.querySelector(".bmtk").textContent=SP.kicker||""; el.querySelector(".bmth").textContent=SP.title; el.querySelector(".bmtn").textContent=SP.intro||""; build(0); (S[0].at||[]).forEach(([k,x,y])=>setAt(k,x,y)); if(S[0].path&&!S[0].at) setAt(S[0].who||"me",...S[0].path[0]);
+  el.querySelector(".bmtk").textContent=SP.kicker||""; el.querySelector(".bmth").textContent=SP.title; el.querySelector(".bmtgo").hidden=true; el.querySelector(".bmtn").textContent=SP.intro||""; build(0); (S[0].at||[]).forEach(([k,x,y])=>setAt(k,x,y)); if(S[0].path&&!S[0].at) setAt(S[0].who||"me",...S[0].path[0]);
   { const st0=Math.max(0,Math.min(S.length-1,+s0||0)), b=document.createElement("button"); b.className="bmtgo0"; b.setAttribute("aria-label",st0?`${st0+1}번째 장면부터 시작`:"시작"); b.innerHTML=`<i>▶</i><span>${st0?`${st0+1}번째 장면부터`:"시작"}</span>`; el.appendChild(b); setTimeout(()=>b.focus(),30); b.onclick=e=>{ e.stopPropagation(); b.remove(); run(st0); }; }
   el.querySelector(".atmap").addEventListener("click",e=>{ if(el.querySelector(".bmtgo0")) return; if(e.target.closest(".bmtparts")) return; if(e.clientX<el.clientWidth*.3) run(Math.max(0,cur-1)); else if(cur<S.length-1) run(cur+1); }); }
 

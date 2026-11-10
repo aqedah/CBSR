@@ -28,9 +28,9 @@ function spaceOpen(id,pl0,ev0){ const SP=SPACES[id]; if(!SP) return; document.qu
     const hl=$("#sp_hl"); hl.innerHTML=`<rect x="${p.box[0]-2}" y="${p.box[1]-2}" width="${p.box[2]+4}" height="${p.box[3]+4}" rx="5" fill="url(#pl_glow)" opacity=".55"/><rect x="${p.box[0]}" y="${p.box[1]}" width="${p.box[2]}" height="${p.box[3]}" rx="4" fill="none" stroke="#a5361f" stroke-width="2" stroke-dasharray="${p.k==="t"?"0":"5 4"}"/>`;
     $(".bmtk").textContent=`${K[p.k||"r"]}${p.alt?` · ${p.alt}`:""}`; $(".bmth").textContent=p.n; $(".bmtn").textContent=p.d||"";
     $(".spev").innerHTML=(p.ev||[]).length?`<div class="spls">${p.ev.map((e,i)=>`<button class="spl${evi===i?" on":""}" data-ev="${i}"><b>${esc(e.t)}</b><small>${esc(vLab(e.r))}${e.c?` · ${esc(e.c)}`:""}</small></button>`).join("")}</div>`:`<p class="plnote">이 자리를 직접 말하는 본문은 없습니다. 짜임을 알기 위한 표시입니다.</p>`;
-    if(evi!=null&&p.ev[evi]){ const e=p.ev[evi]; $(".bmtn").textContent=e.d||p.d||""; mvNar(el,e.q,e.r,66,Math.max(6000,2000+e.q.length*70),e.god?(e.godn||"여호와"):undefined); } }
+    if(evi!=null&&p.ev[evi]){ const e=p.ev[evi]; $(".bmtn").textContent=e.d||p.d||""; mvNar(el,e.q,e.r,66,Math.max(6000,2000+e.q.length*70),e.god?(e.godn||"여호와"):undefined); $(".spev").insertAdjacentHTML("beforeend",`<div class="bmtgo"><button data-t="verse" data-r="${e.r.join("-")}-${e.re||e.r[2]}">📖 본문 펼치기</button></div>`); } }
   const close=pop=>{ el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
-  el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(t){ if(t.dataset.t==="x") close(); else if(t.dataset.t==="back") home(); return; }
+  el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(t){ if(t.dataset.t==="x") close(); else if(t.dataset.t==="back") home(); else if(t.dataset.t==="verse") sVerseSheet(t.dataset.r,()=>{}); return; }
     const ev=e.target.closest("[data-ev]"); if(ev&&cur){ show(cur.id,+ev.dataset.ev); return; } const pl=e.target.closest("[data-pl]"); if(pl){ show(pl.dataset.pl,0); } });
   el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ const pl=e.target.closest&&e.target.closest(".sphot"); if(pl){ e.preventDefault(); show(pl.dataset.pl,0); } } });
   if(pl0&&SP.places.some(p=>p.id===pl0)) show(pl0,ev0!=null&&ev0!==""?+ev0:0); else home(); } /* 2차 검수 P1-2: 오늘 본문의 사건부터 */
