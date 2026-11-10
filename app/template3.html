@@ -1422,6 +1422,9 @@ body.wcmon{overflow:hidden}
 .pln path.pk-i,.pln line.pk-i{stroke-dasharray:3 4}.pln .pk-v-box{fill:none;stroke:#6a2a8a;stroke-width:2.5;stroke-dasharray:8 5}
 .pln .pwalk{animation:plwalk .5s steps(2) infinite}@keyframes plwalk{0%{transform:translateY(0)}50%{transform:translateY(-1.5px)}100%{transform:translateY(0)}}
 .pln .plnote{margin:5px 0 0;font-size:11px;line-height:1.45;color:#a89a84}
+.spc .sphot rect{cursor:pointer;transition:fill .3s,stroke .3s}.spc .sphot:hover rect,.spc .sphot:focus rect{fill:rgba(165,54,31,.08);stroke:rgba(165,54,31,.6)}.spc .sphot.on rect{stroke:rgba(165,54,31,.9)}.spc .sphot text{cursor:pointer}
+.spc .spls{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:30vh;overflow-y:auto}.spc .spl{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid rgba(226,184,116,.25);background:rgba(255,255,255,.06);border-radius:10px;padding:8px 10px;color:inherit;font:inherit;cursor:pointer}.spc .spl b{font:700 14px "Noto Serif KR",serif}.spc .spl small{font-size:11.5px;color:#E2B874}.spc .spl.on{background:rgba(226,184,116,.22);border-color:#E2B874}
+.spc .bmttop b{color:#2a1d0c;text-shadow:none}.spc .atmap{bottom:44%;padding:64px 6px 6px}.spc .bmtp{max-height:46%;overflow:hidden;padding-top:14px;background:rgba(16,20,18,.94);pointer-events:auto}.spc .bmtn{max-height:72px;overflow-y:auto}.spc .spls{max-height:22vh}.spc .bmthint{display:none}
 .pln .bmtpc button.on{background:#a5361f;color:#fff}.pln .bmtparts{top:calc(env(safe-area-inset-top,0px) + 56px)}
 .pln .wall2{fill:none;stroke:#6b4a24;stroke-width:3.2;stroke-linejoin:round}.pln .wall2.low{stroke:#a78452;stroke-width:2;stroke-dasharray:5 4}.pln .gate{fill:#f3e6c4;stroke:#6b4a24;stroke-width:1.5}.pln .tower{fill:#c9a24a;stroke:#5a3c1c;stroke-width:1.2}
 .pln .house{fill:rgba(107,74,36,.14);stroke:#5a3c1c;stroke-width:1.1}.pln .court{fill:rgba(160,120,60,.08);stroke:#6b4a24;stroke-width:1.4}.pln .water{fill:#9fc3d6;stroke:#5b8fa8;stroke-width:1}
@@ -2814,6 +2817,7 @@ function routesFor(w,d){ const p=dayPlan(w,d); if(!p) return []; const has=(b,c)
 function tourHere(w,d){ const p=dayPlan(w,d); if(!p||!window.L||typeof BM_TOURS==="undefined") return ""; const has=r=>r&&p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]);
   const B=BM_TOURS.map((t,ti)=>{ const si=t.steps.findIndex(s=>has(s.r)||has(s.pre)); return si<0?"":`<button class="tourhere" data-bmt2="${ti}" data-bmstep="${si}"><i>▶</i><span><b>${esc(t.n)}</b><small>${si+1}번째 장면 “${esc(t.steps[si].t)}”부터 따라가기</small></span></button>`; }).filter(Boolean);
   if(typeof planHere==="function") B.push(...planHere(p)); /* 2026-11-10 평면도 여정 */
+ if(typeof spaceHere==="function") B.push(...spaceHere(p)); /* 공간 탐색 */
  if(p.ch.some(x=>x[0]===3&&x[1]===16)) B.push(`<button class="tourhere" data-atone="1"><i>▶</i><span><b>대속죄일 · 대제사장의 길</b><small>성막 안에서 아론을 따라가기 · 10장면</small></span></button>`);
   return B.length?`<div class="tourheres"><p class="lead">오늘 본문은 큰 여정의 한 장면입니다</p>${B.join("")}</div>`:""; }
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-bmt2]"); if(!b) return; e.preventDefault(); bmTour(+b.dataset.bmt2,+b.dataset.bmstep); });
@@ -6353,8 +6357,8 @@ const BM_WHO=[
  {k:"kings",n:"왕들",av:"king",b:[11,14],tour:["jonah"]},
  {k:"elijah",n:"엘리야·엘리사",av:"elijah",who:["엘리야","엘리사","수넴 여인","나아만","하사엘","예후","아람 군대"],tour:["elijah"]},
  {k:"exile",n:"포로와 귀환",av:"elder",b:[15,39],tour:["assyria","babylon","jeremiah","exilelife","return"],plans:["wall","esther","ezekiel"]},
- {k:"jesus",n:"예수님",av:"jesus",b:[40,43],tour:["mt","mk","lk","jn"],plans:["passion_mt","passion_mk","passion_lk","passion_jn"]},
- {k:"church",n:"초대교회",av:"peter",b:[44,44],tour:["philip","peter"]},
+ {k:"jesus",n:"예수님",av:"jesus",b:[40,43],tour:["mt","mk","lk","jn"],plans:["passion_mt","passion_mk","passion_lk","passion_jn"],spaces:["temple"]},
+ {k:"church",n:"초대교회",av:"peter",b:[44,44],tour:["philip","peter"],spaces:["temple"]},
  {k:"paul",n:"바울",av:"paul",who:["바울","바나바","바울 (호송됨)","아볼로","뵈뵈","편지","두기고","에바브로디도","두기고와 오네시모"],b:[45,66],tour:["saul","paul1","paul2","paul3","rome"]}];
 /* 시대로 찾기(목사님 2026-11-02): 같은 큰 여정·지도 경로를 시대로 묶어 봄. 예언자는 책 머리말(표제)에 왕·연대가 적힌 사람만(요엘·오바댜·나훔·하박국·말라기처럼 시대를 특정할 수 없는 책은 넣지 않음) */
 const BM_ERA9=[
@@ -6366,7 +6370,7 @@ const BM_ERA9=[
  {k:"exi",n:"포로",y:"기원전 605–539년",av:"jeremiah",d:"예루살렘이 무너지고 백성이 바벨론에 끌려갑니다. 하나님의 사람들은 예루살렘·바벨론·그발 강·애굽에 흩어져 있습니다.",tour:["babylon","jeremiah","exilelife"],plans:["esther","ezekiel"],pro:[["예레미야","시드기야 11년까지",[24,1,3]],["에스겔","여호야긴이 사로잡힌 지 5년",[26,1,2]],["다니엘","여호야김 3년부터 고레스 원년까지",[27,1,1]]]},
  {k:"ret",n:"귀환",y:"기원전 538–430년 무렵",av:"elder",d:"고레스의 조서로 돌아와 성전을 다시 짓고, 에스라와 느헤미야 때 율법과 성벽을 세웁니다. 에스더는 바사 땅에 남은 사람들의 이야기입니다.",tour:["return"],plans:["wall"],pro:[["학개","다리오 왕 2년",[37,1,1]],["스가랴","다리오 왕 2년",[38,1,1]]]},
  {k:"stp",n:"중간사",y:"기원전 430년 무렵–예수님 탄생",av:"temple",d:"말라기 뒤 신약까지 약 400년입니다. 구약 본문은 이 시기의 일을 이야기로 들려주지 않지만, 바사·헬라·로마가 차례로 이 땅을 다스리고, 회당과 바리새인·사두개인이 생겨나 예수님 때의 배경이 됩니다.",tour:[]},
- {k:"jes",n:"예수님",y:"",av:"jesus",d:"네 복음서가 같은 예수님의 길을 저마다 다르게 그립니다.",tour:["mt","mk","lk","jn"],plans:["passion_mt","passion_mk","passion_lk","passion_jn"]},
+ {k:"jes",n:"예수님",y:"",av:"jesus",d:"네 복음서가 같은 예수님의 길을 저마다 다르게 그립니다.",tour:["mt","mk","lk","jn"],plans:["passion_mt","passion_mk","passion_lk","passion_jn"],spaces:["temple"]},
  {k:"chu",n:"초대교회",y:"",av:"cross",d:"예루살렘에서 시작한 복음이 사마리아와 이방의 땅을 지나 로마까지 이릅니다.",tour:["philip","peter","saul","paul1","paul2","paul3","rome"]}];
 function bmEra9(b,c){ if(b===1) return "pat"; if(b<=5) return "exo"; if(b<=8) return "jud"; if(b===9||b===10||(b===11&&c<=11)||b===13||(b===14&&c<=9)||(b>=18&&b<=22)) return "uni";
   if((b===12&&c>=24)||(b===14&&c>=36)||b===24||b===25||b===26||b===27) return "exi"; if(b===11||b===12||b===14||b===23||(b>=28&&b<=36)) return "div";
@@ -6409,7 +6413,7 @@ const BM_WAR=[
  {k:"w5",n:"앗수르·바벨론 침공",av:"soldier",d:"북 이스라엘은 앗수르에, 남 유다는 바벨론에 무너집니다.",tour:["assyria","babylon"],r:[124,126,155,127,131,160,132]}];
 function bmWarSheet(k){ const g=BM_WAR.find(x=>x.k===k); if(!g) return; const T=BMT(), L=g.r.filter(i=>ROUTES_B[i]), tours=T.map((t,i)=>[t,i]).filter(([t])=>g.tour.includes(t.id));
   let h=`<p class="bmshn">따라가는 큰 여정 ${tours.length} · 지도로 보는 전쟁 ${L.length}</p><p class="bmerad">${esc(g.d)}</p>`;
-  if(tours.length||g.scene||(g.plans||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}</div>`;
+  if(tours.length||g.scene||(g.plans||[]).length||(g.spaces||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)+((g.spaces||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}${(g.spaces||[]).map(spaceCard).join("")}</div>`;
   h+=`<p class="bmproh">지도로 보는 전쟁</p><div class="bmrl">${L.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")}</div>`;
   sheet(`전쟁 · ${g.n}`,`<div id="bmWS">${h}</div>`);
   const root=document.getElementById("sheetRoot"), go=f=>{ document.getElementById("sheetClose").click(); setTimeout(f,90); };
@@ -6418,7 +6422,7 @@ function bmWarSheet(k){ const g=BM_WAR.find(x=>x.k===k); if(!g) return; const T=
 /* 시대 창: 그 시대의 큰 여정 · 이때 말씀을 전한 예언자(근거 구절) · 지도로 보는 여정 */
 function bmEraSheet(k){ const g=BM_ERA9.find(x=>x.k===k); if(!g) return; const EG=bmEraGroups(), T=BMT(), L=EG[k], tours=T.map((t,i)=>[t,i]).filter(([t])=>g.tour.includes(t.id));
   let h=`<p class="bmshn">${g.y?esc(g.y)+" · ":""}따라가는 큰 여정 ${tours.length} · 지도로 보는 여정 ${L.length}</p><p class="bmerad">${esc(g.d)}</p>`;
-  if(tours.length||g.scene||(g.plans||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}</div>`;
+  if(tours.length||g.scene||(g.plans||[]).length||(g.spaces||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)+((g.spaces||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}${(g.spaces||[]).map(spaceCard).join("")}</div>`;
   if(g.pro) h+=`<div class="bmpro"><p class="bmproh">이때 말씀을 전한 예언자</p><div class="bmprol">${g.pro.map(([n,w,r])=>`<button data-bmprov="${r.join("-")}-${r[2]}"><b>${esc(n)}</b><small>${esc(w)} · ${esc(vLab(r))}</small></button>`).join("")}</div></div>`;
   if(!tours.length&&!L.length&&!g.pro) h+=`<p class="lead">이 시기를 따라가는 여정은 아직 없습니다.</p>`; else
   h+=`<p class="bmproh">지도로 보는 여정</p><div class="bmrl">${L.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")}</div>`;
@@ -6438,7 +6442,7 @@ function bmShelfHTML(sel){ const G=bmWhoGroups(), T=BMT(); let h="";
   /* 공간 절약(목사님 2026-11-01 '등장인물 탭처럼'): 큰 머리 칸을 없애고, 큰 여정은 옆으로 밀고, 여정이 여러 책에 걸치면 책 탭으로 나눔 */
   const BK=[...new Set(L.map(i=>ROUTES_B[i].b))]; let bk=view.bmBk&&view.bmBk[0]===g.k?view.bmBk[1]:0; if(bk&&!BK.includes(bk)) bk=0; const L2=bk?L.filter(i=>ROUTES_B[i].b===bk):L;
   h+=`<section class="bmshelf in" id="bmShelf">`;
-  if(tours.length||g.scene||(g.plans||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}</div>`;
+  if(tours.length||g.scene||(g.plans||[]).length||(g.spaces||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)+((g.spaces||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}${(g.spaces||[]).map(spaceCard).join("")}</div>`;
   if(BK.length>1) h+=`<div class="bmbk" role="tablist">${[0,...BK].map(x=>`<button role="tab" aria-selected="${x===bk}" class="${x===bk?"on":""}" data-bmbk="${x}">${x?esc(PLAN.full[x-1]):"전체"}<small>${x?L.filter(i=>ROUTES_B[i].b===x).length:L.length}</small></button>`).join("")}</div>`;
   h+=`<div class="bmrl">${L2.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")||`<p class="lead">이 주인공의 여정은 아직 없습니다.</p>`}</div></section>`;
   return h; }
