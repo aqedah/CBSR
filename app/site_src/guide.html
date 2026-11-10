@@ -564,14 +564,14 @@ function coverBack(q){ const f=F(q); return `<div class="pg cv back q${q}">
 <p class="cvch">${esc(f.ch)}${f.bkfoot?' · '+esc(f.bkfoot):''}</p></div>`; }
 function endPaper(q){ return `<div class="pg ep q${q}"></div>` }
 function blankPage(q){ return `<div class="pg q${q}"></div>` }
-function pTitle(q){ const f=F(q); return `<div class="pg fm q${q}"><div class="fmmid">
+function pTitle(q){ const f=F(q); return `<div class="pg fm r q${q}"><div class="fmmid">
 <p class="ftk">${esc(f.cvk)}</p><p class="ftt">${esc(f.cvt).replace(/\n/g,' ')}</p><p class="fts">${esc(f.cvs)}</p><p class="ftc">${esc(f.ch)}</p>
 </div><div class="pn">1</div></div>`; }
 function pCopy(q){ const f=F(q); return `<div class="pg fm q${q}"><div class="fmbot">
 <p class="cp"><b>${esc(f.cvt.replace(/\n/g,' '))}</b> ${esc(f.cvs)}</p>
 ${paras(f.cp).map(t=>t.split('\n').map(x=>`<p class="cp">${esc(x)}</p>`).join('')+'<p class="cp">&nbsp;</p>').join('')}
 <p class="cp">펴낸 곳 ${esc(f.ch)}</p></div><div class="pn">2</div></div>`; }
-function pPreface(q){ const f=F(q); return `<div class="pg fm q${q}">
+function pPreface(q){ const f=F(q); return `<div class="pg fm r q${q}">
 <p class="fh">${esc(f.phead)}</p>${paras(f.pbody).map(t=>`<p class="fp">${bold(t)}</p>`).join('')}
 <p class="fsig">${esc(f.psig)}</p><div class="pn">3</div></div>`; }
 function pHow1(q,sample){ const f=F(q); return `<div class="pg fm q${q}">
@@ -579,7 +579,7 @@ function pHow1(q,sample){ const f=F(q); return `<div class="pg fm q${q}">
 <div class="mini"><div class="miniin">${sample}</div></div>
 <p class="fcap">${esc(f.howcap)}</p><div class="pn">4</div></div>`; }
 function pHow2(q){ const f=F(q); const N=['①','②','③','④'];
-  return `<div class="pg fm q${q}"><p class="fh2">네 걸음</p>
+  return `<div class="pg fm r q${q}"><p class="fh2">네 걸음</p>
 ${lines(f.steps).map((t,i)=>{const [a,b]=t.split('|');return `<p class="st4"><span class="stn">${N[i]||'·'}</span><b>${esc(a)}</b> — ${bold(b||'')}</p>`}).join('')}
 <p class="fh2" style="margin-top:4mm">여섯 가지 약속</p>
 <ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
@@ -588,7 +588,7 @@ function pSym(q){ const f=F(q); return `<div class="pg fm q${q}">
 <p class="fh">${esc(f.symhead)}</p><p class="fp sm">${bold(f.symlead)}</p>
 <table class="symt">${lines(f.syms).map(t=>{const [s,d,e]=t.split('|');return `<tr><td class="sc">${chipSym(s||'')}</td><td>${bold(d||'')}<br><span class="ex">${boldv(e||'')}</span></td></tr>`}).join('')}</table>
 <div class="pn">6</div></div>`; }
-function pSym2(q){ const f=F(q); return `<div class="pg fm q${q}">
+function pSym2(q){ const f=F(q); return `<div class="pg fm r q${q}">
 <p class="fh2">${esc(f.irhead)}</p><p class="fp sm">${bold(f.irlead)}</p>
 <table class="symt">${lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc2">“${esc(a||'')}”</td><td><span class="ex">보기: ${esc(b||'')}</span><br>${boldv(c||'')}</td></tr>`}).join('')}</table>
 <p class="fh2" style="margin-top:3.5mm">${esc(f.whhead)}</p><p class="fp sm">${bold(f.whlead)}</p>
@@ -608,7 +608,7 @@ function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.l
     const qt=(typeof get==='function')?get(p.no):null;
     return band+`<tr><td class="dt">${p.m}/${p.d}</td><td class="tx">${esc(shortRef(p.t))}</td><td class="sb">${esc((qt&&qt.sub)||p.sub||'')}</td><td class="pgn">${pageNo(p)}</td></tr>`;
   }).join('');
-  return `<div class="pg fm q${q}">${part===0?`<p class="fh">${esc(f.tochead)}</p>`:`<p class="fh2">${esc(f.tochead)}</p>`}
+  return `<div class="pg fm ${part===1?'':'r'} q${q}">${part===0?`<p class="fh">${esc(f.tochead)}</p>`:`<p class="fh2">${esc(f.tochead)}</p>`}
 <table class="toc"><colgroup><col class="c1"><col class="c2"><col><col class="c4"></colgroup>${rows}</table>
 <div class="pn">${9+part}</div></div>`; }
 function pDivider(q){ const f=F(q); const ds=qDays(q);
@@ -616,7 +616,7 @@ function pDivider(q){ const f=F(q); const ds=qDays(q);
 <div class="dvbox"><p class="dvk">${esc(f.divk)}</p><p class="dvt">${esc(f.divt).replace(/\n/g,'<br>')}</p>
 <p class="dvs">${esc(f.divs|| (ds[0].m+'월 '+ds[0].d+'일 — '+ds[ds.length-1].m+'월 '+ds[ds.length-1].d+'일'))}</p></div>
 <div class="pn">12</div></div>`; }
-function pDivider2(q){ const f=F(q); return `<div class="pg fm q${q}">
+function pDivider2(q){ const f=F(q); return `<div class="pg fm r q${q}">
 <p class="dvnote">${esc(f.divnote)}</p><div class="pn">13</div></div>`; }
 function frontSpreads(q,sample){
   const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
