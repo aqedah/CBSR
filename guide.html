@@ -102,6 +102,13 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .go{font-size:9.5pt;font-weight:700;margin:1.8mm 0 1mm;padding-left:0.5mm;color:var(--main)}
 .pg .ref{font-size:10pt;color:#222;line-height:1.45;margin:0 0 0.7mm 4mm;text-indent:-4mm;word-break:keep-all;overflow-wrap:anywhere}
 .pg .hint2{font-size:8.6pt;color:#666;margin:-0.6mm 0 1.2mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .stx{border:0.15mm solid #bbb;border-left:0.9mm solid var(--main);background:#fff;padding:1.4mm 2.2mm 1.6mm;margin:1.4mm 0 1.2mm}
+.pg .stx .sh{font-family:"Noto Sans KR",sans-serif;font-size:7.6pt;font-weight:700;color:var(--main);margin:0 0 1.2mm;letter-spacing:.2mm}
+.pg .stx .sr{display:flex;gap:1.6mm;align-items:baseline;margin:0 0 0.9mm;line-height:1.38}
+.pg .stx .sr.d2{padding-left:5mm} .pg .stx .sr.d3{padding-left:10mm}
+.pg .stx .sm2{flex:0 0 5.5mm;font-family:"Noto Sans KR",sans-serif;font-weight:700;color:var(--main);font-size:8.4pt}
+.pg .stx .sw{flex:0 0 11mm;font-family:"Noto Sans KR",sans-serif;font-size:7.8pt;color:#555}
+.pg .stx .st2{flex:1 1 auto;font-size:8.6pt}
 .pg .vs{color:var(--main)}
 .pg.cv{padding:0;display:flex;flex-direction:column;justify-content:flex-end;background:var(--main);color:#fff;overflow:hidden}
 .pg.cv .cvfield{position:absolute;inset:0;background:linear-gradient(160deg,color-mix(in srgb,var(--main) 82%,#000) 0%,var(--main) 55%,color-mix(in srgb,var(--main) 62%,#fff) 100%)}
@@ -232,6 +239,11 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <fieldset><legend><span class="n">2</span>읽은 뒤</legend>
       <label class="f"><span class="k"><b>눈여겨볼 것 (줄마다 하나)</b> <span class="cnt" data-for="pair"></span></span><textarea id="pair" placeholder="● 주도어 &quot;손에 넘기다&quot; 24:4·10, 26:8·23. …&#10;◇ 대조 …"></textarea></label>
       <div class="hint">기호 + 절 주소 + 설명 한 문장. 기록을 요구하지 않는 설명문으로("~보세요" 없음). 왼쪽 상자에 인쇄.</div>
+      <label class="f"><span class="k"><b>짜임 (교차대구·반복평행) <span class="small">— 넣으면 지도·그림 대신 쪽 전체에 그립니다</span></b></span><input type="text" id="stxk" placeholder="짜임 — 교차대구 A X A′ (비우면 짜임 없음)"></label>
+      <textarea id="stx" rows="4" placeholder="A|24장|동굴에서. &quot;여호와의 기름 부음을 받은 자&quot;(24:6)
+X|25장|나발과 아비가일. &quot;친히 복수하는 것을 네가 막았느니라&quot;(25:33)
+A′|26장|언덕에서. &quot;여호와의 기름 부음 받은 자&quot;(26:9)"></textarea>
+      <div class="hint">한 줄에 「표시|구간|설명」. 본문에 실제로 되풀이되는 말이 있을 때만 씁니다.</div>
       <label class="f"><span class="k"><b>지도 — 강조 지명</b> <span class="small" id="placeHint"></span></span><input type="text" id="m_emph" placeholder="엔게디, 갈멜, 하길라 산 (비우면 지도 없음)"></label>
       <div class="row3"><span class="small">함께 표시</span><input type="text" id="m_show" placeholder="기브아, 베들레헴, 헤브론 (회색 점)"></div>
       <div class="row3"><span class="small">경로</span><input type="text" id="m_route" placeholder="엔게디 → 갈멜 → 하길라 산"></div>
@@ -347,6 +359,8 @@ function readForm(){
   qt.apply=$('apply').value.trim(); qt.note=$('note').value.trim(); qt.pray=$('pray').value.trim(); qt.obs.christ=$('christ').value.trim(); const at=$('attr').value.trim(); if(at) qt.attr=at;
   const g=$('god').value.trim(); if(g) qt.god=g;
   const pi=$('p_id').value.trim(); if(pi) qt.img={id:pi,cap:$('p_cap').value.trim()};
+  const sk=$('stxk').value.trim(); const sb=$('stx').value.trim();
+  qt.stx=(sk||sb)?{kind:sk,rows:sb.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split('|'))}:null;
   const e=$('m_emph').value.trim();
   qt.map=e?{emph:e,show:$('m_show').value.trim(),route:$('m_route').value.trim(),route2:$('m_route2').value.trim(),cap:$('m_cap').value.trim()}:null;
   return qt;
@@ -360,6 +374,7 @@ function fillForm(qt){
   $('q').value=qt.obs.q||''; [1,2,3].forEach(i=>{const l=(qt.obs.look||[])[i-1]||['',''];$('r'+i).value=l[0]||'';$('t'+i).value=l[1]||''});
   $('pair').value=(qt.obs.pair||[]).map(x=>(x[0]+' '+x[1]).trim()).join('\n');
   $('apply').value=qt.apply||''; $('note').value=qt.note||''; $('pray').value=qt.pray||''; $('christ').value=(qt.obs&&qt.obs.christ)||''; $('attr').value=qt.attr||''; $('god').value=qt.god||''; $('p_id').value=(qt.img&&qt.img.id)||''; $('p_cap').value=(qt.img&&qt.img.cap)||'';
+  const sx=qt.stx||{}; $('stxk').value=sx.kind||''; $('stx').value=(sx.rows||[]).map(r=>r.join('|')).join('\n');
   const m=qt.map||{}; $('m_emph').value=m.emph||''; $('m_show').value=m.show||''; $('m_route').value=m.route||''; $('m_route2').value=m.route2||''; $('m_cap').value=m.cap||'';
   counters(); document.querySelectorAll('#form textarea, aside textarea').forEach(autoH);
 }
@@ -469,7 +484,8 @@ function pageL(p,qt){
   const refs=look.map(([r,t])=>`<p class="ref"><b>${esc(r)}</b>&nbsp; ${esc(t)}</p>`).join('');
   const box=pair.length?`<div class="box"><div class="h">눈여겨볼 것</div>${pair.map(([s,t])=>`<div class="i">${chipSym(s)}${vs(t)}</div>`).join('')}</div>`:'';
   const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${vs(qt.img.cap||'')}</div></div>`:'';
-  const sec2=hasMap?`<div class="two"><div class="c1">${box}</div><div class="c2" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
+  const stx=qt.stx&&qt.stx.rows&&qt.stx.rows.length?`<div class="stx"><p class="sh">${esc(qt.stx.kind||'짜임')}</p>${qt.stx.rows.map(r=>{const [m,w,t]=r;return `<div class="sr d${(m||'').replace(/[^A-Za-z]/g,'').length>1?2:((m||'').indexOf('X')>=0?3:1)}"><span class="sm2">${esc(m||'')}</span><span class="sw">${esc(w||'')}</span><span class="st2">${vs(t||'')}</span></div>`}).join('')}</div>`:'';
+  const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c1">${box}</div><div class="c2" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
   const whole=qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd">${chip(qt.obs.christ)}</p>`:'';
   return `<div class="pg ${q}">
 <p class="date sans">${p.m}월 ${p.d}일 · ${p.no}일째 · 성경 읽기 약 ${p.min}분</p>
@@ -543,7 +559,8 @@ function F(q){ const o=(typeof DATA!=='undefined'&&DATA['f'+q])||{}; return Obje
 const FKEYS=Object.keys(FDEF(1));
 const lines=t=>String(t||'').split('\n').map(x=>x.trim()).filter(Boolean);
 const paras=t=>String(t||'').split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
-const bold=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const br=h=>String(h).replace(/\n/g,'<br>');
+const bold=t=>br(esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'));
 const boldv=t=>mark(bold(t));
 function qDays(q){ return PLAN.filter(x=>qOf(x)===q) }
 const ABBR={'창세기':'창','출애굽기':'출','레위기':'레','민수기':'민','신명기':'신','여호수아':'수','사사기':'삿','룻기':'룻','사무엘상':'삼상','사무엘하':'삼하','열왕기상':'왕상','열왕기하':'왕하','역대상':'대상','역대하':'대하','에스라':'스','느헤미야':'느','에스더':'에','욥기':'욥','시편':'시','잠언':'잠','전도서':'전','아가':'아','이사야':'사','예레미야애가':'애','예레미야':'렘','에스겔':'겔','다니엘':'단','호세아':'호','요엘':'욜','아모스':'암','오바댜':'옵','요나':'욘','미가':'미','나훔':'나','하박국':'합','스바냐':'습','학개':'학','스가랴':'슥','말라기':'말'};
@@ -560,7 +577,7 @@ function coverFront(q){ const f=F(q); return `<div class="pg cv q${q}"><div clas
 <div class="cvbox"><p class="cvk">${esc(f.cvk)}</p><p class="cvt">${esc(f.cvt).replace(/\n/g,'<br>')}</p><p class="cvs">${esc(f.cvs)}</p></div>
 <p class="cvch">${esc(f.ch)}</p></div>`; }
 function coverBack(q){ const f=F(q); return `<div class="pg cv back q${q}">
-<div class="cvbox2"><p class="bkt">${esc(f.bkt)}</p>${paras(f.bkp).map(t=>`<p class="bkp">${esc(t)}</p>`).join('')}</div>
+<div class="cvbox2"><p class="bkt">${esc(f.bkt)}</p>${paras(f.bkp).map(t=>`<p class="bkp">${br(esc(t))}</p>`).join('')}</div>
 <p class="cvch">${esc(f.ch)}${f.bkfoot?' · '+esc(f.bkfoot):''}</p></div>`; }
 function endPaper(q){ return `<div class="pg ep q${q}"></div>` }
 function blankPage(q){ return `<div class="pg q${q}"></div>` }
@@ -725,15 +742,17 @@ function flip(dir){
   const face=dir>0?fR:fL, back=dir>0?tL:tR;
   if(!face||!back){ showView(k); return }
   ANIM=true;
-  /* 넘기는 동안 밑에 깔리는 쪽: 넘어가는 반쪽만 새 쪽으로, 나머지는 지금 쪽 그대로 */
-  drawRaw(`<div class="spread">${dir>0?fL+tR:tL+fR}</div>`);
-  const wrap=$('flip'); wrap.style.display='block';
+  /* ① 넘길 장을 먼저 덮어 두고 ② 그 아래를 바꾼 뒤 ③ 돌린다 — 새 쪽이 미리 비치지 않게 */
+  const wrap=$('flip');
   wrap.style.transform=`scale(${s})`;
   wrap.style.left=(dir>0?148*MM*s:0)+'px';
   wrap.innerHTML=`<div class="fsheet ${dir>0?'fwd':'bwd'}"><div class="fface">${face}</div><div class="fback">${back}</div><div class="fsh"></div></div>`;
+  wrap.style.display='block';
   const sh=wrap.querySelector('.fsheet');
-  requestAnimationFrame(()=>{ sh.classList.add('go') });
-  setTimeout(()=>{ wrap.style.display='none'; wrap.innerHTML=''; ANIM=false; showView(k) }, 640);
+  void sh.offsetWidth;                       /* 덮은 상태를 먼저 그린다 */
+  drawRaw(`<div class="spread">${dir>0?fL+tR:tL+fR}</div>`);
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ sh.classList.add('go') }) });
+  setTimeout(()=>{ showView(k); requestAnimationFrame(()=>{ wrap.style.display='none'; wrap.innerHTML=''; ANIM=false }) }, 700);
 }
 
 /* ── 책 머리 고치기 ── */
