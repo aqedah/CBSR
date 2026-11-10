@@ -72,6 +72,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .go{font-size:9.5pt;font-weight:700;margin:1.8mm 0 1mm;padding-left:0.5mm;color:var(--main)}
 .pg .ref{font-size:10pt;color:#222;line-height:1.45;margin:0 0 0.7mm 4mm;text-indent:-4mm;word-break:keep-all;overflow-wrap:anywhere}
 .pg .hint2{font-size:8.6pt;color:#666;margin:-0.6mm 0 1.2mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .vs{background:color-mix(in srgb,var(--main) 13%,#fff);border-radius:0.6mm;padding:0 0.5mm;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.pg .after .vs{background:color-mix(in srgb,var(--main) 24%,#fff)}
 .pg .chip{display:inline-block;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-size:7.8pt;font-weight:700;color:var(--main);border:0.25mm solid var(--main);border-radius:1.2mm;padding:0 1.3mm;line-height:1.55;margin-right:1.2mm;vertical-align:0.3mm;white-space:nowrap}
 .pg .ref b{color:#000;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .box{padding:0;font-size:10pt;line-height:1.38;margin:0;font-family:"Noto Serif KR","Noto Serif CJK KR",serif}
@@ -239,6 +241,11 @@ let cur=PLAN.findIndex(p=>p.m===4&&p.d===2); if(cur<0)cur=0;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const md=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const BK='삼상|삼하|왕상|왕하|대상|대하|고전|고후|살전|살후|딤전|딤후|벧전|벧후|요일|요이|요삼|[창출레민신수삿룻스느에욥시잠전아사렘애겔단호욜암옵욘미나합습학슥말마막눅요행롬갈엡빌골딛몬히약유계]';
+const VSRX=new RegExp('((?:(?:'+BK+')\\s)?\\d{1,3}:\\d{1,3}(?:[\u2013\u2014-]\\d{1,3}(?::\\d{1,3})?)?(?:·\\d{1,3}(?:[\u2013\u2014-]\\d{1,3})?)*)','g');
+const mark=h=>String(h).replace(VSRX,'<span class="vs">$1</span>');
+const vs=s=>mark(esc(s));
+const mdv=s=>mark(md(s));
 const qOf=p=>Math.ceil(p.m/3);
 
 /* ── 데이터 ── */
@@ -359,16 +366,16 @@ const SYMS='●◇◆○▲□◎';
 function chipSym(s){ const m=String(s||'').trim(); return m?`<span class="chip">${esc(m)}</span>`:'' }
 function chip(t){ let r=String(t||'').trim(), out=''; let m;
   while((m=r.match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
-  if(out) return out+esc(r);
-  m=String(t||'').match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${esc(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${esc(m[2])}`; return esc(t) }
+  if(out) return out+vs(r);
+  m=String(t||'').match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
 function pageL(p,qt){
   const q='q'+qOf(p);
   const look=(qt.obs.look||[]).filter(x=>x[0]);
   const pair=(qt.obs.pair||[]);
   const hasMap=qt.map&&qt.map.emph; const hasPic=!hasMap&&qt.img&&qt.img.id;
   const refs=look.map(([r,t])=>`<p class="ref"><b>${esc(r)}</b>&nbsp; ${esc(t)}</p>`).join('');
-  const box=pair.length?`<div class="box"><div class="h">눈여겨볼 것</div>${pair.map(([s,t])=>`<div class="i">${chipSym(s)}${esc(t)}</div>`).join('')}</div>`:'';
-  const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${esc(qt.img.cap||'')}</div></div>`:'';
+  const box=pair.length?`<div class="box"><div class="h">눈여겨볼 것</div>${pair.map(([s,t])=>`<div class="i">${chipSym(s)}${vs(t)}</div>`).join('')}</div>`:'';
+  const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${vs(qt.img.cap||'')}</div></div>`:'';
   const sec2=hasMap?`<div class="two"><div class="c1">${box}</div><div class="c2" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
   const whole=qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd">${chip(qt.obs.christ)}</p>`:'';
   return `<div class="pg ${q}">
@@ -376,9 +383,9 @@ function pageL(p,qt){
 <p class="title sans">${esc(p.t)}</p>
 <p class="sub">${esc(qt.sub||p.sub)}</p>
 <p class="sec sans"><span class="n">1</span>읽기 전</p>
-<p class="b"><b>오늘의 흐름</b>&nbsp; ${qt.guide.today?esc(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
+<p class="b"><b>오늘의 흐름</b>&nbsp; ${qt.guide.today?vs(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
 <p class="b"><b>읽으며 둘 초점</b>&nbsp; ${chip(qt.guide.find)}</p>
-${qt.guide.word?`<p class="b"><b>말뜻</b>&nbsp; ${esc(qt.guide.word)}</p>`:''}
+${qt.guide.word?`<p class="b"><b>말뜻</b>&nbsp; ${vs(qt.guide.word)}</p>`:''}
 <p class="go sans">▶ 이제 성경책에서 ${esc(p.rng)} 읽습니다.</p>
 <p class="sec sans"><span class="n">2</span>읽은 뒤</p>
 ${sec2}
@@ -393,13 +400,13 @@ function pageR(p,qt){
   return `<div class="pg r ${q}">
 <p class="date sans">${p.m}월 ${p.d}일 · ${esc(p.t)}</p>
 <p class="sec sans" style="margin-top:0.5mm"><span class="n">3</span>나의 묵상</p>
-<p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q">${esc(qt.obs.q)}</p>${ln(3)}
+<p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q">${vs(qt.obs.q)}</p>${ln(3)}
 <p class="lab sans"><span class="st">2</span>하나님의 성품 <span class="sm">— 본문에서 본 하나님은 어떤 분입니까?</span></p>${ln(2)}
-<p class="lab sans"><span class="st">3</span>적용</p><p class="q">${md(qt.apply)}</p>${ln(2)}
+<p class="lab sans"><span class="st">3</span>적용</p><p class="q">${mdv(qt.apply)}</p>${ln(2)}
 <p class="lab sans"><span class="st">4</span>오늘의 기도</p>${ln(3)}
 <div class="after"><p class="h sans"><span class="n">4</span>쓴 뒤에 읽기 — 해설과 기도</p>
-<p>${esc(qt.note)}${qt.god?' '+esc(qt.god):''}</p>
-<p><span class="k">기도</span>${esc(qt.pray)}</p></div>
+<p>${vs(qt.note)}${qt.god?' '+vs(qt.god):''}</p>
+<p><span class="k">기도</span>${vs(qt.pray)}</p></div>
 <div class="pn">${pageNo(p)+1}</div>
 </div>`;
 }
