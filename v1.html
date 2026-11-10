@@ -2694,6 +2694,10 @@ html.v2 body .mynote .ntdr{margin-left:6px;padding:1px 7px;border-radius:99px;ba
 html.v2 body .bible .chap+.chap{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
 html.v2 body .bible .chap h3 .chsub{display:block;margin-top:4px;font:600 13.5px/1.5 "IBM Plex Sans KR",sans-serif;color:var(--hn-ink)}
 html.v2 body .bible .bible-tools{border:0;background:none;padding:0 0 6px;box-shadow:none}
+/* 11/10 목사님: 가−/가+가 따로 한 줄을 차지해 빈자리가 생김 → 첫 장 제목 줄 오른쪽에 겹쳐 둠 */
+html.v2 body .bible{position:relative}
+html.v2 body .bible>.bible-tools:has(>span:first-child:empty){position:absolute;top:22px;right:14px;padding:0;z-index:1}
+html.v2 body .bible>.bible-tools:has(>span:first-child:empty)~.chap:first-of-type h3{padding-right:96px}
 html.v2 body .rdk{display:block;font:700 12.5px var(--f-ui);color:var(--gold);margin-bottom:2px}
 /* 11/3 층위: 단계 이름(작은 칩) < 질문(가장 크게). 본문·묵상 머리 좌표 통일 */
 html.v2 body .qtcard .qtstp{border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:14px}
