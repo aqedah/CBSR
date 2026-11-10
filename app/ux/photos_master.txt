@@ -796,7 +796,7 @@ g60_08|s|7:8|우리를 다스리소서/여호와께서 너희를 다스리시리
 g60_09|s|42:10|마르다/마리아/발치에 앉아/준비하는 일이 많아|martha,mary,house,light,tray|베다니|9|warm|50|마르다와 마리아 (눅 10)|||scene
 g60_10|s|42:12|어리석은 부자/곳간을 헐고/더 크게 짓고/내 모든 곡식|rich_man,barns,harvest,builders,sunset||9|warm|50|곳간을 헐고 더 크게 짓는 부자 (눅 12)|보류: 만화 느낌||symbolic
 g60_11|s|23:30|애굽으로 내려가/나귀 등에/낙타 안장에/사자와 독사|caravan,camels,donkeys,desert,lion||7|warm|50|애굽으로 보물을 싣고 가는 사절 (사 30)|||scene
-g60_12|s|26:15|포도나무/불에 던질 땔감/두 끝을 불사르고/무슨 제조에|burnt_branch,hand,workbench,cedar||7|dark|50|불에 탄 포도나무 가지 (겔 15)|보류: 현대 장도리||symbolic
+g60_12|s|26:15|포도나무/불에 던질 땔감/두 끝을 불사르고/무슨 제조에|burnt_branch,hand,workbench,cedar||7|dark|50|불에 탄 포도나무 가지 (겔 15)|||symbolic
 g60_13|s|66:13|땅에서 올라오니/어린 양 같이 두 뿔/용처럼 말을|beast,lamb_horns,dragon,crowd||7|dark|50|땅에서 올라온 두 뿔 짐승 (계 13)|보류: 공포 영화 느낌||symbolic
 g60_14|s|45:16;51:4;60:5|편지를 가지고/두기고/뵈뵈/실루아노/너희에게 보내노니|traveler,scroll,road,milestone,harbor||10|bright|50|편지를 품고 길 떠나는 전달자|||scene
 g60_15|s|4:1;4:2|지파마다 한 사람씩/각 지파의 우두머리/자기의 진영의 군기|twelve_men,banners,tabernacle,camp||5|bright|50|지파마다 한 사람씩, 회막 앞에 선 열두 우두머리 (민 1)|||scene
