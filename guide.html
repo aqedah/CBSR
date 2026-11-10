@@ -47,6 +47,9 @@ textarea{min-height:90px;resize:vertical;overflow:hidden}
 #fit.warn{background:#FFF4DC;color:#7A5200}
 #prev{display:flex;flex-direction:column;align-items:center}
 #frontbox{border:1px solid var(--line);border-radius:8px;background:#fff;margin:0 0 14px}
+body.onfront #form .dayhead,body.onfront #form #fit,body.onfront #form fieldset{display:none}
+body.onfront #frontbox{border-color:var(--acc)}
+body.onfront #frontbox>summary{color:var(--acc)}
 #frontbox>summary{cursor:pointer;padding:9px 11px;font-size:13px;font-weight:700}
 #frontform{padding:4px 11px 12px;border-top:1px solid var(--line)}
 #frontform .ff{display:block;margin:0 0 9px}
@@ -667,7 +670,10 @@ function render(){
   f.className=worst<0?'bad':over?'warn':'good'; f.textContent=fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
 }
 function gotoDay(i){ if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } if(typeof fillFrontForm==='function'&&$('frontbox')&&$('frontbox').open) fillFrontForm(); }
-function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML=''; PLAN.forEach((p,i)=>{if(p.m!==m)return;const o=document.createElement('option');o.value=i;o.textContent=`${p.d}일 · ${p.t}${get(p.no)?' ✓':''}`;s.appendChild(o)})}
+function fillDays(){const mv=$('selM').value; const s=$('selD'); s.innerHTML='';
+  if(mv==='front'){ VIEWS.forEach((v,i)=>{ if(v.t!=='s'||i>FLAB.length) return; const o=document.createElement('option'); o.value=i; o.textContent=v.lab; s.appendChild(o) }); return }
+  const m=+mv; PLAN.forEach((p,i)=>{if(p.m!==m)return;const o=document.createElement('option');o.value=i;o.textContent=`${p.d}일 · ${p.t}${get(p.no)?' ✓':''}`;s.appendChild(o)})}
+function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fillFrontForm(); $('frontbox').open=true; $('frontbox').scrollIntoView({block:'nearest'}); }
 /* ── 전자책처럼 넘겨 보기 ── */
 const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','기호 설명','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
 const BLAB=['면지','뒤표지'];
@@ -701,6 +707,9 @@ function showView(k,noAnim){
   k=Math.max(0,Math.min(VIEWS.length-1,k)); VI=k; const v=VIEWS[k];
   if(v.t==='d'){ if(cur!==v.i){ if(saveT){clearTimeout(saveT);save()} cur=v.i; const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); } render(); }
   else drawStatic(v.h);
+  document.body.classList.toggle('onfront', v.t==='s');
+  if(v.t==='s'){ const sm=$('selM'); if(sm.value!=='front'){ sm.value='front'; fillDays() } $('selD').value=k; if(!$('frontbox').dataset.built) fillFrontForm(); }
+  else { const sm=$('selM'); if(sm.value==='front'){ sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur } }
   updateBar();
 }
 function halfOf(html,side){ const d=document.createElement('div'); d.innerHTML=html; const pgs=d.querySelectorAll('.pg'); const e=pgs[side?1:0]; return e?e.outerHTML:'' }
@@ -771,9 +780,11 @@ function saveFront(){
 }
 
 (function init(){
-  const sm=$('selM'); for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'월';sm.appendChild(o)}
+  const sm=$('selM'); {const o=document.createElement('option');o.value='front';o.textContent='책 머리';sm.appendChild(o)}
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'월';sm.appendChild(o)}
   sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur;
-  sm.onchange=()=>{fillDays();gotoDay(+$('selD').value)}; $('selD').onchange=()=>gotoDay(+$('selD').value);
+  sm.onchange=()=>{fillDays(); if(sm.value==='front'){ goFront(+$('selD').value) } else { gotoDay(+$('selD').value) }};
+  $('selD').onchange=()=>{ if($('selM').value==='front'){ goFront(+$('selD').value) } else gotoDay(+$('selD').value) };
   $('btnPrev').onclick=()=>gotoDay(cur-1); $('btnNext').onclick=()=>gotoDay(cur+1);
   $('placeHint').textContent='아는 지명 '+Object.keys(PLACES).length+'곳';
   document.querySelectorAll('#form textarea,#form input[type=text]').forEach(el=>el.addEventListener('input',()=>{counters();render();$('status').textContent='저장 중…';clearTimeout(saveT);saveT=setTimeout(()=>{save();saveT=null;fillDays();$('selD').value=cur},600)}));
