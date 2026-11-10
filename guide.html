@@ -139,7 +139,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       <label class="f"><span class="k"><b>오늘의 흐름</b> <span class="cnt" data-for="today"></span></span><textarea id="today" data-max="125"></textarea></label>
       <div class="hint">장 순서대로 무슨 일이 일어나는지. 지명을 넣습니다(지도와 연결). 해석·평가 없음.</div>
       <label class="f"><span class="k"><b>읽으며 둘 초점</b> <span class="cnt" data-for="find"></span></span><textarea id="find" data-max="100"></textarea></label>
-      <div class="hint">하나만. ● 주도어 ◇ 대조 ◆ 반복 ○ 속말 ▲ 전환 □ 틀 ◎ 침묵 으로 시작. 오른쪽 관찰 질문과 같은 줄기. 100자 안.</div>
+      <div class="hint">● 이끎말 ◇ 대조 ◆ 반복 ○ 속말 ▲ 전환 □ 틀 ◎ 침묵 ⋯ 공백 ?! 아이러니 가운데 하나나 둘로 시작. 오른쪽 관찰 질문과 같은 줄기. 100자 안.</div>
       <label class="f"><span class="k"><b>말뜻 (선택)</b> <span class="cnt" data-for="word"></span></span><input type="text" id="word" data-max="40"></label>
     </fieldset>
     <fieldset><legend><span class="n">2</span>읽은 뒤</legend>
@@ -358,9 +358,9 @@ function svgMap(m,wmm,hTarget){
 const SYMS='●◇◆○▲□◎';
 function chipSym(s){ const m=String(s||'').trim(); return m?`<span class="chip">${esc(m)}</span>`:'' }
 function chip(t){ let r=String(t||'').trim(), out=''; let m;
-  while((m=r.match(/^([●◇◆○▲□◎])\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
+  while((m=r.match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
   if(out) return out+esc(r);
-  m=String(t||'').match(/^([●◇◆○▲□◎])\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${esc(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${esc(m[2])}`; return esc(t) }
+  m=String(t||'').match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${esc(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${esc(m[2])}`; return esc(t) }
 function pageL(p,qt){
   const q='q'+qOf(p);
   const look=(qt.obs.look||[]).filter(x=>x[0]);
