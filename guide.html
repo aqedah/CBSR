@@ -357,7 +357,10 @@ function svgMap(m,wmm,hTarget){
 /* ── 펼침면 ── */
 const SYMS='●◇◆○▲□◎';
 function chipSym(s){ const m=String(s||'').trim(); return m?`<span class="chip">${esc(m)}</span>`:'' }
-function chip(t){ let m=String(t||'').match(/^([●◇◆○▲□◎])\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${esc(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${esc(m[2])}`; return esc(t) }
+function chip(t){ let r=String(t||'').trim(), out=''; let m;
+  while((m=r.match(/^([●◇◆○▲□◎])\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
+  if(out) return out+esc(r);
+  m=String(t||'').match(/^([●◇◆○▲□◎])\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${esc(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${esc(m[2])}`; return esc(t) }
 function pageL(p,qt){
   const q='q'+qOf(p);
   const look=(qt.obs.look||[]).filter(x=>x[0]);
