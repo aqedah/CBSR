@@ -138,37 +138,41 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
       <div class="hint">하나만. ● 주도어 ◇ 대조 ◆ 반복 ○ 속말 ▲ 전환 □ 틀 ◎ 침묵 으로 시작. 오른쪽 관찰 질문과 같은 줄기. 100자 안.</div>
       <label class="f"><span class="k"><b>말뜻 (선택)</b> <span class="cnt" data-for="word"></span></span><input type="text" id="word" data-max="40"></label>
     </fieldset>
-    <fieldset><legend><span class="n">2</span>읽은 뒤 — 눈여겨볼 것</legend>
-      <div class="row"><input type="text" id="r1" placeholder="24:6"><input type="text" id="t1" placeholder="사울 앞 — 다윗이 스스로 멈춘 까닭" data-max="20"></div>
-      <div class="row"><input type="text" id="r2" placeholder="25:32–33"><input type="text" id="t2" placeholder="꼬리표: 누가 — 무엇" data-max="20"></div>
-      <div class="row"><input type="text" id="r3" placeholder="25:39"><input type="text" id="t3" placeholder="꼬리표" data-max="20"></div>
-      <div class="hint">관찰 질문에 답하려면 다시 펴야 할 절. 꼬리표는 답을 주지 않습니다.</div>
-      <label class="f"><span class="k"><b>눈여겨볼 것 (줄마다 하나)</b> <span class="cnt" data-for="pair"></span></span><textarea id="pair" placeholder="● 주도어 &quot;손에 넘기다&quot; 24:4·10, 26:8·23. …&#10;◇ 대조 아비새(26:8) ↔ 다윗(26:9)." data-max="240"></textarea></label>
-      <div class="hint">기호 + 절 주소 + 설명 한 문장. 기록을 요구하지 않는 설명문으로("~보세요" 없음). 신약 인용이 있는 날은 "◎ 성경 전체로 …" 한 줄.</div>
+    <fieldset><legend><span class="n">2</span>읽은 뒤</legend>
+      <label class="f"><span class="k"><b>눈여겨볼 것 (줄마다 하나)</b> <span class="cnt" data-for="pair"></span></span><textarea id="pair" placeholder="● 주도어 &quot;손에 넘기다&quot; 24:4·10, 26:8·23. …&#10;◇ 대조 …"></textarea></label>
+      <div class="hint">기호 + 절 주소 + 설명 한 문장. 기록을 요구하지 않는 설명문으로("~보세요" 없음). 왼쪽 상자에 인쇄.</div>
       <label class="f"><span class="k"><b>지도 — 강조 지명</b> <span class="small" id="placeHint"></span></span><input type="text" id="m_emph" placeholder="엔게디, 갈멜, 하길라 산 (비우면 지도 없음)"></label>
       <div class="row3"><span class="small">함께 표시</span><input type="text" id="m_show" placeholder="기브아, 베들레헴, 헤브론 (회색 점)"></div>
       <div class="row3"><span class="small">경로</span><input type="text" id="m_route" placeholder="엔게디 → 갈멜 → 하길라 산"></div>
       <div class="row3"><span class="small">설명</span><input type="text" id="m_cap" placeholder="엔게디(24장) · 갈멜(25장) · 하길라 산(26장)"></div>
-    </fieldset>
-    <fieldset><legend><span class="n">3</span>나의 묵상 (오른쪽에 인쇄되는 질문)</legend>
-      <label class="f"><span class="k"><b>관찰 질문</b> <span class="cnt" data-for="q"></span></span><textarea id="q" data-max="85"></textarea></label>
       <label class="f"><span class="k"><b>그림 (지도 없는 날만)</b> 그림 번호</span><input type="text" id="p_id" placeholder="예: g12_01 — 앱 그림 라이브러리 번호"></label>
       <label class="f"><span class="k">그림 설명 한 줄</span><input type="text" id="p_cap" placeholder="예: 빛이 드는 동산과 강"></label>
       <div class="hint">지도가 있으면 지도가 우선이고 그림은 쓰이지 않습니다. 지도 자리에 단색으로 들어갑니다.</div>
-      <div class="hint">본문의 말로 답할 수 있는 것. 절 주소 포함. "본문 관찰" 칸 위에 인쇄.</div>
-      <label class="f"><span class="k"><b>적용 질문</b> <span class="cnt" data-for="apply"></span></span><textarea id="apply" data-max="105"></textarea></label>
-      <div class="hint">앞 문장 = 본문의 사실(절 주소), 뒤 문장 = 나에게 묻는 질문 하나. 질문은 **별표 둘**로 감싸면 굵게.</div>
-      <label class="f"><span class="k"><b>하나님의 성품 — 한 문장(“하나님은 …하시는 분입니다”, 해설 띠에 인쇄)</b> <span class="cnt" data-for="god"></span></span><input type="text" id="god" data-max="45" placeholder="비우면 ‘하나님이 하신 일 하나’"></label>
-      <div class="hint">하나님이 직접 말씀하거나 행동하시지 않는 본문(삿 17–18장 등)에서만 바꿉니다.</div>
+      <label class="f"><span class="k"><b>성경 전체로</b> — 구약↔신약 반향 <span class="cnt" data-for="christ"></span></span><textarea id="christ" rows="2" data-max="200" placeholder="종류(인용·약속·주제·모형·흐름) 절 — &quot;인용문&quot;. 왜 가져오는지 한두 문장."></textarea></label>
+      <div class="hint">앱의 ‘성경 전체로’와 같은 자리. 본문이 실제로 인용되거나 되풀이되는 곳만, 왜 가져오는지(의미)를 씁니다. 상자·지도 아래에 인쇄.</div>
     </fieldset>
-    <fieldset><legend><span class="n">4</span>쓴 뒤에 읽기</legend>
+    <fieldset><legend><span class="n">3</span>나의 묵상 (오른쪽 물음)</legend>
+      <label class="f"><span class="k"><b>[1] 본문 관찰 — 질문</b> <span class="cnt" data-for="q"></span></span><textarea id="q" data-max="85"></textarea></label>
+      <div class="hint">본문의 말로 답할 수 있는 것. 절 주소 포함.</div>
+      <div class="hint">[2] 하나님의 성품은 매일 같은 물음("본문에서 본 하나님은 어떤 분입니까?")이라 칸이 없습니다. 답 문장은 아래 ④에.</div>
+      <label class="f"><span class="k"><b>[3] 적용 — 질문</b> <span class="cnt" data-for="apply"></span></span><textarea id="apply" data-max="105"></textarea></label>
+      <div class="hint">앞 문장 = 본문의 사실(절 주소), 뒤 문장 = 나에게 묻는 질문 하나. 질문은 **별표 둘**로 감싸면 굵게.</div>
+      <div class="hint">[4] 오늘의 기도는 빈 줄 3 + "예수님의 이름으로 기도합니다. 아멘."이라 칸이 없습니다. 기도문은 아래 ④에.</div>
+    </fieldset>
+    <fieldset><legend><span class="n">4</span>쓴 뒤에 읽기 — 해설과 기도</legend>
       <label class="f"><span class="k"><b>해설</b> <span class="cnt" data-for="note"></span></span><textarea id="note" data-max="176"></textarea></label>
-      <label class="f"><span class="k"><b>본문의 하나님(성품)</b> — 앱의 성품 이름 · 절</span><input type="text" id="attr" placeholder="예: 기억하시는 하나님 · 9:16"></label>
-      <div class="hint">해설은 요약이 아니라 이 성품이 드러나는 데까지 가고, 기도는 이 이름으로 부릅니다. 앱의 22가지 성품 이름 가운데서 고릅니다. 인쇄에는 따로 찍히지 않습니다.</div>
-      <label class="f"><span class="k"><b>성경 전체로</b> — 구약↔신약 반향 <span class="cnt" data-for="christ"></span></span><textarea id="christ" rows="2" data-max="200" placeholder="종류(인용·약속·주제·모형·흐름) 책 장:절 — &quot;인용&quot;. 오늘 본문과 어떻게 이어지는지 한마디."></textarea></label>
-      <div class="hint">앱의 ‘성경 전체로’와 같은 자리. 본문이 실제로 인용되거나 되풀이되는 곳만, 왜 가져오는지(의미)를 씁니다. 왼쪽 아래(상자·지도 밑)에 인쇄.</div>
       <div class="hint">관찰 질문의 답을 본문 말로 확인 + 그날의 핵심 한 줄. 150자 안팎.</div>
-      <label class="f"><span class="k"><b>기도</b> — 세 호흡, 해설 띠 아래에 인쇄 <span class="cnt" data-for="pray"></span></span><textarea id="pray" data-max="60"></textarea></label>
+      <label class="f"><span class="k"><b>하나님의 성품 — 한 문장</b> <span class="cnt" data-for="god"></span></span><input type="text" id="god" data-max="90" placeholder="하나님은 …하시면서 …하시는 분입니다."></label>
+      <div class="hint">해설 바로 뒤에 이어 인쇄. 하나님이 직접 말씀하거나 행동하시지 않는 본문(삿 17–18장 등)에서만 바꿉니다.</div>
+      <label class="f"><span class="k"><b>기도</b> — 세 호흡 <span class="cnt" data-for="pray"></span></span><textarea id="pray" data-max="130"></textarea></label>
+      <div class="hint">오늘 본 하나님을 부름 → 내 형편 → 오늘의 응답을 위한 도움. "예수님의 이름으로 기도합니다. 아멘."으로 끝. 띠 맨 아래 "기도"로 인쇄.</div>
+    </fieldset>
+    <fieldset><legend>앱 전용 (인쇄 안 함)</legend>
+      <label class="f"><span class="k"><b>성품 이름 · 절</b> — 앱의 22가지 가운데</span><input type="text" id="attr" placeholder="예: 기억하시는 하나님 · 9:16"></label>
+      <div class="row"><input type="text" id="r1" placeholder="24:6"><input type="text" id="t1" placeholder="다시 펼 절 꼬리표" data-max="20"></div>
+      <div class="row"><input type="text" id="r2" placeholder="25:32–33"><input type="text" id="t2" placeholder="꼬리표" data-max="20"></div>
+      <div class="row"><input type="text" id="r3" placeholder="25:39"><input type="text" id="t3" placeholder="꼬리표" data-max="20"></div>
+      <div class="hint">다시 펼 절은 가이드북에서 뺐습니다. 앱 연동용으로만 남겨 둡니다.</div>
     </fieldset>
     <p class="small">원고는 이 브라우저에 자동 저장됩니다. 다른 곳에서도 쓰려면 JSON 내보내기 또는 GitHub 저장을 쓰세요. 칸을 비우면 그 자리는 인쇄되지 않습니다.</p>
   </section>
