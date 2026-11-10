@@ -17270,6 +17270,439 @@
     "at": "2026-11-07",
     "basis": "PDF 원본(Gemini Notebook, 58회 15장)을 한 장씩 직접 보고 분류"
    }
+  },
+  "g59_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 37,
+     "fromVerse": 31,
+     "toVerse": 34,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "천막 앞 저녁, 줄무늬 긴 옷을 펼쳐 든 백발 노인, 옷자락의 붉은 얼룩, 뒤에 고개 숙인 아들들, 바닥의 염소 가죽. 창 37:31–34",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 38,
+     "fromVerse": 25,
+     "toVerse": 26,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "마을 문 앞 굳은 얼굴의 남자, 앞에 내민 손의 돌 도장·끈·지팡이, 뒤로 끌려 나오는 여인(작게). 창 38:25–26",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_03": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 4,
+     "fromVerse": 29,
+     "toVerse": 31,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "애굽 흙벽돌 마을, 말하는 아론과 빛나는 지팡이를 든 모세, 무릎 꿇은 장로들. 뱀 없이 빛으로만. 출 4:29–31",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_04": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 34,
+     "fromVerse": 29,
+     "toVerse": 31,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "시내 산 기슭, 두 돌판을 안은 노인에게서 빛이 퍼지고 앞의 사람들이 눈을 가리며 물러섬. 수건은 아직 없음. 출 34:29–31(고후 3:7·13의 모세 얼굴 광채에도 낱말로)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_05": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 3,
+     "chapter": 13,
+     "fromVerse": 2,
+     "toVerse": 3,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "천막 앞 한낮, 흰 옷 제사장이 남자의 팔을 들어 피부를 살핌, 뒤에 지켜보는 가족. 상처는 그리지 않음. 레 13:2–3(14장 정결 진찰에도)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_06": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 4,
+     "chapter": 13,
+     "fromVerse": 30,
+     "toVerse": 32,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "진영 바위 위에서 손을 들어 무리를 잠재우고 먼 산을 가리키는 남자, 포도송이 막대를 멘 정탐꾼들. 민 13:30–32(신 1:36·수 14:6–12의 갈렙에도 낱말로)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 4,
+     "chapter": 16,
+     "fromVerse": 16,
+     "toVerse": 19,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "회막 앞, 향로를 든 남자들이 줄지어 서고 연기가 오름, 맞은편에 두 노인. 불·땅 갈라짐 전 순간. 민 16:16–19",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_08": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 9,
+     "chapter": 25,
+     "fromVerse": 23,
+     "toVerse": 24,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "산길 저녁, 떡과 포도주 부대 실은 나귀 곁에 엎드린 여인, 칼을 든 채 멈춘 다윗, 뒤의 부하들. 삼상 25:23–24",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_09": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 43,
+     "chapter": 5,
+     "fromVerse": 2,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌기둥 행각 아래 자리에 누운 야윈 남자, 화면 밖에서 드는 빛. 예수님·천사 없음. 요 5:2–5",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_10": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 44,
+     "chapter": 2,
+     "fromVerse": 1,
+     "toVerse": 4,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌집 이층 방에 가득 모인 사람들, 바람에 흔들리는 옷자락, 머리 위의 작은 불빛들. 비둘기·후광 없음. 행 2:1–4",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_11": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 44,
+     "chapter": 10,
+     "fromVerse": 9,
+     "toVerse": 13,
+     "basis": "explicit"
+    },
+    {
+     "book": 44,
+     "chapter": 11,
+     "fromVerse": 5,
+     "toVerse": 7,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "욥바 바닷가 평지붕, 무릎 꿇은 베드로, 네 귀가 매인 베 보자기 안의 양·소·새·뱀, 아래 가죽 널. 행 10:9–13; 11:5–7",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_12": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 44,
+     "chapter": 19,
+     "fromVerse": 14,
+     "toVerse": 17,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌집 문간에서 찢긴 옷으로 뛰쳐나오는 일곱 남자, 문 안의 어두운 사람 형상(눈이 보여 섬뜩한 편 — 목사님 판단). 행 19:14–17",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_13": {
+   "assetKind": "scene",
+   "relation": "illustrative",
+   "directness": "D2",
+   "assignmentPolicy": "broad",
+   "verseAnchors": [
+    {
+     "book": 45,
+     "chapter": 16,
+     "fromVerse": 22,
+     "toVerse": 22,
+     "basis": "explicit"
+    },
+    {
+     "book": 48,
+     "chapter": 6,
+     "fromVerse": 11,
+     "toVerse": 11,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "allowChapters": [
+    [
+     45,
+     1,
+     16
+    ],
+    [
+     46,
+     1,
+     16
+    ],
+    [
+     47,
+     1,
+     13
+    ],
+    [
+     48,
+     1,
+     6
+    ],
+    [
+     49,
+     1,
+     6
+    ],
+    [
+     50,
+     1,
+     4
+    ],
+    [
+     51,
+     1,
+     4
+    ],
+    [
+     52,
+     1,
+     5
+    ],
+    [
+     53,
+     1,
+     3
+    ],
+    [
+     54,
+     1,
+     6
+    ],
+    [
+     55,
+     1,
+     4
+    ],
+    [
+     56,
+     1,
+     3
+    ],
+    [
+     57,
+     1,
+     1
+    ]
+   ],
+   "note": "돌방 밤, 거닐며 말하는 바울과 탁자에서 두루마리에 받아 적는 젊은이. 서신 전체(롬·고전·고후·갈·엡·빌·골·살전·살후·딤전·딤후·딛·몬)의 논증 카드에 두루 씀. 글씨는 흐릿한 선뿐",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_14": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 64,
+     "chapter": 1,
+     "fromVerse": 5,
+     "toVerse": 10,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "blockedUses": [
+    {
+     "book": 63,
+     "chapterFrom": 1,
+     "chapterTo": 1,
+     "reason": "요이 10절의 거절은 거짓 교사를 향한 것이라 이 그림(참 형제를 거절함)과 뜻이 반대"
+    }
+   ],
+   "note": "저녁 골목, 왼쪽 집 문을 밀어 닫는 남자와 오른쪽 집 문에서 등잔 들고 나그네를 맞는 남자. 요삼 1:5–10(요이 1:10의 \"집에 들이지도 말고\"는 반대 상황이므로 쓰지 않음)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g59_15": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 3,
+     "chapter": 19,
+     "fromVerse": 13,
+     "toVerse": 13,
+     "basis": "explicit"
+    },
+    {
+     "book": 5,
+     "chapter": 24,
+     "fromVerse": 14,
+     "toVerse": 15,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "품꾼",
+    "품삯",
+    "삯을",
+    "해 지기 전",
+    "일꾼"
+   ],
+   "note": "노을 아래 추수 끝난 밭, 땀 묻은 품꾼 손에 은 조각을 쥐여 주는 손, 낫과 곡식단. 레 19:13; 신 24:14–15(약 5:4 \"품꾼에게 주지 아니한 삯\"에도 낱말로)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+   }
   }
  },
  "groups": {

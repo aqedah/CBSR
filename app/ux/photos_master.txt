@@ -773,3 +773,18 @@ g58_12|s|28:10|묵은 땅을 기경/공의를 심/의를 비처럼|plow,oxen,far
 g58_13|s|42:11|밤중에/떡 세 덩이/문을 두드리/벗이여|door,knocking,night,basket,lamp||9|dark|50|한밤중에 문을 두드리는 사람 (눅 11)|||symbolic
 g58_14|s|44:14|루스드라/돌로 바울을 쳐서/죽은 줄로 알고/제자들이 둘러섰을 때|stones,fallen,rising,disciples,city_gate|루스드라|10|bright|50|돌에 맞고 다시 일어나는 바울과 손 내민 제자들 (행 14)|||scene
 g58_15|s|59:3|작은 키/큰 배/사공/광풍에 밀려|ship,rudder,hands,storm,sail||10|dark|50|폭풍 속 큰 배의 작은 키를 잡은 손 (약 3)|||object
+g59_01|s|1:37|채색옷/피를 묻히고/악한 짐승이 그를 잡아먹었도다/옷을 찢고|robe,blood_stain,old_man,tent,goat_skin||5|dark|50|피 묻은 채색옷을 받아 든 야곱 (창 37)|||scene
+g59_02|s|1:38|도장과 그 끈과 지팡이/다말/그는 나보다 옳도다|seal,cord,staff,gate,man||5|dark|50|유다 앞에 내민 도장·끈·지팡이 (창 38)|||scene
+g59_03|s|2:4|아론/백성이 믿으며/머리 숙여 경배/모든 장로|two_men,staff,light,elders,kneeling||5|warm|50|백성 앞에서 이적을 보이는 모세와 아론 (출 4)|||scene
+g59_04|s|2:34|얼굴 피부에 광채/두 증거판/가까이 하기를 두려워|moses,tablets,glow,mountain,people_shielding|시내 산|5|bright|50|빛나는 얼굴로 두 돌판을 안고 내려온 모세 (출 34)|||scene
+g59_05|s|3:13|피부에 색점/제사장에게로/제사장은 그 피부의 병을 진찰|priest,arm,examining,tent,family||5|bright|50|피부를 살피는 제사장 (레 13)|||scene
+g59_06|s|4:13|갈렙/백성을 조용하게/능히 이기리라/포도송이|caleb,rock,crowd,grapes,pointing|가데스|5|bright|50|백성을 조용하게 하는 갈렙 (민 13)|||scene
+g59_07|s|4:16|고라/향로/이백오십 명/회막 문|censers,smoke,crowd,tabernacle,two_men||5|dark|50|향로를 든 이백오십 사람과 홀로 선 모세·아론 (민 16)|||scene
+g59_08|s|9:25|아비가일/나귀/다윗의 발에 엎드려/나발|woman_prostrate,donkey,bread,david,sword,soldiers||6|warm|50|다윗 앞에 엎드린 아비가일 (삼상 25)|||scene
+g59_09|s|43:5|베데스다/행각 다섯/서른여덟 해 된 병자/양문 곁|pool,colonnade,sick_man,mat,light|예루살렘|9|warm|50|베데스다 못가에 누운 병자 (요 5)|||scene
+g59_10|s|44:2|오순절/급하고 강한 바람/불의 혀/성령의 충만|upper_room,crowd,wind,flames,lamps|예루살렘|10|bright|50|오순절 다락방, 머리 위 작은 불빛 (행 2)|||scene
+g59_11|s|44:10|베드로/지붕에 올라가/큰 보자기/네 귀를 매어/각종 네 발 가진 짐승|rooftop,sheet,animals,sea,peter|욥바|10|bright|50|지붕 위 베드로의 환상, 내려오는 보자기 (행 10)|||scene
+g59_12|s|44:19|스게와/일곱 아들/벗은 몸으로 상하여/그 집에서 도망|seven_men,fleeing,doorway,torn_clothes,dark_figure|에베소|10|dark|50|쫓겨 달아나는 스게와의 아들들 (행 19)|||scene
+g59_13|s|45:16|더디오/이 편지를 기록하는/친필로/편지를 쓰|paul,scribe,scroll,reed_pen,lamp,night||10|warm|50|편지를 불러 주는 바울과 받아쓰는 더디오 (롬 16)|||scene
+g59_14|s|64:1|디오드레베/가이오/형제들을 맞아들이지/나그네 된 자들|two_doors,street,travelers,lamp,evening||10|dark|50|문을 닫는 디오드레베와 맞아들이는 가이오 (요삼)|||scene
+g59_15|s|3:19;5:24|품꾼의 삯/해 지기 전/가난하고 궁핍한 품꾼|hands,silver,sickle,sheaves,sunset||5|warm|50|해 지기 전에 품삯을 쥐여 주는 손 (레 19; 신 24)|||object
