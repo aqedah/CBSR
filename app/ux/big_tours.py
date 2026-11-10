@@ -797,6 +797,8 @@ json.dump(_ID,open(_IDP,'w'),ensure_ascii=False,indent=1)
 for _w in _W: print("[여정 검사]",_w)
 # 물 위를 걸어가는 직선 고침(11/4 목사님: 마가 여정에서 바다 위 횡단). ux/landroute.py가 지형 그림의 물빛으로 육지 길을 찾아 ux/landpath.json에 경유점을 둠.
 #  여기서는 그 경유점을 육지 이동 구간 앞에 넣기만 함(그림 파일 없이도 빌드됨). 경로를 고친 뒤 다시 만들 때: NO_LANDPATH=1 python3 ux/big_tours.py && python3 ux/landroute.py
+# 사사 시대 큰 여정(2026-11-10): 따로 둔 파일을 읽어 T에 붙임
+import os as _osj; exec(open(_osj.path.join(_osj.path.dirname(_osj.path.abspath(__file__)),'big_tours_judges.py'),encoding='utf-8').read())
 import os as _os2
 if not _os2.environ.get('NO_LANDPATH'):
   _LP=json.load(open(_os2.path.join(_os2.path.dirname(_os2.path.abspath(__file__)),'landpath.json'))); _used=set()

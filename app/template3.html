@@ -1425,6 +1425,7 @@ body.wcmon{overflow:hidden}
 .spc .sphot rect{cursor:pointer;transition:fill .3s,stroke .3s}.spc .sphot:hover rect,.spc .sphot:focus rect{fill:rgba(165,54,31,.08);stroke:rgba(165,54,31,.6)}.spc .sphot.on rect{stroke:rgba(165,54,31,.9)}.spc .sphot text{cursor:pointer}
 .spc .spls{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:30vh;overflow-y:auto}.spc .spl{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid rgba(226,184,116,.25);background:rgba(255,255,255,.06);border-radius:10px;padding:8px 10px;color:inherit;font:inherit;cursor:pointer}.spc .spl b{font:700 14px "Noto Serif KR",serif}.spc .spl small{font-size:11.5px;color:#E2B874}.spc .spl.on{background:rgba(226,184,116,.22);border-color:#E2B874}
 .spc .bmttop b{color:#2a1d0c;text-shadow:none}.spc .atmap{bottom:44%;padding:64px 6px 6px}.spc .bmtp{max-height:46%;overflow:hidden;padding-top:14px;background:rgba(16,20,18,.94);pointer-events:auto}.spc .bmtn{max-height:72px;overflow-y:auto}.spc .spls{max-height:22vh}.spc .bmthint{display:none}
+.mvcycle{position:absolute;left:12px;right:12px;top:50%;transform:translateY(-40%) scale(.96);z-index:1200;background:rgba(243,230,196,.97);color:#2a1d0c;border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.4);opacity:0;transition:opacity .5s,transform .5s;pointer-events:none}.mvcycle.on{opacity:1;transform:translateY(-40%) scale(1)}.mvcycle b{display:block;font:700 14px/1.35 "Noto Serif KR",serif;margin-bottom:8px;text-wrap:balance}.mvcyr{display:flex;align-items:center;justify-content:space-between;gap:2px;flex-wrap:wrap}.mvcyr span{display:flex;flex-direction:column;align-items:center;font:700 10.5px var(--f-ui);gap:2px}.mvcyr span i{font-style:normal;font-size:20px;line-height:1}.mvcyr span.on i{color:#a5361f}.mvcyr span.off{color:#8a7a62}.mvcyr span.off i{color:#b9a98f}.mvcyr em{color:#8a7a62;font-style:normal;font-size:11px}.mvcycle small{display:block;margin-top:8px;font-size:11.5px;color:#6b4a24}
 .pln .bmtpc button.on{background:#a5361f;color:#fff}.pln .bmtparts{top:calc(env(safe-area-inset-top,0px) + 56px)}
 .pln .wall2{fill:none;stroke:#6b4a24;stroke-width:3.2;stroke-linejoin:round}.pln .wall2.low{stroke:#a78452;stroke-width:2;stroke-dasharray:5 4}.pln .gate{fill:#f3e6c4;stroke:#6b4a24;stroke-width:1.5}.pln .tower{fill:#c9a24a;stroke:#5a3c1c;stroke-width:1.2}
 .pln .house{fill:rgba(107,74,36,.14);stroke:#5a3c1c;stroke-width:1.1}.pln .court{fill:rgba(160,120,60,.08);stroke:#6b4a24;stroke-width:1.4}.pln .water{fill:#9fc3d6;stroke:#5b8fa8;stroke-width:1}
@@ -5987,7 +5988,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   /* 도착 뒤의 장면(GPT 2차): 세례 · 십자가의 어둠 · 로뎀 나무. 이 장면은 r 말씀을 장면 안에서 보여 줌 */
   const skyM=(ll,html,z)=>{ const m=L.marker(ll,{interactive:false,zIndexOffset:z||2800,icon:L.divIcon({className:"",html,iconSize:[0,0]})}).addTo(map); SKY.push(m); return m; };
   /* 3차 R3-14: 도착 뒤 현장 연출 시간도 진행 막대에 넣음 */
-  const FXMS={light:()=>7400,fire:()=>9500,baptism:()=>10300,dark:st=>st.quake?10600:9100,sleep:()=>12800,fish:()=>5200};
+  const FXMS={cycle:()=>7200,light:()=>7400,fire:()=>9500,baptism:()=>10300,dark:st=>st.quake?10600:9100,sleep:()=>12800,fish:()=>5200};
   /* 에디오피아 내시의 수레(행 8:27–39, 11/4 목사님 승인 빌립 여정): 빌립이 함께 타면(ride) 수레가 빌립을 따라 움직이고 빌립 그림은 숨김. 수레는 서쪽(가사 쪽)을 보고 감 */
   function cartMk(ll){ if(CART&&CART.m._map) return CART; CART={m:pxMark(map,ll,"cart",{s:2,dy:14,cls:"pxflip"},2600),ride:false,last:null,drive:false};
     CART.iv=setInterval(()=>{ const C=CART; if(!C) return; if(!document.body.contains(el)){ clearInterval(C.iv); return; } const e=main&&chm(main), mk=C.m.getElement(), sp=mk&&mk.querySelector(".pxs");
@@ -5996,6 +5997,9 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   function cartOff(){ if(!CART) return; clearInterval(CART.iv); try{ map.removeLayer(CART.m); }catch(x){} const e=main&&chm(main); if(e) e.style.opacity=""; CART=null; }
   const FXR=new Set(["fire","light"]); /* 효과가 st.r을 직접 띄우는 것 */
   const FXP={
+    /* 사사기 되풀이 카드(목사님 2026-11-10 승인, GPT 검토 §4-1): 다섯 요소(악·넘기심·부르짖음·구원자·평안)를 동그라미로, 있으면 채우고 없으면 비움 */
+    cycle:async(st,my)=>{ const C=st.cycle||[1,1,1,1,1], N=["악을 행함","넘기심","부르짖음","구원자","평안"]; el.querySelectorAll(":scope>.mvcycle").forEach(x=>x.remove()); const d=document.createElement("div"); d.className="mvcycle"; d.innerHTML=`<b>${esc(st.cyc||"사사기의 틀")}</b><div class="mvcyr">${N.map((n,k)=>`<span class="${C[k]?"on":"off"}"><i>${C[k]?"●":"○"}</i>${n}</span>`).join('<em>→</em>')}</div>${C.includes(0)?`<small>빠진 것: ${N.filter((n,k)=>!C[k]).join(" · ")}</small>`:`<small>다섯 요소가 모두 있음</small>`}`; el.appendChild(d); requestAnimationFrame(()=>d.classList.add("on"));
+      const ok=await sleep(6600,my); d.classList.remove("on"); setTimeout(()=>d.remove(),700); return ok; },
     /* 행 8:29–31: 수레가 예루살렘 쪽에서 내려오고, 빌립이 달려가 함께 탐 */
     meetcart:async(st,my)=>{ if(!main) return true; const c=main.getLatLng(), P=map.latLngToContainerPoint(c), at=(x,y)=>map.containerPointToLatLng(P.add(L.point(x,y)));
       const A=at(240,-150), B=at(44,-4), C=cartMk(A); C.ride=false; C.drive=true; C.m.setLatLng(A); let t0=clk;
@@ -6350,7 +6354,7 @@ const BM_WHO=[
  {k:"joseph",n:"요셉",av:"joseph",who:["요셉","요셉의 형들"],tour:["joseph"]},
  {k:"moses",n:"모세",av:"moses",b:[2,5],tour:["midian","exodus"],scene:1,plans:["tab","camp"]},
  {k:"joshua",n:"여호수아",av:"joshua",b:[6,6],tour:["joshua"],plans:["jericho"]},
- {k:"judges",n:"사사들",av:"soldier",b:[7,8],tour:["ruth"]},
+ {k:"judges",n:"사사들",av:"soldier",b:[7,8],tour:["judges","ruth"]},
  {k:"saul",n:"사무엘·사울",av:"saul",who:["사무엘","사울","한나","요나단","야베스 사람들"],tour:["saulking"]},
  {k:"ark",n:"언약궤",av:"ark",who:["언약궤"],tour:["ark"]},
  {k:"david",n:"다윗",av:"david0",who:["다윗","요압","압살롬","아브넬","우리아","아비아달","시므이","아말렉 청년","블레셋 군대"],b:[9,10],tour:["david","absalom"]},
@@ -6364,7 +6368,7 @@ const BM_WHO=[
 const BM_ERA9=[
  {k:"pat",n:"족장",y:"기원전 2000년대 무렵",av:"abraham",d:"아브라함에서 요셉까지, 약속을 받은 한 가족이 가나안과 애굽을 오갑니다.",tour:["abraham","rebekah","jacob","joseph"]},
  {k:"exo",n:"출애굽·광야",y:"",av:"moses",d:"애굽에서 나와 시내 산에서 언약을 받고, 광야 사십 년을 지나 요단 앞에 섭니다.",tour:["midian","exodus"],scene:1,plans:["tab","camp"]},
- {k:"jud",n:"정복·사사",y:"",av:"joshua",d:"요단을 건너 땅을 얻고, 왕이 없던 때에 사사들이 이스라엘을 이끕니다.",tour:["joshua","ruth"],plans:["jericho"]},
+ {k:"jud",n:"정복·사사",y:"",av:"joshua",d:"요단을 건너 땅을 얻고, 왕이 없던 때에 사사들이 이스라엘을 이끕니다.",tour:["joshua","judges","ruth"],plans:["jericho"]},
  {k:"uni",n:"통일 왕국",y:"기원전 1050–930년 무렵",av:"david",d:"사무엘과 사울, 다윗과 솔로몬 때. 언약궤가 예루살렘에 들어오고 성전이 섭니다.",tour:["ark","saulking","david","absalom"]},
  {k:"div",n:"분열 왕국",y:"기원전 930–586년 무렵",av:"elijah",d:"나라가 북 이스라엘과 남 유다로 갈라집니다. 북쪽은 앗수르에, 남쪽은 바벨론에 무너집니다.",tour:["elijah","jonah","assyria"],pro:[["엘리야·엘리사","아합 때",[11,17,1]],["요나","여로보암 2세 때",[12,14,25]],["아모스","웃시야·여로보암 때",[30,1,1]],["호세아","웃시야~히스기야, 여로보암 때",[28,1,1]],["이사야","웃시야~히스기야 때",[23,1,1]],["미가","요담~히스기야 때",[33,1,1]],["스바냐","요시야 때",[36,1,1]],["예레미야","요시야 13년부터",[24,1,2]]]},
  {k:"exi",n:"포로",y:"기원전 605–539년",av:"jeremiah",d:"예루살렘이 무너지고 백성이 바벨론에 끌려갑니다. 하나님의 사람들은 예루살렘·바벨론·그발 강·애굽에 흩어져 있습니다.",tour:["babylon","jeremiah","exilelife"],plans:["esther","ezekiel"],pro:[["예레미야","시드기야 11년까지",[24,1,3]],["에스겔","여호야긴이 사로잡힌 지 5년",[26,1,2]],["다니엘","여호야김 3년부터 고레스 원년까지",[27,1,1]]]},
