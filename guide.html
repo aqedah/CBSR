@@ -359,7 +359,7 @@ function readForm(){
   const g=$('god').value.trim(); if(g) qt.god=g;
   const pi=$('p_id').value.trim(); if(pi) qt.img={id:pi,cap:$('p_cap').value.trim()};
   const sk=$('stxk').value.trim(); const sb=$('stx').value.trim();
-  qt.stx=(sk||sb)?{kind:sk,rows:sb.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split('|'))}:null;
+  qt.stx=(sk||sb)?{kind:sk,rows:sb.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split(/(?<!\|)\|(?!\|)/).map(y=>y.trim()))}:null;
   const e=$('m_emph').value.trim();
   qt.map=e?{emph:e,show:$('m_show').value.trim(),route:$('m_route').value.trim(),route2:$('m_route2').value.trim(),cap:$('m_cap').value.trim()}:null;
   return qt;
