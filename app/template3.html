@@ -2080,10 +2080,10 @@ function guardSync(){ if(!NOWOFF||!window.SYNC||SYNC.__g) return; SYNC.__g=1; co
 guardSync(); window.addEventListener("load",guardSync);
 /* 365 통독의 회차(판): 해마다 1월 1일에 새 회차. 2026 = 첫 회차, 2027 = 2027판 */
 const ED_Y=Math.max(2026,NOW().getFullYear()), ED=MODE==="y365"?ED_Y:2026;
-/* 2027판(목사님 2026-11-03·04): 월–토 313회, 주일은 쉼과 설교. 격자는 2026-12-28(월)부터 한 주 7칸(6번 = 주일), 첫 주 0–3번 칸은 비움 */
-const Y27=MODE==="y365"&&ED===2027&&typeof P313!=="undefined", Y27_PRE=4;
-if(Y27) Object.assign(PI,{name:"2027 성경통독",short:"313일",src:"CBSR 2027 성경통독표(월–토 313회)",start:"2027-01-01"});
-const DEFAULT_START=Y27?"2026-12-28":MODE==="y365"?ED+"-01-01":PI.start;
+/* 11-10: 2027은 365일표 4판(11-08 목사님 확정 — 313회는 교회 일정표로만). 격자는 2027-01-01부터 하루 한 칸, 주일 포함 */
+const Y27=MODE==="y365"&&ED===2027&&typeof P27!=="undefined", Y27_PRE=0;
+if(Y27) Object.assign(PI,{name:"2027 성경통독",short:"365일",src:"CBSR 2027 성경통독표(365일)",start:"2027-01-01"});
+const DEFAULT_START=Y27?"2027-01-01":MODE==="y365"?ED+"-01-01":PI.start;
 /* 새 회차가 되면 지난 회차의 기록(통독·QT·퀴즈)은 hist[해]에 옮겨 보관하고 새로 시작합니다 */
 function rollY(m,to){ to=to||ED_Y; if(!m) return m; const e=m.ed||2026; if(e>=to) { if(!m.ed) m.ed=to; return m; }
   const arc={start:m.start,done:m.done||{},dT:m.dT||{},qt:m.qt||{},q:m.q||{},wq:m.wq||{}};
@@ -2100,7 +2100,7 @@ function y27Remap(){
   const inR=(ch,ref)=>Array.isArray(ref)&&ch.some(([b,c])=>b===ref[0]&&c===ref[1]);
   const W=[], SUMN=[], WKN=[], nk={GUIDE:{},EYE:{},DAYC:{},CUR:{},LW:{},EM:{},IN:{},DET:{},CK:{},TX:{},SC:{},KW:{},CN:{},ST:{}};
   const SC=typeof STORYC!=="undefined"?STORYC:{}, TX=typeof TOOLX!=="undefined"?TOOLX:{}, KW=typeof KWQ!=="undefined"?KWQ:{}, CN=typeof CARDNEWS!=="undefined"?CARDNEWS:{}, ST=(typeof DSTATUS!=="undefined"&&DSTATUS.y365)||{};
-  for(const x of P313){ const [w,d]=gW(x.gi), gn=x.gi+1, k=w+"-"+d, k1=w+"-"+(d+1);
+  for(const x of P27){ const [w,d]=gW(x.gi), gn=x.gi+1, k=w+"-"+d, k1=w+"-"+(d+1);
     (W[w-1] ||= [])[d]={spec:x.spec,label:x.label,ch:x.ch,topic:x.topic}; (SUMN[w-1] ||= [])[d]="";
     Y27N[gn]=x.prim||0; if(!x.prim) continue;
     const [ow,od]=oW(x.prim), ok=ow+"-"+od, ok1=ow+"-"+(od+1), good=!BAD.has(x.prim);
@@ -2145,20 +2145,20 @@ const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 const parseD=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
 const today0=()=>{const n=NOW();return new Date(n.getFullYear(),n.getMonth(),n.getDate());};
 const dayDiff=(a,b)=>Math.round((b-a)/86400000);
-const NW=PLAN.plan.length, READ_DAYS=PLAN.plan.flat().length, TOTAL_DAYS=Y27?369:MODE==="y365"?READ_DAYS:NW*7; /* 2027판: 12/28–12/31(비운 칸) + 365일 */
-const isRev=d=>(MODE==="rj"||Y27)&&d===6;
+const NW=PLAN.plan.length, READ_DAYS=PLAN.plan.flat().length, TOTAL_DAYS=MODE==="y365"?READ_DAYS:NW*7;
+const isRev=d=>MODE==="rj"&&d===6;
 const nd=w=>PLAN.plan[w-1]?PLAN.plan[w-1].length:0;
 const dayNo=(w,d)=>(w-1)*7+d+1;
-const dayName=(w,d)=>Y27?fmt(dateOf(w,d),{month:"long",day:"numeric",weekday:"short"}):MODE==="y365"?`${dayNo(w,d)}일째`:`${w}주차 ${d+1}일째`;
+const dayName=(w,d)=>MODE==="y365"?`${dayNo(w,d)}일째`:`${w}주차 ${d+1}일째`;
 /* 11/3 목사님: 본문·묵상 맨 위 한 줄은 "37주차 2일째"로 통일(365판은 "n일째") */
-const dayK=(w,d)=>Y27?dayName(w,d):MODE==="y365"?`${dayNo(w,d)}일째`:dayName(w,d);
+const dayK=(w,d)=>MODE==="y365"?`${dayNo(w,d)}일째`:dayName(w,d);
 const syncKey=k=>MODE==="y365"?"y-"+k:k;
 /* 함께 읽기 숫자: 한 사람이 한 본문을 처음 완료할 때 한 번만 셉니다(완료 취소 후 다시 눌러도 다시 세지 않음) */
 function countDone(k){ mem.counted ||= {}; if(mem.counted[k]) return; mem.counted[k]=1; save(); if(window.SYNC&&SYNC.available) SYNC.markDone(syncKey(k),syncKey(todayStr())); }
 const dateOf=(w,d)=>{const s=parseD(mem.start);s.setDate(s.getDate()+(w-1)*7+d);return s;};
 /* 화면의 한 주: 리딩지저스 월~주일, 365 주일~토요일. 통독표 날짜(w,d)는 그대로 두고 보여 주는 묶음만 달력 주로 맞춥니다. */
 /* 리딩지저스는 월요일~주일, 365는 주일~토요일 */
-const S0=()=>{const s=parseD(mem.start); s.setDate(s.getDate()-(MODE==="rj"||Y27?(s.getDay()+6)%7:s.getDay())); return s;};
+const S0=()=>{const s=parseD(mem.start); s.setDate(s.getDate()-(MODE==="rj"?(s.getDay()+6)%7:s.getDay())); return s;};
 function NDW(){ const last=parseD(mem.start); last.setDate(last.getDate()+TOTAL_DAYS-1); return Math.floor(dayDiff(S0(),last)/7)+1; }
 function cellOf(W,i){ const dt=S0(); dt.setDate(dt.getDate()+(W-1)*7+i); const n=dayDiff(parseD(mem.start),dt);
   if(n<0||Y27&&n<Y27_PRE) return {dt,pre:true}; if(n>=TOTAL_DAYS) return {dt,after:true}; return {dt,w:Math.floor(n/7)+1,d:n%7}; }

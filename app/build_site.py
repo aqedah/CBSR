@@ -95,8 +95,8 @@ _P27=json.load(open('plan365_2027.json')); _D27={}
 for _i,(_x,_y) in enumerate(zip(P365,_P27)):
     if _x['ch']!=_y['ch'] or _x['label']!=_y['label']: _D27[_i+1]={"spec":spec365(_y['ch']),"label":_y['label'],"ch":_y['ch'],"topic":_y.get('topic','')}
 data+='const P365_27='+J(_D27)+';\n'
-import importlib.util as _iu3; _sp3=_iu3.spec_from_file_location('p313','ux/plan313_build.py'); _p313=_iu3.module_from_spec(_sp3); _sp3.loader.exec_module(_p313)
-data+='const P313='+J([{k:v for k,v in x.items() if k!='part'} for x in _p313.build()])+';\n'  # 2027 주6일 313회(2026-11-04)
+import importlib.util as _iu3; _sp3=_iu3.spec_from_file_location('p27','ux/plan365v4_build.py'); _p27=_iu3.module_from_spec(_sp3); _sp3.loader.exec_module(_p27)
+data+='const P27='+J(_p27.build())+';\n'  # 2027 365일표 4판(목사님 확정 11-08; 313회는 일정표로만 — 11-10 앱 반영)
 A365=json.load(open('s365b/all.json')); GD={};EY={};CQ={}
 for i,d in enumerate(P365):
     w,j=i//7+1,i%7; v=A365.get(str(d['n']))
