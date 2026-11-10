@@ -95,7 +95,7 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
     (st.show||[]).forEach(id=>vis(id,true,900)); (st.hide||[]).forEach(id=>vis(id,false,900)); (st.label||[]).forEach(([x,y,t,k,an])=>FX.label(x,y,t,k,an));
     if(st.pre) await runFx(st.pre,my,st); if(my!==tok) return false;
     const mv=Object.assign({},st.moves||{}); if(st.path) mv[st.who||"me"]=st.path; const ks=Object.keys(mv); if(ks.length){ const rs=await Promise.all(ks.map(k=>walk(k,mv[k],my,st.spd))); if(rs.some(x=>!x)) return false; }
-    if(st.q) mvNar(el,st.q,st.r,66,hold,st.god?(st.godn||"여호와"):undefined); else if(st.say) mvNar(el,st.say,st.r,66,hold,st.sayer?st.sayer:undefined);
+    const NT=SP.parts?106:66; if(st.q) mvNar(el,st.q,st.r,NT,hold,st.god?(st.godn||"여호와"):undefined); else if(st.say) mvNar(el,st.say,st.r,NT,hold,st.sayer?st.sayer:undefined);
     if(st.pray){ const a=actor(st.who||"me"); if(a.at) FX.emo(a.at[0],a.at[1]-44,"🙏"); }
     if(!(await runFx(st.fx,my,st))) return false;
     let t=0; while(t<hold){ if(my!==tok) return false; await new Promise(r=>setTimeout(r,150)); if(!paused){ t+=150; b.style.width=Math.min(100,t/hold*100)+"%"; } } return my===tok; }
