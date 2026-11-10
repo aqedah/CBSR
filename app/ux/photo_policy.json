@@ -8019,38 +8019,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g24_10": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "eraLock": [
-    2
-   ],
-   "verseAnchors": [
-    {
-     "book": 1,
-     "chapter": 16,
-     "fromVerse": 7,
-     "toVerse": 7,
-     "basis": "illustrative"
-    },
-    {
-     "book": 1,
-     "chapter": 21,
-     "fromVerse": 15,
-     "toVerse": 19,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "광야 돌우물 곁에 웅크린 여인(아이 없음)",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g24_13": {
    "assetKind": "scene",
    "relation": "event",
@@ -14320,28 +14288,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g48_17": {
-   "assetKind": "symbolic",
-   "relation": "figurative",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 66,
-     "chapter": 4,
-     "fromVerse": 2,
-     "toVerse": 6,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "바다 위 흰빛을 둘러싼 녹색 둥근 무지개(녹보석 같은 무지개, 4:3)와 바라보는 노인",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g48_19": {
    "assetKind": "object",
    "relation": "ambient",
@@ -14451,28 +14397,6 @@
    ],
    "reviewStatus": "approved",
    "note": "하늘을 덮는 검은 연기와 어두워진 해. 황충은 거의 보이지 않음",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
-  "g49_07": {
-   "assetKind": "symbolic",
-   "relation": "figurative",
-   "directness": "D2",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 66,
-     "chapter": 10,
-     "fromVerse": 1,
-     "toVerse": 2,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "바다 위 빛기둥, 무지개, 바위 위 펼친 두루마리. 천사는 그리지 않음",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
