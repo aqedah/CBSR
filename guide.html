@@ -109,7 +109,10 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
   header,main{display:none!important}
   #printroot{display:block}
   #printroot .pg{page-break-after:always;break-after:page}
+  /* 인쇄 창의 '배경 그래픽'을 켜지 않아도 색이 찍히게 — 상자·띠·그림의 바탕색 */
+  #printroot,#printroot *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
+html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 </style>
 </head>
 <body>
@@ -475,7 +478,7 @@ function fillDays(){const m=+$('selM').value; const s=$('selD'); s.innerHTML='';
     list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); fitMaps(probe,1); parts.push(probe.innerHTML); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
     probe.remove(); $('printroot').innerHTML=parts.join('');
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
-    $('status').textContent=list.length+'일치 · '+(list.length*2)+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음, 배경 그래픽 켜기';
+    $('status').textContent=list.length+'일치 · '+(list.length*2)+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음';
     setTimeout(()=>window.print(),150);
   };
 })();
