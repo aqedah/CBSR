@@ -17214,7 +17214,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_02": {
@@ -17236,7 +17236,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_03": {
@@ -17258,7 +17258,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_04": {
@@ -17302,7 +17302,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_06": {
@@ -17324,7 +17324,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_07": {
@@ -17346,7 +17346,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_08": {
@@ -17368,7 +17368,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_09": {
@@ -17412,7 +17412,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_11": {
@@ -17459,11 +17459,11 @@
     }
    ],
    "reviewStatus": "approved",
-   "note": "돌집 문간에서 찢긴 옷으로 뛰쳐나오는 일곱 남자, 문 안의 어두운 사람 형상(눈이 보여 섬뜩한 편 — 목사님 판단). 행 19:14–17",
+   "note": "돌집 문간에서 찢긴 옷으로 뛰쳐나오는 일곱 남자, 문 안의 어두운 사람 형상(둘째 출력, 덜 섬뜩함). 행 19:14–17",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_13": {
@@ -17559,7 +17559,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_14": {
@@ -17589,7 +17589,7 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
    }
   },
   "g59_15": {
@@ -17625,7 +17625,432 @@
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 59회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "59회 둘째 출력(다시 만든 것)으로 교체. 첫 출력보다 과장이 적음"
+   }
+  },
+  "g60_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 3,
+     "fromVerse": 8,
+     "toVerse": 10,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "큰 무화과나무 뒤에 웅크려 숨은 남자와 여자, 잎으로 몸을 가림, 두려운 눈. 뱀·열매 없음. 창 3:8–10",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 21,
+     "fromVerse": 14,
+     "toVerse": 14,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "동틀 녘 천막 앞, 여인의 어깨에 물부대와 보따리를 얹어 주는 노인, 아이의 손을 잡은 여인, 천막 안 다른 여인의 실루엣. 창 21:14",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_03": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 29,
+     "fromVerse": 25,
+     "toVerse": 26,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "천막 안 아침, 수건 내린 여인과 놀라 일어선 젊은이, 문 밖에 팔짱 낀 라반, 잔치 그릇. 창 29:25–26",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_04": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 45,
+     "fromVerse": 1,
+     "toVerse": 4,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "애굽 궁 방, 총리 차림으로 두 팔 벌린 요셉과 가나안 겉옷 차림으로 뒷걸음질하는 형들. 창 45:1–4",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_05": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 9,
+     "fromVerse": 10,
+     "toVerse": 11,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "애굽 궁 뜰, 지팡이 든 모세·아론 앞에 몸을 감싸 쥐고 주저앉은 요술사들, 보좌의 바로 보류: 요술사들이 웃통을 벗은 채 몸을 비틀어 연극처럼 과장됨",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_06": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 32,
+     "fromVerse": 19,
+     "toVerse": 24,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "깨진 두 돌판 앞에서 마주 선 모세와 두 손 펴 보이는 아론, 뒤에 불타는 금송아지와 흩어지는 백성. 출 32:19–24",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_07": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 3,
+     "chapter": 11,
+     "fromVerse": 1,
+     "toVerse": 12,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "왼쪽 풀밭의 양·소·염소와 물속 물고기, 오른쪽 바위의 멧돼지·오소리·토끼, 가운데 손 보류: 반으로 나뉜 도감 같은 구성과 지나치게 선명한 색이 만화 느낌",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_08": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 7,
+     "chapter": 8,
+     "fromVerse": 22,
+     "toVerse": 24,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "저녁 들판, 손 들어 외치는 군사들과 손 저어 거절하는 기드온, 발치의 금 귀고리 더미 보류: 군사들이 로마식 판갑(세그멘타타)을 입음 — 고증 어긋남",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_09": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 42,
+     "chapter": 10,
+     "fromVerse": 38,
+     "toVerse": 42,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌집 안, 빛 쪽을 보며 앉은 마리아와 문간에서 쟁반·물동이를 든 채 멈춘 마르다. 예수님은 화면 밖. 눅 10:38–42",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_10": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 42,
+     "chapter": 12,
+     "fromVerse": 16,
+     "toVerse": 20,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "추수 들판, 곳간 짓는 일꾼들과 팔짱 낀 부자 보류: 보라색 옷의 부자가 만화처럼 웃고 있음, 붉은 하늘이 과장됨",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_11": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 23,
+     "chapter": 30,
+     "fromVerse": 1,
+     "toVerse": 6,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "남방 광야, 보물 싣은 나귀·낙타 행렬과 바위 틈의 사자. 사절들의 옷이 유다보다 아라비아 상인에 가까움(허용). 사 30:1–6",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_12": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 26,
+     "chapter": 15,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "화덕 앞, 양 끝이 탄 포도나무 가지를 든 손과 백향목 목재 보류: 탁자 위에 현대식 장도리(쇠 망치)가 보임",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_13": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 66,
+     "chapter": 13,
+     "fromVerse": 11,
+     "toVerse": 12,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "갈라진 땅에서 솟은 두 뿔 양과 뒤의 거대한 짐승 실루엣, 엎드린 사람들 보류: 붉은 빛을 내뿜는 양과 검은 괴수가 공포 영화·만화 느낌",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_14": {
+   "assetKind": "scene",
+   "relation": "illustrative",
+   "directness": "D2",
+   "assignmentPolicy": "broad",
+   "verseAnchors": [
+    {
+     "book": 45,
+     "chapter": 16,
+     "fromVerse": 1,
+     "toVerse": 2,
+     "basis": "illustrative"
+    },
+    {
+     "book": 51,
+     "chapter": 4,
+     "fromVerse": 7,
+     "toVerse": 9,
+     "basis": "illustrative"
+    },
+    {
+     "book": 60,
+     "chapter": 5,
+     "fromVerse": 12,
+     "toVerse": 12,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "allowChapters": [
+    [
+     58,
+     1,
+     13
+    ],
+    [
+     59,
+     1,
+     5
+    ],
+    [
+     60,
+     1,
+     5
+    ],
+    [
+     61,
+     1,
+     3
+    ],
+    [
+     62,
+     1,
+     5
+    ],
+    [
+     63,
+     1,
+     1
+    ],
+    [
+     64,
+     1,
+     1
+    ],
+    [
+     65,
+     1,
+     1
+    ],
+    [
+     45,
+     16,
+     16
+    ],
+    [
+     51,
+     4,
+     4
+    ]
+   ],
+   "note": "아침 돌길, 두루마리를 품고 지팡이 짚은 나그네, 뒤로 항구와 배. 일반 서신(히·약·벧전·벧후·요일·요이·요삼·유)의 논증 카드에 두루, 한 날 한 장",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g60_15": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 4,
+     "chapter": 1,
+     "fromVerse": 4,
+     "toVerse": 16,
+     "basis": "explicit"
+    },
+    {
+     "book": 4,
+     "chapter": 2,
+     "fromVerse": 2,
+     "toVerse": 2,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "allowChapters": [
+    [
+     4,
+     1,
+     4
+    ],
+    [
+     4,
+     26,
+     26
+    ],
+    [
+     13,
+     1,
+     9
+    ],
+    [
+     13,
+     23,
+     27
+    ]
+   ],
+   "note": "회막 앞 반원으로 선 열두 남자와 깃발 막대, 앞에 양피지를 편 모세·아론, 뒤로 지파별 천막. 민 1·2·3·26과 대상 계보 목록 카드에",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
    }
   }
  },

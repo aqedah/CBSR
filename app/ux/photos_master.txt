@@ -785,3 +785,18 @@ g59_12|s|44:19|스게와/일곱 아들/벗은 몸으로 상하여/그 집에서 
 g59_13|s|45:16|더디오/이 편지를 기록하는/친필로/편지를 쓰|paul,scribe,scroll,reed_pen,lamp,night||10|warm|50|편지를 불러 주는 바울과 받아쓰는 더디오 (롬 16)|||scene
 g59_14|s|64:1|디오드레베/가이오/형제들을 맞아들이지/나그네 된 자들|two_doors,street,travelers,lamp,evening||10|dark|50|문을 닫는 디오드레베와 맞아들이는 가이오 (요삼)|||scene
 g59_15|s|3:19;5:24|품꾼의 삯/해 지기 전/가난하고 궁핍한 품꾼|hands,silver,sickle,sheaves,sunset||5|warm|50|해 지기 전에 품삯을 쥐여 주는 손 (레 19; 신 24)|||object
+g60_01|s|1:3|동산 나무 사이에 숨은지라/내가 어디 있느냐/벗었으므로 두려워하여|fig_tree,hiding,man,woman,fear|에덴|5|dark|50|나무 사이에 숨은 두 사람 (창 3)|||scene
+g60_02|s|1:21|떡과 물 한 가죽부대/하갈의 어깨에 메워/브엘세바 광야|old_man,woman,boy,water_skin,tent,dawn|브엘세바|5|warm|50|떡과 물부대를 지워 하갈을 보내는 아침 (창 21)|||scene
+g60_03|s|1:29|아침에 보니 레아라/언니보다 아우를 먼저/속이셨나이까|tent,morning,woman,young_man,laban|하란|5|warm|50|아침에 드러난 레아, 야곱과 라반 (창 29)|||scene
+g60_04|s|1:45|나는 요셉이라/내 앞에서 놀라서/형들에게 자기를 알리니|egyptian_hall,joseph,brothers,shock|애굽|5|warm|50|자기를 알리는 요셉과 얼어붙은 형들 (창 45)|||scene
+g60_05|s|2:9|악성 종기/요술사들도/모세 앞에 서지 못하니|pharaoh,magicians,moses,aaron,ash|애굽|5|dark|50|종기로 서지 못하는 요술사들 (출 9)|보류: 요술사 웃통 벗음·과장||scene
+g60_06|s|2:32|깨뜨리니라/이 송아지가 나왔나이다/아론이 그들을 방자하게|broken_tablets,calf,fire,moses,aaron|시내 산|5|dark|50|깨진 돌판 앞 아론의 변명 (출 32)|||scene
+g60_07|s|3:11|굽이 갈라져/새김질/지느러미와 비늘/부정하니|clean_animals,unclean_animals,fish,stream||5|bright|50|정한 짐승과 부정한 짐승 (레 11)|보류: 도감식 구성·만화 느낌||object
+g60_08|s|7:8|우리를 다스리소서/여호와께서 너희를 다스리시리라/금 귀고리|soldiers,shields,gideon,gold_earrings,dusk||6|warm|50|왕이 되어 달라는 백성과 거절하는 기드온 (삿 8)|보류: 로마식 갑옷||scene
+g60_09|s|42:10|마르다/마리아/발치에 앉아/준비하는 일이 많아|martha,mary,house,light,tray|베다니|9|warm|50|마르다와 마리아 (눅 10)|||scene
+g60_10|s|42:12|어리석은 부자/곳간을 헐고/더 크게 짓고/내 모든 곡식|rich_man,barns,harvest,builders,sunset||9|warm|50|곳간을 헐고 더 크게 짓는 부자 (눅 12)|보류: 만화 느낌||symbolic
+g60_11|s|23:30|애굽으로 내려가/나귀 등에/낙타 안장에/사자와 독사|caravan,camels,donkeys,desert,lion||7|warm|50|애굽으로 보물을 싣고 가는 사절 (사 30)|||scene
+g60_12|s|26:15|포도나무/불에 던질 땔감/두 끝을 불사르고/무슨 제조에|burnt_branch,hand,workbench,cedar||7|dark|50|불에 탄 포도나무 가지 (겔 15)|보류: 현대 장도리||symbolic
+g60_13|s|66:13|땅에서 올라오니/어린 양 같이 두 뿔/용처럼 말을|beast,lamb_horns,dragon,crowd||7|dark|50|땅에서 올라온 두 뿔 짐승 (계 13)|보류: 공포 영화 느낌||symbolic
+g60_14|s|45:16;51:4;60:5|편지를 가지고/두기고/뵈뵈/실루아노/너희에게 보내노니|traveler,scroll,road,milestone,harbor||10|bright|50|편지를 품고 길 떠나는 전달자|||scene
+g60_15|s|4:1;4:2|지파마다 한 사람씩/각 지파의 우두머리/자기의 진영의 군기|twelve_men,banners,tabernacle,camp||5|bright|50|지파마다 한 사람씩, 회막 앞에 선 열두 우두머리 (민 1)|||scene
