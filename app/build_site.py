@@ -11,6 +11,9 @@ data=data.replace('if(typeof module!=="undefined") module.exports={buildEntityIn
 data+="\nconst PLACEINFO="+open('places/all.json').read()+";"
 data+="\nconst ROUTES_B="+open('routes/all.json').read()+";"
 data+="\nconst BM_TOURS="+open('ux/big_tours.json').read()+";"
+# 공용 평면도 여정 엔진과 각 편 자료(2026-11-10): 앱 본문(IIFE) 안의 /*PLANS*/ 자리에 넣음(esc·mvNar·C 등을 써야 하므로)
+import glob as _g
+t=t.replace('/*PLANS*/',open('ux/plans.js').read()+"\n"+"\n".join(open(f).read() for f in sorted(_g.glob('ux/plans/*.js'))))
 data+="\nconst RIVERS="+open('ux/rivers.json').read()+";"
 data+="\nconst PHOTO_PIN="+json.dumps(json.load(open('ux/photo_pin.json'))['pins'],ensure_ascii=False,separators=(',',':'))+";"
 data+="\nconst PHOTO_USE="+json.dumps(json.load(open('ux/photo_use_proposed.json'))['uses'],ensure_ascii=False,separators=(',',':'))+";"

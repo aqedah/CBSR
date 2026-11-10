@@ -1417,6 +1417,15 @@ body.wcmon{overflow:hidden}
 .atn .bmtbars span{background:rgba(60,40,20,.25)}.atn .bmtbars i{background:#a5361f;box-shadow:none}
 .atn .athold{margin:6px 0 0;font-size:13px;color:#E2B874;font-weight:700}.atn .athold em{font-style:normal;color:#fff;background:rgba(226,184,116,.2);border-radius:999px;padding:2px 9px;margin-left:4px}
 .atn .bmttop b{color:#2a1d0c;text-shadow:none}.atn .bmthint{color:#5a4630}
+/* 공용 평면도 여정(2026-11-10): 정보 성격 표시 k — i 추론(점선·?) r 복원도(회색) u 위치 미상(흐림) v 환상(보라) */
+.pln .pk-i{fill:#6b4a24;font-style:italic}.pln .pk-r{fill:#8a7a62}.pln .pk-u{fill:#8a7a62;opacity:.6}.pln .pk-v{fill:#6a2a8a}
+.pln path.pk-i,.pln line.pk-i{stroke-dasharray:3 4}.pln .pk-v-box{fill:none;stroke:#6a2a8a;stroke-width:2.5;stroke-dasharray:8 5}
+.pln .pwalk{animation:plwalk .5s steps(2) infinite}@keyframes plwalk{0%{transform:translateY(0)}50%{transform:translateY(-1.5px)}100%{transform:translateY(0)}}
+.pln .plnote{margin:5px 0 0;font-size:11px;line-height:1.45;color:#a89a84}
+.pln .bmtpc button.on{background:#a5361f;color:#fff}.pln .bmtparts{top:calc(env(safe-area-inset-top,0px) + 56px)}
+.pln .wall2{fill:none;stroke:#6b4a24;stroke-width:3.2;stroke-linejoin:round}.pln .wall2.low{stroke:#a78452;stroke-width:2;stroke-dasharray:5 4}.pln .gate{fill:#f3e6c4;stroke:#6b4a24;stroke-width:1.5}.pln .tower{fill:#c9a24a;stroke:#5a3c1c;stroke-width:1.2}
+.pln .house{fill:rgba(107,74,36,.14);stroke:#5a3c1c;stroke-width:1.1}.pln .court{fill:rgba(160,120,60,.08);stroke:#6b4a24;stroke-width:1.4}.pln .water{fill:#9fc3d6;stroke:#5b8fa8;stroke-width:1}
+.pln .valley{fill:none;stroke:#a78452;stroke-width:1.2;opacity:.75}.pln .road{fill:none;stroke:#b9955b;stroke-width:1.6;stroke-dasharray:1 3;opacity:.8}.pln .tribe{fill:rgba(160,120,60,.14);stroke:#6b4a24;stroke-width:1.2;rx:4}
 .wcl{position:fixed;inset:0;z-index:100002;background:#1c1712;color:#f3ece0;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) max(14px,env(safe-area-inset-right,0px)) 0 max(14px,env(safe-area-inset-left,0px));max-width:760px;margin:0 auto}
 .wclt{display:flex;align-items:center;gap:10px;height:54px;flex:none}.wclt b{font:700 17px/1 "Noto Serif KR","Gowun Batang",serif}.wclt span{margin-left:auto;font-size:13px;color:#c9b99f}.wclx{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:transparent;color:#f3ece0;font-size:16px}
 .wcltab{display:flex;gap:4px;border-bottom:1px solid rgba(255,255,255,.14);flex:none}.wcltab button{flex:1;border:0;background:none;color:#c9b99f;padding:10px 2px;font-size:15px;font-weight:600;border-bottom:2px solid transparent;margin-bottom:-1px}.wcltab button.on{color:#fff;border-bottom-color:#E2B874}
@@ -2804,7 +2813,8 @@ function routesFor(w,d){ const p=dayPlan(w,d); if(!p) return []; const has=(b,c)
 /* 성경 → 장면(목사님 2026-10-31): 오늘 읽는 장이 큰 여정의 한 장면이면, 그 장면부터 따라가는 단추 */
 function tourHere(w,d){ const p=dayPlan(w,d); if(!p||!window.L||typeof BM_TOURS==="undefined") return ""; const has=r=>r&&p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]);
   const B=BM_TOURS.map((t,ti)=>{ const si=t.steps.findIndex(s=>has(s.r)||has(s.pre)); return si<0?"":`<button class="tourhere" data-bmt2="${ti}" data-bmstep="${si}"><i>▶</i><span><b>${esc(t.n)}</b><small>${si+1}번째 장면 “${esc(t.steps[si].t)}”부터 따라가기</small></span></button>`; }).filter(Boolean);
-  if(p.ch.some(x=>x[0]===3&&x[1]===16)) B.push(`<button class="tourhere" data-atone="1"><i>▶</i><span><b>대속죄일 · 대제사장의 길</b><small>성막 안에서 아론을 따라가기 · 10장면</small></span></button>`);
+  if(typeof planHere==="function") B.push(...planHere(p)); /* 2026-11-10 평면도 여정 */
+ if(p.ch.some(x=>x[0]===3&&x[1]===16)) B.push(`<button class="tourhere" data-atone="1"><i>▶</i><span><b>대속죄일 · 대제사장의 길</b><small>성막 안에서 아론을 따라가기 · 10장면</small></span></button>`);
   return B.length?`<div class="tourheres"><p class="lead">오늘 본문은 큰 여정의 한 장면입니다</p>${B.join("")}</div>`:""; }
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-bmt2]"); if(!b) return; e.preventDefault(); bmTour(+b.dataset.bmt2,+b.dataset.bmstep); });
 function renderMapBox(A){
@@ -6326,6 +6336,7 @@ function reset(){ { const nf=fx.cloneNode(false); fx.replaceWith(nf); fx=nf; } [
   /* 지도 왼쪽을 누르면 앞 장면, 오른쪽은 다음 장면(큰 여정과 같게) */
   el.querySelector(".atmap").addEventListener("click",e=>{ if(el.querySelector(".bmtgo0")) return; if(e.clientX<el.clientWidth*.3) run(Math.max(0,cur-1)); else if(cur<S.length-1) run(cur+1); }); }
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-atone]"); if(!b) return; e.preventDefault(); e.stopPropagation(); try{ document.querySelector("#sheetX")?.click(); }catch(e2){} atoneOpen(); });
+/*PLANS*/
 const ATONE_CARD=`<button class="bmtc" data-atone="1"><i>▶</i><b>대속죄일</b><small><span>레위기 16장 · 성막 안에서 대제사장 아론의 하루</span></small><em>10장면 따라가기</em></button>`;
 /* ===== 성경 지도 라이브러리(목사님 2026-10-31): 지도가 화면을 차지해 답답하다 → 위에는 주인공 픽셀 배지, 누르면 아래에 그 주인공의 여정 목록.
    지도는 여정·장소를 고를 때만 전체 화면으로 열림 ===== */
@@ -6333,7 +6344,7 @@ const BM_WHO=[
  {k:"abraham",n:"아브라함",av:"abraham",who:["아브람","아브라함","롯","하갈","아브라함의 종"],tour:["abraham","rebekah"]},
  {k:"jacob",n:"이삭·야곱",av:"jacob",who:["이삭","에서","야곱"],tour:["jacob"]},
  {k:"joseph",n:"요셉",av:"joseph",who:["요셉","요셉의 형들"],tour:["joseph"]},
- {k:"moses",n:"모세",av:"moses",b:[2,5],tour:["midian","exodus"],scene:1},
+ {k:"moses",n:"모세",av:"moses",b:[2,5],tour:["midian","exodus"],scene:1,plans:["tab","camp"]},
  {k:"joshua",n:"여호수아",av:"joshua",b:[6,6],tour:["joshua"]},
  {k:"judges",n:"사사들",av:"soldier",b:[7,8],tour:["ruth"]},
  {k:"saul",n:"사무엘·사울",av:"saul",who:["사무엘","사울","한나","요나단","야베스 사람들"],tour:["saulking"]},
@@ -6348,7 +6359,7 @@ const BM_WHO=[
 /* 시대로 찾기(목사님 2026-11-02): 같은 큰 여정·지도 경로를 시대로 묶어 봄. 예언자는 책 머리말(표제)에 왕·연대가 적힌 사람만(요엘·오바댜·나훔·하박국·말라기처럼 시대를 특정할 수 없는 책은 넣지 않음) */
 const BM_ERA9=[
  {k:"pat",n:"족장",y:"기원전 2000년대 무렵",av:"abraham",d:"아브라함에서 요셉까지, 약속을 받은 한 가족이 가나안과 애굽을 오갑니다.",tour:["abraham","rebekah","jacob","joseph"]},
- {k:"exo",n:"출애굽·광야",y:"",av:"moses",d:"애굽에서 나와 시내 산에서 언약을 받고, 광야 사십 년을 지나 요단 앞에 섭니다.",tour:["midian","exodus"],scene:1},
+ {k:"exo",n:"출애굽·광야",y:"",av:"moses",d:"애굽에서 나와 시내 산에서 언약을 받고, 광야 사십 년을 지나 요단 앞에 섭니다.",tour:["midian","exodus"],scene:1,plans:["tab","camp"]},
  {k:"jud",n:"정복·사사",y:"",av:"joshua",d:"요단을 건너 땅을 얻고, 왕이 없던 때에 사사들이 이스라엘을 이끕니다.",tour:["joshua","ruth"]},
  {k:"uni",n:"통일 왕국",y:"기원전 1050–930년 무렵",av:"david",d:"사무엘과 사울, 다윗과 솔로몬 때. 언약궤가 예루살렘에 들어오고 성전이 섭니다.",tour:["ark","saulking","david","absalom"]},
  {k:"div",n:"분열 왕국",y:"기원전 930–586년 무렵",av:"elijah",d:"나라가 북 이스라엘과 남 유다로 갈라집니다. 북쪽은 앗수르에, 남쪽은 바벨론에 무너집니다.",tour:["elijah","jonah","assyria"],pro:[["엘리야·엘리사","아합 때",[11,17,1]],["요나","여로보암 2세 때",[12,14,25]],["아모스","웃시야·여로보암 때",[30,1,1]],["호세아","웃시야~히스기야, 여로보암 때",[28,1,1]],["이사야","웃시야~히스기야 때",[23,1,1]],["미가","요담~히스기야 때",[33,1,1]],["스바냐","요시야 때",[36,1,1]],["예레미야","요시야 13년부터",[24,1,2]]]},
@@ -6398,7 +6409,7 @@ const BM_WAR=[
  {k:"w5",n:"앗수르·바벨론 침공",av:"soldier",d:"북 이스라엘은 앗수르에, 남 유다는 바벨론에 무너집니다.",tour:["assyria","babylon"],r:[124,126,155,127,131,160,132]}];
 function bmWarSheet(k){ const g=BM_WAR.find(x=>x.k===k); if(!g) return; const T=BMT(), L=g.r.filter(i=>ROUTES_B[i]), tours=T.map((t,i)=>[t,i]).filter(([t])=>g.tour.includes(t.id));
   let h=`<p class="bmshn">따라가는 큰 여정 ${tours.length} · 지도로 보는 전쟁 ${L.length}</p><p class="bmerad">${esc(g.d)}</p>`;
-  if(tours.length||g.scene) h+=`<div class="bmtours${tours.length+(g.scene?1:0)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}</div>`;
+  if(tours.length||g.scene||(g.plans||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}</div>`;
   h+=`<p class="bmproh">지도로 보는 전쟁</p><div class="bmrl">${L.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")}</div>`;
   sheet(`전쟁 · ${g.n}`,`<div id="bmWS">${h}</div>`);
   const root=document.getElementById("sheetRoot"), go=f=>{ document.getElementById("sheetClose").click(); setTimeout(f,90); };
@@ -6407,7 +6418,7 @@ function bmWarSheet(k){ const g=BM_WAR.find(x=>x.k===k); if(!g) return; const T=
 /* 시대 창: 그 시대의 큰 여정 · 이때 말씀을 전한 예언자(근거 구절) · 지도로 보는 여정 */
 function bmEraSheet(k){ const g=BM_ERA9.find(x=>x.k===k); if(!g) return; const EG=bmEraGroups(), T=BMT(), L=EG[k], tours=T.map((t,i)=>[t,i]).filter(([t])=>g.tour.includes(t.id));
   let h=`<p class="bmshn">${g.y?esc(g.y)+" · ":""}따라가는 큰 여정 ${tours.length} · 지도로 보는 여정 ${L.length}</p><p class="bmerad">${esc(g.d)}</p>`;
-  if(tours.length||g.scene) h+=`<div class="bmtours${tours.length+(g.scene?1:0)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}</div>`;
+  if(tours.length||g.scene||(g.plans||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}</div>`;
   if(g.pro) h+=`<div class="bmpro"><p class="bmproh">이때 말씀을 전한 예언자</p><div class="bmprol">${g.pro.map(([n,w,r])=>`<button data-bmprov="${r.join("-")}-${r[2]}"><b>${esc(n)}</b><small>${esc(w)} · ${esc(vLab(r))}</small></button>`).join("")}</div></div>`;
   if(!tours.length&&!L.length&&!g.pro) h+=`<p class="lead">이 시기를 따라가는 여정은 아직 없습니다.</p>`; else
   h+=`<p class="bmproh">지도로 보는 여정</p><div class="bmrl">${L.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")}</div>`;
@@ -6427,7 +6438,7 @@ function bmShelfHTML(sel){ const G=bmWhoGroups(), T=BMT(); let h="";
   /* 공간 절약(목사님 2026-11-01 '등장인물 탭처럼'): 큰 머리 칸을 없애고, 큰 여정은 옆으로 밀고, 여정이 여러 책에 걸치면 책 탭으로 나눔 */
   const BK=[...new Set(L.map(i=>ROUTES_B[i].b))]; let bk=view.bmBk&&view.bmBk[0]===g.k?view.bmBk[1]:0; if(bk&&!BK.includes(bk)) bk=0; const L2=bk?L.filter(i=>ROUTES_B[i].b===bk):L;
   h+=`<section class="bmshelf in" id="bmShelf">`;
-  if(tours.length||g.scene) h+=`<div class="bmtours${tours.length+(g.scene?1:0)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}</div>`;
+  if(tours.length||g.scene||(g.plans||[]).length) h+=`<div class="bmtours${tours.length+(g.scene?1:0)+((g.plans||[]).length)>1?" row":""}">${tours.map(([t,i])=>`<button class="bmtc" data-bmtour="${i}"><i>▶</i><b>${esc(t.n)}</b><small><span>${esc(t.sub)}</span></small><em>${t.steps.length}장면 따라가기</em></button>`).join("")}${g.scene?ATONE_CARD:""}${(g.plans||[]).map(planCard).join("")}</div>`;
   if(BK.length>1) h+=`<div class="bmbk" role="tablist">${[0,...BK].map(x=>`<button role="tab" aria-selected="${x===bk}" class="${x===bk?"on":""}" data-bmbk="${x}">${x?esc(PLAN.full[x-1]):"전체"}<small>${x?L.filter(i=>ROUTES_B[i].b===x).length:L.length}</small></button>`).join("")}</div>`;
   h+=`<div class="bmrl">${L2.map(i=>{ const r=ROUTES_B[i], D=bmRouteDay(r), RD=bmRouteRead(r); return `<div class="bmr${RD.all?" done":RD.some?" part":""}"><button class="bmrh" data-bmopen="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${RD.all?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:"지도 ›"}</em></button></div>`; }).join("")||`<p class="lead">이 주인공의 여정은 아직 없습니다.</p>`}</div></section>`;
   return h; }
