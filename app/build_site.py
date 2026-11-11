@@ -140,6 +140,12 @@ data+='const GTOOLS='+J(_GT)+';\n'
 # 11-12: 묵상 탭도 가이드북과 같은 질문(원고 한 벌) — 관찰·적용 질문만
 _GQT={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _GQ.items() if n.isdigit()}
 data+='const GQT='+J(_GQT)+';\n'
+# 11-12: 원고 성구 약칭이 빠진 곳이 있으면 알림(다른 저장으로 덮였을 때)
+try:
+    import subprocess as _sp
+    _o=_sp.run(['python3','tools/guide_refs_fix.py'],capture_output=True,text=True,timeout=60).stdout.strip().splitlines()
+    if _o and _o[-1].strip()!='0': print('경고: 가이드북 성구 약칭 '+_o[-1].strip()+'곳이 빠짐 → python3 tools/guide_refs_fix.py --write')
+except Exception as _e: pass
 data+='const CHRIST_K='+J({k:v['k'] for k,v in CK.items()})+';\n'
 
 data+='(()=>{ const FX='+J({k:v['fix'] for k,v in CK.items() if v.get('fix')})+', MN='+J(MN)+', GF='+J(GF)+';\n'
