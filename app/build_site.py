@@ -6,7 +6,8 @@ plan=json.load(open('plan.json'))
 # 성경연구는 MILALWV로 옮김(2026-10-23): 자리만 남김
 t=t.replace('/*STUDY*/','const STUDY_ON=()=>false;\nfunction studyTabSync(){ document.documentElement.classList.remove("study-on"); try{ localStorage.removeItem("cbsr-study"); }catch(e){} if(view.tab==="study") view.tab="read"; }\n')
 t=t.replace('/*LEAFLETCSS*/',open('npm/node_modules/leaflet/dist/leaflet.css').read())
-data="\n".join(open(f).read() for f in ['engine.js','glossary.js','summaries.js','weeks.js','curated.js','qt_base.js','qt_extra.js','routes.js','incl.js','clues.js'])
+data="\n".join(open(f).read() for f in ['engine.js','glossary.js','weeks.js','qt_base.js','qt_extra.js','routes.js','clues.js'])
+data+='\nconst SUMMARY=[], CURATED={}, INCL={};'  # 리딩지저스 요약·문제·봉투 구조는 지움(2026-11-11): 365 자료로 채움
 data=data.replace('if(typeof module!=="undefined") module.exports={buildEntityIndex,buildGlossIndex,inScope,analyzeDay,makeQuiz,rng};','')
 data+="\nconst PLACEINFO="+open('places/all.json').read()+";"
 data+="\nconst ROUTES_B="+open('routes/all.json').read()+";"
@@ -44,7 +45,7 @@ except Exception as _x:
 data+="\nconst CHROLE="+(open('ux/christ_role.json').read() if os.path.exists('ux/christ_role.json') else "{}")+";"
 data+="\nconst PHLUM="+json.dumps(_lum,separators=(',',':'))+";"
 data+="\nconst NAME_SET=new Set(NAME_MEAN.map(x=>x[0])); for(const n of NAME_MEAN){ if(!GLOSSARY.some(g=>g[0]===n[0])) GLOSSARY.push(n); }"
-data+="\nconst LEITWORT="+open('leitwort.json').read()+";\nconst EMPH="+open('emph.json').read()+";\nconst GAZ="+open('gaz.json').read()+";\nconst PLAN="+json.dumps(plan,ensure_ascii=False,separators=(',',':'))+";\n"
+data+="\nconst LEITWORT="+open('leitwort365.json').read()+";\nconst EMPH="+open('emph365.json').read()+";\nconst GAZ="+open('gaz.json').read()+";\nconst PLAN="+json.dumps(plan,ensure_ascii=False,separators=(',',':'))+";\n"
 tj=json.load(open('terrain.json')); terr={}
 for k,v in tj.items():
     shutil.copy(f'terrain_{k}.jpg',f'{OUT}/terrain/{k}.jpg'); terr[k]={"bounds":v["bounds"],"url":f"terrain/{k}.jpg"}
@@ -93,10 +94,6 @@ for i in range(0,len(P365),7):
     WK.append({"t":tt,"story":"","christ":""})
 J=lambda o:json.dumps(o,ensure_ascii=False,separators=(',',':'))
 data+='const PLAN_INFO={y365:{name:"365 성경통독",short:"365일",src:"2026 365일 성경통독표",start:"2026-01-01"}};\n'
-_P27=json.load(open('plan365_2027.json')); _D27={}
-for _i,(_x,_y) in enumerate(zip(P365,_P27)):
-    if _x['ch']!=_y['ch'] or _x['label']!=_y['label']: _D27[_i+1]={"spec":spec365(_y['ch']),"label":_y['label'],"ch":_y['ch'],"topic":_y.get('topic','')}
-data+='const P365_27='+J(_D27)+';\n'
 import importlib.util as _iu3; _sp3=_iu3.spec_from_file_location('p27','ux/plan365v4_build.py'); _p27=_iu3.module_from_spec(_sp3); _sp3.loader.exec_module(_p27)
 data+='const P27='+J(_p27.build())+';\n'  # 2027 365일표 4판(목사님 확정 11-08; 313회는 일정표로만 — 11-10 앱 반영)
 A365=json.load(open('s365b/all.json')); GD={};EY={};CQ={}
@@ -105,10 +102,7 @@ for i,d in enumerate(P365):
     if not v: continue
     GD[f"{w}-{j}"]=v['g']; EY[f"{w}-{j}"]=v['e']
     CQ[f"{w}-{j+1}"]=[{k:q[k] for k in ('t','kind','q','o','a','h','ref')} for q in v['qz']]
-# 요 3–4장 QT 질문은 s365b/all.json 308일에 옮겨 둠(리딩지저스 삭제 2026-11-10). 읽기 도구(TOOLX)만 옛 열쇠에서 가져옴
-Y_TOOL_FROM={}
-for _i,_d in enumerate(P365):
-    if [tuple(x) for x in _d['ch']]==[(43,3),(43,4)]: Y_TOOL_FROM={f"y365:{_i//7+1}-{_i%7}":"rj:35-0"}
+# 요 3–4장 QT 질문(s365b 308일)과 읽기 도구(tools/toolx.json y365:44-6)는 365 자료로 옮겨 둠(리딩지저스 삭제 2026-11-10·11)
 TRV=hashlib.sha1((open('bible_snb.b64').read()[:3000]+open('bible_shg.b64').read()[:3000]).encode()).hexdigest()[:8] if os.path.exists('bible_snb.b64') else '1'
 data+='window.TR_VER="'+TRV+'";\n'
 data+='const BOOKINFO='+open('books/all.json').read()+';\n'
@@ -116,15 +110,14 @@ data+='const RJ_PLAN=PLAN.plan, RJ_WEEKS=WEEKS.slice(), GUIDE={}, EYE={};\n'
 data+='/* 시편은 "편" */ PLAN.plan.forEach(w=>w.forEach(d=>{ d.label=d.label.replace(/시편 ([0-9–\\-]+)장/g,"시편 $1편"); }));\n'
 data+='window.STUDY_V="0";\n'  # 원문 연구는 MILALWV로 옮김(2026-10-23)
 data+='/* 리딩지저스 삭제(목사님 2026-11-10): 365 통독만 */ window.CBSR_MODE="y365"; try{ localStorage.setItem("cbsr-mode","y365"); }catch(e){}\nconst DAYC={};\n'
-data+='if(window.CBSR_MODE==="y365"){const R=(o,n)=>{for(const k in o)delete o[k];Object.assign(o,n);};\n'
+data+='{const R=(o,n)=>{for(const k in o)delete o[k];Object.assign(o,n);};\n'
 data+=f'PLAN.plan={J(W365)};SUMMARY.length=0;SUMMARY.push(...{J(SW)});WEEKS.length=0;WEEKS.push(...{J(WK)});\n'
-data+=f'R(LEITWORT,{open("leitwort365.json").read()});R(EMPH,{open("emph365.json").read()});R(INCL,{open("incl365.json").read()});PLAN.plan.forEach(w=>w.forEach(d=>{{ d.label=d.label.replace(/시편 ([0-9–\\-]+)장/g,"시편 $1편"); }}));R(DETAIL,{{}});R(CURATED,{J(CQ)});Object.assign(GUIDE,{J(GD)});Object.assign(EYE,{J(EY)});ARC_LIST.length=0;Object.assign(DAYC,{J(DC)});}}\n'
+data+=f'R(INCL,{open("incl365.json").read()});PLAN.plan.forEach(w=>w.forEach(d=>{{ d.label=d.label.replace(/시편 ([0-9–\\-]+)장/g,"시편 $1편"); }}));R(DETAIL,{{}});R(CURATED,{J(CQ)});Object.assign(GUIDE,{J(GD)});Object.assign(EYE,{J(EY)});ARC_LIST.length=0;Object.assign(DAYC,{J(DC)});}}\n'
 import glob as _g
 CK=json.load(open('ux/christ_out.json')); MN=json.load(open('ux/mean_out.json')); GF={}
 for f in sorted(_g.glob('ux/guide_out*.json')): GF.update(json.load(open(f)))
 data+='const FLOW='+open('flow/all.json').read()+';\n'
-import importlib.util as _iu2; _sp2=_iu2.spec_from_file_location('smb','ux/sermon_build.py'); _smb=_iu2.module_from_spec(_sp2); _sp2.loader.exec_module(_smb)
-data+='const SERMON='+json.dumps(_smb.build(),ensure_ascii=False,separators=(',',':'))+';\n'  # 주일 설교 본문(2026-11-03)
+import importlib.util as _iu2
 import base64 as _b64, gzip as _gz
 _BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())))
 _sp4=_iu2.spec_from_file_location('tsay','ux/tour_say.py'); _ts=_iu2.module_from_spec(_sp4); _sp4.loader.exec_module(_ts)
@@ -133,17 +126,12 @@ data+='const TRAITS_C='+open('traits/all.json').read()+';\n'
 data+='const PARA='+open('para/all.json').read()+';\n'
 data+='const SCX='+open('scene/scx.json').read()+';\n'
 data+='const TOOLX='+(open('tools/toolx.json').read() if os.path.exists('tools/toolx.json') else '{}')+';\n'
-data+='if(window.CBSR_MODE==="y365"){const F='+J(Y_TOOL_FROM)+';for(const k in F) if(TOOLX[F[k]]) TOOLX[k]=TOOLX[F[k]];}\n'
 data+='const CHRIST_K='+J({k:v['k'] for k,v in CK.items()})+';\n'
 
 data+='(()=>{ const FX='+J({k:v['fix'] for k,v in CK.items() if v.get('fix')})+', MN='+J(MN)+', GF='+J(GF)+';\n'
-data+=""" const M=window.CBSR_MODE==="y365"?"y365":"rj";
- for(const k in FX){ const [t,r]=k.split(":");
-   if(t==="rjw"&&M==="rj"&&WEEKS[+r-1]) WEEKS[+r-1].christ=FX[k];
-   if(t==="rjd"&&M==="rj"){ const [w,d]=r.split("-").map(Number); const o=DETAIL[w+"-"+(d+1)]; if(o) o.christ=FX[k]; }
-   if(t==="y"&&M==="y365") DAYC[r]=FX[k]; }
+data+=""" for(const k in FX){ const [t,r]=k.split(":"); if(t==="y") DAYC[r]=FX[k]; }
  for(const k in MN){ const n=k.slice(3), o=k.startsWith("pe:")?PEOPLEINFO[n]:PLACEINFO[n]; if(o){ o.m=MN[k].m; o.mc=MN[k].c; } }
- for(const k in GF){ const [m,r]=k.split(":"); if(m!==M) continue; if(GF[k].find&&GUIDE[r]) GUIDE[r].find=GF[k].find; if(GF[k].eye&&EYE[r]) EYE[r].q=GF[k].eye; }
+ for(const k in GF){ const [m,r]=k.split(":"); if(m!=="y365") continue; if(GF[k].find&&GUIDE[r]) GUIDE[r].find=GF[k].find; if(GF[k].eye&&EYE[r]) EYE[r].q=GF[k].eye; }
 })();\n"""
 data+='const KWQ='+open('ux/kwq.json').read()+';\nconst CARDNEWS='+open('ux/cardnews.json').read()+';\n'
 _PH=json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else []
@@ -168,9 +156,9 @@ data+='const PHOTOS='+J([{k:v for k,v in p.items() if k in ('id','u','pl','tags'
 data+='const DSTATUS='+(open('edits/status.json',encoding='utf-8').read() if os.path.exists('edits/status.json') else '{}')+';\n'  # 날짜별 승인 상태(관리자 상태판)
 Y365NT=json.load(open('ux/christ_y365nt.json'))
 DY=json.load(open('ux/detail_y365.json'))
-data+='if(window.CBSR_MODE==="y365"){const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
+data+='{const DY='+J({k:{f:v for f,v in o.items() if not f.startswith('_')} for k,o in DY.items()})+';for(const k in DY) DETAIL[k]=Object.assign({},DETAIL[k]||{},DY[k]);}\n'
 YN={f"{(int(n)-1)//7+1}-{(int(n)-1)%7}":v for n,v in Y365NT.items()}
-data+='if(window.CBSR_MODE==="y365"){const YN='+J(YN)+';for(const k in YN){ DAYC[k]=YN[k].t; CHRIST_K["y:"+k]=YN[k].k; }}\n'
+data+='{const YN='+J(YN)+';for(const k in YN){ DAYC[k]=YN[k].t; CHRIST_K["y:"+k]=YN[k].k; }}\n'
 data+="\nconst TRMAP_SNB="+open('trmap/snb.json').read()+";\nconst TRMAP_SHG="+open('trmap/shg.json').read()+";\n"+open('trconv.js').read()
 print("365 summaries:",len(S365))
 
