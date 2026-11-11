@@ -24,6 +24,7 @@ select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background
 .menu{position:relative}.dd{display:none;position:absolute;right:0;top:36px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.12)}.dd.on{display:block}.dd button{display:block;width:100%;text-align:left;border:0;border-radius:5px;padding:7px 9px;background:transparent}.dd button:hover{background:var(--soft)}.dd hr{border:0;border-top:1px solid var(--line);margin:4px 0}
 #dirty{background:#fbe9e9;color:var(--warn)}
 .card .top .no{cursor:pointer;text-decoration:underline dotted}
+.card .rv{font-size:12px;color:var(--mute);margin-left:4px;white-space:nowrap}.card .rv input{vertical-align:-2px}
 main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(440px,46%) 1fr}
 @media (max-width:980px){main{display:block;overflow:auto}}
 #left{display:flex;flex-direction:column;min-height:0;background:var(--panel);border-right:1px solid var(--line)}
@@ -87,11 +88,12 @@ dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12p
 <header>
   <h1>스토리 작업실</h1>
   <select id="selF" title="날 목록 거르기"><option value="all">전체</option><option value="none">원고 없는 날</option><option value="pub">앱에 원고 있는 날</option><option value="work">작업본 있는 날</option><option value="pend">빌드 대기</option><option value="diff">2027 범위 다른 날</option></select>
+  <input type="text" id="selQ" placeholder="찾기: 창세기, 11/2, 305" style="width:150px;padding:6px 8px;border:1px solid var(--line);border-radius:6px">
   <select id="selD"></select><span class="pill" id="dCount"></span>
   <span class="pill" id="dInfo"></span>
   <span class="sp"></span>
   <span id="status"></span>
-  <span id="dirty" class="pill" title="이 기기에만 저장된 변경이 있습니다" hidden>저장 안 됨 ●</span>
+  <span id="dirty" class="pill" title="게시한 뒤에 고친 것이 있습니다" hidden>게시 안 된 변경 ●</span><span id="pubst" class="pill" title="이 날 원고의 게시 상태"></span>
   <button id="bLoad" title="공개된 원고(앱에 실린 것)를 이 날에 불러옵니다">공개 원고 불러오기</button>
   <button id="bPrev">미리보기 갱신</button>
   <button id="bGit" class="pri">앱에 게시</button>
@@ -99,6 +101,7 @@ dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12p
     <button data-m="pending">빌드 대기 게시 취소</button>
     <button data-m="prev">이전 원고로 되돌리기(불러오기)</button>
     <button data-m="del">앱에서 이 날 원고 내리기</button>
+    <button data-m="point">복원 지점으로 되돌리기(이 기기)</button>
     <button data-m="drop">이 기기의 작업본 버리기</button>
     <hr><button data-m="claude">클로드에게 보내기(요청문 복사)</button>
     <button data-m="refresh">상태 다시 읽기</button>
@@ -121,17 +124,17 @@ dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12p
   </div>
 
   <div class="pane" id="p-qt">
-    <label class="f"><span class="k"><b>중심 물음(spine)</b><span class="cnt" data-for="q_spine"></span></span><textarea id="q_spine" rows="2"></textarea></label>
-    <label class="f"><span class="k"><b>읽기 전 · 오늘(guide.today)</b></span><textarea id="q_today" rows="3"></textarea></label>
-    <label class="f"><span class="k"><b>읽기 전 · 찾아볼 것(guide.find)</b></span><textarea id="q_find" rows="2"></textarea></label>
-    <label class="f"><span class="k"><b>본문 관찰 · 물음(obs.q)</b></span><textarea id="q_obs" rows="2"></textarea></label>
-    <div class="f"><span class="k"><b>본문 관찰 · 살펴볼 곳(obs.look)</b><span class="small">제목 · 장절(눅 22:54) · 물음</span></span><div id="looks"></div><button class="sm" id="bAddLook">+ 더하기</button></div>
-    <label class="f"><span class="k"><b>하나님은(god)</b></span><textarea id="q_god" rows="4"></textarea></label>
-    <label class="f"><span class="k"><b>성경 전체로(christ)</b><span class="small">없으면 비움</span></span><textarea id="q_christ" rows="2"></textarea></label>
-    <label class="f"><span class="k"><b>적용(apply)</b></span><textarea id="q_apply" rows="5"></textarea></label>
-    <label class="f"><span class="k"><b>기도(pray)</b></span><textarea id="q_pray" rows="4"></textarea></label>
-    <label class="f"><span class="k"><b>나의 생각거리(kwq.q)</b></span><textarea id="q_kwq" rows="3"></textarea></label>
-    <label class="f"><span class="k"><b>생각거리 곁 말씀(kwq.r)</b><span class="small">예: 눅 24:48</span></span><input type="text" id="q_kwr"></label>
+    <label class="f"><span class="k"><b>오늘의 중심 물음</b><span class="cnt" data-for="q_spine"></span></span><textarea id="q_spine" rows="2"></textarea></label>
+    <label class="f"><span class="k"><b>읽기 전 안내</b></span><textarea id="q_today" rows="3"></textarea></label>
+    <label class="f"><span class="k"><b>읽으며 주목할 것</b></span><textarea id="q_find" rows="2"></textarea></label>
+    <label class="f"><span class="k"><b>본문 관찰 · 물음</b></span><textarea id="q_obs" rows="2"></textarea></label>
+    <div class="f"><span class="k"><b>본문 관찰 · 살펴볼 곳</b><span class="small">제목 · 장절(눅 22:54) · 물음</span></span><div id="looks"></div><button class="sm" id="bAddLook">+ 더하기</button></div>
+    <label class="f"><span class="k"><b>하나님은</b></span><textarea id="q_god" rows="4"></textarea></label>
+    <label class="f"><span class="k"><b>성경 전체로</b><span class="small">없으면 비움</span></span><textarea id="q_christ" rows="2"></textarea></label>
+    <label class="f"><span class="k"><b>적용</b></span><textarea id="q_apply" rows="5"></textarea></label>
+    <label class="f"><span class="k"><b>기도</b></span><textarea id="q_pray" rows="4"></textarea></label>
+    <label class="f"><span class="k"><b>나의 생각거리</b></span><textarea id="q_kwq" rows="3"></textarea></label>
+    <label class="f"><span class="k"><b>생각거리 곁 말씀</b><span class="small">예: 눅 24:48</span></span><input type="text" id="q_kwr"></label>
   </div>
 
   <div class="pane" id="p-json">
@@ -183,7 +186,7 @@ function dayCh(){ const p=plan(cur); return p?p.ch.map(x=>x[1]):[]; }
 function setDay(n){ if(cur) stash(); cur=n; localStorage.setItem('cbsr_story_edit:last',n);
   const p=plan(n), x=P27BY[n]; $('dInfo').textContent=(p?p.label:'')+(x?' · 2027년에도 같은 범위':' · 2027년에는 범위가 달라집니다');
   const saved=localStorage.getItem(LSK(n)); if(saved){ try{ const o=JSON.parse(saved); D=o.D; $('ms').value=o.ms||''; }catch(e){ reset(); } } else reset();
-  fillAll(); setBase(); loadPreview(); }
+  fillAll(); setBase(); loadPreview(); pubStatus(); }
 function reset(){ D={cards:[],spine:'',qt:{guide:{today:'',find:''},obs:{q:'',look:[]},god:'',christ:'',apply:'',pray:''},kwq:{q:'',r:null},type:''}; $('ms').value=''; }
 function stash(){ try{ localStorage.setItem(LSK(cur),JSON.stringify({D,ms:$('ms').value,at:Date.now()})); }catch(e){} markDirty(); }
 const say=t=>{ $('status').textContent=t; };
@@ -267,7 +270,10 @@ function parseMS(text){
 function guessDay(text){ const l=(text.split('\n').find(x=>x.trim())||'').replace(/\*/g,''); const m=l.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일/); if(m){ const n=Math.round((new Date(2026,+m[1]-1,+m[2])-new Date(2026,0,1))/864e5)+1; if(n>=1&&n<=365) return n; }
   const nz=t=>String(t).replace(/\s+/g,'').replace(/[-~]/g,'–').replace(/장$/,''); const L=nz(l); const hit=P26.filter(p=>L.includes(nz(p.label))); if(hit.length===1) return hit[0].n;
   const mb=l.match(/([가-힣]{2,6})\s*(\d{1,3})\s*[장편]/); if(mb){ const h2=P26.filter(p=>{ const pm=p.label.match(/^(\S+)\s(\d+)(?:[–-](\d+))?[장편]/); return pm&&pm[1]===mb[1]&&+mb[2]>=+pm[2]&&+mb[2]<=+(pm[3]||pm[2]); }); if(h2.length===1) return h2[0].n; } return 0; }
-$('bParse').onclick=()=>{ if(!$('ms').value.trim()){ say('원고가 비어 있습니다'); return; } const g=guessDay($('ms').value); if(g&&g!==cur){ const t=$('ms').value; const saved=localStorage.getItem(LSK(g)); if(saved&&!confirm(`원고 첫 줄로 보아 ${g}일(${plan(g).label})입니다. 그날에 이미 작업 중인 카드가 있는데 바꿀까요?`)){ say('지금 고른 날 그대로 분석합니다'); } else { $('selD').value=g; setDay(g); $('ms').value=t; say(`${g}일 · ${plan(g).label}로 찾아갔습니다`); } } parseMS($('ms').value); fillAll(); stash(); check(); sendPreview(); document.querySelector('[data-p=cards]').click(); };
+$('bParse').onclick=()=>{ if(!$('ms').value.trim()){ say('원고가 비어 있습니다'); return; } const g=guessDay($('ms').value); if(g&&g!==cur){ const t=$('ms').value; const saved=localStorage.getItem(LSK(g)); if(saved&&!confirm(`원고 첫 줄로 보아 ${g}일(${plan(g).label})입니다. 그날에 이미 작업 중인 카드가 있는데 바꿀까요?`)){ say('지금 고른 날 그대로 분석합니다'); } else { $('selD').value=g; setDay(g); $('ms').value=t; say(`${g}일 · ${plan(g).label}로 찾아갔습니다`); } } if(D.cards.length){ const a=confirm('이미 만든 카드가 있습니다. 원고를 다시 분석하면 카드와 묵상 노트가 새로 만들어집니다(지금 카드는 "복원 지점"에 보관됩니다). 계속할까요?'); if(!a) return; savePoint('재분석 전'); } parseMS($('ms').value); fillAll(); stash(); check(); sendPreview(); document.querySelector('[data-p=cards]').click(); };
+/* 복원 지점: 이 기기에 날마다 최근 5개 */
+function savePoint(why){ try{ const k='cbsr_story_pts:'+cur, L=JSON.parse(localStorage.getItem(k)||'[]'); L.unshift({at:Date.now(),why,D:cleanD()}); localStorage.setItem(k,JSON.stringify(L.slice(0,5))); }catch(e){} }
+function restorePoint(){ const k='cbsr_story_pts:'+cur, L=JSON.parse(localStorage.getItem(k)||'[]'); if(!L.length){ say('이 날의 복원 지점이 없습니다'); return; } const pick=prompt('되돌릴 지점 번호를 입력하세요:\n'+L.map((x,i)=>`${i+1}. ${new Date(x.at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})} · ${x.why} · 카드 ${x.D.cards.length}장`).join('\n'),'1'); const i=+pick-1; if(!(i>=0&&i<L.length)) return; savePoint('되돌리기 전'); D=JSON.parse(JSON.stringify(L[i].D)); fillAll(); stash(); sendPreview(); say('복원 지점으로 되돌렸습니다'); }
 
 /* ───────── 카드 편집 ───────── */
 const KINDS=[['cover','표지'],['full','설명'],['split','설명+그림'],['quote','큰 인용'],['echo','비교(두 말)'],['table','표'],['map','지도'],['line','한 줄']];
@@ -284,14 +290,15 @@ function renderCards(){ const root=$('cards'); root.innerHTML='';
     else if(c.k==='line') body=`<label class="f"><span class="k">한 줄(t)</span><textarea data-f="t" rows="2">${esc(c.t||'')}</textarea></label>`;
     else body=`<label class="f"><span class="k">제목(h)</span><input type="text" data-f="h" value="${esc(c.h||'')}"></label><label class="f"><span class="k">글(b) — 한 줄이 한 문단, <code>&gt; 인용 | 장절 | 말한 이</code>는 말씀 상자 · **굵게** __밑줄__</span><textarea class="b" data-f="b">${esc(bToText(c.b))}</textarea></label><label class="f"><span class="k">그림(img) <span class="small">비우면 앱이 고릅니다</span></span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button>${c.img?`<img src="${SITE}img/g/${esc(c.img)}.jpg" onerror="this.style.visibility='hidden'">`:''}</div></label>`;
     const qbadge=cardQs(c).map(([q,r])=>{ const st=quoteCheck(q,r); return `<span class="${st==='ok'?'ok':st==='bad'?'bad':'unk'}" title="${esc(q)}">${esc(r||'장절 없음')} ${st==='ok'?'✓':st==='bad'?'✗ 본문과 다름':st==='unk'?'(본문 읽는 중)':'?'}</span>`; }).join('');
-    d.innerHTML=`<div class="top"><span class="no">${i+1}</span><select data-f="k">${KINDS.map(([v,n])=>`<option value="${v}"${c.k===v?' selected':''}>${n}</option>`).join('')}</select><input class="lab" type="text" data-f="lab" placeholder="단계 · 이름 (예: 긴장 · 멀찍이 · 22장)" value="${esc(c.lab||'')}"${c.k==='cover'?' disabled':''}><span class="cnt${T>200?' over':''}" title="글자 수">${T}</span><span class="tools"><button class="sm" data-mv="-1" title="위로">↑</button><button class="sm" data-mv="1" title="아래로">↓</button><button class="sm" data-del="1" title="지우기">✕</button><button class="sm" data-ins="1" title="아래에 새 카드">＋</button><button class="sm" data-dup="1" title="복제">⧉</button></span></div>${c.k!=='cover'&&qbadge?`<div class="bq">${qbadge}</div>`:''}${body}`;
+    d.innerHTML=`<div class="top"><span class="no">${i+1}</span><select data-f="k">${KINDS.map(([v,n])=>`<option value="${v}"${c.k===v?' selected':''}>${n}</option>`).join('')}</select><input class="lab" type="text" data-f="lab" placeholder="단계 · 이름 (예: 긴장 · 멀찍이 · 22장)" value="${esc(c.lab||'')}"${c.k==='cover'?' disabled':''}><span class="cnt${T>200?' over':''}" title="글자 수">${T}</span><span class="tools"><button class="sm" data-mv="-1" title="위로">↑</button><button class="sm" data-mv="1" title="아래로">↓</button><button class="sm" data-del="1" title="지우기">✕</button><button class="sm" data-ins="1" title="아래에 새 카드">＋</button><button class="sm" data-dup="1" title="복제">⧉</button></span><label class="rv" title="검토 완료 표시 — 카드 내용이 바뀌면 저절로 풀립니다"><input type="checkbox" data-rv="1"${reviewed(c)?' checked':''}> 검토</label></div>${c.k!=='cover'&&qbadge?`<div class="bq">${qbadge}</div>`:''}${body}`;
     d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('change',()=>{ readCard(i,d); renderCards(); stash(); check(); sendPreview(); }));
-    d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('input',()=>{ readCard(i,d,true); }));
+    d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('input',()=>{ readCard(i,d,true); clearTimeout(window._cst); window._cst=setTimeout(stash,700); }));
     d.querySelector('[data-mv="-1"]').onclick=()=>{ if(i>0){ [D.cards[i-1],D.cards[i]]=[D.cards[i],D.cards[i-1]]; after(); } };
     d.querySelector('[data-mv="1"]').onclick=()=>{ if(i<D.cards.length-1){ [D.cards[i+1],D.cards[i]]=[D.cards[i],D.cards[i+1]]; after(); } };
     d.querySelector('[data-del]').onclick=()=>{ if(confirm((i+1)+'번 카드를 지울까요?')){ D.cards.splice(i,1); after(); } };
     d.querySelector('[data-ins]').onclick=()=>{ D.cards.splice(i+1,0,{k:'full',lab:'',h:'',b:[]}); after(); };
     d.querySelector('[data-dup]').onclick=()=>{ D.cards.splice(i+1,0,JSON.parse(JSON.stringify(c))); after(); };
+    d.querySelector('[data-rv]').onchange=e=>{ setReviewed(c,e.target.checked); stash(); };
     d.querySelector('.no').onclick=()=>sendPreview(i); d.querySelector('.no').title='미리보기에서 이 카드 보기';
     d.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>pickPhoto(i));
     root.appendChild(d); });
@@ -304,6 +311,9 @@ function readCard(i,d,soft){ const c=D.cards[i]; const g=f=>{ const el=d.querySe
   if(g('tbl')!==undefined){ try{ c.tbl=JSON.parse(g('tbl')); }catch(e){} }
   if(c.k==='cover') delete c.lab; }
 $('bAddCard').onclick=()=>{ D.cards.push({k:'full',lab:'',h:'',b:[]}); renderCards(); stash(); };
+/* 검토 표시: 카드 본문·그림·인용의 요약값을 저장. 바뀌면 자동 해제 */
+const cardHash=c=>{ const o=Object.assign({},c); delete o._rv; return hashStr(JSON.stringify(o)); };
+const reviewed=c=>c._rv&&c._rv===cardHash(c); const setReviewed=(c,on)=>{ if(on) c._rv=cardHash(c); else delete c._rv; };
 const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==='string'?x:(x.q||[])[0]),...(s.pair||[]).map(x=>x[0])].filter(Boolean).join(' ').replace(/\*\*|__/g,'');
 
 /* 그림 고르기 */
@@ -319,7 +329,7 @@ $('phQ').oninput=()=>drawPh($('phQ').value); $('phNone').onclick=()=>{ if(phFor>
 const QF={q_spine:['spine'],q_today:['qt','guide','today'],q_find:['qt','guide','find'],q_obs:['qt','obs','q'],q_god:['qt','god'],q_christ:['qt','christ'],q_apply:['qt','apply'],q_pray:['qt','pray'],q_kwq:['kwq','q']};
 const getP=(o,p)=>p.reduce((a,k)=>a&&a[k],o), setP=(o,p,v)=>{ let a=o; p.slice(0,-1).forEach(k=>{ a[k]=a[k]||{}; a=a[k]; }); a[p[p.length-1]]=v; };
 function fillQT(){ for(const id in QF) $(id).value=getP(D,QF[id])||''; $('q_kwr').value=refLab(D.kwq&&D.kwq.r); renderLooks(); }
-for(const id in QF) $(id).addEventListener('change',()=>{ setP(D,QF[id],$(id).value.trim()); stash(); sendPreview(); });
+for(const id in QF){ $(id).addEventListener('change',()=>{ setP(D,QF[id],$(id).value.trim()); stash(); sendPreview(); }); $(id).addEventListener('input',()=>{ setP(D,QF[id],$(id).value); clearTimeout(window._qst); window._qst=setTimeout(stash,700); }); }
 $('q_kwr').addEventListener('change',()=>{ D.kwq=D.kwq||{}; D.kwq.r=parseRef($('q_kwr').value)||null; $('q_kwr').value=refLab(D.kwq.r); stash(); });
 function renderLooks(){ const L=(D.qt.obs&&D.qt.obs.look)||[]; $('looks').innerHTML=L.map((x,i)=>`<div class="lookrow"><input type="text" data-l="t" data-i="${i}" placeholder="제목" value="${esc(x.t||'')}"><input type="text" data-l="r" data-i="${i}" placeholder="눅 22:54" value="${esc(refLab(x.r))}"><input type="text" data-l="n" data-i="${i}" placeholder="물음" value="${esc(x.n||'')}"><button class="sm" data-x="${i}">✕</button></div>`).join('');
   $('looks').querySelectorAll('input').forEach(el=>el.onchange=()=>{ const x=L[+el.dataset.i]; if(el.dataset.l==='r'){ x.r=parseRef(el.value)||x.r; el.value=refLab(x.r); } else x[el.dataset.l]=el.value.trim(); stash(); });
@@ -336,6 +346,8 @@ $('bJsonCopy').onclick=()=>{ navigator.clipboard.writeText($('rawj').value).then
 $('bJsonDl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify({n:cur,A:cleanD()},null,1)],{type:'application/json'})); a.download=`story_${cur}.json`; a.click(); };
 
 /* ───────── 검사 ───────── */
+/* 구조 오류(게시 차단): 카드 없음, 표지 아님, 카드 종류 모름, 인용 상자에 장절 없음 */
+function hardErrors(){ const E=[], C=D.cards||[]; if(!C.length) E.push('카드가 없습니다'); else if(C[0].k!=='cover') E.push('첫 카드가 표지가 아닙니다'); C.forEach((c,i)=>{ if(!KINDS.some(([v])=>v===c.k)) E.push(`${i+1}번 카드 종류 모름(${c.k})`); cardQs(c).forEach(([q,r])=>{ if(!parseRef(r)) E.push(`${i+1}번 카드 인용에 장절 없음`); }); }); return E; }
 function check(){ const L=[]; const C=D.cards||[]; const p=plan(cur);
   if(!C.length){ $('chkList').innerHTML='<li class="small">카드가 없습니다.</li>'; return; }
   const n=C.filter(c=>c.k!=='cover').length; L.push({c:n>=8&&n<=13?'ok':'warn',t:`카드 ${C.length}장(표지 빼고 ${n}장) — 보통 9–12장`});
@@ -362,6 +374,12 @@ function loadPreview(){ pvReady=false; const x=P27BY[cur]; $('pv').src=SITE+'v2.
 function sendPreview(card){ clearTimeout(pvTimer); pvTimer=setTimeout(()=>{ if(!pvReady) return; const x=P27BY[cur]; try{ $('pv').contentWindow.postMessage({cbsrStory:1,n26:cur,n27:x?x.gi+1:0,card:(typeof card==='number')?card:undefined,draft:(D.cards&&D.cards.length)?{A:cleanD()}:null},'*'); }catch(e){} markDirty(); },300); }
 /* 저장 안 됨 표시: 마지막으로 불러오거나 게시한 내용과 다르면 */
 let BASE=''; function setBase(){ BASE=JSON.stringify(cleanD()); markDirty(); } function markDirty(){ $('dirty').hidden=!(D.cards.length&&JSON.stringify(cleanD())!==BASE); }
+/* 게시 상태: 기기 저장(자동) · 저장소 반영(story_in에 있음=빌드 대기) · 앱 공개(story_cards.json의 그날 내용이 내가 게시한 것과 같음) */
+const PUBHASH={}; function hashStr(t){ let h=0; for(let i=0;i<t.length;i++) h=(h*31+t.charCodeAt(i))|0; return h.toString(36); }
+async function pubStatus(){ const el=$('pubst'); if(!cur) return; const mine=localStorage.getItem('cbsr_story_pub:'+cur); let live=null; try{ const r=await fetch(SITE+'story_cards.json',{cache:'no-store'}); if(r.ok){ const all=await r.json(); const e=all[String(cur)]; if(e) live=hashStr(JSON.stringify(e.A||e)); } }catch(e){}
+  let build=''; try{ const c=JSON.parse(localStorage.getItem('cbsr_story_git')||'{}'); const r=await fetch(`https://api.github.com/repos/${c.repo||'aqedah/CBSR'}/actions/runs?branch=${c.branch||'source'}&per_page=1`,{headers:c.token?{'Authorization':'Bearer '+c.token}:{}}); if(r.ok){ const j=await r.json(); const w=j.workflow_runs&&j.workflow_runs[0]; if(w) build=w.status!=='completed'?' · 빌드 중':(w.conclusion==='success'?'':' · 마지막 빌드 실패'); } }catch(e){}
+  if(PENDING.has(cur)) el.textContent='저장소 반영됨 · 빌드 대기'+build; else if(mine&&live===mine) el.textContent='앱 공개 확인 ✓'; else if(live) el.textContent='앱에 다른 판이 공개됨'+build; else el.textContent='앱에 없음'+build;
+  el.style.background=el.textContent.startsWith('앱 공개 확인')?'#e6f2ea':(PENDING.has(cur)?'#fff4d6':'var(--soft)'); }
 $('bPrev').onclick=()=>{ if(!pvReady) loadPreview(); else sendPreview(); };
 
 /* ───────── 공개 원고 불러오기 ───────── */
@@ -369,7 +387,7 @@ $('bLoad').onclick=async()=>{ say('불러오는 중…'); try{ let got=null;
   try{ const r=await fetch(SITE+'story_in/'+cur+'.json',{cache:'no-store'}); if(r.ok){ const j=await r.json(); got=j.A||j; say('아직 빌드되지 않은 저장본을 불러왔습니다'); } }catch(e){}
   if(!got){ const r=await fetch(SITE+'story_cards.json',{cache:'no-store'}); if(!r.ok) throw new Error(r.status); const all=await r.json(); const e=all[String(cur)]; if(!e) throw new Error('이 날의 공개 원고가 없습니다'); got=e.A||e; say('공개 원고를 불러왔습니다'); }
   if(D.cards.length&&!confirm('지금 편집 중인 카드를 공개 원고로 바꿀까요? (원고 글은 그대로 둡니다)')) return;
-  D=JSON.parse(JSON.stringify(got)); D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); setBase(); stash(); sendPreview(); }catch(e){ say('불러오기 실패: '+e.message); } };
+  D=JSON.parse(JSON.stringify(got)); D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); setBase(); stash(); sendPreview(); localStorage.setItem('cbsr_story_pub:'+cur,hashStr(JSON.stringify(got))); pubStatus(); }catch(e){ say('불러오기 실패: '+e.message); } };
 
 /* ───────── GitHub에 저장 ───────── */
 (function(){ const g=JSON.parse(localStorage.getItem('cbsr_story_git')||localStorage.getItem('cbsr_guide_git')||'{}'); $('g_repo').value=g.repo||'aqedah/CBSR'; $('g_branch').value=g.branch||'source'; $('g_token').value=g.token||''; })();
@@ -379,23 +397,26 @@ $('bGit').onclick=()=>{ if(!D.cards.length){ say('카드가 없습니다. 먼저
 $('gClose').onclick=()=>$('dlgGit').close();
 $('gSave').onclick=async()=>{ const c=gcfg(); const gm=(t,ok)=>{ $('gMsg').textContent=t; $('gMsg').style.color=ok?'#2E7D4F':'#b00'; say(t); };
   if(!c.token){ gm('토큰 칸이 비어 있습니다. GitHub → Settings → Developer settings → Fine-grained token(저장소 CBSR, Contents: Read and write)을 만들어 붙여 넣으세요.'); return; }
-  const bad=[...$('chkList').querySelectorAll('li.bad')].length; if(bad&&!confirm(`검사에서 고칠 것 ${bad}건이 있습니다. 그래도 게시할까요?`)) return;
+  const hard=hardErrors(); if(hard.length){ gm('게시할 수 없습니다: '+hard.join(' / ')); return; }
+  const bad=[...$('chkList').querySelectorAll('li.bad')].length; if(bad&&!confirm(`검사에서 고칠 것 ${bad}건이 있습니다(인용 불일치 등). 그래도 게시할까요?`)) return;
+  savePoint('게시');
   gm('저장하는 중…',true); $('gSave').disabled=true;
   try{ const path=`app/ux/story_in/${cur}.json`, url=`https://api.github.com/repos/${c.repo}/contents/${path}`, hdr={'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json'};
     let sha; const r0=await fetch(url+'?ref='+c.branch,{headers:hdr}); if(r0.ok) sha=(await r0.json()).sha;
     const p=plan(cur); const body={message:`스토리 원고 ${cur}일 ${p?p.label:''} (작업실)`,content:b64(JSON.stringify({n:cur,plan:'2026-365',label:p?p.label:'',at:new Date().toISOString(),A:cleanD()},null,1)),branch:c.branch}; if(sha) body.sha=sha;
     const r=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},body:JSON.stringify(body)}); if(!r.ok) throw new Error(r.status+' '+(await r.text()).slice(0,80));
-    gm('GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' — 2~3분 뒤 앱에 올라갑니다.',true); $('gSave').disabled=false; setBase(); PENDING.add(cur); fillDays(); setTimeout(()=>$('dlgGit').close(),1500); }
+    gm('GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' — 2~3분 뒤 앱에 올라갑니다.',true); $('gSave').disabled=false; setBase(); PENDING.add(cur); localStorage.setItem('cbsr_story_pub:'+cur,hashStr(JSON.stringify(cleanD()))); fillDays(); pubStatus(); setTimeout(()=>$('dlgGit').close(),1500); }
   catch(e){ gm('저장 실패: '+e.message); $('gSave').disabled=false; } };
 
 /* ───────── 날 고르기 ───────── */
 let PUB=new Set(), PENDING=new Set();
 function fillDays(){ const s=$('selD'), v=s.value||String(cur||''), f=$('selF').value; s.innerHTML=''; let n=0;
   P26.forEach(p=>{ const x=P27BY[p.n], W=!!localStorage.getItem(LSK(p.n)), U=PUB.has(p.n), E=PENDING.has(p.n);
-    const keep=f==='all'||(f==='none'&&!U&&!W&&!E)||(f==='pub'&&U)||(f==='work'&&W)||(f==='pend'&&E)||(f==='diff'&&!x); if(!keep&&String(p.n)!==v) return; n+=keep?1:0;
+    const q=($('selQ').value||'').trim().replace(/\s+/g,''); const hay=(p.n+' '+d26(p.n)+' '+p.label+' '+(p.topic||'')).replace(/\s+/g,'');
+    const keep=(f==='all'||(f==='none'&&!U&&!W&&!E)||(f==='pub'&&U)||(f==='work'&&W)||(f==='pend'&&E)||(f==='diff'&&!x))&&(!q||hay.includes(q)); if(!keep&&String(p.n)!==v) return; n+=keep?1:0;
     const o=document.createElement('option'); o.value=p.n; const mk=(E?'⏳':'')+(U?'●':'')+(W?'✎':''); o.textContent=`${mk?mk+' ':''}${p.n} · ${d26(p.n)} · ${p.label}`+(x?` · 2027 ${d27(x.gi)}`:' · 2027 범위 다름'); s.appendChild(o); });
   if(v) s.value=v; $('dCount').textContent=f==='all'?'':`${n}일`; }
-$('selF').onchange=()=>fillDays();
+$('selF').onchange=()=>fillDays(); $('selQ').oninput=()=>{ fillDays(); $('dCount').textContent=$('selD').options.length+'일'; };
 async function loadStatus(){ try{ const r=await fetch(SITE+'story_cards.json',{cache:'no-store'}); if(r.ok){ const all=await r.json(); PUB=new Set(Object.keys(all).map(Number)); } }catch(e){}
   try{ const c=JSON.parse(localStorage.getItem('cbsr_story_git')||localStorage.getItem('cbsr_guide_git')||'{}'); const repo=c.repo||'aqedah/CBSR', br=c.branch||'source'; const r=await fetch(`https://api.github.com/repos/${repo}/contents/app/ux/story_in?ref=${br}`,{headers:c.token?{'Authorization':'Bearer '+c.token}:{}}); if(r.ok){ const L=await r.json(); PENDING=new Set(L.filter(x=>/^\d+\.json$/.test(x.name)).map(x=>+x.name.replace('.json',''))); } }catch(e){}
   fillDays(); }
@@ -408,7 +429,8 @@ $('bMore').onclick=e=>{ e.stopPropagation(); $('ddMore').classList.toggle('on');
 async function ghReq(path,opt){ const c=gcfg(); if(!c.token) throw new Error('토큰이 없습니다. 먼저 "앱에 게시"에서 토큰을 넣어 두세요.'); const r=await fetch(`https://api.github.com/repos/${c.repo}/contents/${path}`+(opt&&opt.method&&opt.method!=='GET'?'':'?ref='+c.branch),Object.assign({headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'}},opt||{})); return r; }
 $('ddMore').querySelectorAll('[data-m]').forEach(b=>b.onclick=async()=>{ const m=b.dataset.m; $('ddMore').classList.remove('on'); const c=gcfg(); const p=plan(cur);
   try{
-    if(m==='refresh'){ await loadStatus(); say('상태를 다시 읽었습니다'); }
+    if(m==='refresh'){ await loadStatus(); await pubStatus(); say('상태를 다시 읽었습니다'); }
+    if(m==='point'){ restorePoint(); }
     if(m==='pending'){ const path=`app/ux/story_in/${cur}.json`; const r0=await ghReq(path); if(!r0.ok){ say('빌드 대기 중인 게시가 없습니다(이미 앱에 올라갔거나, 게시한 적이 없음)'); return; } const sha=(await r0.json()).sha; if(!confirm(`${cur}일 ${p.label}의 빌드 대기 중인 게시를 취소할까요? (이미 빌드가 돌았다면 앱에는 남습니다)`)) return; const r=await ghReq(path,{method:'DELETE',body:JSON.stringify({message:`스토리 원고 ${cur}일 게시 취소 (작업실)`,sha,branch:c.branch})}); if(!r.ok) throw new Error(r.status); PENDING.delete(cur); fillDays(); say('게시를 취소했습니다'); }
     if(m==='prev'){ const r=await fetch(SITE+'story_prev/'+cur+'.json',{cache:'no-store'}); if(!r.ok){ say('이 날의 이전 원고가 없습니다(한 번도 덮어쓴 적 없음)'); return; } const j=await r.json(); if(!confirm(`${j.at||''}에 덮어쓰기 전의 원고를 불러올까요? 지금 편집 중인 카드는 바뀝니다. 불러온 뒤 "앱에 게시"를 눌러야 앱이 되돌아갑니다.`)) return; D=j.A; D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); stash(); sendPreview(); say('이전 원고를 불러왔습니다 — 확인 뒤 게시하세요'); }
     if(m==='del'){ if(!PUB.has(cur)){ say('이 날은 앱에 올라간 원고가 없습니다'); return; } if(!confirm(`${cur}일 ${p.label}의 원고를 앱에서 내릴까요? 다음 빌드 뒤 그날은 자동 요약 카드만 보입니다. (이전 원고로 되돌리기로 복구할 수 있습니다)`)) return; const path=`app/ux/story_in/${cur}.json`; let sha; const r0=await ghReq(path); if(r0.ok) sha=(await r0.json()).sha; const body={message:`스토리 원고 ${cur}일 내리기 (작업실)`,content:b64(JSON.stringify({n:cur,delete:true,at:new Date().toISOString()})),branch:c.branch}; if(sha) body.sha=sha; const r=await ghReq(path,{method:'PUT',body:JSON.stringify(body)}); if(!r.ok) throw new Error(r.status); PENDING.add(cur); fillDays(); say('내리기를 올렸습니다 — 2~3분 뒤 반영'); }
