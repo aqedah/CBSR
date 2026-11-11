@@ -113,9 +113,16 @@ dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12p
 
   <div class="pane on" id="p-ms">
     <p class="hint">쓰신 원고를 그대로 붙여 넣고 <b>분석</b>을 누르면 카드·묵상 노트로 나뉩니다. 첫 줄은 제목(<code>11월 2일 · 누가복음 22–24장 「제목」</code>)으로 읽고, <code>적용</code>·<code>기도</code>·<code>나눔</code> 제목줄 아래는 묵상 노트로 갑니다. 문단 하나가 카드 하나입니다. 인용은 <code>"…"(22:19)</code>처럼 따옴표와 장절을 붙여 쓰면 말씀 상자가 됩니다.<br>
-    문단 첫머리에 <code>[배경 · 멀찍이]</code>처럼 단계와 이름을 적으면 그대로 씁니다(단계: 배경·긴장·전환·의미). 비우면 자리로 짐작합니다.</p>
+    문단 첫머리에 <code>[배경 · 멀찍이]</code>처럼 단계와 이름을 적으면 그대로 씁니다(단계: 배경·긴장·전환·결과·의미 — <b>전환은 하루에 한 번</b>, 정말 뒤집히는 자리에만). 비우면 자리로 짐작합니다.</p>
     <textarea id="ms" placeholder="여기에 원고를 붙여 넣으세요."></textarea>
     <div class="row"><button id="bParse" class="pri">분석 → 카드 만들기</button><span class="small" id="msInfo"></span></div>
+    <details id="briefBox" style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">
+      <summary><b>요약 원고</b> <span class="small">— 목사님 원고 → 클로드 요약 → 스토리. 이 날 스토리가 어느 원고에서 무엇을 가져왔고 무엇을 보탰는지</span></summary>
+      <label class="f"><span class="k"><b>바탕 원고</b><span class="small">설교·팸플릿 파일 이름과 본문</span></span><input type="text" id="b_src" placeholder="예: 설교 230627(신 32장)"></label>
+      <label class="f"><span class="k"><b>원고에서 추린 것</b><span class="small">한 줄에 하나</span></span><textarea id="b_from" rows="5"></textarea></label>
+      <label class="f"><span class="k"><b>클로드가 보탠 것</b><span class="small">원고에 없던 관찰·연결 — 검토가 필요한 부분</span></span><textarea id="b_added" rows="4"></textarea></label>
+      <label class="f"><span class="k"><b>스토리로 옮기며</b><span class="small">무엇을 뼈대로 삼았는지, 바꾼 것</span></span><textarea id="b_note" rows="3"></textarea></label>
+    </details>
   </div>
 
   <div class="pane" id="p-cards">
@@ -329,9 +336,9 @@ function drawPh(q){ const b=dayBook(), chs=dayCh(); q=q.trim().toLowerCase();
 $('phQ').oninput=()=>drawPh($('phQ').value); $('phNone').onclick=()=>{ if(phFor>=0) delete D.cards[phFor].img; $('dlgPh').close(); renderCards(); stash(); sendPreview(); }; $('phClose').onclick=()=>$('dlgPh').close();
 
 /* ───────── 묵상 노트 ───────── */
-const QF={q_spine:['spine'],q_today:['qt','guide','today'],q_find:['qt','guide','find'],q_obs:['qt','obs','q'],q_god:['qt','god'],q_christ:['qt','christ'],q_apply:['qt','apply'],q_pray:['qt','pray'],q_kwq:['kwq','q']};
+const QF={q_spine:['spine'],q_today:['qt','guide','today'],q_find:['qt','guide','find'],q_obs:['qt','obs','q'],q_god:['qt','god'],q_christ:['qt','christ'],q_apply:['qt','apply'],q_pray:['qt','pray'],q_kwq:['kwq','q'],b_src:['brief','src'],b_from:['brief','from'],b_added:['brief','added'],b_note:['brief','note']};
 const getP=(o,p)=>p.reduce((a,k)=>a&&a[k],o), setP=(o,p,v)=>{ let a=o; p.slice(0,-1).forEach(k=>{ a[k]=a[k]||{}; a=a[k]; }); a[p[p.length-1]]=v; };
-function fillQT(){ for(const id in QF) $(id).value=getP(D,QF[id])||''; $('q_kwr').value=refLab(D.kwq&&D.kwq.r); renderLooks(); }
+function fillQT(){ for(const id in QF) $(id).value=getP(D,QF[id])||''; $('q_kwr').value=refLab(D.kwq&&D.kwq.r); renderLooks(); const b=D.brief||{}; $('briefBox').open=!!(b.src||b.from||b.added); $('briefBox').querySelector('summary b').textContent=(b.src||b.from)?'요약 원고 ✓':'요약 원고'; }
 for(const id in QF){ $(id).addEventListener('change',()=>{ setP(D,QF[id],$(id).value.trim()); stash(); sendPreview(); }); $(id).addEventListener('input',()=>{ setP(D,QF[id],$(id).value); clearTimeout(window._qst); window._qst=setTimeout(stash,700); }); }
 $('q_kwr').addEventListener('change',()=>{ D.kwq=D.kwq||{}; D.kwq.r=parseRef($('q_kwr').value)||null; $('q_kwr').value=refLab(D.kwq.r); stash(); });
 function renderLooks(){ const L=(D.qt.obs&&D.qt.obs.look)||[]; $('looks').innerHTML=L.map((x,i)=>`<div class="lookrow"><input type="text" data-l="t" data-i="${i}" placeholder="제목" value="${esc(x.t||'')}"><input type="text" data-l="r" data-i="${i}" placeholder="눅 22:54" value="${esc(refLab(x.r))}"><input type="text" data-l="n" data-i="${i}" placeholder="물음" value="${esc(x.n||'')}"><button class="sm" data-x="${i}">✕</button></div>`).join('');
@@ -341,7 +348,8 @@ $('bAddLook').onclick=()=>{ D.qt.obs=D.qt.obs||{q:'',look:[]}; (D.qt.obs.look=D.
 
 function fillAll(){ renderCards(); fillQT(); $('rawj').value=JSON.stringify(cleanD(),null,1); check(); }
 function cleanD(){ const o=JSON.parse(JSON.stringify(D)); o.cards=(o.cards||[]).map(c=>{ const d={}; for(const k in c) if(c[k]!==''&&c[k]!=null&&!k.startsWith('_')) d[k]=c[k]; return d; });
-  if(o.qt&&!o.qt.christ) o.qt.christ=''; if(o.kwq&&!o.kwq.r) delete o.kwq.r; if(!o.type) o.type=''; return o; }
+  if(o.qt&&!o.qt.christ) o.qt.christ=''; if(o.kwq&&!o.kwq.r) delete o.kwq.r; if(!o.type) o.type='';
+  if(o.brief){ for(const k in o.brief) if(!String(o.brief[k]||'').trim()) delete o.brief[k]; if(!Object.keys(o.brief).length) delete o.brief; } return o; }
 
 /* JSON 탭 */
 $('bJsonApply').onclick=()=>{ try{ let o=JSON.parse($('rawj').value); if(o.A) o=o.A; if(!Array.isArray(o.cards)) throw new Error('cards가 없습니다'); D=o; D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); stash(); sendPreview(); say('JSON 적용'); }catch(e){ say('JSON 오류: '+e.message); } };
@@ -355,6 +363,7 @@ function check(){ const L=[]; const C=D.cards||[]; const p=plan(cur);
   if(!C.length){ $('chkList').innerHTML='<li class="small">카드가 없습니다.</li>'; return; }
   const n=C.filter(c=>c.k!=='cover').length; L.push({c:n>=8&&n<=13?'ok':'warn',t:`카드 ${C.length}장(표지 빼고 ${n}장) — 보통 9–12장`});
   if(C[0].k!=='cover') L.push({c:'bad',t:'첫 카드가 표지가 아닙니다'});
+  { const nT=C.filter(c=>/^전환/.test(c.lab||'')).length; if(nT>1) L.push({c:'warn',t:`'전환' 단계가 ${nT}번 — 하루에 한 번, 정말 뒤집히는 자리에만 쓰고 나머지는 긴장·결과 등으로 바꾸세요`}); }
   C.forEach((c,i)=>{ const T=sTxt(c).length; if(T>200) L.push({c:'warn',t:`${i+1}번 카드 ${T}자 — 200자를 넘습니다`});
     if(c.k!=='cover'&&!c.lab) L.push({c:'warn',t:`${i+1}번 카드에 단계·이름표(lab)가 없습니다`});
     cardQs(c).forEach(([q,r],j)=>{ const R=parseRef(r); if(!R){ L.push({c:'bad',t:`${i+1}번 카드 인용에 장절이 없거나 읽을 수 없습니다: "${q.slice(0,20)}…" (${r||'없음'})`}); return; }
