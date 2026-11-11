@@ -21,8 +21,10 @@ button.pri{background:var(--acc);color:#fff;border-color:var(--acc)}
 button:disabled{opacity:.5;cursor:default}
 select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#fff}
 #status{font-size:12px;color:var(--mute)}
-main{display:grid;grid-template-columns:420px 1fr;height:calc(100% - 53px)}
-@media (max-width:980px){main{grid-template-columns:1fr;height:auto}}
+body{display:flex;flex-direction:column}
+header{flex:0 0 auto}
+main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:420px 1fr}
+@media (max-width:980px){main{grid-template-columns:1fr;min-height:0;display:block}}
 #form{overflow:auto;padding:14px 16px 60px;background:var(--panel);border-right:1px solid var(--line)}
 #prev{overflow:auto;padding:16px}
 .dayhead{display:flex;gap:8px;align-items:center;margin-bottom:10px}
@@ -59,13 +61,25 @@ body.onfront #frontbox>summary{color:var(--acc)}
 #frontform hr{border:0;border-top:1px solid var(--line);margin:12px 0 10px}
 #bookbar{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-size:13px;color:#555;user-select:none}
 #bkLab{font-weight:700;color:#222;text-align:center}
+#scaled [data-f]{cursor:pointer}
+#scaled [data-f]:hover{outline:1.5px dashed rgba(0,0,0,.22);outline-offset:2px}
+#scaled [data-f].editing{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+#form .flash{animation:fl 1.1s ease-out}
+@keyframes fl{0%{box-shadow:0 0 0 3px rgba(26,77,51,.35)}100%{box-shadow:0 0 0 3px rgba(26,77,51,0)}}
+#fit{cursor:pointer}
+.pvsel{display:inline-flex;gap:0;margin-left:6px}
+.pvsel button{padding:3px 9px;font-size:12px;border-radius:0}
+.pvsel button:first-child{border-radius:6px 0 0 6px}
+.pvsel button:last-child{border-radius:0 6px 6px 0}
+.pvsel button+button{border-left:0}
+.pvsel button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 #scalebox button.nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;font-size:20px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.88);border:1px solid rgba(0,0,0,.12);box-shadow:0 2px 10px rgba(0,0,0,.18);color:#333;z-index:8;opacity:.55;transition:opacity .15s}
 #scalebox:hover button.nav{opacity:1}
 #scalebox button.nav.l{left:10px} #scalebox button.nav.r{right:10px}
 #scalebox button.nav:disabled{opacity:.12;cursor:default}
 #bkNo{color:#999;font-variant-numeric:tabular-nums}
-#scalebox{position:relative;perspective:2600px;perspective-origin:50% 50%}
-#scaled{transform-origin:0 0;box-shadow:0 10px 34px rgba(0,0,0,.18)}
+#scalebox{position:relative;perspective:2600px;perspective-origin:50% 50%;overflow:hidden;max-width:100%}
+#scaled{position:absolute;top:0;left:0;transform-origin:0 0;box-shadow:0 10px 34px rgba(0,0,0,.18)}
 #flip{position:absolute;top:0;display:none;transform-origin:0 0;pointer-events:none;z-index:5}
 .fsheet{position:relative;width:148mm;height:210mm;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.4,.05,.3,1)}
 .fsheet.fwd{transform-origin:left center}
@@ -227,7 +241,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   <button id="btnJson">JSON 내보내기</button>
   <button id="btnImport">가져오기</button>
   <button id="btnGit">GitHub</button>
-  <select id="selPrint"><option value="day">이 날</option><option value="month">이달</option><option value="quarter">이 분기(권)</option><option value="all">원고 있는 날 전체</option><option value="front">책 머리만</option><option value="book">이 분기(권) — 책 머리 + 하루</option></select>
+  <span id="ptar" class="small" style="color:var(--mute)"></span><select id="selPrint"><option value="day">이 날</option><option value="month">이달</option><option value="quarter">이 분기(권)</option><option value="all">원고 있는 날 전체</option><option value="front">책 머리만</option><option value="book">이 분기(권) — 책 머리 + 하루</option></select>
   <button id="btnPrint" class="pri">인쇄 · PDF</button>
 </header>
 <main>
@@ -240,7 +254,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       <label class="f"><span class="k"><b>오늘의 흐름</b> <span class="cnt" data-for="today"></span></span><textarea id="today" data-max="125"></textarea></label>
       <div class="hint">장 순서대로 무슨 일이 일어나는지. 지명을 넣습니다(지도와 연결). 해석·평가 없음.</div>
       <label class="f"><span class="k"><b>읽으며 둘 초점</b> <span class="cnt" data-for="find"></span></span><textarea id="find" data-max="150"></textarea></label>
-      <div class="hint">● 이끎말 ◇ 대조 ◆ 반복 □ 틀 ▲ 전환 ○ 속말 ◎ 침묵 ⋯ 공백 ?! 아이러니 — 기호는 하나, 층은 설명 첫머리로 가른다: 언어적 "뜻과 반대로 말합니다" / 상황적 "뜻한 것과 정반대의 결과가 옵니다" / 구조적 "읽는 사람은 아는데 ○○는 모릅니다". 본문에 실제로 있는 것만, 개수 제한 없음. <b>오른쪽 관찰 질문이 묻는 답을 여기서 먼저 말하지 않습니다</b> — 견줄 자리만 가리키고, 결론은 ④ 해설에 둡니다. ⋯ 공백은 "없다"까지만 적는다 — 왜 없는지는 본문이 말할 때만 적고, 행간을 채우지 않는다. 오른쪽 관찰 질문과 같은 줄기. 100자 안.</div>
+      <div class="hint">● 이끎말 ◇ 대조 ◆ 반복 □ 틀 ▲ 전환 ○ 속말 ◎ 침묵 ⋯ 공백 ?! 아이러니 — 기호는 하나, 층은 설명 첫머리로 가른다: 언어적 "뜻과 반대로 말합니다" / 상황적 "뜻한 것과 정반대의 결과가 옵니다" / 구조적 "읽는 사람은 아는데 ○○는 모릅니다". 본문에 실제로 있는 것만, 개수 제한 없음. <b>오른쪽 관찰 질문이 묻는 답을 여기서 먼저 말하지 않습니다</b> — 견줄 자리만 가리키고, 결론은 ④ 해설에 둡니다. ⋯ 공백은 "없다"까지만 적는다 — 왜 없는지는 본문이 말할 때만 적고, 행간을 채우지 않는다. 오른쪽 관찰 질문과 같은 줄기.</div>
       <label class="f"><span class="k"><b>말뜻 (선택)</b> <span class="cnt" data-for="word"></span></span><input type="text" id="word" data-max="40"></label>
     </fieldset>
     <fieldset><legend><span class="n">2</span>읽은 뒤</legend>
@@ -288,7 +302,7 @@ A′|26장|언덕에서. &quot;여호와의 기름 부음 받은 자&quot;(26:9)
     <p class="small">원고는 이 브라우저에 자동 저장됩니다. 다른 곳에서도 쓰려면 JSON 내보내기 또는 GitHub 저장을 쓰세요. 칸을 비우면 그 자리는 인쇄되지 않습니다.</p>
   </section>
   <section id="prev">
-    <div id="bookbar"><span id="bkLab"></span><span id="bkNo"></span></div>
+    <div id="bookbar"><span id="bkLab"></span><span id="bkNo"></span><span class="pvsel"><button data-pv="both" class="on">펼침면</button><button data-pv="L">왼쪽</button><button data-pv="R">오른쪽</button></span></div>
     <div id="scalebox"><div id="scaled"></div><div id="flip"></div><button id="bkPrev" class="nav l" title="앞 장 (←)">‹</button><button id="bkNext" class="nav r" title="다음 장 (→)">›</button></div>
   </section>
 </main>
@@ -491,17 +505,17 @@ function pageL(p,qt){
   const refs=look.map(([r,t])=>`<p class="ref"><b>${esc(r)}</b>&nbsp; ${esc(t)}</p>`).join('');
   const box=pair.length?`<div class="box"><div class="h">눈여겨볼 것</div>${pair.map(([s,t])=>`<div class="i">${chipSym(s)}${vs(t)}</div>`).join('')}</div>`:'';
   const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${vs(qt.img.cap||'')}</div></div>`:'';
-  const stx=qt.stx&&qt.stx.rows&&qt.stx.rows.length?`<div class="stx"><p class="sh">${esc(qt.stx.kind||'짜임')}</p>${(()=>{const rs=qt.stx.rows; const L=c=>{const u=(c||'').replace(/[^A-Za-z]/g,'').toUpperCase(); return u==='X'?99:(u?u.charCodeAt(0)-64:1)}; const mx=Math.max(1,...rs.map(r=>L(r[0])).filter(v=>v<99)); return rs.map(r=>{const [m,w,t]=r; const d=L(m); const flat=/반복평행/.test(qt.stx.kind||''); const lv=flat?1:(d===99?mx+1:d); return `<div class="sr" style="padding-left:${((lv-1)*4.5).toFixed(1)}mm"><span class="sm2">${esc(m||'')}</span><span class="sw">${esc(w||'')}</span><span class="st2">${vs(t||'')}</span></div>`}).join('')})()}</div>`:'';
-  const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c1">${box}</div><div class="c2" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
-  const whole=qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd">${chip(qt.obs.christ)}</p>`:'';
+  const stx=qt.stx&&qt.stx.rows&&qt.stx.rows.length?`<div class="stx" data-f="stx"><p class="sh">${esc(qt.stx.kind||'짜임')}</p>${(()=>{const rs=qt.stx.rows; const L=c=>{const u=(c||'').replace(/[^A-Za-z]/g,'').toUpperCase(); return u==='X'?99:(u?u.charCodeAt(0)-64:1)}; const mx=Math.max(1,...rs.map(r=>L(r[0])).filter(v=>v<99)); return rs.map(r=>{const [m,w,t]=r; const d=L(m); const flat=/반복평행/.test(qt.stx.kind||''); const lv=flat?1:(d===99?mx+1:d); return `<div class="sr" style="padding-left:${((lv-1)*4.5).toFixed(1)}mm"><span class="sm2">${esc(m||'')}</span><span class="sw">${esc(w||'')}</span><span class="st2">${vs(t||'')}</span></div>`}).join('')})()}</div>`:'';
+  const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c1" data-f="pair">${box}</div><div class="c2" data-f="m_emph" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
+  const whole=qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:'';
   return `<div class="pg ${q}">
 <p class="date sans">${p.m}월 ${p.d}일 · ${p.no}일째 · 성경 읽기 약 ${p.min}분</p>
 <p class="title sans">${esc(p.t)}</p>
-<p class="sub">${esc(qt.sub||p.sub)}</p>
+<p class="sub" data-f="sub">${esc(qt.sub||p.sub)}</p>
 <p class="sec sans"><span class="n">1</span>읽기 전</p>
-<p class="b"><b>오늘의 흐름</b>&nbsp; ${qt.guide.today?vs(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
-<p class="b"><b>읽으며 둘 초점</b>&nbsp; ${chip(qt.guide.find)}</p>
-${qt.guide.word?`<p class="b"><b>말뜻</b>&nbsp; ${vs(qt.guide.word)}</p>`:''}
+<p class="b" data-f="today"><b>오늘의 흐름</b>&nbsp; ${qt.guide.today?vs(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
+<p class="b" data-f="find"><b>읽으며 둘 초점</b>&nbsp; ${chip(qt.guide.find)}</p>
+${qt.guide.word?`<p class="b" data-f="word"><b>말뜻</b>&nbsp; ${vs(qt.guide.word)}</p>`:''}
 <p class="go sans">▶ 이제 성경책에서 ${esc(p.rng)} 읽습니다.</p>
 <p class="sec sans"><span class="n">2</span>읽은 뒤</p>
 ${sec2}
@@ -516,13 +530,13 @@ function pageR(p,qt){
   return `<div class="pg r ${q}">
 <p class="date sans">${p.m}월 ${p.d}일 · ${esc(p.t)}</p>
 <p class="sec sans" style="margin-top:0.5mm"><span class="n">3</span>나의 묵상</p>
-<p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q">${vs(qt.obs.q)}</p>${ln(3)}
+<p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q" data-f="q">${vs(qt.obs.q)}</p>${ln(3)}
 <p class="lab sans"><span class="st">2</span>하나님의 성품 <span class="sm">— 본문에서 본 하나님은 어떤 분입니까?</span></p>${ln(2)}
-<p class="lab sans"><span class="st">3</span>적용</p><p class="q">${mdv(qt.apply)}</p>${ln(2)}
+<p class="lab sans"><span class="st">3</span>적용</p><p class="q" data-f="apply">${mdv(qt.apply)}</p>${ln(2)}
 <p class="lab sans"><span class="st">4</span>오늘의 기도</p>${ln(3)}
 <div class="after"><p class="h sans"><span class="n">4</span>쓴 뒤에 읽기 — 해설과 기도</p>
-<p>${vs(qt.note)}${qt.god?' '+vs(qt.god):''}</p>
-<p><span class="k">기도</span>${vs(qt.pray)}</p></div>
+<p data-f="note">${vs(qt.note)}${qt.god?' <span data-f="god">'+vs(qt.god)+'</span>':''}</p>
+<p data-f="pray"><span class="k">기도</span>${vs(qt.pray)}</p></div>
 <div class="pn">${pageNo(p)+1}</div>
 </div>`;
 }
@@ -686,18 +700,17 @@ const MM=mmpx();
 function render(){
   const p=PLAN[cur], qt=readForm();
   $('dh_t').textContent=`${p.m}월 ${p.d}일 · ${p.t}`; $('dh_s').textContent=`${p.no}일째 · ${qt.sub||p.sub} · ${QLAB[qOf(p)]}${(p.end&&p.end.length)?' · '+p.end.join('·')+' 마치는 날':''}`;
-  const box=$('scalebox'); const avail=box.clientWidth; const full=296*MM; const s=Math.min(1,avail/full);
-  const sc=$('scaled'); sc.style.transform=`scale(${s})`; sc.style.width=full+'px'; box.style.height=(210*MM*s)+'px';
+  const s=curScale(); fitBox(s); const sc=$('scaled');
   sc.innerHTML=spread(p,qt); tighten(sc); matchMedia(sc,s);
   // 맞춤: 각 쪽에서 아래 고정 상자 위 여유
   const res=[]; sc.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM*s;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});res.push((abt-mb)/s/MM)});
   const f=$('fit'); const worst=Math.min(...res);
-  const NM={sub:'소제목',today:'흐름',find:'초점',word:'말뜻',q:'관찰',apply:'적용',note:'해설',pray:'기도',pair:'눈여겨볼 것',god:'보조 문구',christ:'성경 전체로'};
+  const NM={sub:'소제목',today:'흐름',find:'초점',word:'말뜻',q:'관찰',apply:'적용',note:'해설',pray:'기도',pair:'눈여겨볼 것',god:'성품 한 문장',christ:'성경 전체로'};
   const overL=Object.keys(LIM).filter(k=>$(k)&&($(k).value||'').replace(/\*\*/g,'').length>LIM[k]).map(k=>`${NM[k]||k} ${($(k).value||'').replace(/\*\*/g,'').length}/${LIM[k]}`); const over=overL.length;
   const fitTxt=worst<0?`지면 넘침 ${res[0]<0?'왼쪽 ':''}${res[1]<0?'오른쪽 ':''}${Math.abs(worst).toFixed(1)}mm — 해설·눈여겨볼 것부터 줄이기`:`지면 들어감 (여유 왼 ${res[0].toFixed(0)}mm · 오른 ${res[1].toFixed(0)}mm)`;
   f.className=worst<0?'bad':over?'warn':'good'; f.textContent=fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
 }
-function gotoDay(i){ if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } if(typeof fillFrontForm==='function'&&$('frontbox')&&$('frontbox').open) fillFrontForm(); }
+function gotoDay(i){ if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); document.body.classList.remove('onfront'); if($('frontbox')) $('frontbox').open=false; if($('selPrint')&&$('selPrint').value==='front'){$('selPrint').value='day'} if(typeof syncPrintTarget==='function') syncPrintTarget(); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } if(typeof fillFrontForm==='function'&&$('frontbox')&&$('frontbox').open) fillFrontForm(); }
 function fillDays(){const mv=$('selM').value; const s=$('selD'); s.innerHTML='';
   if(mv==='front'){ VIEWS.forEach((v,i)=>{ if(v.t!=='s'||i>FLAB.length) return; const o=document.createElement('option'); o.value=i; o.textContent=v.lab; s.appendChild(o) }); return }
   const m=+mv; PLAN.forEach((p,i)=>{if(p.m!==m)return;const o=document.createElement('option');o.value=i;o.textContent=`${p.d}일 · ${p.t}${get(p.no)?' ✓':''}`;s.appendChild(o)})}
@@ -706,7 +719,16 @@ function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fil
 const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','기호 설명','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
 const BLAB=['면지','뒤표지'];
 let VIEWS=[], VI=0, ANIM=false;
-function curScale(){ const box=$('scalebox'); return Math.min(1,box.clientWidth/(296*MM)) }
+let PV='both';   /* both | L | R */
+function availW(){ const pv=$('prev'); const cs=getComputedStyle(pv); return Math.max(120, pv.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)) }
+function curScale(){ const w=PV==='both'?296*MM:148*MM; return Math.max(0.18, Math.min(PV==='both'?1:1.6, availW()/w)) }
+function fitBox(s){
+  const box=$('scalebox'), sc=$('scaled');
+  const w=(PV==='both'?296*MM:148*MM)*s;
+  box.style.width=w+'px'; box.style.height=(210*MM*s)+'px';
+  sc.style.width=(296*MM)+'px'; sc.style.transform=`scale(${s})`;
+  sc.style.left=(PV==='R'?-(148*MM*s):0)+'px';
+}
 function buildViews(){
   const q=qOf(PLAN[cur]); const ds=qDays(q);
   const sd=ds.find(p=>get(p.no))||ds[0];
@@ -720,8 +742,7 @@ function viewOfDay(i){ return VIEWS.findIndex(v=>v.t==='d'&&v.i===i) }
 function viewHTML(v){ if(v.t==='s') return v.h; const p=PLAN[v.i]; return spread(p, v.i===cur?readForm():(get(p.no)||blank())) }
 function viewLabel(v){ if(v.t==='s') return v.lab; const p=PLAN[v.i]; return `${p.m}월 ${p.d}일 · ${p.t}` }
 function drawStatic(html){
-  const s=curScale(), sc=$('scaled'), box=$('scalebox');
-  sc.style.transform=`scale(${s})`; sc.style.width=(296*MM)+'px'; box.style.height=(210*MM*s)+'px';
+  const s=curScale(); fitBox(s); const sc=$('scaled');
   sc.innerHTML=html; tighten(sc); matchMedia(sc,s);
   $('fit').className='good'; $('fit').textContent='책 머리 — 원고 칸이 아닙니다';
 }
@@ -736,14 +757,14 @@ function showView(k,noAnim){
   if(v.t==='d'){ if(cur!==v.i){ if(saveT){clearTimeout(saveT);save()} cur=v.i; const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); } render(); }
   else drawStatic(v.h);
   document.body.classList.toggle('onfront', v.t==='s');
+  if($('selPrint')){ const sp=$('selPrint'); if(v.t==='s'&&sp.value!=='front'&&sp.value!=='book') sp.value='front'; if(v.t==='d'&&sp.value==='front') sp.value='day'; syncPrintTarget() }
   if(v.t==='s'){ const sm=$('selM'); if(sm.value!=='front'){ sm.value='front'; fillDays() } $('selD').value=k; if(!$('frontbox').dataset.built) fillFrontForm(); }
   else { const sm=$('selM'); if(sm.value==='front'){ sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur } }
   updateBar();
 }
 function halfOf(html,side){ const d=document.createElement('div'); d.innerHTML=html; const pgs=d.querySelectorAll('.pg'); const e=pgs[side?1:0]; return e?e.outerHTML:'' }
 function drawRaw(html){
-  const s=curScale(), sc=$('scaled'), box=$('scalebox');
-  sc.style.transform=`scale(${s})`; sc.style.width=(296*MM)+'px'; box.style.height=(210*MM*s)+'px';
+  const s=curScale(); fitBox(s); const sc=$('scaled');
   sc.innerHTML=html; tighten(sc); matchMedia(sc,s);
 }
 function flip(dir){
@@ -810,6 +831,49 @@ function saveFront(){
   $('status').textContent='책 머리 저장됨';
 }
 
+
+/* ── 미리보기 ↔ 입력칸 잇기 ── */
+const FLD={sub:'소제목',today:'오늘의 흐름',find:'읽으며 둘 초점',word:'말뜻',pair:'눈여겨볼 것',christ:'성경 전체로',q:'본문 관찰 질문',apply:'적용 질문',note:'해설',god:'성품 한 문장',pray:'기도',stx:'짜임',m_emph:'지도',img:'그림'};
+function jumpTo(id){
+  const el=$(id); if(!el) return;
+  const box=el.closest('label')||el.closest('.row3')||el;
+  box.scrollIntoView({block:'center',behavior:'smooth'});
+  el.focus({preventScroll:true});
+  box.classList.add('flash'); setTimeout(()=>box.classList.remove('flash'),1100);
+}
+function markPreview(id){
+  document.querySelectorAll('#scaled [data-f]').forEach(e=>e.classList.toggle('editing', e.getAttribute('data-f')===id));
+}
+function wireLink(){
+  $('scaled').addEventListener('click',e=>{
+    const t=e.target.closest('[data-f]'); if(!t) return;
+    if(document.body.classList.contains('onfront')) return;
+    jumpTo(t.getAttribute('data-f'));
+  });
+  document.querySelectorAll('#form input,#form textarea').forEach(el=>{
+    el.addEventListener('focus',()=>markPreview(el.id));
+    el.addEventListener('blur',()=>setTimeout(()=>{ if(!document.activeElement||!document.activeElement.closest('#form')) markPreview(null) },80));
+  });
+  $('fit').addEventListener('click',()=>{
+    const m=($('fit').textContent||'').match(/(소제목|흐름|초점|말뜻|관찰|적용|해설|기도|눈여겨볼 것|보조 문구|성품 한 문장|성경 전체로)\s+\d+\/\d+/);
+    if(!m) return;
+    const back={'소제목':'sub','흐름':'today','초점':'find','말뜻':'word','관찰':'q','적용':'apply','해설':'note','기도':'pray','눈여겨볼 것':'pair','보조 문구':'god','성품 한 문장':'god','성경 전체로':'christ'};
+    const id=back[m[1]]; if(id) jumpTo(id);
+  });
+}
+
+
+function printLabel(){
+  const mode=$('selPrint').value, p=PLAN[cur], q=qOf(p);
+  if(mode==='day') return `${p.m}월 ${p.d}일 · 하루 지면`;
+  if(mode==='month') return `${p.m}월`;
+  if(mode==='quarter') return `${QLAB[q]} 하루 지면`;
+  if(mode==='front') return `${QLAB[q]} · 책 머리`;
+  if(mode==='book') return `${QLAB[q]} · 책 머리와 하루 지면`;
+  return '원고 있는 날 전체';
+}
+function syncPrintTarget(){ const el=$('ptar'); if(el) el.textContent=printLabel() }
+
 (function init(){
   const sm=$('selM'); {const o=document.createElement('option');o.value='front';o.textContent='책 머리';sm.appendChild(o)}
   for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'월';sm.appendChild(o)}
@@ -821,9 +885,13 @@ function saveFront(){
   document.querySelectorAll('#form textarea,#form input[type=text]').forEach(el=>el.addEventListener('input',()=>{counters();render();$('status').textContent='저장 중…';clearTimeout(saveT);saveT=setTimeout(()=>{save();saveT=null;fillDays();$('selD').value=cur},600)}));
   window.addEventListener('resize',render);
   fillForm(get(PLAN[cur].no)); render();
-  buildViews(); fillFrontForm(); const k0=viewOfDay(cur); showView(k0>=0?k0:0);
+  wireLink();
+  $('selPrint').addEventListener('change',syncPrintTarget);
+  buildViews(); fillFrontForm(); syncPrintTarget(); const k0=viewOfDay(cur); showView(k0>=0?k0:0);
   $('frontbox').addEventListener('toggle',()=>{ if($('frontbox').open) fillFrontForm() });
   $('bkPrev').onclick=()=>flip(-1); $('bkNext').onclick=()=>flip(1);
+  document.querySelectorAll('.pvsel button').forEach(b=>b.onclick=()=>{ PV=b.dataset.pv; document.querySelectorAll('.pvsel button').forEach(x=>x.classList.toggle('on',x===b)); showView(VI,true) });
+  let rt; addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>showView(VI,true),150) });
   document.addEventListener('keydown',e=>{ if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return; if(e.key==='ArrowLeft'){e.preventDefault();flip(-1)} if(e.key==='ArrowRight'){e.preventDefault();flip(1)} });
   fetch('guide_qt.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;takeRemote(j.qt||j,'공개 원고')}).catch(()=>{});
   /* JSON */
@@ -861,7 +929,8 @@ function saveFront(){
     if(mode==='book'){ const q=qOf(p); backSpreads(q).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
     probe.remove(); $('printroot').innerHTML=parts.join('');
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
-    $('status').textContent=list.length+'일치 · '+(list.length*2)+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음';
+    const pgs=$('printroot').querySelectorAll('.pg').length;
+    $('status').textContent=printLabel()+' · '+pgs+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음';
     (async()=>{ try{ if(document.fonts&&document.fonts.ready) await document.fonts.ready; const ims=[...$('printroot').querySelectorAll('img,image')];
       await Promise.all(ims.map(el=>{ if(el.tagName==='IMG'){ if(el.complete) return null; return new Promise(r=>{el.addEventListener('load',r,{once:true});el.addEventListener('error',r,{once:true});setTimeout(r,8000)}) }
         const u=el.getAttribute('href')||el.getAttribute('xlink:href'); if(!u) return null; return fetch(u).then(()=>{},()=>{}) }));
