@@ -2,4 +2,4 @@
 FILES=['ux/story_cards.json','s365b/all.json','ux/detail_y365.json',
  'ux/christ_out.json','ux/christ_y365nt.json','ux/mean_out.json','ux/kwq.json','ux/cardnews.json',
  'traits/all.json','scene/scx.json','tools/toolx.json','flow/all.json','para/all.json','people/all.json','places/all.json','books/all.json',
- 'glossary.js','weeks.js','qt_base.js','qt_extra.js','clues.js']
+ 'glossary.js','qt_base.js','qt_extra.js','clues.js']

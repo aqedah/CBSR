@@ -34,9 +34,6 @@ document.getElementById("cnt2").textContent="카드 메모 "+CF().length+"개";
 document.getElementById("cp").onclick=()=>{const L0=CF();const L=Object.entries(S).filter(([d,r])=>r.ok||r.n).map(([d,r])=>d.replace(/A:/,"일 2027판 ").replace(/B:/,"일 2028판 ").replace(/^(\\d+):/,"$1일 ")+": "+(r.ok?"승인":"수정")+(r.n?" — "+r.n:"")).join("\\n");const ALL=[L,L0.join("\\n")].filter(Boolean).join("\\n");navigator.clipboard.writeText(ALL||"(메모 없음)").then(()=>alert("복사했습니다. 대화에 붙여 넣어 주세요."));};cnt();"""
 open(OUT+'/review.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>이야기 카드 검토</title><meta name="robots" content="noindex"><style>'+_CSS+'</style></head><body><h1>이야기 카드 검토</h1><p>날마다 중심 한 줄과 카드 흐름, QT 묶음을 보고 승인하거나 고칠 점을 적습니다. 다 본 뒤 \'메모 복사\'를 눌러 대화에 붙여 넣어 주세요.</p><div id="bar"><span id="cnt"></span><span id="cnt2"></span><button id="cp">메모 복사</button></div>'+''.join(_rows)+'<script>'+_JS+'</script></body></html>')
 
-# 시험 날(2027판·2028판) 묶음 페이지
-_pr=[r for r in _rows if r.count("<div class='pv'")>=2]
-open(OUT+'/pilot.html','w').write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2027·2028 시험 날</title><meta name="robots" content="noindex"><style>'+_CSS+'</style></head><body><h1>2027판·2028판 시험 날</h1><p>같은 본문을 2027년(1년차)과 2028년(2년차)에 서로 다른 이야기와 QT로 읽게 하는 시험입니다. 날마다 두 판을 나란히 보고, \'카드로 보기\'로 실제 화면을 엽니다. 카드 위쪽 ✎를 누르면 읽던 그 카드에 바로 메모를 남깁니다. 카드를 다 넘긴 뒤 \'QT로 이어가기\'를 누르면 같은 관점의 QT가 이어집니다.</p><div id="bar"><span id="cnt"></span><span id="cnt2"></span><button id="cp">메모 복사</button></div>'+''.join(_pr)+'<script>'+_JS+'</script></body></html>')
 
 # 2027판 달별 검토 페이지 (jan.html 1–31일, feb.html 32–59일)
 for _fn,_lo,_hi,_mn in [('jan',1,31,'1월'),('feb',32,59,'2월'),('rest',301,365,'301–365일(2026년 남은 날)')]:

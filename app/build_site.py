@@ -6,8 +6,8 @@ plan=json.load(open('plan.json'))
 # 성경연구는 MILALWV로 옮김(2026-10-23): 자리만 남김
 t=t.replace('/*STUDY*/','const STUDY_ON=()=>false;\nfunction studyTabSync(){ document.documentElement.classList.remove("study-on"); try{ localStorage.removeItem("cbsr-study"); }catch(e){} if(view.tab==="study") view.tab="read"; }\n')
 t=t.replace('/*LEAFLETCSS*/',open('npm/node_modules/leaflet/dist/leaflet.css').read())
-data="\n".join(open(f).read() for f in ['engine.js','glossary.js','weeks.js','qt_base.js','qt_extra.js','routes.js','clues.js'])
-data+='\nconst SUMMARY=[], CURATED={}, INCL={};'  # 리딩지저스 요약·문제·봉투 구조는 지움(2026-11-11): 365 자료로 채움
+data="\n".join(open(f).read() for f in ['engine.js','glossary.js','qt_base.js','qt_extra.js','routes.js','clues.js'])
+data+='\nconst SUMMARY=[], CURATED={}, INCL={}, WEEKS=[];'  # 리딩지저스 요약·문제·봉투 구조는 지움(2026-11-11): 365 자료로 채움
 data=data.replace('if(typeof module!=="undefined") module.exports={buildEntityIndex,buildGlossIndex,inScope,analyzeDay,makeQuiz,rng};','')
 data+="\nconst PLACEINFO="+open('places/all.json').read()+";"
 data+="\nconst ROUTES_B="+open('routes/all.json').read()+";"
@@ -45,7 +45,7 @@ except Exception as _x:
 data+="\nconst CHROLE="+(open('ux/christ_role.json').read() if os.path.exists('ux/christ_role.json') else "{}")+";"
 data+="\nconst PHLUM="+json.dumps(_lum,separators=(',',':'))+";"
 data+="\nconst NAME_SET=new Set(NAME_MEAN.map(x=>x[0])); for(const n of NAME_MEAN){ if(!GLOSSARY.some(g=>g[0]===n[0])) GLOSSARY.push(n); }"
-data+="\nconst LEITWORT="+open('leitwort365.json').read()+";\nconst EMPH="+open('emph365.json').read()+";\nconst GAZ="+open('gaz.json').read()+";\nconst PLAN="+json.dumps(plan,ensure_ascii=False,separators=(',',':'))+";\n"
+data+="\nconst LEITWORT="+open('leitwort365.json').read()+";\nconst EMPH="+open('emph365.json').read()+";\nconst GAZ="+open('gaz.json').read()+";\nconst PLAN="+json.dumps({**plan,"plan":[]},ensure_ascii=False,separators=(',',':'))+";\n"
 tj=json.load(open('terrain.json')); terr={}
 for k,v in tj.items():
     shutil.copy(f'terrain_{k}.jpg',f'{OUT}/terrain/{k}.jpg'); terr[k]={"bounds":v["bounds"],"url":f"terrain/{k}.jpg"}
@@ -106,8 +106,7 @@ for i,d in enumerate(P365):
 TRV=hashlib.sha1((open('bible_snb.b64').read()[:3000]+open('bible_shg.b64').read()[:3000]).encode()).hexdigest()[:8] if os.path.exists('bible_snb.b64') else '1'
 data+='window.TR_VER="'+TRV+'";\n'
 data+='const BOOKINFO='+open('books/all.json').read()+';\n'
-data+='const RJ_PLAN=PLAN.plan, RJ_WEEKS=WEEKS.slice(), GUIDE={}, EYE={};\n'
-data+='/* 시편은 "편" */ PLAN.plan.forEach(w=>w.forEach(d=>{ d.label=d.label.replace(/시편 ([0-9–\\-]+)장/g,"시편 $1편"); }));\n'
+data+='const GUIDE={}, EYE={};\n'
 data+='window.STUDY_V="0";\n'  # 원문 연구는 MILALWV로 옮김(2026-10-23)
 data+='/* 리딩지저스 삭제(목사님 2026-11-10): 365 통독만 */ window.CBSR_MODE="y365"; try{ localStorage.setItem("cbsr-mode","y365"); }catch(e){}\nconst DAYC={};\n'
 data+='{const R=(o,n)=>{for(const k in o)delete o[k];Object.assign(o,n);};\n'
@@ -117,6 +116,7 @@ import glob as _g
 CK=json.load(open('ux/christ_out.json')); MN=json.load(open('ux/mean_out.json')); GF={}
 for f in sorted(_g.glob('ux/guide_out*.json')): GF.update(json.load(open(f)))
 data+='const FLOW='+open('flow/all.json').read()+';\n'
+data+='const WHERE365='+J(json.load(open('ux/where365.json'))['list'])+';\n'  # 읽기 도우미 '지금 어디쯤?'(11-11)
 import importlib.util as _iu2
 import base64 as _b64, gzip as _gz
 _BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())))
