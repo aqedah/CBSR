@@ -86,7 +86,8 @@ dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12p
 <body>
 <header>
   <h1>스토리 작업실</h1>
-  <select id="selD"></select>
+  <select id="selF" title="날 목록 거르기"><option value="all">전체</option><option value="none">원고 없는 날</option><option value="pub">앱에 원고 있는 날</option><option value="work">작업본 있는 날</option><option value="pend">빌드 대기</option><option value="diff">2027 범위 다른 날</option></select>
+  <select id="selD"></select><span class="pill" id="dCount"></span>
   <span class="pill" id="dInfo"></span>
   <span class="sp"></span>
   <span id="status"></span>
@@ -392,7 +393,12 @@ $('gSave').onclick=async()=>{ const c=gcfg(); const gm=(t,ok)=>{ $('gMsg').textC
 
 /* ───────── 날 고르기 ───────── */
 let PUB=new Set(), PENDING=new Set();
-function fillDays(){ const s=$('selD'), v=s.value; s.innerHTML=''; P26.forEach(p=>{ const o=document.createElement('option'); o.value=p.n; const x=P27BY[p.n]; const mk=(PENDING.has(p.n)?'⏳':'')+(PUB.has(p.n)?'●':'')+(localStorage.getItem(LSK(p.n))?'✎':''); o.textContent=`${mk?mk+' ':''}${p.n} · ${d26(p.n)} · ${p.label}`+(x?` · 2027 ${d27(x.gi)}`:''); s.appendChild(o); }); if(v) s.value=v; }
+function fillDays(){ const s=$('selD'), v=s.value||String(cur||''), f=$('selF').value; s.innerHTML=''; let n=0;
+  P26.forEach(p=>{ const x=P27BY[p.n], W=!!localStorage.getItem(LSK(p.n)), U=PUB.has(p.n), E=PENDING.has(p.n);
+    const keep=f==='all'||(f==='none'&&!U&&!W&&!E)||(f==='pub'&&U)||(f==='work'&&W)||(f==='pend'&&E)||(f==='diff'&&!x); if(!keep&&String(p.n)!==v) return; n+=keep?1:0;
+    const o=document.createElement('option'); o.value=p.n; const mk=(E?'⏳':'')+(U?'●':'')+(W?'✎':''); o.textContent=`${mk?mk+' ':''}${p.n} · ${d26(p.n)} · ${p.label}`+(x?` · 2027 ${d27(x.gi)}`:' · 2027 범위 다름'); s.appendChild(o); });
+  if(v) s.value=v; $('dCount').textContent=f==='all'?'':`${n}일`; }
+$('selF').onchange=()=>fillDays();
 async function loadStatus(){ try{ const r=await fetch(SITE+'story_cards.json',{cache:'no-store'}); if(r.ok){ const all=await r.json(); PUB=new Set(Object.keys(all).map(Number)); } }catch(e){}
   try{ const c=JSON.parse(localStorage.getItem('cbsr_story_git')||localStorage.getItem('cbsr_guide_git')||'{}'); const repo=c.repo||'aqedah/CBSR', br=c.branch||'source'; const r=await fetch(`https://api.github.com/repos/${repo}/contents/app/ux/story_in?ref=${br}`,{headers:c.token?{'Authorization':'Bearer '+c.token}:{}}); if(r.ok){ const L=await r.json(); PENDING=new Set(L.filter(x=>/^\d+\.json$/.test(x.name)).map(x=>+x.name.replace('.json',''))); } }catch(e){}
   fillDays(); }
