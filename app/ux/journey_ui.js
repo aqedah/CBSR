@@ -9,6 +9,11 @@
    7 자리 맞춤 jFit     양피지 지도는 위 말씀 카드와 아래 카드 사이 빈 곳에만(목사님 결정 4)
 */
 const JNS="http://www.w3.org/2000/svg";
+/* 설명 3줄 접기(목사님 승인 대기 — false면 꺼짐). 켜면 아래 카드 설명이 3줄로 접히고 '더 보기'로 펼침, 펼친 동안 멈춤 */
+const JCLAMP=0; /* 0 꺼짐 · 2 = 2줄로 접고 '더 보기'는 단추 줄에 · 3 = 3줄로 접고 '더 보기'는 설명 아래 */
+function jClamp(el){ const n=el.querySelector(".bmtn"); if(!n) return; let b=el.querySelector(".jmore"); if(!JCLAMP){ n.classList.remove("jclamp","jc2"); if(b) b.hidden=true; return; } n.classList.add("jclamp"); n.classList.toggle("jc2",JCLAMP===2);
+  if(!b){ b=document.createElement("button"); b.className="jmore"; b.dataset.t="more"; const g=el.querySelector(".bmtgo"); if(JCLAMP===2&&g){ b.classList.add("inrow"); g.appendChild(b); } else n.after(b); } b.textContent="더 보기 ▾"; b.hidden=true; requestAnimationFrame(()=>{ b.hidden=!(n.scrollHeight>n.clientHeight+2); }); }
+function jMore(el){ const n=el.querySelector(".bmtn"), b=el.querySelector(".jmore"); const open=n.classList.toggle("jclamp")===false; if(b) b.textContent=open?"접기 ▴":"더 보기 ▾"; return open; }
 function jKick(i,n,lab){ return `${i+1} / ${n}${lab?" · "+lab:""}`; }
 /* 두 단추: 큰 여정과 같은 자리·같은 말 */
 function jGoHTML(){ return `<div class="bmtgo" hidden><button data-t="verse">📖 본문 펼치기</button><button data-t="day" hidden></button></div>`; }
@@ -45,7 +50,9 @@ function jPillAt(g,x,y){ if(!g) return; const tr=g.getAttribute("transform")||""
 function jPillify(svg,root){ root=root||svg; root.querySelectorAll('text[data-jn="who"]').forEach(t=>jPillWrap(svg,t,"who")); root.querySelectorAll("text.pl").forEach(t=>{ const c=t.classList; if(c.contains("m")||c.contains("big")||c.contains("v")||t.closest("g.jp")||t.closest("#pl_fx")||t.closest("#at_fx")) return; jPillWrap(svg,t,"place"); }); }
 /* 겹침 정리: 보이는 알약을 순서대로(인물 먼저) 놓고, 앞의 것과 겹치면 숨김 */
 function jVisible(e,stop){ for(let n=e.parentNode;n&&n!==stop;n=n.parentNode){ /* 알약 자신의 투명도(겹침 정리로 숨겼다 보이는 중)는 보지 않음 */ if(n.nodeType!==1) continue; const o=n.getAttribute("opacity"); if(o!=null&&+o===0) return false; const cs=getComputedStyle(n); if(cs.display==="none"||+cs.opacity===0) return false; } return true; }
-function jDeclutter(svg){ const all=[...svg.querySelectorAll("g.jp")]; const order=[...all.filter(g=>g.classList.contains("who")),...all.filter(g=>!g.classList.contains("who"))]; const kept=[];
+function jDeclutter(svg){ const all=[...svg.querySelectorAll("g.jp")]; /* 목사님 2026-11-12: 지금 말하는 사람의 이름을 가장 먼저 남김 → 다른 인물 → 장소 */
+  const root=svg.closest(".atn")||document, spk=new Set([...root.querySelectorAll(".tvb.say:not(.old)")].map(d=>d._spkG).filter(Boolean));
+  const order=[...all.filter(g=>spk.has(g)),...all.filter(g=>g.classList.contains("who")&&!spk.has(g)),...all.filter(g=>!g.classList.contains("who"))]; const kept=[];
   order.forEach(g=>{ g.classList.remove("hid"); if(!jVisible(g,svg)) return; const r=g.getBoundingClientRect(); if(!r.width) return; const hit=kept.some(k=>r.left<k.right-1&&r.right>k.left+1&&r.top<k.bottom-1&&r.bottom>k.top+1); if(hit) g.classList.add("hid"); else kept.push(r); }); }
 
 /* 안내 띠: 아래 카드 바로 위에 한 줄, 여러 개면 차례로 */
@@ -58,6 +65,7 @@ function jToastClear(el){ if(!el) return; if(el._jtq) el._jtq.length=0; clearTim
 
 /* 자리 맞춤: 모든 장면의 아래 카드 가운데 가장 높은 것을 재어, 지도가 그 위 빈 곳에만 그려지게 */
 function jFit(el,rows){ const p=el.querySelector(".bmtp"); if(!p) return; const k=p.querySelector(".bmtk"), h=p.querySelector(".bmth"), n=p.querySelector(".bmtn"), g=p.querySelector(".bmtgo"), keep=[k.textContent,h.textContent,n.textContent,g&&g.hidden];
+  if(JCLAMP){ n.classList.add("jclamp"); n.classList.toggle("jc2",JCLAMP===2); }
   let mx=0; if(g) g.hidden=false; rows.forEach(r=>{ k.textContent=r[0]||""; h.textContent=r[1]||""; n.textContent=r[2]||""; mx=Math.max(mx,p.offsetHeight); });
   k.textContent=keep[0]; h.textContent=keep[1]; n.textContent=keep[2]; if(g) g.hidden=keep[3];
   const H=el.clientHeight||innerHeight; el.style.setProperty("--jcard",Math.round(Math.min(mx-30,H*.5))+"px"); }

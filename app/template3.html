@@ -1420,6 +1420,8 @@ body.wcmon{overflow:hidden}
 .chm .nm{transition:opacity .25s}.chm .nm.hidn,.spl.hidn{opacity:0!important}
 .jtoast{position:absolute;left:50%;transform:translate(-50%,6px);z-index:1002;max-width:calc(100% - 32px);background:#fffdf6;color:#2a2318;border:1.5px solid #d9c49a;border-radius:999px;padding:6px 14px;font:700 13.5px/1.35 var(--f-ui);text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.25);opacity:0;transition:opacity .3s,transform .3s;pointer-events:none}
 .jtoast.on{opacity:1;transform:translate(-50%,0)}
+.bmtn.jclamp.jc2{-webkit-line-clamp:2}.jmore.inrow{display:inline-block;margin:0 0 0 auto;padding:8px 6px}.bmtgo:has(.jmore.inrow){display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bmtn.jclamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.jmore{display:block;margin:2px 0 4px;padding:2px 0;border:0;background:none;color:#E2B874;font:700 13px var(--f-ui);cursor:pointer}
 .atn:not(.spc) .atmap{padding:calc(env(safe-area-inset-top,0px) + 128px) 8px var(--jcard,178px)!important}
 .bmtbars i{background:#e2603f!important;box-shadow:none!important}.atn .bmtbars i{background:#e2603f!important}
 .atn .bmtp{background:linear-gradient(to top,rgba(16,20,18,.95) 78%,rgba(16,20,18,0))}
@@ -4542,7 +4544,9 @@ function mvMarker(map,id,o){ o=o||{}; const w=(id==="cart"?Math.max(o.w||40,86):
 /* 11/4(GPT 검수 5.3): 지도 위 인물 이름표가 겹치면 아래로 비켜 놓음(큰 여정이 열려 있을 때만) */
 function declutterNames(root){ /* 통일안(2026-11-12): 인물 이름이 겹치면 밀어 쌓지 않고, 앞 순서(큰 인물=주인공 → 먼저 나온 인물)만 남기고 숨김. 인물 이름을 가리는 지명 이름표도 잠시 숨김 — 평면도의 jDeclutter와 같은 규칙 */
   const L=[...root.querySelectorAll(".chm .nm")].filter(e=>e.textContent.trim()&&e.closest(".chm").offsetParent); L.forEach(e=>{ e.style.translate=""; e.classList.remove("hidn"); });
-  const wOf=e=>parseFloat(e.closest(".chm").style.getPropertyValue("--w"))||40; L.sort((a,b)=>wOf(b)-wOf(a)); const kept=[], ov=(r,q)=>r.left<q.right-1&&r.right>q.left+1&&r.top<q.bottom-1&&r.bottom>q.top+1;
+  /* 목사님 2026-11-12: 지금 말풍선이 떠 있는 사람(말하는 사람)을 가장 먼저 남김 → 큰 인물(주인공) → 먼저 나온 인물 */
+  const spk=new Set([...root.querySelectorAll(".tvb.say:not(.old)")].map(d=>{ try{ return d._m&&d._m.getElement&&d._m.getElement()?.querySelector(".chm"); }catch(x){ return null; } }).filter(Boolean));
+  const wOf=e=>(spk.has(e.closest(".chm"))?1000:0)+(parseFloat(e.closest(".chm").style.getPropertyValue("--w"))||40); L.sort((a,b)=>wOf(b)-wOf(a)); const kept=[], ov=(r,q)=>r.left<q.right-1&&r.right>q.left+1&&r.top<q.bottom-1&&r.bottom>q.top+1;
   L.forEach(e=>{ const r=e.getBoundingClientRect(); if(!r.width) return; if(kept.some(q=>ov(r,q))) e.classList.add("hidn"); else kept.push(r); });
   root.querySelectorAll(".spl").forEach(s=>{ s.classList.remove("hidn"); const r=s.getBoundingClientRect(); if(r.width&&kept.some(q=>ov(r,q))) s.classList.add("hidn"); }); }
 setInterval(()=>{ document.querySelectorAll(".bmtmap").forEach(m=>declutterNames(m.parentElement||m)); },400);
@@ -6273,7 +6277,7 @@ const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep=async ms=>{ if(RM) ms=Math.min(ms,80); let t=0; do{ const d=Math.max(1,Math.min(60,ms-t)); await new Promise(r=>setTimeout(r,d)); if(!paused) t+=d; }while((t<ms||paused)&&!dead); }; /* 평면도와 같은 규칙: 멈춤 중에도 양보, 닫으면 끝 */
 const mk=(tag,attrs,par=fx)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);par.appendChild(e);return e;};
 const bars=[...el.querySelectorAll(".bmtbars i")];
-function cap(i){ const s=S[i]; el.querySelector(".bmtk").textContent=jKick(i,S.length,`레 ${s.s}`); jGoSet(el,[3,16,+(s.r.match(/16:(\d+)/)||[0,1])[1]]); el.querySelector(".bmth").textContent=s.t; el.querySelector(".bmtn").textContent=s.d; el.querySelector(".athold").innerHTML=`손에 든 것 <em>${esc(s.h)}</em>`;
+function cap(i){ const s=S[i]; el.querySelector(".bmtk").textContent=jKick(i,S.length,`레 ${s.s}`); jClamp(el); jGoSet(el,[3,16,+(s.r.match(/16:(\d+)/)||[0,1])[1]]); el.querySelector(".bmth").textContent=s.t; el.querySelector(".bmtn").textContent=s.d; el.querySelector(".athold").innerHTML=`손에 든 것 <em>${esc(s.h)}</em>`;
   bars.forEach((b,j)=>{ b.style.transition="none"; b.style.width=j<i?"100%":"0"; }); el.querySelector(".bmtend").hidden=true; }
 function setMe(x,y){me.setAttribute("transform",`translate(${x} ${y})`);}
 const D=a=>a.length?"M"+a.map(p=>p.join(" ")).join(" L"):"";
@@ -6340,7 +6344,7 @@ function reset(){ { const nf=fx.cloneNode(false); fx.replaceWith(nf); fx=nf; } [
   const close=pop=>{ tok++; dead=true; paused=false; clearInterval(ADC); jToastClear(el); el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
   el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; const k=t.dataset.t;
     const r16=()=>[3,16,+(S[cur].r.match(/16:(\d+)/)||[0,1])[1]];
-    if(k==="x") close(); else if(k==="day") jGoDay(r16(),close); else if(k==="verse"){ const r=r16(), was=paused; setPause(true); sVerseSheet(`${r[0]}-${r[1]}-${r[2]}-${r[2]}`,()=>{ if(!was&&!dead) setPause(false); }); } else if(k==="prev"){ run(Math.max(0,cur-1)); } else if(k==="nextS"){ run(Math.min(S.length-1,cur+1)); } /* 11/9 검토: 멈춘 채 넘기면 멈춘 채로 그 장면을 보여 줌 */
+    if(k==="x") close(); else if(k==="more"){ if(jMore(el)){ jToastClear(el); el._mw=paused; setPause(true); } else if(!el._mw) setPause(false); } else if(k==="day") jGoDay(r16(),close); else if(k==="verse"){ const r=r16(), was=paused; setPause(true); sVerseSheet(`${r[0]}-${r[1]}-${r[2]}-${r[2]}`,()=>{ if(!was&&!dead) setPause(false); }); } else if(k==="prev"){ run(Math.max(0,cur-1)); } else if(k==="nextS"){ run(Math.min(S.length-1,cur+1)); } /* 11/9 검토: 멈춘 채 넘기면 멈춘 채로 그 장면을 보여 줌 */
     else if(k==="pause") setPause(!paused); else if(k==="again"){ setPause(false); run(0); } });
   /* 11/9 목사님: 다른 큰 여정처럼 첫 설명을 보여 주고 가운데 ▶ 시작을 눌러야 시작 */
   el.querySelector(".bmtk").textContent="레위기 16장 · 성막 안에서"; el.querySelector(".bmth").textContent="대속죄일 · 대제사장의 길"; el.querySelector(".bmtn").textContent="일 년에 한 번, 대제사장 아론이 홀로 지성소에 들어가 자기와 온 이스라엘을 위해 속죄하는 날입니다. 위가 서쪽(지성소), 아래가 동쪽(뜰 문·광야)입니다."; el.querySelector(".athold").innerHTML="";
