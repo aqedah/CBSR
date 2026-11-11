@@ -3541,11 +3541,13 @@ const TOOLS={"장면":"언제, 어디서, 누가 있고, 장면은 어디서 바
  "전환":"흐름이 여기서 돌아섭니다. 교차대구로 짜인 본문에서는 한가운데가 그 자리입니다.",
  "속말":"화자가 인물의 속마음을 열어 보입니다. 겉으로 한 말과 견주어 읽습니다.",
  "침묵":"말해야 할 사람이 말하지 않습니다. 대답이 없다는 것까지만 봅니다.",
- "공백":"본문이 되풀이하던 말이나 행동이 어느 자리에서만 빠집니다. 왜 없는지는 본문이 말할 때만 따라갑니다.",
+ "생략":"되풀이되던 말이 한 자리에서만 빠집니다. 빠진 것이 오히려 드러나 강조가 되고, 앞에서 세운 틀이 그 자리를 채웁니다. 본문의 틀로 채우되, 상상으로 채워 넣지는 않습니다.",
  "아이러니":"겉과 속이 어긋납니다. 뜻과 반대로 말하거나, 뜻한 것과 정반대의 결과가 오거나, 읽는 사람은 아는데 인물은 모릅니다."};
-const TOOL_SYM={"이끎말":"●","반복":"◆","대조":"◇","틀":"□","전환":"▲","속말":"○","침묵":"◎","공백":"⋯","아이러니":"?!"};
+const TOOL_SYM={"이끎말":"●","반복":"◆","대조":"◇","틀":"□","전환":"▲","속말":"○","침묵":"◎","생략":"⋯","아이러니":"?!"};
 const TOOL_ORDER=Object.keys(TOOLS);
-const tName=t=>(TOOL_SYM[t]?TOOL_SYM[t]+" ":"")+t;
+/* 11-12: ⋯ 공백 → ⋯ 생략. 예전 자료의 "공백"도 생략으로 읽는다 */
+const TOOL_ALIAS={"공백":"생략"}; TOOLS["공백"]=TOOLS["생략"]; TOOL_SYM["공백"]=TOOL_SYM["생략"];
+const tName=t=>{t=TOOL_ALIAS[t]||t; return (TOOL_SYM[t]?TOOL_SYM[t]+" ":"")+t};
 const CLUE_TOOL={turn:"전환",pair:"대조",scene:"반복",irony:"아이러니",aside:"화자"};
 const LENS_TOOL={"무대":"장면","줄거리":"전환","글쓴이의 손길":"반복","인물":"인물","편지 뒤의 이야기":"장면","구분":"반복"};
 function dayTools(w,d){ const X=(typeof TOOLX!=="undefined"&&TOOLX[MODE+":"+keyOf(w,d)])||null;
@@ -3731,7 +3733,7 @@ function renderQT(){
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
   let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 관찰하기<small>장면·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary>`;
-  if(gap) dp+=`<div class="qcard gapq"><span class="k"><i class="ltool">⋯ 공백</i> 말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
+  if(gap) dp+=`<div class="qcard gapq"><span class="k"><i class="ltool">⋯ 생략</i> 말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
   L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; if(l.k==="내 자리") return; const c=clueFor(l.k,A,w,d,l.q); dp+=`<div class="qcard"><span class="k">${LENS_TOOL[l.k]?`<i class="ltool">${tName(LENS_TOOL[l.k])}</i> `:""}${esc(LENS_TOOL[l.k]&&LENS_TOOL[l.k]===l.k?"":l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
   let moreTraits=""; if(traits.length>2) moreTraits=`<details class="mine"><summary>본문에서 찾은 하나님의 성품 더 보기</summary>`+traits.slice(2).map(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${window.CBSR_V2?`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`:""}</div>`;}).join("")+`</details>`;
@@ -5408,7 +5410,7 @@ function obsRecord(){
     const lab=dayPlan(w,d).label, X=dayTools(w,d)||{q:[]}, no=dayNo(w,d);
     const add=(tl,txt,src)=>{ if(txt&&txt.trim()&&tl.length) E.push({no,lab,src,txt:txt.trim(),tl}); };
     add(X.q||[],q.obs,"본문 관찰");
-    add(["공백"],q.gap,"더 깊이 · 말하지 않은 것");
+    add(["생략"],q.gap,"더 깊이 · 말하지 않은 것");
     try{ lensesFor(w,d).forEach((l,i)=>{ if(LENS_TOOL[l.k]) add([LENS_TOOL[l.k]],q["l"+i],"더 깊이 · "+(LENS_TOOL[l.k]===l.k?l.k:LENS_TOOL[l.k])); }); }catch(e){} }
   E.sort((a,b)=>b.no-a.no);
   const used=TOOL_ORDER.filter(tl=>E.some(e=>e.tl.includes(tl))), f=used.includes(view.obsF)?view.obsF:"";
