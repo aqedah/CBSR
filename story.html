@@ -2757,13 +2757,27 @@ body.tbkfull .tbkgrip{display:none}
 #tbkPane.txm .tbkink{pointer-events:none}
 /* 태블릿 틀 · 오늘 탭: 왼쪽 그림, 오른쪽 오늘 흐름(11-11) */
 @media (min-width:1024px) and (min-height:560px){
-  html.v2[data-tab="today"] .wrap{max-width:1280px;margin-left:calc(var(--rail) + max(24px,(100vw - var(--rail) - 1280px)/2));margin-right:max(24px,(100vw - var(--rail) - 1280px)/2)}
-  html.v2[data-tab="today"] #main{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,10fr);column-gap:36px;align-items:start}
+  /* 11-11 목사님: 태블릿 오늘 탭 — 그림을 화면 전체 배경으로, 그 위에 왼쪽 아래 제목·요약, 오른쪽에 할 일 칸 */
+  html.v2[data-tab="today"] .wrap{max-width:none;margin:0 0 0 var(--rail);padding:0 max(32px,env(safe-area-inset-right,0px)) 0 0}
+  html.v2[data-tab="today"] #main{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,min(34vw,440px));column-gap:40px;align-content:start;min-height:100vh;min-height:100dvh;padding-top:84px;padding-bottom:32px;box-sizing:border-box}
   html.v2[data-tab="today"] .td4{display:contents}
-  html.v2[data-tab="today"] .td4hero{grid-column:1;grid-row:1/span 6;position:sticky;top:16px;height:calc(100vh - 32px);height:calc(100dvh - 32px);min-height:0;border-radius:22px;margin-top:0}
-  html.v2[data-tab="today"] #main>*:not(.td4),html.v2[data-tab="today"] .td4tx{grid-column:2}
-  html.v2[data-tab="today"] .td4tx{padding:28px 0 0}
-  html.v2[data-tab="today"] header.top{right:auto;width:calc((100% - 36px) * 11 / 21);top:16px;padding-inline:20px!important;box-sizing:border-box}
+  html.v2[data-tab="today"] .td4hero{position:fixed;top:0;bottom:0;left:var(--rail);right:0;height:auto;min-height:0;margin:0;border-radius:0;z-index:0;grid-column:1}
+  html.v2[data-tab="today"] .td4hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.58) 0,rgba(0,0,0,.22) 38%,rgba(0,0,0,.08) 55%,rgba(0,0,0,.42) 100%),linear-gradient(0deg,rgba(0,0,0,.55) 0,rgba(0,0,0,0) 45%)}
+  html.v2[data-tab="today"] .td4head,html.v2[data-tab="today"] .td4sumb{z-index:2;width:min(calc(100% - 34vw - 120px),720px);box-sizing:border-box;padding-left:48px;padding-right:24px;background:none}
+  html.v2[data-tab="today"] .td4head{padding-top:0;padding-bottom:12px}
+  html.v2[data-tab="today"] .td4head h1{font-size:clamp(34px,3.6vw,48px)}
+  html.v2[data-tab="today"] .td4sumb{padding-top:0;padding-bottom:44px}
+  html.v2[data-tab="today"] .td4sum{color:rgba(255,255,255,.93);font-size:17.5px;line-height:1.75;text-shadow:0 1px 8px rgba(0,0,0,.45)}
+  html.v2[data-tab="today"] .td4top{z-index:1}
+  html.v2[data-tab="today"] .td4ar{top:50%}html.v2[data-tab="today"] .td4ar.l{left:14px}html.v2[data-tab="today"] .td4ar.r{right:calc(min(34vw,440px) + 72px)}
+  html.v2[data-tab="today"] .td4hero .tdcr{top:auto;bottom:12px;right:auto;left:48px}
+  html.v2[data-tab="today"] #main>*:not(.td4),html.v2[data-tab="today"] .td4tx{grid-column:2;position:relative;z-index:2}
+  html.v2[data-tab="today"] .td4tx{padding:0;gap:12px}
+  html.v2[data-tab="today"] .td4tx>*{box-shadow:0 8px 30px rgba(0,0,0,.28)}html.v2[data-tab="today"] .td4tx .td4btns{box-shadow:none}html.v2[data-tab="today"] .td4tx .td4btns>*{box-shadow:0 8px 30px rgba(0,0,0,.28)}
+  html.v2[data-tab="today"] #main>*:not(.td4){box-shadow:0 8px 30px rgba(0,0,0,.28)}
+  html.v2[data-tab="today"] #main>*:not(.td4){margin-top:14px}
+  html.v2[data-tab="today"] #main>.sec:not(.td4),html.v2[data-tab="today"] #main>section:not(.td4){background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+  html.v2[data-tab="today"] header.top{position:fixed!important;left:var(--rail)!important;right:0!important;width:auto;top:0;padding:18px 32px 0 48px!important;box-sizing:border-box}
 }
 /* 태블릿 틀(11-11 목사님): 넓은 가로 화면은 왼쪽 세로 메뉴 */
 @media (min-width:1024px) and (min-height:560px){
