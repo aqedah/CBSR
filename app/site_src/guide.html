@@ -51,6 +51,8 @@ textarea{min-height:90px;resize:vertical;overflow:hidden}
 #frontbox{border:1px solid var(--line);border-radius:8px;background:#fff;margin:0 0 14px}
 body.onfront #form .dayhead,body.onfront #form #fit,body.onfront #form fieldset{display:none}
 body.onfront #frontbox{border-color:var(--acc)}
+body.onback #frontbox{border-color:#e3e3dc}
+body.onback #frontbox>summary{color:var(--mute)}
 body.onfront #frontbox>summary{color:var(--acc)}
 #frontbox>summary{cursor:pointer;padding:9px 11px;font-size:13px;font-weight:700}
 #frontform{padding:4px 11px 12px;border-top:1px solid var(--line)}
@@ -271,7 +273,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   <button id="btnJson">JSON 내보내기</button>
   <button id="btnImport">가져오기</button>
   <button id="btnGit">GitHub</button>
-  <span id="ptar" class="small" style="color:var(--mute)"></span><select id="selPrint"><option value="day">이 날</option><option value="month">이달</option><option value="quarter">이 분기(권)</option><option value="all">원고 있는 날 전체</option><option value="front">책 머리만</option><option value="book">이 분기(권) — 책 머리 + 하루</option></select>
+  <span id="ptar" class="small" style="color:var(--mute)"></span><select id="selPrint"><option value="day">이 날</option><option value="month">이달</option><option value="quarter">이 분기(권)</option><option value="all">원고 있는 날 전체</option><option value="front">책 머리만</option><option value="ax">부록 · 책 끝만</option><option value="book">이 분기(권) — 책 머리 + 하루</option></select>
   <button id="btnPrint" class="pri">인쇄 · PDF</button>
 </header>
 <main>
@@ -861,11 +863,15 @@ function render(){
   const fitTxt=worst<0?`지면 넘침 ${res[0]<0?'왼쪽 ':''}${res[1]<0?'오른쪽 ':''}${Math.abs(worst).toFixed(1)}mm — 해설·눈여겨볼 것부터 줄이기`:`지면 들어감 (여유 왼 ${res[0].toFixed(0)}mm · 오른 ${res[1].toFixed(0)}mm)`;
   f.className=worst<0?'bad':over?'warn':'good'; f.textContent=fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
 }
-function gotoDay(i){ if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); document.body.classList.remove('onfront'); if($('frontbox')) $('frontbox').open=false; if($('selPrint')&&$('selPrint').value==='front'){$('selPrint').value='day'} if(typeof syncPrintTarget==='function') syncPrintTarget(); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } if(typeof fillFrontForm==='function'&&$('frontbox')&&$('frontbox').open) fillFrontForm(); }
+function gotoDay(i){ document.body.classList.remove('onback'); if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); document.body.classList.remove('onfront'); if($('frontbox')) $('frontbox').open=false; if($('selPrint')&&($('selPrint').value==='front'||$('selPrint').value==='ax')){$('selPrint').value='day'} if(typeof syncPrintTarget==='function') syncPrintTarget(); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } if(typeof fillFrontForm==='function'&&$('frontbox')&&$('frontbox').open) fillFrontForm(); }
 function fillDays(){const mv=$('selM').value; const s=$('selD'); s.innerHTML='';
-  if(mv==='front'){ VIEWS.forEach((v,i)=>{ if(v.t!=='s'||i>FLAB.length) return; const o=document.createElement('option'); o.value=i; o.textContent=v.lab; s.appendChild(o) }); return }
+  if(mv==='front'||mv==='back'){ const wantFront=(mv==='front');
+    VIEWS.forEach((v,i)=>{ if(v.t!=='s') return; if((i<FLAB.length)!==wantFront) return;
+      const o=document.createElement('option'); o.value=i; o.textContent=v.lab; s.appendChild(o) }); return }
   const m=+mv; PLAN.forEach((p,i)=>{if(p.m!==m)return;const o=document.createElement('option');o.value=i;o.textContent=`${p.d}일 · ${p.t}${get(p.no)?' ✓':''}`;s.appendChild(o)})}
 function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fillFrontForm(); $('frontbox').open=true; $('frontbox').scrollIntoView({block:'nearest'}); }
+function goBack(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); if($('frontbox')) $('frontbox').open=false; }
+function isFrontView(i){ return i<FLAB.length }
 /* ── 전자책처럼 넘겨 보기 ── */
 const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','기호 설명','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
 const BLAB=['면지','뒤표지'];
@@ -910,9 +916,10 @@ function showView(k,noAnim){
   if(v.t==='d'){ if(cur!==v.i){ if(saveT){clearTimeout(saveT);save()} cur=v.i; const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); } render(); }
   else drawStatic(v.h);
   document.body.classList.toggle('onfront', v.t==='s');
-  if($('selPrint')){ const sp=$('selPrint'); if(v.t==='s'&&sp.value!=='front'&&sp.value!=='book') sp.value='front'; if(v.t==='d'&&sp.value==='front') sp.value='day'; syncPrintTarget() }
-  if(v.t==='s'){ const sm=$('selM'); if(sm.value!=='front'){ sm.value='front'; fillDays() } $('selD').value=k; if(!$('frontbox').dataset.built) fillFrontForm(); }
-  else { const sm=$('selM'); if(sm.value==='front'){ sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur } }
+  document.body.classList.toggle('onback', v.t==='s'&&!isFrontView(k));
+  if($('selPrint')){ const sp=$('selPrint'); if(v.t==='s'&&sp.value!=='book'){ sp.value=isFrontView(k)?'front':'ax' } if(v.t==='d'&&(sp.value==='front'||sp.value==='ax')) sp.value='day'; syncPrintTarget() }
+  if(v.t==='s'){ const sm=$('selM'); const want=isFrontView(k)?'front':'back'; if(sm.value!==want){ sm.value=want; fillDays() } $('selD').value=k; if(isFrontView(k)&&!$('frontbox').dataset.built) fillFrontForm(); }
+  else { const sm=$('selM'); if(sm.value==='front'||sm.value==='back'){ sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur } }
   updateBar();
 }
 function halfOf(html,side){ const d=document.createElement('div'); d.innerHTML=html; const pgs=d.querySelectorAll('.pg'); const e=pgs[side?1:0]; return e?e.outerHTML:'' }
@@ -1129,6 +1136,7 @@ function printLabel(){
   if(mode==='month') return `${p.m}월`;
   if(mode==='quarter') return `${QLAB[q]} 하루 지면`;
   if(mode==='front') return `${QLAB[q]} · 책 머리`;
+  if(mode==='ax') return `${QLAB[q]} · 부록과 책 끝`;
   if(mode==='book') return `${QLAB[q]} · 책 머리와 하루 지면`;
   return '원고 있는 날 전체';
 }
@@ -1137,9 +1145,11 @@ function syncPrintTarget(){ const el=$('ptar'); if(el) el.textContent=printLabel
 (function init(){
   const sm=$('selM'); {const o=document.createElement('option');o.value='front';o.textContent='책 머리';sm.appendChild(o)}
   for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'월';sm.appendChild(o)}
+  {const o=document.createElement('option');o.value='back';o.textContent='부록 · 책 끝';sm.appendChild(o)}
   sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur;
-  sm.onchange=()=>{fillDays(); if(sm.value==='front'){ goFront(+$('selD').value) } else { gotoDay(+$('selD').value) }};
-  $('selD').onchange=()=>{ if($('selM').value==='front'){ goFront(+$('selD').value) } else gotoDay(+$('selD').value) };
+  const pick=()=>{ const m=sm.value, k=+$('selD').value; if(m==='front') goFront(k); else if(m==='back') goBack(k); else gotoDay(k) };
+  sm.onchange=()=>{fillDays(); pick()};
+  $('selD').onchange=pick;
   $('btnPrev').onclick=()=>gotoDay(cur-1); $('btnNext').onclick=()=>gotoDay(cur+1);
   $('placeHint').textContent='아는 지명 '+Object.keys(PLACES).length+'곳';
   document.querySelectorAll('#form textarea,#form input[type=text]').forEach(el=>el.addEventListener('input',()=>{counters();render();$('status').textContent='저장 중…';clearTimeout(saveT);saveT=setTimeout(()=>{save();saveT=null;fillDays();$('selD').value=cur},600)}));
@@ -1177,9 +1187,9 @@ function syncPrintTarget(){ const el=$('ptar'); if(el) el.textContent=printLabel
   $('btnPrint').onclick=()=>{
     if(saveT){clearTimeout(saveT);save();saveT=null}
     const mode=$('selPrint').value, p=PLAN[cur];
-    let list=PLAN.filter((x,i)=>mode==='day'?i===cur:mode==='month'?x.m===p.m:(mode==='quarter'||mode==='book')?qOf(x)===qOf(p):mode==='front'?false:true).filter(x=>get(x.no));
+    let list=PLAN.filter((x,i)=>mode==='day'?i===cur:mode==='month'?x.m===p.m:(mode==='quarter'||mode==='book')?qOf(x)===qOf(p):(mode==='front'||mode==='ax')?false:true).filter(x=>get(x.no));
     if(mode==='day'&&!list.length) list=[p];
-    if(mode==='front') list=[];
+    if(mode==='front'||mode==='ax') list=[];
     const parts=[];
     if(mode==='front'||mode==='book'){ const q=qOf(p); const ds=qDays(q); const sd=ds.find(x=>get(x.no))||ds[0];
       frontSpreads(q,spread(sd,get(sd.no)||blank())).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
@@ -1187,6 +1197,7 @@ function syncPrintTarget(){ const el=$('ptar'); if(el) el.textContent=printLabel
     const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[]; const heardN=[];
     list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); matchMedia(probe,1); parts.push(probe.innerHTML); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
     if(mode==='book'){ const q=qOf(p); appendixSpreads(q).concat(backSpreads(q)).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
+    if(mode==='ax'){ const q=qOf(p); appendixSpreads(q).concat(backSpreads(q)).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
     probe.remove(); $('printroot').innerHTML=parts.join('');
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
     const pgs=$('printroot').querySelectorAll('.pg').length;
