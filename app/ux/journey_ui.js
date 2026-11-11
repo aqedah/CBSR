@@ -10,7 +10,7 @@
 */
 const JNS="http://www.w3.org/2000/svg";
 /* 설명 3줄 접기(목사님 승인 대기 — false면 꺼짐). 켜면 아래 카드 설명이 3줄로 접히고 '더 보기'로 펼침, 펼친 동안 멈춤 */
-const JCLAMP=0; /* 0 꺼짐 · 2 = 2줄로 접고 '더 보기'는 단추 줄에 · 3 = 3줄로 접고 '더 보기'는 설명 아래 */
+const JCLAMP=3; /* 목사님 2026-11-12: 3줄 접기로 정함(설명창 안의 색 다른 '더 보기') */ /* 0 꺼짐 · 2 = 2줄로 접고 '더 보기'는 단추 줄에 · 3 = 3줄로 접고 '더 보기'는 설명 아래 */
 function jClamp(el){ const n=el.querySelector(".bmtn"); if(!n) return; let b=el.querySelector(".jmore"); if(!JCLAMP){ n.classList.remove("jclamp","jc2"); if(b) b.hidden=true; return; } n.classList.add("jclamp"); n.classList.toggle("jc2",JCLAMP===2);
   if(!b){ b=document.createElement("button"); b.className="jmore"; b.dataset.t="more"; const g=el.querySelector(".bmtgo"); if(JCLAMP===2&&g){ b.classList.add("inrow"); g.appendChild(b); } else n.after(b); } b.textContent="더 보기 ▾"; b.hidden=true; requestAnimationFrame(()=>{ b.hidden=!(n.scrollHeight>n.clientHeight+2); }); }
 function jMore(el){ const n=el.querySelector(".bmtn"), b=el.querySelector(".jmore"); const open=n.classList.toggle("jclamp")===false; if(b) b.textContent=open?"접기 ▴":"더 보기 ▾"; return open; }
@@ -69,4 +69,8 @@ function jFit(el,rows){ const p=el.querySelector(".bmtp"); if(!p) return; const 
   let mx=0; if(g) g.hidden=false; rows.forEach(r=>{ k.textContent=r[0]||""; h.textContent=r[1]||""; n.textContent=r[2]||""; mx=Math.max(mx,p.offsetHeight); });
   k.textContent=keep[0]; h.textContent=keep[1]; n.textContent=keep[2]; if(g) g.hidden=keep[3];
   const H=el.clientHeight||innerHeight; el.style.setProperty("--jcard",Math.round(Math.min(mx-30,H*.5))+"px"); }
+/* 길 모양 규칙(목사님 2026-11-12 확정): ① 빨간 실선 본문 ② 빨간 점선 추정 ③ 남색 긴 점선 배 ④ 짙은 빨강 굵은 선 군대 ⑤ 회색 점점선 포로 ⑥ 갈색 가는 선 따로 가는 무리 ⑦ 지나온 길은 흐리게 ⑧ 범례는 첫 화면에만 */
+const JLINE={solid:["#c0392b",5,"","본문이 말하는 이동"],est:["#c0392b",5,"6 8","추정 이동"],sea:["#1f4f86",4,"12 6","배로 간 길"],army:["#7d1414",6,"","군대"],captive:["#55524a",4,"1 9","포로로 끌려감"],side:["#8a5a2b",3,"","따로 가는 무리"]};
+function jLegHTML(kinds){ const K=["solid","est","sea","army","captive","side"].filter(k=>kinds.has(k)); if(!K.length) return ""; return `<div class="jleg" aria-label="길 모양">${K.map(k=>{ const [c,w,d,n]=JLINE[k]; return `<span><svg viewBox="0 0 30 10" width="30" height="10" aria-hidden="true"><path d="M2 5 H28" stroke="${c}" stroke-width="${Math.min(w,4)}" stroke-dasharray="${d}" stroke-linecap="${k==="captive"?"round":"butt"}" fill="none"/></svg>${n}</span>`; }).join("")}</div>`; }
+function jUnclamp(el){ el.querySelector(".bmtn")?.classList.remove("jclamp"); const b=el.querySelector(".jmore"); if(b) b.hidden=true; }
 try{ Object.assign(window,{jKick,jPill,jPillify,jDeclutter,jToast,jFit}); }catch(e){}
