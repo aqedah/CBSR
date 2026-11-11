@@ -198,6 +198,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg table.bkt2{width:100%;border-collapse:collapse;font-size:10pt}
 .pg table.bkt2 th{text-align:left;font-family:"Noto Sans KR",sans-serif;font-size:9pt;color:#666;border-bottom:0.3mm solid var(--main);padding:0 0 1.2mm}
 .pg table.bkt2 td{padding:1.7mm 0;border-bottom:0.1mm solid #e8e8e8}
+.pg table.bkt2.dense{font-size:9pt}
+.pg table.bkt2.dense td{padding:.75mm 0}
 .pg table.toc{width:100%;border-collapse:collapse;font-size:7.9pt;table-layout:fixed}
 .pg table.toc td{padding:0.5mm 0;border-bottom:0.1mm solid #eee;vertical-align:top;line-height:1.3}
 .pg table.toc col.c1{width:10mm} .pg table.toc col.c2{width:23mm} .pg table.toc col.c4{width:7mm}
@@ -738,7 +740,7 @@ ${f.whfoot?`<p class="fp sm" style="margin-top:3mm">${bold(f.whfoot)}</p>`:''}
 function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q);
   return `<div class="pg fm q${q}"><p class="fh">${esc(f.bkshead)}</p>
 <p class="fp sm">${ds.length}일 · ${ds[0].m}월 ${ds[0].d}일부터 ${ds[ds.length-1].m}월 ${ds[ds.length-1].d}일까지</p>
-<table class="bkt2"><tr><th>책</th><th>시작</th><th>날수</th></tr>
+<table class="bkt2${bl.length>12?' dense':''}"><tr><th>책</th><th>시작</th><th>날수</th></tr>
 ${bl.map(o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일</td><td>${o.n}일</td></tr>`).join('')}</table>
 <div class="pn">10</div></div>`; }
 function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.length/3);
