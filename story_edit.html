@@ -21,6 +21,9 @@ button.sm{padding:2px 7px;font-size:12px}
 button:disabled{opacity:.5;cursor:default}
 select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#fff;max-width:380px}
 #status{font-size:12px;color:var(--mute)}
+.menu{position:relative}.dd{display:none;position:absolute;right:0;top:36px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.12)}.dd.on{display:block}.dd button{display:block;width:100%;text-align:left;border:0;border-radius:5px;padding:7px 9px;background:transparent}.dd button:hover{background:var(--soft)}.dd hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+#dirty{background:#fbe9e9;color:var(--warn)}
+.card .top .no{cursor:pointer;text-decoration:underline dotted}
 main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(440px,46%) 1fr}
 @media (max-width:980px){main{display:block;overflow:auto}}
 #left{display:flex;flex-direction:column;min-height:0;background:var(--panel);border-right:1px solid var(--line)}
@@ -87,9 +90,18 @@ dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12p
   <span class="pill" id="dInfo"></span>
   <span class="sp"></span>
   <span id="status"></span>
+  <span id="dirty" class="pill" title="이 기기에만 저장된 변경이 있습니다" hidden>저장 안 됨 ●</span>
   <button id="bLoad" title="공개된 원고(앱에 실린 것)를 이 날에 불러옵니다">공개 원고 불러오기</button>
   <button id="bPrev">미리보기 갱신</button>
   <button id="bGit" class="pri">앱에 게시</button>
+  <div class="menu"><button id="bMore">관리 ▾</button><div class="dd" id="ddMore">
+    <button data-m="pending">빌드 대기 게시 취소</button>
+    <button data-m="prev">이전 원고로 되돌리기(불러오기)</button>
+    <button data-m="del">앱에서 이 날 원고 내리기</button>
+    <button data-m="drop">이 기기의 작업본 버리기</button>
+    <hr><button data-m="claude">클로드에게 보내기(요청문 복사)</button>
+    <button data-m="refresh">상태 다시 읽기</button>
+  </div></div>
 </header>
 <main>
 <section id="left">
@@ -173,9 +185,9 @@ function dayCh(){ const p=plan(cur); return p?p.ch.map(x=>x[1]):[]; }
 function setDay(n){ if(cur) stash(); cur=n; localStorage.setItem('cbsr_story_edit:last',n);
   const p=plan(n), x=P27BY[n]; $('dInfo').textContent=(p?p.label:'')+(x?' · 2027년에도 같은 범위':' · 2027년에는 범위가 달라집니다');
   const saved=localStorage.getItem(LSK(n)); if(saved){ try{ const o=JSON.parse(saved); D=o.D; $('ms').value=o.ms||''; }catch(e){ reset(); } } else reset();
-  fillAll(); loadPreview(); }
+  fillAll(); setBase(); loadPreview(); }
 function reset(){ D={cards:[],spine:'',qt:{guide:{today:'',find:''},obs:{q:'',look:[]},god:'',christ:'',apply:'',pray:''},kwq:{q:'',r:null},type:''}; $('ms').value=''; }
-function stash(){ try{ localStorage.setItem(LSK(cur),JSON.stringify({D,ms:$('ms').value,at:Date.now()})); }catch(e){} }
+function stash(){ try{ localStorage.setItem(LSK(cur),JSON.stringify({D,ms:$('ms').value,at:Date.now()})); }catch(e){} markDirty(); }
 const say=t=>{ $('status').textContent=t; };
 
 /* ───────── 탭 ───────── */
@@ -186,7 +198,7 @@ const REFRE=/(?:([가-힣]{1,4})\s?)?(\d{1,3}):(\d{1,3})(?:\s?[–\-]\s?(\d{1,3}
 function parseRef(t,book){ const m=String(t||'').match(REFRE); if(!m) return null; let b=book||dayBook(); if(m[1]){ const i=ABBR.indexOf(m[1]); if(i<0) return null; b=i+1; } return [b,+m[2],+m[3],m[4]?+m[4]:0]; }
 function refLab(r){ return r?`${ABBR[r[0]-1]} ${r[1]}:${r[2]}${r[3]?'–'+r[3]:''}`:''; }
 function verse(b,c,v){ try{ return BIBLE[b-1][c-1][v-1]||''; }catch(e){ return ''; } }
-const norm=s=>String(s||'').replace(/[\s"“”'‘’,.;:!?()·…\-–]/g,'');
+const norm=s=>String(s||'').replace(/\*\*|__/g,'').replace(/^[^:"“]{1,8}:\s*/,'').replace(/[\s"“”'‘’,.;:!?()·…\-–]/g,'');
 function quoteCheck(q,ref){ if(!BIBLE) return 'unk'; const r=parseRef(ref); if(!r) return 'noref'; const txt=[]; for(let v=r[2];v<=(r[3]||r[2]);v++) txt.push(verse(r[0],r[1],v)); const T=norm(txt.join(' ')); if(!T) return 'noverse'; const parts=String(q).split(/…|\.\.\./).map(norm).filter(Boolean); let at=0; for(const p of parts){ const i=T.indexOf(p,at); if(i<0) return 'bad'; at=i+p.length; } return 'ok'; }
 function inRange(r){ if(!r) return true; const p=plan(cur); if(!p) return true; return p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]); }
 
@@ -274,13 +286,15 @@ function renderCards(){ const root=$('cards'); root.innerHTML='';
     else if(c.k==='line') body=`<label class="f"><span class="k">한 줄(t)</span><textarea data-f="t" rows="2">${esc(c.t||'')}</textarea></label>`;
     else body=`<label class="f"><span class="k">제목(h)</span><input type="text" data-f="h" value="${esc(c.h||'')}"></label><label class="f"><span class="k">글(b) — 한 줄이 한 문단, <code>&gt; 인용 | 장절 | 말한 이</code>는 말씀 상자 · **굵게** __밑줄__</span><textarea class="b" data-f="b">${esc(bToText(c.b))}</textarea></label><label class="f"><span class="k">그림(img) <span class="small">비우면 앱이 고릅니다</span></span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button>${c.img?`<img src="${SITE}img/g/${esc(c.img)}.jpg" onerror="this.style.visibility='hidden'">`:''}</div></label>`;
     const qbadge=cardQs(c).map(([q,r])=>{ const st=quoteCheck(q,r); return `<span class="${st==='ok'?'ok':st==='bad'?'bad':'unk'}" title="${esc(q)}">${esc(r||'장절 없음')} ${st==='ok'?'✓':st==='bad'?'✗ 본문과 다름':st==='unk'?'(본문 읽는 중)':'?'}</span>`; }).join('');
-    d.innerHTML=`<div class="top"><span class="no">${i+1}</span><select data-f="k">${KINDS.map(([v,n])=>`<option value="${v}"${c.k===v?' selected':''}>${n}</option>`).join('')}</select><input class="lab" type="text" data-f="lab" placeholder="단계 · 이름 (예: 긴장 · 멀찍이 · 22장)" value="${esc(c.lab||'')}"${c.k==='cover'?' disabled':''}><span class="cnt${T>200?' over':''}" title="글자 수">${T}</span><span class="tools"><button class="sm" data-mv="-1" title="위로">↑</button><button class="sm" data-mv="1" title="아래로">↓</button><button class="sm" data-del="1" title="지우기">✕</button><button class="sm" data-ins="1" title="아래에 새 카드">＋</button></span></div>${c.k!=='cover'&&qbadge?`<div class="bq">${qbadge}</div>`:''}${body}`;
+    d.innerHTML=`<div class="top"><span class="no">${i+1}</span><select data-f="k">${KINDS.map(([v,n])=>`<option value="${v}"${c.k===v?' selected':''}>${n}</option>`).join('')}</select><input class="lab" type="text" data-f="lab" placeholder="단계 · 이름 (예: 긴장 · 멀찍이 · 22장)" value="${esc(c.lab||'')}"${c.k==='cover'?' disabled':''}><span class="cnt${T>200?' over':''}" title="글자 수">${T}</span><span class="tools"><button class="sm" data-mv="-1" title="위로">↑</button><button class="sm" data-mv="1" title="아래로">↓</button><button class="sm" data-del="1" title="지우기">✕</button><button class="sm" data-ins="1" title="아래에 새 카드">＋</button><button class="sm" data-dup="1" title="복제">⧉</button></span></div>${c.k!=='cover'&&qbadge?`<div class="bq">${qbadge}</div>`:''}${body}`;
     d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('change',()=>{ readCard(i,d); renderCards(); stash(); check(); sendPreview(); }));
     d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('input',()=>{ readCard(i,d,true); }));
     d.querySelector('[data-mv="-1"]').onclick=()=>{ if(i>0){ [D.cards[i-1],D.cards[i]]=[D.cards[i],D.cards[i-1]]; after(); } };
     d.querySelector('[data-mv="1"]').onclick=()=>{ if(i<D.cards.length-1){ [D.cards[i+1],D.cards[i]]=[D.cards[i],D.cards[i+1]]; after(); } };
     d.querySelector('[data-del]').onclick=()=>{ if(confirm((i+1)+'번 카드를 지울까요?')){ D.cards.splice(i,1); after(); } };
     d.querySelector('[data-ins]').onclick=()=>{ D.cards.splice(i+1,0,{k:'full',lab:'',h:'',b:[]}); after(); };
+    d.querySelector('[data-dup]').onclick=()=>{ D.cards.splice(i+1,0,JSON.parse(JSON.stringify(c))); after(); };
+    d.querySelector('.no').onclick=()=>sendPreview(i); d.querySelector('.no').title='미리보기에서 이 카드 보기';
     d.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>pickPhoto(i));
     root.appendChild(d); });
   function after(){ renderCards(); stash(); check(); sendPreview(); } }
@@ -347,7 +361,9 @@ function check(){ const L=[]; const C=D.cards||[]; const p=plan(cur);
 /* ───────── 미리보기(앱 v2) ───────── */
 let pvReady=false, pvTimer=null;
 function loadPreview(){ pvReady=false; const x=P27BY[cur]; $('pv').src=SITE+'v2.html?day='+cur+'&pv=edit&now=0'; $('pv').onload=()=>{ pvReady=true; setTimeout(sendPreview,900); }; }
-function sendPreview(){ clearTimeout(pvTimer); pvTimer=setTimeout(()=>{ if(!pvReady) return; const x=P27BY[cur]; try{ $('pv').contentWindow.postMessage({cbsrStory:1,n26:cur,n27:x?x.gi+1:0,draft:(D.cards&&D.cards.length)?{A:cleanD()}:null},'*'); }catch(e){} },300); }
+function sendPreview(card){ clearTimeout(pvTimer); pvTimer=setTimeout(()=>{ if(!pvReady) return; const x=P27BY[cur]; try{ $('pv').contentWindow.postMessage({cbsrStory:1,n26:cur,n27:x?x.gi+1:0,card:(typeof card==='number')?card:undefined,draft:(D.cards&&D.cards.length)?{A:cleanD()}:null},'*'); }catch(e){} markDirty(); },300); }
+/* 저장 안 됨 표시: 마지막으로 불러오거나 게시한 내용과 다르면 */
+let BASE=''; function setBase(){ BASE=JSON.stringify(cleanD()); markDirty(); } function markDirty(){ $('dirty').hidden=!(D.cards.length&&JSON.stringify(cleanD())!==BASE); }
 $('bPrev').onclick=()=>{ if(!pvReady) loadPreview(); else sendPreview(); };
 
 /* ───────── 공개 원고 불러오기 ───────── */
@@ -355,7 +371,7 @@ $('bLoad').onclick=async()=>{ say('불러오는 중…'); try{ let got=null;
   try{ const r=await fetch(SITE+'story_in/'+cur+'.json',{cache:'no-store'}); if(r.ok){ const j=await r.json(); got=j.A||j; say('아직 빌드되지 않은 저장본을 불러왔습니다'); } }catch(e){}
   if(!got){ const r=await fetch(SITE+'story_cards.json',{cache:'no-store'}); if(!r.ok) throw new Error(r.status); const all=await r.json(); const e=all[String(cur)]; if(!e) throw new Error('이 날의 공개 원고가 없습니다'); got=e.A||e; say('공개 원고를 불러왔습니다'); }
   if(D.cards.length&&!confirm('지금 편집 중인 카드를 공개 원고로 바꿀까요? (원고 글은 그대로 둡니다)')) return;
-  D=JSON.parse(JSON.stringify(got)); D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); stash(); sendPreview(); }catch(e){ say('불러오기 실패: '+e.message); } };
+  D=JSON.parse(JSON.stringify(got)); D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); setBase(); stash(); sendPreview(); }catch(e){ say('불러오기 실패: '+e.message); } };
 
 /* ───────── GitHub에 저장 ───────── */
 (function(){ const g=JSON.parse(localStorage.getItem('cbsr_story_git')||localStorage.getItem('cbsr_guide_git')||'{}'); $('g_repo').value=g.repo||'aqedah/CBSR'; $('g_branch').value=g.branch||'source'; $('g_token').value=g.token||''; })();
@@ -371,14 +387,32 @@ $('gSave').onclick=async()=>{ const c=gcfg(); const gm=(t,ok)=>{ $('gMsg').textC
     let sha; const r0=await fetch(url+'?ref='+c.branch,{headers:hdr}); if(r0.ok) sha=(await r0.json()).sha;
     const p=plan(cur); const body={message:`스토리 원고 ${cur}일 ${p?p.label:''} (작업실)`,content:b64(JSON.stringify({n:cur,plan:'2026-365',label:p?p.label:'',at:new Date().toISOString(),A:cleanD()},null,1)),branch:c.branch}; if(sha) body.sha=sha;
     const r=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},body:JSON.stringify(body)}); if(!r.ok) throw new Error(r.status+' '+(await r.text()).slice(0,80));
-    gm('GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' — 2~3분 뒤 앱에 올라갑니다.',true); $('gSave').disabled=false; setTimeout(()=>$('dlgGit').close(),1500); }
+    gm('GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' — 2~3분 뒤 앱에 올라갑니다.',true); $('gSave').disabled=false; setBase(); PENDING.add(cur); fillDays(); setTimeout(()=>$('dlgGit').close(),1500); }
   catch(e){ gm('저장 실패: '+e.message); $('gSave').disabled=false; } };
 
 /* ───────── 날 고르기 ───────── */
-(function(){ const s=$('selD'); P26.forEach(p=>{ const o=document.createElement('option'); o.value=p.n; const x=P27BY[p.n]; o.textContent=`${p.n} · ${d26(p.n)} · ${p.label}`+(x?` · 2027 ${d27(x.gi)}`:''); s.appendChild(o); });
+let PUB=new Set(), PENDING=new Set();
+function fillDays(){ const s=$('selD'), v=s.value; s.innerHTML=''; P26.forEach(p=>{ const o=document.createElement('option'); o.value=p.n; const x=P27BY[p.n]; const mk=(PENDING.has(p.n)?'⏳':'')+(PUB.has(p.n)?'●':'')+(localStorage.getItem(LSK(p.n))?'✎':''); o.textContent=`${mk?mk+' ':''}${p.n} · ${d26(p.n)} · ${p.label}`+(x?` · 2027 ${d27(x.gi)}`:''); s.appendChild(o); }); if(v) s.value=v; }
+async function loadStatus(){ try{ const r=await fetch(SITE+'story_cards.json',{cache:'no-store'}); if(r.ok){ const all=await r.json(); PUB=new Set(Object.keys(all).map(Number)); } }catch(e){}
+  try{ const c=JSON.parse(localStorage.getItem('cbsr_story_git')||localStorage.getItem('cbsr_guide_git')||'{}'); const repo=c.repo||'aqedah/CBSR', br=c.branch||'source'; const r=await fetch(`https://api.github.com/repos/${repo}/contents/app/ux/story_in?ref=${br}`,{headers:c.token?{'Authorization':'Bearer '+c.token}:{}}); if(r.ok){ const L=await r.json(); PENDING=new Set(L.filter(x=>/^\d+\.json$/.test(x.name)).map(x=>+x.name.replace('.json',''))); } }catch(e){}
+  fillDays(); }
+(function(){ const s=$('selD'); fillDays(); loadStatus();
   const u=new URLSearchParams(location.search); let n=+u.get('day')||+(localStorage.getItem('cbsr_story_edit:last')||0);
   if(!n){ const t=new Date(); n=Math.max(1,Math.min(365,Math.round((t-new Date(2026,0,1))/864e5)+1)); }
   s.value=n; s.onchange=()=>setDay(+s.value); setDay(n); })();
+/* ───────── 관리 메뉴 ───────── */
+$('bMore').onclick=e=>{ e.stopPropagation(); $('ddMore').classList.toggle('on'); }; document.addEventListener('click',()=>$('ddMore').classList.remove('on'));
+async function ghReq(path,opt){ const c=gcfg(); if(!c.token) throw new Error('토큰이 없습니다. 먼저 "앱에 게시"에서 토큰을 넣어 두세요.'); const r=await fetch(`https://api.github.com/repos/${c.repo}/contents/${path}`+(opt&&opt.method&&opt.method!=='GET'?'':'?ref='+c.branch),Object.assign({headers:{'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'}},opt||{})); return r; }
+$('ddMore').querySelectorAll('[data-m]').forEach(b=>b.onclick=async()=>{ const m=b.dataset.m; $('ddMore').classList.remove('on'); const c=gcfg(); const p=plan(cur);
+  try{
+    if(m==='refresh'){ await loadStatus(); say('상태를 다시 읽었습니다'); }
+    if(m==='pending'){ const path=`app/ux/story_in/${cur}.json`; const r0=await ghReq(path); if(!r0.ok){ say('빌드 대기 중인 게시가 없습니다(이미 앱에 올라갔거나, 게시한 적이 없음)'); return; } const sha=(await r0.json()).sha; if(!confirm(`${cur}일 ${p.label}의 빌드 대기 중인 게시를 취소할까요? (이미 빌드가 돌았다면 앱에는 남습니다)`)) return; const r=await ghReq(path,{method:'DELETE',body:JSON.stringify({message:`스토리 원고 ${cur}일 게시 취소 (작업실)`,sha,branch:c.branch})}); if(!r.ok) throw new Error(r.status); PENDING.delete(cur); fillDays(); say('게시를 취소했습니다'); }
+    if(m==='prev'){ const r=await fetch(SITE+'story_prev/'+cur+'.json',{cache:'no-store'}); if(!r.ok){ say('이 날의 이전 원고가 없습니다(한 번도 덮어쓴 적 없음)'); return; } const j=await r.json(); if(!confirm(`${j.at||''}에 덮어쓰기 전의 원고를 불러올까요? 지금 편집 중인 카드는 바뀝니다. 불러온 뒤 "앱에 게시"를 눌러야 앱이 되돌아갑니다.`)) return; D=j.A; D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); stash(); sendPreview(); say('이전 원고를 불러왔습니다 — 확인 뒤 게시하세요'); }
+    if(m==='del'){ if(!PUB.has(cur)){ say('이 날은 앱에 올라간 원고가 없습니다'); return; } if(!confirm(`${cur}일 ${p.label}의 원고를 앱에서 내릴까요? 다음 빌드 뒤 그날은 자동 요약 카드만 보입니다. (이전 원고로 되돌리기로 복구할 수 있습니다)`)) return; const path=`app/ux/story_in/${cur}.json`; let sha; const r0=await ghReq(path); if(r0.ok) sha=(await r0.json()).sha; const body={message:`스토리 원고 ${cur}일 내리기 (작업실)`,content:b64(JSON.stringify({n:cur,delete:true,at:new Date().toISOString()})),branch:c.branch}; if(sha) body.sha=sha; const r=await ghReq(path,{method:'PUT',body:JSON.stringify(body)}); if(!r.ok) throw new Error(r.status); PENDING.add(cur); fillDays(); say('내리기를 올렸습니다 — 2~3분 뒤 반영'); }
+    if(m==='drop'){ if(!confirm('이 기기에 저장된 이 날의 작업본(원고 글·카드)을 버릴까요?')) return; localStorage.removeItem(LSK(cur)); reset(); fillAll(); fillDays(); sendPreview(); say('작업본을 버렸습니다'); }
+    if(m==='claude'){ const x=P27BY[cur]; const txt=`# CBSR 스토리 원고 요청\n- 날: ${cur}일 · ${p.label}${x?` (2027년 ${d27(x.gi)}, 같은 범위)`:' (2027년에는 범위가 달라짐)'}\n- 원칙: 저장소 source 가지 docs/CBSR_스토리QT_통합원고작성원칙.md, docs/CBSR_내러티브_원칙.md\n- 결과: app/ux/story_in/${cur}.json 으로 커밋 (형식 {"n":${cur},"plan":"2026-365","label":"${p.label}","A":{type,spine,cards,kwq,qt}})\n- 아래 원고의 관찰을 뼈대로 스토리 9–12장과 묵상 노트를 만들 것. 인용은 개역개정 그대로.\n\n## 원고\n${$('ms').value||'(작업실 ① 원고 칸이 비어 있음)'}`; await navigator.clipboard.writeText(txt); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/markdown'})); a.download=`스토리요청_${cur}.md`; a.click(); say('요청문을 복사했고 파일로도 내려받았습니다 — 클로드 대화에 붙여 넣으세요'); }
+  }catch(e){ say('실패: '+e.message); } });
+document.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); stash(); say('이 기기에 저장됨 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})); } });
 $('ms').addEventListener('input',()=>{ clearTimeout(window._mst); window._mst=setTimeout(stash,800); });
 </script>
 </body>
