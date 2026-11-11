@@ -19085,108 +19085,6 @@
     "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
-  "g64_05": {
-   "assetKind": "object",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 58,
-     "chapter": 9,
-     "fromVerse": 4,
-     "toVerse": 4,
-     "basis": "explicit"
-    },
-    {
-     "book": 2,
-     "chapter": 16,
-     "fromVerse": 33,
-     "toVerse": 34,
-     "basis": "explicit"
-    },
-    {
-     "book": 4,
-     "chapter": 17,
-     "fromVerse": 10,
-     "toVerse": 10,
-     "basis": "explicit"
-    },
-    {
-     "book": 5,
-     "chapter": 10,
-     "fromVerse": 1,
-     "toVerse": 5,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "requireAny": [
-    "만나",
-    "항아리",
-    "싹 난",
-    "지팡이",
-    "돌판",
-    "증거판",
-    "언약궤"
-   ],
-   "note": "천막 안 등잔 빛, 궤 앞에 금 항아리·꽃 핀 지팡이·돌판 둘",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
-  "g64_06": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 2,
-     "chapter": 26,
-     "fromVerse": 31,
-     "toVerse": 34,
-     "basis": "explicit"
-    },
-    {
-     "book": 2,
-     "chapter": 40,
-     "fromVerse": 20,
-     "toVerse": 21,
-     "basis": "explicit"
-    },
-    {
-     "book": 3,
-     "chapter": 16,
-     "fromVerse": 2,
-     "toVerse": 2,
-     "basis": "illustrative"
-    },
-    {
-     "book": 58,
-     "chapter": 9,
-     "fromVerse": 3,
-     "toVerse": 5,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "approved",
-   "requireAny": [
-    "지성소",
-    "휘장",
-    "언약궤",
-    "증거궤",
-    "궤를"
-   ],
-   "note": "금 널판 벽의 지성소, 그룹 무늬 휘장, 가운데 궤",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
   "g64_07": {
    "assetKind": "scene",
    "relation": "event",
@@ -19341,64 +19239,6 @@
    ],
    "reviewStatus": "approved",
    "note": "밀밭 길, 암소 두 마리가 끄는 수레 위 궤와 금 상자, 낫 든 사람들",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
-  "g64_13": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 10,
-     "chapter": 6,
-     "fromVerse": 10,
-     "toVerse": 12,
-     "basis": "explicit"
-    },
-    {
-     "book": 13,
-     "chapter": 13,
-     "fromVerse": 13,
-     "toVerse": 14,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "돌집 안마당 천 위의 궤, 키질하는 여인과 아이들",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
-  "g64_14": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 10,
-     "chapter": 6,
-     "fromVerse": 12,
-     "toVerse": 16,
-     "basis": "explicit"
-    },
-    {
-     "book": 13,
-     "chapter": 15,
-     "fromVerse": 25,
-     "toVerse": 29,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "성문 안 길, 베 에봇의 다윗이 춤추고 뒤에 제사장들이 궤를 멤, 창의 미갈",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
@@ -19626,49 +19466,6 @@
     "증거판"
    ]
   },
-  "g65_06": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 2,
-     "chapter": 26,
-     "fromVerse": 31,
-     "toVerse": 34,
-     "basis": "explicit"
-    },
-    {
-     "book": 2,
-     "chapter": 40,
-     "fromVerse": 20,
-     "toVerse": 21,
-     "basis": "explicit"
-    },
-    {
-     "book": 3,
-     "chapter": 16,
-     "fromVerse": 2,
-     "toVerse": 2,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "지성소의 궤와 그룹 무늬 휘장(65회 둘째). 정면 구도 — 채 방향 목사님 확인 필요",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "65회 둘째 출력(산문 소스+참고 사진)을 한 장씩 보고 분류. 채 방향은 메고 가는 장면에서 확인"
-   },
-   "requireAny": [
-    "지성소",
-    "휘장",
-    "언약궤",
-    "증거궤",
-    "궤를"
-   ]
-  },
   "g65_07": {
    "assetKind": "scene",
    "relation": "event",
@@ -19853,35 +19650,6 @@
    ],
    "reviewStatus": "approved",
    "note": "벧세메스로 오는 새 수레 위의 궤, 낫 든 사람들, 큰 돌",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "65회 둘째 출력(산문 소스+참고 사진)을 한 장씩 보고 분류. 채 방향은 메고 가는 장면에서 확인"
-   }
-  },
-  "g65_14": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 10,
-     "chapter": 6,
-     "fromVerse": 10,
-     "toVerse": 12,
-     "basis": "explicit"
-    },
-    {
-     "book": 13,
-     "chapter": 13,
-     "fromVerse": 13,
-     "toVerse": 14,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "오벧에돔의 집 마당의 궤 — 정면 구도, 채 방향 목사님 확인 필요",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
