@@ -18671,6 +18671,272 @@
     "at": "2026-11-11",
     "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
    }
+  },
+  "g63_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 10,
+     "chapter": 18,
+     "fromVerse": 9,
+     "toVerse": 10,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "멀리서 본 큰 상수리나무, 가지에 머리가 엉켜 두 팔로 가지를 붙잡고 매달린 자색 옷의 남자, 아래로 달려 나가는 노새. 삼하 18:9–10",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g63_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 3,
+     "chapter": 1,
+     "fromVerse": 7,
+     "toVerse": 9,
+     "basis": "explicit"
+    },
+    {
+     "book": 3,
+     "chapter": 6,
+     "fromVerse": 12,
+     "toVerse": 13,
+     "basis": "explicit"
+    },
+    {
+     "book": 2,
+     "chapter": 27,
+     "fromVerse": 1,
+     "toVerse": 8,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "번제단",
+    "제단",
+    "번제",
+    "불을",
+    "장작",
+    "나무를 벌여"
+   ],
+   "note": "뿔 달린 놋 제단 위 장작불과 연기, 흰 옷 제사장이 장작을 얹음. 고기·피 없음. 레 1·6, 출 27",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g63_03": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 43,
+     "chapter": 18,
+     "fromVerse": 3,
+     "toVerse": 6,
+     "basis": "explicit"
+    },
+    {
+     "book": 40,
+     "chapter": 26,
+     "fromVerse": 47,
+     "toVerse": 50,
+     "basis": "illustrative"
+    },
+    {
+     "book": 41,
+     "chapter": 14,
+     "fromVerse": 43,
+     "toVerse": 46,
+     "basis": "illustrative"
+    },
+    {
+     "book": 42,
+     "chapter": 22,
+     "fromVerse": 47,
+     "toVerse": 53,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "감람나무 동산 밤, 횃불 든 유대 경비 무리와 앞에 엎드러진 사람들. 예수님 화면 밖. 요 18:3–6",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g63_04": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 40,
+     "chapter": 27,
+     "fromVerse": 27,
+     "toVerse": 31,
+     "basis": "explicit"
+    },
+    {
+     "book": 41,
+     "chapter": 15,
+     "fromVerse": 16,
+     "toVerse": 20,
+     "basis": "explicit"
+    },
+    {
+     "book": 43,
+     "chapter": 19,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "가시관",
+    "가시",
+    "자색 옷",
+    "홍포",
+    "희롱"
+   ],
+   "note": "돌 바닥에 놓인 가시관, 자색 옷, 갈대. 사람·피 없음. 마 27, 막 15, 요 19",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g63_05": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 40,
+     "chapter": 3,
+     "fromVerse": 13,
+     "toVerse": 17,
+     "basis": "explicit"
+    },
+    {
+     "book": 41,
+     "chapter": 1,
+     "fromVerse": 9,
+     "toVerse": 11,
+     "basis": "explicit"
+    },
+    {
+     "book": 42,
+     "chapter": 3,
+     "fromVerse": 21,
+     "toVerse": 22,
+     "basis": "explicit"
+    },
+    {
+     "book": 43,
+     "chapter": 1,
+     "fromVerse": 29,
+     "toVerse": 34,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "세례",
+    "요단",
+    "물에서 올라",
+    "물에서"
+   ],
+   "note": "요단 강 얕은 물가, 젖은 발과 겉옷 자락. 비둘기·얼굴 없음. 마 3, 막 1, 눅 3",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g63_06": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 43,
+     "chapter": 20,
+     "fromVerse": 1,
+     "toVerse": 8,
+     "basis": "explicit"
+    },
+    {
+     "book": 42,
+     "chapter": 24,
+     "fromVerse": 1,
+     "toVerse": 12,
+     "basis": "explicit"
+    },
+    {
+     "book": 41,
+     "chapter": 16,
+     "fromVerse": 1,
+     "toVerse": 8,
+     "basis": "explicit"
+    },
+    {
+     "book": 40,
+     "chapter": 28,
+     "fromVerse": 1,
+     "toVerse": 8,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "바위 무덤 안, 돌 선반 위 세마포와 개켜진 수건, 굴려 낸 돌. 천사·광선 없음. 요 20, 눅 24, 막 16",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g63_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 27,
+     "chapter": 5,
+     "fromVerse": 1,
+     "toVerse": 9,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "잔치 자리, 흰 벽에 빛 글씨와 손, 놀라 일어선 왕과 손님들 보류: 벽의 손이 손바닥 전체로 뚜렷함(앞 그림보다는 덜함). 손가락 끝만으로 다시, 또는 이것으로 허용할지 목사님 판단",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
   }
  },
  "groups": {
