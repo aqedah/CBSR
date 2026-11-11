@@ -848,4 +848,4 @@ g64_12|s|9:6|새 수레/젖 나는 소 두 마리/벧세메스/밀을 베다가|
 g64_13|s|10:6|오벧에돔/그의 온 집에 복|courtyard,ark,family,winnowing||6|warm|50|오벧에돔의 집 마당에 있는 궤 (삼하 6)|||scene
 g64_14|s|10:6;13:15|다윗이 춤추며/베 에봇/소고/미갈이 창으로|david_dancing,ark,priests,gate,harp,michal|예루살렘|6|bright|50|다윗이 춤추며 궤를 들여옴 (삼하 6)|||scene
 g64_15|s|11:6;11:8|내소/감람나무로 그룹 둘/날개를 펴서/궤를 그 처소로|temple,great_cherubim,ark,priests|예루살렘|6|warm|50|솔로몬 성전 지성소로 들어가는 궤 (왕상 6·8)|보류: 천사상||scene
-g65_01|s|2:25;2:37|언약궤/속죄소/그룹 둘/채를 고리에/금 관|ark,cherubim,poles,crown_molding,front|||warm|50|언약궤 정면 — 바른 모양(65회)|||object
+g65_01|s|2:25;2:37|언약궤/속죄소/그룹 둘/채를 고리에/금 관|ark,cherubim,poles,crown_molding,front||5|warm|50|언약궤 정면 — 바른 모양(65회)|||object
