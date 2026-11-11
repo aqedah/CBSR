@@ -2462,13 +2462,13 @@ html.v2 .td4sumb:empty{padding:24px 0 0}
 @media not all and (min-width:1024px) and (min-height:560px){
   html.v2 body.tab-today.tdcov .td4ar{top:calc(env(safe-area-inset-top,0px) + 112px)}
   html.v2 body.tab-today.tdcov .td4hero,html.v2 body.tab-today .td4hero{min-height:calc(100vh - 64px - env(safe-area-inset-bottom,0px));min-height:calc(100svh - 64px - env(safe-area-inset-bottom,0px));padding-bottom:var(--txh,0px)}
-  html.v2 body.tab-today .td4hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.86) 0,rgba(0,0,0,.66) 45%,rgba(0,0,0,.3) 70%,rgba(0,0,0,0) 88%)}
+  html.v2 body.tab-today .td4hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,var(--rybg,var(--bg)) 0,color-mix(in srgb,var(--rybg,var(--bg)) 70%,transparent) 26px,transparent 72px),linear-gradient(180deg,rgba(0,0,0,.5) 0,rgba(0,0,0,0) 150px),linear-gradient(0deg,rgba(0,0,0,.86) 0,rgba(0,0,0,.66) 45%,rgba(0,0,0,.3) 70%,rgba(0,0,0,0) 88%)}
   html.v2 body.tab-today .td4head,html.v2 body.tab-today .td4sumb{z-index:2}html.v2 body.tab-today .td4top{z-index:1}html.v2 body.tab-today .td4nav{z-index:3}
   html.v2 body.tab-today .td4head{background:none;padding-bottom:10px}
   html.v2 body.tab-today .td4sumb{background:none;padding:0 20px 18px}html.v2 body.tab-today .td4sumb:empty{padding:0}
   html.v2 body.tab-today .td4sum{color:rgba(255,255,255,.93);text-shadow:0 1px 6px rgba(0,0,0,.5);font-size:15.5px;line-height:1.7}
-  html.v2 body.tab-today .td4tx{z-index:2;margin-top:calc(-1 * var(--txh,0px));padding-bottom:16px}
-  html.v2 body.tab-today .td4tx>*:not(.td4btns),html.v2 body.tab-today .td4tx .td4btns>*{box-shadow:0 6px 22px rgba(0,0,0,.3)}
+  html.v2 body.tab-today .td4tx{z-index:2;margin-top:calc(-1 * var(--txh,0px));padding-bottom:16px}html.v2 body.tab-today .td4tx .td4btns{margin-top:0}
+  html.v2 body.tab-today .td4tx .td4btns>*{box-shadow:0 6px 22px rgba(0,0,0,.3)}
   html.v2 body.tab-today .td4hero .tdcr{z-index:3}
 }
 html.v2 .td4sum{margin:0;font:400 16px/1.7 var(--f-text);color:var(--ink);word-break:keep-all}
@@ -12813,7 +12813,7 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   h+=tdTrip(w,d)+`</div></section>`;
   return h; }
 /* 그림 위쪽 밝기를 재서 머리줄 아이콘 색을 고름(11/3) */
-function tdFit(){ const S=document.querySelector(".td4"), T=S&&S.querySelector(".td4tx"); if(!T) return; const f=()=>document.documentElement.style.setProperty("--txh",(T.isConnected?T.offsetHeight:0)+"px"); f(); if(window.ResizeObserver){ if(tdFit.ro) tdFit.ro.disconnect(); tdFit.ro=new ResizeObserver(f); tdFit.ro.observe(T); } }
+function tdFit(){ const S=document.querySelector(".td4"), T=S&&S.querySelector(".td4tx .td4btns"); if(!T) return; const f=()=>document.documentElement.style.setProperty("--txh",(T.isConnected?T.offsetHeight+22:0)+"px"); /* 11-11: 그림 위에는 본문 읽기 단추까지만 */ f(); if(window.ResizeObserver){ if(tdFit.ro) tdFit.ro.disconnect(); tdFit.ro=new ResizeObserver(f); tdFit.ro.observe(T); } }
 function tdTone(){ const im=document.querySelector(".td4hero img"); const B=document.body; const set=d=>{ B.classList.toggle("hdk",d); B.classList.toggle("hlt",!d); };
   set(true); if(!im) return; const run=()=>{ try{ const c=document.createElement("canvas"), w=40, h=16; c.width=w; c.height=h; const x=c.getContext("2d"); x.drawImage(im,0,0,im.naturalWidth,im.naturalHeight*.22,0,0,w,h); const d=x.getImageData(0,0,w,h).data; let L=0; for(let i=0;i<d.length;i+=4) L+=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2]; L/=d.length/4; set(L<150); }catch(e){} };
   if(im.complete&&im.naturalWidth) run(); else im.addEventListener("load",run,{once:true}); }
