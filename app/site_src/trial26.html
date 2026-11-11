@@ -210,7 +210,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .miniin{transform:scale(0.385);transform-origin:top left;width:296mm}
 .pg .fcap{font-size:8.4pt;color:#666;margin:0}
 .pg .chip.rep{background:var(--main);color:#fff}
-.pg p.b .spot{font-family:"Noto Sans KR",sans-serif;font-size:8.4pt;color:var(--main);white-space:nowrap}
+.pg p.b .spot{display:block;text-align:left;margin-top:.4mm;font-family:"Noto Sans KR",sans-serif;font-size:8.4pt;color:var(--main)}
 .pg .demo{width:100%;border-collapse:collapse;font-size:9.2pt;margin:0 0 2.5mm}
 .pg .demo td{padding:.9mm 0;border-bottom:0.1mm solid #e4e4e4;vertical-align:top;line-height:1.42}
 .pg .demo td.k{width:20mm;color:var(--main);font-weight:700;font-family:"Noto Sans KR",sans-serif;font-size:8.8pt}
@@ -561,10 +561,10 @@ function repChaps(t){ const out=[]; repRefs(t).forEach(r=>{ const m=r.match(/^(\
 function findHtml(p,qt){
   const st=stageOf(p), first=((qt.obs.pair||[])[0]||['',''])[1];
   let h=chip(qt.guide.find).replace('<span class="chip">','<span class="chip rep">');
-  if((p.end||[]).length) h+=` <span class="spot">▸ 책을 마치는 날 — 이 도구들 말고 하나를 더 찾아보십시오</span>`;
-  if(st===3) return h;
-  const rs=st===1?repRefs(first):repChaps(first);
-  if(rs.length) h+=` <span class="spot">▸ ${st===1?'볼 자리':'볼 범위'} ${esc(rs.slice(0,4).join(', '))}</span>`;
+  const sp=[];
+  if(st<3){ const rs=st===1?repRefs(first):repChaps(first); if(rs.length) sp.push(`${st===1?'볼 자리':'볼 범위'} ${esc(rs.slice(0,4).join(', '))}`) }
+  if((p.end||[]).length) sp.push('책을 마치는 날 — 이 도구들 말고 하나를 더 찾아보십시오');
+  if(sp.length) h+=`<span class="spot">▸ ${sp.join(' · ')}</span>`;
   return h }
 function chip(t){ let r=String(t||'').trim(), out=''; let m;
   while((m=r.match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
