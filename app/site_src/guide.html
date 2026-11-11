@@ -54,6 +54,11 @@ body.onfront #frontbox{border-color:var(--acc)}
 body.onfront #frontbox>summary{color:var(--acc)}
 #frontbox>summary{cursor:pointer;padding:9px 11px;font-size:13px;font-weight:700}
 #frontform{padding:4px 11px 12px;border-top:1px solid var(--line)}
+#frontform .fsc{display:block;background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin:8px 0 6px;font-size:12px}
+#frontform .fsc .h{display:block;color:var(--mute);margin-top:3px;font-size:11px}
+#frontform .h{font-size:11px;color:#a07000;margin:0 0 8px}
+#frontform label.qonly>b::after{content:' · 이 권만';color:#a07000;font-weight:400}
+#frontform label.qonly input,#frontform label.qonly textarea{background:#fffdf3;border-color:#e3c78a}
 #frontform .ff{display:block;margin:0 0 9px}
 #frontform .ff>b{display:block;font-size:12px;margin:0 0 3px;color:#444}
 #frontform .ff>.h{font-size:11px;color:#888;margin:2px 0 0}
@@ -246,7 +251,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 </header>
 <main>
   <section id="form">
-    <details id="frontbox"><summary>책 머리 고치기 — 표지 · 서문 · 쓰는 법 · 기호 설명 (이 권 전체)</summary><div id="frontform"></div></details>
+    <details id="frontbox"><summary>책 머리 고치기 — 표지 · 서문 · 쓰는 법 · 기호 설명 (기본: 네 권 공통)</summary><div id="frontform"></div></details>
     <div class="dayhead"><span class="t" id="dh_t"></span><span class="s" id="dh_s"></span></div>
     <div id="fit">—</div>
     <fieldset><legend>머리</legend><label class="f"><span class="k"><b>소제목</b> <span class="cnt" data-for="sub"></span></span><input type="text" id="sub" data-max="30" placeholder="비우면 통독표 소제목"></label></fieldset>
@@ -327,14 +332,14 @@ const QLAB=['','1권 1–3월','2권 4–6월','3권 7–9월','4권 10–12월'
 const FRONT=13; // 책 머리 쪽수(속표지~차례~가름). 하루 펼침면은 FRONT+1(짝수)에서 시작
 function pageNo(p){const qs=PLAN.filter(x=>qOf(x)===qOf(p));const i=qs.findIndex(x=>x.no===p.no);return FRONT+1+2*i}
 // 날짜별 합치기: 수정 시각 u가 더 새로운 쪽이 남는다. u가 없는(옛) 원고는 0으로 본다.
-function mergeInto(local, remote){ let n=0, conf=[]; Object.keys(remote).forEach(k=>{ if(/^f[1-4]$/.test(k)){ if(!local[k]){local[k]=remote[k];n++} return } if(!/^\d+$/.test(k)) return; const r=remote[k], l=local[k]; const ru=r.u||0, lu=l?(l.u||0):-1; if(!l){local[k]=r;n++} else if(ru>lu){ if(lu>0&&JSON.stringify({...l,u:0})!==JSON.stringify({...r,u:0})) conf.push(k); local[k]=r; n++ } }); return {n,conf} }
-function cleanOut(data){ const o={}; Object.keys(data).forEach(k=>{ if(/^f[1-4]$/.test(k)){o[k]=data[k];return} if(!/^\d+$/.test(k)) return; o[k]=data[k].del?{del:1,u:data[k].u||0}:data[k] }); return o }
+function mergeInto(local, remote){ let n=0, conf=[]; Object.keys(remote).forEach(k=>{ if(/^f[0-4]$/.test(k)){ if(!local[k]){local[k]=remote[k];n++} return } if(!/^\d+$/.test(k)) return; const r=remote[k], l=local[k]; const ru=r.u||0, lu=l?(l.u||0):-1; if(!l){local[k]=r;n++} else if(ru>lu){ if(lu>0&&JSON.stringify({...l,u:0})!==JSON.stringify({...r,u:0})) conf.push(k); local[k]=r; n++ } }); return {n,conf} }
+function cleanOut(data){ const o={}; Object.keys(data).forEach(k=>{ if(/^f[0-4]$/.test(k)){o[k]=data[k];return} if(!/^\d+$/.test(k)) return; o[k]=data[k].del?{del:1,u:data[k].u||0}:data[k] }); return o }
 /* 기준본(BASE): 마지막으로 GitHub과 맞춘 원고. 이 기기에서 고친 날 = DATA와 BASE가 다른 날 */
 let BASE={}; try{BASE=JSON.parse(localStorage.getItem('cbsr_guide_base')||'{}')}catch(e){BASE={}}
 function norm(x){ if(!x) return 'null'; if(x.del) return 'del'; const {u,...rest}=x; return JSON.stringify(rest) }
 function eq(a,b){ return norm(a)===norm(b) }
 /* 3-way 합치기: 양쪽 다 고친 날은 conflicts로 돌려주고(기본은 이 기기 것 유지), 나머지는 자동 */
-function merge3(remote){ const changed=[], conflicts=[]; Object.keys(remote).forEach(k=>{ if(/^f[1-4]$/.test(k)&&!DATA[k]) DATA[k]=remote[k] });
+function merge3(remote){ const changed=[], conflicts=[]; Object.keys(remote).forEach(k=>{ if(/^f[0-4]$/.test(k)&&!DATA[k]) DATA[k]=remote[k] });
   const keys=new Set([...Object.keys(DATA),...Object.keys(remote)].filter(k=>/^\d+$/.test(k)));
   if(!Object.keys(BASE).length){ keys.forEach(k=>{ const L=DATA[k], R=remote[k]; if(!R||eq(L,R)) return; if(!L||(R.u||0)>=(L.u||0)){ DATA[k]=R; changed.push(k) } }); return {changed,conflicts} } // 처음 맞출 때는 수정 시각으로
   keys.forEach(k=>{ const L=DATA[k], B=BASE[k], R=remote[k]; const lc=!eq(L,B), rc=!eq(R,B);
@@ -577,7 +582,8 @@ const FDEF=q=>({
  divs:'',
  divnote:'성경책을 펴고 시작합니다.'
 });
-function F(q){ const o=(typeof DATA!=='undefined'&&DATA['f'+q])||{}; return Object.assign({},FDEF(q),o) }
+const QONLY=['cvs','divs','howlead','sample'];   /* 권마다 달라야 하는 칸 — 권 표시, 가름 날짜, 작성 예시(그 권의 날을 보여 준다) */
+function F(q){ const D=(typeof DATA!=='undefined')?DATA:{}; return Object.assign({},FDEF(q),D.f0||{},D['f'+q]||{}) }
 const FKEYS=Object.keys(FDEF(1));
 const lines=t=>String(t||'').split('\n').map(x=>x.trim()).filter(Boolean);
 const paras=t=>String(t||'').split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
@@ -817,18 +823,42 @@ const FSPEC=[
 ];
 function buildFrontForm(){
   const box=$('frontform'); if(!box||box.dataset.built) return; box.dataset.built='1';
-  box.innerHTML=FSPEC.map(([k,lab,rows])=>k==='--'?`<hr><p style="font-size:12px;font-weight:700;color:var(--acc);margin:0 0 7px">${lab}</p>`
+  box.innerHTML=`<label class="fsc"><input type="checkbox" id="fscope" checked> <b>네 권 모두에 적용</b><span class="h">끄면 지금 보는 권에만 저장됩니다. 권 표시 · 가름 날짜 · 쓰는 법 머리글과 작성 예시는 늘 권마다 따로입니다.</span></label><p class="h" id="fscopenote"></p>`+FSPEC.map(([k,lab,rows])=>k==='--'?`<hr><p style="font-size:12px;font-weight:700;color:var(--acc);margin:0 0 7px">${lab}</p>`
     :`<label class="ff"><b>${lab}</b>${rows>1?`<textarea id="f_${k}" rows="${rows}"></textarea>`:`<input type="text" id="f_${k}">`}</label>`).join('');
-  box.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',()=>{clearTimeout(window._ft);window._ft=setTimeout(saveFront,400)}));
+  $('fscope').addEventListener('change',()=>{ markScope(); $('status').textContent=frontScopeAll()?'이제 고치는 칸은 네 권 모두에 적용됩니다':'이제 고치는 칸은 이 권에만 저장됩니다' });
+  box.querySelectorAll('input,textarea').forEach(el=>el.id!=='fscope'&&el.addEventListener('input',()=>{clearTimeout(window._ft);const k=el.id.slice(2);window._ft=setTimeout(()=>saveFront(k),400)}));
 }
-function fillFrontForm(){ buildFrontForm(); const f=F(qOf(PLAN[cur])); FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(el) el.value=f[k]||'' }) }
-function saveFront(){
-  const q=qOf(PLAN[cur]), d=FDEF(q), o={};
-  FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(!el)return; const v=el.value; if(v!==d[k]) o[k]=v });
-  if(Object.keys(o).length) DATA['f'+q]=o; else delete DATA['f'+q];
+function fillFrontForm(){ buildFrontForm(); const f=F(qOf(PLAN[cur])); FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(el) el.value=f[k]||'' }); markScope() }
+function frontScopeAll(){ const el=$('fscope'); return !el || el.checked }
+function saveFront(changed){
+  const q=qOf(PLAN[cur]), d=FDEF(q), all=frontScopeAll();
+  const com=Object.assign({},DATA.f0||{}), own=Object.assign({},DATA['f'+q]||{});
+  const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+  FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(!el)return; const v=el.value;
+    const qonly=QONLY.includes(k);
+    /* 방금 고친 칸만 범위를 새로 정한다. 나머지는 있던 자리에 그대로 둔다 */
+    const tgt = (k===changed) ? ((qonly||!all)?'own':'com')
+              : (has(own,k)?'own':(has(com,k)?'com':(qonly?'own':'com')));
+    if(v===d[k]){ delete com[k]; delete own[k] }
+    else if(tgt==='own'){ delete com[k]; own[k]=v }
+    else { delete own[k]; com[k]=v }
+  });
+  if(Object.keys(com).length) DATA.f0=com; else delete DATA.f0;
+  if(Object.keys(own).length) DATA['f'+q]=own; else delete DATA['f'+q];
   localStorage.setItem('cbsr_guide_qt',JSON.stringify(DATA));
   const keep=VI; buildViews(); showView(keep,true);
-  $('status').textContent='책 머리 저장됨';
+  $('status').textContent=(changed&&(QONLY.includes(changed)||!all))?('책 머리 저장됨 — '+QLAB[q]+'만'):'책 머리 저장됨 — 네 권 모두';
+  markScope();
+}
+function markScope(){
+  const q=qOf(PLAN[cur]), own=DATA['f'+q]||{};
+  FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(!el)return;
+    const lab=el.closest('label'); if(!lab) return;
+    const only=Object.prototype.hasOwnProperty.call(own,k)&&!QONLY.includes(k);
+    lab.classList.toggle('qonly',only);
+  });
+  const n=Object.keys(own).filter(k=>!QONLY.includes(k)).length;
+  const t=$('fscopenote'); if(t) t.textContent=n?`이 권에만 다르게 저장된 칸 ${n}개 (노란 표시)`:'';
 }
 
 
