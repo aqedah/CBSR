@@ -1760,6 +1760,8 @@ html.v2 .td4k{margin:0;display:flex;align-items:center;gap:8px;font:700 14px var
 html.v2 .td4k:empty{display:none}html.v2 .td4r{margin:-2px 0 0;font:600 14px var(--f-ui);color:rgba(255,255,255,.88)}html.v2 .td4head h1{margin:0;font:700 clamp(26px,7.4vw,32px)/1.25 var(--f-disp);color:#fff;word-break:keep-all;text-wrap:balance;text-shadow:0 1px 8px rgba(0,0,0,.35)}
 html.v2 .td4sumb{position:relative;padding:34px 20px 4px;background:linear-gradient(180deg,rgba(0,0,0,.45) 0,color-mix(in srgb,var(--rybg) 92%,transparent) 34px,var(--rybg) 100%)}
 html.v2 .td4sumb:empty{padding:24px 0 0}
+/* 11-11: 본문 요약이 길어져도 그림이 줄지 않게 제목 위 그림 자리를 지킴(휴대폰). 태블릿은 그림 칸 높이가 정해져 있어 그대로 */
+@media not all and (min-width:1024px) and (min-height:560px){html.v2 .td4head{padding-top:min(34vh,300px)}}
 html.v2 .td4sum{margin:0;font:400 16px/1.7 var(--f-text);color:var(--ink);word-break:keep-all}
 html.v2 .td4tx{position:relative;padding:4px 20px 0;display:flex;flex-direction:column;gap:10px}
 html.v2 .td4btns{display:flex;gap:10px;margin-top:6px}
@@ -3280,8 +3282,8 @@ function renderRead(){
   h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl">${window.CBSR_V2?`<span class="rdk">${esc(dayK(w,d))}</span>`:""}<h2>${esc(p.label)}</h2>${window.CBSR_V2&&p.topic&&p.topic!==p.label?`<small class="rdt">${esc(p.topic)}</small>`:""}${window.CBSR_V2?placeBand(w,d):""}<p class="dmeta">${window.CBSR_V2?`<span class="dmtag ${tag[0]}">${TRY?tag[1]:tag[0]==="today"?"오늘 본문":tag[1]}</span>`:""}<span>${p.ch.length}${b0===19?"편":"장"}</span><span>약 ${mins}분</span>${(()=>{ const R=false; return R&&R.core&&!window.CBSR_V2?`<span>핵심 읽기 <b class="rjc">${esc(R.core)}</b></span>`:""; })()}${done?`<span class="okc">✓ 통독 완료</span>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:window.CBSR_V2&&envKind()==="kakao"?`<button class="kext" id="kakaoOut" aria-label="다른 브라우저로 열어 본문 듣기">${ICON_SPK}<span>듣기 ↗</span></button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
-  const TXd=PVQ.has(key)?null:dayTools(w,d), tl=TXd?TXd.q:[];
-  const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:"";
+  const GTd=Y27&&typeof GTOOLS!=="undefined"&&GTOOLS[dayNo(w,d)], TXd=PVQ.has(key)?(GTd?{q:GTd}:null):dayTools(w,d), tl=TXd?TXd.q:[]; /* 가이드북이 있는 날은 가이드북의 장치 */
+  const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:(tl.length?`<div class="eyeq qbox">${toolLine(tl,MODE+key)}</div>`:""); /* 11-11: 질문이 없는 날도 읽기 도구는 보임 */
   const V2R=!!window.CBSR_V2;
   if(V2R&&!view.v2shut) view.open=true;
   const aid=V2R&&(helpBox||eyeQ)?`<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>지난 이야기 · 살펴볼 질문</small></summary>${helpBox.replace('<details class="help30"','<details class="help30" open')}${eyeQ}</details>`:"";
@@ -3306,11 +3308,10 @@ function renderRead(){
   /* 오늘 본문이 큰 여정의 한 장면이면 그 장면부터 따라가기(목사님 2026-10-31) */
   if(window.CBSR_V2){ const TH=tourHere(w,d); if(TH) h+=`<section class="sec">${TH}</section>`; }
   // 이해가 필요할 때 (참고 자료)
-  const sumT=(SUMMARY[w-1]||[])[d]||"";
-  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 보기 · 요약, 인물과 지도, 퀴즈</summary>`; }
+  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 보기 · 인물과 지도, 퀴즈</summary>`; }
   if(!simple||view.moreOpen){
   h+=`<div class="helpzone">`;
-  h+=`<section class="sec"><span class="label">본문 요약</span>${p.topic?`<p class="topic">${esc(p.topic)}</p>`:""}${sumT?`<p class="summary">${markGloss(sumT,b0,new Set())}</p>`:`<p class="lead">이 날의 요약은 준비 중입니다.</p>`}</section>`;
+  /* 본문 요약은 오늘 탭 그림 아래로 옮김(11-11 목사님) */
   h+=knowSection(p,A,b0);
   h+=moreSection(p,A,b0,w,d);
   h+=renderMapBox(A);
@@ -3482,28 +3483,43 @@ function qtVerses(A,traits,key){
 }
 const qtStoryText=q=>q?[q.obs,q.gap,q.l0,q.l1,q.l2,q.story].filter(Boolean).join(" / "):"";
 
-/* ── 일곱 관찰 도구: 이름표와 한 줄 풀이 ── */
-const TOOLS={"장면":"언제, 어디서, 누가 있고, 장면은 어디서 바뀌는가","인물":"누가 무엇을 원하고 하는가, 하나님은 무엇을 하시는가","화자":"누구의 말인가, 앞뒤 이야기는 그 말을 믿을 만하게 보여 주는가","전환":"이야기는 어디서 꺾이고, 무엇이 달라지는가","반복":"무엇이 되풀이되고, 그때 무엇이 달라지는가","공백":"본문이 알려 주는 것과 말하지 않는 것은 무엇인가, 되풀이되던 말이 빠진 곳은 어디인가","아이러니":"독자는 알고 인물은 모르는 것은 무엇인가"};
+/* ── 읽기 도구(가이드북과 같은 이름·기호, 2026-11-10 통일표 · 11-11 앱 반영) ──
+   1층 보는 자리(기호 없음): 장면·인물·화자 / 2층 서술자의 장치(본문에 있을 때만): 9가지 */
+const TOOLS={"장면":"언제, 어디서, 누가 있고, 장면은 어디서 바뀌는가","인물":"누가 무엇을 원하고 하는가, 하나님은 무엇을 하시는가","화자":"누구의 말인가, 앞뒤 이야기는 그 말을 믿을 만하게 보여 주는가",
+ "이끎말":"한 낱말이 본문 전체를 끌고 갑니다. 그 말이 나올 때마다 표시해 두면 줄기가 보입니다.",
+ "반복":"같은 말이나 장면이 거듭됩니다. 거듭될 때마다 무엇이 달라지는지가 핵심입니다.",
+ "대조":"두 자리를 나란히 놓아 갈라 보입니다. 무엇과 무엇을 견주는지 먼저 찾습니다.",
+ "틀":"처음과 끝이 맞물려 한 덩어리로 묶입니다. 묶인 안쪽이 그 단락입니다.",
+ "전환":"흐름이 여기서 돌아섭니다. 교차대구로 짜인 본문에서는 한가운데가 그 자리입니다.",
+ "속말":"화자가 인물의 속마음을 열어 보입니다. 겉으로 한 말과 견주어 읽습니다.",
+ "침묵":"말해야 할 사람이 말하지 않습니다. 대답이 없다는 것까지만 봅니다.",
+ "공백":"본문이 되풀이하던 말이나 행동이 어느 자리에서만 빠집니다. 왜 없는지는 본문이 말할 때만 따라갑니다.",
+ "아이러니":"겉과 속이 어긋납니다. 뜻과 반대로 말하거나, 뜻한 것과 정반대의 결과가 오거나, 읽는 사람은 아는데 인물은 모릅니다."};
+const TOOL_SYM={"이끎말":"●","반복":"◆","대조":"◇","틀":"□","전환":"▲","속말":"○","침묵":"◎","공백":"⋯","아이러니":"?!"};
 const TOOL_ORDER=Object.keys(TOOLS);
-const CLUE_TOOL={turn:"전환",pair:"반복",scene:"반복",irony:"아이러니",aside:"화자"};
+const tName=t=>(TOOL_SYM[t]?TOOL_SYM[t]+" ":"")+t;
+const CLUE_TOOL={turn:"전환",pair:"대조",scene:"반복",irony:"아이러니",aside:"화자"};
 const LENS_TOOL={"무대":"장면","줄거리":"전환","글쓴이의 손길":"반복","인물":"인물","편지 뒤의 이야기":"장면","구분":"반복"};
-function dayTools(w,d){ return (typeof TOOLX!=="undefined"&&TOOLX[MODE+":"+keyOf(w,d)]); }
-const toolChip=(t,cls)=>t&&TOOLS[t]?`<button class="tool${cls?" "+cls:""}" data-tool="${t}">${t}</button>`:"";
+function dayTools(w,d){ const X=(typeof TOOLX!=="undefined"&&TOOLX[MODE+":"+keyOf(w,d)])||null;
+  /* 가이드북이 있는 날은 2층 장치를 가이드북과 같게: 1층(장면·인물·화자)은 그대로, 2층은 가이드북의 기호 */
+  const G=Y27&&typeof GTOOLS!=="undefined"&&GTOOLS[dayNo(w,d)]; if(!G) return X;
+  const L1=((X&&X.q)||[]).filter(t=>!TOOL_SYM[t]); return {q:[...L1,...G],look:(X&&X.look)||[]}; }
+const toolChip=(t,cls)=>t&&TOOLS[t]?`<button class="tool${cls?" "+cls:""}" data-tool="${t}">${tName(t)}</button>`:"";
 /* 한 줄 풀이: 도구마다 처음 세 날만 보입니다(이름표를 누르면 언제든 다시) */
 /* 질문 아래 '오늘의 읽기 도구'. 누르는 법 안내는 처음 세 날만 */
 function toolLine(L,key){ let seen={}; try{ seen=JSON.parse(localStorage.getItem("cbsr-tool-days")||"{}")||{}; }catch(e){}
   /* 도구마다 처음 세 날(날짜 수)은 풀이를 함께 보여 줍니다 */
   const show=L.filter(tl=>{ const D=seen[tl]||[]; if(D.includes(key)) return D.indexOf(key)<3; if(D.length>=3) return false; D.push(key); seen[tl]=D; return true; });
   try{ localStorage.setItem("cbsr-tool-days",JSON.stringify(seen)); }catch(e){}
-  return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tl}</b> ${esc(TOOLS[tl])}`).join("<br>")}</p>`:""}</div>`; }
-function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(b.dataset.tool+": "+TOOLS[b.dataset.tool]); }); }
+  return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tName(tl)}</b> ${esc(TOOLS[tl])}`).join("<br>")}</p>`:""}</div>`; }
+function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(tName(b.dataset.tool)+": "+TOOLS[b.dataset.tool]); }); }
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
 function eyeFor(w,d,L){
   const k=keyOf(w,d), e=EYE[k];
   const TX=PVQ.has(k)?(e&&e.tools?{q:[],look:e.tools}:null):dayTools(w,d);
-  if(e) return {q:e.q,tools:TX?TX.q:[],looks:e.look.map((l,i)=>`<button class="lookbtn" data-look="${i}"><span>${esc(window.CBSR_V2&&l.n?l.n:l.t)}${window.CBSR_V2&&l.r?`<small class="lref">${esc(fullRef(l.r))} ›</small>`:""}</span>${TX&&TX.look&&TX.look[i]?`<i class="ltool">${TX.look[i]}</i>`:""}</button>`)};
+  if(e) return {q:e.q,tools:TX?TX.q:[],looks:e.look.map((l,i)=>`<button class="lookbtn" data-look="${i}"><span>${esc(window.CBSR_V2&&l.n?l.n:l.t)}${window.CBSR_V2&&l.r?`<small class="lref">${esc(fullRef(l.r))} ›</small>`:""}</span>${TX&&TX.look&&TX.look[i]?`<i class="ltool">${tName(TX.look[i])}</i>`:""}</button>`)};
   const C=(CLUES[w+"-"+(d+1)]||[]).filter(c=>c.t!=="scene"||c.prev.length).slice(0,3);
-  return {q:L[0].q,tools:[],looks:C.map(c=>`<button class="lookbtn" data-clue="${CLUES[w+"-"+(d+1)].indexOf(c)}"><span>${esc(CLUE_LAB[c.t]||"살펴보기")} · ${esc(c.t==="pair"?c.a+" ↔ "+c.b:c.t==="scene"?c.g:fullRef(c.r))}</span>${CLUE_TOOL[c.t]?`<i class="ltool">${CLUE_TOOL[c.t]}</i>`:""}</button>`),skip0:true};
+  return {q:L[0].q,tools:[],looks:C.map(c=>`<button class="lookbtn" data-clue="${CLUES[w+"-"+(d+1)].indexOf(c)}"><span>${esc(CLUE_LAB[c.t]||"살펴보기")} · ${esc(c.t==="pair"?c.a+" ↔ "+c.b:c.t==="scene"?c.g:fullRef(c.r))}</span>${CLUE_TOOL[c.t]?`<i class="ltool">${tName(CLUE_TOOL[c.t])}</i>`:""}</button>`),skip0:true};
 }
 function showLook(i){
   const e=EYE[keyOf(view.w,view.d)]; if(!e) return; const l=e.look[i]; if(!l) return;
@@ -3663,8 +3679,8 @@ function renderQT(){
   const gap=GAPS[w+"-"+(d+1)];
   const filled=["gap","l0","l1","l2","story"].some(f=>q[f]);
   let dp=`<details class="deep" id="deepBox"${filled||view.deepOpen?" open":""}><summary>더 깊이 관찰하기<small>장면·인물·반복·말하지 않은 것을 더 살펴볼 수 있습니다.</small></summary>`;
-  if(gap) dp+=`<div class="qcard gapq"><span class="k"><i class="ltool">공백</i> 말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
-  L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; if(l.k==="내 자리") return; const c=clueFor(l.k,A,w,d,l.q); dp+=`<div class="qcard"><span class="k">${LENS_TOOL[l.k]?`<i class="ltool">${LENS_TOOL[l.k]}</i> `:""}${esc(LENS_TOOL[l.k]&&LENS_TOOL[l.k]===l.k?"":l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
+  if(gap) dp+=`<div class="qcard gapq"><span class="k"><i class="ltool">⋯ 공백</i> 말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
+  L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; if(l.k==="내 자리") return; const c=clueFor(l.k,A,w,d,l.q); dp+=`<div class="qcard"><span class="k">${LENS_TOOL[l.k]?`<i class="ltool">${tName(LENS_TOOL[l.k])}</i> `:""}${esc(LENS_TOOL[l.k]&&LENS_TOOL[l.k]===l.k?"":l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
   let moreTraits=""; if(traits.length>2) moreTraits=`<details class="mine"><summary>본문에서 찾은 하나님의 성품 더 보기</summary>`+traits.slice(2).map(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${window.CBSR_V2?`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`:""}</div>`;}).join("")+`</details>`;
   dp+=`</details>`;
@@ -5323,7 +5339,7 @@ function ringSVG(p){ /* 프로필 원(62px)과 같은 크기 */ const W=62,cx=31
 function obsRecord(){
   const E=[];
   for(const k in mem.qt){ const q=mem.qt[k]; if(!q) continue; const [w,d]=k.split("-").map(Number); if(!(PLAN.plan[w-1]&&PLAN.plan[w-1][d])) continue;
-    const lab=dayPlan(w,d).label, X=TOOLX[MODE+":"+k]||{q:[]}, no=dayNo(w,d);
+    const lab=dayPlan(w,d).label, X=dayTools(w,d)||{q:[]}, no=dayNo(w,d);
     const add=(tl,txt,src)=>{ if(txt&&txt.trim()&&tl.length) E.push({no,lab,src,txt:txt.trim(),tl}); };
     add(X.q||[],q.obs,"본문 관찰");
     add(["공백"],q.gap,"더 깊이 · 말하지 않은 것");
@@ -5331,7 +5347,7 @@ function obsRecord(){
   E.sort((a,b)=>b.no-a.no);
   const used=TOOL_ORDER.filter(tl=>E.some(e=>e.tl.includes(tl))), f=used.includes(view.obsF)?view.obsF:"";
   const L=f?E.filter(e=>e.tl.includes(f)):E;
-  return `<section class="sec"><span class="label">관찰 기록${E.length?` · ${E.length}개`:""}</span><p class="lead" style="margin:0 0 6px">내가 직접 적은 관찰입니다. 이름표로 골라 볼 수 있습니다.</p>${E.length?`<div class="obsf"><button class="${f?"":"on"}" data-obsf="">모두</button>${used.map(tl=>`<button class="${f===tl?"on":""}" data-obsf="${tl}">${tl}</button>`).join("")}</div>${f?`<p class="lead obsdef"><b>${f}</b> ${esc(TOOLS[f])}</p>`:""}`+L.slice(0,view.obsAll?999:12).map(e=>`<div class="obsitem"><small>${esc(e.lab)} · ${esc(e.src)} ${e.tl.map(tl=>`<i class="tool">${tl}</i>`).join("")}</small><p>${esc(e.txt)}</p></div>`).join("")+(L.length>12&&!view.obsAll?`<button class="btn ghost small" id="obsAll">${L.length-12}개 더 보기</button>`:""):`<p class="lead">QT의 '내가 본문에서 본 것'이나 '더 깊이 관찰하기'에 글을 적으면 여기에 모입니다.</p>`}</section>`; }
+  return `<section class="sec"><span class="label">관찰 기록${E.length?` · ${E.length}개`:""}</span><p class="lead" style="margin:0 0 6px">내가 직접 적은 관찰입니다. 이름표로 골라 볼 수 있습니다.</p>${E.length?`<div class="obsf"><button class="${f?"":"on"}" data-obsf="">모두</button>${used.map(tl=>`<button class="${f===tl?"on":""}" data-obsf="${tl}">${tName(tl)}</button>`).join("")}</div>${f?`<p class="lead obsdef"><b>${tName(f)}</b> ${esc(TOOLS[f])}</p>`:""}`+L.slice(0,view.obsAll?999:12).map(e=>`<div class="obsitem"><small>${esc(e.lab)} · ${esc(e.src)} ${e.tl.map(tl=>`<i class="tool">${tl}</i>`).join("")}</small><p>${esc(e.txt)}</p></div>`).join("")+(L.length>12&&!view.obsAll?`<button class="btn ghost small" id="obsAll">${L.length-12}개 더 보기</button>`:""):`<p class="lead">QT의 '내가 본문에서 본 것'이나 '더 깊이 관찰하기'에 글을 적으면 여기에 모입니다.</p>`}</section>`; }
 function renderRecord(){
   let qd=0,s=0,t=0,perfect=0; for(const k in mem.q){const f=mem.q[k].first; if(f){qd++;s+=f.s;t+=f.t; if(mem.q[k].best&&mem.q[k].best.s===mem.q[k].best.t) perfect++;}}
   const doneN=Object.keys(mem.done).length, qtN=Object.values(mem.qt).filter(x=>x.done).length, hlN=Object.keys(HL).length;
@@ -6961,7 +6977,7 @@ function renderGuide(){
    <div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>
    <span class="label" style="margin-top:10px">중간부터 쓰기 시작했다면</span><p class="lead">오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞춥니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div></section>
   <section class="sec msec"><h3 class="mh">화면</h3><span class="label" style="margin-top:0px">통독 화면</span><div class="plans" role="radiogroup">
-     <button class="plan" role="radio" aria-checked="${!SIMPLE()}" data-simple="0"><i class="dot"></i><b>모두 펼쳐 보기</b><span class="lead">본문 아래에 요약, 인물·곳·말, 지도, 퀴즈가 차례로 나옵니다.</span></button>
+     <button class="plan" role="radio" aria-checked="${!SIMPLE()}" data-simple="0"><i class="dot"></i><b>모두 펼쳐 보기</b><span class="lead">본문 아래에 인물·곳·말, 지도, 퀴즈가 차례로 나옵니다.</span></button>
      <button class="plan" role="radio" aria-checked="${SIMPLE()}" data-simple="1"><i class="dot"></i><b>간단히 보기</b><span class="lead">본문과 '오늘 통독 완료' 단추만 보입니다. 요약·인물·지도·퀴즈는 '더 보기' 상자 하나에 접혀 있다가 누르면 펼쳐집니다. 처음 읽는 분께 알맞습니다.</span></button></div>
    <span class="label" style="margin-top:12px">본문 보기</span><div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div><span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
    <span class="label" style="margin-top:12px">본문 듣기 목소리</span><div id="voiceList"></div></section>`
@@ -7147,7 +7163,7 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
   let h=td4Top(w,d,ph,live)+`
   <div class="td4head"><p class="td4k">${esc(dayName(w,d))}</p><h1>${esc(p.label)}</h1>${p.topic&&p.topic!==p.label?`<p class="td4r">${esc(p.topic)}</p>`:""}</div>
-  <div class="td4sumb">${g.today?`<p class="td4sum">${esc(g.today)}</p>`:""}</div></div><div class="td4tx">`;
+  <div class="td4sumb">${(()=>{ const sm=(SUMMARY[w-1]||[])[d]||g.today||""; return sm?`<p class="td4sum">${esc(sm)}</p>`:""; })()}</div></div><div class="td4tx">`; /* 11-11 목사님: 본문 탭에 있던 본문 요약을 그림 아래로 */
   const n=(S||[]).length;
   let sec="";
   if(q.done) sec=`<button class="td4b2" id="tdNote"><b>묵상 노트</b><small>다시 보기</small></button>`;
@@ -8383,7 +8399,7 @@ const TOUR=window.CBSR_V2?[
  {sel:"#strip",t:"날짜",d:"날짜 칸을 누르면 그날 본문으로 갑니다. 위의 주차 제목을 누르면 다른 주를 고르거나 장으로 찾을 수 있습니다."},
  {sel:"#openText, #bible",t:"오늘 본문",d:"여기서 오늘 본문을 펼쳐 읽습니다. 절을 누르면 형광펜을 칠할 수 있고, 점선 밑줄 친 말을 누르면 풀이가 나옵니다."},
  {sel:".help30",t:"오늘 이야기 · 읽기 전 도움",d:"지금 어디쯤인지, 지난 이야기, 읽으면서 찾을 것이 접혀 있습니다."},
- {sel:".helpzone",t:"읽은 뒤에",d:"본문 요약, 오늘 알아둘 인물·곳·말, 지도가 모여 있습니다."},
+ {sel:".helpzone",t:"읽은 뒤에",d:"오늘 알아둘 인물·곳·말, 지도가 모여 있습니다."},
  {sel:"#quizSec",t:"퀴즈",d:"읽은 내용을 퀴즈로 확인합니다. 틀리면 힌트가 나오고 본문으로 돌아가 다시 찾습니다."},
  {sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 '오늘 통독 완료'를 누릅니다. 진행률이 올라갑니다."},
  {sel:'.bnav [data-tab="qt"]',t:"QT",d:"읽은 말씀으로 묵상하고 한 줄을 적고 기도합니다."},

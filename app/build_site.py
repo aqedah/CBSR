@@ -126,6 +126,17 @@ data+='const TRAITS_C='+open('traits/all.json').read()+';\n'
 data+='const PARA='+open('para/all.json').read()+';\n'
 data+='const SCX='+open('scene/scx.json').read()+';\n'
 data+='const TOOLX='+(open('tools/toolx.json').read() if os.path.exists('tools/toolx.json') else '{}')+';\n'
+# 가이드북이 쓴 서술자의 장치(2층 9가지)를 앱의 '오늘의 읽기 도구'에도(2026-11-11 목사님)
+import re as _re9
+_GQ=json.load(open('site_src/guide_qt.json')).get('qt',{})
+_GT={}
+for _n,_v in _GQ.items():
+    _f=((_v or {}).get('guide') or {}).get('find','')
+    _L=[]
+    for _m in _re9.findall(r'(?:●|◆|◇|□|▲|○|◎|⋯|\?!) ?(이끎말|반복|대조|틀|전환|속말|침묵|공백|아이러니)',_f):
+        if _m not in _L: _L.append(_m)
+    if _L and _n.isdigit(): _GT[int(_n)]=_L
+data+='const GTOOLS='+J(_GT)+';\n'
 data+='const CHRIST_K='+J({k:v['k'] for k,v in CK.items()})+';\n'
 
 data+='(()=>{ const FX='+J({k:v['fix'] for k,v in CK.items() if v.get('fix')})+', MN='+J(MN)+', GF='+J(GF)+';\n'
