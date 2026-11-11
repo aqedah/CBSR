@@ -17730,12 +17730,12 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "hold",
-   "note": "애굽 궁 뜰, 지팡이 든 모세·아론 앞에 몸을 감싸 쥐고 주저앉은 요술사들, 보좌의 바로 보류: 요술사들이 웃통을 벗은 채 몸을 비틀어 연극처럼 과장됨",
+   "reviewStatus": "approved",
+   "note": "애굽 궁 뜰, 재가 내리는 가운데 흰 아마 옷의 요술사 셋이 허리를 굽혀 물러서고 왼쪽에 모세·아론. 출 9:10–11 (61회 재출력)",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
   "g60_06": {
@@ -17774,12 +17774,12 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "hold",
-   "note": "왼쪽 풀밭의 양·소·염소와 물속 물고기, 오른쪽 바위의 멧돼지·오소리·토끼, 가운데 손 보류: 반으로 나뉜 도감 같은 구성과 지나치게 선명한 색이 만화 느낌",
+   "reviewStatus": "approved",
+   "note": "가나안 시냇가 풀밭, 양·소와 물속 물고기, 건너편 바위 그늘의 멧돼지·토끼. 레 11:1–12 (61회 재출력, 한 풍경)",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
   "g60_08": {
@@ -17796,12 +17796,12 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "hold",
-   "note": "저녁 들판, 손 들어 외치는 군사들과 손 저어 거절하는 기드온, 발치의 금 귀고리 더미 보류: 군사들이 로마식 판갑(세그멘타타)을 입음 — 고증 어긋남",
+   "reviewStatus": "approved",
+   "note": "저녁 들판, 갑옷 없는 군사들이 무릎 꿇고 청하고 기드온이 두 손바닥을 펴 거절, 발치의 금 귀고리. 삿 8:22–24 (61회 재출력)",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
   "g60_09": {
@@ -17840,12 +17840,12 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "hold",
-   "note": "추수 들판, 곳간 짓는 일꾼들과 팔짱 낀 부자 보류: 보라색 옷의 부자가 만화처럼 웃고 있음, 붉은 하늘이 과장됨",
+   "reviewStatus": "approved",
+   "note": "추수철, 헐리는 옛 곳간과 올라가는 새 곳간을 올려다보는 밭주인의 옆모습. 눅 12:16–20 (61회 재출력)",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
   "g60_11": {
@@ -17906,12 +17906,12 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "hold",
-   "note": "갈라진 땅에서 솟은 두 뿔 양과 뒤의 거대한 짐승 실루엣, 엎드린 사람들 보류: 붉은 빛을 내뿜는 양과 검은 괴수가 공포 영화·만화 느낌",
+   "reviewStatus": "approved",
+   "note": "갈라진 땅 틈에서 솟은 흰 양, 바다 쪽을 향해 엎드린 사람들, 수평선의 짐승 실루엣. 뿔은 없이 나옴(상징으로 허용). 계 13:11–12 (61회 재출력)",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
   "g60_14": {
@@ -18051,6 +18051,245 @@
     "by": "claude-visual",
     "at": "2026-11-11",
     "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 3,
+     "chapter": 16,
+     "fromVerse": 12,
+     "toVerse": 13,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "성소 안 등잔 불빛, 흰 세마포 옷의 아론이 등을 보인 채 향로를 들고 청·자·홍색 휘장 앞에 섬. 레 16:12–13",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 4,
+     "chapter": 32,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "요단 동편 풀밭을 메운 양·소 떼, 목자 차림 다섯이 모세 앞에서 들판을 가리킴. 민 32:1–5",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_03": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 21,
+     "chapter": 12,
+     "fromVerse": 3,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "안뜰 문턱에 지팡이 짚고 앉은 노인, 멈춘 맷돌, 문 밖의 흰 꽃 살구나무. 전 12:3–5",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_04": {
+   "assetKind": "scene",
+   "relation": "illustrative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 23,
+     "chapter": 55,
+     "fromVerse": 1,
+     "toVerse": 2,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "값 없이",
+    "돈 없이",
+    "포도주와 젖",
+    "사라"
+   ],
+   "note": "성문 안 시장 천막 아래, 상인이 토기 항아리에서 포도주를 따라 주고 손 내민 가난한 셋. 사 55:1–2",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_05": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 30,
+     "chapter": 5,
+     "fromVerse": 24,
+     "toVerse": 24,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "물 같이",
+    "강 같이",
+    "정의",
+    "공의"
+   ],
+   "note": "갈라진 마른 골짜기 바닥으로 맑은 물이 막 터져 흐름, 저녁 빛에 물결이 반짝임. 암 5:24",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_06": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 38,
+     "chapter": 8,
+     "fromVerse": 20,
+     "toVerse": 23,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "성문 밖 길, 줄무늬 겉옷의 유다 사람 뒤를 열 사람이 옷자락을 잡고 따름 보류: 뒤의 성문이 오스만 시대 다메섹 문(총안 있는 중세식 성벽)으로 나옴 — 고증 어긋남",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 42,
+     "chapter": 6,
+     "fromVerse": 6,
+     "toVerse": 8,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "돌 회당 안, 가운데 서서 손을 든 남자와 둘레에 앉은 사람들 보류: 가운데 인물이 긴 머리·수염에 빛을 받아 예수님처럼 보이고, 든 손이 마른 손으로 보이지 않음",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_08": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 44,
+     "chapter": 5,
+     "fromVerse": 27,
+     "toVerse": 29,
+     "basis": "explicit"
+    },
+    {
+     "book": 44,
+     "chapter": 4,
+     "fromVerse": 5,
+     "toVerse": 7,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌 회의실, 반원으로 앉은 흰 옷 공회원들 앞에 손을 뒤로 묶인 두 사도가 섬, 앞의 대제사장. 행 5:27–29(행 4:5–7에도)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_09": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 66,
+     "chapter": 7,
+     "fromVerse": 9,
+     "toVerse": 10,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "흰 돌 광장, 흰 옷에 종려 가지를 든 셀 수 없는 무리가 흰 빛 쪽을 향해 섬. 보좌·어린 양 없음. 계 7:9–10",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g61_10": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 15,
+     "fromVerse": 20,
+     "toVerse": 21,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "홍해 모래 해변 아침, 소고를 든 미리암이 앞서고 여인들이 따름, 물가에 병거 바퀴 하나. 출 15:20–21",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
    }
   }
  },
