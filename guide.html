@@ -63,6 +63,12 @@ body.onfront #frontbox>summary{color:var(--acc)}
 #frontform label.qonly input,#frontform label.qonly textarea{background:#fffdf3;border-color:#e3c78a}
 #frontform .ff{display:block;margin:0 0 9px}
 #frontform .ff>b{display:block;font-size:12px;margin:0 0 3px;color:#444}
+#frontform .ff>b{display:flex;align-items:center;gap:6px}
+button.fdef{border:1px solid #ddd;background:#fafaf6;color:#888;border-radius:5px;font-size:10.5px;padding:1px 6px;cursor:pointer;visibility:hidden}
+#frontform .ff.edited>b{color:var(--acc)}
+#frontform .ff.edited>b button.fdef{visibility:visible;border-color:#d9cfae;color:#8a6d1f;background:#fdfaf0}
+#frontform .ff.edited textarea,#frontform .ff.edited input[type=text]{border-color:#e0d4a8;background:#fffdf5}
+#fdefall button.fdef{visibility:visible;margin-left:4px}
 #frontform .ff>.h{font-size:11px;color:#888;margin:2px 0 0}
 #frontform input,#frontform textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:5px 7px;font:inherit;font-size:12px;line-height:1.5;background:#fff;resize:vertical}
 #frontform hr{border:0;border-top:1px solid var(--line);margin:12px 0 10px}
@@ -962,7 +968,7 @@ const FSPEC=[
  ['howhead','제목',1],['howlead','머리글',3],['howcap','아래 덧말',3],
  ['sample','작성 예시 — 한 줄에 「번호|이름|질문|기록」',8],
  ['steps','네 걸음 — 한 줄에 「이름|설명」',6],
- ['rules','여섯 가지 약속 — 한 줄에 하나',7],
+ ['rules','약속 — 한 줄에 하나 (제목의 숫자는 줄 수를 따라갑니다)',7],
  ['--','기호 설명 (6–7쪽)'],
  ['symhead','기호 쪽 제목',1],['symlead','기호 쪽 머리글',2],
  ['syms','기호 — 한 줄에 「기호 이름|설명|예」',10],
@@ -970,7 +976,6 @@ const FSPEC=[
  ['irony','아이러니 — 한 줄에 「설명 첫머리|보기|예」',4],
  ['whhead','성경 전체로 제목',1],['whlead','성경 전체로 머리글',2],
  ['whole','다섯 갈래 — 한 줄에 「갈래|설명」',6],
- ['gaphead','공백 제목',1],['gaptext','공백 설명',3],
  ['--','이 권의 책들 · 통독표 (8–11쪽)'],
  ['bkshead','책 목록 제목',1],['tochead','통독표 제목',1],
  ['--','가름 쪽 (12–13쪽)'],
@@ -978,12 +983,25 @@ const FSPEC=[
 ];
 function buildFrontForm(){
   const box=$('frontform'); if(!box||box.dataset.built) return; box.dataset.built='1';
-  box.innerHTML=`<label class="fsc"><input type="checkbox" id="fscope" checked> <b>네 권 모두에 적용</b><span class="h">끄면 지금 보는 권에만 저장됩니다. 권 표시 · 가름 날짜 · 쓰는 법 머리글과 작성 예시는 늘 권마다 따로입니다.</span></label><p class="h" id="fscopenote"></p>`+FSPEC.map(([k,lab,rows])=>k==='--'?`<hr><p style="font-size:12px;font-weight:700;color:var(--acc);margin:0 0 7px">${lab}</p>`
-    :`<label class="ff"><b>${lab}</b>${rows>1?`<textarea id="f_${k}" rows="${rows}"></textarea>`:`<input type="text" id="f_${k}">`}</label>`).join('');
+  box.innerHTML=`<label class="fsc"><input type="checkbox" id="fscope" checked> <b>네 권 모두에 적용</b><span class="h">끄면 지금 보는 권에만 저장됩니다. 권 표시 · 가름 날짜 · 쓰는 법 머리글과 작성 예시는 늘 권마다 따로입니다.</span></label><p class="h" id="fscopenote"></p><p class="h" id="fdefall"></p>`+FSPEC.map(([k,lab,rows])=>k==='--'?`<hr><p style="font-size:12px;font-weight:700;color:var(--acc);margin:0 0 7px">${lab}</p>`
+    :`<label class="ff" id="fw_${k}"><b>${lab}<button type="button" class="fdef" data-k="${k}">기본값으로</button></b>${rows>1?`<textarea id="f_${k}" rows="${rows}"></textarea>`:`<input type="text" id="f_${k}">`}</label>`).join('');
   $('fscope').addEventListener('change',()=>{ markScope(); $('status').textContent=frontScopeAll()?'이제 고치는 칸은 네 권 모두에 적용됩니다':'이제 고치는 칸은 이 권에만 저장됩니다' });
   box.querySelectorAll('input,textarea').forEach(el=>el.id!=='fscope'&&el.addEventListener('input',()=>{clearTimeout(window._ft);const k=el.id.slice(2);window._ft=setTimeout(()=>saveFront(k),400)}));
+  box.querySelectorAll('button.fdef').forEach(b=>b.addEventListener('click',e=>{ e.preventDefault(); const k=b.dataset.k; const el=$('f_'+k); if(!el) return;
+    el.value=FDEF(qOf(PLAN[cur]))[k]||''; saveFront(k); $('status').textContent='이 칸을 기본값으로 되돌렸습니다' }));
 }
-function fillFrontForm(){ buildFrontForm(); const f=F(qOf(PLAN[cur])); FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(el) el.value=f[k]||'' }); markScope() }
+function fillFrontForm(){ buildFrontForm(); const f=F(qOf(PLAN[cur])); FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(el) el.value=f[k]||'' }); markScope(); markEdited() }
+/* 기본값과 다른 칸을 표시합니다 — 고쳐 둔 칸은 새 기본값으로 바뀌지 않기 때문입니다 */
+function markEdited(){
+  const d=FDEF(qOf(PLAN[cur])); let n=0;
+  FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k), w=$('fw_'+k); if(!el||!w) return;
+    const on=(el.value||'')!==(d[k]||''); w.classList.toggle('edited',on); if(on)n++ });
+  const note=$('fdefall');
+  if(note) note.innerHTML = n ? `고쳐 둔 칸 <b>${n}</b>개는 기본 글이 바뀌어도 그대로 남습니다. <button type="button" id="fdefreset" class="fdef">고친 칸 모두 기본값으로</button>` : '';
+  const rb=$('fdefreset'); if(rb) rb.onclick=e=>{ e.preventDefault();
+    const dd=FDEF(qOf(PLAN[cur])); FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(el) el.value=dd[k]||'' });
+    saveFront(null); $('status').textContent='책 머리를 모두 기본값으로 되돌렸습니다' };
+}
 function frontScopeAll(){ const el=$('fscope'); return !el || el.checked }
 function saveFront(changed){
   const q=qOf(PLAN[cur]), d=FDEF(q), all=frontScopeAll();
@@ -1003,7 +1021,7 @@ function saveFront(changed){
   localStorage.setItem('cbsr_guide_qt',JSON.stringify(DATA));
   const keep=VI; buildViews(); showView(keep,true);
   $('status').textContent=(changed&&(QONLY.includes(changed)||!all))?('책 머리 저장됨 — '+QLAB[q]+'만'):'책 머리 저장됨 — 네 권 모두';
-  markScope();
+  markScope(); markEdited();
 }
 function markScope(){
   const q=qOf(PLAN[cur]), own=DATA['f'+q]||{};
