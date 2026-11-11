@@ -2135,6 +2135,15 @@ body.tbkfull .tbkgrip{display:none}
   html.v2 .tbkopen,html.v2 .tbkback{bottom:calc(24px + env(safe-area-inset-bottom,0px))}
   html.v2 .tbkback{left:calc(var(--rail) + 16px)}
   html.v2 #nowBadge{left:calc(var(--rail) + 8px)!important}
+  /* 여정 화면(태블릿 검수에서, 2026-11-12): 휴대폰 폭(720px) 틀 그대로 가운데 그려져 오른쪽에 뒤 화면이 비치던 것 → 왼쪽 메뉴를 뺀 폭 전체를 덮음. 아래 설명판·단추 줄도 같은 폭 */
+  html.v2 .bmov{left:var(--rail);right:0;max-width:none;margin:0;box-shadow:-1px 0 0 var(--line)}
+  html.v2 .bmov .bmovmap .bmmap{inset:34px 24px 0!important}
+  html.v2 .bmovtop{padding-left:22px;padding-right:24px}
+  html.v2 .bmovp{padding-left:24px;padding-right:24px;max-height:38vh}
+  /* 왼쪽 메뉴: 여정 화면이 열린 동안은 그 화면을 연 탭에 표시('나'가 남던 것) */
+  html.v2 body[data-bmov] .bnav .tab[aria-selected="true"]{color:inherit;font-weight:inherit}
+  html.v2 body[data-bmov] .bnav .tab[aria-selected="true"]::before{opacity:0}
+  html.v2 body[data-bmov="today"] .bnav .tab[data-tab="today"],html.v2 body[data-bmov="read"] .bnav .tab[data-tab="read"],html.v2 body[data-bmov="qt"] .bnav .tab[data-tab="qt"],html.v2 body[data-bmov="challenge"] .bnav .tab[data-tab="challenge"],html.v2 body[data-bmov="record"] .bnav .tab[data-tab="record"]{color:var(--accent);font-weight:700}
 }
 
 @keyframes tbkfl{0%,60%{background:#fff1b8;box-shadow:0 0 0 4px #fff1b8}100%{background:transparent;box-shadow:none}}
@@ -4496,7 +4505,7 @@ function vSplit(r){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{}; con
   let n=na.filter(Boolean).join(" ").trim(); if((sp.length||gsp.length)&&core.join("").replace(/\s/g,"").length<16) n=""; /* '이르되' 같은 말 머리는 이름표가 대신함 */
   if(god&&GOD_RE.test(who)) who=""; /* 사람의 말풍선에 하나님 이름표가 붙지 않게 */
   return {sp:sp.join(" … "), segs, gsp:gsp.join(" … "), na:n, who:sp.length?who:"", god}; }
-if(/[?&]dbg=1/.test(location.search)) window.DBG=Object.assign(window.DBG||{},{vSplit:r=>vSplit(r)}); /* 시험용 */
+if(/[?&]dbg=1/.test(location.search)) window.DBG=Object.assign(window.DBG||{},{vSplit:r=>vSplit(r), /* 점검용(2026-11-12): 가이드북 날 n의 경로 후보 */ dayRoutes:n=>{ for(let w=1;w<60;w++) for(let d=0;d<7;d++){ let k; try{ k=dayNo(w,d); }catch(e){ continue; } if(k===n){ const R=routesFor(w,d)||[], P=dayPlan(w,d); return {w,d,ch:P?P.ch:[],R:R.map(r=>({i:ROUTES_B.indexOf(r),n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}; } } return null; }, allRoutes:()=>ROUTES_B.map((r,i)=>({i,n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}); /* 시험용 */
 /* 말 앞뒤에 붙는 '이르되', '하고' 같은 말 머리·꼬리는 서술에서 뺍니다 */
 function vTrimIntro(t,afterSp,beforeSp){ t=t.trim(); if(afterSp) t=t.replace(/^(하[고니며매되여]|하니라|하더라|하시고|하시니|하시매|하시더라|하시니라|하였더라|하였느니라|하는지라|하거늘|하신대|한대|하였고|하였으나)(?=\s|$)\s*/,"");
   if(beforeSp) t=t.replace(/\s*\S*(이르되|이르시되|가로되|가라사대|말하되|말하기를|대답하되|대답하여|외치되|부르짖되|물어|물으시되|묻되|생각하되|하되)$/,m=>/^\s*\S*?(이르되|이르시되|가로되|가라사대|말하되|말하기를|대답하되|외치되|부르짖되|물으시되|묻되|생각하되|하되)$/.test(m)?"":m);
@@ -6512,9 +6521,9 @@ function bmLibBind(m){ bmPx(m); view.bmSeg="lib"; setTimeout(()=>{ if(!BM_OV&&do
 /* 지도는 전체 화면으로: 위 막대(돌아가기·제목), 지도, 아래 짧은 설명판 */
 let BM_OV=null;
 function bmMapOpen(seg,o){ o=o||{}; if(BM_OV) BM_OV.close(true); view.bmSeg=seg; if(seg==="trip"){ const r=ROUTES_B[o.sel]; view.bmEra=r?bmEra(r.b,r.c[0]):0; view.bmSel=o.sel; } if(seg==="big") view.bmBig=null; if(o.fly) view.bmFly=o.fly;
-  const el=document.createElement("div"); el.className="bmov"; const T={lib:"성경 지도",day:"오늘 본문의 곳",land:window.CBSR_V2?"성경 지도":"통독하며 지나온 곳",big:"성경의 큰 흐름",trip:"여정"}[seg]||"성경 지도";
+  const el=document.createElement("div"); el.className="bmov"; try{ document.body.dataset.bmov=(view.bmFrom&&view.bmFrom.tab)||"record"; }catch(e){} /* 태블릿: 여정 화면을 연 탭을 왼쪽 메뉴에 표시 */ const T={lib:"성경 지도",day:"오늘 본문의 곳",land:window.CBSR_V2?"성경 지도":"통독하며 지나온 곳",big:"성경의 큰 흐름",trip:"여정"}[seg]||"성경 지도";
   el.innerHTML=`<div class="bmovtop"><button class="bmovx" aria-label="돌아가기">‹</button><b>${T}</b></div><div class="bmovmap"><div class="bmmap" id="bmMap"></div></div><div class="bmovp" id="bmOvP"></div>`; document.body.appendChild(el); document.body.style.overflow="hidden";
-  const close=pop=>{ if(pop!==true) ovDone(close); try{ BM_MAP&&BM_MAP.remove(); }catch(e){} BM_MAP=null; BM_LY=null; el.remove(); document.body.style.overflow=""; BM_OV=null; if(view.recD==="map"){ const y=scrollY; render(); scrollTo({top:y}); } };
+  const close=pop=>{ if(pop!==true) ovDone(close); try{ delete document.body.dataset.bmov; }catch(e){} try{ BM_MAP&&BM_MAP.remove(); }catch(e){} BM_MAP=null; BM_LY=null; el.remove(); document.body.style.overflow=""; BM_OV=null; if(view.recD==="map"){ const y=scrollY; render(); scrollTo({top:y}); } };
   BM_OV={close,list:o.list}; ovOpen(close); el.querySelector(".bmovx").onclick=()=>close();
   bmOvPanel(); setTimeout(()=>{ bmInit(); if(o.fly){ const g=PLACE.get(o.fly); if(g&&BM_MAP) BM_MAP.setView([g[1],g[2]],8.5); } },30); }
 function bmOvPanel(){ const P=document.getElementById("bmOvP"); if(!P) return; const seg=bmSegX();
