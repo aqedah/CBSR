@@ -12,10 +12,13 @@ for f in IN:
     try: e=json.load(open(f,encoding='utf-8'))
     except Exception as x: print('story_in 읽기 실패',f,x); continue
     n=str(e.get('n') or os.path.splitext(os.path.basename(f))[0]); A=e.get('A') or e
-    if not isinstance(A,dict) or not isinstance(A.get('cards'),list): print('story_in 형식 아님',f); continue
     if n in d and not n.startswith('_'):
         old=d[n].get('A',d[n]) if isinstance(d[n],dict) else d[n]
         bk[f'{n}A_{time.strftime("%Y-%m-%d")}']=old
+        os.makedirs('ux/story_prev',exist_ok=True); json.dump({'n':int(n),'at':time.strftime('%Y-%m-%d %H:%M'),'A':old},open(f'ux/story_prev/{n}.json','w',encoding='utf-8'),ensure_ascii=False,indent=1)  # 작업실 '이전 원고로 되돌리기'
+    if e.get('delete'):
+        d.pop(n,None); os.remove(f); print('story_in 삭제:',n); continue
+    if not isinstance(A,dict) or not isinstance(A.get('cards'),list): print('story_in 형식 아님',f); continue
     d[n]={'A':A}
     os.remove(f); print('story_in 반영:',n,e.get('label',''))
 json.dump(d,open(SC,'w',encoding='utf-8'),ensure_ascii=False,indent=1)

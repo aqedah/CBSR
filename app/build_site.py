@@ -174,6 +174,7 @@ for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png
 _PE=[{'id':p['id'],'memo':p.get('memo',''),'refs':p.get('refs',[]),'role':p.get('role','')} for p in (json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else [])]
 _P26=[{'n':x['n'],'label':x['label'],'ch':x['ch'],'topic':x.get('topic','')} for x in P365]
 open(OUT+'/story_edit.html','w').write(open('site_src/story_edit.html').read().replace('/*PLANS*/','const PLAN26='+J(_P26)+';\nconst P27='+J(_p27.build())+';\nconst ABBR_L='+J(AB)+';\nconst PHOTOS_E='+J(_PE)+';'))
+if os.path.isdir('ux/story_prev'): shutil.copytree('ux/story_prev',OUT+'/story_prev',dirs_exist_ok=True)  # 작업실 되돌리기용 이전 원고
 open(OUT+'/story_cards.json','w').write(J({k:v for k,v in (json.load(open('ux/story_cards.json')) if os.path.exists('ux/story_cards.json') else {}).items() if not k.startswith('_')}))  # 작업실 '공개 원고 불러오기'
 shutil.copytree('site_src/icons',OUT+'/icons')
 shutil.copytree('site_src/img',OUT+'/img')
