@@ -2759,7 +2759,7 @@ body.tbkfull .tbkgrip{display:none}
 @media (min-width:1024px) and (min-height:560px){
   /* 11-11 목사님: 태블릿 오늘 탭 — 그림을 화면 전체 배경으로, 그 위에 왼쪽 아래 제목·요약, 오른쪽에 할 일 칸 */
   html.v2[data-tab="today"] .wrap{max-width:none;margin:0 0 0 var(--rail);padding:0 max(32px,env(safe-area-inset-right,0px)) 0 0}
-  html.v2[data-tab="today"] #main{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,min(34vw,440px));column-gap:40px;align-content:start;min-height:100vh;min-height:100dvh;padding-top:84px;padding-bottom:32px;box-sizing:border-box}
+  html.v2[data-tab="today"] #main{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,min(34vw,440px));column-gap:40px;align-content:end;min-height:100vh;min-height:100dvh;padding-top:84px;padding-bottom:44px;box-sizing:border-box}
   html.v2[data-tab="today"] .td4{display:contents}
   html.v2[data-tab="today"] .td4hero{position:fixed;top:0;bottom:0;left:var(--rail);right:0;height:auto;min-height:0;margin:0;border-radius:0;z-index:0;grid-column:1}
   html.v2[data-tab="today"] .td4hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.58) 0,rgba(0,0,0,.22) 38%,rgba(0,0,0,.08) 55%,rgba(0,0,0,.42) 100%),linear-gradient(0deg,rgba(0,0,0,.55) 0,rgba(0,0,0,0) 45%)}
