@@ -137,6 +137,9 @@ for _n,_v in _GQ.items():
         if _m not in _L: _L.append(_m)
     if _L and _n.isdigit(): _GT[int(_n)]=_L
 data+='const GTOOLS='+J(_GT)+';\n'
+# 11-12: 묵상 탭도 가이드북과 같은 질문(원고 한 벌) — 관찰·적용 질문만
+_GQT={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _GQ.items() if n.isdigit()}
+data+='const GQT='+J(_GQT)+';\n'
 data+='const CHRIST_K='+J({k:v['k'] for k,v in CK.items()})+';\n'
 
 data+='(()=>{ const FX='+J({k:v['fix'] for k,v in CK.items() if v.get('fix')})+', MN='+J(MN)+', GF='+J(GF)+';\n'
