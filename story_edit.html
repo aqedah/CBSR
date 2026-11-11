@@ -43,7 +43,7 @@ textarea{resize:vertical;min-height:70px}
 .f .k{display:flex;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin-bottom:3px}
 .f .k .cnt,.f .k .small{margin-left:auto}
 .f .k b{color:var(--ink)}
-.cnt{font-variant-numeric:tabular-nums}.cnt.over{color:var(--warn);font-weight:700}
+.cnt{font-variant-numeric:tabular-nums}.cnt.over{color:#c0392b;font-weight:700}.cnt.warnc{color:#b8860b;font-weight:700}
 .card{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 12px;background:#fff}
 .card.cover{background:#f4f8f5}
 .card .top{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
@@ -141,7 +141,7 @@ dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12p
     <label class="f"><span class="k"><b>성경 전체로</b><span class="small">없으면 비움</span></span><textarea id="q_christ" rows="2"></textarea></label>
     <label class="f"><span class="k"><b>적용</b></span><textarea id="q_apply" rows="5"></textarea></label>
     <label class="f"><span class="k"><b>기도</b></span><textarea id="q_pray" rows="4"></textarea></label>
-    <label class="f"><span class="k"><b>나의 생각거리</b></span><textarea id="q_kwq" rows="3"></textarea></label>
+    <label class="f"><span class="k"><b>나의 생각거리</b><span class="small">하나님의 성품 한 문장 + 적용 물음 — 예: "하나님은 죄를 지은 사람에게도 찾아오셔서 말을 건네시는 분이십니다. 나는 …?"</span></span><textarea id="q_kwq" rows="3"></textarea></label>
     <label class="f"><span class="k"><b>생각거리 곁 말씀</b><span class="small">예: 눅 24:48</span></span><input type="text" id="q_kwr"></label>
   </div>
 
@@ -292,7 +292,7 @@ function bToText(b){ return (b||[]).map(x=>typeof x==='string'?x:'> '+x.q[0]+' |
 function textToB(t){ return String(t).split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{ if(!s.startsWith('>')) return s; const p=s.slice(1).split('|').map(x=>x.trim()); const q=[p[0]||'',p[1]||'']; if(p[2]) q.push(p[2]); return {q}; }); }
 function cardQs(c){ const L=[]; (c.b||[]).forEach(x=>{ if(x&&x.q) L.push([x.q[0],x.q[1]]); }); if(c.big) L.push([c.big,c.ref]); (c.pair||[]).forEach(x=>L.push([x[0],x[1]])); return L; }
 function renderCards(){ const root=$('cards'); root.innerHTML='';
-  D.cards.forEach((c,i)=>{ const d=document.createElement('div'); d.className='card'+(c.k==='cover'?' cover':''); const T=sTxt(c).length;
+  D.cards.forEach((c,i)=>{ const d=document.createElement('div'); d.className='card'+(c.k==='cover'?' cover':''); const T=nTxt(c).length;
     let body='';
     if(c.k==='cover'||c.k==='book') body=`<div class="gridf"><label class="f"><span class="k">작은 제목(kick)</span><input type="text" data-f="kick" value="${esc(c.kick)}"></label><label class="f"><span class="k">그림(img)</span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button>${c.img?`<img src="${SITE}img/g/${esc(c.img)}.jpg" onerror="this.style.visibility='hidden'">`:''}</div></label></div><label class="f"><span class="k">제목(h) — 줄바꿈 그대로</span><textarea data-f="h" rows="2">${esc(c.h)}</textarea></label><label class="f"><span class="k">부제(sub)</span><textarea data-f="sub" rows="2">${esc(c.sub||'')}</textarea></label>`;
     else if(c.k==='quote') body=`<label class="f"><span class="k">앞글(b) — 한 줄이 한 문단, <code>&gt; 인용 | 장절 | 말한 이</code>는 말씀 상자</span><textarea class="b" data-f="b">${esc(bToText(c.b))}</textarea></label><label class="f"><span class="k">큰 인용(big)</span><textarea data-f="big" rows="2">${esc(c.big||'')}</textarea></label><div class="gridf"><label class="f"><span class="k">장절(ref)</span><input type="text" data-f="ref" value="${esc(c.ref||'')}"></label><label class="f"><span class="k">그림(img)</span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button></div></label></div>`;
@@ -301,7 +301,7 @@ function renderCards(){ const root=$('cards'); root.innerHTML='';
     else if(c.k==='line') body=`<label class="f"><span class="k">한 줄(t)</span><textarea data-f="t" rows="2">${esc(c.t||'')}</textarea></label>`;
     else body=`<label class="f"><span class="k">제목(h)</span><input type="text" data-f="h" value="${esc(c.h||'')}"></label><label class="f"><span class="k">글(b) — 한 줄이 한 문단, <code>&gt; 인용 | 장절 | 말한 이</code>는 말씀 상자 · **굵게** __밑줄__</span><textarea class="b" data-f="b">${esc(bToText(c.b))}</textarea></label><label class="f"><span class="k">그림(img) <span class="small">비우면 앱이 고릅니다</span></span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button>${c.img?`<img src="${SITE}img/g/${esc(c.img)}.jpg" onerror="this.style.visibility='hidden'">`:''}</div></label>`;
     const qbadge=cardQs(c).map(([q,r])=>{ const st=quoteCheck(q,r); return `<span class="${st==='ok'?'ok':st==='bad'?'bad':'unk'}" title="${esc(q)}">${esc(r||'장절 없음')} ${st==='ok'?'✓':st==='bad'?'✗ 본문과 다름':st==='unk'?'(본문 읽는 중)':'?'}</span>`; }).join('');
-    d.innerHTML=`<div class="top"><span class="no">${i+1}</span><select data-f="k">${KINDS.map(([v,n])=>`<option value="${v}"${c.k===v?' selected':''}>${n}</option>`).join('')}</select><input class="lab" type="text" data-f="lab" placeholder="단계 · 이름 (예: 긴장 · 멀찍이 · 22장)" value="${esc(c.lab||'')}"${c.k==='cover'?' disabled':''}><span class="cnt${T>200?' over':''}" title="글자 수">${T}</span><span class="tools"><button class="sm" data-mv="-1" title="위로">↑</button><button class="sm" data-mv="1" title="아래로">↓</button><button class="sm" data-del="1" title="지우기">✕</button><button class="sm" data-ins="1" title="아래에 새 카드">＋</button><button class="sm" data-dup="1" title="복제">⧉</button></span><label class="rv" title="검토 완료 표시 — 카드 내용이 바뀌면 저절로 풀립니다"><input type="checkbox" data-rv="1"${reviewed(c)?' checked':''}> 검토</label></div>${c.k!=='cover'&&qbadge?`<div class="bq">${qbadge}</div>`:''}${body}`;
+    d.innerHTML=`<div class="top"><span class="no">${i+1}</span><select data-f="k">${KINDS.map(([v,n])=>`<option value="${v}"${c.k===v?' selected':''}>${n}</option>`).join('')}</select><input class="lab" type="text" data-f="lab" placeholder="단계 · 이름 (예: 긴장 · 멀찍이 · 22장)" value="${esc(c.lab||'')}"${c.k==='cover'?' disabled':''}><span class="cnt${T>80?' over':T>60?' warnc':''}" title="이야기 글자 수(말씀 인용 뺌) — 60자 안팎">${T}</span><span class="tools"><button class="sm" data-mv="-1" title="위로">↑</button><button class="sm" data-mv="1" title="아래로">↓</button><button class="sm" data-del="1" title="지우기">✕</button><button class="sm" data-ins="1" title="아래에 새 카드">＋</button><button class="sm" data-dup="1" title="복제">⧉</button></span><label class="rv" title="검토 완료 표시 — 카드 내용이 바뀌면 저절로 풀립니다"><input type="checkbox" data-rv="1"${reviewed(c)?' checked':''}> 검토</label></div>${c.k!=='cover'&&qbadge?`<div class="bq">${qbadge}</div>`:''}${body}`;
     d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('change',()=>{ readCard(i,d); renderCards(); stash(); check(); sendPreview(i); }));
     d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('input',()=>{ readCard(i,d,true); clearTimeout(window._cst); window._cst=setTimeout(stash,700); sendPreview(i,700); }));  /* 입력하는 동안에도 미리보기가 그 카드로 따라감 */
     d.querySelector('[data-mv="-1"]').onclick=()=>{ if(i>0){ [D.cards[i-1],D.cards[i]]=[D.cards[i],D.cards[i-1]]; after(); } };
@@ -325,6 +325,8 @@ $('bAddCard').onclick=()=>{ D.cards.push({k:'full',lab:'',h:'',b:[]}); renderCar
 /* 검토 표시: 카드 본문·그림·인용의 요약값을 저장. 바뀌면 자동 해제 */
 const cardHash=c=>{ const o=Object.assign({},c); delete o._rv; return hashStr(JSON.stringify(o)); };
 const reviewed=c=>c._rv&&c._rv===cardHash(c); const setReviewed=(c,on)=>{ if(on) c._rv=cardHash(c); else delete c._rv; };
+/* 이야기 글자 수: 말씀 인용(말씀 상자·대조·큰 인용)은 빼고 셉니다 — 카드 한 장 60자 안팎(2026-11-11 목사님) */
+const nTxt=s=>[s.h,s.t,...(s.b||[]).filter(x=>typeof x==='string')].filter(Boolean).join(' ').replace(/\*\*|__/g,'');
 const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==='string'?x:(x.q||[])[0]),...(s.pair||[]).map(x=>x[0])].filter(Boolean).join(' ').replace(/\*\*|__/g,'');
 
 /* 그림 고르기 */
@@ -362,10 +364,10 @@ $('bJsonDl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.creat
 function hardErrors(){ const E=[], C=D.cards||[]; if(!C.length) E.push('카드가 없습니다'); else if(C[0].k!=='cover') E.push('첫 카드가 표지가 아닙니다'); C.forEach((c,i)=>{ if(!KINDS.some(([v])=>v===c.k)) E.push(`${i+1}번 카드 종류 모름(${c.k})`); cardQs(c).forEach(([q,r])=>{ if(!parseRef(r)) E.push(`${i+1}번 카드 인용에 장절 없음`); }); }); return E; }
 function check(){ const L=[]; const C=D.cards||[]; const p=plan(cur);
   if(!C.length){ $('chkList').innerHTML='<li class="small">카드가 없습니다.</li>'; return; }
-  const n=C.filter(c=>c.k!=='cover').length; L.push({c:n>=8&&n<=13?'ok':'warn',t:`카드 ${C.length}장(표지 빼고 ${n}장) — 보통 9–12장`});
+  const n=C.filter(c=>c.k!=='cover').length; L.push({c:n>=6&&n<=9?'ok':'warn',t:`카드 ${C.length}장(표지 빼고 ${n}장) — 보통 7–9장, 하루 한 가지 발견`});
   if(C[0].k!=='cover') L.push({c:'bad',t:'첫 카드가 표지가 아닙니다'});
   { const nT=C.filter(c=>/^전환/.test(c.lab||'')).length; if(nT>1) L.push({c:'warn',t:`'전환' 단계가 ${nT}번 — 하루에 한 번, 정말 뒤집히는 자리에만 쓰고 나머지는 긴장·결과 등으로 바꾸세요`}); }
-  C.forEach((c,i)=>{ const T=sTxt(c).length; if(T>200) L.push({c:'warn',t:`${i+1}번 카드 ${T}자 — 200자를 넘습니다`});
+  C.forEach((c,i)=>{ const T=c.k==='cover'?0:nTxt(c).length; if(T>80) L.push({c:'warn',t:`${i+1}번 카드 ${T}자 — 80자를 넘습니다(말씀 인용 빼고, 60자 안팎이 좋음)`});
     if(c.k!=='cover'&&!c.lab) L.push({c:'warn',t:`${i+1}번 카드에 단계·이름표(lab)가 없습니다`});
     cardQs(c).forEach(([q,r],j)=>{ const R=parseRef(r); if(!R){ L.push({c:'bad',t:`${i+1}번 카드 인용에 장절이 없거나 읽을 수 없습니다: "${q.slice(0,20)}…" (${r||'없음'})`}); return; }
       if(!inRange(R)&&R[0]===dayBook()) L.push({c:'warn',t:`${i+1}번 카드 ${refLab(R)} — 오늘 범위(${p?p.label:''}) 밖입니다`});
