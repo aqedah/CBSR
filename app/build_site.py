@@ -189,7 +189,7 @@ for tk in ('snb','shg'):
     open(f'{OUT}/bible_{tk}.js','w').write('window.BIBLE_TR=window.BIBLE_TR||{};BIBLE_TR.'+tk+'="'+open(f'bible_{tk}.b64').read()+'";\nwindow.SPEECH_'+tk+'='+open(f'speech/bible_{tk}.json').read()+';\n')
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
-for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html','ui2.html','ui3.html','guide.html','guide_qt.json']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
+for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html','ui2.html','ui3.html','guide.html','guide_qt.json','trial26.html','trial26_qt.json']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
 # 스토리 작업실(2026-11-11): 원고를 붙여 카드로 나누고 앱(v2) 미리보기로 보고 GitHub(ux/story_in)에 저장 → 다음 빌드가 story_cards.json에 합침
 _PE=[{'id':p['id'],'memo':p.get('memo',''),'refs':p.get('refs',[]),'role':p.get('role','')} for p in (json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else [])]
 _P26=[{'n':x['n'],'label':x['label'],'ch':x['ch'],'topic':x.get('topic','')} for x in P365]
