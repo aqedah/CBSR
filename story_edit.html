@@ -247,7 +247,10 @@ function parseMS(text){
   D.kwq={q:aq[aq.length-1]||lastQ,r:parseRef(big?big.ref:(allQ[0]?allQ[0].ref:''))};
   $('msInfo').textContent=`카드 ${cards.length}장 · 묵상 노트 ${secs.apply.length?'적용 ':''}${secs.pray.length?'기도':''}`;
 }
-$('bParse').onclick=()=>{ if(!$('ms').value.trim()){ say('원고가 비어 있습니다'); return; } parseMS($('ms').value); fillAll(); stash(); check(); sendPreview(); document.querySelector('[data-p=cards]').click(); };
+/* 첫 줄의 날짜(11월 2일)나 본문 범위(누가복음 22–24장)로 날을 찾아 고름 — 둘 다 없으면 위에서 고른 날 */
+function guessDay(text){ const l=(text.split('\n').find(x=>x.trim())||'').replace(/\*/g,''); const m=l.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일/); if(m){ const n=Math.round((new Date(2026,+m[1]-1,+m[2])-new Date(2026,0,1))/864e5)+1; if(n>=1&&n<=365) return n; }
+  const nz=t=>String(t).replace(/\s+/g,'').replace(/[-~]/g,'–').replace(/장$/,''); const L=nz(l); const hit=P26.filter(p=>L.includes(nz(p.label))); return hit.length===1?hit[0].n:0; }
+$('bParse').onclick=()=>{ if(!$('ms').value.trim()){ say('원고가 비어 있습니다'); return; } const g=guessDay($('ms').value); if(g&&g!==cur){ const t=$('ms').value; const saved=localStorage.getItem(LSK(g)); if(saved&&!confirm(`원고 첫 줄로 보아 ${g}일(${plan(g).label})입니다. 그날에 이미 작업 중인 카드가 있는데 바꿀까요?`)){ say('지금 고른 날 그대로 분석합니다'); } else { $('selD').value=g; setDay(g); $('ms').value=t; say(`${g}일 · ${plan(g).label}로 찾아갔습니다`); } } parseMS($('ms').value); fillAll(); stash(); check(); sendPreview(); document.querySelector('[data-p=cards]').click(); };
 
 /* ───────── 카드 편집 ───────── */
 const KINDS=[['cover','표지'],['full','설명'],['split','설명+그림'],['quote','큰 인용'],['echo','비교(두 말)'],['table','표'],['map','지도'],['line','한 줄']];
