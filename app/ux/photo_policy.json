@@ -18225,6 +18225,451 @@
     "at": "2026-11-11",
     "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
    }
+  },
+  "g62_01": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 16,
+     "fromVerse": 4,
+     "toVerse": 6,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "천막 안, 앉아 고개 돌린 사래와 두 손 모으고 고개 숙인 임신한 하갈. 창 16:4–6",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_02": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 35,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "언덕길을 넘는 야곱 가족과 가축 행렬, 뒤로 작게 보이는 세겜. 창 35:1–5",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_03": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 1,
+     "chapter": 46,
+     "fromVerse": 1,
+     "toVerse": 4,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "밤, 돌 제단의 장작불 앞에 무릎 꿇고 두 손 든 늙은 야곱, 뒤로 수레와 천막. 창 46:1–4",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_04": {
+   "assetKind": "scene",
+   "relation": "illustrative",
+   "directness": "D2",
+   "assignmentPolicy": "broad",
+   "verseAnchors": [
+    {
+     "book": 3,
+     "chapter": 19,
+     "fromVerse": 3,
+     "toVerse": 3,
+     "basis": "illustrative"
+    },
+    {
+     "book": 2,
+     "chapter": 20,
+     "fromVerse": 8,
+     "toVerse": 12,
+     "basis": "illustrative"
+    },
+    {
+     "book": 5,
+     "chapter": 5,
+     "fromVerse": 12,
+     "toVerse": 16,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "안식일",
+    "부모",
+    "공경",
+    "경외",
+    "제칠일",
+    "식탁",
+    "가족"
+   ],
+   "note": "흙벽돌 집 안 등잔 아래 삼대가 둘러앉은 상, 떡·포도주·올리브. 안식일·부모 공경 규례 카드 두루(출 20, 레 19, 신 5)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_05": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 4,
+     "chapter": 10,
+     "fromVerse": 29,
+     "toVerse": 33,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "천막을 걷는 진영 앞에서 모세가 미디안 사람 호밥의 팔을 잡고 말함, 멀리 천으로 덮인 궤. 민 10:29–33",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_06": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 5,
+     "chapter": 8,
+     "fromVerse": 7,
+     "toVerse": 10,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "밀",
+    "보리",
+    "포도",
+    "무화과",
+    "석류",
+    "감람",
+    "꿀",
+    "소산",
+    "열매",
+    "아름다운 땅"
+   ],
+   "note": "안뜰 상 위의 밀·보리 단, 포도, 무화과, 석류, 감람, 꿀 항아리. 신 8:7–10(신 26 첫 열매, 수 5:12 땅의 소산에도)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 23,
+     "chapter": 7,
+     "fromVerse": 14,
+     "toVerse": 16,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌집 문간, 황토 수건의 젊은 여인이 토기 그릇의 버터와 꿀을 아이에게 먹임. 사 7:14–16",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_08": {
+   "assetKind": "scene",
+   "relation": "illustrative",
+   "directness": "D2",
+   "assignmentPolicy": "broad",
+   "verseAnchors": [
+    {
+     "book": 38,
+     "chapter": 7,
+     "fromVerse": 9,
+     "toVerse": 10,
+     "basis": "explicit"
+    },
+    {
+     "book": 2,
+     "chapter": 22,
+     "fromVerse": 21,
+     "toVerse": 24,
+     "basis": "illustrative"
+    },
+    {
+     "book": 5,
+     "chapter": 24,
+     "fromVerse": 17,
+     "toVerse": 19,
+     "basis": "illustrative"
+    },
+    {
+     "book": 23,
+     "chapter": 1,
+     "fromVerse": 17,
+     "toVerse": 17,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "과부",
+    "고아",
+    "나그네",
+    "압제",
+    "학대",
+    "궁핍"
+   ],
+   "note": "성문 안 돌 의자의 장로 셋, 앞에 선 검은 옷 과부와 아이 둘, 나그네. 과부·고아·나그네 규례와 예언서 고발 카드 두루",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_09": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 44,
+     "chapter": 13,
+     "fromVerse": 1,
+     "toVerse": 3,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌집 큰 방, 무릎 꿇은 두 사람의 머리에 세 사람이 손을 얹고 둘레가 고개 숙임. 행 13:1–3",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_10": {
+   "assetKind": "scene",
+   "relation": "figurative",
+   "directness": "D2",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 45,
+     "chapter": 1,
+     "fromVerse": 22,
+     "toVerse": 25,
+     "basis": "explicit"
+    },
+    {
+     "book": 23,
+     "chapter": 44,
+     "fromVerse": 9,
+     "toVerse": 17,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "우상",
+    "형상",
+    "신상",
+    "조각",
+    "새와 짐승",
+    "만든 신"
+   ],
+   "note": "선반에 사람·새·소·뱀 모양 조각상, 돌을 깎는 장인. 롬 1:22–25(사 44 우상 만드는 자, 행 17·19 우상 가게에도)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_11": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 21,
+     "fromVerse": 26,
+     "toVerse": 27,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "문간, 한쪽 눈에 천을 감고 보따리를 든 종이 나가고 안쪽에 돌아선 주인. 출 21:26–27",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_12": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 14,
+     "fromVerse": 21,
+     "toVerse": 28,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "두 물벽 사이 마른 길 끝, 뭍으로 오른 무리와 돌아선 모세, 길 안쪽에 멈춘 병거들. 출 14:21–28",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_13": {
+   "assetKind": "symbolic",
+   "relation": "figurative",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 30,
+     "chapter": 5,
+     "fromVerse": 7,
+     "toVerse": 7,
+     "basis": "explicit"
+    },
+    {
+     "book": 30,
+     "chapter": 5,
+     "fromVerse": 21,
+     "toVerse": 24,
+     "basis": "explicit"
+    },
+    {
+     "book": 30,
+     "chapter": 6,
+     "fromVerse": 4,
+     "toVerse": 6,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "hold",
+   "requireAny": [
+    "정의",
+    "공의",
+    "저울",
+    "노래 소리",
+    "비파",
+    "수금"
+   ],
+   "note": "광장 바닥의 뒤집힌 청동 저울과 흩어진 추, 뒤 돌 의자에서 수금을 듣는 두 남자 보류: 뒤의 두 남자가 자색 띠 두른 로마 토가 차림 — 시대가 맞지 않음",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_14": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 38,
+     "chapter": 8,
+     "fromVerse": 20,
+     "toVerse": 23,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "성문 밖 길, 줄무늬 겉옷의 유다 사람 뒤를 피부색·옷이 다른 열 사람이 옷자락을 잡고 따름, 뒤의 네모 돌탑 성문. 슥 8:20–23 (61회 보류분 재출력)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g62_15": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 42,
+     "chapter": 6,
+     "fromVerse": 6,
+     "toVerse": 8,
+     "basis": "explicit"
+    },
+    {
+     "book": 40,
+     "chapter": 12,
+     "fromVerse": 9,
+     "toVerse": 13,
+     "basis": "explicit"
+    },
+    {
+     "book": 41,
+     "chapter": 3,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌 회당 안, 둘러앉은 사람들 가운데 같은 줄에 앉아 고개 숙여 자기 손을 보는 남자. 눅 6:6–8(마 12:9–13, 막 3:1–5) (61회 보류분 재출력)",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 62회·지시 3판)을 한 장씩 직접 보고 분류"
+   }
   }
  },
  "groups": {

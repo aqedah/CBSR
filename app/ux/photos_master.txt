@@ -808,3 +808,19 @@ g61_05|s|30:5|정의를 물 같이/공의를 마르지 않는 강 같이|dry_val
 g61_08|s|44:5|공회 앞/대제사장이 물어/사람보다 하나님께 순종|council,sadducees,apostles_bound,hall,light_shafts|예루살렘|10|bright|50|공회 앞에 선 두 사도 (행 5)|||scene
 g61_09|s|66:7|흰 옷을 입고/종려 가지/각 나라와 족속과 백성과 방언/아무도 능히 셀 수 없는 큰 무리|white_robes,palm_branches,multitude,white_light||7|bright|50|흰 옷 입고 종려 가지를 든 큰 무리 (계 7)|||symbolic
 g61_10|s|2:15|미리암/소고를 잡/여호와를 찬송하라/모든 여인|miriam,women,tambourines,seashore,chariot_wheel|홍해|5|bright|50|소고를 든 미리암과 여인들 (출 15)|||scene
+
+g62_01|s|1:16|하갈/사래가 하갈을 학대/여주인/임신함을 알고|sarai,hagar,tent,pregnant,afternoon||5|warm|50|사래 앞에 고개 숙인 하갈 (창 16)|||scene
+g62_02|s|1:35|세겜/하나님이 그 사면 고을들로 크게 두려워하게/야곱의 아들들을 추격하는 자|jacob,family,flocks,donkeys,road,town_behind|세겜|5|bright|50|세겜을 떠나는 야곱의 가족, 뒤따르는 사람 없음 (창 35)|||scene
+g62_03|s|1:46|브엘세바/이삭의 하나님께 희생제사/밤에 이상 중에|jacob,altar,fire,night,stars,wagons|브엘세바|5|dark|50|브엘세바에서 밤에 제사하는 야곱 (창 46)|||scene
+g62_04|s|3:19;2:20|안식일/부모를 경외/제칠일/부모를 공경|family,table,lamps,bread,elders,evening||5|warm|50|안식일 저녁의 가족 식탁 — 아버지가 할아버지에게 떡을 먼저 건넴|||scene
+g62_05|s|4:10|호밥/미디안 사람/우리의 눈이 되리이다/떠나지 마소서|moses,hobab,camp_breaking,donkeys,ark_covered|시내 광야|5|bright|50|떠나는 아침, 호밥의 팔을 잡은 모세 (민 10)|||scene
+g62_06|s|5:8|밀과 보리/포도와 무화과/석류/감람나무/꿀/아름다운 땅|wheat,barley,grapes,figs,pomegranates,olives,honey,table||5|warm|50|좋은 땅의 일곱 소산 (신 8)|||object
+g62_07|s|23:7|처녀가 잉태/임마누엘/버터와 꿀을 먹|young_woman,child,bowl,doorway,morning||7|warm|50|버터와 꿀을 먹이는 젊은 여인과 아이 (사 7)|||scene
+g62_08|s|38:7|과부와 고아/나그네와 궁핍한 자/성문에서/압제하지|widow,children,stranger,elders,gate,bench||7|bright|50|성문 재판 자리에서 외면당하는 과부와 고아와 나그네 (슥 7)|||scene
+g62_09|s|44:13|안디옥/바나바와 사울/안수하여 보내니라/금식하며 기도|antioch,laying_hands,kneeling,congregation|안디옥|10|bright|50|안디옥 교회가 바나바와 사울에게 안수하여 보냄 (행 13)|||scene
+g62_10|s|45:1|썩어지지 아니하는 하나님의 영광을/새와 짐승과 기어다니는 동물 모양의 우상|idol_shop,figurines,sculptor,chisel||10|warm|50|새·짐승·뱀 모양 우상을 깎는 장인의 가게 (롬 1)|||scene
+g62_11|s|2:21|종의 눈/종의 이/자유롭게 놓아/눈을 상하게|servant,eye_bandage,doorway,master,bundle||5|warm|50|눈을 다쳐 자유의 몸으로 나가는 종 (출 21)|||scene
+g62_12|s|2:14|바다 가운데 마른 땅/병거 바퀴가 벗어져/애굽 사람들이 이르되/여호와께서 너희를 위하여 싸우시리니|parted_sea,moses,israelites,chariots_stuck,dawn|홍해|5|dark|50|갈라진 바다 기슭에서 돌아보는 모세, 바퀴 빠진 병거들 (출 14)|||scene
+g62_13|s|30:5|정의를 쓴 쑥으로/공의를 땅에 던지는/노래 소리를 그치라/비파 소리|overturned_scales,weights,court,harpist,rich_men||7|warm|50|땅에 뒤집힌 저울, 뒤에서 수금을 듣는 부자들 (암 5)|보류: 로마 토가||symbolic
+g62_14|s|38:8|유다 사람 하나의 옷자락/열 사람/너희와 함께 가려 하노라|judean,ten_men,robe_hem,city_gate,road|예루살렘|7|bright|50|유다 사람의 옷자락을 잡은 열 사람 (슥 8)|||scene
+g62_15|s|42:6|오른손 마른 사람/회당/안식일|synagogue,seated_men,man_looking_at_hand||9|bright|50|회당에 둘러앉은 사람들 가운데 자기 손을 보는 손 마른 사람 (눅 6)|||scene
