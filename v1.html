@@ -9003,7 +9003,7 @@ function sKind(s){ return s.qt?"qt":s.k; }
 function nextWD(w,d){ let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } return PLAN.plan[nw-1]&&PLAN.plan[nw-1][nd2]?[nw,nd2]:null; }
 const isHere=(w,d)=>w===here.w&&d===here.d;
 function askQ(w,d){ const SK=storyDay(dayNo(w,d)); if(SK&&SK.kwq) return {q:SK.kwq.q,r:SK.kwq.r}; const K=(typeof KWQ!=="undefined"&&true)?KWQ[dayNo(w,d)]:null; if(K) return {q:K.q,r:K.r};
-  const det=DETAIL[w+"-"+(d+1)]; if(det&&det.apply) return {q:det.apply}; const X=storyQT(w,d); return {q:X.kv?verseQuestion(X.kv):APPLY_Q}; }
+  const det=DETAIL[w+"-"+(d+1)]; if(det&&det.apply) return {q:det.apply}; const X=storyQT(w,d); return X.kv?{q:verseQuestion(X.kv),r:[X.kv.b,X.kv.c,X.kv.v]}:{q:APPLY_Q}; }
 function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
   if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}${window.CBSR_V2?`<p class="sasknote">오늘 이야기의 짜임을 살펴보았습니다. 이제 발견한 것을 나의 말로 정리하고 기도할 수 있습니다.</p><button class="tgrw" data-tgr="1" hidden></button>`:""}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">${window.CBSR_V2?"묵상 노트로 이어가기":"QT로 이어가기"}</button></div>${FB_ON?`<button class="sfbcopy" id="sFbCopy">검토 메모 모아 복사 (${Object.keys(fbAll()).length}개)</button>`:""}</div>`; }
   if(s.k==="fin"){ if(!q.done) return `<div class="sbox"><span class="slab">오늘의 말씀 카드</span><h2>QT를 마치면 오늘의 말씀 카드가 만들어집니다</h2><div class="sfbtn"><button class="btn" data-sgo="-1">‹ 돌아가서 마치기</button></div></div>`;
@@ -10123,21 +10123,30 @@ function speechInfo(v){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(
   if(!who) return {who:"",trusted:null};
   return {who, trusted:TRUST_SP.test(who)||TRUST_SP.test(last)||TRUST_P.test(last)}; }
 try{ if(localStorage.getItem("cbsr-test")) window.__T={view:()=>view,mem:()=>mem,keyOf:(w,d)=>keyOf(w,d),speechInfo,verseKind,verseQuestion:(...a)=>verseQuestion(...a),bible:()=>BIBLE,story:{open:(w,d)=>{view.w=w;view.d=d;view.tab="qt";view.qtDeep=false;view.allowFut=true;if(document.getElementById("storyRoot"))storyClose();storyOpen(0);},go:i=>storyGo(i),games:(w,d)=>({o:gOrder(w,d,"t"),w:gWho(w,d,"t"),c:gClue(w,d,"t")}),list:()=>storySlides(view.w,view.d),slides:(w,d)=>storySlides(w,d),plan:(w,d)=>dayPlan(w,d),pause:on=>storyPause(on)}}; }catch(e){}
+/* 초보자용 생각거리(2026-11-11): 인용은 '이르시되' 뒤부터 깔끔하게, 이야기책에서 하나님이 한 사람에게 하신 명령은 '그대로 따르라'가 아니라 그 사람의 반응을 먼저 보게 함 */
+const SAYS=/(이르시되|이르되|아뢰되|말하되|말씀하시되|하시되|대답하되|가로되|부르짖되)\s/g;
+function cleanPh(v,ph){ const t=v.t, i=t.indexOf(ph.replace(/^…/,"")); if(i<0) return ph; let st=-1, m; SAYS.lastIndex=0; while((m=SAYS.exec(t))&&m.index<i+ph.length) st=m.index+m[0].length; if(st<0) return ph; const end=i+ph.replace(/^…/,"").length; const q=t.slice(st,end).trim(); return q&&q.length<=40?q:ph; }
+function sayer(v,ph){ const t=v.t, i=t.indexOf(ph.replace(/^…/,"")); if(i<0) return ""; let st=-1, m; SAYS.lastIndex=0; while((m=SAYS.exec(t))&&m.index<i) st=m.index; if(st<0) return ""; const mm=t.slice(0,st).match(/([가-힣]+?)(께서|이|가)\s+(?:[가-힣]+\s+){0,2}$/); return mm?mm[1]:""; }
+const NARR_B=b=>(b<=17&&b!==3)||(b>=40&&b<=44)||b===27||b===32;
 function verseQuestion(v){
   const K=verseKind(v), sp=speechInfo(v);
+  if(K.ph) K.ph=cleanPh(v,K.ph);
+  if(K.k==="command"&&NARR_B(v.b)){ const who=sayer(v,K.ph)||(sp&&sp.who)||"";
+    if(/^(여호와|하나님|주)/.test(who)) return `이 장면에서 하나님은 '${K.ph}' 하고 말씀하십니다. 이 말씀을 들은 사람은 어떻게 했나요? 나에게도 하나님 말씀대로 따라야 할 일이 있나요?`;
+    if(/^예수/.test(who)) return `이 장면에서 예수님은 '${K.ph}' 하고 말씀하십니다. 이 말씀을 들은 사람은 어떻게 했나요? 같은 말씀을 오늘 내가 듣는다면 무엇을 하게 될까요?`; }
   if(sp&&sp.trusted===false&&K.k!=="prayer") return `이 말은 ${sp.who}의 말입니다. 누구에게, 무엇을 위해 한 말입니까? 앞뒤 이야기는 이 말을 믿을 만한 말로 보여 줍니까?`;
   if(sp&&sp.trusted===null&&(K.k==="command"||K.k==="promise"||K.k==="purpose")) return "이 말은 누가 누구에게 한 말입니까? 앞뒤 이야기 속에서 이 말은 어떤 뜻입니까?";
   switch(K.k){
-    case "command": return `이 구절은 '${K.ph}'라고 말합니다. 오늘 이 말씀을 그대로 따른다면 나는 구체적으로 무엇을 하게 될까요?`;
-    case "promise": return `이 구절에는 '${K.ph}'라는 약속이 있습니다. 이 약속을 붙들어야 할 내 삶의 자리는 어디인가요?`;
+    case "command": return `이 말씀은 '${K.ph}' 하고 말합니다. 오늘 이 말씀대로 산다면, 내가 할 일 하나는 무엇일까요?`;
+    case "promise": return `이 말씀에는 '${K.ph}' 하는 약속이 있습니다. 요즘 내가 이 약속을 꼭 붙들어야 할 일은 무엇인가요?`;
     case "prayer": return "이 구절은 하나님께 드리는 기도입니다. 이 기도를 오늘 내 형편에 맞는 말로 바꾸어 드린다면 어떤 기도가 될까요?";
     case "self": return "이 구절에서 예수님은 자신이 누구이며 왜 오셨는지 말씀하십니다. 이 사실이 오늘 내 생각과 행동에서 무엇을 바꾸나요?";
-    case "purpose": return `이 구절은 '${K.ph}'라고 그 목적을 밝힙니다. 그 목적이 오늘 나에게는 어떻게 이루어지고 있나요?`;
-    case "question": return "이 구절은 질문을 던집니다. 그 질문을 오늘 내가 받는다면 나는 무엇이라고 대답하겠습니까?";
-    case "trait": return `이 구절에서 하나님은 '${K.at.n}'으로 드러납니다. 오늘 내 삶에서 그런 하나님이 가장 필요한 자리는 어디인가요?`;
+    case "purpose": return `이 말씀은 '${K.ph}' 하고 그 까닭을 말합니다. 이 까닭을 알고 나니 무엇이 새롭게 보이나요?`;
+    case "question": return "이 말씀에는 질문이 있습니다. 그 질문을 내가 받는다면 뭐라고 대답하겠어요?";
+    case "trait": return `이 말씀에서 하나님은 '${K.at.n}'으로 보입니다. 요즘 내가 그런 하나님을 가장 필요로 하는 일은 무엇인가요?`;
     case "jesus": return "예수님이 이 말씀을 누구에게 하셨나요? 같은 말씀을 오늘 나에게 하신다면 어떻게 들리나요?";
-    case "person": return `${K.name}의 자리에 서서 이 장면을 다시 보세요. 그는 무엇을 느꼈을까요? 그 모습에서 나는 무엇을 배우나요?`;
-    default: return "이 장면을 마음속에 그려 보세요. 무엇이 보이고 들리나요? 이 장면이 오늘 나에게 무엇을 말하나요?";
+    case "person": return `내가 ${K.name}이라고 생각하고 이 장면을 다시 보세요. 어떤 마음이 들까요? 그 모습에서 나는 무엇을 배우나요?`;
+    default: return "이 장면을 눈앞에 그려 보세요. 무엇이 보이고 들리나요? 이 장면에서 가장 마음에 남는 것은 무엇인가요?";
   }
 }
 /* 기도문 끝맺음: 손으로 쓴 원고의 기도에도 "예수님의 이름으로 기도합니다. 아멘."을 붙입니다 */
