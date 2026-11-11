@@ -1409,6 +1409,20 @@ body.wcmon{overflow:hidden}
 .atn .athold{margin:6px 0 0;font-size:13px;color:#E2B874;font-weight:700}.atn .athold em{font-style:normal;color:#fff;background:rgba(226,184,116,.2);border-radius:999px;padding:2px 9px;margin-left:4px}
 .atn .bmttop b{color:#2a1d0c;text-shadow:none}.atn .bmthint{color:#5a4630}
 /* 공용 평면도 여정(2026-11-10): 정보 성격 표시 k — i 추론(점선·?) r 복원도(회색) u 위치 미상(흐림) v 환상(보라) */
+/* ===== 공용 여정 부품(2026-11-12 통일안) ===== */
+.jp rect{fill:rgba(255,255,255,.92);stroke:rgba(80,70,50,.4);stroke-width:1px;vector-effect:non-scaling-stroke}
+.jp text{fill:#1e1a14;font-family:var(--f-ui);font-weight:700;paint-order:normal;stroke:none}
+.jp text tspan{fill:#9a6417;font-weight:600}
+.jp.est rect{stroke-dasharray:3 2}.jp.unk{opacity:.72}.jp.unk rect{stroke-dasharray:2 2}
+.jp.vis rect{stroke:#6a2a8a}.jp.vis text{fill:#4b1d63}
+.jp.who rect{fill:#e2603f;stroke:none}.jp.who text{fill:#fff;font-family:'Jua',var(--f-ui);font-weight:400}
+.jp{transition:opacity .3s}.jp.hid{opacity:0!important}
+.chm .nm{transition:opacity .25s}.chm .nm.hidn,.spl.hidn{opacity:0!important}
+.jtoast{position:absolute;left:50%;transform:translate(-50%,6px);z-index:1002;max-width:calc(100% - 32px);background:#fffdf6;color:#2a2318;border:1.5px solid #d9c49a;border-radius:999px;padding:6px 14px;font:700 13.5px/1.35 var(--f-ui);text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.25);opacity:0;transition:opacity .3s,transform .3s;pointer-events:none}
+.jtoast.on{opacity:1;transform:translate(-50%,0)}
+.atn:not(.spc) .atmap{padding:calc(env(safe-area-inset-top,0px) + 128px) 8px var(--jcard,178px)!important}
+.bmtbars i{background:#e2603f!important;box-shadow:none!important}.atn .bmtbars i{background:#e2603f!important}
+.atn .bmtp{background:linear-gradient(to top,rgba(16,20,18,.95) 78%,rgba(16,20,18,0))}
 .pln .pk-i{fill:#6b4a24;font-style:italic}.pln .pk-r{fill:#8a7a62}.pln .pk-u{fill:#8a7a62;opacity:.6}.pln .pk-v{fill:#6a2a8a}
 .pln path.pk-i,.pln line.pk-i{stroke-dasharray:3 4}.pln .pk-v-box{fill:none;stroke:#6a2a8a;stroke-width:2.5;stroke-dasharray:8 5}
 .pln #pl_base > g.pldim{opacity:.32;transition:opacity .6s}.pln #pl_base > g{transition:opacity .6s}
@@ -4526,8 +4540,11 @@ function mvIdx(names,pl){ if(!pl) return -1; const m=String(pl).match(/^(.*)#(\d
 function mvMarker(map,id,o){ o=o||{}; const w=(id==="cart"?Math.max(o.w||40,86):o.w||40), ic=id==="boat"?BOAT(o):id==="letter"?LETTER():(id==="coffin"||id==="ark"||id==="cart")?OBJ(id):C(id,o.look);
   return L.marker(o.at,{interactive:false,zIndexOffset:o.z||500,icon:L.divIcon({className:"",html:`<div class="chm ${id}${id==="boat"||id==="letter"?" sail":""}" style="--w:${w}px">${o.name?`<span class="nm">${esc(o.name)}</span>`:""}<div class="fig">${ic}</div></div>`,iconSize:[0,0]})}).addTo(map); }
 /* 11/4(GPT 검수 5.3): 지도 위 인물 이름표가 겹치면 아래로 비켜 놓음(큰 여정이 열려 있을 때만) */
-function declutterNames(root){ const L=[...root.querySelectorAll(".chm .nm")].filter(e=>e.offsetParent&&e.textContent.trim()); L.forEach(e=>{ e.style.translate=""; }); const placed=[];
-  L.forEach(e=>{ const r=e.getBoundingClientRect(); let dy=0; for(let k=0;k<5;k++){ const hit=placed.find(q=>!(r.right<=q.l||r.left>=q.r||r.bottom+dy<=q.t||r.top+dy>=q.b)); if(!hit) break; dy+=hit.b-(r.top+dy)+1; } if(dy) e.style.translate=`0 ${Math.round(dy)}px`; placed.push({l:r.left,r:r.right,t:r.top+dy,b:r.bottom+dy}); }); }
+function declutterNames(root){ /* 통일안(2026-11-12): 인물 이름이 겹치면 밀어 쌓지 않고, 앞 순서(큰 인물=주인공 → 먼저 나온 인물)만 남기고 숨김. 인물 이름을 가리는 지명 이름표도 잠시 숨김 — 평면도의 jDeclutter와 같은 규칙 */
+  const L=[...root.querySelectorAll(".chm .nm")].filter(e=>e.textContent.trim()&&e.closest(".chm").offsetParent); L.forEach(e=>{ e.style.translate=""; e.classList.remove("hidn"); });
+  const wOf=e=>parseFloat(e.closest(".chm").style.getPropertyValue("--w"))||40; L.sort((a,b)=>wOf(b)-wOf(a)); const kept=[], ov=(r,q)=>r.left<q.right-1&&r.right>q.left+1&&r.top<q.bottom-1&&r.bottom>q.top+1;
+  L.forEach(e=>{ const r=e.getBoundingClientRect(); if(!r.width) return; if(kept.some(q=>ov(r,q))) e.classList.add("hidn"); else kept.push(r); });
+  root.querySelectorAll(".spl").forEach(s=>{ s.classList.remove("hidn"); const r=s.getBoundingClientRect(); if(r.width&&kept.some(q=>ov(r,q))) s.classList.add("hidn"); }); }
 setInterval(()=>{ document.querySelectorAll(".bmtmap").forEach(m=>declutterNames(m.parentElement||m)); },400);
 /* 사물 그림(목사님 2026-10-30): 야곱의 관, 언약궤 — 사람처럼 걷지 않고 메고 가는 물건 */
 function OBJ(id){ if(id==="cart"){ /* 젖 나는 암소 두 마리가 끄는 새 수레와 언약궤(삼상 6:7–12 · 목사님 2026-11-01) */
@@ -5801,11 +5818,9 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   function vbPlace(){ if(!VB.length||!map) return; const W=el.clientWidth, H=el.clientHeight, top0=mvNarBottom(el,NTOP), bot=UZ().bot-6, avoid=[]; /* 말풍선이 아래 설명판 밑으로 들어가지 않게(C06) */
     try{ [main,...fol.map(f=>f.m),lead&&lead.m].forEach(m=>{ if(!m) return; const p=map.latLngToContainerPoint(m.getLatLng()); avoid.push({x0:p.x-24,x1:p.x+24,y0:p.y-60,y1:p.y+6}); }); }catch(e){}
     const area=(a,b)=>Math.max(0,Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0))*Math.max(0,Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0));
-    VB.forEach(d=>{ const w=d.offsetWidth, h=d.offsetHeight; if(!d._m){ d.style.transform=`translate(${Math.round((W-w)/2)}px,${Math.round(top0)}px)`; d.classList.remove("tup","tdn"); return; } let p; try{ p=map.latLngToContainerPoint(d._m.getLatLng()); }catch(e){ return; }
-      let best=null, bs=1e18; for(const [dx,dy] of [[-w/2,-h-66],[-w+26,-h-66],[-26,-h-66],[-w/2,16],[-w+26,16],[-26,16]]){ const x=Math.max(10,Math.min(W-w-10,p.x+dx)), y=Math.max(top0,Math.min(bot-h,p.y+dy)), r={x0:x,x1:x+w,y0:y,y1:y+h}; const sc=avoid.reduce((t,a)=>t+area(r,a),0)*10+Math.hypot(x+w/2-p.x,y+h/2-p.y); if(sc<bs){ bs=sc; best=r; } }
-      d.style.transform=`translate(${Math.round(best.x0)}px,${Math.round(best.y0)}px)`; mvTail(d,best.x0,best.y0,w,h,p.x,p.y); }); }
+    VB.forEach(d=>{ let p=null; if(d._m){ try{ p=map.latLngToContainerPoint(d._m.getLatLng()); }catch(e){ return; } } jPlaceBub(d,p,{W,top0,bot,avoid}); }); } /* 통일안: 말풍선 자리 찾기는 공용 부품(jPlaceBub) — 평면도도 같은 것을 씀 */
   function cap(i){ const st=S[i]; if(T.parts){ let a=0; T.parts.forEach((p,k)=>{ if(p.at<=i) a=k; }); el.querySelectorAll(".bmtpc button").forEach((b,k)=>b.classList.toggle("on",k===a)); $(".bmtps").textContent=T.parts[a].s||""; }
-    $(".bmtk").textContent=`${i+1} / ${S.length}${st.s?" · "+st.s:""}`; $(".bmth").textContent=st.t; $(".bmtn").textContent=st.n||""; $(".bmtend").hidden=true; $(".bmtp").classList.add("fix");
+    $(".bmtk").textContent=jKick(i,S.length,(st.r||st.pre)?vLab(st.r||st.pre):""); /* 통일안(목사님 결정 2): 머리줄은 장면 번호 · 성경 자리, 부제는 쓰지 않음 */ $(".bmth").textContent=st.t; $(".bmtn").textContent=st.n||""; $(".bmtend").hidden=true; $(".bmtp").classList.add("fix");
     /* 장면 → 성경(목사님 2026-10-31): 경로를 먼저 본 사람이 그 일이 성경 어디서 일어났는지 바로 펼쳐 보고, 그 본문을 읽는 날로 갈 수 있게 */
     const r=st.r||st.pre, g=$(".bmtgo"); g.hidden=!r; if(!r) return; const D=dayOfRef(r), db=g.querySelector('[data-t="day"]');
     db.hidden=!D; if(D) db.textContent=`${PLAN.abbr[r[0]-1]} ${r[1]}${r[0]===19?"편":"장"} 읽는 날 · ${fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"})} ›`; }
@@ -5820,7 +5835,7 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
   const chm=m=>m&&m.getElement&&m.getElement()&&m.getElement().querySelector(".chm");
   function emo(m,e,force){ const x=m&&m.getElement&&m.getElement(); if(!x||!e) return; if(!force&&VB.some(v=>!v.classList.contains("old"))) return; /* 말풍선이 떠 있는 동안은 감정 표시를 쉼(GPT 2차) */ const b=document.createElement("span"); b.className="mvemo"; b.textContent=e; x.appendChild(b); setTimeout(()=>b.remove(),1700); }
   const EMO=st=>[...(st.mood||"")].filter(c=>c.trim()&&c!=="️");
-  function label(q){ if(!q||!q[0]||shown.has(q[0])) return; shown.add(q[0]); const est=/\?$/.test(q[0]), nm=q[0].replace(/\?$/,""), rg=!est&&(PLACE.get(nm)||[])[3]==="r"; /* 원칙 2.5: 땅·광야 같은 지역 이름은 한 점이 아니라 그 일대 */ /* 3차 R3-18: 이름 끝 ?는 자리를 추정한 곳 */ if(est) L.circle(LL(q),{radius:9000,color:"#e2b874",weight:1.2,dashArray:"4 5",fillColor:"#e2b874",fillOpacity:.12,interactive:false}).addTo(labs); /* 2차 검수 P1-5: 추정 자리는 점이 아니라 흐린 일대(반지름 9km) */ L.marker(LL(q),{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl${est?" est":""}${rg?" rg":""}">${esc(nm)}${est?"<small>추정</small>":rg?"<small>일대</small>":""}</span>`,iconSize:[0,0],iconAnchor:[-6,8]})}).addTo(labs); clutLater(); }
+  function label(q){ if(!q||!q[0]||shown.has(q[0])) return; shown.add(q[0]); const est=/\?$/.test(q[0]), nm=q[0].replace(/\?$/,""), rg=!est&&(PLACE.get(nm)||[])[3]==="r"; /* 원칙 2.5: 땅·광야 같은 지역 이름은 한 점이 아니라 그 일대 */ /* 3차 R3-18: 이름 끝 ?는 자리를 추정한 곳 */ /* 통일안(목사님 결정 3, 2026-11-12): 추정 9km 원은 없앰 — 근거 없는 정밀성. 추정은 이름표의 '추정' 꼬리말로 */ L.marker(LL(q),{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl${est?" est":""}${rg?" rg":""}">${esc(nm)}${est?"<small>추정</small>":rg?"<small>일대</small>":""}</span>`,iconSize:[0,0],iconAnchor:[-6,8]})}).addTo(labs); clutLater(); }
   /* 이름표 겹침 풀기(2026-11-01): 나중에 지난 곳을 먼저 살리고, 겹치면 점 왼쪽으로, 그래도 겹치면 잠시 숨김 */
   let clutT=0; function clutLater(){ clearTimeout(clutT); clutT=setTimeout(declutter,60); }
   function declutter(){ if(!labs) return; const ms=[]; labs.eachLayer(m=>ms.push(m)); const R=[], ov=r=>R.some(q=>!(r.right<q.left-2||q.right<r.left-2||r.bottom<q.top-1||q.bottom<r.top-1));
@@ -5955,13 +5970,13 @@ function bmTour(ti,s0){ s0=Math.max(0,+s0||0); const T=(typeof BM_TOURS!=="undef
       <path id="pwRide" d="M124 190 L96 222 L150 284 L186 256 L178 272" class="pr"/><path id="pwWalk" d="M186 256 C200 230 214 190 220 150" class="pr w"/><path id="pwBack" d="M220 150 C214 190 200 230 186 256 L150 284 L96 222 L124 190" class="pr b"/>
       <text x="214" y="304" text-anchor="middle" class="px" opacity="0">✕ 짐승이 지나갈 곳이 없음</text><circle r="6" class="pme" cx="124" cy="190"/></svg>
       <p class="pnote">복원도 · 성문과 용정의 자리는 학자마다 다릅니다</p></div>`;
-    el.appendChild(pa); requestAnimationFrame(()=>pa.classList.add("on")); el.querySelector(".bmtmap").classList.add("mvnight");
+    el.appendChild(pa); requestAnimationFrame(()=>pa.classList.add("on")); el.querySelector(".bmtmap").classList.add("mvnight"); setTimeout(()=>{ const sv=pa.querySelector("svg"); if(sv&&document.body.contains(sv)){ jPillify(sv); jDeclutter(sv); } },700); /* 통일안: 장소 = 흰 알약 */
     /* 11/4(R10): 위쪽 본문 카드 아래, 아래 설명판 위에 맞춰 놓음 — 겹치면 작게 */ const fit=()=>{ if(!document.body.contains(pa)) return; const t=Math.max(110,mvNarBottom(el,NTOP)+6), bot=UZ().bot-8, W0=Math.min(360,el.clientWidth*.82), h0=W0*1.17; const w=Math.max(200,Math.min(W0,(bot-t)/1.17)); pa.style.top=t+"px"; pa.style.maxWidth=w+"px"; pa.style.left=pa.style.right="0"; later(fit,500); }; fit();
     const me=pa.querySelector(".pme"), X=pa.querySelector(".px");
     const run=async(id,ms)=>{ const pth=pa.querySelector("#"+id), L0=pth.getTotalLength(); pth.style.strokeDasharray=L0; pth.style.strokeDashoffset=L0; pth.style.opacity=1; const t0=clk;
       while(clk-t0<ms){ if(!(await sleep(30,my))) return false; const k=Math.min(1,(clk-t0)/ms), q=pth.getPointAtLength(L0*k); pth.style.strokeDashoffset=L0*(1-k); me.setAttribute("cx",q.x); me.setAttribute("cy",q.y); } return true; };
     if(!(await sleep(1400,my))) return; showVerse([16,2,13]);
-    if(!(await run("pwRide",5200))) return; showVerse([16,2,14]); X.setAttribute("opacity",1); me.classList.add("stop");
+    if(!(await run("pwRide",5200))) return; showVerse([16,2,14]); jToast(el,"✕ 짐승이 지나갈 곳이 없음 (2:14)"); me.classList.add("stop");
     if(!(await sleep(2400,my))) return; me.classList.remove("stop"); me.classList.add("foot"); showVerse([16,2,15]);
     if(!(await run("pwWalk",2800))) return; if(!(await run("pwBack",4200))) return;
     if(!(await sleep(1500,my))) return; pa.classList.remove("on"); el.querySelector(".bmtmap").classList.remove("mvnight"); setTimeout(()=>pa.remove(),900); }
@@ -6221,12 +6236,12 @@ function atoneOpen(s0){ document.querySelector(".atn")?.remove(); const el=docum
     <g id="at_me"><circle r="7" fill="#fffaf0" stroke="#a5361f" stroke-width="2.4"/><path d="M-4 -1.5 q0-4.5 4-5 q4 .5 4 5 q-4-1.6-8 0z" fill="#a5361f"/></g>
   </svg></div><div class="bmtbars">${Array.from({length:10},()=>`<span><i></i></span>`).join("")}</div>
    <div class="bmttop"><b>대속죄일 · 대제사장의 길</b><button class="bmtic" data-t="prev" aria-label="이전 장면">‹</button><button class="bmtic" data-t="pause" aria-label="멈춤">❚❚</button><button class="bmtic" data-t="nextS" aria-label="다음 장면">›</button><button class="bmtic" data-t="x" aria-label="닫기">✕</button></div>
-   <div class="bmtp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><p class="athold"></p><div class="bmtend" hidden><button class="btn bmtag" data-t="again">↺ 처음부터</button><button class="btn bmtcl" data-t="x">닫기</button></div></div>
+   <div class="bmtp"><p class="bmtk"></p><h3 class="bmth"></h3><p class="bmtn"></p><p class="athold"></p>${jGoHTML()}<div class="bmtend" hidden><button class="btn bmtag" data-t="again">↺ 처음부터</button><button class="btn bmtcl" data-t="x">닫기</button></div></div>
    <p class="bmthint">‹ › 장면 넘기기 · ❚❚ 멈춤</p>`;
   document.body.appendChild(el); document.body.style.overflow="hidden";
   /* 11/9 목사님: 옷 갈아입는 연출 — 평소 대제사장 옷(청색·금) ↔ 거룩한 세마포 옷(16:4, 23–24) */
   const AIMG={}; ["aaron","aaronhp","man","priest"].forEach(k=>{ try{ AIMG[k]="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(C(k).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="92" ')); }catch(e){} });
-  { const g0=el.querySelector("#at_me"); g0.innerHTML=`<ellipse cx="0" cy="0" rx="8" ry="2.6" fill="rgba(60,40,20,.35)"/><image class="atimg" href="${AIMG.aaron||""}" x="-13" y="-38" width="26" height="40"/><text class="pl" x="11" y="-26" style="font-size:9px;font-weight:700;fill:#a5361f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">아론</text>`; }
+  { const g0=el.querySelector("#at_me"); g0.innerHTML=`<ellipse cx="0" cy="0" rx="8" ry="2.6" fill="rgba(60,40,20,.35)"/><image class="atimg" href="${AIMG.aaron||""}" x="-13" y="-38" width="26" height="40"/><text data-jn="who" x="0" y="-41" text-anchor="middle">아론</text>`; jPillify(el.querySelector("#at_map"),g0); /* 통일안: 인물 이름 = 빨간 알약 */ void 0; }
   /* 11/9 목사님: 세 동그라미가 무엇인지 모름 → 뜰에서 시중드는 '다른 제사장들'을 인물로(아론이 휘장 안에 있는 동안은 회막에 있지 못함, 16:17) */
   /* 11/9 목사님: 제사장들은 평소 성소에서 등잔과 향단을 돌봄(출 30:7–8, 레 24:3–4). 아론이 휘장 안에 들어가 속죄하는 동안은 누구든지 회막에 있지 못하므로(16:17) 문으로 걸어 나가 기다렸다가, 아론이 나온 뒤 다시 들어감 */
   const PR_IN=[[124,182],[176,182]], PR_OUT=[[94,232],[236,232]]; /* 11/9 목사님: 회막에서 나온 제사장들은 뜰에서 제물(두 염소·숫양) 곁을 지킴 — 16:17은 회막 안만 금하므로 본문에 어긋나지 않는 추론 */
@@ -6252,13 +6267,13 @@ const S=[
  {s:"16:26, 30",t:"염소를 보낸 사람이 씻고 진영으로",h:"자기 옷 · 번제",d:"아사셀 염소를 광야에 두고 온 사람은 옷을 빨고 물로 몸을 씻은 뒤에야 진영에 들어갑니다. 이렇게 이날 이스라엘이 여호와 앞에 정결하게 됩니다.",q:"염소를 아사셀에게 보낸 자는 그의 옷을 빨고 물로 그의 몸을 씻은 후에 진영에 들어갈 것이며",r:"레 16:26",path:[[150,250]],fx:"return"}
 ];
 const $=id=>el.querySelector("#"+id), NS="http://www.w3.org/2000/svg", me=$("at_me"), trail=$("at_trail"); let fx=$("at_fx");
-let cur=0, paused=false, tok=0, pts=[], old=[];
+let cur=0, paused=false, tok=0, pts=[], old=[], dead=false;
 const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* 멈춤을 지키는 기다림: 멈춰 있는 동안은 시간이 흐르지 않음 */
-const sleep=async ms=>{ if(RM) ms=0; let t=0; while(t<ms){ const d=Math.min(60,ms-t); await new Promise(r=>setTimeout(r,d)); if(!paused) t+=d; } };
+const sleep=async ms=>{ if(RM) ms=Math.min(ms,80); let t=0; do{ const d=Math.max(1,Math.min(60,ms-t)); await new Promise(r=>setTimeout(r,d)); if(!paused) t+=d; }while((t<ms||paused)&&!dead); }; /* 평면도와 같은 규칙: 멈춤 중에도 양보, 닫으면 끝 */
 const mk=(tag,attrs,par=fx)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);par.appendChild(e);return e;};
 const bars=[...el.querySelectorAll(".bmtbars i")];
-function cap(i){ const s=S[i]; el.querySelector(".bmtk").textContent=`${i+1} / ${S.length} · 레 ${s.s}`; el.querySelector(".bmth").textContent=s.t; el.querySelector(".bmtn").textContent=s.d; el.querySelector(".athold").innerHTML=`손에 든 것 <em>${esc(s.h)}</em>`;
+function cap(i){ const s=S[i]; el.querySelector(".bmtk").textContent=jKick(i,S.length,`레 ${s.s}`); jGoSet(el,[3,16,+(s.r.match(/16:(\d+)/)||[0,1])[1]]); el.querySelector(".bmth").textContent=s.t; el.querySelector(".bmtn").textContent=s.d; el.querySelector(".athold").innerHTML=`손에 든 것 <em>${esc(s.h)}</em>`;
   bars.forEach((b,j)=>{ b.style.transition="none"; b.style.width=j<i?"100%":"0"; }); el.querySelector(".bmtend").hidden=true; }
 function setMe(x,y){me.setAttribute("transform",`translate(${x} ${y})`);}
 const D=a=>a.length?"M"+a.map(p=>p.join(" ")).join(" L"):"";
@@ -6268,8 +6283,8 @@ function others(on){} /* 11/9: 제사장들은 사라지지 않고 문으로 드
 async function change(k,label,my){ const FX=fx, mk=(t,a)=>{ const e=document.createElementNS(NS,t); for(const q in a) e.setAttribute(q,a[q]); FX.appendChild(e); return e; }; const g=el.querySelector("#at_me"), tr=(g.getAttribute("transform")||"").match(/translate\(([-\d.]+) ([-\d.]+)\)/), x=tr?+tr[1]:150, y=tr?+tr[2]:200;
     const ring=mk("circle",{cx:x,cy:y-18,r:6,fill:"url(#at_smk)",filter:"url(#at_blur)"}); ring.animate([{r:6,opacity:0},{r:22,opacity:1},{r:26,opacity:0}],{duration:1300,fill:"forwards"});
     const im=g.querySelector(".atimg"); im.animate([{opacity:1},{opacity:0}],{duration:450,fill:"forwards"}); await sleep(480); if(my!==tok) return; dress(k); im.animate([{opacity:0},{opacity:1}],{duration:550,fill:"forwards"});
-    const t=mk("text",{x:x+14,y:y-6,class:"pl",style:"font-size:9.5px;font-weight:700;fill:#3e2a12;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px"}); t.textContent=label; t.animate([{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.8},{opacity:0}],{duration:2600,fill:"forwards"}); await sleep(900); }
-const tag=(x,y,t,anchor)=>{ const e=document.createElementNS(NS,"text"); e.setAttribute("x",x); e.setAttribute("y",y); if(anchor) e.setAttribute("text-anchor",anchor); e.setAttribute("style","font:700 9.5px 'Noto Serif KR',serif;fill:#8f1d0f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px"); e.textContent=t; fx.appendChild(e); e.animate([{opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.85},{opacity:0}],{duration:2800,fill:"forwards"}); };
+    jToast(el,label); await sleep(900); }
+const tag=(x,y,t)=>jToast(el,t); /* 통일안: 지도 위 꼬리표 → 아래 카드 위 안내 띠 */ const tagOld=(x,y,t,anchor)=>{ const e=document.createElementNS(NS,"text"); e.setAttribute("x",x); e.setAttribute("y",y); if(anchor) e.setAttribute("text-anchor",anchor); e.setAttribute("style","font:700 9.5px 'Noto Serif KR',serif;fill:#8f1d0f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px"); e.textContent=t; fx.appendChild(e); e.animate([{opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.85},{opacity:0}],{duration:2800,fill:"forwards"}); };
 async function effect(f,my){ const FX=fx, mk=(t,a)=>{ const e=document.createElementNS(NS,t); for(const q in a) e.setAttribute(q,a[q]); FX.appendChild(e); return e; }; /* 장면이 바뀌면 옛 효과는 떼어 낸 묶음에만 그려짐 */
   if(f==="wash"){for(let r=0;r<3;r++){const c=mk("circle",{cx:150,cy:238,r:8,fill:"none",stroke:"#5b8fa8","stroke-width":1.6});c.animate([{r:8,opacity:.9},{r:22,opacity:0}],{duration:1200,delay:r*350,fill:"forwards"});} await sleep(1300); if(my!==tok) return; await change("aaron","세마포 옷으로 갈아입음",my); }
   if(f==="bull"){ for(const id of ["at_bull","at_rams"]){ const g=$(id); g.setAttribute("opacity",1); g.animate([{opacity:0},{opacity:1}],{duration:700}); } } /* 16:3, 5: 속죄제 수송아지와 번제 숫양 */
@@ -6283,17 +6298,17 @@ async function effect(f,my){ const FX=fx, mk=(t,a)=>{ const e=document.createEle
   if(f==="blood7"||f==="blood7b"){for(let k=0;k<7;k++){if(my!==tok)return;const c=mk("circle",{cx:136+k*4.6,cy:94+((k%2)?1.5:-1),r:1.7,fill:f==="blood7"?"#8f1d0f":"#b2321a"});c.animate([{opacity:0},{opacity:1}],{duration:200,fill:"forwards"});await sleep(260);} }
   if(f==="horns"){for(const [x,y] of [[133,259],[167,259],[133,293],[167,293]]){const c=mk("circle",{cx:x,cy:y,r:2.6,fill:"#8f1d0f"});c.animate([{opacity:0},{opacity:1}],{duration:300,fill:"forwards"});await sleep(250);} for(let k=0;k<7;k++){const c=mk("circle",{cx:140+k*3.4,cy:276,r:1.4,fill:"#8f1d0f"});c.animate([{opacity:0},{opacity:1}],{duration:150,fill:"forwards"});await sleep(140);}  await sleep(600); if(my!==tok) return; await prMove("in",my); }
   if(f==="azazel"){mk("text",{x:206,y:206,class:"pl m"}).textContent="✋✋";await sleep(1200);if(my!==tok)return;
-    $("at_g1").setAttribute("opacity",0);$("at_lot1").setAttribute("opacity",0);$("at_lot2").setAttribute("opacity",0);const g=$("at_g2"),man=mk("g",{}) /* 11/9 목사님: 미리 정한 사람을 인물로 */; man.innerHTML=`<ellipse cx="0" cy="0" rx="6" ry="2" fill="rgba(60,40,20,.3)"/><image href="${AIMG.man||""}" x="-10" y="-30" width="20" height="31"/><text x="9" y="-22" style="font:700 8.5px &quot;Noto Serif KR&quot;,serif;fill:#3e2a12;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">미리 정한 사람</text>`; man.setAttribute("transform","translate(206 222)");const P=[[214,220],[214,300],[160,318],[160,350],[238,416]];
+    $("at_g1").setAttribute("opacity",0);$("at_lot1").setAttribute("opacity",0);$("at_lot2").setAttribute("opacity",0);const g=$("at_g2"),man=mk("g",{}) /* 11/9 목사님: 미리 정한 사람을 인물로 */; man.innerHTML=`<ellipse cx="0" cy="0" rx="6" ry="2" fill="rgba(60,40,20,.3)"/><image href="${AIMG.man||""}" x="-10" y="-30" width="20" height="31"/><text data-jn="who" x="0" y="-33" text-anchor="middle">미리 정한 사람</text>`; jPillify(el.querySelector("#at_map"),man);; man.setAttribute("transform","translate(206 222)");const P=[[214,220],[214,300],[160,318],[160,350],[238,416]];
     for(let i=1;i<P.length;i++){const [x0,y0]=P[i-1],[x1,y1]=P[i];const n=Math.round(Math.hypot(x1-x0,y1-y0)/2);for(let k=1;k<=n;k++){if(my!==tok)return;const x=x0+(x1-x0)*k/n,y=y0+(y1-y0)*k/n;g.setAttribute("x",x);g.setAttribute("y",y);man.setAttribute("transform",`translate(${x-12} ${y+2})`);await sleep(18);}}
     g.animate([{opacity:1},{opacity:0}],{duration:1400,fill:"forwards"}); man.animate([{opacity:1},{opacity:0}],{duration:1600,delay:300,fill:"forwards"});mk("text",{x:292,y:424,class:"pl m","text-anchor":"end"}).textContent="접근하기 어려운 땅";}
   if(f==="return"){ /* 11/9 목사님: 아사셀 염소를 끌고 간 사람이 돌아와 옷을 빨고 몸을 씻은 뒤 진영으로(16:26) */
     const fire=mk("circle",{cx:150,cy:276,r:6,fill:"#e98a2b",opacity:.85});
-    const man=mk("g",{}); man.innerHTML=`<ellipse cx="0" cy="0" rx="6" ry="2" fill="rgba(60,40,20,.3)"/><image href="${AIMG.man||""}" x="-10" y="-30" width="20" height="31"/><text x="9" y="-22" style="font:700 8.5px &quot;Noto Serif KR&quot;,serif;fill:#3e2a12;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px">염소를 보낸 사람</text>`;
+    const man=mk("g",{}); man.innerHTML=`<ellipse cx="0" cy="0" rx="6" ry="2" fill="rgba(60,40,20,.3)"/><image href="${AIMG.man||""}" x="-10" y="-30" width="20" height="31"/><text data-jn="who" x="0" y="-33" text-anchor="middle">염소를 보낸 사람</text>`; jPillify(el.querySelector("#at_map"),man);;
     const mv=async P=>{ for(let i=1;i<P.length;i++){ const [x0,y0]=P[i-1],[x1,y1]=P[i]; const n=Math.round(Math.hypot(x1-x0,y1-y0)/2); for(let k=1;k<=n;k++){ if(my!==tok) return false; man.setAttribute("transform",`translate(${x0+(x1-x0)*k/n} ${y0+(y1-y0)*k/n})`); await sleep(20); } } return true; };
     man.setAttribute("transform","translate(238 418)"); man.animate([{opacity:0},{opacity:1}],{duration:700,fill:"forwards"});
     if(!(await mv([[238,418],[262,372],[268,346]]))) return;
     for(let r=0;r<3;r++){ const c=mk("circle",{cx:268,cy:346,r:6,fill:"none",stroke:"#5b8fa8","stroke-width":1.6}); c.animate([{r:6,opacity:.9},{r:20,opacity:0}],{duration:1200,delay:r*350,fill:"forwards"}); }
-    const lb=mk("text",{x:292,y:334,"text-anchor":"end",class:"pl",style:"font-size:9.5px;font-weight:700;fill:#3e2a12;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px"}); lb.textContent="옷을 빨고 몸을 씻음"; lb.animate([{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:3000,fill:"forwards"});
+    jToast(el,"옷을 빨고 몸을 씻음 (16:26)");
     await sleep(2600); if(my!==tok) return; if(!(await mv([[268,346],[280,300],[286,276]]))) return; man.animate([{opacity:1},{opacity:0}],{duration:900,fill:"forwards"});
     const ln=mk("text",{x:282,y:262,"text-anchor":"end",class:"pl m"}); ln.textContent="진영으로";
     await sleep(1600); if(my!==tok) return; mvNar(el,"이 날에 너희를 위하여 속죄하여 너희를 정결하게 하리니 너희의 모든 죄에서 너희가 여호와 앞에 정결하리라",[3,16,30],66,9000,GODN(30)); }
@@ -6307,7 +6322,7 @@ function reset(){ { const nf=fx.cloneNode(false); fx.replaceWith(nf); fx=nf; } [
   const PRAY=new Set([1,4,5,6,7,8]); /* 2 자기 속죄 · 5·6 피 뿌려 속죄 · 7 제단 속죄 · 8 죄 고백 · 9 번제로 속죄 */
   const pray=()=>{ const g=el.querySelector("#at_me"), m=(g.getAttribute("transform")||"").match(/translate\(([-\d.]+) ([-\d.]+)\)/); if(!m) return; const x=+m[1], y=+m[2];
     const t=mk("text",{x:x,y:y-44,"text-anchor":"middle",style:"font-size:15px"}); t.textContent="🙏"; t.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none",offset:.15},{opacity:1,offset:.85},{opacity:0,transform:"translateY(-6px)"}],{duration:3600,fill:"forwards"}); };
-  async function go(i){ const my=++tok; cur=Math.max(0,Math.min(S.length-1,i)); cap(cur); reset(); el.querySelectorAll(":scope>.mvnar").forEach(n=>{ if(n._c) n._c(); n.classList.remove("on"); });
+  async function go(i){ const my=++tok; cur=Math.max(0,Math.min(S.length-1,i)); jToastClear(el); cap(cur); reset(); el.querySelectorAll(":scope>.mvnar").forEach(n=>{ if(n._c) n._c(); n.classList.remove("on"); });
     for(let j=0;j<cur;j++){S[j].path.forEach(q=>old.push(q)); (S[j].more||[]).forEach(q=>old.push(q));if(j>=2){$("at_goats").style.opacity=1;$("at_lot1").setAttribute("opacity",1);$("at_lot2").setAttribute("opacity",1);} if(S[j].fx==="azazel"){$("at_g2").setAttribute("opacity",0);$("at_g1").setAttribute("opacity",0);$("at_lot2").setAttribute("opacity",0);} }
     if(cur>=1){ $("at_bull").setAttribute("opacity",cur>3?0:1); $("at_rams").setAttribute("opacity",cur>8?0:1); } if(cur>=3) $("at_lot1b").setAttribute("opacity",1); if(cur>5){ $("at_g1").setAttribute("opacity",0); $("at_lot1").setAttribute("opacity",0); $("at_lot1b").setAttribute("opacity",0); }
     prSet(cur>=4&&cur<=6?"out":"in");
@@ -6321,13 +6336,16 @@ function reset(){ { const nf=fx.cloneNode(false); fx.replaceWith(nf); fx=nf; } [
     return my===tok; }
   async function run(i){ for(let k=i;k<S.length;k++){ const ok=await go(k); if(!ok) return; } el.querySelector(".bmtend").hidden=false; }
   const setPause=v=>{ paused=v; try{ document.getAnimations().forEach(a=>{ const tg=a.effect&&a.effect.target; if(tg&&el.contains(tg)) v?a.pause():a.play(); }); }catch(e){} const pb=el.querySelector('[data-t="pause"]'); pb.textContent=v?"▶":"❚❚"; pb.setAttribute("aria-label",v?"이어 보기":"멈춤"); };
-  const close=pop=>{ tok++; el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
+  const ADC=setInterval(()=>{ if(document.body.contains(el)) jDeclutter(el.querySelector("#at_map")); },350);
+  const close=pop=>{ tok++; dead=true; paused=false; clearInterval(ADC); jToastClear(el); el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
   el.addEventListener("click",e=>{ const t=e.target.closest("[data-t]"); if(!t) return; const k=t.dataset.t;
-    if(k==="x") close(); else if(k==="prev"){ run(Math.max(0,cur-1)); } else if(k==="nextS"){ run(Math.min(S.length-1,cur+1)); } /* 11/9 검토: 멈춘 채 넘기면 멈춘 채로 그 장면을 보여 줌 */
+    const r16=()=>[3,16,+(S[cur].r.match(/16:(\d+)/)||[0,1])[1]];
+    if(k==="x") close(); else if(k==="day") jGoDay(r16(),close); else if(k==="verse"){ const r=r16(), was=paused; setPause(true); sVerseSheet(`${r[0]}-${r[1]}-${r[2]}-${r[2]}`,()=>{ if(!was&&!dead) setPause(false); }); } else if(k==="prev"){ run(Math.max(0,cur-1)); } else if(k==="nextS"){ run(Math.min(S.length-1,cur+1)); } /* 11/9 검토: 멈춘 채 넘기면 멈춘 채로 그 장면을 보여 줌 */
     else if(k==="pause") setPause(!paused); else if(k==="again"){ setPause(false); run(0); } });
   /* 11/9 목사님: 다른 큰 여정처럼 첫 설명을 보여 주고 가운데 ▶ 시작을 눌러야 시작 */
   el.querySelector(".bmtk").textContent="레위기 16장 · 성막 안에서"; el.querySelector(".bmth").textContent="대속죄일 · 대제사장의 길"; el.querySelector(".bmtn").textContent="일 년에 한 번, 대제사장 아론이 홀로 지성소에 들어가 자기와 온 이스라엘을 위해 속죄하는 날입니다. 위가 서쪽(지성소), 아래가 동쪽(뜰 문·광야)입니다."; el.querySelector(".athold").innerHTML="";
-  dress("aaronhp"); setMe(150,206); bars.forEach(b=>{ b.style.width="0"; });
+  dress("aaronhp"); setMe(150,206); bars.forEach(b=>{ b.style.width="0"; }); el.querySelector(".bmtgo").hidden=true;
+  jFit(el,[[el.querySelector(".bmtk").textContent,el.querySelector(".bmth").textContent,el.querySelector(".bmtn").textContent],...S.map((s,i)=>[jKick(i,S.length,`레 ${s.s}`),s.t,s.d])]); { const sv=el.querySelector("#at_map"); jPillify(sv); jDeclutter(sv); } /* 통일안 */
   { const st0=Math.max(0,Math.min(S.length-1,+s0||0)), b=document.createElement("button"); b.className="bmtgo0"; b.setAttribute("aria-label",st0?`${st0+1}번째 장면부터 시작`:"시작"); b.innerHTML=`<i>▶</i><span>${st0?`${st0+1}번째 장면부터`:"시작"}</span>`; el.appendChild(b); setTimeout(()=>b.focus(),30);
     b.onclick=e=>{ e.stopPropagation(); b.remove(); run(st0); }; }
   /* 지도 왼쪽을 누르면 앞 장면, 오른쪽은 다음 장면(큰 여정과 같게) */

@@ -34,7 +34,7 @@ const base=(id,title,sub,kicker,intro,open,scenes,end)=>(scenes.forEach(FOC),pla
 const Q=(b,c,v,t)=>({r:[b,c,v],q:t});
 const SUP=(b,c,v,q,s,d)=>({s,t:"유월절 식사 · 다락방",d,...Q(b,c,v,q),night:true,at:[["me",UP[0],UP[1]-14],["pt",UP[0]-16,UP[1]-6],["ds",UP[0]+18,UP[1]-4]],fx:[["glow",UP[0],UP[1]-14,22,1200]]});
 const CROSS_DARK=(b,c,v,q,s,d,quake)=>({s,t:"십자가 · 어둠 · 성소 휘장",d,...Q(b,c,v,q),hold:11000,fx:[["dark",.5],["wait",1500],["tear",217,134,154],["label",217,196,"성소 휘장이 찢어짐","t"],...(quake?[["quake"],["label",150,60,"땅이 진동하고 바위가 터짐 (27:51)","t"]]:[])]});
-const BURIAL=(b,c,v,q,s,d,who)=>({s,t:"동산 무덤에 장사하다",d,...Q(b,c,v,q),gone:["sol"],at:[["jos",GOL[0]-14,GOL[1]+10]],moves:{jos:P_GOL_TOMB.slice(1).map(([x,y])=>[x-8,y+6]),...(who?{[who]:[[GOL[0]+18,GOL[1]+14],[TOMB[0]+18,TOMB[1]+12]]}:{})},fx:[["hideA","me"],["wait",500],["dot",TOMB[0],TOMB[1],"#5a3c1c",2]]});
+const BURIAL=(b,c,v,q,s,d,who)=>({s,t:"동산 무덤에 장사하다",d,...Q(b,c,v,q),gone:["sol","si"],at:[["jos",GOL[0]-14,GOL[1]+10]],moves:{jos:P_GOL_TOMB.slice(1).map(([x,y])=>[x-8,y+6]),...(who?{[who]:[[GOL[0]+18,GOL[1]+14],[TOMB[0]+18,TOMB[1]+12]]}:{})},fx:[["hideA","me"],["wait",500],["dot",TOMB[0],TOMB[1],"#5a3c1c",2]]});
 
 /* ── 마태복음 ── */
 base("passion_mt","마지막 밤과 날 · 마태복음","마태복음 26–28장 · 다락방에서 빈 무덤, 갈릴리로","마태복음 26–28장 · 예루살렘 성 안",

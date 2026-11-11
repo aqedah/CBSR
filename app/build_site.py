@@ -16,7 +16,7 @@ data+="\nconst BM_TOURS="+open('ux/big_tours.json').read()+";"
 import glob as _g
 import subprocess as _sp
 if _sp.call(['python3','ux/plans_check.py'])!=0: raise SystemExit('평면도 여정 인용이 개역개정 원문과 다릅니다(ux/plans_check.py)')
-t=t.replace('/*PLANS*/',open('ux/plans.js').read()+"\n"+"\n".join(open(f).read() for f in sorted(_g.glob('ux/plans/*.js'))))
+t=t.replace('/*PLANS*/',open('ux/journey_ui.js').read()+"\n"+open('ux/plans.js').read()+"\n"+"\n".join(open(f).read() for f in sorted(_g.glob('ux/plans/*.js'))))
 data+="\nconst RIVERS="+open('ux/rivers.json').read()+";"
 data+="\nconst PHOTO_PIN="+json.dumps(json.load(open('ux/photo_pin.json'))['pins'],ensure_ascii=False,separators=(',',':'))+";"
 data+="\nconst PHOTO_USE="+json.dumps(json.load(open('ux/photo_use_proposed.json'))['uses'],ensure_ascii=False,separators=(',',':'))+";"
