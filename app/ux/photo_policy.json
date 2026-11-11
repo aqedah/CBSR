@@ -17716,28 +17716,6 @@
     "basis": "PDF 원본(Gemini Notebook, 60회 15장)을 한 장씩 직접 보고 분류"
    }
   },
-  "g60_05": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 2,
-     "chapter": 9,
-     "fromVerse": 10,
-     "toVerse": 11,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "애굽 궁 뜰, 재가 내리는 가운데 흰 아마 옷의 요술사 셋이 허리를 굽혀 물러서고 왼쪽에 모세·아론. 출 9:10–11 (61회 재출력)",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
   "g60_06": {
    "assetKind": "scene",
    "relation": "event",
@@ -18169,50 +18147,6 @@
     "공의"
    ],
    "note": "갈라진 마른 골짜기 바닥으로 맑은 물이 막 터져 흐름, 저녁 빛에 물결이 반짝임. 암 5:24",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
-  "g61_06": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 38,
-     "chapter": 8,
-     "fromVerse": 20,
-     "toVerse": 23,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "성문 밖 길, 줄무늬 겉옷의 유다 사람 뒤를 열 사람이 옷자락을 잡고 따름 보류: 뒤의 성문이 오스만 시대 다메섹 문(총안 있는 중세식 성벽)으로 나옴 — 고증 어긋남",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 61회·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
-  "g61_07": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 42,
-     "chapter": 6,
-     "fromVerse": 6,
-     "toVerse": 8,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "돌 회당 안, 가운데 서서 손을 든 남자와 둘레에 앉은 사람들 보류: 가운데 인물이 긴 머리·수염에 빛을 받아 예수님처럼 보이고, 든 손이 마른 손으로 보이지 않음",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",

@@ -789,7 +789,6 @@ g60_01|s|1:3|동산 나무 사이에 숨은지라/내가 어디 있느냐/벗었
 g60_02|s|1:21|떡과 물 한 가죽부대/하갈의 어깨에 메워/브엘세바 광야|old_man,woman,boy,water_skin,tent,dawn|브엘세바|5|warm|50|떡과 물부대를 지워 하갈을 보내는 아침 (창 21)|||scene
 g60_03|s|1:29|아침에 보니 레아라/언니보다 아우를 먼저/속이셨나이까|tent,morning,woman,young_man,laban|하란|5|warm|50|아침에 드러난 레아, 야곱과 라반 (창 29)|||scene
 g60_04|s|1:45|나는 요셉이라/내 앞에서 놀라서/형들에게 자기를 알리니|egyptian_hall,joseph,brothers,shock|애굽|5|warm|50|자기를 알리는 요셉과 얼어붙은 형들 (창 45)|||scene
-g60_05|s|2:9|악성 종기/요술사들도/모세 앞에 서지 못하니|pharaoh,magicians,moses,aaron,ash|애굽|5|dark|50|종기로 서지 못하는 요술사들 (출 9)|||scene
 g60_06|s|2:32|깨뜨리니라/이 송아지가 나왔나이다/아론이 그들을 방자하게|broken_tablets,calf,fire,moses,aaron|시내 산|5|dark|50|깨진 돌판 앞 아론의 변명 (출 32)|||scene
 g60_07|s|3:11|굽이 갈라져/새김질/지느러미와 비늘/부정하니|clean_animals,unclean_animals,fish,stream||5|bright|50|정한 짐승과 부정한 짐승 (레 11)|||object
 g60_08|s|7:8|우리를 다스리소서/여호와께서 너희를 다스리시리라/금 귀고리|soldiers,shields,gideon,gold_earrings,dusk||6|warm|50|왕이 되어 달라는 백성과 거절하는 기드온 (삿 8)|||scene
@@ -806,8 +805,6 @@ g61_02|s|4:32|르우벤 자손과 갓 자손/가축이 심히 많/야셀 땅과 
 g61_03|s|21:12|맷돌 소리/살구나무/길에서도 두려워/영원한 집|old_man,doorway,millstone,almond_blossom,evening||7|warm|50|저무는 집 — 문턱의 노인, 멈춘 맷돌, 꽃 핀 살구나무 (전 12)|||symbolic
 g61_04|s|23:55|돈 없이/값 없이/포도주와 젖|market,merchant,jar,poor_family,canopy||7|warm|50|돈 없이, 값 없이 — 포도주와 젖을 따라 주는 상인 (사 55)|||scene
 g61_05|s|30:5|정의를 물 같이/공의를 마르지 않는 강 같이|dry_valley,water_rushing,cracked_earth,evening_light||7|bright|50|마른 골짜기에 터져 흐르는 물 — 정의가 물같이 (암 5)|||symbolic
-g61_06|s|38:8|유다 사람 하나의 옷자락/열 사람/너희와 함께 가려 하노라|judean,ten_men,robe_hem,city_gate,road|예루살렘|7|bright|50|유다 사람의 옷자락을 잡은 열 사람 (슥 8)|보류: 오스만식 성문||scene
-g61_07|s|42:6|오른손 마른 사람/회당/안식일|synagogue,man_standing,hand_raised,stone_benches||9|bright|50|회당 가운데 선 손 마른 사람 (눅 6)|보류: 예수님처럼 보임||scene
 g61_08|s|44:5|공회 앞/대제사장이 물어/사람보다 하나님께 순종|council,sadducees,apostles_bound,hall,light_shafts|예루살렘|10|bright|50|공회 앞에 선 두 사도 (행 5)|||scene
 g61_09|s|66:7|흰 옷을 입고/종려 가지/각 나라와 족속과 백성과 방언/아무도 능히 셀 수 없는 큰 무리|white_robes,palm_branches,multitude,white_light||7|bright|50|흰 옷 입고 종려 가지를 든 큰 무리 (계 7)|||symbolic
 g61_10|s|2:15|미리암/소고를 잡/여호와를 찬송하라/모든 여인|miriam,women,tambourines,seashore,chariot_wheel|홍해|5|bright|50|소고를 든 미리암과 여인들 (출 15)|||scene
