@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>통독 가이드북 작업실</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Noto+Serif+KR:wght@400;700&display=swap">
+<style>
+/* 작업실(화면) — 편집 왼쪽, 펼침면 미리보기 오른쪽 */
+:root{--bg:#F6F5F2;--panel:#fff;--ink:#1a1a1a;--mute:#6b6b6b;--line:#dcdad5;--acc:#2E7D4F;--warn:#C23B3B;--ok:#2E7D4F;
+  --q1:#2E7D4F;--q1L:#E6F2EA;--q2:#6A3FA0;--q2L:#EFE8F7;--q3:#1F5FA8;--q3L:#E6EEF8;--q4:#C23B3B;--q4L:#FBE9E9}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans CJK KR",system-ui,sans-serif;font-size:14px}
+header{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:-.2px}
+header .sp{flex:1}
+button,select,input[type=file]{font:inherit}
+button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 11px;cursor:pointer}
+button.pri{background:var(--acc);color:#fff;border-color:var(--acc)}
+button:disabled{opacity:.5;cursor:default}
+select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#fff}
+#status{font-size:12px;color:var(--mute)}
+body{display:flex;flex-direction:column}
+header{flex:0 0 auto}
+main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:420px 1fr}
+@media (max-width:980px){main{grid-template-columns:1fr;min-height:0;display:block}}
+#form{overflow:auto;padding:14px 16px 60px;background:var(--panel);border-right:1px solid var(--line)}
+#prev{overflow:auto;padding:16px}
+.dayhead{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.dayhead .t{font-weight:700;font-size:15px}
+.dayhead .s{color:var(--mute);font-size:12px}
+fieldset{border:0;padding:0;margin:0 0 16px}
+legend{font-weight:700;font-size:13px;padding:0;margin:0 0 6px;display:flex;align-items:center;gap:6px}
+legend .n{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;align-items:center;justify-content:center}
+label.f{display:block;margin:0 0 9px}
+label.f .k{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-bottom:3px}
+label.f .k b{color:var(--ink);font-weight:700}
+label.f .cnt{font-variant-numeric:tabular-nums}
+label.f .cnt.over{color:var(--warn);font-weight:700}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font:inherit;font-size:13px;line-height:1.5;background:#fff;color:var(--ink);resize:vertical}
+textarea{min-height:90px;resize:vertical;overflow:hidden}
+.row{display:grid;grid-template-columns:90px 1fr;gap:6px;margin-bottom:5px}
+.row3{display:grid;grid-template-columns:70px 1fr;gap:6px;margin-bottom:5px}
+.hint{font-size:12px;color:var(--mute);margin:-4px 0 8px}
+#fit{font-size:12px;padding:6px 10px;border-radius:6px;background:#eee;display:inline-block;margin-bottom:10px}
+#fit.bad{background:#FBE9E9;color:var(--warn)}
+#fit.good{background:#E6F2EA;color:var(--ok)}
+#fit.warn{background:#FFF4DC;color:#7A5200}
+#prev{display:flex;flex-direction:column;align-items:center}
+#frontbox{border:1px solid var(--line);border-radius:8px;background:#fff;margin:0 0 14px}
+body.onfront #form .dayhead,body.onfront #form #fit,body.onfront #form fieldset{display:none}
+body.onfront #frontbox{border-color:var(--acc)}
+body.onback #frontbox{border-color:#e3e3dc}
+body.onback #frontbox>summary{color:var(--mute)}
+body.onfront #frontbox>summary{color:var(--acc)}
+#frontbox>summary{cursor:pointer;padding:9px 11px;font-size:13px;font-weight:700}
+#frontform{padding:4px 11px 12px;border-top:1px solid var(--line)}
+#frontform .fsc{display:block;background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin:8px 0 6px;font-size:12px}
+#frontform .fsc .h{display:block;color:var(--mute);margin-top:3px;font-size:11px}
+#frontform .h{font-size:11px;color:#a07000;margin:0 0 8px}
+#frontform label.qonly>b::after{content:' · 이 권만';color:#a07000;font-weight:400}
+#frontform label.qonly input,#frontform label.qonly textarea{background:#fffdf3;border-color:#e3c78a}
+#frontform .ff{display:block;margin:0 0 9px}
+#frontform .ff>b{display:block;font-size:12px;margin:0 0 3px;color:#444}
+#frontform .ff>b{display:flex;align-items:center;gap:6px}
+button.fdef{border:1px solid #ddd;background:#fafaf6;color:#888;border-radius:5px;font-size:10.5px;padding:1px 6px;cursor:pointer;visibility:hidden}
+#frontform .ff.edited>b{color:var(--acc)}
+#frontform .ff.edited>b button.fdef{visibility:visible;border-color:#d9cfae;color:#8a6d1f;background:#fdfaf0}
+#frontform .ff.edited textarea,#frontform .ff.edited input[type=text]{border-color:#e0d4a8;background:#fffdf5}
+#fdefall button.fdef{visibility:visible;margin-left:4px}
+#frontform .ff>.h{font-size:11px;color:#888;margin:2px 0 0}
+#frontform input,#frontform textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:5px 7px;font:inherit;font-size:12px;line-height:1.5;background:#fff;resize:vertical}
+#frontform hr{border:0;border-top:1px solid var(--line);margin:12px 0 10px}
+#bookbar{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-size:13px;color:#555;user-select:none}
+#bkLab{font-weight:700;color:#222;text-align:center}
+#scaled [data-f]{cursor:pointer}
+#scaled [data-f]:hover{outline:1.5px dashed rgba(0,0,0,.22);outline-offset:2px}
+#scaled [data-f].editing{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+#form .flash{animation:fl 1.1s ease-out}
+@keyframes fl{0%{box-shadow:0 0 0 3px rgba(26,77,51,.35)}100%{box-shadow:0 0 0 3px rgba(26,77,51,0)}}
+#fit{cursor:pointer}
+.pvsel{display:inline-flex;gap:0;margin-left:6px}
+.pvsel button{padding:3px 9px;font-size:12px;border-radius:0}
+.pvsel button:first-child{border-radius:6px 0 0 6px}
+.pvsel button:last-child{border-radius:0 6px 6px 0}
+.pvsel button+button{border-left:0}
+.pvsel button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+#scalebox button.nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;font-size:20px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.88);border:1px solid rgba(0,0,0,.12);box-shadow:0 2px 10px rgba(0,0,0,.18);color:#333;z-index:8;opacity:.55;transition:opacity .15s}
+#scalebox:hover button.nav{opacity:1}
+#scalebox button.nav.l{left:10px} #scalebox button.nav.r{right:10px}
+#scalebox button.nav:disabled{opacity:.12;cursor:default}
+#bkNo{color:#999;font-variant-numeric:tabular-nums}
+#scalebox{position:relative;perspective:2600px;perspective-origin:50% 50%;overflow:hidden;max-width:100%}
+#scaled{position:absolute;top:0;left:0;transform-origin:0 0;box-shadow:0 10px 34px rgba(0,0,0,.18)}
+#flip{position:absolute;top:0;display:none;transform-origin:0 0;pointer-events:none;z-index:5}
+.fsheet{position:relative;width:148mm;height:210mm;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.4,.05,.3,1)}
+.fsheet.fwd{transform-origin:left center}
+.fsheet.bwd{transform-origin:right center}
+.fsheet .fface,.fsheet .fback{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.fsheet .fback{transform:rotateY(180deg)}
+.fsheet .fsh{position:absolute;inset:0;background:linear-gradient(to left,rgba(0,0,0,.18),rgba(0,0,0,0) 45%);opacity:0;transition:opacity .62s}
+.fsheet.bwd .fsh{background:linear-gradient(to right,rgba(0,0,0,.18),rgba(0,0,0,0) 45%)}
+.fsheet.fwd.go{transform:rotateY(-180deg)}
+.fsheet.bwd.go{transform:rotateY(180deg)}
+.fsheet.go .fsh{opacity:1}
+.spread{display:flex;gap:0;background:#4a4a4a;padding:0}
+dialog{border:1px solid var(--line);border-radius:10px;padding:18px;max-width:560px;width:92vw}
+.conf{border-top:1px solid var(--line);padding:8px 0} .conf label{display:block;font-size:13px;margin:3px 0 0 8px} #confList{max-height:50vh;overflow:auto}
+dialog textarea{min-height:200px;font-family:ui-monospace,monospace;font-size:12px}
+dialog h3{margin:0 0 10px;font-size:15px}
+dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.small{font-size:12px;color:var(--mute)}
+#printroot{display:none}
+
+/* ───── 가이드북 쪽(A5) — 인쇄와 미리보기 공통 ───── */
+.pg{width:148mm;height:210mm;box-sizing:border-box;padding:13mm 14mm 11mm 14mm;background:#fff;font-family:"Noto Serif KR","Noto Serif CJK KR",serif;color:#000;position:relative;overflow:hidden;--main:var(--q2);--mainL:var(--q2L);--gy:#F2F2F2;--gyb:#BBB;--ink:#111}
+.pg.q1{--main:var(--q1);--mainL:var(--q1L)} .pg.q2{--main:var(--q2);--mainL:var(--q2L)} .pg.q3{--main:var(--q3);--mainL:var(--q3L)} .pg.q4{--main:var(--q4);--mainL:var(--q4L)}
+.pg .sans{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .date{font-size:8.8pt;color:var(--main);margin:0 0 1mm;font-weight:700}
+.pg .pn{position:absolute;bottom:5.5mm;left:14mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-size:8pt;color:#777;letter-spacing:0.02em}
+.pg.r .pn{left:auto;right:14mm}
+.pg .title{font-size:16pt;font-weight:700;letter-spacing:-0.3px;border-bottom:0.7mm solid var(--main);padding-bottom:0.4mm;margin:0 0 1mm}
+.pg .sub{font-size:10.5pt;font-weight:700;margin:0 0 2.2mm;color:#333}
+.pg .sec{font-size:9.5pt;font-weight:700;letter-spacing:0.3px;border-bottom:0.3mm solid var(--gyb);padding-bottom:0.3mm;margin:3mm 0 1.6mm;color:var(--ink)}
+.pg .n{display:inline-block;background:var(--main);color:#fff;border-radius:50%;width:4.6mm;height:4.6mm;line-height:4.6mm;text-align:center;font-size:8.5pt;margin-right:1.2mm;vertical-align:1px;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg p.b{font-size:10pt;line-height:1.46;margin:0 0 1.3mm;text-align:justify}
+.pg p.b b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;color:var(--ink)}
+.pg .go{font-size:9.5pt;font-weight:700;margin:1.8mm 0 1mm;padding-left:0.5mm;color:var(--main)}
+.pg .ref{font-size:10pt;color:#222;line-height:1.45;margin:0 0 0.7mm 4mm;text-indent:-4mm;word-break:keep-all;overflow-wrap:anywhere}
+.pg .hint2{font-size:8.6pt;color:#666;margin:-0.6mm 0 1.2mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .samp{border:0.15mm solid #bbb;border-left:0.9mm solid var(--main);background:#fff;padding:2mm 2.6mm 2.2mm;margin:1.6mm 0 1.6mm}
+.pg .samp .sh2{font-family:"Noto Sans KR",sans-serif;font-size:8.6pt;font-weight:700;color:var(--main);margin:0 0 2mm}
+.pg .samp .sh2 .n{display:inline-block;background:var(--main);color:#fff;border-radius:50%;width:4mm;height:4mm;line-height:4mm;text-align:center;font-size:7pt;margin-right:1.4mm}
+.pg .samp .slab{font-family:"Noto Sans KR",sans-serif;font-size:8.2pt;font-weight:700;margin:2.2mm 0 0.8mm}
+.pg .samp .slab .st{display:inline-block;border:0.2mm solid var(--main);color:var(--main);border-radius:0.7mm;width:3.4mm;height:3.4mm;line-height:3.4mm;text-align:center;font-size:6.6pt;margin-right:1.2mm}
+.pg .samp .sq{font-size:8.6pt;color:#555;margin:0 0 1mm;line-height:1.42}
+.pg .samp .sa{font-size:9.2pt;margin:0;line-height:1.5;border-bottom:0.12mm solid #ddd;padding-bottom:1.2mm;color:#1a4d33}
+.pg.q2 .samp .sa{color:#432a63} .pg.q3 .samp .sa{color:#19406f} .pg.q4 .samp .sa{color:#7d2626}
+.pg .atlas{margin:1mm 0 1.4mm}
+.pg .atlas svg{margin:0 auto}
+.pg ul.leg{list-style:none;margin:0 0 1.6mm;padding:0;display:flex;flex-wrap:wrap;gap:1.2mm 5mm;font-size:8.6pt}
+.pg ul.leg li{display:flex;align-items:center;gap:1.4mm}
+.pg ul.leg .sw{display:inline-block;width:7mm;height:0;border-top:0.8mm dashed currentColor;border-color:inherit}
+.pg .tab{margin:1.4mm 0 0}
+.pg .stx{border:0.15mm solid #bbb;border-left:0.9mm solid var(--main);background:#fff;padding:1.4mm 2.2mm 1.6mm;margin:1.4mm 0 1.2mm}
+.pg .stx .sh{font-family:"Noto Sans KR",sans-serif;font-size:7.6pt;font-weight:700;color:var(--main);margin:0 0 1.2mm;letter-spacing:.2mm}
+.pg .stx .sr{display:flex;gap:1.6mm;align-items:baseline;margin:0 0 0.9mm;line-height:1.38}
+.pg .stx .sm2{flex:0 0 5mm;font-family:"Noto Sans KR",sans-serif;font-weight:700;color:var(--main);font-size:8.4pt}
+.pg .stx .sw{flex:0 0 17mm;white-space:nowrap;font-family:"Noto Sans KR",sans-serif;font-size:7.8pt;color:#555}
+.pg .stx .st2{flex:1 1 auto;font-size:8.6pt}
+.pg .vs{color:var(--main)}
+.pg.cv{padding:0;display:flex;flex-direction:column;justify-content:flex-end;background:var(--main);color:#fff;overflow:hidden}
+.pg.cv .cvfield{position:absolute;inset:0;background:linear-gradient(160deg,color-mix(in srgb,var(--main) 82%,#000) 0%,var(--main) 55%,color-mix(in srgb,var(--main) 62%,#fff) 100%)}
+.pg.cv .cvbox{position:relative;margin-top:auto;padding:0 16mm;margin-bottom:30mm}
+.pg .cvk{font-family:"Noto Sans KR",sans-serif;font-size:10pt;opacity:.85;margin:0 0 3mm}
+.pg .cvt{font-family:"Noto Sans KR",sans-serif;font-size:30pt;font-weight:800;line-height:1.18;margin:0}
+.pg .cvs{font-family:"Noto Sans KR",sans-serif;font-size:12pt;margin:5mm 0 0;opacity:.92}
+.pg .cvch{position:relative;font-family:"Noto Sans KR",sans-serif;font-size:9.5pt;padding:0 16mm 14mm;opacity:.85;margin:0}
+.pg.cv.back{justify-content:flex-start}
+.pg .cvbox2{position:relative;padding:26mm 16mm 0;margin-bottom:auto}
+.pg .bkt{font-family:"Noto Sans KR",sans-serif;font-size:13pt;font-weight:700;margin:0 0 6mm}
+.pg .bkp{font-size:10pt;line-height:1.62;margin:0 0 4mm;opacity:.95}
+.pg.dv{padding:0;display:flex;flex-direction:column;justify-content:center;background:var(--mainL);overflow:hidden}
+.pg.dv .dvfield{position:absolute;left:0;right:0;top:0;height:3.5mm;background:var(--main)}
+.pg.dv .dvbox{position:relative;padding:0 18mm}
+.pg .dvk{font-family:"Noto Sans KR",sans-serif;font-size:9.5pt;color:var(--main);margin:0 0 5mm;letter-spacing:.3mm}
+.pg .dvt{font-family:"Noto Sans KR",sans-serif;font-size:21pt;font-weight:800;line-height:1.3;margin:0;color:#1a1a1a}
+.pg .dvs{font-family:"Noto Sans KR",sans-serif;font-size:11pt;margin:6mm 0 0;color:#555}
+.pg .dvnote{position:absolute;left:14mm;right:14mm;bottom:28mm;font-size:10pt;color:#777;text-align:right}
+.pg.ep{background:color-mix(in srgb,var(--mainL) 70%,#fff)}
+.pg.fm{font-size:10pt;line-height:1.5}
+.pg .fh{font-family:"Noto Sans KR",sans-serif;font-size:15pt;font-weight:800;color:var(--main);margin:0 0 4mm;padding-bottom:1.6mm;border-bottom:0.4mm solid var(--main)}
+.pg .fh2{font-family:"Noto Sans KR",sans-serif;font-size:12pt;font-weight:700;color:var(--main);margin:0 0 2.4mm}
+.pg .fp{margin:0 0 3mm;text-align:justify}
+.pg .fp.sm{font-size:9pt;color:#444;margin-bottom:2.2mm}
+.pg .fsig{margin-top:6mm;text-align:right;font-size:10pt}
+.pg .fmmid{position:absolute;left:14mm;right:14mm;top:62mm;text-align:center}
+.pg .ftk{font-family:"Noto Sans KR",sans-serif;font-size:9.5pt;color:#666;margin:0 0 3mm}
+.pg .ftt{font-family:"Noto Sans KR",sans-serif;font-size:22pt;font-weight:800;margin:0;color:var(--main)}
+.pg .fts{font-family:"Noto Sans KR",sans-serif;font-size:11pt;margin:4mm 0 0;color:#444}
+.pg .ftc{font-family:"Noto Sans KR",sans-serif;font-size:10pt;margin:16mm 0 0;color:#666}
+.pg .fmbot{position:absolute;left:14mm;right:14mm;bottom:18mm}
+.pg .cp{font-size:8.6pt;line-height:1.55;margin:0 0 1.2mm;color:#333}
+.pg .st4{margin:0 0 2.6mm;line-height:1.5}
+.pg .stn{display:inline-block;background:var(--main);color:#fff;border-radius:50%;width:4.6mm;height:4.6mm;line-height:4.6mm;text-align:center;font-size:8pt;margin-right:1.6mm;font-family:"Noto Sans KR",sans-serif}
+.pg ol.rules{margin:0;padding-left:5mm}
+.pg ol.rules li{margin:0 0 1.8mm;line-height:1.5}
+.pg table.symt{width:100%;border-collapse:collapse;font-size:9.2pt}
+.pg table.symt td{vertical-align:top;padding:1.3mm 0;border-bottom:0.1mm solid #e4e4e4;line-height:1.42}
+.pg table.symt td.sc{width:21mm;white-space:nowrap}
+.pg table.symt td.sc2{width:46mm;color:var(--main);font-weight:700;font-family:"Noto Sans KR",sans-serif;font-size:9pt;line-height:1.35}
+.pg table.symt .ex{color:#555;font-size:8.6pt}
+.pg table.symt tr.sub td{border-bottom:0;padding:.5mm 0 .5mm 0;font-size:8.6pt}
+.pg table.symt tr.sub td.sc2{width:30mm;padding-left:5mm;font-size:8.4pt;font-weight:600}
+.pg table.symt tr.sub+tr:not(.sub) td{border-top:0.1mm solid #e4e4e4}
+.pg table.symt tr.sub:last-child td{padding-bottom:1.3mm;border-bottom:0.1mm solid #e4e4e4}
+.pg table.bkt2{width:100%;border-collapse:collapse;font-size:10pt}
+.pg table.bkt2 th{text-align:left;font-family:"Noto Sans KR",sans-serif;font-size:9pt;color:#666;border-bottom:0.3mm solid var(--main);padding:0 0 1.2mm}
+.pg table.bkt2 td{padding:1.7mm 0;border-bottom:0.1mm solid #e8e8e8}
+.pg table.toc{width:100%;border-collapse:collapse;font-size:7.9pt;table-layout:fixed}
+.pg table.toc td{padding:0.5mm 0;border-bottom:0.1mm solid #eee;vertical-align:top;line-height:1.3}
+.pg table.toc col.c1{width:10mm} .pg table.toc col.c2{width:23mm} .pg table.toc col.c4{width:7mm}
+.pg table.toc td.dt{color:#666;white-space:nowrap}
+.pg table.toc td.tx{padding-right:2mm;white-space:nowrap}
+.pg table.toc td.sb{color:#333;padding-right:2mm}
+.pg table.toc td.pgn{text-align:right;color:#666}
+.pg table.toc tr.band td{background:var(--mainL);color:var(--main);font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:8.6pt;padding:0.9mm 1.4mm;border:0}
+.pg .mini{border:0.15mm solid #ccc;background:#fafafa;padding:2mm;margin:1mm 0 2mm;overflow:hidden;height:118mm}
+.pg .miniin{transform:scale(0.385);transform-origin:top left;width:296mm}
+.pg .fcap{font-size:8.4pt;color:#666;margin:0}
+.pg .chip{display:inline-block;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-size:7.8pt;font-weight:700;color:var(--main);border:0.25mm solid var(--main);border-radius:1.2mm;padding:0 1.3mm;line-height:1.55;margin-right:1.2mm;vertical-align:0.3mm;white-space:nowrap}
+.pg .ref b{color:#000;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .box{padding:0;font-size:10pt;line-height:1.38;margin:0;font-family:"Noto Serif KR","Noto Serif CJK KR",serif}
+.pg > .box{border:0.15mm solid #bbb;background:#fff;padding:1.6mm 2.2mm;margin:1.6mm 0 1.2mm}
+.pg .box .h{font-weight:700;font-size:8.8pt;color:var(--ink);margin-bottom:0.6mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .box div.i{margin:0.5mm 0;text-align:left;word-break:keep-all;overflow-wrap:anywhere}
+.pg .box b{font-size:9.3pt}
+.pg .two{display:flex;gap:4mm;align-items:flex-start;border:0.15mm solid #bbb;background:#fff;padding:1.6mm 2.2mm;margin:1.6mm 0 1.2mm}
+.pg .two .c1{flex:0 0 66mm;display:flex;flex-direction:column} .pg .two .c2{flex:1 1 auto;display:flex;min-width:0}
+.pg .map{background:#fff;margin:0;display:flex;flex-direction:column;width:100%} .pg .map svg{flex:1 1 auto;width:100%;height:auto;min-height:0;display:block}
+.pg .pic{background:#fff;margin:0;display:flex;flex-direction:column;width:100%;min-height:0} .pg .pic .im{height:45mm;background:var(--main);display:flex} .pg .pic img{width:100%;height:100%;min-height:0;object-fit:cover;display:block;filter:grayscale(1) contrast(1.1) brightness(1.08);mix-blend-mode:screen;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pg .map .cap,.pg .pic .cap{font-size:8.3pt;color:#444;padding:0.8mm 0 0;line-height:1.25}
+.pg .after{position:absolute;left:14mm;right:14mm;bottom:10mm;background:color-mix(in srgb,var(--mainL) 55%,#fff);border-top:0.3mm solid var(--main);padding:1.1mm 2.2mm 1.1mm}
+.pg .after .h{font-size:9.5pt;font-weight:700;margin:0 0 1mm;color:var(--main)}
+.pg .after p{font-size:9.2pt;line-height:1.36;margin:0 0 0.5mm;text-align:justify;color:#111} .pg .after p .k{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-weight:700;color:var(--main);margin-right:0.8mm}
+.pg .after p b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .q{font-size:9.8pt;line-height:1.4;margin:0 0 0.6mm;color:#222;text-align:justify}
+.pg .rd{font-size:9.2pt;line-height:1.36;margin:0 0 0.6mm;color:#222;text-align:justify}
+.pg .q b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
+.pg .lab{font-size:9.6pt;font-weight:500;margin:1.6mm 0 0.3mm;color:var(--ink);display:flex;align-items:center;gap:1.2mm} .pg .lab .sm{font-size:9.2pt;color:#444} .pg .hint3{font-size:8.6pt;color:#555;margin:-0.8mm 0 1.2mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif} .pg .amen{font-size:9.2pt;margin:0.6mm 0 0;text-align:right;color:#222}
+.pg .lab .sm{font-weight:400}
+.pg .lab .st{display:inline-flex;align-items:center;justify-content:center;min-width:3.6mm;height:3.6mm;border:0.25mm solid var(--main);color:var(--main);border-radius:0.8mm;font-size:7.5pt;line-height:1;flex:0 0 auto}
+.pg .sm{font-size:8.6pt;color:#555}
+.pg .lnw{margin:0 0 0.5mm}
+.pg .ln{border-bottom:0.15mm dotted #999;height:6mm}
+.pg .hold{border:0.2mm solid var(--main);background:#fff;height:8mm;margin-top:0.6mm}
+.pg .heard{position:absolute;left:14mm;right:14mm;bottom:11mm;border-top:0.1mm solid #bbb;padding-top:1.4mm;font-size:8.3pt;color:#777}
+.pg .heard .ln{height:6.3mm}
+.pg .heard .echo{font-family:"Noto Serif KR","Noto Serif CJK KR",serif;font-size:8.8pt;line-height:1.38;color:#222;margin:0 0 1.2mm;text-align:justify;word-break:keep-all;overflow-wrap:anywhere} .pg .heard .echo b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;color:var(--main)}
+.pg .heard .memo{border-top:0.1mm solid #bbb;padding-top:1.2mm}
+.pg .empty{color:#bbb;font-style:italic}
+
+@page{size:148mm 210mm;margin:0}
+@media print{
+  body{background:#fff}
+  header,main{display:none!important}
+  #printroot{display:block}
+  #printroot .pg{page-break-after:always;break-after:page}
+  /* 인쇄 창의 '배경 그래픽'을 켜지 않아도 색이 찍히게 — 상자·띠·그림의 바탕색 */
+  #printroot,#printroot *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+/* 지도 재생 */
+.pg .map{position:relative;cursor:zoom-in}
+.pg .map .mplay{position:absolute;right:1.2mm;top:1.2mm;z-index:3;border:0;border-radius:50%;width:8mm;height:8mm;pointer-events:none;
+  background:rgba(255,255,255,.88);color:var(--main);font-size:3.8mm;line-height:1;cursor:pointer;box-shadow:0 .3mm 1mm rgba(0,0,0,.18);padding:0}
+.pg .map .mplay:hover{background:#fff}
+@media print{.pg .map .mplay{display:none}}
+#mapview{position:fixed;inset:0;z-index:70;background:rgba(20,22,20,.93);display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+#mapview.on{display:flex}
+#mapview .mvbox{background:#fff;border-radius:10px;padding:14px;max-width:min(96vw,980px);max-height:92vh;display:flex;flex-direction:column;gap:8px}
+#mapview .mvsvg{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
+#mapview .mvsvg svg{display:block;max-width:100%}
+#mapview .mvbar{display:flex;align-items:center;gap:10px;justify-content:space-between}
+#mapview .mvnow{font-size:15px;color:#333;min-height:20px;font-weight:600}
+#mapview .mvbtns{display:flex;gap:6px}
+#mapview button{border:1px solid #d6d6cf;background:#fbfbf7;border-radius:7px;padding:7px 13px;font-size:14px;cursor:pointer;color:#333}
+#mapview button:hover{background:#f2f2ea}
+#mapview .mvcap{font-size:12.5px;color:#777}
+#mapview .trav{filter:drop-shadow(0 0 1.2px rgba(255,255,255,.95))}
+</style>
+</head>
+<body>
+<header>
+  <h1>통독 가이드북 작업실</h1>
+  <select id="selM"></select>
+  <select id="selD"></select>
+  <button id="btnPrev" title="앞날">‹</button><button id="btnNext" title="뒷날">›</button>
+  <span class="sp"></span>
+  <span id="status">저장됨</span>
+  <button id="btnJson">JSON 내보내기</button>
+  <button id="btnImport">가져오기</button>
+  <button id="btnGit">GitHub</button>
+  <span id="ptar" class="small" style="color:var(--mute)"></span><select id="selPrint"><option value="day">이 날</option><option value="month">이달</option><option value="quarter">이 분기(권)</option><option value="all">원고 있는 날 전체</option><option value="front">책 머리만</option><option value="ax">부록 · 책 끝만</option><option value="book">이 분기(권) — 책 머리 + 하루</option></select>
+  <button id="btnPrint" class="pri">인쇄 · PDF</button>
+</header>
+<main>
+  <section id="form">
+    <details id="frontbox"><summary>책 머리 고치기 — 표지 · 서문 · 쓰는 법 · 기호 설명 (기본: 네 권 공통)</summary><div id="frontform"></div></details>
+    <div class="dayhead"><span class="t" id="dh_t"></span><span class="s" id="dh_s"></span></div>
+    <div id="fit">—</div>
+    <fieldset><legend>머리</legend><label class="f"><span class="k"><b>소제목</b> <span class="cnt" data-for="sub"></span></span><input type="text" id="sub" data-max="30" placeholder="비우면 통독표 소제목"></label></fieldset>
+    <fieldset><legend><span class="n">1</span>읽기 전</legend>
+      <label class="f"><span class="k"><b>오늘의 흐름</b> <span class="cnt" data-for="today"></span></span><textarea id="today" data-max="125"></textarea></label>
+      <div class="hint">장 순서대로 무슨 일이 일어나는지. 지명을 넣습니다(지도와 연결). 해석·평가 없음.</div>
+      <label class="f"><span class="k"><b>읽으며 둘 초점</b> <span class="cnt" data-for="find"></span></span><textarea id="find" data-max="150"></textarea></label>
+      <div class="hint">● 이끎말 ◇ 대조 ◆ 반복 □ 틀 ▲ 전환 ○ 속말 ◎ 침묵 ⋯ 공백 ?! 아이러니 — 기호는 하나, 층은 설명 첫머리로 가른다: 언어적 "뜻과 반대로 말합니다" / 상황적 "뜻한 것과 정반대의 결과가 옵니다" / 구조적 "읽는 사람은 아는데 ○○는 모릅니다". 본문에 실제로 있는 것만, 개수 제한 없음. <b>오른쪽 관찰 질문이 묻는 답을 여기서 먼저 말하지 않습니다</b> — 견줄 자리만 가리키고, 결론은 ④ 해설에 둡니다. ⋯ 공백은 "없다"까지만 적는다 — 왜 없는지는 본문이 말할 때만 적고, 행간을 채우지 않는다. 오른쪽 관찰 질문과 같은 줄기.</div>
+      <label class="f"><span class="k"><b>말뜻 (선택)</b> <span class="cnt" data-for="word"></span></span><input type="text" id="word" data-max="40"></label>
+    </fieldset>
+    <fieldset><legend><span class="n">2</span>읽은 뒤</legend>
+      <label class="f"><span class="k"><b>눈여겨볼 것 (줄마다 하나)</b> <span class="cnt" data-for="pair"></span></span><textarea id="pair" placeholder="● 주도어 &quot;손에 넘기다&quot; 24:4·10, 26:8·23. …&#10;◇ 대조 …"></textarea></label>
+      <div class="hint">기호 + 절 주소 + 설명 한 문장. 기록을 요구하지 않는 설명문으로("~보세요" 없음). 왼쪽 상자에 인쇄.</div>
+      <label class="f"><span class="k"><b>짜임 (교차대구·반복평행) <span class="small">— 넣으면 지도·그림 대신 쪽 전체에 그립니다</span></b></span><input type="text" id="stxk" placeholder="짜임 — 교차대구 A X A′ (비우면 짜임 없음)"></label>
+      <textarea id="stx" rows="4" placeholder="A|24장|동굴에서. &quot;여호와의 기름 부음을 받은 자&quot;(24:6)
+X|25장|나발과 아비가일. &quot;친히 복수하는 것을 네가 막았느니라&quot;(25:33)
+A′|26장|언덕에서. &quot;여호와의 기름 부음 받은 자&quot;(26:9)"></textarea>
+      <div class="hint">한 줄에 「표시|구간|설명」. 반복평행은 ||로 짝을 묶습니다. <b>도구가 구조 설명보다 앞섭니다</b> — 반복·대조·틀·전환으로 보일 수 있으면 그 쪽으로 적고, 이 칸은 도구로는 도저히 안 보이는 본문에만 씁니다.</div>
+      <label class="f"><span class="k"><b>지도 — 강조 지명</b> <span class="small" id="placeHint"></span></span><input type="text" id="m_emph" placeholder="엔게디, 갈멜, 하길라 산 (비우면 지도 없음)"></label>
+      <div class="row3"><span class="small">함께 표시</span><input type="text" id="m_show" placeholder="기브아, 베들레헴, 헤브론 (회색 점)"></div>
+      <div class="row3"><span class="small">경로</span><input type="text" id="m_route" placeholder="엔게디 → 갈멜 → 하길라 산"></div>
+      <div class="row3"><span class="small">둘째 경로</span><input type="text" id="m_route2" placeholder="세일 → 브니엘 (회색 화살표)"></div>
+      <div class="row3"><span class="small">설명</span><input type="text" id="m_cap" placeholder="엔게디(24장) · 갈멜(25장) · 하길라 산(26장)"></div>
+      <label class="f"><span class="k"><b>그림 (지도 없는 날만)</b> 그림 번호</span><input type="text" id="p_id" placeholder="예: g12_01 — 앱 그림 라이브러리 번호"></label>
+      <label class="f"><span class="k">그림 설명 한 줄</span><input type="text" id="p_cap" placeholder="예: 빛이 드는 동산과 강"></label>
+      <div class="hint">지도가 있으면 지도가 우선이고 그림은 쓰이지 않습니다. 지도 자리에 단색으로 들어갑니다.</div>
+      <label class="f"><span class="k"><b>성경 전체로</b> — 구약↔신약 반향 <span class="cnt" data-for="christ"></span></span><textarea id="christ" rows="2" data-max="200" placeholder="종류(인용·약속·주제·모형·흐름) 절 — &quot;인용문&quot;. 왜 가져오는지 한두 문장."></textarea></label>
+      <div class="hint">앱의 ‘성경 전체로’와 같은 자리. 본문이 실제로 인용되거나 되풀이되는 곳만, 왜 가져오는지(의미)를 씁니다. 상자·지도 아래에 인쇄.</div>
+    </fieldset>
+    <fieldset><legend><span class="n">3</span>나의 묵상 (오른쪽 물음)</legend>
+      <label class="f"><span class="k"><b>[1] 본문 관찰 — 질문</b> <span class="cnt" data-for="q"></span></span><textarea id="q" data-max="85"></textarea></label>
+      <div class="hint">본문의 말로 답할 수 있는 것. 절 주소 포함.</div>
+      <div class="hint">[2] 하나님의 성품은 매일 같은 물음("본문에서 본 하나님은 어떤 분입니까?")이라 칸이 없습니다. 답 문장은 아래 ④에.</div>
+      <label class="f"><span class="k"><b>[3] 적용 — 질문</b> <span class="cnt" data-for="apply"></span></span><textarea id="apply" data-max="105"></textarea></label>
+      <div class="hint">앞 문장 = 본문의 사실(절 주소), 뒤 문장 = 나에게 묻는 질문 하나. 질문은 **별표 둘**로 감싸면 굵게.</div>
+      <div class="hint">[4] 오늘의 기도는 빈 줄 3 + "예수님의 이름으로 기도합니다. 아멘."이라 칸이 없습니다. 기도문은 아래 ④에.</div>
+    </fieldset>
+    <fieldset><legend><span class="n">4</span>쓴 뒤에 읽기 — 해설과 기도</legend>
+      <label class="f"><span class="k"><b>해설</b> <span class="cnt" data-for="note"></span></span><textarea id="note" data-max="176"></textarea></label>
+      <div class="hint">관찰 질문의 답을 본문 말로 확인 + 그날의 핵심 한 줄. 150자 안팎.</div>
+      <label class="f"><span class="k"><b>하나님의 성품 — 한 문장</b> <span class="cnt" data-for="god"></span></span><input type="text" id="god" data-max="90" placeholder="하나님은 …하시면서 …하시는 분입니다."></label>
+      <div class="hint">해설 바로 뒤에 이어 인쇄. 하나님이 직접 말씀하거나 행동하시지 않는 본문(삿 17–18장 등)에서만 바꿉니다.</div>
+      <label class="f"><span class="k"><b>기도</b> — 세 호흡 <span class="cnt" data-for="pray"></span></span><textarea id="pray" data-max="130"></textarea></label>
+      <div class="hint">오늘 본 하나님을 부름 → 내 형편 → 오늘의 응답을 위한 도움. "예수님의 이름으로 기도합니다. 아멘."으로 끝. 띠 맨 아래 "기도"로 인쇄.</div>
+    </fieldset>
+    <fieldset><legend>앱 전용 (인쇄 안 함)</legend>
+      <label class="f"><span class="k"><b>성품 이름 · 절</b> — 앱의 22가지 가운데</span><input type="text" id="attr" placeholder="예: 기억하시는 하나님 · 9:16"></label>
+      <div class="row"><input type="text" id="r1" placeholder="24:6"><input type="text" id="t1" placeholder="다시 펼 절 꼬리표" data-max="20"></div>
+      <div class="row"><input type="text" id="r2" placeholder="25:32–33"><input type="text" id="t2" placeholder="꼬리표" data-max="20"></div>
+      <div class="row"><input type="text" id="r3" placeholder="25:39"><input type="text" id="t3" placeholder="꼬리표" data-max="20"></div>
+      <div class="hint">다시 펼 절은 가이드북에서 뺐습니다. 앱 연동용으로만 남겨 둡니다.</div>
+    </fieldset>
+    <p class="small">원고는 이 브라우저에 자동 저장됩니다. 다른 곳에서도 쓰려면 JSON 내보내기 또는 GitHub 저장을 쓰세요. 칸을 비우면 그 자리는 인쇄되지 않습니다.</p>
+  </section>
+  <section id="prev">
+    <div id="bookbar"><span id="bkLab"></span><span id="bkNo"></span><span class="pvsel"><button data-pv="both" class="on">펼침면</button><button data-pv="L">왼쪽</button><button data-pv="R">오른쪽</button></span></div>
+    <div id="scalebox"><div id="scaled"></div><div id="flip"></div><button id="bkPrev" class="nav l" title="앞 장 (←)">‹</button><button id="bkNext" class="nav r" title="다음 장 (→)">›</button></div>
+  </section>
+</main>
+<div id="printroot"></div>
+
+<dialog id="dlgJson"><h3 id="dlgTitle">JSON</h3><textarea id="dlgText"></textarea><div class="btns"><button id="dlgCopy">복사</button><button id="dlgDl">파일로 내려받기</button><button id="dlgApply" class="pri">가져오기(붙여넣은 내용 적용)</button><button id="dlgClose">닫기</button></div><p class="small">가져오기: 같은 날 번호가 있으면 덮어씁니다. 파일을 고르려면 <input type="file" id="fileIn" accept="application/json"></p></dialog>
+<dialog id="dlgConf"><h3>양쪽에서 같은 날을 고쳤습니다</h3><p class="small">이 기기와 GitHub의 내용이 다릅니다. 날마다 남길 쪽을 고르세요.</p><div id="confList"></div><div class="btns"><button id="confAllL">모두 이 기기 것</button><button id="confAllR">모두 GitHub 것</button><button id="confOk" class="pri">고른 대로</button></div></dialog>
+<dialog id="dlgGit"><h3>GitHub에 저장 / 불러오기</h3>
+<label class="f"><span class="k"><b>저장소</b></span><input type="text" id="g_repo" placeholder="aqedah/CBSR"></label>
+<label class="f"><span class="k"><b>파일 경로</b></span><input type="text" id="g_path" placeholder="app/site_src/guide_qt.json" ></label>
+<label class="f"><span class="k"><b>가지(branch)</b></span><input type="text" id="g_branch" placeholder="source"></label>
+<label class="f"><span class="k"><b>토큰(PAT, contents 쓰기 권한)</b></span><input type="text" id="g_token" placeholder="github_pat_…"></label>
+<p class="small">토큰은 이 브라우저에만 저장됩니다. 저장하면 전체 원고(JSON)를 source 가지의 그 경로에 커밋하고, 2–3분 뒤 빌드가 guide_qt.json으로 공개합니다. 앱도 같은 파일을 읽게 하면 원고 한 벌로 두 매체가 움직입니다.</p>
+<p id="gMsg" class="small" style="color:#b00;min-height:1.2em;margin:4px 0 6px"></p><div class="btns"><button id="gLoad">불러오기</button><button id="gSave" class="pri">저장(커밋)</button><button id="gClose">닫기</button></div></dialog>
+
+<div id="mapview" aria-hidden="true"><div class="mvbox">
+  <div class="mvsvg"></div>
+  <div class="mvbar"><div class="mvnow"></div><div class="mvbtns"><button class="mvre">다시 재생</button><button class="mvcl">닫기</button></div></div>
+<script>
+const PLAN=[{"no": 315, "m": 11, "d": 11, "t": "요한복음 17장", "rng": "요한복음 17장을", "sub": "예수께서 기도하시다", "nch": 1, "vv": 26, "min": 5, "end": []}, {"no": 316, "m": 11, "d": 12, "t": "요한복음 18–21장", "rng": "요한복음 18–21장을", "sub": "제자들에게 나타나시다", "nch": 4, "vv": 138, "min": 21, "end": []}, {"no": 317, "m": 11, "d": 13, "t": "사도행전 1–2장", "rng": "사도행전 1–2장을", "sub": "성령이 강림하시다", "nch": 2, "vv": 73, "min": 10, "end": []}, {"no": 318, "m": 11, "d": 14, "t": "사도행전 3–5장", "rng": "사도행전 3–5장을", "sub": "사도들이 담대하게 전도하다", "nch": 3, "vv": 105, "min": 14, "end": []}, {"no": 319, "m": 11, "d": 15, "t": "사도행전 6–7장", "rng": "사도행전 6–7장을", "sub": "스데반의 순교", "nch": 2, "vv": 75, "min": 10, "end": []}, {"no": 320, "m": 11, "d": 16, "t": "사도행전 8–9장", "rng": "사도행전 8–9장을", "sub": "바울의 회심", "nch": 2, "vv": 83, "min": 11, "end": []}, {"no": 321, "m": 11, "d": 17, "t": "사도행전 10–12장", "rng": "사도행전 10–12장을", "sub": "베드로의 고난", "nch": 3, "vv": 103, "min": 14, "end": []}, {"no": 322, "m": 11, "d": 18, "t": "사도행전 13–15장", "rng": "사도행전 13–15장을", "sub": "1차 선교여행", "nch": 3, "vv": 121, "min": 16, "end": []}, {"no": 323, "m": 11, "d": 19, "t": "사도행전 16–18장", "rng": "사도행전 16–18장을", "sub": "2차 선교여행", "nch": 3, "vv": 102, "min": 15, "end": []}, {"no": 324, "m": 11, "d": 20, "t": "사도행전 19–20장", "rng": "사도행전 19–20장을", "sub": "3차 선교여행", "nch": 2, "vv": 79, "min": 11, "end": []}, {"no": 325, "m": 11, "d": 21, "t": "사도행전 21–24장", "rng": "사도행전 21–24장을", "sub": "예루살렘 구금", "nch": 4, "vv": 132, "min": 19, "end": []}, {"no": 326, "m": 11, "d": 22, "t": "사도행전 25–28장", "rng": "사도행전 25–28장을", "sub": "로마 여행", "nch": 4, "vv": 134, "min": 19, "end": []}, {"no": 327, "m": 11, "d": 23, "t": "로마서 1–3장", "rng": "로마서 1–3장을", "sub": "믿음으로 말미암은 하나님의 의", "nch": 3, "vv": 92, "min": 13, "end": []}, {"no": 328, "m": 11, "d": 24, "t": "로마서 4–8장", "rng": "로마서 4–8장을", "sub": "칭의와 성령", "nch": 5, "vv": 133, "min": 20, "end": []}, {"no": 329, "m": 11, "d": 25, "t": "로마서 9–11장", "rng": "로마서 9–11장을", "sub": "이스라엘의 구원", "nch": 3, "vv": 90, "min": 13, "end": []}, {"no": 330, "m": 11, "d": 26, "t": "로마서 12–16장", "rng": "로마서 12–16장을", "sub": "교회의 삶", "nch": 5, "vv": 118, "min": 17, "end": []}, {"no": 331, "m": 11, "d": 27, "t": "고린도전서 1–4장", "rng": "고린도전서 1–4장을", "sub": "하나님의 지혜", "nch": 4, "vv": 91, "min": 14, "end": []}, {"no": 332, "m": 11, "d": 28, "t": "고린도전서 5–7장", "rng": "고린도전서 5–7장을", "sub": "고린도교회의 문제(1)-윤리", "nch": 3, "vv": 73, "min": 11, "end": []}, {"no": 333, "m": 11, "d": 29, "t": "고린도전서 8–10장", "rng": "고린도전서 8–10장을", "sub": "고린도교회의 문제(2)-우상숭배", "nch": 3, "vv": 73, "min": 11, "end": []}, {"no": 334, "m": 11, "d": 30, "t": "고린도전서 11–14장", "rng": "고린도전서 11–14장을", "sub": "고린도교회의 문제(3)-예배", "nch": 4, "vv": 118, "min": 16, "end": []}, {"no": 335, "m": 12, "d": 1, "t": "고린도전서 15–16장", "rng": "고린도전서 15–16장을", "sub": "예수 그리스도의 부활", "nch": 2, "vv": 82, "min": 11, "end": []}, {"no": 336, "m": 12, "d": 2, "t": "고린도후서 1–2장", "rng": "고린도후서 1–2장을", "sub": "고린도교회 방문을 연기하다", "nch": 2, "vv": 41, "min": 7, "end": []}, {"no": 337, "m": 12, "d": 3, "t": "고린도후서 3–7장", "rng": "고린도후서 3–7장을", "sub": "구원과 소망", "nch": 5, "vv": 91, "min": 14, "end": []}, {"no": 338, "m": 12, "d": 4, "t": "고린도후서 8–9장", "rng": "고린도후서 8–9장을", "sub": "가난한 자를 위한 헌금", "nch": 2, "vv": 39, "min": 6, "end": []}, {"no": 339, "m": 12, "d": 5, "t": "고린도후서 10–13장", "rng": "고린도후서 10–13장을", "sub": "고난의 유익", "nch": 4, "vv": 85, "min": 14, "end": []}, {"no": 340, "m": 12, "d": 6, "t": "갈라디아서 1–2장", "rng": "갈라디아서 1–2장을", "sub": "바울의 회심", "nch": 2, "vv": 45, "min": 7, "end": []}, {"no": 341, "m": 12, "d": 7, "t": "갈라디아서 3–6장", "rng": "갈라디아서 3–6장을", "sub": "믿음으로 말미암는 하나님의 의와 성령", "nch": 4, "vv": 104, "min": 14, "end": []}, {"no": 342, "m": 12, "d": 8, "t": "에베소서 1–6장", "rng": "에베소서 1–6장을", "sub": "구원 받은 자의 새로운 삶", "nch": 6, "vv": 155, "min": 20, "end": []}, {"no": 343, "m": 12, "d": 9, "t": "빌립보서 1–4장", "rng": "빌립보서 1–4장을", "sub": "고난 중에 감사하는 이유", "nch": 4, "vv": 104, "min": 14, "end": []}, {"no": 344, "m": 12, "d": 10, "t": "골로새서 1–4장", "rng": "골로새서 1–4장을", "sub": "구원 받은 자의 새로운 삶", "nch": 4, "vv": 95, "min": 13, "end": []}, {"no": 345, "m": 12, "d": 11, "t": "데살로니가전서 1–5장", "rng": "데살로니가전서 1–5장을", "sub": "그리스도의 재림을 기다림", "nch": 5, "vv": 89, "min": 12, "end": []}, {"no": 346, "m": 12, "d": 12, "t": "데살로니가후서 1–3장", "rng": "데살로니가후서 1–3장을", "sub": "적그리스도를 멀리하라", "nch": 3, "vv": 47, "min": 7, "end": []}, {"no": 347, "m": 12, "d": 13, "t": "디모데전서 1–6장", "rng": "디모데전서 1–6장을", "sub": "믿음과 성실함으로 목회하라", "nch": 6, "vv": 113, "min": 15, "end": []}, {"no": 348, "m": 12, "d": 14, "t": "디모데후서 1–4장", "rng": "디모데후서 1–4장을", "sub": "경건한 삶으로 목회하라", "nch": 4, "vv": 83, "min": 11, "end": []}, {"no": 349, "m": 12, "d": 15, "t": "디도서 1–3장", "rng": "디도서 1–3장을", "sub": "바른 복음으로 목회하라", "nch": 3, "vv": 46, "min": 7, "end": []}, {"no": 350, "m": 12, "d": 16, "t": "빌레몬서", "rng": "빌레몬서를", "sub": "주 안에서 형제된 자를 사랑하라", "nch": 1, "vv": 25, "min": 3, "end": []}, {"no": 351, "m": 12, "d": 17, "t": "히브리서 1–6장", "rng": "히브리서 1–6장을", "sub": "천사보다 우월한 그리스도의 사역", "nch": 6, "vv": 101, "min": 15, "end": []}, {"no": 352, "m": 12, "d": 18, "t": "히브리서 7–10장", "rng": "히브리서 7–10장을", "sub": "대제사장 그리스도의 사역", "nch": 4, "vv": 108, "min": 15, "end": []}, {"no": 353, "m": 12, "d": 19, "t": "히브리서 11–13장", "rng": "히브리서 11–13장을", "sub": "믿음과 형제 사랑", "nch": 3, "vv": 94, "min": 14, "end": []}, {"no": 354, "m": 12, "d": 20, "t": "야고보서 1–5장", "rng": "야고보서 1–5장을", "sub": "믿음과 행함", "nch": 5, "vv": 108, "min": 15, "end": []}, {"no": 355, "m": 12, "d": 21, "t": "베드로전서 1–5장", "rng": "베드로전서 1–5장을", "sub": "박해를 기뻐하라", "nch": 5, "vv": 105, "min": 16, "end": []}, {"no": 356, "m": 12, "d": 22, "t": "베드로후서 1–3장", "rng": "베드로후서 1–3장을", "sub": "재림을 사모하라", "nch": 3, "vv": 61, "min": 10, "end": []}, {"no": 357, "m": 12, "d": 23, "t": "요한일서 1–3장", "rng": "요한일서 1–3장을", "sub": "사랑이란 무엇인가", "nch": 3, "vv": 63, "min": 10, "end": []}, {"no": 358, "m": 12, "d": 24, "t": "요한일서 4–5장", "rng": "요한일서 4–5장을", "sub": "우리가 서로 사랑하자", "nch": 2, "vv": 42, "min": 7, "end": []}, {"no": 359, "m": 12, "d": 25, "t": "요한이서 · 요한삼서 · 유다서", "rng": "요한이서 · 요한삼서 · 유다서를", "sub": "바른 교훈을 따르라", "nch": 3, "vv": 53, "min": 8, "end": []}, {"no": 360, "m": 12, "d": 26, "t": "요한계시록 1–3장", "rng": "요한계시록 1–3장을", "sub": "7교회에 보내는 예수 그리스도의 말씀", "nch": 3, "vv": 71, "min": 12, "end": []}, {"no": 361, "m": 12, "d": 27, "t": "요한계시록 4–6장", "rng": "요한계시록 4–6장을", "sub": "7인을 떼는 그리스도", "nch": 3, "vv": 42, "min": 7, "end": []}, {"no": 362, "m": 12, "d": 28, "t": "요한계시록 7–9장", "rng": "요한계시록 7–9장을", "sub": "14만 4천의 노래", "nch": 3, "vv": 51, "min": 8, "end": []}, {"no": 363, "m": 12, "d": 29, "t": "요한계시록 10–14장", "rng": "요한계시록 10–14장을", "sub": "14만 4천의 노래", "nch": 5, "vv": 85, "min": 15, "end": []}, {"no": 364, "m": 12, "d": 30, "t": "요한계시록 15–18장", "rng": "요한계시록 15–18장을", "sub": "7대접 심판과 바벨론의 패망", "nch": 4, "vv": 71, "min": 12, "end": []}, {"no": 365, "m": 12, "d": 31, "t": "요한계시록 19–22장", "rng": "요한계시록 19–22장을", "sub": "어린양의 혼인잔치와 새하늘과 새땅", "nch": 4, "vv": 84, "min": 14, "end": []}];
+const ED=Object.assign({key:'cbsr_guide_qt',gitkey:'cbsr_guide_git',path:'app/site_src/guide_qt.json',pub:'guide_qt.json',qlab:null,trial:false},{"key":"cbsr_trial26_qt","gitkey":"cbsr_trial26_git","path":"app/site_src/trial26_qt.json","pub":"trial26_qt.json","qlab":["","","","","체험판 · 2026년 11–12월"],"trial":true,"axl":["부록 — 복음이 퍼진 길","부록 — 일곱 교회 · 이 책을 마치며"],"fdef":{"cvk":"성경을 이야기로 읽는","cvt":"성경통독\n가이드북 체험판","bkt":"2027년을 앞두고 미리 써 보는 책입니다","bkp":"2026년 11월 11일부터 12월 31일까지 쉰한 날입니다. 요한복음 끝자락에서 시작해 사도행전을 지나 바울의 편지와 요한계시록으로 한 해를 닫습니다.\n\n쓰는 법은 2027년 가이드북과 똑같습니다. 왼쪽을 읽고, 성경책을 펴서 읽고, 오른쪽에 손으로 씁니다. 쉰한 날이면 손에 익습니다.\n\n2027년 1월부터는 창세기부터 네 권으로 이어집니다.","bkfoot":"통독 앱 CBSR과 함께 씁니다","cp":"기획·총괄 이삭 목사\n\n이 책에는 성경 본문을 싣지 않았습니다. 본문을 인용한 자리는 대한성서공회 「성경전서 개역개정판」을 따랐습니다.\n2026년 통독표(365일)의 315–365일에 맞추었습니다.\n교회 안에서 쓰기 위해 만든 책이며, 팔지 않습니다.","phead":"쉰한 날 먼저 써 봅니다","pbody":"2027년부터 네 권짜리 가이드북으로 성경을 한 해에 한 번 읽습니다. 그 전에 쉰한 날을 미리 써 보는 책입니다. 올해 통독표의 마지막 구간, 11월 11일부터 12월 31일까지입니다.\n\n이 책은 성경을 대신하지 않습니다. 성경책을 옆에 펴 놓고 쓰는 책입니다. 본문은 한 절도 싣지 않았습니다.\n\n하루는 네 걸음입니다. ① 읽기 전에 오늘의 흐름과 오늘 쓸 도구를 받습니다. ② 성경책을 읽고 돌아와 눈여겨볼 것을 확인합니다. ③ 본 것을 내 말로 씁니다. ④ 다 쓴 뒤에 해설과 기도를 읽습니다. 해설을 먼저 읽으면 ③에 쓸 말이 남지 않습니다. 이 순서만은 지켜 주십시오.\n\n목수에게는 망치와 톱이 필요하고 농부에게는 쟁기와 낫이 필요하듯이 통독자에게도 다양한 도구가 필요합니다. 도구는 외워 두는 지식이 아니라 본문 앞에서 손에 쥐고 쓰는 것입니다.\n\n**글의 갈래가 다르면 쓰는 도구도 다릅니다.** 이 쉰한 날은 두 갈래입니다. 요한복음과 사도행전은 이야기입니다. 아홉 가지 도구를 그대로 씁니다. 로마서부터 요한계시록까지는 편지와 환상입니다. 인물의 속마음을 열어 보이거나 말하지 않는 사람을 지켜보는 자리가 없으므로, ○ 속말 · ◎ 침묵 · ⋯ 공백은 쉬어 갑니다. 대신 ● 이끎말 · ◆ 반복 · ◇ 대조 · □ 틀 · ▲ 전환 · ?! 아이러니가 그대로 쓰입니다. 편지에도 되풀이되는 낱말이 있고, 나란히 놓인 두 자리가 있으며, 흐름이 돌아서는 자리가 있습니다.\n\n성경책에 밑줄을 긋고 형광펜으로 표시하십시오. 쉰한 날이 쌓이면 2027년이 수월해집니다.","symlead":"본문에 있을 때만 꺼냅니다. **이 체험판에서는 사도행전까지 아홉 가지를 모두 쓰고, 로마서부터는 여섯 가지(● ◆ ◇ □ ▲ ?!)를 씁니다.**","bkshead":"이 체험판에서 읽는 책들","tochead":"쉰한 날 차례","divk":"여기까지가 안내입니다","divt":"11월 11일부터\n하루 한 펼침면","divnote":"성경책을 펴고 시작합니다.","rvhead":"이 쉰한 날을 마치며","rvhead2":"2027년 1월로 가기 전에","rvlist":"성경책에 그어 둔 밑줄을 한 번 넘겨 보십시오. 쉰한 날 동안 손이 멈춘 자리가 거기 있습니다.\n가장 오래 남은 하루를 한 날 골라, 그날의 ③ 묵상을 다시 읽어 보십시오.\n기호 가운데 손에 익은 것과 아직 낯선 것을 가려 보십시오. 낯선 것은 2027년 1권에서 눈여겨보면 됩니다.\n가이드북 없이 짧은 이야기 한 대목을 읽어 보십시오. 되풀이되는 말이 보이면, 이 책이 할 일을 한 것입니다.","rvfoot":"2027년 1월 1일, 창세기 1장에서 다시 만납니다."},"atlas":{"4":[{"title":"복음이 퍼진 길 — 예루살렘에서 로마까지","emph":"예루살렘, 안디옥, 에베소, 고린도, 로마","show":"사마리아, 가이사랴, 다메섹, 빌립보, 멜리데","routes":[["사도행전의 줄거리 — 행 1–28","예루살렘 → 사마리아 → 안디옥 → 에베소 → 고린도 → 로마","#1f5fa8"]],"note":"\"예루살렘과 온 유대와 사마리아와 땅 끝까지\"(행 1:8) — 사도행전은 이 한 문장이 이루어지는 책입니다.","h":86},{"title":"바울의 세 차례 길","emph":"안디옥, 에베소, 고린도","show":"살라미, 버가, 비시디아 안디옥, 루스드라, 드로아, 빌립보, 데살로니가, 아덴, 밀레도, 예루살렘","routes":[["1차 — 행 13–14","안디옥 → 살라미 → 버가 → 비시디아 안디옥 → 루스드라 → 더베","#9b2c2c"],["2차 — 행 16–18","안디옥 → 드로아 → 빌립보 → 데살로니가 → 아덴 → 고린도","#1a7f4b"],["3차 — 행 19–21","안디옥 → 에베소 → 밀레도 → 예루살렘","#6b46c1"]],"note":"세 번 모두 안디옥에서 떠납니다. 마지막 길은 예루살렘에서 끝나고, 거기서 로마로 끌려갑니다.","h":118}]},"ax2map":{"title":"요한계시록의 일곱 교회","emph":"에베소, 서머나, 버가모, 두아디라, 사데, 빌라델비아, 라오디게아","show":"밧모","routes":[["편지가 돌아간 차례 — 계 2–3장","에베소 → 서머나 → 버가모 → 두아디라 → 사데 → 빌라델비아 → 라오디게아","#9b2c2c"]],"note":"밧모 섬에서 쓴 편지가 일곱 교회를 차례로 돕니다. 길을 따라가면 원을 그리며 돌아옵니다.","h":112}});
+const PLACES={"우르":[30.96,46.1],"하란":[36.86,39.03],"가나안":[31.7,34.95],"세겜":[32.21,35.28],"벧엘":[31.93,35.22],"헤브론":[31.53,35.1],"마므레":[31.55,35.12],"브엘세바":[31.24,34.79],"소돔":[31.05,35.4],"애굽":[28.6,30.9],"고센":[30.75,31.7],"라암셋":[30.8,31.83],"시내 산":[28.54,33.97],"호렙":[28.56,33.95],"가데스":[30.69,34.49],"홍해":[28.3,33.3],"에돔":[30.6,35.6],"모압":[31.4,35.8],"암몬":[31.95,36.0],"랍바":[31.95,35.93],"느보 산":[31.77,35.73],"여리고":[31.87,35.44],"기브온":[31.85,35.18],"요단":[32.3,35.57],"길갈":[31.86,35.5],"실로":[32.06,35.29],"기브아":[31.82,35.23],"라마":[31.89,35.24],"미스바":[31.88,35.21],"베들레헴":[31.7,35.2],"예루살렘":[31.78,35.23],"가드":[31.7,34.85],"아스돗":[31.75,34.65],"아스글론":[31.66,34.55],"가사":[31.5,34.46],"에그론":[31.78,34.85],"블레셋":[31.55,34.55],"그랄":[31.38,34.61],"엔게디":[31.46,35.39],"헤스본":[31.8,35.81],"길르앗":[32.3,35.85],"길르앗 라못":[32.56,36.01],"바산":[32.85,36.2],"갈멜":[32.73,35.05],"다볼":[32.69,35.39],"길보아":[32.47,35.43],"이스르엘":[32.56,35.33],"므깃도":[32.58,35.18],"벧산":[32.5,35.5],"사마리아":[32.28,35.2],"디르사":[32.29,35.36],"도단":[32.41,35.24],"하솔":[33.02,35.57],"가나":[32.75,35.34],"나사렛":[32.7,35.3],"가버나움":[32.88,35.58],"벳새다":[32.91,35.63],"고라신":[32.91,35.56],"게네사렛":[32.86,35.55],"갈릴리 바다":[32.82,35.59],"디베랴 호수":[32.82,35.59],"갈릴리":[32.95,35.35],"디베랴":[32.79,35.53],"나인":[32.63,35.35],"빌립보 가이사랴":[33.25,35.69],"가이사랴":[32.5,34.89],"두로":[33.27,35.2],"시돈":[33.56,35.37],"데가볼리":[32.45,35.95],"베다니":[31.77,35.26],"엠마오":[31.84,35.05],"욥바":[32.05,34.75],"룻다":[31.95,34.89],"다메섹":[33.51,36.29],"비시디아 안디옥":[38.31,31.19],"안디옥":[36.2,36.16],"다소":[36.92,34.89],"구브로":[35.1,33.3],"살라미":[35.18,33.9],"바보":[34.76,32.41],"버가":[36.96,30.85],"이고니온":[37.87,32.49],"루스드라":[37.58,32.45],"더베":[37.35,33.36],"드로아":[39.76,26.16],"네압볼리":[40.94,24.41],"빌립보":[41.01,24.29],"데살로니가":[40.64,22.94],"베뢰아":[40.52,22.2],"아덴":[37.97,23.73],"고린도":[37.91,22.88],"겐그레아":[37.88,22.99],"에베소":[37.94,27.34],"밀레도":[37.53,27.28],"로도":[36.43,28.22],"그레데":[35.2,24.9],"멜리데":[35.9,14.4],"수라구사":[37.07,15.29],"레기온":[38.11,15.65],"보디올":[40.82,14.12],"로마":[41.9,12.5],"갈라디아":[39.5,32.8],"아시아":[38.5,28.6],"마게도냐":[40.8,22.3],"아가야":[37.8,22.2],"길리기아":[37.0,35.0],"밤빌리아":[37.0,31.0],"브루기아":[38.9,30.5],"비두니아":[40.5,30.5],"본도":[41.0,36.0],"갑바도기아":[38.6,35.0],"골로새":[37.79,29.26],"라오디게아":[37.84,29.11],"서머나":[38.42,27.14],"버가모":[39.13,27.18],"두아디라":[38.92,27.84],"사데":[38.49,28.04],"빌라델비아":[38.35,28.52],"밧모":[37.32,26.55],"니느웨":[36.36,43.15],"바벨론":[32.54,44.42],"갈대아":[31.2,46.0],"앗수르":[36.0,43.6],"메대":[35.0,48.5],"수산":[32.19,48.26],"엘람":[32.0,48.4],"그발 강":[32.1,45.2],"갈그미스":[36.83,38.01],"하맛":[35.13,36.75],"레바논":[33.8,35.8],"헐몬":[33.42,35.86],"아둘람":[31.65,34.98],"시글락":[31.39,34.8],"수넴":[32.6,35.33],"사르밧":[33.37,35.27],"기럇여아림":[31.81,35.1],"벧세메스":[31.75,34.98],"엘라 골짜기":[31.69,34.96],"아랏":[31.28,35.13],"메소보다미아":[35.5,41.0],"밧단아람":[36.4,38.8],"세일":[30.5,35.5],"바란":[30.4,34.6],"에시온게벨":[29.53,34.98],"얍복":[32.2,35.7],"아르논":[31.45,35.75],"염해":[31.45,35.48],"아라랏":[39.7,44.3],"마하나임":[32.18,35.65],"감람 산":[31.78,35.25],"시온":[31.7767,35.2342],"아람":[33.5111,36.3064],"바사":[34.8065,48.5162],"미디안":[28.4947,35.0122],"나일":[31.4653,30.3667],"스바":[15.3483,44.2064],"헤르몬":[33.4,35.85],"아말렉":[30.6483,34.4222],"아로엘":[31.4708,35.8194],"드빌":[31.4321,35.0149],"라기스":[31.5653,34.8492],"믹마스":[31.8728,35.2769],"리블라":[34.4595,36.5726],"야베스":[32.4024,35.6823],"고모라":[31.2085,35.4492],"야하스":[31.5883,35.9079],"소알":[31.0369,35.4877],"다시스":[37.2719,-6.9442],"그일라":[31.6137,35.0036],"게바":[31.8575,35.2611],"게셀":[31.8592,34.9192],"두발":[39.655,31.9942],"소바":[33.9353,36.1508],"에덴":[40.3833,44.95],"야셀":[31.9445,35.8301],"기드론":[31.7803,35.24],"브니엘":[32.187,35.6921],"십마":[31.7824,35.7613],"세바":[31.2447,34.8408],"디본":[31.5022,35.7766],"길하레셋":[31.1806,35.7014],"호르":[30.8321,35.0569],"숙곳":[32.1966,35.6212],"호르마":[31.2123,34.9583],"게달":[29.8114,39.8683],"므리바":[30.6483,34.4222],"딤나":[31.7848,34.9103],"도벳":[31.7692,35.2281],"아얄론":[31.8411,35.0236],"바알므온":[31.6795,35.7353],"벧스안":[32.5036,35.5031],"보스라":[30.7458,35.6039],"에글론":[31.4918,34.9281],"에스다올":[31.7977,34.986],"하살에난":[34.2294,37.2406],"갑스엘":[31.2862,34.9323],"막게다":[31.5347,34.9666],"브올":[31.777,35.7385],"하히롯":[30.8606,32.1714],"비스가":[31.7678,35.7256],"시날":[32.5433,44.4222],"아르":[31.3599,35.7828],"아세가":[31.7002,34.9357],"바후림":[31.7912,35.2569],"벧호론":[31.895,35.0836],"드단":[26.65,37.9167],"에드레이":[32.6253,36.1061],"하림":[32.1882,34.8067],"다아낙":[32.5215,35.2191],"다바네스":[30.8606,32.1714],"소안":[30.9769,31.88],"아르밧":[36.4725,37.0947],"아스마웻":[31.835,35.2619],"엘랏":[29.5307,35.0],"돌랏":[31.2447,34.8408],"엔로겔":[31.7672,35.236],"기혼":[31.7729,35.2364],"야일":[32.5876,35.7256],"하세롯":[28.8969,34.4217],"홀하깃갓":[30.1142,34.7115],"이예아바림":[30.956,35.7795],"야르뭇":[31.7083,34.975],"얏딜":[31.3525,35.0161],"루스":[31.9228,35.2414],"막벨라":[31.5247,35.1108],"마레사":[31.593,34.8982],"미살":[32.8728,35.1513],"갈르엣":[32.1185,35.777],"모세롯":[30.8321,35.0569],"나할랄":[32.6791,35.197],"나욧":[31.8543,35.2316],"스발와임":[34.4011,36.6364],"사알빔":[31.8698,34.9871],"사노아":[31.7194,35.0013],"아바림":[31.7539,35.7152],"아드마":[31.2085,35.4492],"갑돌":[35.3097,24.8933],"엘르알레":[31.8193,35.8283],"깁브돈":[31.8564,34.8656],"고산":[36.8268,40.0397],"기브롯 핫다아와":[28.7887,34.2754],"기랴다임":[31.7491,35.7439],"기손":[32.8167,35.0333],"마라":[29.346,32.9428],"맛사":[28.6231,33.8803],"메드바":[31.7161,35.7955],"에발":[32.234,35.2733],"오노":[32.0272,34.8681],"오브라":[32.6057,35.29],"바드로스":[24.1,32.7],"르비딤":[28.6231,33.8803],"랏사론":[32.4,34.883],"싯딤":[31.8402,35.6737],"스보임":[31.2085,35.4492],"앗단":[32.5433,44.4222],"아르곱":[32.9695,36.4554],"아산":[31.2814,34.7974],"벧아웬":[31.8692,35.2681],"벧여시못":[31.7826,35.6213],"벧말가봇":[31.3503,34.9286],"벳브올":[31.777,35.7385],"벧술":[31.5894,35.0942],"베셀":[31.786,35.9017],"갈로":[36.2475,36.3764],"그비라":[31.8309,35.1068],"긴네렛":[32.8694,35.5383],"엘림":[29.2547,32.9158],"에스드모":[31.4008,35.0671],"에담":[30.5475,31.9636],"가아스":[32.0081,35.1073],"골란":[32.7811,35.9347],"야완":[37.9719,23.7267],"할라":[36.4317,43.1946],"하살수알":[31.2447,34.8408],"하살수심":[31.3445,34.9014],"호로나임":[31.09,35.6419],"이블르암":[32.4462,35.292],"야브네":[31.866,34.7463],"욕느암":[32.6641,35.1083],"유다":[31.7767,35.2342],"그데못":[31.5318,35.8803],"게데스":[33.1116,35.5295],"레히":[31.7488,35.001],"로드발":[32.6839,35.6299],"맛만나":[31.3503,34.9286],"메바앗":[31.4997,35.9197],"몰라다":[31.2573,34.9214],"에서":[30.1843,35.3166],"그리심":[32.1994,35.2728],"오봇":[30.6167,35.19],"라못":[32.4999,36.015],"르홉":[34.0089,36.1453],"살르가":[32.4939,36.7105],"스닐":[33.4,35.85],"델렘":[31.1421,34.9122],"베다":[34.3639,36.4156],"에스골":[31.5251,35.1022],"아벨므홀라":[32.3743,35.5609],"악삽":[32.7589,35.0903],"아하와":[32.5433,44.4222],"아인":[31.3833,34.8656],"아그랍빔":[30.9066,35.1313],"아벡":[32.105,34.9304],"아리엘":[31.7767,35.2342],"아스몬":[30.6875,34.3333],"바알라":[31.809,35.1038],"바알스본":[30.8606,32.1714],"브엘라해로이":[30.6875,34.3333],"브솔":[31.4642,34.3757],"다브랏":[32.6973,35.3775],"엔돌":[32.6436,35.3902],"에베스담밈":[31.6845,35.0522],"에브랏":[31.7043,35.2076],"에셈":[31.2814,34.7974],"가드림몬":[32.0917,34.8075],"글릴롯":[31.7905,35.3226],"하볼":[35.1303,40.4273],"하길라":[31.4703,35.2228],"하딧":[31.9633,34.9518],"하로셋학고임":[32.7589,35.0903],"헤나":[34.3686,41.9819],"홀론":[31.6622,35.0305],"이욘":[33.3453,35.59],"아와":[34.6847,36.6906],"욧바다":[29.4925,34.8969],"윳다":[31.4478,35.09],"그리욧":[31.5406,35.6861],"마온":[31.4094,35.1338],"가드모레셋":[31.6334,34.9166],"스나아":[31.9472,35.3997],"스밤":[34.3967,36.3871],"시님":[24.0889,32.8997],"답부아":[32.1041,35.2301],"우스":[30.7458,35.6039],"사르단":[32.2677,35.5772],"압돈":[33.0477,35.1619],"아브로나":[29.5307,35.0],"악십":[31.6421,34.953],"알몬디블라다임":[31.6387,35.8266],"알루스":[28.7703,33.7675],"아납":[31.4121,34.9549],"아루마":[32.1476,35.3216],"아르왓":[34.8561,35.8583],"아다롯":[31.5753,35.6659],"아윗":[30.206,35.6019],"바알랏":[31.8385,34.7822],"바알브올":[31.777,35.7385],"바알브라심":[31.7419,35.1833],"바못":[31.7318,35.7409],"브네야아간":[30.7918,34.4725],"벧아낫":[33.2003,35.4331],"양털 깎는 집":[32.4697,35.3563],"벧학게렘":[31.7399,35.2169],"벧니므라":[31.9091,35.6387],"벧벨렛":[31.3099,34.9078],"벧르홉":[34.0089,36.1453],"도갈마":[38.7225,37.2775],"베섹":[32.3688,35.3974],"보김":[31.9228,35.2414],"보스갓":[31.5369,34.9132],"갈라":[36.0981,43.3289],"구다":[32.76,44.6129],"딘하바":[31.7985,35.7224],"돕가":[29.0367,33.4594],"에벤에셀":[32.1046,34.9645],"에글랏 슬리시야":[31.0369,35.4877],"엘라살":[35.4567,43.2625],"엘드게":[31.8925,34.7678],"에나임":[31.6877,35.0124],"엔간님":[32.7135,35.4954],"엔답부아":[32.1041,35.2301],"에렉":[31.3222,45.6361],"갈림":[31.8154,35.2508],"가드헤벨":[32.7381,35.3197],"게델":[31.6326,35.0921],"그데롯":[31.6889,34.9961],"그돌":[31.6326,35.0921],"깃다임":[31.903,34.8899],"고임":[33.5111,36.3064],"하라다":[30.5066,34.3036],"하스모나":[31.3099,34.9078],"하우란":[32.7301,36.3681],"헬람":[32.75,36.2408],"헬렙":[32.7247,35.4138],"헬갓":[32.6853,35.1097],"헤벨":[32.4428,35.2177],"헤들론":[34.6031,36.1336],"임멜":[32.5433,44.4222],"인도":[23.9944,67.4308],"야노아":[32.158,35.3613],"욕브하":[32.0135,35.8558],"가르다":[33.1119,35.4625],"그헬라다":[30.1931,34.4211],"그낫":[32.7562,36.619],"기시온":[32.6614,35.3931],"구에":[37.0,35.325],"루힛":[31.1379,35.6222],"마돈":[33.0768,35.4324],"마곡":[38.4883,28.0403],"막헬롯":[30.1931,34.4211],"마스레가":[29.9469,35.4636],"맛다나":[31.5883,35.9079],"메사합":[31.8066,36.0508],"믹돌":[30.9648,32.4929],"민닛":[31.8202,35.8747],"미스르봇마임":[33.3384,35.245],"밋가":[30.6406,34.4111],"모레":[32.2136,35.2819],"네아":[32.8042,35.4235],"넵도아":[31.7944,35.1966],"니므림":[31.1336,35.5267],"노바":[32.7562,36.619],"브곳":[31.3611,47.4496],"베레스웃사":[31.7767,35.2342],"브돌":[36.7014,38.0865],"부논":[30.6277,35.4936],"르호봇":[30.9332,35.6109],"레셉":[35.6278,38.7564],"림몬베레스":[29.5402,34.6543],"릿사":[28.026,35.248],"릿마":[29.0337,34.1255],"로글림":[32.5279,35.7806],"살렘":[31.7767,35.2342],"스이라":[31.9878,35.3332],"사아라임":[31.7355,35.0276],"사밀":[32.2761,35.195],"세삭":[32.5433,44.4222],"시홀":[31.0425,32.5461],"시므론":[32.7039,35.2133],"다베라":[28.7887,34.2754],"다핫":[30.6406,34.4111],"들라살":[36.7014,38.0865],"델하르사":[32.1261,45.2308],"델멜라":[32.1261,45.2308],"데베스":[32.3222,35.3686],"힛데겔":[31.0043,47.4421],"을래":[32.41,48.1478],"우바스":[18.2167,42.5],"웃사":[31.7767,35.2342],"사아난님":[32.7211,35.4106],"살모나":[30.8122,35.3734],"사본":[32.2677,35.5772],"스닷":[34.3135,36.9242],"세렛":[31.027,35.4853],"네게브":[31.0,34.8],"단":[33.25,35.65],"모리아":[31.78,35.23],"비하히롯":[29.73,32.37],"신 광야":[28.85,33.4],"시내 광야":[28.55,33.95],"호르 산":[30.32,35.41],"세렛 골짜기":[31.05,35.6],"비스가 산":[31.76,35.72],"모압 평지":[31.83,35.62],"세렛 시내":[31.05,35.6],"아이":[31.92,35.26],"에발 산":[32.23,35.27],"메롬 물":[33.0,35.43],"하롯 샘":[32.55,35.36],"브누엘":[32.18,35.68],"소라":[31.78,34.98],"소렉 골짜기":[31.77,34.95],"라이스":[33.25,35.65],"림몬 바위":[31.93,35.29],"야베스 길르앗":[32.38,35.67],"놉":[31.79,35.24],"모압 미스베":[31.3,35.7],"헤렛 수풀":[31.62,35.02],"십 광야":[31.47,35.14],"마온 황무지":[31.41,35.13],"브솔 시내":[31.3,34.45],"르바임 골짜기":[31.75,35.21],"바알레유다":[31.81,35.1],"다윗 성":[31.77,35.24],"바알하솔":[31.98,35.29],"그술":[32.85,35.7],"기드론 시내":[31.77,35.24],"벧마아가 아벨":[33.26,35.58],"아나돗":[31.82,35.26],"부느엘":[32.18,35.7],"아벨벧마아가":[33.26,35.58],"기손 시내":[32.68,35.11],"립나":[31.57,34.87],"드고아":[31.63,35.21],"요단 강":[31.84,35.55],"유대 광야":[31.7,35.35],"가다라":[32.66,35.68],"벳바게":[31.78,35.25],"겟세마네":[31.78,35.24],"골고다":[31.78,35.23],"거라사":[32.83,35.65],"갈릴리 호수":[32.82,35.59],"요단 강 건너편 베다니":[31.84,35.55],"수가":[32.21,35.28],"에브라임":[31.95,35.3],"아소도":[31.75,34.65],"실루기아":[36.12,35.93],"앗달리아":[36.88,30.7],"베니게":[33.6,35.4],"사모드라게":[40.47,25.53],"암비볼리":[40.82,23.85],"아볼로니아":[40.62,23.48],"헬라":[37.9,22.9],"앗소":[39.49,26.34],"미둘레네":[39.11,26.55],"기오":[38.37,26.14],"사모":[37.75,26.98],"고스":[36.89,27.29],"바다라":[36.26,29.31],"돌레마이":[32.92,35.08],"안디바드리":[32.1,34.93],"무라":[36.26,29.98],"니도":[36.69,27.37],"살모네":[35.31,26.3],"미항":[34.93,24.8],"가우다":[34.84,24.08],"압비오 광장":[41.46,13.03],"트레이스 타베르네":[41.66,12.8],"아라비아":[31.5,36.3],"수리아":[36.0,36.6],"브룬디시움":[40.64,17.94],"디라기온":[41.32,19.45],"에브라임 수풀":[32.34,35.77],"나홀의 성":[36.86,39.03],"하맛 땅 립나":[34.46,36.57],"여리고 평지":[31.85,35.47],"살리사 땅":[32.07,35.08],"사알림 땅":[31.97,35.1],"숩 땅의 성읍":[31.885,35.18],"라헬의 묘실":[31.83,35.21],"다볼 상수리나무":[31.87,35.235],"숙곳(애굽)":[30.5483,32.1003],"메롬":[33.08,35.6],"하로셋":[32.76,35.16],"소고":[31.68,34.98],"십":[31.48,35.15]};
+const SEED={};
+const LIM={sub:30,today:125,find:150,word:40,q:85,apply:105,note:176,pray:130,pair:620,god:90,christ:200};
+const QLAB=ED.qlab||['','1권 1–3월','2권 4–6월','3권 7–9월','4권 10–12월'];
+const FRONT=13; // 책 머리 쪽수(속표지~차례~가름). 하루 펼침면은 FRONT+1(짝수)에서 시작
+function pageNo(p){const qs=PLAN.filter(x=>qOf(x)===qOf(p));const i=qs.findIndex(x=>x.no===p.no);return FRONT+1+2*i}
+// 날짜별 합치기: 수정 시각 u가 더 새로운 쪽이 남는다. u가 없는(옛) 원고는 0으로 본다.
+function mergeInto(local, remote){ let n=0, conf=[]; Object.keys(remote).forEach(k=>{ if(/^f[0-4]$/.test(k)){ if(!local[k]){local[k]=remote[k];n++} return } if(!/^\d+$/.test(k)) return; const r=remote[k], l=local[k]; const ru=r.u||0, lu=l?(l.u||0):-1; if(!l){local[k]=r;n++} else if(ru>lu){ if(lu>0&&JSON.stringify({...l,u:0})!==JSON.stringify({...r,u:0})) conf.push(k); local[k]=r; n++ } }); return {n,conf} }
+function cleanOut(data){ const o={}; Object.keys(data).forEach(k=>{ if(/^f[0-4]$/.test(k)){o[k]=data[k];return} if(!/^\d+$/.test(k)) return; o[k]=data[k].del?{del:1,u:data[k].u||0}:data[k] }); return o }
+/* 기준본(BASE): 마지막으로 GitHub과 맞춘 원고. 이 기기에서 고친 날 = DATA와 BASE가 다른 날 */
+let BASE={}; try{BASE=JSON.parse(localStorage.getItem('cbsr_guide_base')||'{}')}catch(e){BASE={}}
+function norm(x){ if(!x) return 'null'; if(x.del) return 'del'; const {u,...rest}=x; return JSON.stringify(rest) }
+function eq(a,b){ return norm(a)===norm(b) }
+/* 3-way 합치기: 양쪽 다 고친 날은 conflicts로 돌려주고(기본은 이 기기 것 유지), 나머지는 자동 */
+function merge3(remote){ const changed=[], conflicts=[]; Object.keys(remote).forEach(k=>{ if(/^f[0-4]$/.test(k)&&!DATA[k]) DATA[k]=remote[k] });
+  const keys=new Set([...Object.keys(DATA),...Object.keys(remote)].filter(k=>/^\d+$/.test(k)));
+  if(!Object.keys(BASE).length){ keys.forEach(k=>{ const L=DATA[k], R=remote[k]; if(!R||eq(L,R)) return; if(!L||(R.u||0)>=(L.u||0)){ DATA[k]=R; changed.push(k) } }); return {changed,conflicts} } // 처음 맞출 때는 수정 시각으로
+  keys.forEach(k=>{ const L=DATA[k], B=BASE[k], R=remote[k]; const lc=!eq(L,B), rc=!eq(R,B);
+    if(!rc) return; if(eq(L,R)) return;
+    if(!lc){ if(R) DATA[k]=R; else delete DATA[k]; changed.push(k); }
+    else conflicts.push({k,L,R}); });
+  return {changed,conflicts} }
+function setBase(remote){ BASE={}; Object.keys(remote).forEach(k=>{ if(/^\d+$/.test(k)) BASE[k]=remote[k] }); localStorage.setItem('cbsr_guide_base',JSON.stringify(BASE)) }
+function dayLabel(k){ const p=PLAN.find(x=>String(x.no)===k); return p?`${p.m}/${p.d} ${p.t}`:k }
+function brief(x){ if(!x) return '(없음)'; if(x.del) return '(지움)'; const t=(x.sub||x.guide&&x.guide.today||'').slice(0,40); return (t||'(내용 없음)')+(x.u?' · '+new Date(x.u).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'') }
+/* 충돌 고르기 창: 날마다 '이 기기' 또는 'GitHub' 선택 */
+function resolveConflicts(conf){ return new Promise(res=>{ if(!conf.length){res();return}
+  const box=$('confList'); box.innerHTML=conf.map((c,i)=>`<div class="conf"><b>${dayLabel(c.k)}</b><label><input type="radio" name="c${i}" value="L" checked> 이 기기: ${esc(brief(c.L))}</label><label><input type="radio" name="c${i}" value="R"> GitHub: ${esc(brief(c.R))}</label></div>`).join('');
+  const d=$('dlgConf'); d.showModal();
+  $('confOk').onclick=()=>{ conf.forEach((c,i)=>{ const v=box.querySelector(`input[name=c${i}]:checked`).value; if(v==='R'){ if(c.R) DATA[c.k]=c.R; else delete DATA[c.k]; } else if(DATA[c.k]) DATA[c.k]={...DATA[c.k],u:Date.now()}; }); d.close(); res(); };
+  $('confAllL').onclick=()=>{ conf.forEach(c=>{ if(DATA[c.k]) DATA[c.k]={...DATA[c.k],u:Date.now()} }); d.close(); res(); };
+  $('confAllR').onclick=()=>{ conf.forEach(c=>{ if(c.R) DATA[c.k]=c.R; else delete DATA[c.k]; }); d.close(); res(); }; }) }
+async function takeRemote(remote,label){ const m=merge3(remote); await resolveConflicts(m.conflicts); setBase(remote); localStorage.setItem(ED.key,JSON.stringify(DATA)); fillForm(get(PLAN[cur].no)); fillDays(); $('selD').value=cur; render();
+  const mine=Object.keys(DATA).filter(k=>/^\d+$/.test(k)&&!eq(DATA[k],BASE[k])).length;
+  $('status').textContent=`${label}에서 ${m.changed.length}일치 받음`+(m.conflicts.length?` · 양쪽 다 고친 날 ${m.conflicts.length}일은 고른 대로`:'')+(mine?` · 이 기기에서 고친 ${mine}일은 아직 GitHub에 없음`:''); return m }
+let DATA={};
+try{DATA=JSON.parse(localStorage.getItem(ED.key)||'{}')}catch(e){DATA={}}
+if(!Object.keys(DATA).length){DATA=JSON.parse(JSON.stringify(SEED))}
+let cur=PLAN.findIndex(p=>p.m===4&&p.d===2); if(cur<0)cur=0;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const md=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const BK='삼상|삼하|왕상|왕하|대상|대하|고전|고후|살전|살후|딤전|딤후|벧전|벧후|요일|요이|요삼|[창출레민신수삿룻스느에욥시잠전아사렘애겔단호욜암옵욘미나합습학슥말마막눅요행롬갈엡빌골딛몬히약유계]';
+const VSRX=new RegExp('((?:(?:'+BK+')\\s)?\\d{1,3}:\\d{1,3}(?:[\u2013\u2014-]\\d{1,3}(?::\\d{1,3})?)?(?:·\\d{1,3}(?:[\u2013\u2014-]\\d{1,3})?)*)','g');
+const mark=h=>String(h).replace(VSRX,'<span class="vs">$1</span>');
+const vs=s=>mark(esc(s));
+const mdv=s=>mark(md(s));
+const qOf=p=>Math.ceil(p.m/3);
+
+/* ── 데이터 ── */
+function blank(){return {sub:'',guide:{today:'',find:'',word:''},obs:{q:'',look:[['',''],['',''],['','']],pair:[],christ:''},apply:'',note:'',pray:'',map:null}}
+function get(no){const d=DATA[String(no)];return (d&&!d.del)?d:null}
+function readForm(){
+  const qt=blank();
+  qt.sub=$('sub').value.trim(); qt.guide.today=$('today').value.trim(); qt.guide.find=$('find').value.trim(); qt.guide.word=$('word').value.trim();
+  qt.obs.q=$('q').value.trim(); qt.obs.look=[1,2,3].map(i=>[$('r'+i).value.trim(),$('t'+i).value.trim()]);
+  qt.obs.pair=$('pair').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{const m=s.match(/^(\S+\s\S+)\s+(.*)$/);return m?[m[1],m[2]]:['',s]});
+  qt.apply=$('apply').value.trim(); qt.note=$('note').value.trim(); qt.pray=$('pray').value.trim(); qt.obs.christ=$('christ').value.trim(); const at=$('attr').value.trim(); if(at) qt.attr=at;
+  const g=$('god').value.trim(); if(g) qt.god=g;
+  const pi=$('p_id').value.trim(); if(pi) qt.img={id:pi,cap:$('p_cap').value.trim()};
+  const sk=$('stxk').value.trim(); const sb=$('stx').value.trim();
+  qt.stx=(sk||sb)?{kind:sk,rows:sb.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split(/(?<!\|)\|(?!\|)/).map(y=>y.trim()))}:null;
+  const e=$('m_emph').value.trim();
+  qt.map=e?{emph:e,show:$('m_show').value.trim(),route:$('m_route').value.trim(),route2:$('m_route2').value.trim(),cap:$('m_cap').value.trim()}:null;
+  return qt;
+}
+function isEmpty(qt){return !qt||qt.del||!(qt.sub||qt.guide.today||qt.guide.find||qt.guide.word||qt.obs.q||qt.apply||qt.note||qt.pray||qt.god||qt.attr||(qt.img&&qt.img.id)||(qt.map&&qt.map.emph)||(qt.obs.pair&&qt.obs.pair.length)||qt.obs.look.some(x=>x[0]))}
+function autoH(t){t.style.height='auto';t.style.height=Math.max(90,t.scrollHeight+2)+'px'}
+document.addEventListener('input',e=>{if(e.target.tagName==='TEXTAREA'&&!e.target.closest('dialog'))autoH(e.target)});
+function fillForm(qt){
+  qt=qt||blank();
+  $('sub').value=qt.sub||''; $('today').value=qt.guide.today||''; $('find').value=qt.guide.find||''; $('word').value=qt.guide.word||'';
+  $('q').value=qt.obs.q||''; [1,2,3].forEach(i=>{const l=(qt.obs.look||[])[i-1]||['',''];$('r'+i).value=l[0]||'';$('t'+i).value=l[1]||''});
+  $('pair').value=(qt.obs.pair||[]).map(x=>(x[0]+' '+x[1]).trim()).join('\n');
+  $('apply').value=qt.apply||''; $('note').value=qt.note||''; $('pray').value=qt.pray||''; $('christ').value=(qt.obs&&qt.obs.christ)||''; $('attr').value=qt.attr||''; $('god').value=qt.god||''; $('p_id').value=(qt.img&&qt.img.id)||''; $('p_cap').value=(qt.img&&qt.img.cap)||'';
+  const sx=qt.stx||{}; $('stxk').value=sx.kind||''; $('stx').value=(sx.rows||[]).map(r=>r.join('|')).join('\n');
+  const m=qt.map||{}; $('m_emph').value=m.emph||''; $('m_show').value=m.show||''; $('m_route').value=m.route||''; $('m_route2').value=m.route2||''; $('m_cap').value=m.cap||'';
+  counters(); document.querySelectorAll('#form textarea, aside textarea').forEach(autoH);
+}
+let saveT=null;
+function save(){
+  const qt=readForm(); const key=String(PLAN[cur].no);
+  const prev=DATA[key]; const same=prev&&JSON.stringify({...prev,u:0})===JSON.stringify({...qt,u:0});
+  if(isEmpty(qt)){ if(prev) DATA[key]={...qt,u:Date.now(),del:1}; }
+  else if(!same){ DATA[key]={...qt,u:Date.now()}; }
+  try{localStorage.setItem(ED.key,JSON.stringify(DATA));$('status').textContent='이 기기에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' · GitHub에는 아직'}catch(e){$('status').textContent='이 브라우저에 저장하지 못했습니다 — JSON으로 내보내 두세요'}
+}
+function counters(){
+  document.querySelectorAll('.cnt').forEach(c=>{const id=c.dataset.for;const n=($(id).value||'').replace(/\*\*/g,'').length;const L=LIM[id];c.textContent=n+' / '+L;c.classList.toggle('over',n>L)});
+}
+
+/* ── 지도(SVG) ── */
+/* 지형 조각 고르기: 좁은 이스라엘(terrhi 8–12) → 근동(terrm 10–11) → 넓은 범위(terrw 3–9). 조각은 웹 메르카토르, 지도는 등장방형이라 조각마다 위·아래 위도로 맞춰 붙인다(조각 안의 오차는 0.1mm 이하). */
+const TERR_BASE=(location.protocol==='file:')?'https://aqedah.github.io/CBSR/':'';
+const TERR_SRC={terrhi:{regs:[[34.2,36.6,29.8,33.8]],z:[8,12]},terrm:{regs:[[29.8,38.6,27.3,37.4],[12.0,16.3,35.6,42.2],[21.5,30.5,36.3,41.3]],z:[10,11]},terrw:{regs:[[6.5,49.0,26.5,46.8]],z:[7,9]}};
+function terrainTiles(lon0,lon1,lat0,lat1,px){ if(window.TDBG) console.log('bbox',lon0,lon1,lat0,lat1);
+  const inside=(regs)=>regs.some(([a,b,c,d])=>{const ox=Math.min(lon1,b)-Math.max(lon0,a), oy=Math.min(lat1,d)-Math.max(lat0,c); return ox>0&&oy>0&&ox*oy>=0.6*(lon1-lon0)*(lat1-lat0)});
+  let z0=Math.round(Math.log2(2160/(lon1-lon0)));
+  let src=null,z=null; for(const k of ['terrhi','terrm','terrw']){ const S=TERR_SRC[k]; if(inside(S.regs)&&z0>=S.z[0]&&z0<=S.z[1]){src=k;z=Math.max(S.z[0],Math.min(S.z[1],z0));break} }
+  if(!src){ for(const k of ['terrw','terrm','terrhi']){ const S=TERR_SRC[k]; if(inside(S.regs)){src=k;z=Math.max(S.z[0],Math.min(S.z[1],z0));break} } }
+  if(!src) return '';
+  const n=Math.pow(2,z), x2lon=x=>x/n*360-180, y2lat=y=>{const t=Math.PI-2*Math.PI*y/n;return Math.atan(Math.sinh(t))*180/Math.PI};
+  const lon2x=lo=>(lo+180)/360*n, lat2y=la=>{const r=la*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n};
+  const xa=Math.floor(lon2x(lon0)), xb=Math.floor(lon2x(lon1)), ya=Math.floor(lat2y(lat1)), yb=Math.floor(lat2y(lat0));
+  if((xb-xa+1)*(yb-ya+1)>200) return '';
+  const t=[`<defs><filter id="ter"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="linear" slope="1.25" intercept="-0.05"/><feFuncG type="linear" slope="1.25" intercept="-0.05"/><feFuncB type="linear" slope="1.25" intercept="-0.05"/></feComponentTransfer></filter></defs><g filter="url(#ter)">`];
+  for(let x=xa;x<=xb;x++) for(let y=ya;y<=yb;y++){ const [X0,Y0]=px(x2lon(x),y2lat(y)), [X1,Y1]=px(x2lon(x+1),y2lat(y+1)); t.push(`<image href="${TERR_BASE}${src}/${z}/${x}/${y}.webp" x="${X0.toFixed(2)}" y="${Y0.toFixed(2)}" width="${(X1-X0+0.06).toFixed(2)}" height="${(Y1-Y0+0.06).toFixed(2)}" preserveAspectRatio="none" onerror="this.remove()"/>`) }
+  t.push('</g>'); return t.join('');
+}
+function svgMap(m,wmm,hTarget){
+  const names=s=>s.split(/[,，]/).map(x=>x.trim()).filter(Boolean);
+  const rsplit=t=>String(t||'').split(/→|->|,/).map(x=>x.trim()).filter(Boolean);
+  const emph=names(m.emph), show=names(m.show||''), route=rsplit(m.route), route2=rsplit(m.route2);
+  const multi=(m.routes||[]).map(r=>({lab:r[0], pts:rsplit(r[1]), col:r[2]||'var(--main)'}));
+  const all=[...new Set([...emph,...show,...route,...route2,...multi.flatMap(r=>r.pts)])].filter(n=>PLACES[n]);
+  if(!all.length) return '';
+  const lats=all.map(n=>PLACES[n][0]), lons=all.map(n=>PLACES[n][1]);
+  let lat0=Math.min(...lats),lat1=Math.max(...lats),lon0=Math.min(...lons),lon1=Math.max(...lons);
+  const k=Math.cos(32*Math.PI/180);
+  // 여백: 최소 폭·높이 보장
+  let dlat=Math.max(lat1-lat0,0.35), dlon=Math.max(lon1-lon0,0.45);
+  const clat=(lat0+lat1)/2, clon=(lon0+lon1)/2;
+  dlat*=1.35; dlon*=1.35;
+  // 비율: 너무 납작하거나 길쭉하지 않게 (세로/가로 0.7–1.3)
+  let H=dlat, W=dlon*k; const r=H/W; if(r<0.7){H=W*0.7} if(r>1.15){W=H/1.15}
+  lat0=clat-H/2; lat1=clat+H/2; lon0=clon-W/k/2; lon1=clon+W/k/2;
+  if(hTarget){ const r2=hTarget/wmm; if(H/W<r2) H=W*r2; else W=H/r2; lat0=clat-H/2; lat1=clat+H/2; lon0=clon-W/k/2; lon1=clon+W/k/2; }
+  let hmm=wmm*H/W; if(!hTarget&&hmm>45){ wmm=wmm*45/hmm; hmm=45 } const vh=100*hmm/wmm;
+  const px=(lo,la)=>[((lo-lon0)*k/W*100),((lat1-la)/H*100*(hmm/wmm))];
+  const pts=a=>a.map(([x,y])=>x.toFixed(1)+','+y.toFixed(1)).join(' ');
+  const o=[`<svg viewBox="0 0 100 ${vh.toFixed(1)}" width="${wmm}mm" height="${hmm.toFixed(1)}mm" preserveAspectRatio="xMidYMid meet" style="display:block">`];
+  // 지형 음영: 앱의 지형 조각(terrhi/terrm/terrw)을 회색으로 깔아 산지가 보이게
+  o.push(`<rect x="0" y="0" width="100" height="${vh.toFixed(1)}" fill="#EEEEEE"/>`); o.push(terrainTiles(lon0,lon1,lat0,lat1,px));
+  // 지중해(가사–나일 삼각주까지), 수에즈 만, 아카바 만, 홍해 — 개략 해안선
+  o.push(`<polygon points="${pts([px(27.5,37.2),px(30.5,36.85),px(32.0,36.55),px(33.0,36.15),px(34.6,36.75),px(35.5,36.6),px(36.15,36.6),px(35.95,36.0),px(35.78,35.5),px(35.9,34.9),px(35.83,34.45),px(35.62,34.1),px(35.5,33.9),px(35.37,33.56),px(35.2,33.27),px(35.08,33.0),px(34.9,32.6),px(34.75,32.0),px(34.55,31.45),px(34.3,31.25),px(33.8,31.12),px(33.0,31.12),px(32.3,31.26),px(31.5,31.5),px(30.4,31.5),px(29.6,31.0),px(27.5,31.0)])}" fill="#DADADA"/>`);
+  o.push(`<polygon points="${pts([px(32.55,29.97),px(32.45,29.5),px(32.6,28.9),px(33.0,28.3),px(33.5,27.8),px(33.9,27.5),px(34.0,27.7),px(33.6,28.3),px(33.3,28.8),px(33.0,29.3),px(32.7,29.8)])}" fill="#DADADA"/>`);
+  o.push(`<polygon points="${pts([px(34.95,29.55),px(34.9,29.3),px(34.75,28.7),px(34.55,28.2),px(34.4,27.9),px(34.6,27.9),px(34.75,28.4),px(34.95,28.9),px(35.05,29.3),px(35.0,29.55)])}" fill="#DADADA"/>`);
+  o.push(`<polygon points="${pts([px(33.9,27.5),px(34.0,27.7),px(34.4,27.9),px(34.6,27.9),px(35.2,27.4),px(36.0,26.5),px(36.0,24.5),px(33.0,24.5),px(33.4,27.0)])}" fill="#DADADA"/>`);
+  o.push(`<polygon points="${pts([px(35.40,31.75),px(35.52,31.70),px(35.56,31.45),px(35.50,31.15),px(35.42,31.05),px(35.36,31.30),px(35.37,31.55)])}" fill="#DADADA"/>`);
+  o.push(`<polygon points="${pts([px(35.52,32.72),px(35.63,32.80),px(35.65,32.90),px(35.58,32.95),px(35.52,32.85)])}" fill="#DADADA"/>`);
+  o.push(`<polyline points="${pts([px(35.55,31.75),px(35.57,32.0),px(35.56,32.4),px(35.55,32.72)])}" fill="none" stroke="#CCC" stroke-width="1.2"/>`);
+  const inb=(lo,la)=>lo>lon0&&lo<lon1&&la>lat0&&la<lat1;
+  const seaB=[];
+  if(inb(35.47,31.35)&&lon1-lon0<3.2){const [x,y]=px(35.47,31.33);seaB.push([x-5,y-4.5,x+5,y+1]);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1" stroke-linejoin="round">사해</text>`)}
+  { const wide=lon1-lon0>=3.2; const cands=wide?[[33.2,33.6],[32.6,32.8],[33.3,31.8],[34.45,32.35]]:[[34.45,32.35],[34.1,32.6],[33.3,31.8],[33.6,32.4]]; const pt=cands.find(([lo,la])=>inb(lo,la)&&(lon1-lon0<3.2||lo<lon0+0.62*(lon1-lon0))); if(pt){const [x,y]=px(pt[0],pt[1]);seaB.push([x-7.5,y-4.5,x+7.5,y+1]);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1" stroke-linejoin="round">지중해</text>`)} }
+  if(false){const [x,y]=px(34.55,32.2);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1" stroke-linejoin="round">지중해</text>`)}
+  const uid='mk'+(svgMap._n=(svgMap._n||0)+1);
+  o.push(`<defs><marker id="${uid}a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path d="M0,1.2 L9.4,5 L0,8.8 z" fill="var(--main)"/></marker><marker id="${uid}b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0,1.2 L9.4,5 L0,8.8 z" fill="#4a4a4a"/></marker></defs>`);
+  const PLAY=[];
+  const drawRoute=(arr,color,mk,dash,rid,lab)=>{ const nm=arr.filter(n=>PLACES[n]); const ps=nm.map(n=>px(PLACES[n][1],PLACES[n][0])); if(nm.length>1) PLAY.push({r:rid,col:color,pts:nm,lab:lab||''});
+    for(let i=0;i<ps.length-1;i++){ const [x1,y1]=ps[i],[x2,y2]=ps[i+1]; const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1; const t=Math.min(2.9,L*0.34); const ex=x2-dx/L*t, ey=y2-dy/L*t; const sx=x1+dx/L*Math.min(2.0,L*0.2), sy=y1+dy/L*Math.min(2.0,L*0.2); o.push(`<line class="rt" data-rt="${rid}" data-seg="${i}" x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="${color}" stroke-width="0.9" stroke-dasharray="${dash}" marker-end="url(#${mk})"/>`) } };
+  if(route.length>1) drawRoute(route,'var(--main)',uid+'a','2.2 1.4',0,m.rlab||'오늘의 길');
+  if(route2.length>1) drawRoute(route2,'#4a4a4a',uid+'b','3 1.7',1,m.rlab2||'또 다른 길');
+  multi.forEach((r,i)=>{ if(r.pts.length<2) return;
+    o.push(`<defs><marker id="${uid}r${i}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0,1.2 L9.4,5 L0,8.8 z" fill="${r.col}"/></marker></defs>`);
+    drawRoute(r.pts, r.col, uid+'r'+i, '2.4 1.5', 10+i, r.lab) });
+  // 라벨 자리: 오른쪽 기본, 겹치면 왼쪽/위/아래
+  const placed=all.map(n=>{const [x,y]=px(PLACES[n][1],PLACES[n][0]);return [x-2.4,y-2.4,x+2.4,y+2.4]});
+  seaB.forEach(b=>placed.push(b));
+  all.sort((a,b)=>(emph.includes(b)?1:0)-(emph.includes(a)?1:0)).forEach(n=>{
+    const [x,y]=px(PLACES[n][1],PLACES[n][0]); const e=emph.includes(n);
+    const pa=` data-pl="${esc(n)}"`;
+    o.push(e?`<circle${pa} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.1" fill="var(--main)"/>`:`<circle${pa} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.5" fill="#fff" stroke="#777" stroke-width="0.7"/>`);
+    const lab=n.replace(/\(.*\)$/,''); const fs=e?5.2:4.4, w=lab.length*fs*0.95;
+    const cands=[[x+3,y+1.6,'start'],[x-3,y+1.6,'end'],[x,y-3,'middle'],[x,y+6.2,'middle'],[x+3,y-2.5,'start'],[x-3,y-2.5,'end'],[x+3,y+5.5,'start'],[x-3,y+5.5,'end'],[x,y-7,'middle'],[x,y+10,'middle']];
+    let pick=cands[0], best=1e9, bestBox=null;
+    for(const c of cands){const bx=c[2]==='start'?c[0]:c[2]==='end'?c[0]-w:c[0]-w/2;const box=[bx,c[1]-fs,bx+w,c[1]];
+      let cost=0; placed.forEach(b=>{const ox=Math.min(box[2],b[2])-Math.max(box[0],b[0]), oy=Math.min(box[3],b[3])-Math.max(box[1],b[1]); if(ox>0&&oy>0) cost+=ox*oy});
+      if(box[0]<0) cost+=(-box[0])*fs*3; if(box[2]>100) cost+=(box[2]-100)*fs*3; if(box[1]<0) cost+=50; if(box[3]>vh) cost+=50;
+      cost+=cands.indexOf(c)*0.5;
+      if(cost<best){best=cost;pick=c;bestBox=box}}
+    placed.push(bestBox);
+    const ci=cands.indexOf(pick); if(ci>=4){const lx=pick[2]==='start'?pick[0]-0.6:pick[2]==='end'?pick[0]+0.6:pick[0]; const ly=pick[1]-fs*0.35; o.push(`<line${pa} x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${lx.toFixed(1)}" y2="${ly.toFixed(1)}" stroke="#777" stroke-width="0.35"/>`)}
+    o.push(`<text${pa} x="${pick[0].toFixed(1)}" y="${pick[1].toFixed(1)}" font-size="${fs}" font-weight="${e?700:400}" fill="${e?'#111':'#555'}" text-anchor="${pick[2]}" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1.1" stroke-linejoin="round">${esc(lab)}</text>`);
+  });
+  o.push('</svg>');
+  const pd=PLAY.length?` data-play="${encodeURIComponent(JSON.stringify(PLAY))}" data-mspec="${encodeURIComponent(JSON.stringify(m))}"`:'';
+  return `<div class="map"${pd}>${o.join('')}<div class="cap sans">${esc(m.cap||'')}${m.cap?' · ':''}개략도</div></div>`;
+}
+
+/* ── 펼침면 ── */
+const SYMS='●◇◆○▲□◎';
+function chipSym(s){ const m=String(s||'').trim(); return m?`<span class="chip">${esc(m)}</span>`:'' }
+function chip(t){ let r=String(t||'').trim(), out=''; let m;
+  while((m=r.match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
+  if(out) return out+vs(r);
+  m=String(t||'').match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
+function pageL(p,qt){
+  const q='q'+qOf(p);
+  const look=(qt.obs.look||[]).filter(x=>x[0]);
+  const pair=(qt.obs.pair||[]);
+  const hasMap=qt.map&&qt.map.emph; const hasPic=!hasMap&&qt.img&&qt.img.id;
+  const refs=look.map(([r,t])=>`<p class="ref"><b>${esc(r)}</b>&nbsp; ${esc(t)}</p>`).join('');
+  const box=pair.length?`<div class="box"><div class="h">눈여겨볼 것</div>${pair.map(([s,t])=>`<div class="i">${chipSym(s)}${vs(t)}</div>`).join('')}</div>`:'';
+  const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${vs(qt.img.cap||'')}</div></div>`:'';
+  const stx=qt.stx&&qt.stx.rows&&qt.stx.rows.length?`<div class="stx" data-f="stx"><p class="sh">${esc(qt.stx.kind||'짜임')}</p>${(()=>{const rs=qt.stx.rows; const L=c=>{const u=(c||'').replace(/[^A-Za-z]/g,'').toUpperCase(); return u==='X'?99:(u?u.charCodeAt(0)-64:1)}; const mx=Math.max(1,...rs.map(r=>L(r[0])).filter(v=>v<99)); return rs.map(r=>{const [m,w,t]=r; const d=L(m); const flat=/반복평행/.test(qt.stx.kind||''); const lv=flat?1:(d===99?mx+1:d); return `<div class="sr" style="padding-left:${((lv-1)*4.5).toFixed(1)}mm"><span class="sm2">${esc(m||'')}</span><span class="sw">${esc(w||'')}</span><span class="st2">${vs(t||'')}</span></div>`}).join('')})()}</div>`:'';
+  const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c1" data-f="pair">${box}</div><div class="c2" data-f="m_emph" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
+  const whole=qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:'';
+  return `<div class="pg ${q}">
+<p class="date sans">${p.m}월 ${p.d}일 · ${p.no}일째 · 성경 읽기 약 ${p.min}분</p>
+<p class="title sans">${esc(p.t)}</p>
+<p class="sub" data-f="sub">${esc(qt.sub||p.sub)}</p>
+<p class="sec sans"><span class="n">1</span>읽기 전</p>
+<p class="b" data-f="today"><b>오늘의 흐름</b>&nbsp; ${qt.guide.today?vs(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
+<p class="b" data-f="find"><b>읽으며 둘 초점</b>&nbsp; ${chip(qt.guide.find)}</p>
+${qt.guide.word?`<p class="b" data-f="word"><b>말뜻</b>&nbsp; ${vs(qt.guide.word)}</p>`:''}
+<p class="go sans">▶ 이제 성경책에서 ${esc(p.rng)} 읽습니다.</p>
+<p class="sec sans"><span class="n">2</span>읽은 뒤</p>
+${sec2}
+${whole}
+<div class="pn">${pageNo(p)}</div>
+</div>`;
+}
+function pageR(p,qt){
+  const q='q'+qOf(p);
+  const ln=n=>'<div class="lnw">'+'<div class="ln"></div>'.repeat(n)+'</div>';
+  const ends=(p.end||[]); const holdLab=ends.length?`${esc(ends.join('·'))}에서 붙잡은 말씀 하나 <span class="sm">— 절 주소와 짧은 문구</span>`:`붙잡은 말씀 <span class="sm">— 절 주소와 짧은 문구</span>`;
+  return `<div class="pg r ${q}">
+<p class="date sans">${p.m}월 ${p.d}일 · ${esc(p.t)}</p>
+<p class="sec sans" style="margin-top:0.5mm"><span class="n">3</span>나의 묵상</p>
+<p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q" data-f="q">${vs(qt.obs.q)}</p>${ln(3)}
+<p class="lab sans"><span class="st">2</span>하나님의 성품 <span class="sm">— 본문에서 본 하나님은 어떤 분입니까?</span></p>${ln(2)}
+<p class="lab sans"><span class="st">3</span>적용</p><p class="q" data-f="apply">${mdv(qt.apply)}</p>${ln(2)}
+<p class="lab sans"><span class="st">4</span>오늘의 기도</p>${ln(3)}
+<div class="after"><p class="h sans"><span class="n">4</span>쓴 뒤에 읽기 — 해설과 기도</p>
+<p data-f="note">${vs(qt.note)}${qt.god?' <span data-f="god">'+vs(qt.god)+'</span>':''}</p>
+<p data-f="pray"><span class="k">기도</span>${vs(qt.pray)}</p></div>
+<div class="pn">${pageNo(p)+1}</div>
+</div>`;
+}
+/* ── 책 머리(겉표지·면지·1–13쪽) — 글은 DATA['f'+권]에서 고칠 수 있다 ── */
+const FDEF=q=>Object.assign({
+ ch:'중앙성서교회 청년부',
+ cvk:'성경을 이야기로 읽는',
+ cvt:'성경통독\n가이드북',
+ cvs:QLAB[q].replace('권 ','권 · '),
+ bkt:'성경책을 펴 놓고 쓰는 책입니다',
+ bkp:'이 책에는 성경 본문이 한 절도 실려 있지 않습니다. 날마다 왼쪽 쪽을 읽고, 성경책을 펴서 그날의 본문을 읽고, 오른쪽 쪽에 손으로 씁니다.\n\n되풀이되는 낱말, 나란히 놓인 두 자리, 흐름이 돌아서는 자리, 비어 있는 자리 — 석 달이면 이 도구들이 손에 익습니다. 그러면 가이드북이 없는 본문 앞에서도 스스로 읽게 됩니다.\n\n성경책에 밑줄을 긋고 형광펜으로 표시하십시오. 해마다 쌓이면 평생 함께 가는 성경책이 됩니다.',
+ bkfoot:'통독 앱 CBSR과 함께 씁니다',
+ cp:'기획·총괄 이삭 목사\n\n이 책에는 성경 본문을 싣지 않았습니다. 본문을 인용한 자리는 대한성서공회 「성경전서 개역개정판」을 따랐습니다.\n통독 앱 CBSR과 같은 흐름으로 만들었습니다.\n교회 안에서 쓰기 위해 만든 책이며, 팔지 않습니다.',
+ phead:'왜 이렇게 읽습니까',
+ pbody:'성경의 절반이 넘는 분량이 이야기입니다. 이야기는 교리를 요약해 놓은 글이 아닙니다. 누가 무엇을 했고 하나님이 어떻게 하셨는지를 장면으로 보여 주는 글입니다. 그래서 이야기는 이야기로 읽어야 합니다.\n\n이 책은 성경을 대신하지 않습니다. 성경책을 옆에 펴 놓고 쓰는 책입니다. 본문은 한 절도 싣지 않았습니다.\n\n하루는 네 걸음입니다. ① 읽기 전에 오늘의 흐름과 오늘 쓸 도구를 받습니다. ② 성경책을 읽고 돌아와 눈여겨볼 것을 확인합니다. ③ 본 것을 내 말로 씁니다. ④ 다 쓴 뒤에 해설과 기도를 읽습니다. 해설을 먼저 읽으면 ③에 쓸 말이 남지 않습니다. 이 순서만은 지켜 주십시오.\n\n목수에게는 망치와 톱이 필요하고 농부에게는 쟁기와 낫이 필요하듯이 통독자에게도 다양한 도구가 필요합니다. 도구는 외워 두는 지식이 아니라 본문 앞에서 손에 쥐고 쓰는 것입니다. 되풀이되는 낱말, 나란히 놓인 두 자리, 처음과 끝이 맞물리는 틀, 흐름이 돌아서는 자리, 인물의 속마음, 말하지 않는 사람, 비어 있는 자리, 겉과 속이 어긋나는 자리. 석 달 동안 이 도구로 본문을 살피는 연습을 합니다. 되풀이되는 말과 서로 다른 장면에서 근거를 찾고, 거기서 하나님을 알고 삶으로 응답합니다. 가이드북이 없는 본문에서도 스스로 살피고 묵상하는 것이 이 책의 목표입니다.\n\n성경책에 밑줄을 긋고 형광펜으로 표시하십시오. 해마다 쌓이면 그 성경책이 평생 함께 가는 책이 됩니다.',
+ psig:'이삭 목사',
+ howhead:'이 책 쓰는 법',
+ howlead:'하루에 펼침면 하나입니다. 왼쪽은 읽고, 오른쪽은 씁니다. 아래는 **1월 14일(창세기 39–41장)을 실제로 써 본 모습**입니다.',
+ howcap:'성품 칸에 ‘함께하시는 하나님’이라고만 쓰면 오늘 본문이 없어도 쓸 수 있는 말이 됩니다. 본문의 어느 자리에서 그렇게 보았는지까지 적으십시오.',
+ sample:'1|본문 관찰|서술자는 요셉이 형통한 까닭을 무엇이라 말하고, 요셉 자신은 꿈 해석의 출처를 무엇이라 말합니까?|집에서도 감옥에서도 "여호와께서 요셉과 함께 하시므로"가 되풀이됩니다(39:2·21). 요셉도 "해석은 하나님께 있지 아니하니이까"(40:8), "내가 아니라 하나님께서"(41:16) 합니다.\n2|하나님의 성품|본문에서 본 하나님은 어떤 분입니까?|자리가 낮아지고 사람이 잊은 동안에도 함께하시는 하나님. 주인의 집에서도 감옥에서도 서술자가 같은 말을 되풀이합니다.\n3|적용|지금 내가 잊힌 것 같은 자리에 있다면, 거기서 내가 할 수 있는 한 가지는 무엇입니까?|알아주지 않는다는 생각으로 미뤄 둔 공동 작업을 오늘 마무리하겠다.\n4|오늘의 기도|—|서운한 마음을 주께 말씀드립니다. 사람의 평가에 매여 지금 맡은 일을 놓지 않게 하소서.',
+ steps:'읽기 전|오늘의 흐름으로 줄거리를 잡고, **읽으며 둘 초점**의 기호로 오늘 쓸 도구를 받습니다. 말뜻은 낯선 낱말 하나를 풀어 줍니다.\n읽은 뒤|성경책을 다 읽고 돌아와서 봅니다. 눈여겨볼 것은 답이 아니라 확인입니다. 내가 본 것과 견주어 보십시오.\n나의 묵상|손으로 쓰는 자리입니다. 본문 관찰 · 하나님의 성품 · 적용 · 오늘의 기도. 칸마다 한두 문장이면 넉넉합니다.\n쓴 뒤에 읽기|쪽 아래 띠입니다. **③을 다 쓴 뒤에** 읽습니다.',
+ rules:'성경책과 나란히 놓고 씁니다. 이 책만 읽는 것은 통독이 아닙니다.\n④ 해설은 반드시 다 쓴 뒤에 읽습니다. 먼저 내가 본 것을 적고, 해설에서 그 근거를 다시 확인하십시오.\n초점의 기호가 그날의 도구입니다. **설명이 붙지 않은 기호는 스스로 찾아보라는 뜻**입니다.\n마음에 걸린 구절은 이 책에 옮겨 적지 말고 **성경책에 바로 밑줄을 긋거나 형광펜으로 표시**하십시오.\n하루를 건너뛰어도 그 날은 비워 두고 다음 날부터 이어 갑니다. 몰아 읽으려다 멈추는 것보다 낫습니다. 칸을 다 채우지 못해도 괜찮습니다.',
+ symhead:'기호 — 아홉 가지 도구',
+ symlead:'본문에 있을 때만 꺼냅니다. 하루에 몇 개가 나오든 상관없습니다. **본문이 먼저입니다.**',
+ syms:'● 이끎말|한 낱말이 본문 전체를 끌고 갑니다. 그 말이 나올 때마다 표시해 두면 줄기가 보입니다.|창 29–31장의 ‘섬기다·일하다’ — 야곱의 20년이 이 말로 세어집니다.\n◆ 반복|같은 말이나 장면이 거듭됩니다. 거듭될 때마다 무엇이 달라지는지가 핵심입니다.|창 5장의 "죽었더라" 여덟 번.\n◇ 대조|두 자리를 나란히 놓아 갈라 보입니다. 무엇과 무엇을 견주는지 먼저 찾습니다.|출 1:12 바로의 계획과 그 결과.\n□ 틀|처음과 끝이 맞물려 한 덩어리로 묶입니다. 묶인 안쪽이 그 단락입니다.|룻 1:1 "사사들이 치리하던 때에" ↔ 4:17 다윗.\n▲ 전환|흐름이 여기서 돌아섭니다. 교차대구로 짜인 본문에서는 한가운데가 그 자리입니다.|창 8:1 "하나님이 노아를 기억하사".\n○ 속말|화자가 인물의 속마음을 열어 보입니다. 겉으로 한 말과 견주어 읽습니다.|삼상 18:11 "그가 스스로 이르기를".\n◎ 침묵|말해야 할 사람이 말하지 않습니다. 대답이 없다는 것까지만 봅니다.|레 10:3 "아론이 잠잠하니".\n⋯ 공백|본문이 되풀이하던 말이나 행동이 어느 자리에서만 빠집니다. 왜 없는지는 본문이 말할 때만 따라갑니다.|창 1장 둘째 날에만 "좋았더라"가 없습니다.\n?! 아이러니|겉과 속이 어긋납니다. 세 가지 가운데 어느 것인지는 설명 첫머리로 알 수 있습니다(맞은쪽).|삿 6:12 포도주 틀에 숨은 이를 "큰 용사여".',
+ irhead:'?! 아이러니의 세 가지',
+ irlead:'기호는 **?! 하나**입니다. 어느 쪽인지는 그날 ② 눈여겨볼 것의 설명 첫머리로 알 수 있습니다.',
+ irony:'뜻과 반대로 말합니다|소풍 가는 날 비가 오는데 "날씨 참 좋다"|삼상 26:15 다윗이 아브넬에게 "네가 용사가 아니냐".\n뜻한 것과 정반대의 결과가 옵니다|여행을 계획했는데 그날 비가 내린다|출 1:22 나일 강에 던지라던 명령이 모세를 왕궁에 들여놓습니다.\n읽는 사람은 아는데 ○○는 모릅니다|욥의 고통은 사탄의 내기 때문인데 욥은 하나님을 탓한다|창 22:1 "하나님이 아브라함을 시험하시려고".',
+ whhead:'‘성경 전체로’의 다섯 갈래',
+ whlead:'왼쪽 쪽 아래에 붙는 줄입니다. 관찰 도구와는 다른 갈래입니다.',
+ whole:'인용|뒤의 성경이 이 본문을 그대로 끌어다 씁니다.\n약속|여기서 하신 약속이 어디서 이루어지는지 봅니다.\n주제|같은 주제가 성경 전체에 어떻게 이어지는지 봅니다.\n모형|이 사람이나 이 일이 뒤의 무엇을 미리 보입니다.\n흐름|구원의 줄거리에서 이 본문이 어디쯤인지 봅니다.',
+ bkshead:'이 권에서 읽는 책들',
+ tochead:'통독표 · 차례',
+ divk:'여기까지가 안내입니다',
+ divt:'이제부터\n하루 한 펼침면',
+ divs:'',
+ divnote:'성경책을 펴고 시작합니다.'
+},ED.fdef||{});
+const QONLY=['cvs','divs','howlead','sample'];   /* 권마다 달라야 하는 칸 — 권 표시, 가름 날짜, 작성 예시(그 권의 날을 보여 준다) */
+function F(q){ const D=(typeof DATA!=='undefined')?DATA:{}; return Object.assign({},FDEF(q),D.f0||{},D['f'+q]||{}) }
+const FKEYS=Object.keys(FDEF(1));
+const lines=t=>String(t||'').split('\n').map(x=>x.trim()).filter(Boolean);
+const paras=t=>String(t||'').split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
+const br=h=>String(h).replace(/\n/g,'<br>');
+const bold=t=>br(esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'));
+const boldv=t=>mark(bold(t));
+function qDays(q){ return PLAN.filter(x=>qOf(x)===q) }
+const ABBR={'창세기':'창','출애굽기':'출','레위기':'레','민수기':'민','신명기':'신','여호수아':'수','사사기':'삿','룻기':'룻','사무엘상':'삼상','사무엘하':'삼하','열왕기상':'왕상','열왕기하':'왕하','역대상':'대상','역대하':'대하','에스라':'스','느헤미야':'느','에스더':'에','욥기':'욥','시편':'시','잠언':'잠','전도서':'전','아가':'아','이사야':'사','예레미야애가':'애','예레미야':'렘','에스겔':'겔','다니엘':'단','호세아':'호','요엘':'욜','아모스':'암','오바댜':'옵','요나':'욘','미가':'미','나훔':'나','하박국':'합','스바냐':'습','학개':'학','스가랴':'슥','말라기':'말'};
+function shortRef(t){ let r=String(t); Object.keys(ABBR).forEach(k=>{ r=r.split(k).join(ABBR[k]) }); return r.replace(/장/g,'') }
+function bookOf(t){ return String(t).split(' · ').map(s=>s.replace(/\s*\d+\s*[–-]?\s*\d*\s*(장|편).*$/,'').trim()) }
+function bookList(q){
+  const ds=qDays(q); const out=[];
+  ds.forEach(p=>{ bookOf(p.t).forEach(b=>{ if(!b) return; const last=out[out.length-1];
+    if(last&&last.b===b){ last.n++; last.to=p } else out.push({b, from:p, to:p, n:1}) }) });
+  const merged=[]; out.forEach(o=>{ const f=merged.find(x=>x.b===o.b); if(f){f.n+=o.n; f.to=o.to} else merged.push(o) });
+  return merged;
+}
+function coverFront(q){ const f=F(q); return `<div class="pg cv q${q}"><div class="cvfield"></div>
+<div class="cvbox"><p class="cvk">${esc(f.cvk)}</p><p class="cvt">${esc(f.cvt).replace(/\n/g,'<br>')}</p><p class="cvs">${esc(f.cvs)}</p></div>
+<p class="cvch">${esc(f.ch)}</p></div>`; }
+function coverBack(q){ const f=F(q); return `<div class="pg cv back q${q}">
+<div class="cvbox2"><p class="bkt">${esc(f.bkt)}</p>${paras(f.bkp).map(t=>`<p class="bkp">${br(esc(t))}</p>`).join('')}</div>
+<p class="cvch">${esc(f.ch)}${f.bkfoot?' · '+esc(f.bkfoot):''}</p></div>`; }
+function endPaper(q){ return `<div class="pg ep q${q}"></div>` }
+function blankPage(q){ return `<div class="pg q${q}"></div>` }
+function pTitle(q){ const f=F(q); return `<div class="pg fm r q${q}"><div class="fmmid">
+<p class="ftk">${esc(f.cvk)}</p><p class="ftt">${esc(f.cvt).replace(/\n/g,' ')}</p><p class="fts">${esc(f.cvs)}</p><p class="ftc">${esc(f.ch)}</p>
+</div><div class="pn">1</div></div>`; }
+function pCopy(q){ const f=F(q); return `<div class="pg fm q${q}"><div class="fmbot">
+<p class="cp"><b>${esc(f.cvt.replace(/\n/g,' '))}</b> ${esc(f.cvs)}</p>
+${paras(f.cp).map(t=>t.split('\n').map(x=>`<p class="cp">${esc(x)}</p>`).join('')+'<p class="cp">&nbsp;</p>').join('')}
+<p class="cp">펴낸 곳 ${esc(f.ch)}</p></div><div class="pn">2</div></div>`; }
+function pPreface(q){ const f=F(q); return `<div class="pg fm r q${q}">
+<p class="fh">${esc(f.phead)}</p>${paras(f.pbody).map(t=>`<p class="fp">${bold(t)}</p>`).join('')}
+<p class="fsig">${esc(f.psig)}</p><div class="pn">3</div></div>`; }
+function pHow1(q,sample){ const f=F(q);
+  const rows=lines(f.sample).map(t=>{ const [n,lab,qq,ans]=t.split(/(?<!\|)\|(?!\|)/).map(x=>(x||'').trim());
+    return `<p class="slab"><span class="st">${esc(n)}</span>${esc(lab)}</p>${qq&&qq!=='—'?`<p class="sq">${vs(qq)}</p>`:''}<p class="sa">${vs(ans||'')}</p>` }).join('');
+  return `<div class="pg fm q${q}">
+<p class="fh">${esc(f.howhead)}</p><p class="fp">${bold(f.howlead)}</p>
+<div class="samp"><p class="sh2"><span class="n">3</span>나의 묵상 — 손으로 쓰는 자리</p>${rows}</div>
+<p class="fcap">${bold(f.howcap)}</p><div class="pn">4</div></div>`; }
+function pHow2(q){ const f=F(q); const N=['①','②','③','④'];
+  return `<div class="pg fm r q${q}"><p class="fh2">네 걸음</p>
+${lines(f.steps).map((t,i)=>{const [a,b]=t.split('|');return `<p class="st4"><span class="stn">${N[i]||'·'}</span><b>${esc(a)}</b> — ${bold(b||'')}</p>`}).join('')}
+<p class="fh2" style="margin-top:4mm">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p>
+<ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
+<div class="pn">5</div></div>`; }
+function pSym(q){ const f=F(q); return `<div class="pg fm q${q}">
+<p class="fh">${esc(f.symhead)}</p><p class="fp sm">${bold(f.symlead)}</p>
+<table class="symt">${lines(f.syms).map(t=>{const [s,d,e]=t.split('|');return `<tr><td class="sc">${chipSym(s||'')}</td><td>${bold(d||'')}<br><span class="ex">${boldv(e||'')}</span></td></tr>`}).join('')}</table>
+<div class="pn">6</div></div>`; }
+function pSym2(q){ const f=F(q); return `<div class="pg fm r q${q}">
+<p class="fh2">${esc(f.irhead)}</p><p class="fp sm">${bold(f.irlead)}</p>
+<table class="symt">${lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc2">“${esc(a||'')}”</td><td><span class="ex">보기: ${esc(b||'')}</span><br>${boldv(c||'')}</td></tr>`}).join('')}</table>
+<p class="fh2" style="margin-top:3.5mm">${esc(f.whhead)}</p><p class="fp sm">${bold(f.whlead)}</p>
+<table class="symt">${lines(f.whole).map(t=>{const [a,b]=t.split('|');return `<tr><td class="sc"><span class="chip">${esc(a||'')}</span></td><td>${bold(b||'')}</td></tr>`}).join('')}</table>
+<div class="pn">7</div></div>`; }
+function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q);
+  return `<div class="pg fm q${q}"><p class="fh">${esc(f.bkshead)}</p>
+<p class="fp sm">${ds.length}일 · ${ds[0].m}월 ${ds[0].d}일부터 ${ds[ds.length-1].m}월 ${ds[ds.length-1].d}일까지</p>
+<table class="bkt2"><tr><th>책</th><th>시작</th><th>날수</th></tr>
+${bl.map(o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일</td><td>${o.n}일</td></tr>`).join('')}</table>
+<div class="pn">8</div></div>`; }
+function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.length/3);
+  const seg=ds.slice(part*per,(part+1)*per); let last='';
+  const rows=seg.map(p=>{ const b=bookOf(p.t)[0]; let band='';
+    if(b!==last){ band=`<tr class="band"><td colspan="4">${esc(b)}</td></tr>`; last=b }
+    const qt=(typeof get==='function')?get(p.no):null;
+    return band+`<tr><td class="dt">${p.m}/${p.d}</td><td class="tx">${esc(shortRef(p.t))}</td><td class="sb">${esc((qt&&qt.sub)||p.sub||'')}</td><td class="pgn">${pageNo(p)}</td></tr>`;
+  }).join('');
+  return `<div class="pg fm ${part===1?'':'r'} q${q}">${part===0?`<p class="fh">${esc(f.tochead)}</p>`:`<p class="fh2">${esc(f.tochead)}</p>`}
+<table class="toc"><colgroup><col class="c1"><col class="c2"><col><col class="c4"></colgroup>${rows}</table>
+<div class="pn">${9+part}</div></div>`; }
+function pDivider(q){ const f=F(q); const ds=qDays(q);
+  return `<div class="pg dv q${q}"><div class="dvfield"></div>
+<div class="dvbox"><p class="dvk">${esc(f.divk)}</p><p class="dvt">${esc(f.divt).replace(/\n/g,'<br>')}</p>
+<p class="dvs">${esc(f.divs|| (ds[0].m+'월 '+ds[0].d+'일 — '+ds[ds.length-1].m+'월 '+ds[ds.length-1].d+'일'))}</p></div>
+<div class="pn">12</div></div>`; }
+function pDivider2(q){ const f=F(q); return `<div class="pg fm r q${q}">
+<p class="dvnote">${esc(f.divnote)}</p><div class="pn">13</div></div>`; }
+/* ── 권 끝 부록: 여정 한눈에 · 성막 ── */
+const ATLAS=Object.assign({
+ 1:[{ title:'큰 여정 — 하란에서 모압 평지까지',
+     emph:'하란, 헤브론, 시내 산, 가데스, 모압 평지', show:'세겜, 라암셋, 호르 산, 애굽',
+     routes:[['족장의 길 — 창세기','하란 → 세겜 → 헤브론 → 애굽','#1f5fa8'],
+             ['출애굽과 광야 — 출애굽기·민수기','라암셋 → 시내 산 → 가데스 → 호르 산 → 모압 평지','#1a7f4b']],
+     note:'창세기에서 신명기까지, 석 달 동안 읽은 가장 먼 길입니다.' },
+   { title:'가나안 안 — 길갈에서 시글락까지',
+     emph:'길갈, 하솔, 실로, 헤브론, 시글락', show:'세겜, 므깃도',
+     routes:[['땅에 들어감 — 여호수아','모압 평지 → 길갈 → 하솔','#9b2c2c'],
+             ['사울과 다윗 — 사무엘상','기브아 → 베들레헴 → 엔게디 → 시글락','#6b46c1']],
+     note:'사사기와 사무엘상은 이 좁은 땅 안에서 일어납니다.' }],
+ 2:[{ title:'다윗과 솔로몬의 왕국', emph:'예루살렘, 헤브론, 단, 브엘세바', show:'세겜, 므깃도, 여리고',
+     routes:[['헤브론에서 예루살렘으로 — 사무엘하','헤브론 → 예루살렘','#1f5fa8']], note:'' },
+   { title:'나뉜 나라', emph:'예루살렘, 사마리아', show:'단, 벧엘, 므깃도, 하솔',
+     routes:[['남과 북 — 열왕기','사마리아 → 예루살렘','#9b2c2c']], note:'' }],
+ 3:[{ title:'예언자들이 다닌 길', emph:'예루살렘, 사마리아, 니느웨', show:'다메섹, 단, 므깃도',
+     routes:[['북이스라엘의 끝 — 열왕기하','사마리아 → 니느웨','#9b2c2c']], note:'' },
+   { title:'포로로 끌려간 길', emph:'예루살렘, 바벨론', show:'다메섹, 니느웨',
+     routes:[['바벨론으로','예루살렘 → 다메섹 → 바벨론','#6b46c1']], note:'' }],
+ 4:[{ title:'돌아온 길', emph:'바벨론, 예루살렘', show:'수산, 다메섹',
+     routes:[['스룹바벨과 에스라와 느헤미야','바벨론 → 예루살렘','#1a7f4b']], note:'' },
+   { title:'다시 세운 성', emph:'예루살렘', show:'사마리아, 벧엘, 여리고', routes:[], note:'' }]
+},ED.atlas||{});
+function pAtlas(q,no,i,right,A0){
+  const A=A0||(ATLAS[q]||ATLAS[1])[i]||((ATLAS[1])[0]);
+  const spec={emph:A.emph, show:A.show, routes:A.routes};
+  return `<div class="pg fm ${right?'r ':''}q${q}">
+<p class="fh">부록 · ${esc(A.title)}</p>
+<div class="atlas">${svgMap(spec,112,A.h||126)}</div>
+<ul class="leg">${A.routes.map(r=>`<li><span class="sw" style="background:${r[2]}"></span>${esc(r[0])}</li>`).join('')}</ul>
+${A.note?`<p class="fcap">${esc(A.note)}</p>`:''}
+<div class="pn">${no}</div></div>`;
+}
+function tabCourt(){
+  const C=3.0, X=o=>14+o*C, Y=o=>16+o*C, g=[];
+  g.push(`<rect x="${X(0)}" y="${Y(0)}" width="${100*C}" height="${50*C}" fill="#fff" stroke="#999" stroke-width="1"/>`);
+  g.push(`<rect x="${X(0)-2}" y="${Y(15)}" width="4" height="${20*C}" fill="#b08a3e"/>`);
+  g.push(`<text x="${X(0)-6}" y="${Y(25)+3}" font-size="8" fill="#555" text-anchor="end" font-family="Noto Sans KR">뜰 문</text>`);
+  g.push(`<rect x="${X(12)}" y="${Y(22.5)}" width="${5*C}" height="${5*C}" fill="#e8ded0" stroke="#8a7355"/>`);
+  g.push(`<text x="${X(14.5)}" y="${Y(22.5)-4}" font-size="8" text-anchor="middle" font-family="Noto Sans KR">번제단</text>`);
+  g.push(`<circle cx="${X(24)}" cy="${Y(25)}" r="${2*C}" fill="#dce7ee" stroke="#5b7f96"/>`);
+  g.push(`<text x="${X(24)}" y="${Y(25)-9}" font-size="8" text-anchor="middle" font-family="Noto Sans KR">물두멍</text>`);
+  g.push(`<rect x="${X(33)}" y="${Y(20)}" width="${30*C}" height="${10*C}" fill="#faf7f1" stroke="#6b5a3e" stroke-width="1.3"/>`);
+  g.push(`<text x="${X(48)}" y="${Y(25)+3}" font-size="9" text-anchor="middle" font-family="Noto Sans KR">성막</text>`);
+  g.push(`<text x="${X(48)}" y="${Y(20)-4}" font-size="7.4" fill="#777" text-anchor="middle" font-family="Noto Sans KR">↓ 아래에 자세히</text>`);
+  g.push(`<text x="${X(0)}" y="${Y(50)+11}" font-size="7.4" fill="#999" font-family="Noto Sans KR">← 동(해 뜨는 쪽)</text>`);
+  g.push(`<text x="${X(100)}" y="${Y(50)+11}" font-size="7.4" fill="#999" text-anchor="end" font-family="Noto Sans KR">서 →</text>`);
+  g.push(`<text x="${X(50)}" y="${Y(0)-5}" font-size="7.4" fill="#999" text-anchor="middle" font-family="Noto Sans KR">뜰 — 길이 100규빗, 너비 50규빗(출 27:9–18)</text>`);
+  return `<svg viewBox="0 0 ${100*C+28} ${50*C+32}" width="110mm" style="display:block;margin:0 auto">${g.join('')}</svg>`;
+}
+function tabHouse(){
+  const C=10.5, X=o=>16+o*C, Y=o=>18+o*C, g=[];
+  g.push(`<rect x="${X(0)}" y="${Y(0)}" width="${30*C}" height="${10*C}" fill="#faf7f1" stroke="#6b5a3e" stroke-width="1.4"/>`);
+  g.push(`<rect x="${X(0)-2}" y="${Y(1)}" width="4" height="${8*C}" fill="#b08a3e"/>`);
+  g.push(`<text x="${X(0)-6}" y="${Y(5)+3}" font-size="8.4" fill="#555" text-anchor="end" font-family="Noto Sans KR">성막 문</text>`);
+  g.push(`<line x1="${X(20)}" y1="${Y(0)}" x2="${X(20)}" y2="${Y(10)}" stroke="#9b2c2c" stroke-width="2" stroke-dasharray="4 3"/>`);
+  g.push(`<text x="${X(20)}" y="${Y(10)+11}" font-size="8" fill="#9b2c2c" text-anchor="middle" font-family="Noto Sans KR">휘장</text>`);
+  g.push(`<text x="${X(10)}" y="${Y(0)-6}" font-size="9.5" text-anchor="middle" font-family="Noto Sans KR">성소 — 20규빗</text>`);
+  g.push(`<text x="${X(25)}" y="${Y(0)-6}" font-size="9.5" text-anchor="middle" font-family="Noto Sans KR">지성소 — 10규빗</text>`);
+  const box=(ox,oy,w,h,fill,lab,ly)=>{ g.push(`<rect x="${X(ox)}" y="${Y(oy)}" width="${w*C}" height="${h*C}" fill="${fill}" stroke="#8a7355"/>`);
+    g.push(`<text x="${X(ox+w/2)}" y="${Y(oy)+(ly||-5)}" font-size="8.4" text-anchor="middle" font-family="Noto Sans KR">${lab}</text>`) };
+  box(5,1.2,3,1.4,'#efe6d2','떡상');
+  g.push(`<circle cx="${X(6.5)}" cy="${Y(7.6)}" r="${0.95*C}" fill="#f3e9c9" stroke="#8a7355"/>`);
+  g.push(`<text x="${X(6.5)}" y="${Y(7.6)+18}" font-size="8.4" text-anchor="middle" font-family="Noto Sans KR">등잔대</text>`);
+  box(16.6,4.2,1.8,1.6,'#efe6d2','분향단');
+  box(23.6,4.0,2.8,2.0,'#e6d7a8','법궤');
+  g.push(`<text x="${X(15)}" y="${Y(10)+25}" font-size="7.6" fill="#999" text-anchor="middle" font-family="Noto Sans KR">북쪽이 위입니다 · 1규빗은 약 45cm</text>`);
+  return `<svg viewBox="0 0 ${30*C+32} ${10*C+52}" width="110mm" style="display:block;margin:0 auto">${g.join('')}</svg>`;
+}
+function pTabernacle(q,no){
+  const f=F(q);
+  return `<div class="pg fm q${q}">
+<p class="fh">부록 · 성막</p>
+<p class="fp sm">${bold(f.tabnote||'출애굽기 25–40장, 레위기 전체가 이 한 자리를 두고 말합니다. 뜰 문으로 들어가 번제단과 물두멍을 지나야 성소에 이릅니다.')}</p>
+<div class="tab">${tabCourt()}</div><div class="tab">${tabHouse()}</div>
+<table class="symt" style="margin-top:2mm">
+<tr><td class="sc">번제단</td><td>출 27:1–8 · 뜰에 들어서면 첫 자리. 피 없이는 더 들어가지 못합니다.</td></tr>
+<tr><td class="sc">물두멍</td><td>출 30:17–21 · 제사장이 손과 발을 씻는 곳.</td></tr>
+<tr><td class="sc">떡상</td><td>출 25:23–30 · 열두 덩이, 늘 그 앞에.</td></tr>
+<tr><td class="sc">등잔대</td><td>출 25:31–40 · 꺼지지 않는 불.</td></tr>
+<tr><td class="sc">분향단</td><td>출 30:1–10 · 휘장 바로 앞, 아침저녁의 향.</td></tr>
+<tr><td class="sc">법궤</td><td>출 25:10–22 · 지성소 안. "거기서 너와 만나고"(25:22).</td></tr>
+</table>
+<div class="pn">${no}</div></div>`;
+}
+function pReview(q,no){
+  const ds=qDays(q), bl=bookList(q);
+  return `<div class="pg fm r q${q}">
+<p class="fh">${esc(F(q).rvhead||'이 권을 마치며')}</p>
+<p class="fp">${ds.length}일 동안 ${bl.map(o=>esc(o.b)).join(' · ')}를 읽었습니다.</p>
+<p class="fh2" style="margin-top:5mm">${esc(F(q).rvhead2||'다음 권으로 가기 전에')}</p>
+<ol class="rules">${lines(F(q).rvlist||'성경책에 그어 둔 밑줄을 한 번 넘겨 보십시오. 석 달 동안 손이 멈춘 자리가 거기 있습니다.\n가장 오래 남은 하루를 한 날 골라, 그날의 ③ 묵상을 다시 읽어 보십시오.\n기호 아홉 가운데 손에 익은 것과 아직 낯선 것을 가려 보십시오. 낯선 것은 다음 권에서 눈여겨보면 됩니다.\n가이드북 없이 짧은 이야기 한 대목을 읽어 보십시오. 되풀이되는 말이 보이면, 이 책이 할 일을 한 것입니다.').map(t=>`<li>${bold(t)}</li>`).join('')}</ol>
+<p class="fcap" style="margin-top:6mm">${esc(F(q).rvfoot||'다음 권에서 이어집니다.')}</p>
+<div class="pn">${no}</div></div>`;
+}
+function appendixSpreads(q){
+  const ds=qDays(q); const last=ds[ds.length-1]; const n=pageNo(last)+2;
+  return [`<div class="spread">${pAtlas(q,n,0,false)}${pAtlas(q,n+1,1,true)}</div>`,
+          `<div class="spread">${ED.ax2map?pAtlas(q,n+2,0,false,ED.ax2map):pTabernacle(q,n+2)}${pReview(q,n+3)}</div>`];
+}
+
+function frontSpreads(q,sample){
+  const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
+  return [ sp(blankPage(q),coverFront(q)), sp(endPaper(q),endPaper(q)), sp(blankPage(q),pTitle(q)),
+    sp(pCopy(q),pPreface(q)), sp(pHow1(q,sample),pHow2(q)), sp(pSym(q),pSym2(q)),
+    sp(pBooks(q),pToc(q,0)), sp(pToc(q,1),pToc(q,2)), sp(pDivider(q),pDivider2(q)) ];
+}
+function backSpreads(q){ const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
+  return [ sp(endPaper(q),endPaper(q)), sp(coverBack(q),blankPage(q)) ]; }
+function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</div>`}
+
+/* ── 미리보기와 맞춤 검사 ── */
+/* 한두 글자만 다음 줄로 내려오는 줄은 자간·글자 크기를 조금 줄여 한 줄에 넣는다(최대 7%) */
+/* 지도: 왼쪽 단(절·눈여겨볼 것)의 높이만큼 지도를 키워 빈 칸이 남지 않게 */
+/* 지도·그림의 높이를 왼쪽 글(눈여겨볼 것)에 맞춘다. 쪽의 남는 높이가 아니라 글 높이가 기준이고, 32–70mm 안에서만 따라간다 */
+function matchMedia(root,s){ root.querySelectorAll('.pg .two').forEach(two=>{ try{
+  const c1=two.querySelector('.c1'), c2=two.querySelector('.c2'); if(!c1||!c2) return;
+  const h1=c1.getBoundingClientRect().height/s/MM;
+  const cap=c2.querySelector('.cap'); const capH=cap?cap.getBoundingClientRect().height/s/MM:0;
+  const target=Math.max(26,Math.min(70,h1)-capH);
+  const m=c2.getAttribute('data-m');
+  if(m){ const svg=c2.querySelector('svg'); const tmp=document.createElement('div'); tmp.innerHTML=svgMap(JSON.parse(m),45,target); const ns=tmp.querySelector('svg'); if(svg&&ns) svg.replaceWith(ns); }
+  else { const im=c2.querySelector('.pic .im'); if(im) im.style.height=target.toFixed(1)+'mm'; }
+}catch(e){} }) }
+function tighten(root){ root.querySelectorAll('.pg .ref, .pg .box .i').forEach(el=>{
+  const lh=parseFloat(getComputedStyle(el).lineHeight); if(!(el.getBoundingClientRect().height>lh*1.5)) return;
+  const probe=document.createElement('span'); probe.style.cssText='position:absolute;white-space:nowrap;visibility:hidden;left:-9999px'; probe.className=el.className; probe.innerHTML=el.innerHTML; probe.style.font=getComputedStyle(el).font; el.parentNode.appendChild(probe);
+  const need=probe.getBoundingClientRect().width, have=el.getBoundingClientRect().width+ (parseFloat(getComputedStyle(el).textIndent)||0)*-1*0; probe.remove();
+  const ratio=need/el.clientWidth; if(ratio>1.07) return;
+  const steps=[[-0.01,1],[-0.02,1],[-0.03,1],[-0.03,0.97],[-0.035,0.95],[-0.04,0.93]];
+  const fs=parseFloat(getComputedStyle(el).fontSize);
+  for(const [ls,f] of steps){ el.style.letterSpacing=ls+'em'; el.style.fontSize=(fs*f)+'px'; if(el.getBoundingClientRect().height<lh*1.5) return; }
+  el.style.letterSpacing=''; el.style.fontSize=''; }) }
+/* 빈 자리가 메모 한 줄보다 좁으면 메모(이름표+줄)를 뺀다 — 함께 읽을 말씀만 남음 */
+/* 오른쪽: 해설 위에 남는 자리만큼 쓰기 줄을 더 준다(본문 관찰 → 적용 → 성품 차례, 최대 6줄) */
+function fillLines(root,s){ root.querySelectorAll('.pg.r').forEach(pg=>{ const ab=pg.querySelector('.after'); if(!ab) return; const ws=pg.querySelectorAll('.lnw'); if(ws.length<3) return; const order=[ws[0],ws[2],ws[1]]; for(let n=0;n<6;n++){ let mb=0; pg.querySelectorAll(':scope > *:not(.after):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom}); const slack=(ab.getBoundingClientRect().top-mb)/s/MM; if(slack<5.6+1.5) break; const d=document.createElement('div'); d.className='ln'; order[n%3].appendChild(d); } }) }
+function mmpx(){const d=document.createElement('div');d.style.cssText='position:absolute;width:100mm;height:0;visibility:hidden';document.body.appendChild(d);const w=d.getBoundingClientRect().width/100;d.remove();return w}
+const MM=mmpx();
+function render(){
+  const p=PLAN[cur], qt=readForm();
+  $('dh_t').textContent=`${p.m}월 ${p.d}일 · ${p.t}`; $('dh_s').textContent=`${p.no}일째 · ${qt.sub||p.sub} · ${QLAB[qOf(p)]}${(p.end&&p.end.length)?' · '+p.end.join('·')+' 마치는 날':''}`;
+  const s=curScale(); fitBox(s); const sc=$('scaled');
+  sc.innerHTML=spread(p,qt); tighten(sc); matchMedia(sc,s); addPlayBtns();
+  // 맞춤: 각 쪽에서 아래 고정 상자 위 여유
+  const res=[]; sc.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM*s;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});res.push((abt-mb)/s/MM)});
+  const f=$('fit'); const worst=Math.min(...res);
+  const NM={sub:'소제목',today:'흐름',find:'초점',word:'말뜻',q:'관찰',apply:'적용',note:'해설',pray:'기도',pair:'눈여겨볼 것',god:'성품 한 문장',christ:'성경 전체로'};
+  const overL=Object.keys(LIM).filter(k=>$(k)&&($(k).value||'').replace(/\*\*/g,'').length>LIM[k]).map(k=>`${NM[k]||k} ${($(k).value||'').replace(/\*\*/g,'').length}/${LIM[k]}`); const over=overL.length;
+  const fitTxt=worst<0?`지면 넘침 ${res[0]<0?'왼쪽 ':''}${res[1]<0?'오른쪽 ':''}${Math.abs(worst).toFixed(1)}mm — 해설·눈여겨볼 것부터 줄이기`:`지면 들어감 (여유 왼 ${res[0].toFixed(0)}mm · 오른 ${res[1].toFixed(0)}mm)`;
+  f.className=worst<0?'bad':over?'warn':'good'; f.textContent=fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
+}
+function gotoDay(i){ document.body.classList.remove('onback'); if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); document.body.classList.remove('onfront'); if($('frontbox')) $('frontbox').open=false; if($('selPrint')&&($('selPrint').value==='front'||$('selPrint').value==='ax')){$('selPrint').value='day'} if(typeof syncPrintTarget==='function') syncPrintTarget(); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } if(typeof fillFrontForm==='function'&&$('frontbox')&&$('frontbox').open) fillFrontForm(); }
+function fillDays(){const mv=$('selM').value; const s=$('selD'); s.innerHTML='';
+  if(mv==='front'||mv==='back'){ const wantFront=(mv==='front');
+    VIEWS.forEach((v,i)=>{ if(v.t!=='s') return; if((i<FLAB.length)!==wantFront) return;
+      const o=document.createElement('option'); o.value=i; o.textContent=v.lab; s.appendChild(o) }); return }
+  const m=+mv; PLAN.forEach((p,i)=>{if(p.m!==m)return;const o=document.createElement('option');o.value=i;o.textContent=`${p.d}일 · ${p.t}${get(p.no)?' ✓':''}`;s.appendChild(o)})}
+function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fillFrontForm(); $('frontbox').open=true; $('frontbox').scrollIntoView({block:'nearest'}); }
+function goBack(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); if($('frontbox')) $('frontbox').open=false; }
+function isFrontView(i){ return i<FLAB.length }
+/* ── 전자책처럼 넘겨 보기 ── */
+const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','기호 설명','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
+const BLAB=['면지','뒤표지'];
+let VIEWS=[], VI=0, ANIM=false;
+let PV='both';   /* both | L | R */
+function availW(){ const pv=$('prev'); const cs=getComputedStyle(pv); return Math.max(120, pv.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)) }
+function curScale(){ const w=PV==='both'?296*MM:148*MM; return Math.max(0.18, Math.min(PV==='both'?1:1.6, availW()/w)) }
+function fitBox(s){
+  const box=$('scalebox'), sc=$('scaled');
+  const w=(PV==='both'?296*MM:148*MM)*s;
+  box.style.width=w+'px'; box.style.height=(210*MM*s)+'px';
+  sc.style.width=(296*MM)+'px'; sc.style.transform=`scale(${s})`;
+  sc.style.left=(PV==='R'?-(148*MM*s):0)+'px';
+}
+function buildViews(){
+  const q=qOf(PLAN[cur]); const ds=qDays(q);
+  const sd=ds.find(p=>get(p.no))||ds[0];
+  const sample=spread(sd,get(sd.no)||blank());
+  const fs=frontSpreads(q,sample).map((h,i)=>({t:'s',h,lab:FLAB[i]||'책 머리'}));
+  const dv=ds.map(p=>({t:'d',i:PLAN.indexOf(p)}));
+  const AXL=ED.axl||['부록 — 여정 한눈에','부록 — 성막 · 이 권을 마치며'];
+  const ax=appendixSpreads(q).map((h,i)=>({t:'s',h,lab:AXL[i]||'부록'}));
+  const bs=backSpreads(q).map((h,i)=>({t:'s',h,lab:BLAB[i]||'책 끝'}));
+  VIEWS=fs.concat(dv,ax,bs);
+}
+function viewOfDay(i){ return VIEWS.findIndex(v=>v.t==='d'&&v.i===i) }
+function viewHTML(v){ if(v.t==='s') return v.h; const p=PLAN[v.i]; return spread(p, v.i===cur?readForm():(get(p.no)||blank())) }
+function viewLabel(v){ if(v.t==='s') return v.lab; const p=PLAN[v.i]; return `${p.m}월 ${p.d}일 · ${p.t}` }
+function drawStatic(html){
+  const s=curScale(); fitBox(s); const sc=$('scaled');
+  sc.innerHTML=html; tighten(sc); matchMedia(sc,s); addPlayBtns();
+  $('fit').className='good'; $('fit').textContent='책 머리 — 원고 칸이 아닙니다';
+}
+function updateBar(){
+  const v=VIEWS[VI]; if(!v) return;
+  $('bkLab').textContent=viewLabel(v);
+  $('bkNo').textContent=(VI+1)+' / '+VIEWS.length;
+  $('bkPrev').disabled=VI<=0; $('bkNext').disabled=VI>=VIEWS.length-1;
+}
+function showView(k,noAnim){
+  k=Math.max(0,Math.min(VIEWS.length-1,k)); VI=k; const v=VIEWS[k];
+  if(v.t==='d'){ if(cur!==v.i){ if(saveT){clearTimeout(saveT);save()} cur=v.i; const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); } render(); }
+  else drawStatic(v.h);
+  document.body.classList.toggle('onfront', v.t==='s');
+  document.body.classList.toggle('onback', v.t==='s'&&!isFrontView(k));
+  if($('selPrint')){ const sp=$('selPrint'); if(v.t==='s'&&sp.value!=='book'){ sp.value=isFrontView(k)?'front':'ax' } if(v.t==='d'&&(sp.value==='front'||sp.value==='ax')) sp.value='day'; syncPrintTarget() }
+  if(v.t==='s'){ const sm=$('selM'); const want=isFrontView(k)?'front':'back'; if(sm.value!==want){ sm.value=want; fillDays() } $('selD').value=k; if(isFrontView(k)&&!$('frontbox').dataset.built) fillFrontForm(); }
+  else { const sm=$('selM'); if(sm.value==='front'||sm.value==='back'){ sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur } }
+  updateBar();
+}
+function halfOf(html,side){ const d=document.createElement('div'); d.innerHTML=html; const pgs=d.querySelectorAll('.pg'); const e=pgs[side?1:0]; return e?e.outerHTML:'' }
+function drawRaw(html){
+  const s=curScale(); fitBox(s); const sc=$('scaled');
+  sc.innerHTML=html; tighten(sc); matchMedia(sc,s); addPlayBtns();
+}
+function flip(dir){
+  if(ANIM) return; const k=VI+dir; if(k<0||k>=VIEWS.length) return;
+  const s=curScale(); const from=viewHTML(VIEWS[VI]), to=viewHTML(VIEWS[k]);
+  const fL=halfOf(from,0), fR=halfOf(from,1), tL=halfOf(to,0), tR=halfOf(to,1);
+  const face=dir>0?fR:fL, back=dir>0?tL:tR;
+  if(!face||!back){ showView(k); return }
+  ANIM=true;
+  /* ① 넘길 장을 먼저 덮어 두고 ② 그 아래를 바꾼 뒤 ③ 돌린다 — 새 쪽이 미리 비치지 않게 */
+  const wrap=$('flip');
+  wrap.style.transform=`scale(${s})`;
+  wrap.style.left=(dir>0?148*MM*s:0)+'px';
+  wrap.innerHTML=`<div class="fsheet ${dir>0?'fwd':'bwd'}"><div class="fface">${face}</div><div class="fback">${back}</div><div class="fsh"></div></div>`;
+  wrap.style.display='block';
+  const sh=wrap.querySelector('.fsheet');
+  void sh.offsetWidth;                       /* 덮은 상태를 먼저 그린다 */
+  drawRaw(`<div class="spread">${dir>0?fL+tR:tL+fR}</div>`);
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ sh.classList.add('go') }) });
+  setTimeout(()=>{ showView(k); requestAnimationFrame(()=>{ wrap.style.display='none'; wrap.innerHTML=''; ANIM=false }) }, 700);
+}
+
+/* ── 책 머리 고치기 ── */
+const FSPEC=[
+ ['--','겉표지'],
+ ['cvk','표지 윗줄',1],['cvt','표지 제목 (줄바꿈 가능)',2],['cvs','권 표시',1],['ch','교회 이름',1],
+ ['--','뒤표지'],
+ ['bkt','뒤표지 제목',1],['bkp','뒤표지 글 (빈 줄로 문단)',6],['bkfoot','뒤표지 아랫줄',1],
+ ['--','저작권 (2쪽)'],
+ ['cp','저작권 글 (빈 줄로 묶음)',5],
+ ['--','서문 (3쪽)'],
+ ['phead','서문 제목',1],['pbody','서문 본문 (빈 줄로 문단, **굵게**)',12],['psig','서명',1],
+ ['--','이 책 쓰는 법 (4–5쪽)'],
+ ['howhead','제목',1],['howlead','머리글',3],['howcap','아래 덧말',3],
+ ['sample','작성 예시 — 한 줄에 「번호|이름|질문|기록」',8],
+ ['steps','네 걸음 — 한 줄에 「이름|설명」',6],
+ ['rules','약속 — 한 줄에 하나 (제목의 숫자는 줄 수를 따라갑니다)',7],
+ ['--','기호 설명 (6–7쪽)'],
+ ['symhead','기호 쪽 제목',1],['symlead','기호 쪽 머리글',2],
+ ['syms','기호 — 한 줄에 「기호 이름|설명|예」',10],
+ ['irhead','아이러니 제목',1],['irlead','아이러니 머리글',2],
+ ['irony','아이러니 — 한 줄에 「설명 첫머리|보기|예」',4],
+ ['whhead','성경 전체로 제목',1],['whlead','성경 전체로 머리글',2],
+ ['whole','다섯 갈래 — 한 줄에 「갈래|설명」',6],
+ ['--','이 권의 책들 · 통독표 (8–11쪽)'],
+ ['bkshead','책 목록 제목',1],['tochead','통독표 제목',1],
+ ['--','가름 쪽 (12–13쪽)'],
+ ['divk','가름 윗줄',1],['divt','가름 제목 (줄바꿈 가능)',2],['divs','가름 아랫줄 (비우면 날짜 범위)',1],['divnote','13쪽 한 줄',2]
+];
+function buildFrontForm(){
+  const box=$('frontform'); if(!box||box.dataset.built) return; box.dataset.built='1';
+  box.innerHTML=`<label class="fsc"><input type="checkbox" id="fscope" checked> <b>네 권 모두에 적용</b><span class="h">끄면 지금 보는 권에만 저장됩니다. 권 표시 · 가름 날짜 · 쓰는 법 머리글과 작성 예시는 늘 권마다 따로입니다.</span></label><p class="h" id="fscopenote"></p><p class="h" id="fdefall"></p>`+FSPEC.map(([k,lab,rows])=>k==='--'?`<hr><p style="font-size:12px;font-weight:700;color:var(--acc);margin:0 0 7px">${lab}</p>`
+    :`<label class="ff" id="fw_${k}"><b>${lab}<button type="button" class="fdef" data-k="${k}">기본값으로</button></b>${rows>1?`<textarea id="f_${k}" rows="${rows}"></textarea>`:`<input type="text" id="f_${k}">`}</label>`).join('');
+  $('fscope').addEventListener('change',()=>{ markScope(); $('status').textContent=frontScopeAll()?'이제 고치는 칸은 네 권 모두에 적용됩니다':'이제 고치는 칸은 이 권에만 저장됩니다' });
+  box.querySelectorAll('input,textarea').forEach(el=>el.id!=='fscope'&&el.addEventListener('input',()=>{clearTimeout(window._ft);const k=el.id.slice(2);window._ft=setTimeout(()=>saveFront(k),400)}));
+  box.querySelectorAll('button.fdef').forEach(b=>b.addEventListener('click',e=>{ e.preventDefault(); const k=b.dataset.k; const el=$('f_'+k); if(!el) return;
+    el.value=FDEF(qOf(PLAN[cur]))[k]||''; saveFront(k); $('status').textContent='이 칸을 기본값으로 되돌렸습니다' }));
+}
+function fillFrontForm(){ buildFrontForm(); const f=F(qOf(PLAN[cur])); FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(el) el.value=f[k]||'' }); markScope(); markEdited() }
+/* 기본값과 다른 칸을 표시합니다 — 고쳐 둔 칸은 새 기본값으로 바뀌지 않기 때문입니다 */
+function markEdited(){
+  const d=FDEF(qOf(PLAN[cur])); let n=0;
+  FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k), w=$('fw_'+k); if(!el||!w) return;
+    const on=(el.value||'')!==(d[k]||''); w.classList.toggle('edited',on); if(on)n++ });
+  const note=$('fdefall');
+  if(note) note.innerHTML = n ? `고쳐 둔 칸 <b>${n}</b>개는 기본 글이 바뀌어도 그대로 남습니다. <button type="button" id="fdefreset" class="fdef">고친 칸 모두 기본값으로</button>` : '';
+  const rb=$('fdefreset'); if(rb) rb.onclick=e=>{ e.preventDefault();
+    const dd=FDEF(qOf(PLAN[cur])); FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(el) el.value=dd[k]||'' });
+    saveFront(null); $('status').textContent='책 머리를 모두 기본값으로 되돌렸습니다' };
+}
+function frontScopeAll(){ const el=$('fscope'); return !el || el.checked }
+function saveFront(changed){
+  const q=qOf(PLAN[cur]), d=FDEF(q), all=frontScopeAll();
+  const com=Object.assign({},DATA.f0||{}), own=Object.assign({},DATA['f'+q]||{});
+  const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+  FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(!el)return; const v=el.value;
+    const qonly=QONLY.includes(k);
+    /* 방금 고친 칸만 범위를 새로 정한다. 나머지는 있던 자리에 그대로 둔다 */
+    const tgt = (k===changed) ? ((qonly||!all)?'own':'com')
+              : (has(own,k)?'own':(has(com,k)?'com':(qonly?'own':'com')));
+    if(v===d[k]){ delete com[k]; delete own[k] }
+    else if(tgt==='own'){ delete com[k]; own[k]=v }
+    else { delete own[k]; com[k]=v }
+  });
+  if(Object.keys(com).length) DATA.f0=com; else delete DATA.f0;
+  if(Object.keys(own).length) DATA['f'+q]=own; else delete DATA['f'+q];
+  localStorage.setItem(ED.key,JSON.stringify(DATA));
+  const keep=VI; buildViews(); showView(keep,true);
+  $('status').textContent=(changed&&(QONLY.includes(changed)||!all))?('책 머리 저장됨 — '+QLAB[q]+'만'):'책 머리 저장됨 — 네 권 모두';
+  markScope(); markEdited();
+}
+function markScope(){
+  const q=qOf(PLAN[cur]), own=DATA['f'+q]||{};
+  FSPEC.forEach(([k])=>{ if(k==='--')return; const el=$('f_'+k); if(!el)return;
+    const lab=el.closest('label'); if(!lab) return;
+    const only=Object.prototype.hasOwnProperty.call(own,k)&&!QONLY.includes(k);
+    lab.classList.toggle('qonly',only);
+  });
+  const n=Object.keys(own).filter(k=>!QONLY.includes(k)).length;
+  const t=$('fscopenote'); if(t) t.textContent=n?`이 권에만 다르게 저장된 칸 ${n}개 (노란 표시)`:'';
+}
+
+
+/* ── 미리보기 ↔ 입력칸 잇기 ── */
+const FLD={sub:'소제목',today:'오늘의 흐름',find:'읽으며 둘 초점',word:'말뜻',pair:'눈여겨볼 것',christ:'성경 전체로',q:'본문 관찰 질문',apply:'적용 질문',note:'해설',god:'성품 한 문장',pray:'기도',stx:'짜임',m_emph:'지도',img:'그림'};
+function jumpTo(id){
+  const el=$(id); if(!el) return;
+  const box=el.closest('label')||el.closest('.row3')||el;
+  box.scrollIntoView({block:'center',behavior:'smooth'});
+  el.focus({preventScroll:true});
+  box.classList.add('flash'); setTimeout(()=>box.classList.remove('flash'),1100);
+}
+function markPreview(id){
+  document.querySelectorAll('#scaled [data-f]').forEach(e=>e.classList.toggle('editing', e.getAttribute('data-f')===id));
+}
+
+/* ── 지도 재생: 미리보기의 지도를 크게 열고 여정을 순서대로 그립니다 ── */
+let MVT=[];
+function mvStop(){ MVT.forEach(t=>clearTimeout(t)); MVT=[]; }
+function mvClose(){ mvStop(); const v=$('mapview'); v.classList.remove('on'); v.setAttribute('aria-hidden','true'); v.querySelector('.mvsvg').innerHTML=''; }
+function mvOpen(mapEl){
+  const v=$('mapview');
+  /* 책의 권 색을 그대로 씁니다 — .pg 밖에서는 --main이 풀리지 않아 검정이 됩니다 */
+  const pg=mapEl.closest('.pg'); const mc=pg?getComputedStyle(pg).getPropertyValue('--main').trim():'';
+  v.style.setProperty('--main', mc||'#1f6b45');
+  /* 큰 화면용으로 다시 그립니다 — 지형이 또렷해지고 글자 크기는 책과 같은 비율입니다 */
+  let big=null; try{ const spec=JSON.parse(decodeURIComponent(mapEl.getAttribute('data-mspec')||'')); const d=document.createElement('div'); d.innerHTML=svgMap(spec,150); big=d.querySelector('svg'); }catch(e){}
+  if(!big){ const svg=mapEl.querySelector('svg'); if(!svg) return; big=svg.cloneNode(true) }
+  const vb=(big.getAttribute('viewBox')||'0 0 100 115').split(/\s+/).map(Number);
+  const Hm=Math.min(innerHeight*0.70,760), Wm=Math.min(innerWidth*0.86,780,Hm*vb[2]/vb[3]);
+  big.setAttribute('width',Math.round(Wm)); big.setAttribute('height',Math.round(Wm*vb[3]/vb[2]));
+  v.querySelector('.mvsvg').innerHTML=''; v.querySelector('.mvsvg').appendChild(big);
+  const cl=big;
+  v.querySelector('.mvcap').textContent=(mapEl.querySelector('.cap')||{}).textContent||'';
+  v.classList.add('on'); v.setAttribute('aria-hidden','false');
+  let plan=[]; try{ plan=JSON.parse(decodeURIComponent(mapEl.getAttribute('data-play')||'%5B%5D')) }catch(e){}
+  mvPlay(cl, plan);
+}
+function mvPlay(svg, plan){
+  mvStop();
+  const now=$('mapview').querySelector('.mvnow');
+  const nodes=new Set(); plan.forEach(r=>r.pts.forEach(n=>nodes.add(n)));
+  const setPl=(n,on)=>svg.querySelectorAll('[data-pl="'+(n||'').replace(/"/g,'')+'"]').forEach(e=>{e.style.opacity=on?1:0; e.style.transition='opacity .45s'});
+  svg.querySelectorAll('.rt').forEach(e=>{e.style.opacity=0; e.style.transition='opacity .5s'});
+  nodes.forEach(n=>setPl(n,false));
+  if(!plan.length){ now.textContent=''; return }
+  const ns='http://www.w3.org/2000/svg';
+  const dot=document.createElementNS(ns,'circle'); dot.setAttribute('r','1.7'); dot.setAttribute('class','trav');
+  dot.setAttribute('stroke','#fff'); dot.setAttribute('stroke-width','0.6'); dot.style.opacity=0; svg.appendChild(dot);
+  let t=0;
+  const at=(ms,fn)=>MVT.push(setTimeout(fn,ms));
+  plan.forEach((r,ri)=>{
+    at(t,()=>{ now.textContent=r.lab||('여정 '+(ri+1)); setPl(r.pts[0],true); dot.setAttribute('fill',r.col); });
+    t+=700;
+    for(let i=0;i<r.pts.length-1;i++){
+      const ln=svg.querySelector('.rt[data-rt="'+r.r+'"][data-seg="'+i+'"]');
+      const to=r.pts[i+1];
+      if(!ln){ at(t,()=>setPl(to,true)); t+=400; continue }
+      const x1=+ln.getAttribute('x1'), y1=+ln.getAttribute('y1'), x2=+ln.getAttribute('x2'), y2=+ln.getAttribute('y2');
+      const L=Math.hypot(x2-x1,y2-y1), dur=Math.max(550,Math.min(1500,L*22));
+      at(t,()=>{
+        ln.style.opacity=1; dot.style.opacity=1;
+        const t0=performance.now();
+        const step=()=>{ const k=Math.min(1,(performance.now()-t0)/dur); const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+          dot.setAttribute('cx',(x1+(x2-x1)*e).toFixed(2)); dot.setAttribute('cy',(y1+(y2-y1)*e).toFixed(2));
+          if(k<1 && $('mapview').classList.contains('on')) requestAnimationFrame(step); };
+        requestAnimationFrame(step);
+      });
+      t+=dur;
+      at(t,()=>setPl(to,true));
+      t+=260;
+    }
+    t+=500;
+  });
+  at(t,()=>{ dot.style.opacity=0; now.textContent='여정 끝'; });
+}
+function wireMap(){
+  const v=$('mapview');
+  v.querySelector('.mvcl').onclick=mvClose;
+  v.querySelector('.mvre').onclick=()=>{ const el=v.querySelector('.mvsvg svg'); if(!el) return;
+    let plan=[]; try{ plan=JSON.parse(decodeURIComponent(v.getAttribute('data-plan')||'%5B%5D')) }catch(e){}; mvPlay(el,plan) };
+  v.addEventListener('click',e=>{ if(e.target===v) mvClose() });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&v.classList.contains('on')) mvClose() });
+}
+/* 미리보기를 그릴 때마다 지도 구석에 ▶ 단추를 답니다 */
+function addPlayBtns(){
+  document.querySelectorAll('#scaled .map[data-play]').forEach(m=>{
+    if(m.querySelector('.mplay')) return;
+    const b=document.createElement('button'); b.className='mplay'; b.type='button'; b.title='여정 재생'; b.textContent='▶';
+    b.addEventListener('click',ev=>{ ev.stopPropagation(); ev.preventDefault();
+      const v=$('mapview'); v.setAttribute('data-plan', m.getAttribute('data-play')||'[]'); mvOpen(m); });
+    m.appendChild(b);
+  });
+}
+
+function wireLink(){
+  $('scaled').addEventListener('click',e=>{
+    const mp=e.target.closest('.map[data-play]');
+    if(mp){ e.preventDefault(); e.stopPropagation();
+      const v=$('mapview'); v.setAttribute('data-plan', mp.getAttribute('data-play')||'%5B%5D'); mvOpen(mp); return }
+    const t=e.target.closest('[data-f]'); if(!t) return;
+    if(document.body.classList.contains('onfront')) return;
+    jumpTo(t.getAttribute('data-f'));
+  });
+  document.querySelectorAll('#form input,#form textarea').forEach(el=>{
+    el.addEventListener('focus',()=>markPreview(el.id));
+    el.addEventListener('blur',()=>setTimeout(()=>{ if(!document.activeElement||!document.activeElement.closest('#form')) markPreview(null) },80));
+  });
+  $('fit').addEventListener('click',()=>{
+    const m=($('fit').textContent||'').match(/(소제목|흐름|초점|말뜻|관찰|적용|해설|기도|눈여겨볼 것|보조 문구|성품 한 문장|성경 전체로)\s+\d+\/\d+/);
+    if(!m) return;
+    const back={'소제목':'sub','흐름':'today','초점':'find','말뜻':'word','관찰':'q','적용':'apply','해설':'note','기도':'pray','눈여겨볼 것':'pair','보조 문구':'god','성품 한 문장':'god','성경 전체로':'christ'};
+    const id=back[m[1]]; if(id) jumpTo(id);
+  });
+}
+
+
+function printLabel(){
+  const mode=$('selPrint').value, p=PLAN[cur], q=qOf(p);
+  if(mode==='day') return `${p.m}월 ${p.d}일 · 하루 지면`;
+  if(mode==='month') return `${p.m}월`;
+  if(mode==='quarter') return `${QLAB[q]} 하루 지면`;
+  if(mode==='front') return `${QLAB[q]} · 책 머리`;
+  if(mode==='ax') return `${QLAB[q]} · 부록과 책 끝`;
+  if(mode==='book') return `${QLAB[q]} · 책 머리와 하루 지면`;
+  return '원고 있는 날 전체';
+}
+function syncPrintTarget(){ const el=$('ptar'); if(el) el.textContent=printLabel() }
+
+(function init(){
+  const sm=$('selM'); {const o=document.createElement('option');o.value='front';o.textContent='책 머리';sm.appendChild(o)}
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'월';sm.appendChild(o)}
+  {const o=document.createElement('option');o.value='back';o.textContent='부록 · 책 끝';sm.appendChild(o)}
+  sm.value=PLAN[cur].m; fillDays(); $('selD').value=cur;
+  const pick=()=>{ const m=sm.value, k=+$('selD').value; if(m==='front') goFront(k); else if(m==='back') goBack(k); else gotoDay(k) };
+  sm.onchange=()=>{fillDays(); pick()};
+  $('selD').onchange=pick;
+  $('btnPrev').onclick=()=>gotoDay(cur-1); $('btnNext').onclick=()=>gotoDay(cur+1);
+  $('placeHint').textContent='아는 지명 '+Object.keys(PLACES).length+'곳';
+  document.querySelectorAll('#form textarea,#form input[type=text]').forEach(el=>el.addEventListener('input',()=>{counters();render();$('status').textContent='저장 중…';clearTimeout(saveT);saveT=setTimeout(()=>{save();saveT=null;fillDays();$('selD').value=cur},600)}));
+  window.addEventListener('resize',render);
+  fillForm(get(PLAN[cur].no)); render();
+  wireLink(); wireMap();
+  $('selPrint').addEventListener('change',syncPrintTarget);
+  buildViews(); fillFrontForm(); syncPrintTarget(); const k0=viewOfDay(cur); showView(k0>=0?k0:0);
+  $('frontbox').addEventListener('toggle',()=>{ if($('frontbox').open) fillFrontForm() });
+  $('bkPrev').onclick=()=>flip(-1); $('bkNext').onclick=()=>flip(1);
+  document.querySelectorAll('.pvsel button').forEach(b=>b.onclick=()=>{ PV=b.dataset.pv; document.querySelectorAll('.pvsel button').forEach(x=>x.classList.toggle('on',x===b)); showView(VI,true) });
+  let rt; addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>showView(VI,true),150) });
+  document.addEventListener('keydown',e=>{ if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return; if(e.key==='ArrowLeft'){e.preventDefault();flip(-1)} if(e.key==='ArrowRight'){e.preventDefault();flip(1)} });
+  fetch(ED.pub,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;takeRemote(j.qt||j,'공개 원고')}).catch(()=>{});
+  /* JSON */
+  $('btnJson').onclick=()=>{$('dlgTitle').textContent='JSON 내보내기 — 원고 '+Object.keys(DATA).length+'일치';$('dlgText').value=JSON.stringify({plan:'2027-365',updated:new Date().toISOString(),qt:cleanOut(DATA)},null,1);$('dlgJson').showModal()};
+  $('btnImport').onclick=()=>{$('dlgTitle').textContent='가져오기 — JSON을 붙여넣거나 파일을 고르세요';$('dlgText').value='';$('dlgJson').showModal()};
+  $('dlgClose').onclick=()=>$('dlgJson').close();
+  $('dlgCopy').onclick=()=>{navigator.clipboard.writeText($('dlgText').value).then(()=>$('dlgCopy').textContent='복사됨').catch(()=>{$('dlgText').select()})};
+  $('dlgDl').onclick=()=>{const b=new Blob([$('dlgText').value],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='qt_365.json';a.click()};
+  $('fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>$('dlgText').value=t)};
+  $('dlgApply').onclick=()=>{try{const j=JSON.parse($('dlgText').value);const src=j.qt||j;const mm=mergeInto(DATA,src);let n=mm.n;localStorage.setItem(ED.key,JSON.stringify(DATA));$('dlgJson').close();fillForm(get(PLAN[cur].no));fillDays();$('selD').value=cur;render();$('status').textContent=n+'일치 가져옴'}catch(err){$('dlgTitle').textContent='JSON을 읽지 못했습니다: '+err.message}};
+  /* GitHub */
+  const G=JSON.parse(localStorage.getItem(ED.gitkey)||JSON.stringify({repo:"aqedah/CBSR",path:ED.path,branch:"source",token:""}));
+  $('g_repo').value=G.repo;$('g_path').value=G.path;$('g_branch').value=G.branch;$('g_token').value=G.token;
+  const gcfg=()=>{const c={repo:$('g_repo').value.trim(),path:$('g_path').value.trim(),branch:$('g_branch').value.trim()||'main',token:$('g_token').value.trim()};localStorage.setItem(ED.gitkey,JSON.stringify(c));return c};
+  $('btnGit').onclick=()=>$('dlgGit').showModal(); $('gClose').onclick=()=>$('dlgGit').close();
+  const api=c=>`https://api.github.com/repos/${c.repo}/contents/${c.path}?ref=${c.branch}`;
+  const hdr=c=>({'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json'});
+  const b64=s=>btoa(unescape(encodeURIComponent(s))), unb64=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
+  $('gLoad').onclick=async()=>{const c=gcfg();try{const r=await fetch(api(c),{headers:c.token?hdr(c):{}});if(!r.ok)throw new Error(r.status);const j=await r.json();const src=JSON.parse(unb64(j.content));await takeRemote(src.qt||src,'GitHub');$('dlgGit').close()}catch(e){$('status').textContent='불러오기 실패: '+e.message}};
+  $('gSave').onclick=async()=>{const c=gcfg();const gm=(t,ok)=>{$('gMsg').textContent=t;$('gMsg').style.color=ok?'#2E7D4F':'#b00';$('status').textContent=t};if(!c.token){gm('토큰 칸이 비어 있습니다. GitHub → Settings → Developer settings → Fine-grained token(저장소 CBSR, Contents: Read and write)을 만들어 붙여 넣으세요.');$('g_token').focus();return}gm('저장하는 중…',true);$('gSave').disabled=true;try{let sha;const r0=await fetch(api(c),{headers:hdr(c)});if(r0.ok){const j0=await r0.json();sha=j0.sha;try{const rq=JSON.parse(unb64(j0.content));const m=merge3(rq.qt||rq);await resolveConflicts(m.conflicts);localStorage.setItem(ED.key,JSON.stringify(DATA));fillForm(get(PLAN[cur].no));fillDays();$('selD').value=cur;render()}catch(e){}}
+      const body={message:'가이드북 원고 '+new Date().toISOString().slice(0,16),content:b64(JSON.stringify({plan:'2027-365',updated:new Date().toISOString(),qt:cleanOut(DATA)},null,1)),branch:c.branch};if(sha)body.sha=sha;const r=await fetch(`https://api.github.com/repos/${c.repo}/contents/${c.path}`,{method:'PUT',headers:{...hdr(c),'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,80));setBase(cleanOut(DATA));gm('GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' — 2~3분 뒤 앱과 작업실에 반영됩니다.',true);$('gSave').disabled=false;$('dlgGit').close()}catch(e){gm('저장 실패: '+e.message);$('gSave').disabled=false}};
+  /* 인쇄 */
+  $('btnPrint').onclick=()=>{
+    if(saveT){clearTimeout(saveT);save();saveT=null}
+    const mode=$('selPrint').value, p=PLAN[cur];
+    let list=PLAN.filter((x,i)=>mode==='day'?i===cur:mode==='month'?x.m===p.m:(mode==='quarter'||mode==='book')?qOf(x)===qOf(p):(mode==='front'||mode==='ax')?false:true).filter(x=>get(x.no));
+    if(mode==='day'&&!list.length) list=[p];
+    if(mode==='front'||mode==='ax') list=[];
+    const parts=[];
+    if(mode==='front'||mode==='book'){ const q=qOf(p); const ds=qDays(q); const sd=ds.find(x=>get(x.no))||ds[0];
+      frontSpreads(q,spread(sd,get(sd.no)||blank())).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
+    // 모든 날 맞춤 검사(숨겨 그려 잼)
+    const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[]; const heardN=[];
+    list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); matchMedia(probe,1); parts.push(probe.innerHTML); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
+    if(mode==='book'){ const q=qOf(p); appendixSpreads(q).concat(backSpreads(q)).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
+    if(mode==='ax'){ const q=qOf(p); appendixSpreads(q).concat(backSpreads(q)).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
+    probe.remove(); $('printroot').innerHTML=parts.join('');
+    if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
+    const pgs=$('printroot').querySelectorAll('.pg').length;
+    $('status').textContent=printLabel()+' · '+pgs+'쪽을 인쇄합니다 — 인쇄 창에서 "PDF로 저장", 용지 A5, 여백 없음';
+    (async()=>{ try{ if(document.fonts&&document.fonts.ready) await document.fonts.ready; const ims=[...$('printroot').querySelectorAll('img,image')];
+      await Promise.all(ims.map(el=>{ if(el.tagName==='IMG'){ if(el.complete) return null; return new Promise(r=>{el.addEventListener('load',r,{once:true});el.addEventListener('error',r,{once:true});setTimeout(r,8000)}) }
+        const u=el.getAttribute('href')||el.getAttribute('xlink:href'); if(!u) return null; return fetch(u).then(()=>{},()=>{}) }));
+    }catch(e){} setTimeout(()=>window.print(),120); })();
+  };
+})();
+</script>
+  <div class="mvcap"></div>
+</div></div>
+</body>
+</html>
