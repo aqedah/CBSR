@@ -34,6 +34,7 @@ jobs:
         working-directory: src/app
         run: |
           if [ -f apply_edits.py ]; then python3 apply_edits.py; fi
+          if [ -f story_in.py ]; then python3 story_in.py; fi  # 스토리 작업실 저장본 합치기
           python3 photo_dec.py || echo "그림 결정 읽기 건너뜀"
           python3 build_site.py
       - name: 원본에 바뀐 것 보관

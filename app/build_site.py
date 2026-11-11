@@ -170,6 +170,11 @@ for tk in ('snb','shg'):
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
 for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html','ui2.html','ui3.html','guide.html','guide_qt.json']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
+# 스토리 작업실(2026-11-11): 원고를 붙여 카드로 나누고 앱(v2) 미리보기로 보고 GitHub(ux/story_in)에 저장 → 다음 빌드가 story_cards.json에 합침
+_PE=[{'id':p['id'],'memo':p.get('memo',''),'refs':p.get('refs',[]),'role':p.get('role','')} for p in (json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else [])]
+_P26=[{'n':x['n'],'label':x['label'],'ch':x['ch'],'topic':x.get('topic','')} for x in P365]
+open(OUT+'/story_edit.html','w').write(open('site_src/story_edit.html').read().replace('/*PLANS*/','const PLAN26='+J(_P26)+';\nconst P27='+J(_p27.build())+';\nconst ABBR_L='+J(AB)+';\nconst PHOTOS_E='+J(_PE)+';'))
+open(OUT+'/story_cards.json','w').write(J({k:v for k,v in (json.load(open('ux/story_cards.json')) if os.path.exists('ux/story_cards.json') else {}).items() if not k.startswith('_')}))  # 작업실 '공개 원고 불러오기'
 shutil.copytree('site_src/icons',OUT+'/icons')
 shutil.copytree('site_src/img',OUT+'/img')
 FB="https://www.gstatic.com/firebasejs/10.14.1/"

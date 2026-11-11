@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스토리 작업실</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap">
+<style>
+/* 스토리 작업실 — 왼쪽: 원고·카드·묵상 노트·JSON, 오른쪽: 앱(v2) 미리보기와 검사 */
+:root{--bg:#F6F5F2;--panel:#fff;--ink:#1a1a1a;--mute:#6b6b6b;--line:#dcdad5;--acc:#2E7D4F;--warn:#C23B3B;--ok:#2E7D4F;--soft:#f1efe9}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans CJK KR",system-ui,sans-serif;font-size:14px;display:flex;flex-direction:column}
+header{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header h1{font-size:16px;margin:0;font-weight:700}
+header .sp{flex:1}
+button,select,input{font:inherit}
+button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 11px;cursor:pointer}
+button.pri{background:var(--acc);color:#fff;border-color:var(--acc)}
+button.sm{padding:2px 7px;font-size:12px}
+button:disabled{opacity:.5;cursor:default}
+select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#fff;max-width:380px}
+#status{font-size:12px;color:var(--mute)}
+main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(440px,46%) 1fr}
+@media (max-width:980px){main{display:block;overflow:auto}}
+#left{display:flex;flex-direction:column;min-height:0;background:var(--panel);border-right:1px solid var(--line)}
+.tabs{display:flex;border-bottom:1px solid var(--line);flex:0 0 auto}
+.tabs button{border:0;border-radius:0;background:transparent;padding:9px 14px;color:var(--mute);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--acc);font-weight:700}
+.pane{display:none;overflow:auto;padding:12px 14px 60px;flex:1 1 auto;min-height:0}
+.pane.on{display:block}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font:inherit;font-size:13px;line-height:1.55;background:#fff;color:var(--ink)}
+textarea{resize:vertical;min-height:70px}
+#ms{min-height:50vh;font-size:13.5px}
+.hint{font-size:12px;color:var(--mute);line-height:1.5;margin:6px 0 10px}
+.hint code{background:var(--soft);padding:0 4px;border-radius:3px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.f{display:block;margin:0 0 8px}
+.f .k{display:flex;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin-bottom:3px}
+.f .k .cnt,.f .k .small{margin-left:auto}
+.f .k b{color:var(--ink)}
+.cnt{font-variant-numeric:tabular-nums}.cnt.over{color:var(--warn);font-weight:700}
+.card{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 12px;background:#fff}
+.card.cover{background:#f4f8f5}
+.card .top{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.card .top .no{font-weight:700;font-size:12px;color:var(--mute);min-width:26px}
+.card .top select{padding:3px 6px;font-size:12px}
+.card .top input.lab{flex:1;min-width:120px;font-size:12px;padding:3px 6px}
+.card .top .tools{display:flex;gap:3px}
+.card textarea.b{min-height:64px}
+.card .img{display:flex;gap:6px;align-items:center}
+.card .img input{flex:1}
+.card .img img{width:64px;height:34px;object-fit:cover;border-radius:3px;background:#ddd}
+.card .bq{font-size:12px;color:var(--mute);margin:2px 0 6px;display:flex;gap:6px;flex-wrap:wrap}
+.card .bq span{padding:1px 6px;border-radius:10px;background:var(--soft)}
+.card .bq span.bad{background:#fbe9e9;color:var(--warn)}
+.card .bq span.ok{background:#e6f2ea;color:var(--ok)}
+.card .bq span.unk{background:#eee}
+.gridf{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.addc{text-align:center;margin:6px 0 14px}
+#right{display:flex;flex-direction:column;min-height:0}
+#prevwrap{flex:1 1 auto;min-height:0;display:flex;align-items:stretch;justify-content:center;background:#e9e7e2;padding:10px;gap:10px}
+#prevwrap iframe{width:420px;max-width:100%;height:100%;min-height:600px;border:1px solid #ccc;border-radius:16px;background:#111}
+#chk{flex:0 0 auto;max-height:34vh;overflow:auto;border-top:1px solid var(--line);background:var(--panel);padding:8px 14px;font-size:12.5px}
+#chk h3{margin:0 0 6px;font-size:13px}
+#chk ul{margin:0;padding-left:18px}
+#chk li.bad{color:var(--warn)}#chk li.ok{color:var(--ok)}#chk li.warn{color:#9a6a00}
+#chk .fix{margin-left:6px}
+dialog{border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-width:640px;width:92vw}
+dialog h3{margin:0 0 10px;font-size:15px}
+dialog textarea{min-height:40vh;font-family:ui-monospace,monospace;font-size:12px}
+.btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.small{font-size:12px;color:var(--mute);line-height:1.5}
+#phpick{max-height:60vh;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+#phpick .ph{cursor:pointer;border:1px solid var(--line);border-radius:6px;padding:4px;font-size:11px}
+#phpick .ph img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:3px;background:#ccc}
+.lookrow{display:grid;grid-template-columns:1fr 90px 1fr auto;gap:6px;margin-bottom:5px}
+.lookrow input{padding:4px 6px;font-size:12px}
+#rawj{min-height:60vh;font-family:ui-monospace,monospace;font-size:12px}
+.pill{font-size:11px;padding:1px 7px;border-radius:10px;background:var(--soft);color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+  <h1>스토리 작업실</h1>
+  <select id="selD"></select>
+  <span class="pill" id="dInfo"></span>
+  <span class="sp"></span>
+  <span id="status"></span>
+  <button id="bLoad" title="공개된 원고(앱에 실린 것)를 이 날에 불러옵니다">공개 원고 불러오기</button>
+  <button id="bPrev">미리보기 갱신</button>
+  <button id="bGit" class="pri">앱에 게시</button>
+</header>
+<main>
+<section id="left">
+  <div class="tabs"><button class="on" data-p="ms">① 원고</button><button data-p="cards">② 카드</button><button data-p="qt">③ 묵상 노트</button><button data-p="json">④ JSON</button></div>
+
+  <div class="pane on" id="p-ms">
+    <p class="hint">쓰신 원고를 그대로 붙여 넣고 <b>분석</b>을 누르면 카드·묵상 노트로 나뉩니다. 첫 줄은 제목(<code>11월 2일 · 누가복음 22–24장 「제목」</code>)으로 읽고, <code>적용</code>·<code>기도</code>·<code>나눔</code> 제목줄 아래는 묵상 노트로 갑니다. 문단 하나가 카드 하나입니다. 인용은 <code>"…"(22:19)</code>처럼 따옴표와 장절을 붙여 쓰면 말씀 상자가 됩니다.<br>
+    문단 첫머리에 <code>[배경 · 멀찍이]</code>처럼 단계와 이름을 적으면 그대로 씁니다(단계: 배경·긴장·전환·의미). 비우면 자리로 짐작합니다.</p>
+    <textarea id="ms" placeholder="여기에 원고를 붙여 넣으세요."></textarea>
+    <div class="row"><button id="bParse" class="pri">분석 → 카드 만들기</button><span class="small" id="msInfo"></span></div>
+  </div>
+
+  <div class="pane" id="p-cards">
+    <div id="cards"></div>
+    <div class="addc"><button id="bAddCard">+ 카드 더하기</button></div>
+  </div>
+
+  <div class="pane" id="p-qt">
+    <label class="f"><span class="k"><b>중심 물음(spine)</b><span class="cnt" data-for="q_spine"></span></span><textarea id="q_spine" rows="2"></textarea></label>
+    <label class="f"><span class="k"><b>읽기 전 · 오늘(guide.today)</b></span><textarea id="q_today" rows="3"></textarea></label>
+    <label class="f"><span class="k"><b>읽기 전 · 찾아볼 것(guide.find)</b></span><textarea id="q_find" rows="2"></textarea></label>
+    <label class="f"><span class="k"><b>본문 관찰 · 물음(obs.q)</b></span><textarea id="q_obs" rows="2"></textarea></label>
+    <div class="f"><span class="k"><b>본문 관찰 · 살펴볼 곳(obs.look)</b><span class="small">제목 · 장절(눅 22:54) · 물음</span></span><div id="looks"></div><button class="sm" id="bAddLook">+ 더하기</button></div>
+    <label class="f"><span class="k"><b>하나님은(god)</b></span><textarea id="q_god" rows="4"></textarea></label>
+    <label class="f"><span class="k"><b>성경 전체로(christ)</b><span class="small">없으면 비움</span></span><textarea id="q_christ" rows="2"></textarea></label>
+    <label class="f"><span class="k"><b>적용(apply)</b></span><textarea id="q_apply" rows="5"></textarea></label>
+    <label class="f"><span class="k"><b>기도(pray)</b></span><textarea id="q_pray" rows="4"></textarea></label>
+    <label class="f"><span class="k"><b>나의 생각거리(kwq.q)</b></span><textarea id="q_kwq" rows="3"></textarea></label>
+    <label class="f"><span class="k"><b>생각거리 곁 말씀(kwq.r)</b><span class="small">예: 눅 24:48</span></span><input type="text" id="q_kwr"></label>
+  </div>
+
+  <div class="pane" id="p-json">
+    <p class="hint">앱이 읽는 형식 그대로입니다(ux/story_cards.json의 그날 항목). 고쳐서 <b>적용</b>을 누르면 카드·묵상 노트에 반영됩니다.</p>
+    <textarea id="rawj"></textarea>
+    <div class="row"><button id="bJsonApply" class="pri">적용</button><button id="bJsonCopy">복사</button><button id="bJsonDl">파일로 내려받기</button></div>
+  </div>
+</section>
+
+<section id="right">
+  <div id="prevwrap"><iframe id="pv" title="앱 미리보기"></iframe></div>
+  <div id="chk"><h3>검사</h3><ul id="chkList"><li class="small">카드를 만들면 인용·장절·분량을 검사합니다.</li></ul></div>
+</section>
+</main>
+
+<dialog id="dlgGit"><h3>앱에 게시(GitHub에 저장)</h3>
+<label class="f"><span class="k"><b>저장소</b></span><input type="text" id="g_repo" placeholder="aqedah/CBSR"></label>
+<label class="f"><span class="k"><b>가지(branch)</b></span><input type="text" id="g_branch" placeholder="source"></label>
+<label class="f"><span class="k"><b>토큰(PAT, contents 쓰기 권한)</b></span><input type="text" id="g_token" placeholder="github_pat_…"></label>
+<p class="small">토큰은 이 브라우저에만 저장됩니다(가이드북 작업실과 같은 토큰). 저장하면 이 날의 원고가 <code>app/ux/story_in/날번호.json</code>으로 커밋되고, 2–3분 뒤 빌드가 <code>story_cards.json</code>에 합쳐 앱에 올립니다. 같은 날의 옛 원고는 덮어씁니다.</p>
+<p id="gMsg" class="small" style="min-height:1.2em;margin:4px 0 6px"></p>
+<div class="btns"><button id="gSave" class="pri">저장(커밋)</button><button id="gClose">닫기</button></div></dialog>
+
+<dialog id="dlgPh"><h3>그림 고르기 <span class="small" id="phInfo"></span></h3>
+<div class="row"><input type="text" id="phQ" placeholder="번호·설명으로 찾기 (예: 엠마오, g23)"><button id="phNone" class="sm">그림 없음(앱이 고름)</button><button id="phClose" class="sm">닫기</button></div>
+<div id="phpick"></div></dialog>
+
+<script>
+/*PLANS*/
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const SITE=(location.protocol==='file:')?'https://aqedah.github.io/CBSR/':'';
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const P26=(typeof PLAN26!=='undefined')?PLAN26:[], P27L=(typeof P27!=='undefined')?P27:[], ABBR=(typeof ABBR_L!=='undefined')?ABBR_L:[], PHL=(typeof PHOTOS_E!=='undefined')?PHOTOS_E:[];
+const d26=n=>{ const d=new Date(2026,0,n); return (d.getMonth()+1)+'/'+d.getDate(); };
+const P27BY={}; P27L.forEach(x=>{ if(x.prim) P27BY[x.prim]=x; });
+const d27=gi=>{ const d=new Date(2027,0,gi+1); return (d.getMonth()+1)+'/'+d.getDate(); };
+
+/* ───────── 상태 ───────── */
+let cur=null;               // 날 번호(2026 365일표, story_cards.json의 열쇠)
+let D={cards:[],spine:'',qt:{guide:{today:'',find:''},obs:{q:'',look:[]},god:'',christ:'',apply:'',pray:''},kwq:{q:'',r:null},type:''};
+let BIBLE=null; // BIBLE[b-1][c-1][v-1]
+const LSK=n=>'cbsr_story_edit:'+n;
+function plan(n){ return P26[n-1]; }
+function dayBook(){ const p=plan(cur); return p?p.ch[0][0]:0; }
+function dayCh(){ const p=plan(cur); return p?p.ch.map(x=>x[1]):[]; }
+
+function setDay(n){ if(cur) stash(); cur=n; localStorage.setItem('cbsr_story_edit:last',n);
+  const p=plan(n), x=P27BY[n]; $('dInfo').textContent=(p?p.label:'')+(x?' · 2027년에도 같은 범위':' · 2027년에는 범위가 달라집니다');
+  const saved=localStorage.getItem(LSK(n)); if(saved){ try{ const o=JSON.parse(saved); D=o.D; $('ms').value=o.ms||''; }catch(e){ reset(); } } else reset();
+  fillAll(); loadPreview(); }
+function reset(){ D={cards:[],spine:'',qt:{guide:{today:'',find:''},obs:{q:'',look:[]},god:'',christ:'',apply:'',pray:''},kwq:{q:'',r:null},type:''}; $('ms').value=''; }
+function stash(){ try{ localStorage.setItem(LSK(cur),JSON.stringify({D,ms:$('ms').value,at:Date.now()})); }catch(e){} }
+const say=t=>{ $('status').textContent=t; };
+
+/* ───────── 탭 ───────── */
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b)); document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p)); if(b.dataset.p==='json') $('rawj').value=JSON.stringify(cleanD(),null,1); });
+
+/* ───────── 장절 ───────── */
+const REFRE=/(?:([가-힣]{1,4})\s?)?(\d{1,3}):(\d{1,3})(?:\s?[–\-]\s?(\d{1,3}))?/;
+function parseRef(t,book){ const m=String(t||'').match(REFRE); if(!m) return null; let b=book||dayBook(); if(m[1]){ const i=ABBR.indexOf(m[1]); if(i<0) return null; b=i+1; } return [b,+m[2],+m[3],m[4]?+m[4]:0]; }
+function refLab(r){ return r?`${ABBR[r[0]-1]} ${r[1]}:${r[2]}${r[3]?'–'+r[3]:''}`:''; }
+function verse(b,c,v){ try{ return BIBLE[b-1][c-1][v-1]||''; }catch(e){ return ''; } }
+const norm=s=>String(s||'').replace(/[\s"“”'‘’,.;:!?()·…\-–]/g,'');
+function quoteCheck(q,ref){ if(!BIBLE) return 'unk'; const r=parseRef(ref); if(!r) return 'noref'; const txt=[]; for(let v=r[2];v<=(r[3]||r[2]);v++) txt.push(verse(r[0],r[1],v)); const T=norm(txt.join(' ')); if(!T) return 'noverse'; const parts=String(q).split(/…|\.\.\./).map(norm).filter(Boolean); let at=0; for(const p of parts){ const i=T.indexOf(p,at); if(i<0) return 'bad'; at=i+p.length; } return 'ok'; }
+function inRange(r){ if(!r) return true; const p=plan(cur); if(!p) return true; return p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]); }
+
+/* ───────── 원고 분석 ───────── */
+const QRE=/["“]([^"“”]{4,}?)["”]\s*\(([^)]{1,28})\)/g;
+function sentences(t){ return String(t).replace(/\s+/g,' ').trim().split(/(?<=[.?!])\s+(?=[^”"'’)])/).map(s=>s.trim()).filter(Boolean); }
+const clip=(s,n)=>{ s=String(s).replace(/["“”'‘’]/g,'').replace(/[.?!,]+$/,'').trim(); if(s.length<=n) return s; const i=s.lastIndexOf(' ',n); return (i>4?s.slice(0,i):s.slice(0,n)).replace(/[,.]+$/,''); };
+function stripBold(s){ return s.replace(/^\*\*(.+?)\*\*$/,'$1').replace(/^#+\s*/,'').trim(); }
+function isHeading(l){ const s=stripBold(l); if(!s||s.length>28) return false; if(/[다요]\.$/.test(s)) return false; return /^\*\*.+\*\*$/.test(l.trim())||/^#/.test(l.trim())||/^(적용|기도|나눔|본문|이야기|묵상)/.test(s)||/^\d+\.\s/.test(s); }
+function secOf(h){ const s=stripBold(h); if(/^기도/.test(s)) return 'pray'; if(/^(적용|나에게|돌아보|오늘의 적용)/.test(s)) return 'apply'; if(/나눔/.test(s)) return 'share'; return 'body'; }
+function parseMS(text){
+  const lines=text.replace(/\r/g,'').split('\n'); let title='', i=0;
+  while(i<lines.length&&!lines[i].trim()) i++; if(i<lines.length){ title=stripBold(lines[i]); i++; }
+  const secs={body:[],apply:[],pray:[],share:[]}; let sec='body', buf=[];
+  const flush=()=>{ const t=buf.join(' ').trim(); if(t) secs[sec].push(t); buf=[]; };
+  for(;i<lines.length;i++){ const l=lines[i]; if(!l.trim()){ flush(); continue; } if(isHeading(l)&&!buf.length){ sec=secOf(l); continue; } buf.push(l.trim()); }
+  flush();
+  // 제목
+  let h=title, m=title.match(/「(.+?)」/); if(m) h=m[1]; else if(title.includes('·')) h=title.split('·').pop().trim(); h=h.replace(/^[「『"“]|[」』"”]$/g,'');
+  const p=plan(cur), chs=dayCh(); let lastCh=0;
+  const cards=[], body=secs.body;
+  // 본문 문단 → 카드
+  body.forEach((para,pi)=>{ let lab='', hint='';
+    const mk=para.match(/^\[([^\]]+)\]\s*/); if(mk){ lab=mk[1]; para=para.slice(mk[0].length); }
+    const Q=[]; para.replace(QRE,(all,q,ref,at)=>{ Q.push({q:q.trim(),ref:ref.trim(),at,all}); return all; });
+    const S=sentences(para);
+    const stage=lab?lab.split('·')[0].trim():(pi===0?'배경':(pi>=body.length-2?'의미':(/그제야|비로소|마침내|반대로|뒤집|돌아갑니다|돌아옵니다|눈이 열린|이제야|달라집니다|바뀝니다/.test(para)?'전환':'긴장')));
+    const ch=(()=>{ for(const s of Q){ const r=parseRef(s.ref); if(r&&r[0]===dayBook()) return r[1]; } const m2=para.match(/\((\d{1,3}):\d{1,3}/); return m2?+m2[1]:0; })();
+    const refFull=r=>{ const R=parseRef(r); return R?refLab(R):r; };
+    const name=lab&&lab.includes('·')?lab.split('·').slice(1).join('·').trim():(Q[0]&&Q[0].q.length<=14?Q[0].q:clip(S[0].split(/[,，(]/)[0],12));
+    let L=stage+' · '+name; if(ch&&ch!==lastCh&&chs.length>1){ L+=' · '+ch+'장'; lastCh=ch; }
+    const cue=/같은|다시|두 번|둘|나란히|번째|되풀이|거듭|똑같/.test(para);
+    const mkq=s=>({q:[s.q,refFull(s.ref)]});
+    if(Q.length>=2&&cue){ cards.push({k:'echo',lab:L,h:name,pair:[[Q[0].q,refFull(Q[0].ref)],[Q[1].q,refFull(Q[1].ref)]],b:S.filter(s=>!Q.some(x=>s.includes(x.q))).slice(0,3)}); return; }
+    const last=Q.length?Q[Q.length-1]:null;
+    const bare=s=>Q.reduce((t,x)=>t.replace(x.all,''),s).replace(/\s+/g,' ').replace(/[.,\s]/g,'').trim();
+    /* 마지막 문장이 긴 인용 하나로 된 문단 → 큰 인용 카드 */
+    if(last&&last.q.length>=26&&S.length&&S[S.length-1].includes(last.q)&&bare(S[S.length-1]).length<12){ const b=[]; S.slice(0,-1).forEach(s=>{ const qq=Q.filter(x=>s.includes(x.q)&&x.q.length>=18&&bare(s).length<12); if(qq.length) qq.forEach(x=>b.push(mkq(x))); else b.push(s); }); cards.push({k:'quote',lab:L,b,big:last.q,ref:refFull(last.ref)}); return; }
+    /* 문장이 인용 하나로만 된 것은 말씀 상자, 그 밖의 인용은 문장 안에 그대로 */
+    const b=[]; S.forEach(s=>{ const qq=Q.filter(x=>s.includes(x.q)&&x.q.length>=18); if(qq.length&&bare(s).length<12) qq.forEach(x=>b.push(mkq(x))); else b.push(s); });
+    // 긴 카드 나누기
+    const txt=b.filter(x=>typeof x==='string').join('');
+    if(txt.length>200&&b.filter(x=>typeof x==='string').length>=2){ const half=Math.ceil(b.length/2); cards.push({k:b.slice(0,half).some(x=>x.q)?'split':'full',lab:L,h:name,b:b.slice(0,half)}); cards.push({k:b.slice(half).some(x=>x.q)?'split':'full',lab:stage+' · '+name+' (이어서)',h:name,b:b.slice(half)}); return; }
+    cards.push({k:b.some(x=>x.q)?'split':'full',lab:L,h:name,b}); });
+  // 표지
+  const qs=t=>sentences(t).filter(s=>/[까요]\?$/.test(s)||/\?$/.test(s));
+  const lastQ=qs(body.slice(-2).join(' '))[0]||qs(secs.apply.join(' '))[0]||'';
+  const br=s=>{ s=s.replace(/\s+/g,' ').trim(); if(s.length<16||s.includes('\n')) return s; const i=s.slice(0,Math.ceil(s.length*0.55)).lastIndexOf(','); const j=i>5?i+1:s.slice(0,Math.ceil(s.length*0.55)).lastIndexOf(' '); return j>5?s.slice(0,j).trim()+'\n'+s.slice(j).trim():s; };
+  cards.unshift({k:'cover',kick:p?p.label:'',h:br(h),sub:br(lastQ.replace(/\?$/,'').replace(/습니까$/,'을까').replace(/입니까$/,'일까'))});
+  // 묵상 노트
+  const allQ=[]; body.forEach(pa=>pa.replace(QRE,(a,q,ref)=>{ allQ.push({q,ref}); return a; }));
+  const b0=sentences(body[0]||'').filter(s=>!/["“]/.test(s)).slice(0,2).join(' ');
+  const find=sentences(body.join(' ')).find(s=>/눈여겨|기억해 두|놓치|찾아보|붙들고|살펴/.test(s))||'';
+  const god=sentences(body.slice(-2).join(' ')).filter(s=>/하나님|예수님|그분|주님|여호와/.test(s)).slice(0,2).join(' ');
+  const aq=qs(secs.apply.join(' ')); const big=cards.find(c=>c.k==='quote');
+  D.cards=cards; D.spine=lastQ; D.type=D.type||'';
+  D.qt={guide:{today:b0,find},obs:{q:qs(body.join(' ')).find(s=>!/나는|내가|우리/.test(s))||'',look:allQ.slice(0,3).map(x=>({t:clip(x.q,12),r:parseRef(x.ref)||[dayBook(),chs[0]||1,1],n:''}))},god,christ:'',apply:secs.apply.join('\n\n'),pray:secs.pray.join('\n\n')};
+  D.kwq={q:aq[aq.length-1]||lastQ,r:parseRef(big?big.ref:(allQ[0]?allQ[0].ref:''))};
+  $('msInfo').textContent=`카드 ${cards.length}장 · 묵상 노트 ${secs.apply.length?'적용 ':''}${secs.pray.length?'기도':''}`;
+}
+$('bParse').onclick=()=>{ if(!$('ms').value.trim()){ say('원고가 비어 있습니다'); return; } parseMS($('ms').value); fillAll(); stash(); check(); sendPreview(); document.querySelector('[data-p=cards]').click(); };
+
+/* ───────── 카드 편집 ───────── */
+const KINDS=[['cover','표지'],['full','설명'],['split','설명+그림'],['quote','큰 인용'],['echo','비교(두 말)'],['table','표'],['map','지도'],['line','한 줄']];
+function bToText(b){ return (b||[]).map(x=>typeof x==='string'?x:'> '+x.q[0]+' | '+(x.q[1]||'')+(x.q[2]?' | '+x.q[2]:'')).join('\n'); }
+function textToB(t){ return String(t).split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{ if(!s.startsWith('>')) return s; const p=s.slice(1).split('|').map(x=>x.trim()); const q=[p[0]||'',p[1]||'']; if(p[2]) q.push(p[2]); return {q}; }); }
+function cardQs(c){ const L=[]; (c.b||[]).forEach(x=>{ if(x&&x.q) L.push([x.q[0],x.q[1]]); }); if(c.big) L.push([c.big,c.ref]); (c.pair||[]).forEach(x=>L.push([x[0],x[1]])); return L; }
+function renderCards(){ const root=$('cards'); root.innerHTML='';
+  D.cards.forEach((c,i)=>{ const d=document.createElement('div'); d.className='card'+(c.k==='cover'?' cover':''); const T=sTxt(c).length;
+    let body='';
+    if(c.k==='cover'||c.k==='book') body=`<div class="gridf"><label class="f"><span class="k">작은 제목(kick)</span><input type="text" data-f="kick" value="${esc(c.kick)}"></label><label class="f"><span class="k">그림(img)</span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button>${c.img?`<img src="${SITE}img/g/${esc(c.img)}.jpg" onerror="this.style.visibility='hidden'">`:''}</div></label></div><label class="f"><span class="k">제목(h) — 줄바꿈 그대로</span><textarea data-f="h" rows="2">${esc(c.h)}</textarea></label><label class="f"><span class="k">부제(sub)</span><textarea data-f="sub" rows="2">${esc(c.sub||'')}</textarea></label>`;
+    else if(c.k==='quote') body=`<label class="f"><span class="k">앞글(b) — 한 줄이 한 문단, <code>&gt; 인용 | 장절 | 말한 이</code>는 말씀 상자</span><textarea class="b" data-f="b">${esc(bToText(c.b))}</textarea></label><label class="f"><span class="k">큰 인용(big)</span><textarea data-f="big" rows="2">${esc(c.big||'')}</textarea></label><div class="gridf"><label class="f"><span class="k">장절(ref)</span><input type="text" data-f="ref" value="${esc(c.ref||'')}"></label><label class="f"><span class="k">그림(img)</span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button></div></label></div>`;
+    else if(c.k==='echo') body=`<label class="f"><span class="k">제목(h)</span><input type="text" data-f="h" value="${esc(c.h||'')}"></label><label class="f"><span class="k">두 말(pair) — 한 줄에 <code>말 | 장절·설명 | 말한 이</code></span><textarea data-f="pair" rows="3">${esc((c.pair||[]).map(x=>x.join(' | ')).join('\n'))}</textarea></label><label class="f"><span class="k">설명(b)</span><textarea class="b" data-f="b">${esc(bToText(c.b))}</textarea></label><div class="gridf"><label class="f"><span class="k">뒤에 붙는 풀이(note)</span><input type="text" data-f="note" value="${esc(c.note||'')}"></label><label class="f"><span class="k">그림(img)</span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button></div></label></div>`;
+    else if(c.k==='table') body=`<label class="f"><span class="k">제목(h)</span><input type="text" data-f="h" value="${esc(c.h||'')}"></label><label class="f"><span class="k">표(tbl) JSON — {"h":[…],"rows":[[…]],"hl":[[행,열]]}</span><textarea data-f="tbl" rows="5">${esc(JSON.stringify(c.tbl||{h:[],rows:[]}))}</textarea></label><label class="f"><span class="k">풀이(note)</span><textarea data-f="note" rows="2">${esc(c.note||'')}</textarea></label>`;
+    else if(c.k==='line') body=`<label class="f"><span class="k">한 줄(t)</span><textarea data-f="t" rows="2">${esc(c.t||'')}</textarea></label>`;
+    else body=`<label class="f"><span class="k">제목(h)</span><input type="text" data-f="h" value="${esc(c.h||'')}"></label><label class="f"><span class="k">글(b) — 한 줄이 한 문단, <code>&gt; 인용 | 장절 | 말한 이</code>는 말씀 상자 · **굵게** __밑줄__</span><textarea class="b" data-f="b">${esc(bToText(c.b))}</textarea></label><label class="f"><span class="k">그림(img) <span class="small">비우면 앱이 고릅니다</span></span><div class="img"><input type="text" data-f="img" value="${esc(c.img||'')}"><button class="sm" data-ph="1">고르기</button>${c.img?`<img src="${SITE}img/g/${esc(c.img)}.jpg" onerror="this.style.visibility='hidden'">`:''}</div></label>`;
+    const qbadge=cardQs(c).map(([q,r])=>{ const st=quoteCheck(q,r); return `<span class="${st==='ok'?'ok':st==='bad'?'bad':'unk'}" title="${esc(q)}">${esc(r||'장절 없음')} ${st==='ok'?'✓':st==='bad'?'✗ 본문과 다름':st==='unk'?'(본문 읽는 중)':'?'}</span>`; }).join('');
+    d.innerHTML=`<div class="top"><span class="no">${i+1}</span><select data-f="k">${KINDS.map(([v,n])=>`<option value="${v}"${c.k===v?' selected':''}>${n}</option>`).join('')}</select><input class="lab" type="text" data-f="lab" placeholder="단계 · 이름 (예: 긴장 · 멀찍이 · 22장)" value="${esc(c.lab||'')}"${c.k==='cover'?' disabled':''}><span class="cnt${T>200?' over':''}" title="글자 수">${T}</span><span class="tools"><button class="sm" data-mv="-1" title="위로">↑</button><button class="sm" data-mv="1" title="아래로">↓</button><button class="sm" data-del="1" title="지우기">✕</button><button class="sm" data-ins="1" title="아래에 새 카드">＋</button></span></div>${c.k!=='cover'&&qbadge?`<div class="bq">${qbadge}</div>`:''}${body}`;
+    d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('change',()=>{ readCard(i,d); renderCards(); stash(); check(); sendPreview(); }));
+    d.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('input',()=>{ readCard(i,d,true); }));
+    d.querySelector('[data-mv="-1"]').onclick=()=>{ if(i>0){ [D.cards[i-1],D.cards[i]]=[D.cards[i],D.cards[i-1]]; after(); } };
+    d.querySelector('[data-mv="1"]').onclick=()=>{ if(i<D.cards.length-1){ [D.cards[i+1],D.cards[i]]=[D.cards[i],D.cards[i+1]]; after(); } };
+    d.querySelector('[data-del]').onclick=()=>{ if(confirm((i+1)+'번 카드를 지울까요?')){ D.cards.splice(i,1); after(); } };
+    d.querySelector('[data-ins]').onclick=()=>{ D.cards.splice(i+1,0,{k:'full',lab:'',h:'',b:[]}); after(); };
+    d.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>pickPhoto(i));
+    root.appendChild(d); });
+  function after(){ renderCards(); stash(); check(); sendPreview(); } }
+function readCard(i,d,soft){ const c=D.cards[i]; const g=f=>{ const el=d.querySelector(`[data-f="${f}"]`); return el?el.value:undefined; };
+  const k=g('k'); if(k&&k!==c.k){ c.k=k; if(soft) return; }
+  ['lab','h','kick','sub','img','big','ref','note','t'].forEach(f=>{ const v=g(f); if(v!==undefined){ if(v) c[f]=v; else delete c[f]; } });
+  if(g('b')!==undefined) c.b=textToB(g('b'));
+  if(g('pair')!==undefined) c.pair=g('pair').split('\n').map(s=>s.trim()).filter(Boolean).map(s=>s.split('|').map(x=>x.trim()));
+  if(g('tbl')!==undefined){ try{ c.tbl=JSON.parse(g('tbl')); }catch(e){} }
+  if(c.k==='cover') delete c.lab; }
+$('bAddCard').onclick=()=>{ D.cards.push({k:'full',lab:'',h:'',b:[]}); renderCards(); stash(); };
+const sTxt=s=>[s.kick,s.h,s.sub,s.t,s.big,...(s.b||[]).map(x=>typeof x==='string'?x:(x.q||[])[0]),...(s.pair||[]).map(x=>x[0])].filter(Boolean).join(' ').replace(/\*\*|__/g,'');
+
+/* 그림 고르기 */
+let phFor=-1;
+function pickPhoto(i){ phFor=i; const c=D.cards[i]; $('phInfo').textContent=(i+1)+'번 카드'; $('phQ').value=''; drawPh(''); $('dlgPh').showModal(); }
+function drawPh(q){ const b=dayBook(), chs=dayCh(); q=q.trim().toLowerCase();
+  const L=PHL.filter(p=>!q||p.id.includes(q)||(p.memo||'').toLowerCase().includes(q)).map(p=>({p,s:(p.refs||[]).some(r=>r[0]===b&&chs.some(c=>c>=r[1]&&c<=r[2]))?2:((p.refs||[]).some(r=>r[0]===b)?1:0)})).sort((a,b)=>b.s-a.s).slice(0,120);
+  $('phpick').innerHTML=L.map(({p,s})=>`<div class="ph" data-id="${p.id}"><img loading="lazy" src="${SITE}img/g/${p.id}.jpg"><div>${s?'★ ':''}${esc(p.id)} ${esc(p.memo||'')}</div></div>`).join('')||'<p class="small">맞는 그림이 없습니다.</p>';
+  $('phpick').querySelectorAll('.ph').forEach(e=>e.onclick=()=>{ if(phFor>=0){ D.cards[phFor].img=e.dataset.id; } $('dlgPh').close(); renderCards(); stash(); sendPreview(); }); }
+$('phQ').oninput=()=>drawPh($('phQ').value); $('phNone').onclick=()=>{ if(phFor>=0) delete D.cards[phFor].img; $('dlgPh').close(); renderCards(); stash(); sendPreview(); }; $('phClose').onclick=()=>$('dlgPh').close();
+
+/* ───────── 묵상 노트 ───────── */
+const QF={q_spine:['spine'],q_today:['qt','guide','today'],q_find:['qt','guide','find'],q_obs:['qt','obs','q'],q_god:['qt','god'],q_christ:['qt','christ'],q_apply:['qt','apply'],q_pray:['qt','pray'],q_kwq:['kwq','q']};
+const getP=(o,p)=>p.reduce((a,k)=>a&&a[k],o), setP=(o,p,v)=>{ let a=o; p.slice(0,-1).forEach(k=>{ a[k]=a[k]||{}; a=a[k]; }); a[p[p.length-1]]=v; };
+function fillQT(){ for(const id in QF) $(id).value=getP(D,QF[id])||''; $('q_kwr').value=refLab(D.kwq&&D.kwq.r); renderLooks(); }
+for(const id in QF) $(id).addEventListener('change',()=>{ setP(D,QF[id],$(id).value.trim()); stash(); sendPreview(); });
+$('q_kwr').addEventListener('change',()=>{ D.kwq=D.kwq||{}; D.kwq.r=parseRef($('q_kwr').value)||null; $('q_kwr').value=refLab(D.kwq.r); stash(); });
+function renderLooks(){ const L=(D.qt.obs&&D.qt.obs.look)||[]; $('looks').innerHTML=L.map((x,i)=>`<div class="lookrow"><input type="text" data-l="t" data-i="${i}" placeholder="제목" value="${esc(x.t||'')}"><input type="text" data-l="r" data-i="${i}" placeholder="눅 22:54" value="${esc(refLab(x.r))}"><input type="text" data-l="n" data-i="${i}" placeholder="물음" value="${esc(x.n||'')}"><button class="sm" data-x="${i}">✕</button></div>`).join('');
+  $('looks').querySelectorAll('input').forEach(el=>el.onchange=()=>{ const x=L[+el.dataset.i]; if(el.dataset.l==='r'){ x.r=parseRef(el.value)||x.r; el.value=refLab(x.r); } else x[el.dataset.l]=el.value.trim(); stash(); });
+  $('looks').querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{ L.splice(+b.dataset.x,1); renderLooks(); stash(); }); }
+$('bAddLook').onclick=()=>{ D.qt.obs=D.qt.obs||{q:'',look:[]}; (D.qt.obs.look=D.qt.obs.look||[]).push({t:'',r:[dayBook(),dayCh()[0]||1,1],n:''}); renderLooks(); };
+
+function fillAll(){ renderCards(); fillQT(); $('rawj').value=JSON.stringify(cleanD(),null,1); check(); }
+function cleanD(){ const o=JSON.parse(JSON.stringify(D)); o.cards=(o.cards||[]).map(c=>{ const d={}; for(const k in c) if(c[k]!==''&&c[k]!=null&&!k.startsWith('_')) d[k]=c[k]; return d; });
+  if(o.qt&&!o.qt.christ) o.qt.christ=''; if(o.kwq&&!o.kwq.r) delete o.kwq.r; if(!o.type) o.type=''; return o; }
+
+/* JSON 탭 */
+$('bJsonApply').onclick=()=>{ try{ let o=JSON.parse($('rawj').value); if(o.A) o=o.A; if(!Array.isArray(o.cards)) throw new Error('cards가 없습니다'); D=o; D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); stash(); sendPreview(); say('JSON 적용'); }catch(e){ say('JSON 오류: '+e.message); } };
+$('bJsonCopy').onclick=()=>{ navigator.clipboard.writeText($('rawj').value).then(()=>say('복사됨')); };
+$('bJsonDl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify({n:cur,A:cleanD()},null,1)],{type:'application/json'})); a.download=`story_${cur}.json`; a.click(); };
+
+/* ───────── 검사 ───────── */
+function check(){ const L=[]; const C=D.cards||[]; const p=plan(cur);
+  if(!C.length){ $('chkList').innerHTML='<li class="small">카드가 없습니다.</li>'; return; }
+  const n=C.filter(c=>c.k!=='cover').length; L.push({c:n>=8&&n<=13?'ok':'warn',t:`카드 ${C.length}장(표지 빼고 ${n}장) — 보통 9–12장`});
+  if(C[0].k!=='cover') L.push({c:'bad',t:'첫 카드가 표지가 아닙니다'});
+  C.forEach((c,i)=>{ const T=sTxt(c).length; if(T>200) L.push({c:'warn',t:`${i+1}번 카드 ${T}자 — 200자를 넘습니다`});
+    if(c.k!=='cover'&&!c.lab) L.push({c:'warn',t:`${i+1}번 카드에 단계·이름표(lab)가 없습니다`});
+    cardQs(c).forEach(([q,r],j)=>{ const R=parseRef(r); if(!R){ L.push({c:'bad',t:`${i+1}번 카드 인용에 장절이 없거나 읽을 수 없습니다: "${q.slice(0,20)}…" (${r||'없음'})`}); return; }
+      if(!inRange(R)&&R[0]===dayBook()) L.push({c:'warn',t:`${i+1}번 카드 ${refLab(R)} — 오늘 범위(${p?p.label:''}) 밖입니다`});
+      if(R[0]!==dayBook()&&!inRange(R)) L.push({c:'warn',t:`${i+1}번 카드 ${refLab(R)} — 다른 책의 말씀입니다(의도한 것이면 그대로)`});
+      const st=quoteCheck(q,r); if(st==='bad'){ const txt=[]; for(let v=R[2];v<=(R[3]||R[2]);v++) txt.push(verse(R[0],R[1],v)); L.push({c:'bad',t:`${i+1}번 카드 ${refLab(R)} 인용이 개역개정과 다릅니다. 본문: “${txt.join(' ')}”`,fix:{i,j,txt:txt.join(' ')}}); }
+      else if(st==='noverse') L.push({c:'bad',t:`${i+1}번 카드 ${refLab(R)} — 그 절이 없습니다`}); }); });
+  if(!D.qt||!D.qt.apply) L.push({c:'warn',t:'묵상 노트 적용(apply)이 비어 있습니다'}); if(!D.qt||!D.qt.pray) L.push({c:'warn',t:'묵상 노트 기도(pray)가 비어 있습니다'}); if(!D.qt||!D.qt.god) L.push({c:'warn',t:'하나님의 성품(god)이 비어 있습니다 — 모든 본문에서 찾습니다'});
+  if(!D.kwq||!D.kwq.q) L.push({c:'warn',t:'나의 생각거리(kwq.q)가 비어 있습니다'});
+  if(!BIBLE) L.push({c:'warn',t:'개역개정 본문을 아직 읽는 중이라 인용 대조는 잠시 뒤에 됩니다'});
+  $('chkList').innerHTML=L.map((x,k)=>`<li class="${x.c}">${esc(x.t)}${x.fix?`<button class="sm fix" data-k="${k}">그 절 보기·복사</button>`:''}</li>`).join('')||'<li class="ok">문제가 없습니다</li>';
+  $('chkList').querySelectorAll('.fix').forEach(b=>b.onclick=()=>{ const f=L[+b.dataset.k].fix; navigator.clipboard.writeText(f.txt); say('그 절을 복사했습니다 — 카드의 인용에 붙여 넣으세요'); }); }
+
+/* ───────── 개역개정 본문 ───────── */
+(async function(){ try{ const t=await (await fetch(SITE+'bible.js',{cache:'force-cache'})).text(); const m=t.match(/BIBLE_B64="([^"]+)"/); if(!m) throw 0; const bk=Uint8Array.from(atob(m[1]),c=>c.charCodeAt(0)); BIBLE=JSON.parse(await new Response(new Blob([bk]).stream().pipeThrough(new DecompressionStream('gzip'))).text()); say('개역개정 본문 준비됨'); renderCards(); check(); }catch(e){ say('본문을 읽지 못해 인용 대조는 건너뜁니다'); } })();
+
+/* ───────── 미리보기(앱 v2) ───────── */
+let pvReady=false, pvTimer=null;
+function loadPreview(){ pvReady=false; const x=P27BY[cur]; $('pv').src=SITE+'v2.html?day='+cur+'&pv=edit&now=0'; $('pv').onload=()=>{ pvReady=true; setTimeout(sendPreview,900); }; }
+function sendPreview(){ clearTimeout(pvTimer); pvTimer=setTimeout(()=>{ if(!pvReady) return; const x=P27BY[cur]; try{ $('pv').contentWindow.postMessage({cbsrStory:1,n26:cur,n27:x?x.gi+1:0,draft:(D.cards&&D.cards.length)?{A:cleanD()}:null},'*'); }catch(e){} },300); }
+$('bPrev').onclick=()=>{ if(!pvReady) loadPreview(); else sendPreview(); };
+
+/* ───────── 공개 원고 불러오기 ───────── */
+$('bLoad').onclick=async()=>{ say('불러오는 중…'); try{ let got=null;
+  try{ const r=await fetch(SITE+'story_in/'+cur+'.json',{cache:'no-store'}); if(r.ok){ const j=await r.json(); got=j.A||j; say('아직 빌드되지 않은 저장본을 불러왔습니다'); } }catch(e){}
+  if(!got){ const r=await fetch(SITE+'story_cards.json',{cache:'no-store'}); if(!r.ok) throw new Error(r.status); const all=await r.json(); const e=all[String(cur)]; if(!e) throw new Error('이 날의 공개 원고가 없습니다'); got=e.A||e; say('공개 원고를 불러왔습니다'); }
+  if(D.cards.length&&!confirm('지금 편집 중인 카드를 공개 원고로 바꿀까요? (원고 글은 그대로 둡니다)')) return;
+  D=JSON.parse(JSON.stringify(got)); D.qt=D.qt||{}; D.kwq=D.kwq||{}; fillAll(); stash(); sendPreview(); }catch(e){ say('불러오기 실패: '+e.message); } };
+
+/* ───────── GitHub에 저장 ───────── */
+(function(){ const g=JSON.parse(localStorage.getItem('cbsr_story_git')||localStorage.getItem('cbsr_guide_git')||'{}'); $('g_repo').value=g.repo||'aqedah/CBSR'; $('g_branch').value=g.branch||'source'; $('g_token').value=g.token||''; })();
+const gcfg=()=>{ const c={repo:$('g_repo').value.trim()||'aqedah/CBSR',branch:$('g_branch').value.trim()||'source',token:$('g_token').value.trim()}; localStorage.setItem('cbsr_story_git',JSON.stringify(c)); return c; };
+const b64=s=>btoa(unescape(encodeURIComponent(s)));
+$('bGit').onclick=()=>{ if(!D.cards.length){ say('카드가 없습니다. 먼저 분석하세요.'); return; } $('gMsg').textContent=''; $('dlgGit').showModal(); };
+$('gClose').onclick=()=>$('dlgGit').close();
+$('gSave').onclick=async()=>{ const c=gcfg(); const gm=(t,ok)=>{ $('gMsg').textContent=t; $('gMsg').style.color=ok?'#2E7D4F':'#b00'; say(t); };
+  if(!c.token){ gm('토큰 칸이 비어 있습니다. GitHub → Settings → Developer settings → Fine-grained token(저장소 CBSR, Contents: Read and write)을 만들어 붙여 넣으세요.'); return; }
+  const bad=[...$('chkList').querySelectorAll('li.bad')].length; if(bad&&!confirm(`검사에서 고칠 것 ${bad}건이 있습니다. 그래도 게시할까요?`)) return;
+  gm('저장하는 중…',true); $('gSave').disabled=true;
+  try{ const path=`app/ux/story_in/${cur}.json`, url=`https://api.github.com/repos/${c.repo}/contents/${path}`, hdr={'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json'};
+    let sha; const r0=await fetch(url+'?ref='+c.branch,{headers:hdr}); if(r0.ok) sha=(await r0.json()).sha;
+    const p=plan(cur); const body={message:`스토리 원고 ${cur}일 ${p?p.label:''} (작업실)`,content:b64(JSON.stringify({n:cur,plan:'2026-365',label:p?p.label:'',at:new Date().toISOString(),A:cleanD()},null,1)),branch:c.branch}; if(sha) body.sha=sha;
+    const r=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},body:JSON.stringify(body)}); if(!r.ok) throw new Error(r.status+' '+(await r.text()).slice(0,80));
+    gm('GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' — 2~3분 뒤 앱에 올라갑니다.',true); $('gSave').disabled=false; setTimeout(()=>$('dlgGit').close(),1500); }
+  catch(e){ gm('저장 실패: '+e.message); $('gSave').disabled=false; } };
+
+/* ───────── 날 고르기 ───────── */
+(function(){ const s=$('selD'); P26.forEach(p=>{ const o=document.createElement('option'); o.value=p.n; const x=P27BY[p.n]; o.textContent=`${p.n} · ${d26(p.n)} · ${p.label}`+(x?` · 2027 ${d27(x.gi)}`:''); s.appendChild(o); });
+  const u=new URLSearchParams(location.search); let n=+u.get('day')||+(localStorage.getItem('cbsr_story_edit:last')||0);
+  if(!n){ const t=new Date(); n=Math.max(1,Math.min(365,Math.round((t-new Date(2026,0,1))/864e5)+1)); }
+  s.value=n; s.onchange=()=>setDay(+s.value); setDay(n); })();
+$('ms').addEventListener('input',()=>{ clearTimeout(window._mst); window._mst=setTimeout(stash,800); });
+</script>
+</body>
+</html>
