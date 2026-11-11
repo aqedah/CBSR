@@ -13561,8 +13561,6 @@ function render(){
   bind(); if(view.tab==="admin"&&window.CBSR_V2) bindDash(m); else document.documentElement.classList.remove("admwide"); if(view.tab==="study") bindStudy(m); else if(typeof bindStudyNotes==="function") bindStudyNotes(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); } if(TTS.on) ttsMark(false);
   
   if(view.tab==="read"&&true&&BIBLE&&view.mapOpen) initMap(dayA(view.w,view.d)); else destroyMap();
-  if(view.qtMark&&view.tab!=="read") view.qtMark=false;
-  if(view.qtMark) document.querySelectorAll(".bnav .tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab==="qt"));
   document.documentElement.dataset.tab=view.tab;
   if(window.CBSR_V2) tbkSync();
 }
@@ -13583,7 +13581,6 @@ function tbkDay(){ if((!Y27||view.tab!=="read"||view.pre)) return null; if(!TBK.
   const n=dayNo(view.w,view.d), qt=TBK.data.qt&&TBK.data.qt[n]; return qt?{n,qt,p:dayPlan(view.w,view.d),key:keyOf(view.w,view.d)}:null; }
 const tbkWide=()=>innerWidth>=1024;
 /* 11-11 목사님: 가이드북 있는 날 넓은 태블릿에서는 묵상 탭도 본문+가이드북(스토리는 지금처럼 통독 마친 뒤) */
-function tbkQtSplit(){ if(!Y27||!tbkWide()||tbkPref()==="text"||(tbkPref()==="both"&&!tbkFits())) return false; if(!TBK.data){ tbkLoad(); return false; } return !!(TBK.data.qt&&TBK.data.qt[dayNo(view.w,view.d)]); }
 function tbkRatio(){ let r=.5; try{ r=+localStorage.getItem("cbsr-tbkr")||.5; }catch(e){} return Math.min(.65,Math.max(.35,r)); }
 function tbkGrip(g){ let on=false, last=0; const rail=()=>parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--rail"))||0;
   g.onpointerdown=e=>{ e.preventDefault(); const now=Date.now(); if(now-last<350){ document.body.style.setProperty("--tbkr",.5); try{ localStorage.setItem("cbsr-tbkr",".5"); }catch(_){} last=0; if(TBK.fit) TBK.fit(); return; } last=now; on=true; g.classList.add("on"); g.setPointerCapture(e.pointerId); };
@@ -14022,8 +14019,7 @@ document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,her
 /* 탭마다 보던 자리 기억: 통독 ↔ QT를 오가도 읽던 곳으로 돌아옴 */
 const TAB_Y={};
 const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view.d);
-function switchTab(t){ if(window.CBSR_V2){ if(t==="qt"&&tbkQtSplit()){ if(view.tab==="read"&&view.qtMark){ TBK.focusM=true; tbkSync(); return; } TAB_Y[tabPosKey(view.tab)]=window.scrollY; view.qtMark=true; TBK.focusM=true; view.tab="read"; HSEL.clear(); render(); return; }
-    if(view.qtMark){ view.qtMark=false; if(t==="read"){ render(); return; } } }
+function switchTab(t){
   if(view.tab===t){ if(window.CBSR_V2&&t==="record"&&view.recD){ if(BM_OV) try{ BM_OV.close(true); }catch(e){} try{ ovDone(recBackOv); }catch(e){} view.recD=null; view.bmFrom=null; render(); window.scrollTo({top:0}); return; } /* 11/9 목사님: 나 탭 안 세부 화면에서 '나'를 누르면 나 첫 화면으로 */ window.scrollTo({top:0,behavior:"smooth"}); return; } view.rgOpen=false;
   /* 기록 탭에서 연 지도·책장 같은 세부 화면은 다른 탭으로 가면 닫음(목사님 2026-11-02) */
   if(window.CBSR_V2&&view.tab==="record"&&t!=="record"&&view.recD){ if(BM_OV) try{ BM_OV.close(true); }catch(e){} try{ ovDone(recBackOv); }catch(e){} view.recD=null; }
