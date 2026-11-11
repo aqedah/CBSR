@@ -7889,11 +7889,10 @@ function syncHlBar(){
   const one=first, isBm=mem.bm&&mem.bm.v===one, V2=!!window.CBSR_V2;
   const lnHas=V2&&lnGet(keyOf(view.w,view.d),one);
   const ttsHere=ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d));
-  bar.innerHTML=`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="${isBm?"책갈피 빼기":"책갈피"}">${isBm?"책갈피 빼기":"책갈피"}</button>${ttsHere?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}<span class="hlsws">${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기" title="형광펜 지우기">✕</button>`:""}</span>${V2?`<i class="hlbr"></i><button class="bmb lnb${lnHas?" on":""}" data-mk="ln">메모</button><button class="bmb wcb" data-mk="wc">말씀 카드</button>`:""}${document.body.classList.contains("tbksplit")||document.body.classList.contains("tbkfull")?`<button class="wcb obsb" data-mk="obs" title="고른 절(또는 끌어서 고른 문구)과 절 주소를 가이드북 '본문 관찰' 칸에 붙입니다">관찰에 붙이기</button>`:""}<button class="hlx" data-mk="close" aria-label="닫기" title="닫기">✕</button>`;
+  bar.innerHTML=`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="${isBm?"책갈피 빼기":"책갈피"}">${isBm?"책갈피 빼기":"책갈피"}</button>${ttsHere?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}<span class="hlsws">${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기" title="형광펜 지우기">✕</button>`:""}</span>${V2?`<i class="hlbr"></i><button class="bmb lnb${lnHas?" on":""}" data-mk="ln">메모</button><button class="bmb wcb" data-mk="wc">말씀 카드</button>`:""}<button class="hlx" data-mk="close" aria-label="닫기" title="닫기">✕</button>`;
   bar.hidden=false; setTimeout(()=>coach("hl-wc",bar.querySelector(".wcb"),"고른 절로 말씀 카드를 만들 수 있습니다"),250);
   bar.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const k=b.dataset.mk;
     if(k==="wc"){ wcFromSel(); return; }
-    if(k==="obs"){ tbkObsAdd([...HSEL]); HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); syncHlBar(); return; }
     if(k==="orig"){ const id=[...HSEL][0]; document.getElementById("v-"+id)?.classList.remove("sel"); const [b,c,v]=id.split("-").map(Number); studyOpenVerse(b,c,v); return; }
     if(k==="tts"){ const id=first; HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); syncHlBar(); ttsStart(id); ttsBtnSync(); return; }
     if(k==="ln"){ const id=first; HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); syncHlBar(); lnOpen(id,view.w,view.d); return; }
@@ -13764,12 +13763,6 @@ function tbkMore(D){ sheet("가이드북 필기",`<div class="vpick"><button cla
       close(); TBK.ikey=""; toast(`불러왔습니다 · 쪽 ${n}개${m?` · 문항 글 ${m}개`:""}`); tbkSync(); }catch(e){ toast("CBSR 가이드북 필기 백업 파일이 아닙니다"); } }; }
 /* 절 주소 → 왼쪽(좁으면 가이드북을 닫고) 본문의 그 절로, '읽던 곳으로' */
 /* 11-11 목사님 승인(써 보고 판단): 본문에서 고른 절·문구를 '본문 관찰' 칸에 근거로 붙임. 해석은 넣지 않음 */
-function tbkObsAdd(ids){ const D=tbkDay(); if(!D||!ids.length) return; const vn=id=>id.split("-").map(Number); ids.sort((a,b)=>{const A=vn(a),B=vn(b);return A[0]-B[0]||A[1]-B[1]||A[2]-B[2];});
-  const txt=id=>{ const el=document.getElementById("v-"+id); if(!el) return ""; const c=el.cloneNode(true); c.querySelectorAll("sup,.bmk").forEach(x=>x.remove()); return c.textContent.replace(/\s+/g," ").trim(); };
-  let sel=""; try{ const S=getSelection(); if(S&&!S.isCollapsed){ const n=S.anchorNode&&(S.anchorNode.nodeType===1?S.anchorNode:S.anchorNode.parentElement); if(n&&n.closest&&n.closest(".v")) sel=String(S).replace(/\s+/g," ").trim(); } }catch(e){}
-  const [b,c,v]=vn(ids[0]), L=vn(ids[ids.length-1]), ref=`${PLAN.abbr[b-1]} ${c}:${v}${ids.length>1?(L[1]===c?"–"+L[2]:"–"+L[1]+":"+L[2]):""}`;
-  const quote=sel||ids.map(txt).join(" "); const q=qtOf(D.key); q.obs=(q.obs?q.obs.replace(/\s+$/,"")+"\n":"")+`“${quote}”(${ref})`; touchQ(q,"obs"); save();
-  TBK.focusM=true; const ae=document.activeElement; if(ae&&ae.blur) ae.blur(); tbkSync(); toast("본문 관찰 칸에 붙였습니다"); }
 function tbkPeek(b,c,v,v2){ const C=BIBLE&&BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!C){ toast("본문을 불러오는 중입니다"); return; }
   const L=[]; for(let i=v;i<=Math.max(v,v2);i++) if(C[i-1]) L.push(`<sup>${i}</sup>${esc(C[i-1])}`);
   sheet(`${PLAN.full[b-1]} ${c}:${v}${v2>v?"–"+v2:""}`,`<p class="srtext">${L.join(" ")}</p><p class="lead" style="margin-top:8px">오늘 범위 밖의 말씀이라 잠깐 펴 봅니다. 오늘 날짜와 읽던 곳은 그대로입니다.</p>`); }
