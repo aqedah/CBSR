@@ -832,3 +832,19 @@ g63_04|s|40:27|가시관/자색 옷/갈대|crown_of_thorns,purple_robe,reed,ston
 g63_05|s|40:3|요단 강/물에서 올라오실새/세례|jordan,wet_feet,riverbank,dawn|요단 강|9|bright|50|요단 강 물가, 물에서 막 올라온 발 (마 3)|||scene
 g63_06|s|43:20|세마포/머리를 쌌던 수건/따로 개켜/빈 무덤|empty_tomb,linen,folded_cloth,rolled_stone,dawn||9|bright|50|세마포와 따로 개켜진 수건만 남은 빈 무덤 (요 20)|||scene
 g63_07|s|27:5|벨사살/왕궁 석회벽에 글자/손가락이 나타나서|belshazzar,feast,wall_writing,hand,candles|바벨론|7|dark|50|벨사살의 잔치, 벽에 나타난 글씨 (단 5)|보류: 손이 뚜렷||scene
+
+g64_01|s|2:25;2:37|언약궤/속죄소/그룹 둘/채를 고리에|ark,cherubim,poles,gold,front||5|warm|50|언약궤 정면 — 출 25 규격(바닥 고리의 채, 위로 솟아 덮는 날개, 숙인 얼굴)|||object
+g64_02|s|2:25|언약궤 비스듬히|ark,poles,angle||5|warm|50|언약궤 45도|보류: 그룹 하나·막대 높이||object
+g64_03|s|2:25|속죄소/그룹들은 그 날개를 높이 펴서/얼굴을 서로 대하여|mercy_seat,cherubim,wings,closeup||5|warm|50|속죄소 위의 두 그룹 (출 25:17–22)|||object
+g64_04|s|4:4|청색 보자기/궤를 덮/메는 채|ark_covered,blue_cloth,poles,desert||5|bright|50|청색 보자기로 덮인 궤 (민 4)|||object
+g64_05|s|58:9|금 항아리/아론의 싹 난 지팡이/언약의 돌판|ark,manna_jar,rod,tablets,lamp||10|warm|50|궤 앞의 만나 항아리·싹 난 지팡이·돌판 (히 9)|||object
+g64_06|s|2:26;2:40|지성소/휘장/증거궤를 그 안에|holy_of_holies,ark,veil,gold_walls||5|dark|50|지성소의 언약궤와 휘장 (출 26·40)|||scene
+g64_07|s|3:16|속죄일/피를 속죄소에 뿌리|high_priest,blood_sprinkle,ark,smoke||5|dark|50|속죄일, 피를 뿌리는 대제사장 (레 16)|보류: 피 날림||scene
+g64_08|s|4:4;4:10|고핫 자손이 와서 멜 것/궤를 메고|levites,carrying_ark,blue_cover,camp||5|bright|50|청색 보자기로 덮인 궤를 메고 가는 레위 사람들 (민 4·10)|||scene
+g64_09|s|6:3|요단/제사장들/궤를 멘/물이 그쳐서 쌓이고|priests,ark,jordan,water_wall|요단 강|6|bright|50|요단 가운데 궤를 멘 제사장들 (수 3)|보류: 폭포||scene
+g64_10|s|6:6|여리고/양각 나팔/일곱 제사장/궤가 그 뒤를 따르며|jericho,wall,priests,ram_horns,ark,soldiers|여리고|6|bright|50|여리고 성을 도는 행렬 — 나팔 든 제사장과 궤 (수 6)|||scene
+g64_11|s|9:5|다곤/엎드러져/머리와 두 손목은 끊어져 문지방|dagon,fallen_idol,ark,temple_floor|아스돗|6|dark|50|다곤 신전 바닥에 엎어진 다곤과 궤 (삼상 5)|||scene
+g64_12|s|9:6|새 수레/젖 나는 소 두 마리/벧세메스/밀을 베다가|cart,cows,ark,wheat_field,reapers|벧세메스|6|bright|50|새 수레에 실려 벧세메스로 오는 궤 (삼상 6)|||scene
+g64_13|s|10:6|오벧에돔/그의 온 집에 복|courtyard,ark,family,winnowing||6|warm|50|오벧에돔의 집 마당에 있는 궤 (삼하 6)|||scene
+g64_14|s|10:6;13:15|다윗이 춤추며/베 에봇/소고/미갈이 창으로|david_dancing,ark,priests,gate,harp,michal|예루살렘|6|bright|50|다윗이 춤추며 궤를 들여옴 (삼하 6)|||scene
+g64_15|s|11:6;11:8|내소/감람나무로 그룹 둘/날개를 펴서/궤를 그 처소로|temple,great_cherubim,ark,priests|예루살렘|6|warm|50|솔로몬 성전 지성소로 들어가는 궤 (왕상 6·8)|보류: 천사상||scene

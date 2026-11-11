@@ -18937,6 +18937,487 @@
     "at": "2026-11-11",
     "basis": "PDF 원본(Gemini Notebook, 63회·지시 3판)을 한 장씩 직접 보고 분류"
    }
+  },
+  "g64_01": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 25,
+     "fromVerse": 10,
+     "toVerse": 22,
+     "basis": "explicit"
+    },
+    {
+     "book": 2,
+     "chapter": 37,
+     "fromVerse": 1,
+     "toVerse": 9,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "언약궤",
+    "궤",
+    "속죄소",
+    "그룹",
+    "증거궤"
+   ],
+   "note": "짙은 천 위 언약궤 정면. 모든 언약궤 낱말 카드의 기본 그림",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_02": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 25,
+     "fromVerse": 10,
+     "toVerse": 22,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "requireAny": [
+    "언약궤",
+    "궤"
+   ],
+   "note": "45도에서 본 궤 보류: 그룹이 하나만 보이고 막대 하나가 뚜껑 높이에 꿰임",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_03": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 25,
+     "fromVerse": 17,
+     "toVerse": 22,
+     "basis": "explicit"
+    },
+    {
+     "book": 3,
+     "chapter": 16,
+     "fromVerse": 2,
+     "toVerse": 2,
+     "basis": "explicit"
+    },
+    {
+     "book": 58,
+     "chapter": 9,
+     "fromVerse": 5,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "속죄소",
+    "그룹",
+    "시은좌",
+    "날개"
+   ],
+   "note": "뚜껑 가까이, 날개로 덮고 마주 보며 숙인 두 그룹",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_04": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 4,
+     "chapter": 4,
+     "fromVerse": 5,
+     "toVerse": 6,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "보자기",
+    "덮",
+    "언약궤",
+    "궤"
+   ],
+   "note": "광야 모래 위 청색 보자기로 덮인 궤, 채 끝만 보임",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_05": {
+   "assetKind": "object",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 58,
+     "chapter": 9,
+     "fromVerse": 4,
+     "toVerse": 4,
+     "basis": "explicit"
+    },
+    {
+     "book": 2,
+     "chapter": 16,
+     "fromVerse": 33,
+     "toVerse": 34,
+     "basis": "explicit"
+    },
+    {
+     "book": 4,
+     "chapter": 17,
+     "fromVerse": 10,
+     "toVerse": 10,
+     "basis": "explicit"
+    },
+    {
+     "book": 5,
+     "chapter": 10,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "만나",
+    "항아리",
+    "싹 난",
+    "지팡이",
+    "돌판",
+    "증거판",
+    "언약궤"
+   ],
+   "note": "천막 안 등잔 빛, 궤 앞에 금 항아리·꽃 핀 지팡이·돌판 둘",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_06": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 2,
+     "chapter": 26,
+     "fromVerse": 31,
+     "toVerse": 34,
+     "basis": "explicit"
+    },
+    {
+     "book": 2,
+     "chapter": 40,
+     "fromVerse": 20,
+     "toVerse": 21,
+     "basis": "explicit"
+    },
+    {
+     "book": 3,
+     "chapter": 16,
+     "fromVerse": 2,
+     "toVerse": 2,
+     "basis": "illustrative"
+    },
+    {
+     "book": 58,
+     "chapter": 9,
+     "fromVerse": 3,
+     "toVerse": 5,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "지성소",
+    "휘장",
+    "언약궤",
+    "증거궤",
+    "궤"
+   ],
+   "note": "금 널판 벽의 지성소, 그룹 무늬 휘장, 가운데 궤",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_07": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 3,
+     "chapter": 16,
+     "fromVerse": 14,
+     "toVerse": 15,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "향 연기 속에서 손가락으로 피를 튕기는 흰 옷 대제사장 보류: 피가 공중에 방울로 날리고 궤 위에 피 자국 — 불편. 궤의 그룹이 잘림",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_08": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "narrow",
+   "verseAnchors": [
+    {
+     "book": 4,
+     "chapter": 4,
+     "fromVerse": 15,
+     "toVerse": 15,
+     "basis": "explicit"
+    },
+    {
+     "book": 4,
+     "chapter": 10,
+     "fromVerse": 33,
+     "toVerse": 36,
+     "basis": "explicit"
+    },
+    {
+     "book": 5,
+     "chapter": 31,
+     "fromVerse": 9,
+     "toVerse": 9,
+     "basis": "illustrative"
+    }
+   ],
+   "reviewStatus": "approved",
+   "requireAny": [
+    "메고",
+    "멜",
+    "고핫",
+    "언약궤",
+    "궤를"
+   ],
+   "note": "진영 앞 흰 옷 레위 사람 넷이 채를 메고 걸음",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_09": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 6,
+     "chapter": 3,
+     "fromVerse": 15,
+     "toVerse": 17,
+     "basis": "explicit"
+    },
+    {
+     "book": 6,
+     "chapter": 4,
+     "fromVerse": 9,
+     "toVerse": 11,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "마른 강바닥의 제사장 넷과 궤, 상류의 물 보류: 멈춰 쌓인 물이 아니라 폭포처럼 쏟아지는 물로 나옴 — 본문과 다름",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_10": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 6,
+     "chapter": 6,
+     "fromVerse": 6,
+     "toVerse": 16,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "온전한 성벽 곁, 군사·나팔 제사장 일곱·궤 행렬",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_11": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 9,
+     "chapter": 5,
+     "fromVerse": 1,
+     "toVerse": 5,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌 바닥에 궤, 앞에 머리·두 손이 떨어진 물고기 꼬리 석상",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_12": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 9,
+     "chapter": 6,
+     "fromVerse": 7,
+     "toVerse": 15,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "밀밭 길, 암소 두 마리가 끄는 수레 위 궤와 금 상자, 낫 든 사람들",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_13": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 10,
+     "chapter": 6,
+     "fromVerse": 10,
+     "toVerse": 12,
+     "basis": "explicit"
+    },
+    {
+     "book": 13,
+     "chapter": 13,
+     "fromVerse": 13,
+     "toVerse": 14,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "돌집 안마당 천 위의 궤, 키질하는 여인과 아이들",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_14": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 10,
+     "chapter": 6,
+     "fromVerse": 12,
+     "toVerse": 16,
+     "basis": "explicit"
+    },
+    {
+     "book": 13,
+     "chapter": 15,
+     "fromVerse": 25,
+     "toVerse": 29,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "approved",
+   "note": "성문 안 길, 베 에봇의 다윗이 춤추고 뒤에 제사장들이 궤를 멤, 창의 미갈",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
+  },
+  "g64_15": {
+   "assetKind": "scene",
+   "relation": "event",
+   "directness": "D1",
+   "assignmentPolicy": "strict",
+   "verseAnchors": [
+    {
+     "book": 11,
+     "chapter": 6,
+     "fromVerse": 23,
+     "toVerse": 28,
+     "basis": "explicit"
+    },
+    {
+     "book": 11,
+     "chapter": 8,
+     "fromVerse": 6,
+     "toVerse": 8,
+     "basis": "explicit"
+    }
+   ],
+   "reviewStatus": "hold",
+   "note": "금 벽 내소, 큰 그룹 둘 아래로 궤를 들여놓는 제사장들 보류: 큰 그룹이 옷 입은 사람 얼굴의 천사상 — 고증 어긋남",
+   "review": {
+    "by": "claude-visual",
+    "at": "2026-11-11",
+    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
+   }
   }
  },
  "groups": {
