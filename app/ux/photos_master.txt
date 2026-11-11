@@ -438,7 +438,7 @@ g34_12|g||성전의 지대/기초를 놓|temple,foundation,crowd,light|예루살
 g34_13|g||학사/서기관/율법에 익숙한|scroll,ink,reed_pen,table||7|dark|50|두루마리와 먹물 통과 갈대 펜|||object
 g34_14|g||시내/골짜기 물|stream,canyon,mountain||1|bright|50|협곡을 흐르는 광야 시냇물|||landscape
 g34_15|g||추수/곡식 단을|harvest,grain,city_gate,men||5,6,8|warm|50|곡식 단을 지고 성으로 들어가는 사람들|||scene
-g35_01|s|2:25;2:26;2:40;3:16;58:9|언약궤/증거궤/지성소/그룹 사이/휘장|ark,cherubim,holy_of_holies,veil,light||4,5,6|dark|50|수놓은 휘장 앞 지성소의 언약궤|보류: 언약궤 고증 어긋남: 그룹이 바깥을 보고 뒤 휘장에 그룹 수놓이 대신 천사상. 고증 맞는 궤로 다시||object
+g35_01|s|2:25;2:26;2:40;3:16;58:9|언약궤/증거궤/지성소/그룹 사이/휘장|ark,cherubim,holy_of_holies,veil,light||4,5,6|dark|50|수놓은 휘장 앞 지성소의 언약궤|||object
 g35_02|s|3:16;58:9|속죄일/피를 속죄소/향연/뿌릴지며|ark,blood,incense,priest_hand||4|dark|50|향연 속 속죄소 위로 피를 뿌리는 손(레 16)|보류: 언약궤 고증 어긋남(그룹·뚜껑). 속죄일 피 뿌림 장면 자체는 좋음. 궤를 바로잡아 다시||scene
 g35_03|s|11:6;11:8;14:3;14:5|내소/금 그룹/언약궤를 그 처소|ark,cherubim,temple,gold||6|warm|50|성전 내소의 큰 금 그룹과 언약궤(왕상 6; 8)|보류: 궤 뒤에 날개 달린 천사 두 사람이 서 있음 — 천사를 사람 모습으로 그리지 않는 원칙에 어긋남||object
 g35_04|s|11:8;14:5|채가 길므로/채 끝이 보이|veil,ark,light,temple||6|dark|50|휘장 틈으로 보이는 언약궤와 채 끝(왕상 8:8)|보류: 언약궤 고증 어긋남(그룹이 바깥쪽). 휘장 틈 구도는 좋음. 다시||object
@@ -848,4 +848,4 @@ g64_12|s|9:6|새 수레/젖 나는 소 두 마리/벧세메스/밀을 베다가|
 g64_13|s|10:6|오벧에돔/그의 온 집에 복|courtyard,ark,family,winnowing||6|warm|50|오벧에돔의 집 마당에 있는 궤 (삼하 6)|||scene
 g64_14|s|10:6;13:15|다윗이 춤추며/베 에봇/소고/미갈이 창으로|david_dancing,ark,priests,gate,harp,michal|예루살렘|6|bright|50|다윗이 춤추며 궤를 들여옴 (삼하 6)|||scene
 g64_15|s|11:6;11:8|내소/감람나무로 그룹 둘/날개를 펴서/궤를 그 처소로|temple,great_cherubim,ark,priests|예루살렘|6|warm|50|솔로몬 성전 지성소로 들어가는 궤 (왕상 6·8)|보류: 천사상||scene
-g65_01|s|2:25;2:37|언약궤/속죄소/그룹 둘/채를 고리에/금 관|ark,cherubim,poles,crown_molding,front||5|warm|50|언약궤 정면 — 바른 모양(65회)|||object
+g65_01|s|2:25;2:37|언약궤/속죄소/그룹 둘/채를 고리에/금 관|ark,cherubim,poles,crown_molding,front||5|warm|50|언약궤 정면 — 바른 모양(65회)|보류: 채 방향 틀림||object
