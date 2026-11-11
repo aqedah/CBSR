@@ -129,6 +129,12 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .samp .sq{font-size:8.6pt;color:#555;margin:0 0 1mm;line-height:1.42}
 .pg .samp .sa{font-size:9.2pt;margin:0;line-height:1.5;border-bottom:0.12mm solid #ddd;padding-bottom:1.2mm;color:#1a4d33}
 .pg.q2 .samp .sa{color:#432a63} .pg.q3 .samp .sa{color:#19406f} .pg.q4 .samp .sa{color:#7d2626}
+.pg .atlas{margin:1mm 0 1.4mm}
+.pg .atlas svg{margin:0 auto}
+.pg ul.leg{list-style:none;margin:0 0 1.6mm;padding:0;display:flex;flex-wrap:wrap;gap:1.2mm 5mm;font-size:8.6pt}
+.pg ul.leg li{display:flex;align-items:center;gap:1.4mm}
+.pg ul.leg .sw{display:inline-block;width:7mm;height:0;border-top:0.8mm dashed currentColor;border-color:inherit}
+.pg .tab{margin:1.4mm 0 0}
 .pg .stx{border:0.15mm solid #bbb;border-left:0.9mm solid var(--main);background:#fff;padding:1.4mm 2.2mm 1.6mm;margin:1.4mm 0 1.2mm}
 .pg .stx .sh{font-family:"Noto Sans KR",sans-serif;font-size:7.6pt;font-weight:700;color:var(--main);margin:0 0 1.2mm;letter-spacing:.2mm}
 .pg .stx .sr{display:flex;gap:1.6mm;align-items:baseline;margin:0 0 0.9mm;line-height:1.38}
@@ -438,7 +444,8 @@ function svgMap(m,wmm,hTarget){
   const names=s=>s.split(/[,，]/).map(x=>x.trim()).filter(Boolean);
   const rsplit=t=>String(t||'').split(/→|->|,/).map(x=>x.trim()).filter(Boolean);
   const emph=names(m.emph), show=names(m.show||''), route=rsplit(m.route), route2=rsplit(m.route2);
-  const all=[...new Set([...emph,...show,...route,...route2])].filter(n=>PLACES[n]);
+  const multi=(m.routes||[]).map(r=>({lab:r[0], pts:rsplit(r[1]), col:r[2]||'var(--main)'}));
+  const all=[...new Set([...emph,...show,...route,...route2,...multi.flatMap(r=>r.pts)])].filter(n=>PLACES[n]);
   if(!all.length) return '';
   const lats=all.map(n=>PLACES[n][0]), lons=all.map(n=>PLACES[n][1]);
   let lat0=Math.min(...lats),lat1=Math.max(...lats),lon0=Math.min(...lons),lon1=Math.max(...lons);
@@ -466,16 +473,21 @@ function svgMap(m,wmm,hTarget){
   o.push(`<polygon points="${pts([px(35.52,32.72),px(35.63,32.80),px(35.65,32.90),px(35.58,32.95),px(35.52,32.85)])}" fill="#DADADA"/>`);
   o.push(`<polyline points="${pts([px(35.55,31.75),px(35.57,32.0),px(35.56,32.4),px(35.55,32.72)])}" fill="none" stroke="#CCC" stroke-width="1.2"/>`);
   const inb=(lo,la)=>lo>lon0&&lo<lon1&&la>lat0&&la<lat1;
-  if(inb(35.47,31.35)){const [x,y]=px(35.47,31.33);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR">사해</text>`)}
-  { const wide=lon1-lon0>=3.2; const cands=wide?[[33.2,33.6],[32.6,32.8],[33.3,31.8],[34.45,32.35]]:[[34.45,32.35],[34.1,32.6],[33.3,31.8],[33.6,32.4]]; const pt=cands.find(([lo,la])=>inb(lo,la)&&(lon1-lon0<3.2||lo<lon0+0.62*(lon1-lon0))); if(pt){const [x,y]=px(pt[0],pt[1]);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR">지중해</text>`)} }
-  if(false){const [x,y]=px(34.55,32.2);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR">지중해</text>`)}
+  const seaB=[];
+  if(inb(35.47,31.35)&&lon1-lon0<3.2){const [x,y]=px(35.47,31.33);seaB.push([x-5,y-4.5,x+5,y+1]);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1" stroke-linejoin="round">사해</text>`)}
+  { const wide=lon1-lon0>=3.2; const cands=wide?[[33.2,33.6],[32.6,32.8],[33.3,31.8],[34.45,32.35]]:[[34.45,32.35],[34.1,32.6],[33.3,31.8],[33.6,32.4]]; const pt=cands.find(([lo,la])=>inb(lo,la)&&(lon1-lon0<3.2||lo<lon0+0.62*(lon1-lon0))); if(pt){const [x,y]=px(pt[0],pt[1]);seaB.push([x-7.5,y-4.5,x+7.5,y+1]);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1" stroke-linejoin="round">지중해</text>`)} }
+  if(false){const [x,y]=px(34.55,32.2);o.push(`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="4.2" fill="#777" text-anchor="middle" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1" stroke-linejoin="round">지중해</text>`)}
   const uid='mk'+(svgMap._n=(svgMap._n||0)+1);
   o.push(`<defs><marker id="${uid}a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3.6" markerHeight="3.6" orient="auto"><path d="M0,1.2 L9.4,5 L0,8.8 z" fill="var(--main)"/></marker><marker id="${uid}b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0,1.2 L9.4,5 L0,8.8 z" fill="#4a4a4a"/></marker></defs>`);
   const drawRoute=(arr,color,mk,dash)=>{ const ps=arr.filter(n=>PLACES[n]).map(n=>px(PLACES[n][1],PLACES[n][0])); for(let i=0;i<ps.length-1;i++){ const [x1,y1]=ps[i],[x2,y2]=ps[i+1]; const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1; const t=Math.min(2.9,L*0.34); const ex=x2-dx/L*t, ey=y2-dy/L*t; const sx=x1+dx/L*Math.min(2.0,L*0.2), sy=y1+dy/L*Math.min(2.0,L*0.2); o.push(`<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="${color}" stroke-width="0.9" stroke-dasharray="${dash}" marker-end="url(#${mk})"/>`) } };
   if(route.length>1) drawRoute(route,'var(--main)',uid+'a','2.2 1.4');
   if(route2.length>1) drawRoute(route2,'#4a4a4a',uid+'b','3 1.7');
+  multi.forEach((r,i)=>{ if(r.pts.length<2) return;
+    o.push(`<defs><marker id="${uid}r${i}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0,1.2 L9.4,5 L0,8.8 z" fill="${r.col}"/></marker></defs>`);
+    drawRoute(r.pts, r.col, uid+'r'+i, '2.4 1.5') });
   // 라벨 자리: 오른쪽 기본, 겹치면 왼쪽/위/아래
   const placed=all.map(n=>{const [x,y]=px(PLACES[n][1],PLACES[n][0]);return [x-2.4,y-2.4,x+2.4,y+2.4]});
+  seaB.forEach(b=>placed.push(b));
   all.sort((a,b)=>(emph.includes(b)?1:0)-(emph.includes(a)?1:0)).forEach(n=>{
     const [x,y]=px(PLACES[n][1],PLACES[n][0]); const e=emph.includes(n);
     o.push(e?`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.1" fill="var(--main)"/>`:`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.5" fill="#fff" stroke="#777" stroke-width="0.7"/>`);
@@ -489,7 +501,7 @@ function svgMap(m,wmm,hTarget){
       if(cost<best){best=cost;pick=c;bestBox=box}}
     placed.push(bestBox);
     const ci=cands.indexOf(pick); if(ci>=4){const lx=pick[2]==='start'?pick[0]-0.6:pick[2]==='end'?pick[0]+0.6:pick[0]; const ly=pick[1]-fs*0.35; o.push(`<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${lx.toFixed(1)}" y2="${ly.toFixed(1)}" stroke="#777" stroke-width="0.35"/>`)}
-    o.push(`<text x="${pick[0].toFixed(1)}" y="${pick[1].toFixed(1)}" font-size="${fs}" font-weight="${e?700:400}" fill="${e?'#111':'#555'}" text-anchor="${pick[2]}" font-family="Noto Sans KR">${esc(lab)}</text>`);
+    o.push(`<text x="${pick[0].toFixed(1)}" y="${pick[1].toFixed(1)}" font-size="${fs}" font-weight="${e?700:400}" fill="${e?'#111':'#555'}" text-anchor="${pick[2]}" font-family="Noto Sans KR" paint-order="stroke" stroke="#fff" stroke-width="1.1" stroke-linejoin="round">${esc(lab)}</text>`);
   });
   o.push('</svg>');
   return `<div class="map">${o.join('')}<div class="cap sans">${esc(m.cap||'')}${m.cap?' · ':''}개략도</div></div>`;
@@ -666,6 +678,113 @@ function pDivider(q){ const f=F(q); const ds=qDays(q);
 <div class="pn">12</div></div>`; }
 function pDivider2(q){ const f=F(q); return `<div class="pg fm r q${q}">
 <p class="dvnote">${esc(f.divnote)}</p><div class="pn">13</div></div>`; }
+/* ── 권 끝 부록: 여정 한눈에 · 성막 ── */
+const ATLAS={
+ 1:[{ title:'큰 여정 — 하란에서 모압 평지까지',
+     emph:'하란, 헤브론, 시내 산, 가데스, 모압 평지', show:'세겜, 라암셋, 호르 산, 애굽',
+     routes:[['족장의 길 — 창세기','하란 → 세겜 → 헤브론 → 애굽','#1f5fa8'],
+             ['출애굽과 광야 — 출애굽기·민수기','라암셋 → 시내 산 → 가데스 → 호르 산 → 모압 평지','#1a7f4b']],
+     note:'창세기에서 신명기까지, 석 달 동안 읽은 가장 먼 길입니다.' },
+   { title:'가나안 안 — 길갈에서 시글락까지',
+     emph:'길갈, 하솔, 실로, 헤브론, 시글락', show:'세겜, 므깃도',
+     routes:[['땅에 들어감 — 여호수아','모압 평지 → 길갈 → 하솔','#9b2c2c'],
+             ['사울과 다윗 — 사무엘상','기브아 → 베들레헴 → 엔게디 → 시글락','#6b46c1']],
+     note:'사사기와 사무엘상은 이 좁은 땅 안에서 일어납니다.' }],
+ 2:[{ title:'다윗과 솔로몬의 왕국', emph:'예루살렘, 헤브론, 단, 브엘세바', show:'세겜, 므깃도, 여리고',
+     routes:[['헤브론에서 예루살렘으로 — 사무엘하','헤브론 → 예루살렘','#1f5fa8']], note:'' },
+   { title:'나뉜 나라', emph:'예루살렘, 사마리아', show:'단, 벧엘, 므깃도, 하솔',
+     routes:[['남과 북 — 열왕기','사마리아 → 예루살렘','#9b2c2c']], note:'' }],
+ 3:[{ title:'예언자들이 다닌 길', emph:'예루살렘, 사마리아, 니느웨', show:'다메섹, 단, 므깃도',
+     routes:[['북이스라엘의 끝 — 열왕기하','사마리아 → 니느웨','#9b2c2c']], note:'' },
+   { title:'포로로 끌려간 길', emph:'예루살렘, 바벨론', show:'다메섹, 니느웨',
+     routes:[['바벨론으로','예루살렘 → 다메섹 → 바벨론','#6b46c1']], note:'' }],
+ 4:[{ title:'돌아온 길', emph:'바벨론, 예루살렘', show:'수산, 다메섹',
+     routes:[['스룹바벨과 에스라와 느헤미야','바벨론 → 예루살렘','#1a7f4b']], note:'' },
+   { title:'다시 세운 성', emph:'예루살렘', show:'사마리아, 벧엘, 여리고', routes:[], note:'' }]
+};
+function pAtlas(q,no,i,right){
+  const A=(ATLAS[q]||ATLAS[1])[i]||((ATLAS[1])[0]);
+  const spec={emph:A.emph, show:A.show, routes:A.routes};
+  return `<div class="pg fm ${right?'r ':''}q${q}">
+<p class="fh">부록 · ${esc(A.title)}</p>
+<div class="atlas">${svgMap(spec,112,126)}</div>
+<ul class="leg">${A.routes.map(r=>`<li><span class="sw" style="background:${r[2]}"></span>${esc(r[0])}</li>`).join('')}</ul>
+${A.note?`<p class="fcap">${esc(A.note)}</p>`:''}
+<div class="pn">${no}</div></div>`;
+}
+function tabCourt(){
+  const C=3.0, X=o=>14+o*C, Y=o=>16+o*C, g=[];
+  g.push(`<rect x="${X(0)}" y="${Y(0)}" width="${100*C}" height="${50*C}" fill="#fff" stroke="#999" stroke-width="1"/>`);
+  g.push(`<rect x="${X(0)-2}" y="${Y(15)}" width="4" height="${20*C}" fill="#b08a3e"/>`);
+  g.push(`<text x="${X(0)-6}" y="${Y(25)+3}" font-size="8" fill="#555" text-anchor="end" font-family="Noto Sans KR">뜰 문</text>`);
+  g.push(`<rect x="${X(12)}" y="${Y(22.5)}" width="${5*C}" height="${5*C}" fill="#e8ded0" stroke="#8a7355"/>`);
+  g.push(`<text x="${X(14.5)}" y="${Y(22.5)-4}" font-size="8" text-anchor="middle" font-family="Noto Sans KR">번제단</text>`);
+  g.push(`<circle cx="${X(24)}" cy="${Y(25)}" r="${2*C}" fill="#dce7ee" stroke="#5b7f96"/>`);
+  g.push(`<text x="${X(24)}" y="${Y(25)-9}" font-size="8" text-anchor="middle" font-family="Noto Sans KR">물두멍</text>`);
+  g.push(`<rect x="${X(33)}" y="${Y(20)}" width="${30*C}" height="${10*C}" fill="#faf7f1" stroke="#6b5a3e" stroke-width="1.3"/>`);
+  g.push(`<text x="${X(48)}" y="${Y(25)+3}" font-size="9" text-anchor="middle" font-family="Noto Sans KR">성막</text>`);
+  g.push(`<text x="${X(48)}" y="${Y(20)-4}" font-size="7.4" fill="#777" text-anchor="middle" font-family="Noto Sans KR">↓ 아래에 자세히</text>`);
+  g.push(`<text x="${X(0)}" y="${Y(50)+11}" font-size="7.4" fill="#999" font-family="Noto Sans KR">← 동(해 뜨는 쪽)</text>`);
+  g.push(`<text x="${X(100)}" y="${Y(50)+11}" font-size="7.4" fill="#999" text-anchor="end" font-family="Noto Sans KR">서 →</text>`);
+  g.push(`<text x="${X(50)}" y="${Y(0)-5}" font-size="7.4" fill="#999" text-anchor="middle" font-family="Noto Sans KR">뜰 — 길이 100규빗, 너비 50규빗(출 27:9–18)</text>`);
+  return `<svg viewBox="0 0 ${100*C+28} ${50*C+32}" width="110mm" style="display:block;margin:0 auto">${g.join('')}</svg>`;
+}
+function tabHouse(){
+  const C=10.5, X=o=>16+o*C, Y=o=>18+o*C, g=[];
+  g.push(`<rect x="${X(0)}" y="${Y(0)}" width="${30*C}" height="${10*C}" fill="#faf7f1" stroke="#6b5a3e" stroke-width="1.4"/>`);
+  g.push(`<rect x="${X(0)-2}" y="${Y(1)}" width="4" height="${8*C}" fill="#b08a3e"/>`);
+  g.push(`<text x="${X(0)-6}" y="${Y(5)+3}" font-size="8.4" fill="#555" text-anchor="end" font-family="Noto Sans KR">성막 문</text>`);
+  g.push(`<line x1="${X(20)}" y1="${Y(0)}" x2="${X(20)}" y2="${Y(10)}" stroke="#9b2c2c" stroke-width="2" stroke-dasharray="4 3"/>`);
+  g.push(`<text x="${X(20)}" y="${Y(10)+11}" font-size="8" fill="#9b2c2c" text-anchor="middle" font-family="Noto Sans KR">휘장</text>`);
+  g.push(`<text x="${X(10)}" y="${Y(0)-6}" font-size="9.5" text-anchor="middle" font-family="Noto Sans KR">성소 — 20규빗</text>`);
+  g.push(`<text x="${X(25)}" y="${Y(0)-6}" font-size="9.5" text-anchor="middle" font-family="Noto Sans KR">지성소 — 10규빗</text>`);
+  const box=(ox,oy,w,h,fill,lab,ly)=>{ g.push(`<rect x="${X(ox)}" y="${Y(oy)}" width="${w*C}" height="${h*C}" fill="${fill}" stroke="#8a7355"/>`);
+    g.push(`<text x="${X(ox+w/2)}" y="${Y(oy)+(ly||-5)}" font-size="8.4" text-anchor="middle" font-family="Noto Sans KR">${lab}</text>`) };
+  box(5,1.2,3,1.4,'#efe6d2','떡상');
+  g.push(`<circle cx="${X(6.5)}" cy="${Y(7.6)}" r="${0.95*C}" fill="#f3e9c9" stroke="#8a7355"/>`);
+  g.push(`<text x="${X(6.5)}" y="${Y(7.6)+18}" font-size="8.4" text-anchor="middle" font-family="Noto Sans KR">등잔대</text>`);
+  box(16.6,4.2,1.8,1.6,'#efe6d2','분향단');
+  box(23.6,4.0,2.8,2.0,'#e6d7a8','법궤');
+  g.push(`<text x="${X(15)}" y="${Y(10)+25}" font-size="7.6" fill="#999" text-anchor="middle" font-family="Noto Sans KR">북쪽이 위입니다 · 1규빗은 약 45cm</text>`);
+  return `<svg viewBox="0 0 ${30*C+32} ${10*C+52}" width="110mm" style="display:block;margin:0 auto">${g.join('')}</svg>`;
+}
+function pTabernacle(q,no){
+  const f=F(q);
+  return `<div class="pg fm q${q}">
+<p class="fh">부록 · 성막</p>
+<p class="fp sm">${bold(f.tabnote||'출애굽기 25–40장, 레위기 전체가 이 한 자리를 두고 말합니다. 뜰 문으로 들어가 번제단과 물두멍을 지나야 성소에 이릅니다.')}</p>
+<div class="tab">${tabCourt()}</div><div class="tab">${tabHouse()}</div>
+<table class="symt" style="margin-top:2mm">
+<tr><td class="sc">번제단</td><td>출 27:1–8 · 뜰에 들어서면 첫 자리. 피 없이는 더 들어가지 못합니다.</td></tr>
+<tr><td class="sc">물두멍</td><td>출 30:17–21 · 제사장이 손과 발을 씻는 곳.</td></tr>
+<tr><td class="sc">떡상</td><td>출 25:23–30 · 열두 덩이, 늘 그 앞에.</td></tr>
+<tr><td class="sc">등잔대</td><td>출 25:31–40 · 꺼지지 않는 불.</td></tr>
+<tr><td class="sc">분향단</td><td>출 30:1–10 · 휘장 바로 앞, 아침저녁의 향.</td></tr>
+<tr><td class="sc">법궤</td><td>출 25:10–22 · 지성소 안. "거기서 너와 만나고"(25:22).</td></tr>
+</table>
+<div class="pn">${no}</div></div>`;
+}
+function pReview(q,no){
+  const ds=qDays(q), bl=bookList(q);
+  return `<div class="pg fm r q${q}">
+<p class="fh">이 권을 마치며</p>
+<p class="fp">${ds.length}일 동안 ${bl.map(o=>esc(o.b)).join(' · ')}를 읽었습니다.</p>
+<p class="fh2" style="margin-top:5mm">다음 권으로 가기 전에</p>
+<ol class="rules">
+<li>성경책에 그어 둔 밑줄을 한 번 넘겨 보십시오. 석 달 동안 손이 멈춘 자리가 거기 있습니다.</li>
+<li>가장 오래 남은 하루를 한 날 골라, 그날의 ③ 묵상을 다시 읽어 보십시오.</li>
+<li>기호 아홉 가운데 손에 익은 것과 아직 낯선 것을 가려 보십시오. 낯선 것은 다음 권에서 눈여겨보면 됩니다.</li>
+<li>가이드북 없이 짧은 이야기 한 대목을 읽어 보십시오. 되풀이되는 말이 보이면, 이 책이 할 일을 한 것입니다.</li>
+</ol>
+<p class="fcap" style="margin-top:6mm">다음 권에서 이어집니다.</p>
+<div class="pn">${no}</div></div>`;
+}
+function appendixSpreads(q){
+  const ds=qDays(q); const last=ds[ds.length-1]; const n=pageNo(last)+2;
+  return [`<div class="spread">${pAtlas(q,n,0,false)}${pAtlas(q,n+1,1,true)}</div>`,
+          `<div class="spread">${pTabernacle(q,n+2)}${pReview(q,n+3)}</div>`];
+}
+
 function frontSpreads(q,sample){
   const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
   return [ sp(blankPage(q),coverFront(q)), sp(endPaper(q),endPaper(q)), sp(blankPage(q),pTitle(q)),
@@ -741,8 +860,10 @@ function buildViews(){
   const sample=spread(sd,get(sd.no)||blank());
   const fs=frontSpreads(q,sample).map((h,i)=>({t:'s',h,lab:FLAB[i]||'책 머리'}));
   const dv=ds.map(p=>({t:'d',i:PLAN.indexOf(p)}));
+  const AXL=['부록 — 여정 한눈에','부록 — 성막 · 이 권을 마치며'];
+  const ax=appendixSpreads(q).map((h,i)=>({t:'s',h,lab:AXL[i]||'부록'}));
   const bs=backSpreads(q).map((h,i)=>({t:'s',h,lab:BLAB[i]||'책 끝'}));
-  VIEWS=fs.concat(dv,bs);
+  VIEWS=fs.concat(dv,ax,bs);
 }
 function viewOfDay(i){ return VIEWS.findIndex(v=>v.t==='d'&&v.i===i) }
 function viewHTML(v){ if(v.t==='s') return v.h; const p=PLAN[v.i]; return spread(p, v.i===cur?readForm():(get(p.no)||blank())) }
@@ -956,7 +1077,7 @@ function syncPrintTarget(){ const el=$('ptar'); if(el) el.textContent=printLabel
     // 모든 날 맞춤 검사(숨겨 그려 잼)
     const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[]; const heardN=[];
     list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); matchMedia(probe,1); parts.push(probe.innerHTML); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
-    if(mode==='book'){ const q=qOf(p); backSpreads(q).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
+    if(mode==='book'){ const q=qOf(p); appendixSpreads(q).concat(backSpreads(q)).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
     probe.remove(); $('printroot').innerHTML=parts.join('');
     if(bad.length){$('status').textContent='넘치는 날이 있어 인쇄하지 않았습니다: '+bad.join(', ');return}
     const pgs=$('printroot').querySelectorAll('.pg').length;
