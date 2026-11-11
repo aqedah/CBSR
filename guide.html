@@ -198,6 +198,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg table.bkt2{width:100%;border-collapse:collapse;font-size:10pt}
 .pg table.bkt2 th{text-align:left;font-family:"Noto Sans KR",sans-serif;font-size:9pt;color:#666;border-bottom:0.3mm solid var(--main);padding:0 0 1.2mm}
 .pg table.bkt2 td{padding:1.7mm 0;border-bottom:0.1mm solid #e8e8e8}
+.pg table.bkt2.dense{font-size:9pt}
+.pg table.bkt2.dense td{padding:.75mm 0}
 .pg table.toc{width:100%;border-collapse:collapse;font-size:7.9pt;table-layout:fixed}
 .pg table.toc td{padding:0.5mm 0;border-bottom:0.1mm solid #eee;vertical-align:top;line-height:1.3}
 .pg table.toc col.c1{width:10mm} .pg table.toc col.c2{width:23mm} .pg table.toc col.c4{width:7mm}
@@ -211,6 +213,11 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .fcap{font-size:8.4pt;color:#666;margin:0}
 .pg .chip.rep{background:var(--main);color:#fff}
 .pg p.b .spot{display:block;text-align:left;margin-top:.4mm;font-family:"Noto Sans KR",sans-serif;font-size:8.4pt;color:var(--main)}
+.pg table.prt th{font-family:"Noto Sans KR",sans-serif;font-size:8.2pt;color:var(--main);text-align:left;padding:.8mm 1mm;border-bottom:.2mm solid var(--main)}
+.pg table.prt td{padding:1.1mm 1mm}
+.pg table.gnt td.sc2{width:13mm}
+.pg table.gnt td{padding-top:.9mm;padding-bottom:.9mm}
+.pg table.gnt td.gtool{width:19mm;font-family:"Noto Sans KR",sans-serif;font-size:8.6pt;color:var(--main);white-space:nowrap}
 .pg .demo{width:100%;border-collapse:collapse;font-size:9.2pt;margin:0 0 2.5mm}
 .pg .demo td{padding:.9mm 0;border-bottom:0.1mm solid #e4e4e4;vertical-align:top;line-height:1.42}
 .pg .demo td.k{width:20mm;color:var(--main);font-weight:700;font-family:"Noto Sans KR",sans-serif;font-size:8.8pt}
@@ -300,12 +307,12 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <fieldset><legend><span class="n">1</span>읽기 전</legend>
       <label class="f"><span class="k"><b>오늘의 흐름</b> <span class="cnt" data-for="today"></span></span><textarea id="today" data-max="125"></textarea></label>
       <div class="hint">장 순서대로 무슨 일이 일어나는지. 지명을 넣습니다(지도와 연결). 해석·평가 없음.</div>
-      <label class="f"><span class="k"><b>읽으며 둘 초점</b> <span class="cnt" data-for="find"></span></span><textarea id="find" data-max="150"></textarea></label>
-      <div class="hint">● 이끎말 ◇ 대조 ◆ 반복 □ 틀 ▲ 전환 ○ 속말 ◎ 침묵 ⋯ 생략 ?! 아이러니 — 기호는 하나, 층은 설명 첫머리로 가른다: 언어적 "뜻과 반대로 말합니다" / 상황적 "뜻한 것과 정반대의 결과가 옵니다" / 구조적 "읽는 사람은 아는데 ○○는 모릅니다". 본문에 실제로 있는 것만, 개수 제한 없음. <b>오른쪽 관찰 질문이 묻는 답을 여기서 먼저 말하지 않습니다</b> — 견줄 자리만 가리키고, 결론은 ④ 해설에 둡니다. ⋯ 생략은 "없다"까지만 적는다 — 왜 없는지는 본문이 말할 때만 적고, 행간을 채우지 않는다. 오른쪽 관찰 질문과 같은 줄기.</div>
+      <label class="f"><span class="k"><b>오늘의 읽기 도구</b> <span class="cnt" data-for="find"></span></span><textarea id="find" data-max="150"></textarea></label>
+      <div class="hint">● 이끎말 ⇔ 대조 ◆ 반복 □ 틀 ▲ 전환 ○ 속말 ◎ 침묵 ⋯ 생략 ?! 아이러니 — 기호는 하나, 층은 설명 첫머리로 가른다: 언어적 "뜻과 반대로 말합니다" / 상황적 "뜻한 것과 정반대의 결과가 옵니다" / 구조적 "읽는 사람은 아는데 ○○는 모릅니다". 본문에 실제로 있는 것만, 개수 제한 없음. <b>오른쪽 관찰 질문이 묻는 답을 여기서 먼저 말하지 않습니다</b> — 견줄 자리만 가리키고, 결론은 ④ 해설에 둡니다. ⋯ 생략은 "없다"까지만 적는다 — 왜 없는지는 본문이 말할 때만 적고, 행간을 채우지 않는다. 오른쪽 관찰 질문과 같은 줄기.</div>
       <label class="f"><span class="k"><b>말뜻 (선택)</b> <span class="cnt" data-for="word"></span></span><input type="text" id="word" data-max="40"></label>
     </fieldset>
     <fieldset><legend><span class="n">2</span>읽은 뒤</legend>
-      <label class="f"><span class="k"><b>눈여겨볼 것 (줄마다 하나)</b> <span class="cnt" data-for="pair"></span></span><textarea id="pair" placeholder="● 주도어 &quot;손에 넘기다&quot; 24:4·10, 26:8·23. …&#10;◇ 대조 …"></textarea></label>
+      <label class="f"><span class="k"><b>눈여겨볼 것 (줄마다 하나)</b> <span class="cnt" data-for="pair"></span></span><textarea id="pair" placeholder="● 주도어 &quot;손에 넘기다&quot; 24:4·10, 26:8·23. …&#10;⇔ 대조 …"></textarea></label>
       <div class="hint">기호 + 절 주소 + 설명 한 문장. 기록을 요구하지 않는 설명문으로("~보세요" 없음). 왼쪽 상자에 인쇄.</div>
       <label class="f"><span class="k"><b>짜임 (교차대구·반복평행) <span class="small">— 넣으면 지도·그림 대신 쪽 전체에 그립니다</span></b></span><input type="text" id="stxk" placeholder="짜임 — 교차대구 A X A′ (비우면 짜임 없음)"></label>
       <textarea id="stx" rows="4" placeholder="A|24장|동굴에서. &quot;여호와의 기름 부음을 받은 자&quot;(24:6)
@@ -375,7 +382,7 @@ const PLACES={"우르":[30.96,46.1],"하란":[36.86,39.03],"가나안":[31.7,34.
 const SEED={};
 const LIM={sub:30,today:125,find:150,word:40,q:85,apply:105,note:176,pray:130,pair:620,god:90,christ:200};
 const QLAB=ED.qlab||['','1권 1–3월','2권 4–6월','3권 7–9월','4권 10–12월'];
-const FRONT=13; // 책 머리 쪽수(속표지~차례~가름). 하루 펼침면은 FRONT+1(짝수)에서 시작
+const FRONT=15; // 책 머리 쪽수(속표지~차례~가름). 하루 펼침면은 FRONT+1(짝수)에서 시작
 function pageNo(p){const qs=PLAN.filter(x=>qOf(x)===qOf(p));const i=qs.findIndex(x=>x.no===p.no);return FRONT+1+2*i}
 // 날짜별 합치기: 수정 시각 u가 더 새로운 쪽이 남는다. u가 없는(옛) 원고는 0으로 본다.
 function mergeInto(local, remote){ let n=0, conf=[]; Object.keys(remote).forEach(k=>{ if(/^f[0-4]$/.test(k)){ if(!local[k]||(remote[k]._u||0)>(local[k]._u||0)){local[k]=remote[k];n++} return } if(!/^\d+$/.test(k)) return; const r=remote[k], l=local[k]; const ru=r.u||0, lu=l?(l.u||0):-1; if(!l){local[k]=r;n++} else if(ru>lu){ if(lu>0&&JSON.stringify({...l,u:0})!==JSON.stringify({...r,u:0})) conf.push(k); local[k]=r; n++ } }); return {n,conf} }
@@ -552,7 +559,7 @@ function svgMap(m,wmm,hTarget){
 }
 
 /* ── 펼침면 ── */
-const SYMS='●◇◆○▲□◎';
+const SYMS='●⇔◇◆○▲□◎';
 function chipSym(s){ const m=String(s||'').trim(); return m?`<span class="chip">${esc(m)}</span>`:'' }
 /* 대표 도구 — 첫 기호. 93일 모두 같은 꼴: 도구 + 초점 + 대표 도구의 볼 자리 */
 function stageOf(p){ const ds=qDays(qOf(p)); const d=p.m-ds[0].m; return d<=0?1:d===1?2:3 }
@@ -561,13 +568,11 @@ function repChaps(t){ const out=[]; repRefs(t).forEach(r=>{ const m=r.match(/^(\
 function findHtml(p,qt){
   const st=stageOf(p), first=((qt.obs.pair||[])[0]||['',''])[1];
   let h=chip(qt.guide.find).replace('<span class="chip">','<span class="chip rep">');
-  const rs=repRefs(first);
-  if(rs.length) h+=`<span class="spot">▸ 볼 자리 ${esc(rs.slice(0,4).join(', '))}</span>`;
   return h }
 function chip(t){ let r=String(t||'').trim(), out=''; let m;
-  while((m=r.match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
+  while((m=r.match(/^((?:\?!|「」|if|[●◇◆○▲□◎⋯⇔♪∥¿≒☞]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
   if(out) return out+vs(r);
-  m=String(t||'').match(/^((?:\?!|[●◇◆○▲□◎⋯]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
+  m=String(t||'').match(/^((?:\?!|「」|if|[●◇◆○▲□◎⋯⇔♪∥¿≒☞]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
 function pageL(p,qt){
   const q='q'+qOf(p);
   const look=(qt.obs.look||[]).filter(x=>x[0]);
@@ -585,7 +590,7 @@ function pageL(p,qt){
 <p class="sub" data-f="sub">${esc(qt.sub||p.sub)}</p>
 <p class="sec sans"><span class="n">1</span>읽기 전</p>
 <p class="b" data-f="today"><b>오늘의 흐름</b>&nbsp; ${qt.guide.today?vs(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
-<p class="b" data-f="find"><b>읽으며 둘 초점</b>&nbsp; ${findHtml(p,qt)}</p>
+<p class="b" data-f="find"><b>오늘의 읽기 도구</b>&nbsp; ${findHtml(p,qt)}</p>
 ${qt.guide.word?`<p class="b" data-f="word"><b>말뜻</b>&nbsp; ${vs(qt.guide.word)}</p>`:''}
 <p class="go sans">▶ 이제 성경책에서 ${esc(p.rng)} 읽습니다.</p>
 <p class="sec sans"><span class="n">2</span>읽은 뒤</p>
@@ -629,19 +634,28 @@ const FDEF=q=>Object.assign({
  demo:'표시한다|39:2 "여호와께서 요셉과 함께 하시므로"와 39:21 "여호와께서 요셉과 함께 하시고"에 밑줄을 긋습니다.\n견준다|한 곳은 주인의 집, 한 곳은 감옥입니다. 자리는 낮아졌습니다.\n한 문장으로|자리가 바뀌어도 서술자의 말은 바뀌지 않습니다. 이 문장이 ③ 본문 관찰이 됩니다.',
  howcap:'성품 칸에 ‘함께하시는 하나님’이라고만 쓰면 오늘 본문이 없어도 쓸 수 있는 말이 됩니다. 본문의 어느 자리에서 그렇게 보았는지까지 적으십시오.',
  sample:'1|본문 관찰|서술자는 요셉이 형통한 까닭을 무엇이라 말하고, 요셉 자신은 꿈 해석의 출처를 무엇이라 말합니까?|서술자는 집에서 "여호와께서 요셉과 함께 하시므로"(39:2), 감옥에서 "여호와께서 요셉과 함께 하시고"(39:21) 하고 되풀이합니다. 요셉도 "해석은 하나님께 있지 아니하니이까"(40:8), "내가 아니라 하나님께서"(41:16) 합니다.\n2|하나님의 성품|본문에서 본 하나님은 어떤 분입니까?|자리가 낮아지고 사람이 잊은 동안에도 함께하시는 하나님. 주인의 집에서도 감옥에서도 서술자가 같은 말을 되풀이합니다.\n3|적용|지금 내가 잊힌 것 같은 자리에 있다면, 거기서 내가 할 수 있는 한 가지는 무엇입니까?|알아주지 않는다는 생각으로 미뤄 둔 공동 작업을 오늘 마무리하겠다.\n4|오늘의 기도|—|서운한 마음을 주께 말씀드립니다. 사람의 평가에 매여 지금 맡은 일을 놓지 않게 하소서.',
- steps:'읽기 전|오늘의 흐름으로 줄거리를 잡고, **읽으며 둘 초점**의 기호로 오늘 쓸 도구를 받습니다. 말뜻은 낯선 낱말 하나를 풀어 줍니다.\n읽은 뒤|성경책을 다 읽고 돌아와서 봅니다. 눈여겨볼 것은 답이 아니라 확인입니다. 내가 본 것과 견주어 보십시오.\n나의 묵상|손으로 쓰는 자리입니다. 본문 관찰 · 하나님의 성품 · 적용 · 오늘의 기도. 칸마다 한두 문장이면 넉넉합니다.\n쓴 뒤에 읽기|쪽 아래 띠입니다. **③을 다 쓴 뒤에** 읽습니다.',
- rules:'성경책과 나란히 놓고 씁니다. 이 책만 읽는 것은 통독이 아닙니다.\n④ 해설은 반드시 다 쓴 뒤에 읽습니다. 먼저 내가 본 것을 적고, 해설에서 그 근거를 다시 확인하십시오.\n초점의 기호가 그날의 도구이고, **색을 채운 첫 기호가 대표 도구**입니다. 관찰 질문은 대표 도구에서 나옵니다. 대표 도구로 볼 자리는 초점 아래 ▸ 줄에 적어 드립니다.\n마음에 걸린 구절은 이 책에 옮겨 적지 말고 **성경책에 바로 밑줄을 긋거나 형광펜으로 표시**하십시오.\n하루를 건너뛰어도 그 날은 비워 두고 다음 날부터 이어 갑니다. 몰아 읽으려다 멈추는 것보다 낫습니다. 칸을 다 채우지 못해도 괜찮습니다.',
- symhead:'기호 — 아홉 가지 도구',
- symlead:'본문에 있을 때만 꺼냅니다. 하루에 몇 개가 나오든 상관없습니다. **본문이 먼저입니다.**',
- syms:'● 이끎말|한 낱말이 본문 전체를 끌고 갑니다. 그 말이 나올 때마다 표시해 두면 줄기가 보입니다.|창 29–31장의 ‘섬기다·일하다’ — 야곱의 20년이 이 말로 세어집니다.\n◆ 반복|같은 말이나 장면이 거듭됩니다. 거듭될 때마다 무엇이 달라지는지가 핵심입니다.|창 5장의 "죽었더라" 여덟 번.\n◇ 대조|두 자리를 나란히 놓아 갈라 보입니다. 무엇과 무엇을 견주는지 먼저 찾습니다.|출 1:12 바로의 계획과 그 결과.\n□ 틀|처음과 끝이 맞물려 한 덩어리로 묶입니다. 묶인 안쪽이 그 단락입니다.|룻 1:1 "사사들이 치리하던 때에" ↔ 4:17 다윗.\n▲ 전환|흐름이 여기서 돌아섭니다. 교차대구로 짜인 본문에서는 한가운데가 그 자리입니다.|창 8:1 "하나님이 노아와 … 기억하사".\n○ 속말|화자가 인물의 속마음을 열어 보입니다. 겉으로 한 말과 견주어 읽습니다.|삼상 18:11 "그가 스스로 이르기를".\n◎ 침묵|말해야 할 사람이 말하지 않습니다. 대답이 없다는 것까지만 봅니다.|레 10:3 "아론이 잠잠하니".\n⋯ 생략|되풀이되던 말이 한 자리에서만 빠집니다. 빠진 것이 오히려 드러나 강조가 되고, 앞에서 세운 틀이 그 자리를 채웁니다. 본문의 틀로 채우되, 상상으로 채워 넣지는 않습니다.|눅 15:21 준비한 말(15:19)에서 "나를 품꾼의 하나로 보소서"만 빠지고, "… 하나 아버지는"(15:22) 아버지가 말합니다.\n?! 아이러니|겉과 속이 어긋납니다. 세 가지 가운데 어느 것인지는 설명 첫머리로 알 수 있습니다(맞은쪽).|삿 6:12 포도주 틀에 숨은 이를 "큰 용사여".',
+ steps:'읽기 전|오늘의 흐름으로 줄거리를 잡고, **오늘의 읽기 도구**에서 그날 쓸 도구를 받습니다. 말뜻은 낯선 낱말 하나를 풀어 줍니다.\n읽은 뒤|성경책을 다 읽고 돌아와서 봅니다. 눈여겨볼 것은 답이 아니라 확인입니다. 내가 본 것과 견주어 보십시오.\n나의 묵상|손으로 쓰는 자리입니다. 본문 관찰 · 하나님의 성품 · 적용 · 오늘의 기도. 칸마다 한두 문장이면 넉넉합니다.\n쓴 뒤에 읽기|쪽 아래 띠입니다. **③을 다 쓴 뒤에** 읽습니다.',
+ rules:'성경책과 나란히 놓고 씁니다. 이 책만 읽는 것은 통독이 아닙니다.\n④ 해설은 반드시 다 쓴 뒤에 읽습니다. 먼저 내가 본 것을 적고, 해설에서 그 근거를 다시 확인하십시오.\n**오늘의 읽기 도구**에 그날 쓸 도구가 있습니다. **색을 채운 첫 기호가 대표 도구**이고, 관찰 질문은 대표 도구에서 나옵니다.\n마음에 걸린 구절은 이 책에 옮겨 적지 말고 **성경책에 바로 밑줄을 긋거나 형광펜으로 표시**하십시오.\n하루를 건너뛰어도 그 날은 비워 두고 다음 날부터 이어 갑니다. 몰아 읽으려다 멈추는 것보다 낫습니다. 칸을 다 채우지 못해도 괜찮습니다.',
+ symhead:'이야기를 읽는 아홉 가지 도구',
+ symlead:'**서술 도구**입니다. 서술자가 들려주는 이야기에서 씁니다. 본문에 있을 때만 꺼냅니다. 하루에 몇 개가 나오든 상관없습니다. **본문이 먼저입니다.**',
+ syms:'● 이끎말|한 낱말이 본문 전체를 끌고 갑니다. 그 말이 나올 때마다 표시해 두면 줄기가 보입니다.|창 29–31장의 ‘섬기다·일하다’ — 야곱의 20년이 이 말로 세어집니다.\n◆ 반복|같은 말이나 장면이 거듭됩니다. 거듭될 때마다 무엇이 달라지는지가 핵심입니다.|창 5장의 "죽었더라" 여덟 번.\n⇔ 대조|두 자리를 나란히 놓아 갈라 보입니다. 무엇과 무엇을 견주는지 먼저 찾습니다.|출 1:12 바로의 계획과 그 결과.\n□ 틀|처음과 끝이 맞물려 한 덩어리로 묶입니다. 묶인 안쪽이 그 단락입니다.|룻 1:1 "사사들이 치리하던 때에" ↔ 4:17 다윗.\n▲ 전환|흐름이 여기서 돌아섭니다. 교차대구로 짜인 본문에서는 한가운데가 그 자리입니다.|창 8:1 "하나님이 노아와 … 기억하사".\n○ 속말|화자가 인물의 속마음을 열어 보입니다. 겉으로 한 말과 견주어 읽습니다.|삼상 18:11 "그가 스스로 이르기를".\n◎ 침묵|말해야 할 사람이 말하지 않습니다. 대답이 없다는 것까지만 봅니다.|레 10:3 "아론이 잠잠하니".\n⋯ 생략|되풀이되던 말이 한 자리에서만 빠집니다. 빠진 것이 오히려 드러나 강조가 되고, 앞에서 세운 틀이 그 자리를 채웁니다. 본문의 틀로 채우되, 상상으로 채워 넣지는 않습니다.|눅 15:21 준비한 말(15:19)에서 "나를 품꾼의 하나로 보소서"만 빠지고, "… 하나 아버지는"(15:22) 아버지가 말합니다.\n?! 아이러니|겉과 속이 어긋납니다. 세 가지 가운데 어느 것인지는 설명 첫머리로 알 수 있습니다(맞은쪽).|삿 6:12 포도주 틀에 숨은 이를 "큰 용사여".',
  irhead:'?! 아이러니의 세 가지',
  irlead:'기호는 **?! 하나**입니다. 어느 쪽인지는 그날 ② 눈여겨볼 것의 설명 첫머리로 알 수 있습니다.',
  irony:'뜻과 반대로 말합니다|소풍 가는 날 비가 오는데 "날씨 참 좋다"|삼상 26:15 다윗이 아브넬에게 "네가 용사가 아니냐".\n뜻한 것과 정반대의 결과가 옵니다|늦지 않으려고 지름길로 갔는데 더 늦었다|출 1:22 나일 강에 던지라던 명령이 모세를 왕궁에 들여놓습니다.\n읽는 사람은 아는데 인물은 모릅니다|깜짝 생일잔치가 준비된 줄 모르고 친구가 서운해한다|창 22:1 "하나님이 아브라함을 시험하시려고".',
- rdhead:'읽을 때 늘 묻는 두 가지',
- rdbody:'누가 말합니까|인물의 말, 속생각, 서술자의 말은 무게가 다릅니다. 누가 말하는지 → 서술자는 무엇이라 하는지 → 뒤의 일이 그 말을 어떻게 보여 주는지 차례로 봅니다.\n어떤 글입니까|이야기에서는 말과 행동을, 율법에서는 명령과 그 까닭을, 노래에서는 부르짖음과 고백을 봅니다. 하나님을 만나는 자리가 글의 종류마다 다릅니다.',
+ dshead:'말을 읽는 일곱 가지 도구',
+ dslead:'**담화 도구**입니다. 하나님, 선지자, 시인, 사도가 직접 하는 말에서 씁니다. 이야기 안의 긴 말(모세의 설교, 한나의 노래)에서도 씁니다.',
+ dsyms:'「」 말씀 공식|누가 말하는지 알려 주는 정해진 말입니다. 부르며 말씀하시는 공식과, 말을 열고 닫는 공식이 있습니다.|레 1:1 "여호와께서 회막에서 모세를 부르시고 그에게 말씀하여 이르시되" · 사 1:20 "여호와의 입의 말씀이니라".\n♪ 후렴|단락 끝마다 같은 말이 돌아옵니다. 노래의 마디가 나뉘고, 돌아올 때마다 무게가 쌓입니다.|시 42:5·11, 43:5 "내 영혼아 네가 어찌하여 낙심하며" · 암 4:6·8 "너희가 내게로 돌아오지 아니하였느니라".\n∥ 대구|한 절의 두 줄이 같은 뜻으로 거듭하거나 반대 뜻으로 맞섭니다. 둘째 줄이 무엇을 더하는지 봅니다.|시 19:1 "하늘이 하나님의 영광을 선포하고 궁창이 그의 손으로 하신 일을 나타내는도다".\nif 가정|"만일 …하면 …하리라". 두 길과 그 끝이 나란히 놓입니다.|사 1:19–20 "너희가 즐겨 순종하면 … 거절하여 배반하면".\n¿ 수사적 질문|대답을 구하지 않는 물음입니다. 듣는 사람이 스스로 답하게 합니다.|롬 8:31 "누가 우리를 대적하리요" · 욥 38:4 "네가 어디 있었느냐".\n≒ 비유|하나님이나 사람을 다른 것에 빗댑니다. 무엇을 무엇에 빗댔는지, 어디까지 닮았는지 봅니다.|시 23:1 "여호와는 나의 목자시니".\n☞ 호명|듣는 사람을 이름으로 부릅니다. 누구에게 하는 말인지가 정해집니다.|신 6:4 "이스라엘아 들으라" · 잠 3:1 "내 아들아".',
+ prhead:'하는 일은 같고 이름이 다른 짝',
+ prlead:'글의 갈래가 달라서 이름이 다릅니다. 이야기에서 쓰는 이름과 노래·예언·지혜에서 쓰는 이름입니다.',
+ prs:'같은 것이 거듭 나옵니다|◆ 반복|♪ 후렴\n둘을 나란히 놓고 견줍니다|⇔ 대조|∥ 대구',
+ gnhead:'성경의 글 갈래',
+ gnlead:'갈래에 따라 손에 드는 도구가 다릅니다. 한 책 안에서도 섞입니다. 이야기 속에 노래가 있고(출 15장, 삼상 2장), 율법 속에 이야기가 있습니다(레 10장).',
+ genres:'이야기|서술자가 일어난 일을 들려줍니다. 말과 행동, 장면이 바뀌는 자리를 봅니다.|창세기, 여호수아–에스더, 복음서, 사도행전|서술 도구\n율법|하나님이 백성에게 명령하십니다. 명령과 그 까닭, 조건을 봅니다.|출 20–40장, 레위기, 신명기|「」 if ☞\n노래|부르짖음과 찬양입니다. 두 줄의 짝과 돌아오는 말을 봅니다.|시편, 애가, 출 15장, 삼상 2장|∥ ♪ ≒\n지혜|삶의 이치를 짧게 가르칩니다.|잠언, 욥기, 전도서|∥ ≒ ¿ ☞\n예언|선지자가 하나님의 말씀을 전합니다.|이사야–말라기|「」 ♪ if ¿\n편지|사도가 교회에 씁니다. 말의 이음과 물음을 따라갑니다.|로마서–유다서|¿ ☞ if\n묵시|환상과 상징으로 마지막 일을 보입니다.|다니엘 7–12장, 요한계시록|≒ ♪',
  whhead:'‘성경 전체로’의 다섯 갈래',
- whlead:'왼쪽 쪽 아래에 붙는 줄입니다. 관찰 도구와는 다른 갈래입니다.',
- whole:'인용|뒤의 성경이 이 본문을 그대로 끌어다 씁니다.\n약속|여기서 하신 약속이 어디서 이루어지는지 봅니다.\n주제|같은 주제가 성경 전체에 어떻게 이어지는지 봅니다.\n모형|이 사람이나 이 일이 뒤의 무엇을 미리 보입니다.\n흐름|구원의 줄거리에서 이 본문이 어디쯤인지 봅니다.',
+ whlead:'왼쪽 쪽 아래, ② 눈여겨볼 것 밑에 붙는 줄입니다. 오늘 본문에서 성경 전체로 나가는 길을 보여 줍니다. **도구와는 다릅니다.**',
+ whdiff:'어디를 봅니까|오늘 본문 안|오늘 본문 밖, 성경 전체\n언제 씁니까|읽기 전 ①에서 받아 읽으며 씀|읽은 뒤 ② 눈여겨볼 것 다음\n누가 찾습니까|내가 본문에서 찾습니다|이 책이 길을 안내합니다',
+ whole:'인용|뒤의 성경이 이 본문의 말을 그대로 가져다 씁니다. 누가, 왜 이 말을 집었는지 봅니다.|1/5 창 15:6 → 롬 4:3\n약속|여기서 하신 약속이 어디서 이루어지는지 봅니다. 약속과 성취 사이의 시간도 봅니다.|2/22 민 32:17 → 수 22:2–4\n주제|같은 주제가 성경 전체에서 어떻게 이어지고 자라는지 봅니다.|1/4 바벨의 흩으심 → 행 2:6 오순절\n모형|이 사람이나 이 일이 뒤에 오실 그리스도를 미리 보입니다. 닮은 점과 다른 점을 함께 봅니다.|1/21 유월절 양 → 고전 5:7\n흐름|구원의 큰 줄거리에서 이 본문이 어디쯤인지 봅니다.|1/13 유다와 다말 → 마 1:3',
+ whfoot:'도구로 오늘 본문을 깊이 보고, 다섯 갈래로 그 본문이 성경 전체 안에서 어디에 서 있는지 봅니다.',
  bkshead:'이 권에서 읽는 책들',
  tochead:'통독표 · 차례',
  divk:'여기까지가 안내입니다',
@@ -706,18 +720,29 @@ function pSym(q){ const f=F(q); return `<div class="pg fm q${q}">
 <table class="symt">${lines(f.syms).map(t=>{const [s,d,e]=t.split('|');return `<tr><td class="sc">${(s||'').split(' · ').map(chipSym).join('<br>')}</td><td>${bold(d||'')}<br><span class="ex">${boldv(e||'')}</span></td></tr>`}).join('')}</table>
 <div class="pn">6</div></div>`; }
 function pSym2(q){ const f=F(q); return `<div class="pg fm r q${q}">
-<p class="fh2">${esc(f.irhead)}</p><p class="fp sm">${bold(f.irlead)}</p>
-<table class="symt">${lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc2">“${esc(a||'')}”</td><td><span class="ex">보기: ${esc(b||'')}</span><br>${boldv(c||'')}</td></tr>`}).join('')}</table>
-<p class="fh2" style="margin-top:3.5mm">${esc(f.whhead)}</p><p class="fp sm">${bold(f.whlead)}</p>
-<table class="symt">${lines(f.whole).map(t=>{const [a,b]=t.split('|');return `<tr><td class="sc"><span class="chip">${esc(a||'')}</span></td><td>${bold(b||'')}</td></tr>`}).join('')}</table>
-${f.rdhead?`<p class="fh2" style="margin-top:3.5mm">${esc(f.rdhead)}</p><table class="symt">${lines(f.rdbody).map(t=>{const [a,b]=t.split('|');return `<tr><td class="sc2" style="width:24mm">${esc(a||'')}</td><td>${bold(b||'')}</td></tr>`}).join('')}</table>`:''}
+<p class="fh2">${esc(f.dshead)}</p><p class="fp sm">${bold(f.dslead)}</p>
+<table class="symt">${lines(f.dsyms).map(t=>{const [s,d,e]=t.split('|');return `<tr><td class="sc">${chipSym(s||'')}</td><td>${bold(d||'')}<br><span class="ex">${boldv(e||'')}</span></td></tr>`}).join('')}</table>
+<p class="fh2" style="margin-top:3.5mm">${esc(f.prhead)}</p><p class="fp sm">${bold(f.prlead)}</p>
+<table class="symt prt"><tr><th>하는 일</th><th>이야기에서</th><th>노래·예언·지혜에서</th></tr>${lines(f.prs).map(t=>{const [a,b,c]=t.split('|');return `<tr><td>${esc(a||'')}</td><td>${chipSym(b||'')}</td><td>${chipSym(c||'')}</td></tr>`}).join('')}</table>
 <div class="pn">7</div></div>`; }
+function pGenre(q){ const f=F(q); return `<div class="pg fm q${q}">
+<p class="fh">${esc(f.irhead)}</p><p class="fp sm">${bold(f.irlead)}</p>
+<table class="symt">${lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc2">“${esc(a||'')}”</td><td><span class="ex">보기: ${esc(b||'')}</span><br>${boldv(c||'')}</td></tr>`}).join('')}</table>
+<p class="fh2" style="margin-top:4mm">${esc(f.gnhead)}</p><p class="fp sm">${bold(f.gnlead)}</p>
+<table class="symt gnt">${lines(f.genres).map(t=>{const [a,b,c,d]=t.split('|');return `<tr><td class="sc2">${esc(a||'')}</td><td>${bold(b||'')} <span class="ex">— ${esc(c||'')}</span></td><td class="gtool">${esc(d||'')}</td></tr>`}).join('')}</table>
+<div class="pn">8</div></div>`; }
+function pWhole(q){ const f=F(q); return `<div class="pg fm r q${q}">
+<p class="fh2">${esc(f.whhead)}</p><p class="fp sm">${bold(f.whlead)}</p>
+<table class="symt prt"><tr><th></th><th>도구</th><th>다섯 갈래</th></tr>${lines(f.whdiff).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc2">${esc(a||'')}</td><td>${esc(b||'')}</td><td>${esc(c||'')}</td></tr>`}).join('')}</table>
+<table class="symt" style="margin-top:3mm">${lines(f.whole).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc"><span class="chip">${esc(a||'')}</span></td><td>${bold(b||'')}${c?`<br><span class="ex">보기: ${boldv(c)}</span>`:''}</td></tr>`}).join('')}</table>
+${f.whfoot?`<p class="fp sm" style="margin-top:3mm">${bold(f.whfoot)}</p>`:''}
+<div class="pn">9</div></div>`; }
 function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q);
   return `<div class="pg fm q${q}"><p class="fh">${esc(f.bkshead)}</p>
 <p class="fp sm">${ds.length}일 · ${ds[0].m}월 ${ds[0].d}일부터 ${ds[ds.length-1].m}월 ${ds[ds.length-1].d}일까지</p>
-<table class="bkt2"><tr><th>책</th><th>시작</th><th>날수</th></tr>
+<table class="bkt2${bl.length>12?' dense':''}"><tr><th>책</th><th>시작</th><th>날수</th></tr>
 ${bl.map(o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일</td><td>${o.n}일</td></tr>`).join('')}</table>
-<div class="pn">8</div></div>`; }
+<div class="pn">10</div></div>`; }
 function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.length/3);
   const seg=ds.slice(part*per,(part+1)*per); let last='';
   const rows=seg.map(p=>{ const b=bookOf(p.t)[0]; let band='';
@@ -727,14 +752,14 @@ function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.l
   }).join('');
   return `<div class="pg fm ${part===1?'':'r'} q${q}">${part===0?`<p class="fh">${esc(f.tochead)}</p>`:`<p class="fh2">${esc(f.tochead)}</p>`}
 <table class="toc"><colgroup><col class="c1"><col class="c2"><col><col class="c4"></colgroup>${rows}</table>
-<div class="pn">${9+part}</div></div>`; }
+<div class="pn">${11+part}</div></div>`; }
 function pDivider(q){ const f=F(q); const ds=qDays(q);
   return `<div class="pg dv q${q}"><div class="dvfield"></div>
 <div class="dvbox"><p class="dvk">${esc(f.divk)}</p><p class="dvt">${esc(f.divt).replace(/\n/g,'<br>')}</p>
 <p class="dvs">${esc(f.divs|| (ds[0].m+'월 '+ds[0].d+'일 — '+ds[ds.length-1].m+'월 '+ds[ds.length-1].d+'일'))}</p></div>
-<div class="pn">12</div></div>`; }
+<div class="pn">14</div></div>`; }
 function pDivider2(q){ const f=F(q); return `<div class="pg fm r q${q}">
-<p class="dvnote">${esc(f.divnote)}</p><div class="pn">13</div></div>`; }
+<p class="dvnote">${esc(f.divnote)}</p><div class="pn">15</div></div>`; }
 /* ── 권 끝 부록: 여정 한눈에 · 성막 ── */
 const ATLAS=Object.assign({
  1:[{ title:'큰 여정 — 하란에서 모압 평지까지',
@@ -840,7 +865,7 @@ function appendixSpreads(q){
 function frontSpreads(q,sample){
   const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
   return [ sp(blankPage(q),coverFront(q)), sp(endPaper(q),endPaper(q)), sp(blankPage(q),pTitle(q)),
-    sp(pCopy(q),pPreface(q)), sp(pHow1(q,sample),pHow2(q)), sp(pSym(q),pSym2(q)),
+    sp(pCopy(q),pPreface(q)), sp(pHow1(q,sample),pHow2(q)), sp(pSym(q),pSym2(q)), sp(pGenre(q),pWhole(q)),
     sp(pBooks(q),pToc(q,0)), sp(pToc(q,1),pToc(q,2)), sp(pDivider(q),pDivider2(q)) ];
 }
 function backSpreads(q){ const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
@@ -897,7 +922,7 @@ function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fil
 function goBack(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); if($('frontbox')) $('frontbox').open=false; }
 function isFrontView(i){ return i<FLAB.length }
 /* ── 전자책처럼 넘겨 보기 ── */
-const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','기호 설명','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
+const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 갈래 · 성경 전체로','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
 const BLAB=['면지','뒤표지'];
 let VIEWS=[], VI=0, ANIM=false;
 let PV='both';   /* both | L | R */
@@ -992,9 +1017,10 @@ const FSPEC=[
  ['syms','기호 — 한 줄에 「기호 이름|설명|예」',10],
  ['irhead','아이러니 제목',1],['irlead','아이러니 머리글',2],
  ['irony','아이러니 — 한 줄에 「설명 첫머리|보기|예」',4],
- ['rdhead','두 가지 물음 제목 (비우면 숨김)',1],['rdbody','두 가지 물음 — 한 줄에 「물음|설명」',3],
- ['whhead','성경 전체로 제목',1],['whlead','성경 전체로 머리글',2],
- ['whole','다섯 갈래 — 한 줄에 「갈래|설명」',6],
+ ['dshead','담화 도구 제목',1],['dslead','담화 도구 머리글',2],['dsyms','담화 도구 — 한 줄에 「기호 이름|설명|보기」',8],['prhead','짝 제목',1],['prlead','짝 머리글',2],['prs','짝 — 「하는 일|이야기|노래·예언·지혜」',3],
+ ['gnhead','글 갈래 제목',1],['gnlead','글 갈래 머리글',3],['genres','글 갈래 — 「갈래|설명|책|도구」',8],
+ ['whhead','성경 전체로 제목',1],['whlead','성경 전체로 머리글',2],['whdiff','도구와 다른 점 — 「물음|도구|갈래」',4],['whfoot','성경 전체로 맺음말',2],
+ ['whole','다섯 갈래 — 한 줄에 「갈래|설명|보기」',6],
  ['--','이 권의 책들 · 통독표 (8–11쪽)'],
  ['bkshead','책 목록 제목',1],['tochead','통독표 제목',1],
  ['--','가름 쪽 (12–13쪽)'],
@@ -1056,7 +1082,7 @@ function markScope(){
 
 
 /* ── 미리보기 ↔ 입력칸 잇기 ── */
-const FLD={sub:'소제목',today:'오늘의 흐름',find:'읽으며 둘 초점',word:'말뜻',pair:'눈여겨볼 것',christ:'성경 전체로',q:'본문 관찰 질문',apply:'적용 질문',note:'해설',god:'성품 한 문장',pray:'기도',stx:'짜임',m_emph:'지도',img:'그림'};
+const FLD={sub:'소제목',today:'오늘의 흐름',find:'오늘의 읽기 도구',word:'말뜻',pair:'눈여겨볼 것',christ:'성경 전체로',q:'본문 관찰 질문',apply:'적용 질문',note:'해설',god:'성품 한 문장',pray:'기도',stx:'짜임',m_emph:'지도',img:'그림'};
 function jumpTo(id){
   const el=$(id); if(!el) return;
   const box=el.closest('label')||el.closest('.row3')||el;
