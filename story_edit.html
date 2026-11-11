@@ -195,61 +195,68 @@ const QRE=/["“]([^"“”]{4,}?)["”]\s*\(([^)]{1,28})\)/g;
 function sentences(t){ return String(t).replace(/\s+/g,' ').trim().split(/(?<=[.?!])\s+(?=[^”"'’)])/).map(s=>s.trim()).filter(Boolean); }
 const clip=(s,n)=>{ s=String(s).replace(/["“”'‘’]/g,'').replace(/[.?!,]+$/,'').trim(); if(s.length<=n) return s; const i=s.lastIndexOf(' ',n); return (i>4?s.slice(0,i):s.slice(0,n)).replace(/[,.]+$/,''); };
 function stripBold(s){ return s.replace(/^\*\*(.+?)\*\*$/,'$1').replace(/^#+\s*/,'').trim(); }
-function isHeading(l){ const s=stripBold(l); if(!s||s.length>28) return false; if(/[다요]\.$/.test(s)) return false; return /^\*\*.+\*\*$/.test(l.trim())||/^#/.test(l.trim())||/^(적용|기도|나눔|본문|이야기|묵상)/.test(s)||/^\d+\.\s/.test(s); }
-function secOf(h){ const s=stripBold(h); if(/^기도/.test(s)) return 'pray'; if(/^(적용|나에게|돌아보|오늘의 적용)/.test(s)) return 'apply'; if(/나눔/.test(s)) return 'share'; return 'body'; }
+/* 제목줄: **…**, #…, 'A. 본문 배경', '1) 선언', '적용'·'기도'·'나눔'처럼 짧은 줄 */
+function isHeading(l){ const t=l.trim(), s=stripBold(t); if(!s) return false; if(/^\*\*.+\*\*$/.test(t)||/^#/.test(t)) return true; if(/^\d+\)\s*\S/.test(s)) return true; if(/^[A-Z]\.\s*\S/.test(s)&&s.length<40) return true; if(s.length>28||/[다요]\.$/.test(s)) return false; return /^(적용|기도|나눔|본문|이야기|묵상)/.test(s)||/^\d+\.\s/.test(s); }
+function secOf(h,prev){ const s=stripBold(h).replace(/^([A-Z]\.|\d+\)|\d+\.)\s*/,''); if(/^기도/.test(s)) return 'pray'; if(/묵상과 적용|^(적용|나에게|돌아보|오늘의 적용)/.test(s)) return 'apply'; if(/나눔/.test(s)) return 'share'; if(/배경/.test(s)) return 'bg'; if(/구조/.test(s)) return 'struct'; if(/해설|본문|이야기/.test(s)) return 'body'; return prev==='body'||prev==='struct'||prev==='bg'?'body':prev; }
 function parseMS(text){
   const lines=text.replace(/\r/g,'').split('\n'); let title='', i=0;
   while(i<lines.length&&!lines[i].trim()) i++; if(i<lines.length){ title=stripBold(lines[i]); i++; }
-  const secs={body:[],apply:[],pray:[],share:[]}; let sec='body', buf=[];
-  const flush=()=>{ const t=buf.join(' ').trim(); if(t) secs[sec].push(t); buf=[]; };
-  for(;i<lines.length;i++){ const l=lines[i]; if(!l.trim()){ flush(); continue; } if(isHeading(l)&&!buf.length){ sec=secOf(l); continue; } buf.push(l.trim()); }
-  flush();
+  const secs={bg:[],struct:[],body:[],apply:[],pray:[],share:[]}; let sec='body', sub='';
+  // 한 줄이 한 문단. 제목줄은 단원(배경·구조·해설·적용·기도)이나 작은 제목(1) 선언)으로
+  for(;i<lines.length;i++){ const l=lines[i]; const t=l.trim(); if(!t) continue;
+    if(isHeading(l)){ const h=stripBold(t); if(/^\d+\)\s*\S/.test(h)){ sub=h.replace(/^\d+\)\s*/,'').replace(/\(?\d+:\d+[^)]*\)?\.?$/,'').trim(); if(sec!=='body'&&sec!=='struct'&&sec!=='bg') sec='body'; continue; } const ns=secOf(h,sec); if(ns!==sec){ sec=ns; sub=''; } continue; }
+    if(sec==='struct'&&t.length<30&&!/[다요]\.$/.test(t)) continue; // 구조 표의 칸
+    if((sec==='apply'||sec==='share'||sec==='pray')&&/^[가-힣]{2,6}\s?\d{1,3}\s?[장편](에|은|을|의|부터|\s)/.test(t)&&t.length>60){ sec='body'; sub=''; } // 적용 뒤에 새 본문 설명이 이어짐(두 원고를 붙인 경우)
+    secs[sec].push(sub?'['+sub+'] '+t:t); }
+  if(!secs.body.length&&secs.bg.length){ secs.body=secs.bg; secs.bg=[]; }
+  const body=[...secs.struct.filter(x=>sentences(x).length>=2),...secs.body];
   // 제목
-  let h=title, m=title.match(/「(.+?)」/); if(m) h=m[1]; else if(title.includes('·')) h=title.split('·').pop().trim(); h=h.replace(/^[「『"“]|[」』"”]$/g,'');
+  let h=title.replace(/#.*$/,'').replace(/^\d+\.\s*/,'').trim(), m=title.match(/「(.+?)」/); if(m) h=m[1]; else if(title.includes('·')) h=title.split('·').pop().trim(); h=h.replace(/^[「『"“]|[」』"”]$/g,'');
   const p=plan(cur), chs=dayCh(); let lastCh=0;
-  const cards=[], body=secs.body;
-  // 본문 문단 → 카드
+  if(!h||/말씀 나눔|팸|교육|설교|자료/.test(h)) h=(p&&p.topic)||(p?p.label:'');
+  const cards=[];
+  const refFull=r=>{ const R=parseRef(r); return R?refLab(R):r; };
+  const chunk=b=>{ const out=[]; let cur=[], n=0; b.forEach(x=>{ const len=typeof x==='string'?x.length:0; if(n+len>190&&cur.length){ out.push(cur); cur=[]; n=0; } cur.push(x); n+=len; }); if(cur.length) out.push(cur); return out; };
   body.forEach((para,pi)=>{ let lab='', hint='';
     const mk=para.match(/^\[([^\]]+)\]\s*/); if(mk){ lab=mk[1]; para=para.slice(mk[0].length); }
+    let vref=''; const mv=para.match(/^\[(\d{1,3}:\d{1,3}[^\]]*)\]\s*/); if(mv){ vref=mv[1]; para=para.slice(mv[0].length); }
     const Q=[]; para.replace(QRE,(all,q,ref,at)=>{ Q.push({q:q.trim(),ref:ref.trim(),at,all}); return all; });
-    const S=sentences(para);
-    const stage=lab?lab.split('·')[0].trim():(pi===0?'배경':(pi>=body.length-2?'의미':(/그제야|비로소|마침내|반대로|뒤집|돌아갑니다|돌아옵니다|눈이 열린|이제야|달라집니다|바뀝니다/.test(para)?'전환':'긴장')));
-    const ch=(()=>{ for(const s of Q){ const r=parseRef(s.ref); if(r&&r[0]===dayBook()) return r[1]; } const m2=para.match(/\((\d{1,3}):\d{1,3}/); return m2?+m2[1]:0; })();
-    const refFull=r=>{ const R=parseRef(r); return R?refLab(R):r; };
-    const name=lab&&lab.includes('·')?lab.split('·').slice(1).join('·').trim():(Q[0]&&Q[0].q.length<=14?Q[0].q:clip(S[0].split(/[,，(]/)[0],12));
-    let L=stage+' · '+name; if(ch&&ch!==lastCh&&chs.length>1){ L+=' · '+ch+'장'; lastCh=ch; }
+    const S=sentences(para); if(!S.length) return;
+    const explicit=lab&&/^(배경|긴장|전환|의미)/.test(lab);
+    const stage=explicit?lab.split('·')[0].trim():(pi===0?'배경':(pi>=body.length-2?'의미':(/그제야|비로소|마침내|반대로|뒤집|돌아갑니다|돌아옵니다|눈이 열린|이제야|달라집니다|바뀝니다/.test(para)?'전환':'긴장')));
+    const ch=(()=>{ if(vref) return +vref.split(':')[0]; for(const s of Q){ const r=parseRef(s.ref); if(r&&r[0]===dayBook()) return r[1]; } const m2=para.match(/\((\d{1,3}):\d{1,3}/); return m2?+m2[1]:0; })();
+    const name=lab?(explicit&&lab.includes('·')?lab.split('·').slice(1).join('·').trim():(explicit?'':lab)):'';
+    const nm=name||(Q[0]&&Q[0].q.length<=14?Q[0].q:clip(S[0].split(/[,，(]/)[0],12));
+    let L=stage+' · '+nm; if(vref) L+=' · '+vref.replace(/-/g,'–'); else if(ch&&ch!==lastCh&&chs.length>1){ L+=' · '+ch+'장'; } if(ch) lastCh=ch;
     const cue=/같은|다시|두 번|둘|나란히|번째|되풀이|거듭|똑같/.test(para);
     const mkq=s=>({q:[s.q,refFull(s.ref)]});
-    if(Q.length>=2&&cue){ cards.push({k:'echo',lab:L,h:name,pair:[[Q[0].q,refFull(Q[0].ref)],[Q[1].q,refFull(Q[1].ref)]],b:S.filter(s=>!Q.some(x=>s.includes(x.q))).slice(0,3)}); return; }
+    if(Q.length>=2&&cue){ cards.push({k:'echo',lab:L,h:nm,pair:[[Q[0].q,refFull(Q[0].ref)],[Q[1].q,refFull(Q[1].ref)]],b:S.filter(s=>!Q.some(x=>s.includes(x.q))).slice(0,3)}); return; }
     const last=Q.length?Q[Q.length-1]:null;
     const bare=s=>Q.reduce((t,x)=>t.replace(x.all,''),s).replace(/\s+/g,' ').replace(/[.,\s]/g,'').trim();
-    /* 마지막 문장이 긴 인용 하나로 된 문단 → 큰 인용 카드 */
     if(last&&last.q.length>=26&&S.length&&S[S.length-1].includes(last.q)&&bare(S[S.length-1]).length<12){ const b=[]; S.slice(0,-1).forEach(s=>{ const qq=Q.filter(x=>s.includes(x.q)&&x.q.length>=18&&bare(s).length<12); if(qq.length) qq.forEach(x=>b.push(mkq(x))); else b.push(s); }); cards.push({k:'quote',lab:L,b,big:last.q,ref:refFull(last.ref)}); return; }
-    /* 문장이 인용 하나로만 된 것은 말씀 상자, 그 밖의 인용은 문장 안에 그대로 */
     const b=[]; S.forEach(s=>{ const qq=Q.filter(x=>s.includes(x.q)&&x.q.length>=18); if(qq.length&&bare(s).length<12) qq.forEach(x=>b.push(mkq(x))); else b.push(s); });
-    // 긴 카드 나누기
-    const txt=b.filter(x=>typeof x==='string').join('');
-    if(txt.length>200&&b.filter(x=>typeof x==='string').length>=2){ const half=Math.ceil(b.length/2); cards.push({k:b.slice(0,half).some(x=>x.q)?'split':'full',lab:L,h:name,b:b.slice(0,half)}); cards.push({k:b.slice(half).some(x=>x.q)?'split':'full',lab:stage+' · '+name+' (이어서)',h:name,b:b.slice(half)}); return; }
-    cards.push({k:b.some(x=>x.q)?'split':'full',lab:L,h:name,b}); });
+    chunk(b).forEach((bb,ci)=>cards.push({k:bb.some(x=>x.q)?'split':'full',lab:ci?stage+' · '+nm+' (이어서)':L,h:nm,b:bb})); });
   // 표지
   const qs=t=>sentences(t).filter(s=>/[까요]\?$/.test(s)||/\?$/.test(s));
-  const lastQ=qs(body.slice(-2).join(' '))[0]||qs(secs.apply.join(' '))[0]||'';
+  const lastQ=qs(body.slice(-2).map(x=>x.replace(/^\[[^\]]+\]\s*/,'')).join(' '))[0]||qs(secs.apply.join(' '))[0]||'';
   const br=s=>{ s=s.replace(/\s+/g,' ').trim(); if(s.length<16||s.includes('\n')) return s; const i=s.slice(0,Math.ceil(s.length*0.55)).lastIndexOf(','); const j=i>5?i+1:s.slice(0,Math.ceil(s.length*0.55)).lastIndexOf(' '); return j>5?s.slice(0,j).trim()+'\n'+s.slice(j).trim():s; };
   cards.unshift({k:'cover',kick:p?p.label:'',h:br(h),sub:br(lastQ.replace(/\?$/,'').replace(/습니까$/,'을까').replace(/입니까$/,'일까'))});
   // 묵상 노트
-  const allQ=[]; body.forEach(pa=>pa.replace(QRE,(a,q,ref)=>{ allQ.push({q,ref}); return a; }));
-  const b0=sentences(body[0]||'').filter(s=>!/["“]/.test(s)).slice(0,2).join(' ');
-  const find=sentences(body.join(' ')).find(s=>/눈여겨|기억해 두|놓치|찾아보|붙들고|살펴/.test(s))||'';
-  const god=sentences(body.slice(-2).join(' ')).filter(s=>/하나님|예수님|그분|주님|여호와/.test(s)).slice(0,2).join(' ');
+  const bodyC=body.map(x=>x.replace(/^\[[^\]]+\]\s*/,''));
+  const allQ=[]; bodyC.forEach(pa=>pa.replace(QRE,(a,q,ref)=>{ allQ.push({q,ref}); return a; }));
+  const b0=sentences((secs.bg[0]||bodyC[0]||'')).filter(s=>!/["“]/.test(s)).slice(0,2).join(' ');
+  const find=sentences(bodyC.join(' ')).find(s=>/눈여겨|기억해 두|놓치|찾아보|붙들고|살펴/.test(s))||'';
+  const god=sentences(bodyC.slice(-2).join(' ')).filter(s=>/하나님|예수님|그분|주님|여호와/.test(s)).slice(0,2).join(' ');
   const aq=qs(secs.apply.join(' ')); const big=cards.find(c=>c.k==='quote');
   D.cards=cards; D.spine=lastQ; D.type=D.type||'';
-  D.qt={guide:{today:b0,find},obs:{q:qs(body.join(' ')).find(s=>!/나는|내가|우리/.test(s))||'',look:allQ.slice(0,3).map(x=>({t:clip(x.q,12),r:parseRef(x.ref)||[dayBook(),chs[0]||1,1],n:''}))},god,christ:'',apply:secs.apply.join('\n\n'),pray:secs.pray.join('\n\n')};
+  D.qt={guide:{today:b0,find},obs:{q:qs(bodyC.join(' ')).find(s=>!/나는|내가|우리/.test(s))||'',look:allQ.slice(0,3).map(x=>({t:clip(x.q,12),r:parseRef(x.ref)||[dayBook(),chs[0]||1,1],n:''}))},god,christ:'',apply:secs.apply.map(x=>x.replace(/^\d+[.)]\s*/,'')).join('\n\n'),pray:secs.pray.join('\n\n')};
   D.kwq={q:aq[aq.length-1]||lastQ,r:parseRef(big?big.ref:(allQ[0]?allQ[0].ref:''))};
   $('msInfo').textContent=`카드 ${cards.length}장 · 묵상 노트 ${secs.apply.length?'적용 ':''}${secs.pray.length?'기도':''}`;
 }
 /* 첫 줄의 날짜(11월 2일)나 본문 범위(누가복음 22–24장)로 날을 찾아 고름 — 둘 다 없으면 위에서 고른 날 */
 function guessDay(text){ const l=(text.split('\n').find(x=>x.trim())||'').replace(/\*/g,''); const m=l.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일/); if(m){ const n=Math.round((new Date(2026,+m[1]-1,+m[2])-new Date(2026,0,1))/864e5)+1; if(n>=1&&n<=365) return n; }
-  const nz=t=>String(t).replace(/\s+/g,'').replace(/[-~]/g,'–').replace(/장$/,''); const L=nz(l); const hit=P26.filter(p=>L.includes(nz(p.label))); return hit.length===1?hit[0].n:0; }
+  const nz=t=>String(t).replace(/\s+/g,'').replace(/[-~]/g,'–').replace(/장$/,''); const L=nz(l); const hit=P26.filter(p=>L.includes(nz(p.label))); if(hit.length===1) return hit[0].n;
+  const mb=l.match(/([가-힣]{2,6})\s*(\d{1,3})\s*[장편]/); if(mb){ const h2=P26.filter(p=>{ const pm=p.label.match(/^(\S+)\s(\d+)(?:[–-](\d+))?[장편]/); return pm&&pm[1]===mb[1]&&+mb[2]>=+pm[2]&&+mb[2]<=+(pm[3]||pm[2]); }); if(h2.length===1) return h2[0].n; } return 0; }
 $('bParse').onclick=()=>{ if(!$('ms').value.trim()){ say('원고가 비어 있습니다'); return; } const g=guessDay($('ms').value); if(g&&g!==cur){ const t=$('ms').value; const saved=localStorage.getItem(LSK(g)); if(saved&&!confirm(`원고 첫 줄로 보아 ${g}일(${plan(g).label})입니다. 그날에 이미 작업 중인 카드가 있는데 바꿀까요?`)){ say('지금 고른 날 그대로 분석합니다'); } else { $('selD').value=g; setDay(g); $('ms').value=t; say(`${g}일 · ${plan(g).label}로 찾아갔습니다`); } } parseMS($('ms').value); fillAll(); stash(); check(); sendPreview(); document.querySelector('[data-p=cards]').click(); };
 
 /* ───────── 카드 편집 ───────── */
