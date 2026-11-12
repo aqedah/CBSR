@@ -6992,7 +6992,7 @@ function bindDash(m){ if(!m.querySelector(".dash")) return;
 function adminLinks(){
   const G=[["지금 쓰는 앱",[["./","v2 · 첫 화면(2026-10-29부터)","365 통독"],["v1.html","v1 · 이전 화면","옛 기록 확인용으로 남겨 둠"]]],
     ["미리 보기",[["v2.html?now=2027-01-01","v2를 2027년 1월 1일로 열기","날짜를 바꿔 본 뒤에는 아래 '오늘 날짜로 되돌리기'"],["v2.html?now=0","오늘 날짜로 되돌리기",""]]],
-    ["검토할 것",[["review.html","365 카드 검토 (날마다 중심 한 줄·카드 흐름)",""],["gallery.html","그림 목록","그림마다 어느 카드에 쓰였는지"]]]];
+    ["검토할 것",[["story_edit.html","스토리 작업실","날마다 카드·묵상 노트·생각거리를 보고 고치기"],["gallery.html","그림 목록","그림마다 어느 카드에 쓰였는지"]]]];
   return `<h2>주소 모음</h2><div class="admlinks">${G.map(([h,L])=>`<p class="admlh">${h}</p>`+L.map(([u,t,d])=>`<a class="admlk" href="${u}" target="_blank" rel="noopener"><b>${t}</b>${d?`<span>${d}</span>`:""}</a>`).join("")).join("")}</div>`; }
 /* 관리자 */
 function renderAdmin(){ if(window.CBSR_V2) return renderDash(); setTimeout(loadAdmin,0); setTimeout(edPanel,0);
