@@ -102,13 +102,18 @@ function planOpen(id,s0){ const SP=PLANS[id]; if(!SP) return; document.querySele
     const hold=st.hold||Math.max(6000,Math.min(16000,2500+((st.q||st.say||"").length*90)+((st.d||"").length*45))), b=bars[cur]; /* 2차 검수: 인용 90ms/자, 풀이 45ms/자, 6–16초 */ b.style.transition="none"; b.style.width="0"; void b.offsetWidth;
     if(st.focus){ svg.querySelectorAll("#pl_base > g[id]").forEach(g=>g.classList.toggle("pldim",!st.focus.includes(g.id))); } else svg.querySelectorAll("#pl_base > g.pldim").forEach(g=>g.classList.remove("pldim")); /* 2차 검수 UX: focus에 든 자리만 또렷이 */
     (st.show||[]).forEach(id=>vis(id,true,900)); (st.hide||[]).forEach(id=>vis(id,false,900)); (st.label||[]).forEach(([x,y,t,k])=>FX.label(x,y,t,k));
-    if(st.pre) await runFx(st.pre,my,st); if(my!==tok) return false;
-    const mv=Object.assign({},st.moves||{}); if(st.path) mv[st.who||"me"]=st.path; const ks=Object.keys(mv); if(ks.length){ const rs=await Promise.all(ks.map(k=>walk(k,mv[k],my,st.spd))); if(rs.some(x=>!x)) return false; }
-    const NT=SP.parts?106:66, PQ=t=>st.part?((st.part==="pre"||st.part==="mid")?"… ":"")+t+((st.part==="post"||st.part==="mid")?" …":""):t; /* part: 절의 일부만 인용할 때 … 표시(검사기 plans_check.py가 강제) */ if(st.q) mvNar(el,PQ(st.q),st.r,NT,hold,st.god?(st.godn||"여호와"):undefined); else if(st.say) sayBub(st.sayer,PQ(st.say),st.r,st.who,hold); /* 통일안: 인물의 말 = 인물 옆 말풍선(큰 여정과 같은 부품) */
+    /* 11/13 목사님(여리고 영상 "돌고 나서 시간이 너무 길어요"): 전에는 걷기·효과가 다 끝난 뒤에 읽는 시간(hold)을 처음부터 다시 셌음.
+       → 본문 카드(q)는 장면 시작에 바로 띄우고, 읽는 시간은 글이 뜬 때부터 셈. 움직임이 끝난 뒤에는 최소 2.5초만 더 머묾. (인물의 말 say는 걸음이 끝난 자리에 뜨므로 그때부터 셈) */
+    let act=0; const tick=setInterval(()=>{ if(!paused) act+=150; },150), done=v=>{ clearInterval(tick); return v; };
+    const NT=SP.parts?106:66, PQ=t=>st.part?((st.part==="pre"||st.part==="mid")?"… ":"")+t+((st.part==="post"||st.part==="mid")?" …":""):t; /* part: 절의 일부만 인용할 때 … 표시(검사기 plans_check.py가 강제) */
+    let textAt=0; if(st.q) mvNar(el,PQ(st.q),st.r,NT,9e5,st.god?(st.godn||"여호와"):undefined);
+    if(st.pre) await runFx(st.pre,my,st); if(my!==tok) return done(false);
+    const mv=Object.assign({},st.moves||{}); if(st.path) mv[st.who||"me"]=st.path; const ks=Object.keys(mv); if(ks.length){ const rs=await Promise.all(ks.map(k=>walk(k,mv[k],my,st.spd))); if(rs.some(x=>!x)) return done(false); }
+    if(!st.q&&st.say){ sayBub(st.sayer,PQ(st.say),st.r,st.who,9e5); textAt=act; } /* 통일안: 인물의 말 = 인물 옆 말풍선(큰 여정과 같은 부품) */
     if(st.pray){ const a=actor(st.who||"me"); if(a.at) FX.emo(a.at[0],a.at[1]-44,"🙏"); }
-    if(!(await runFx(st.fx,my,st))) return false;
-    let t=0; while(t<hold){ if(my!==tok) return false; await new Promise(r=>setTimeout(r,150)); if(!paused){ t+=150; b.style.width=Math.min(100,t/hold*100)+"%"; } } return my===tok; }
-  async function run(i){ for(let k=i;k<S.length;k++){ const ok=await go(k); if(!ok) return; } if(SP.end){ el.querySelector(".bmtn").textContent=SP.end; } jUnclamp(el); const nt=el.querySelector(".plnote"); if(nt) nt.hidden=false; el.querySelector(".bmtgo").hidden=true; el.querySelector(".bmtend").hidden=false; }
+    if(!(await runFx(st.fx,my,st))) return done(false);
+    const goal=Math.max(textAt+hold, act+2500); while(act<goal){ if(my!==tok) return done(false); await new Promise(r=>setTimeout(r,150)); b.style.width=Math.min(100,act/goal*100)+"%"; } return done(my===tok); }
+  async function run(i){ for(let k=i;k<S.length;k++){ const ok=await go(k); if(!ok) return; } el.querySelectorAll(":scope>.mvnar").forEach(n=>{ if(n._c) n._c(); n.classList.remove("on"); }); bubOff(); if(SP.end){ el.querySelector(".bmtn").textContent=SP.end; } jUnclamp(el); const nt=el.querySelector(".plnote"); if(nt) nt.hidden=false; el.querySelector(".bmtgo").hidden=true; el.querySelector(".bmtend").hidden=false; }
   const setPause=v=>{ paused=v; el.classList.toggle("paused",v); try{ document.getAnimations().forEach(a=>{ const tg=a.effect&&a.effect.target; if(tg&&el.contains(tg)) v?a.pause():a.play(); }); }catch(e){} const pb=el.querySelector('[data-t="pause"]'); pb.textContent=v?"▶":"❚❚"; pb.setAttribute("aria-label",v?"이어 보기":"멈춤"); };
   const DCL=setInterval(()=>{ if(document.body.contains(el)) jDeclutter(svg); },350); /* 큰 여정처럼 늘 이름표 겹침 정리 */
   const close=pop=>{ tok++; dead=true; paused=false; clearInterval(DCL); jToastClear(el); el.remove(); document.body.style.overflow=""; if(pop!==true) ovDone(close); }; ovOpen(close);
