@@ -152,6 +152,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .stx .sw{flex:0 0 17mm;white-space:nowrap;font-family:"Noto Sans KR",sans-serif;font-size:7.8pt;color:#555}
 .pg .stx .st2{flex:1 1 auto;font-size:8.6pt}
 .pg .vs{color:var(--main)}
+.pg [data-f="god"]{font-weight:700;color:var(--main)}
+.pg [data-f="god"] .vs{color:inherit}
 .pg.cv{padding:0;display:flex;flex-direction:column;justify-content:flex-end;background:var(--main);color:#fff;overflow:hidden}
 .pg.cv .cvfield{position:absolute;inset:0;background:linear-gradient(160deg,color-mix(in srgb,var(--main) 82%,#000) 0%,var(--main) 55%,color-mix(in srgb,var(--main) 62%,#fff) 100%)}
 .pg.cv .cvbox{position:relative;margin-top:auto;padding:0 16mm;margin-bottom:30mm}
@@ -426,7 +428,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const md=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
 const BK='삼상|삼하|왕상|왕하|대상|대하|고전|고후|살전|살후|딤전|딤후|벧전|벧후|요일|요이|요삼|[창출레민신수삿룻스느에욥시잠전아사렘애겔단호욜암옵욘미나합습학슥말마막눅요행롬갈엡빌골딛몬히약유계]';
-const VSRX=new RegExp('((?:(?:'+BK+')\\s)?\\d{1,3}:\\d{1,3}(?:[\u2013\u2014-]\\d{1,3}(?::\\d{1,3})?)?(?:·\\d{1,3}(?:[\u2013\u2014-]\\d{1,3})?)*)','g');
+const VSRX=new RegExp('((?:(?<![가-힣])(?:'+BK+')\\s)?\\d{1,3}:\\d{1,3}(?:[\u2013\u2014-]\\d{1,3}(?::\\d{1,3})?)?(?:·\\d{1,3}(?:[\u2013\u2014-]\\d{1,3})?)*)','g');
 const mark=h=>String(h).replace(VSRX,'<span class="vs">$1</span>');
 const vs=s=>mark(esc(s));
 const mdv=s=>mark(md(s));
@@ -515,7 +517,7 @@ function svgMap(m,wmm,hTarget){
   const pts=a=>a.map(([x,y])=>x.toFixed(1)+','+y.toFixed(1)).join(' ');
   const o=[`<svg viewBox="0 0 100 ${vh.toFixed(1)}" width="${wmm}mm" height="${hmm.toFixed(1)}mm" preserveAspectRatio="xMidYMid meet" style="display:block">`];
   // 지형 음영: 앱의 지형 조각(terrhi/terrm/terrw)을 회색으로 깔아 산지가 보이게
-  o.push(`<rect x="0" y="0" width="100" height="${vh.toFixed(1)}" fill="#EEEEEE"/>`); o.push(terrainTiles(lon0,lon1,lat0,lat1,px));
+  { const TT=terrainTiles(lon0,lon1,lat0,lat1,px); /* 바다만 있는 칸은 타일이 없다 — 바탕을 타일의 바다 빛과 같게 */ o.push(`<rect x="0" y="0" width="100" height="${vh.toFixed(1)}" fill="${TT?'#B8B8B8':'#EEEEEE'}"/>`); o.push(TT); }
   // 지중해(가사–나일 삼각주까지), 수에즈 만, 아카바 만, 홍해 — 개략 해안선
   o.push(`<polygon points="${pts([px(27.5,37.2),px(30.5,36.85),px(32.0,36.55),px(33.0,36.15),px(34.6,36.75),px(35.5,36.6),px(36.15,36.6),px(35.95,36.0),px(35.78,35.5),px(35.9,34.9),px(35.83,34.45),px(35.62,34.1),px(35.5,33.9),px(35.37,33.56),px(35.2,33.27),px(35.08,33.0),px(34.9,32.6),px(34.75,32.0),px(34.55,31.45),px(34.3,31.25),px(33.8,31.12),px(33.0,31.12),px(32.3,31.26),px(31.5,31.5),px(30.4,31.5),px(29.6,31.0),px(27.5,31.0)])}" fill="#DADADA"/>`);
   o.push(`<polygon points="${pts([px(32.55,29.97),px(32.45,29.5),px(32.6,28.9),px(33.0,28.3),px(33.5,27.8),px(33.9,27.5),px(34.0,27.7),px(33.6,28.3),px(33.3,28.8),px(33.0,29.3),px(32.7,29.8)])}" fill="#DADADA"/>`);
