@@ -713,17 +713,17 @@ function pPreface(q){ const f=F(q); return `<div class="pg fm r q${q}">
 function pHow1(q,sample){ const f=F(q);
   const rows=lines(f.sample).map(t=>{ const [n,lab,qq,ans]=t.split(/(?<!\|)\|(?!\|)/).map(x=>(x||'').trim());
     return `<p class="slab"><span class="st">${esc(n)}</span>${esc(lab)}</p>${qq&&qq!=='—'?`<p class="sq">${vs(qq)}</p>`:''}<p class="sa">${vs(ans||'')}</p>` }).join('');
-  return `<div class="pg fm q${q}">
+  return `<div class="pg fm r q${q}">
 <p class="fh">${esc(f.howhead)}</p><p class="fp">${bold(f.howlead)}</p>
 ${f.demo?`<table class="demo">${lines(f.demo).map(t=>{const [a,b]=t.split('|');return `<tr><td class="k">${esc(a||'')}</td><td>${boldv(b||'')}</td></tr>`}).join('')}</table>`:''}
 <div class="samp"><p class="sh2"><span class="n">3</span>나의 묵상 — 손으로 쓰는 자리</p>${rows}</div>
-<p class="fcap">${bold(f.howcap)}</p><div class="pn">4</div></div>`; }
+<p class="fcap">${bold(f.howcap)}</p><div class="pn">5</div></div>`; }
 function pHow2(q){ const f=F(q); const N=['①','②','③','④'];
-  return `<div class="pg fm r q${q}"><p class="fh2">네 걸음</p>
+  return `<div class="pg fm q${q}"><p class="fh2">네 걸음</p>
 ${lines(f.steps).map((t,i)=>{const [a,b]=t.split('|');return `<p class="st4"><span class="stn">${N[i]||'·'}</span><b>${esc(a)}</b> — ${bold(b||'')}</p>`}).join('')}
 <p class="fh2" style="margin-top:4mm">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p>
 <ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
-<div class="pn">5</div></div>`; }
+<div class="pn">4</div></div>`; }
 function pSym(q){ const f=F(q); return `<div class="pg fm q${q}">
 <p class="fh">${esc(f.symhead)}</p><p class="fp sm">${bold(f.symlead)}</p>
 <table class="symt tight">${lines(f.syms).map(t=>{const [s,d,e]=t.split('|');return `<tr><td class="sc">${(s||'').split(' · ').map(chipSym).join('<br>')}</td><td>${bold(d||'')}<br><span class="ex">${boldv(e||'')}</span></td></tr>`}).join('')}</table>
@@ -872,7 +872,7 @@ function appendixSpreads(q){
 function frontSpreads(q,sample){
   const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
   return [ sp(blankPage(q),coverFront(q)), sp(endPaper(q),endPaper(q)), sp(blankPage(q),pTitle(q)),
-    sp(pCopy(q),pPreface(q)), sp(pHow1(q,sample),pHow2(q)), sp(pSym(q),pSym2(q)), sp(pGenre(q),pWhole(q)),
+    sp(pCopy(q),pPreface(q)), sp(pHow2(q),pHow1(q,sample)), sp(pSym(q),pSym2(q)), sp(pGenre(q),pWhole(q)),
     sp(pBooks(q),pToc(q,0)), sp(pToc(q,1),pToc(q,2)), sp(pDivider(q),pDivider2(q)) ];
 }
 function backSpreads(q){ const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
@@ -929,7 +929,7 @@ function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fil
 function goBack(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); if($('frontbox')) $('frontbox').open=false; }
 function isFrontView(i){ return i<FLAB.length }
 /* ── 전자책처럼 넘겨 보기 ── */
-const FLAB=['앞표지','면지','속표지','저작권 · 서문','이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
+const FLAB=['앞표지','면지','속표지','저작권 · 서문','네 걸음 · 이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
 const BLAB=['면지','뒤표지'];
 let VIEWS=[], VI=0, ANIM=false;
 let PV='both';   /* both | L | R */
