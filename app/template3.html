@@ -2048,7 +2048,7 @@ body.tbkfull #tbkPane{width:100vw;z-index:9400;bottom:var(--tbknav,64px)}body.tb
 .tbkpage .tbksec{display:flex;align-items:center;gap:8px;font:700 17px var(--f-ui);margin:22px 0 8px;padding-bottom:6px;border-bottom:1.5px solid #5a4aa0;color:#2a2350}
 .tbkpage .tbksec i{display:inline-flex;width:24px;height:24px;border-radius:50%;background:#5a4aa0;color:#fff;font:700 13px var(--f-ui);font-style:normal;align-items:center;justify-content:center}
 .tbkpage .tbkk{font:700 14px var(--f-ui);color:#2a2350;margin:12px 0 2px}
-.tbkpage p{margin:0 0 6px}.tbkpage .tbkgo{font:700 15px var(--f-ui);color:#5a4aa0;margin:16px 0 0}
+.tbkpage p{margin:0 0 6px}.tbkpage .tbkgo{font:700 15px var(--f-ui);color:#5a4aa0;margin:16px 0 0}.tbkpage .tbksec .tbkgo{font:700 14px var(--f-ui);margin:0 0 0 6px}
 button.tbkchip{background:none;cursor:pointer}
 .tbkchip{display:inline-block;font:700 12.5px var(--f-ui);border:1.2px solid #5a4aa0;color:#5a4aa0;border-radius:6px;padding:0 6px;margin-right:6px;line-height:1.6;vertical-align:1px}
 .tbkref{border:0;background:none;padding:0;font:inherit;color:#2b5a4f;text-decoration:underline;text-decoration-color:rgba(43,90,79,.4);text-underline-offset:3px;cursor:pointer}
@@ -2230,6 +2230,10 @@ guardSync(); window.addEventListener("load",guardSync);
 const ED_Y=Math.max(2026,NOW().getFullYear()), ED=ED_Y;
 /* 11-10: 2027은 365일표 4판(11-08 목사님 확정 — 313회는 교회 일정표로만). 격자는 2027-01-01부터 하루 한 칸, 주일 포함 */
 const Y27=(ED===2027)&&typeof P27!=="undefined";
+/* 11-12 목사님: 2026년에는 체험판 가이드북(317–365일, trial26_qt.json), 2027년에는 2027 가이드북 */
+const GB26=(ED===2026), GBON=Y27||GB26;
+const GBT=()=>Y27?(typeof GTOOLS!=="undefined"?GTOOLS:null):GB26?(typeof GTOOLS26!=="undefined"?GTOOLS26:null):null;
+const GBQ=()=>Y27?(typeof GQT!=="undefined"?GQT:null):GB26?(typeof GQT26!=="undefined"?GQT26:null):null;
 if(Y27) Object.assign(PI,{name:"2027 성경통독",short:"365일",src:"CBSR 2027 성경통독표(365일)",start:"2027-01-01"});
 const DEFAULT_START=Y27?"2027-01-01":(ED+"-01-01");
 /* 새 회차가 되면 지난 회차의 기록(통독·QT·퀴즈)은 hist[해]에 옮겨 보관하고 새로 시작합니다 */
@@ -2462,7 +2466,7 @@ function noteAll(){ return Object.entries(mem.qt||{}).filter(([k,q])=>q&&/^\d+-\
   let kv=null; try{ const v=String(q.kv||"").split(":").map(Number); if(v.length===3){ const tx=vtxt(v); if(tx) kv={v,t:tx}; } }catch(e){} return {k,w,d,q,p,t,kv}; }).filter(Boolean).sort((a,b)=>b.t-a.t||b.k.localeCompare(a.k,undefined,{numeric:true})); }
 /* 11-12 GPT 검수 R05·R16: 노트를 누르면 실제로 쓴 자리로 — 손글씨가 있는 가이드북 날은 본문+가이드북, 아니면 묵상 노트 */
 function noteGo(k){ const [w,d]=String(k).split("-").map(Number), q=mem.qt[k]||{}; view.pre=false; view.revW=null; view.recD=null; view.w=w; view.d=d;
-  const gd=Y27&&typeof GQT!=="undefined"&&GQT[dayNo(w,d)]; if(gd&&(q.ink||tbkWide())){ view.tab="read"; if(!(tbkWide()&&tbkPref()==="both"&&tbkFits())) TBK.open=true; } else view.tab="qt"; render(); scrollTo({top:0}); }
+  const gd=GBQ()&&GBQ()[dayNo(w,d)]; if(gd&&(q.ink||tbkWide())){ view.tab="read"; if(!(tbkWide()&&tbkPref()==="both"&&tbkFits())) TBK.open=true; } else view.tab="qt"; render(); scrollTo({top:0}); }
 /* 오늘 탭: 다른 날(다른 기기 포함, 연동된 기록)에 쓰다 만 노트가 있으면 이어 쓰기 한 줄 */
 function tdResume(w,d){ const here=keyOf(w,d), x=noteAll().find(x=>!x.q.done&&x.k!==here&&x.t&&Date.now()-x.t<14*864e5); if(!x) return "";
   return `<button class="tdresume" data-resume="${x.k}"><span><small>쓰다 만 노트</small><b>${esc(fmt(dateOf(x.w,x.d),{month:"long",day:"numeric"}))} · ${esc(x.p.label)}</b></span><em>이어 쓰기 ›</em></button>`; }
@@ -3356,7 +3360,7 @@ function renderRead(){
   h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl">${window.CBSR_V2?`<span class="rdk">${esc(dayK(w,d))}</span>`:""}<h2>${esc(p.label)}</h2>${window.CBSR_V2&&p.topic&&p.topic!==p.label?`<small class="rdt">${esc(p.topic)}</small>`:""}${window.CBSR_V2?placeBand(w,d):""}<p class="dmeta">${window.CBSR_V2?`<span class="dmtag ${tag[0]}">${TRY?tag[1]:tag[0]==="today"?"오늘 본문":tag[1]}</span>`:""}<span>${p.ch.length}${b0===19?"편":"장"}</span><span>약 ${mins}분</span>${(()=>{ const R=false; return R&&R.core&&!window.CBSR_V2?`<span>핵심 읽기 <b class="rjc">${esc(R.core)}</b></span>`:""; })()}${done?`<span class="okc">✓ 통독 완료</span>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:window.CBSR_V2&&envKind()==="kakao"?`<button class="kext" id="kakaoOut" aria-label="다른 브라우저로 열어 본문 듣기">${ICON_SPK}<span>듣기 ↗</span></button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
-  const GTd=Y27&&typeof GTOOLS!=="undefined"&&GTOOLS[dayNo(w,d)], TXd=PVQ.has(key)?(GTd?{q:GTd}:null):dayTools(w,d), tl=TXd?TXd.q:[]; /* 가이드북이 있는 날은 가이드북의 장치 */
+  const GTd=GBT()&&GBT()[dayNo(w,d)], TXd=PVQ.has(key)?(GTd?{q:GTd}:null):dayTools(w,d), tl=TXd?TXd.q:[]; /* 가이드북이 있는 날은 가이드북의 장치 */
   const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:(tl.length?`<div class="eyeq qbox">${toolLine(tl,MODE+key)}</div>`:""); /* 11-11: 질문이 없는 날도 읽기 도구는 보임 */
   const V2R=!!window.CBSR_V2;
   if(V2R&&!view.v2shut) view.open=true;
@@ -3591,7 +3595,7 @@ const CLUE_TOOL={turn:"전환",pair:"대조",scene:"반복",irony:"아이러니"
 const LENS_TOOL={"무대":"장면","줄거리":"전환","글쓴이의 손길":"반복","인물":"인물","편지 뒤의 이야기":"장면","구분":"반복"};
 function dayTools(w,d){ const X=(typeof TOOLX!=="undefined"&&TOOLX[MODE+":"+keyOf(w,d)])||null;
   /* 가이드북이 있는 날은 2층 장치를 가이드북과 같게: 1층(장면·인물·화자)은 그대로, 2층은 가이드북의 기호 */
-  const G=Y27&&typeof GTOOLS!=="undefined"&&GTOOLS[dayNo(w,d)]; if(!G) return X;
+  const G=GBT()&&GBT()[dayNo(w,d)]; if(!G) return X;
   const L1=((X&&X.q)||[]).filter(t=>!TOOL_SYM[t]); return {q:[...L1,...G],look:(X&&X.look)||[]}; }
 const toolChip=(t,cls)=>t&&TOOLS[t]?`<button class="tool${cls?" "+cls:""}" data-tool="${t}">${tName(t)}</button>`:"";
 /* 한 줄 풀이: 도구마다 처음 세 날만 보입니다(이름표를 누르면 언제든 다시) */
@@ -3604,7 +3608,7 @@ function toolLine(L,key){ let seen={}; try{ seen=JSON.parse(localStorage.getItem
 function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(tName(b.dataset.tool)+": "+TOOLS[b.dataset.tool]); }); }
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
 /* 11-12: 가이드북이 있는 날은 묵상 탭의 관찰·적용 질문을 가이드북과 같게(같은 칸에 저장되므로 질문도 같아야 함) */
-function gqOf(w,d){ return Y27&&typeof GQT!=="undefined"?GQT[dayNo(w,d)]||null:null; }
+function gqOf(w,d){ const Q=GBQ(); return Q?Q[dayNo(w,d)]||null:null; }
 const gqPlain=t=>String(t||"").replace(/\*\*(.+?)\*\*/g,"$1");
 function eyeFor(w,d,L){ const r=eyeFor0(w,d,L), G=gqOf(w,d); if(G&&G.q&&r) r.q=G.q; return r; }
 function eyeFor0(w,d,L){
@@ -8109,11 +8113,11 @@ function render(){
    - ④ 해설은 [쓴 뒤 해설 열기]로 열고, [오늘 묵상 마침]을 따로 눌러 마침. */
 const TBK_V="tg1", TBK_W=600;
 const TBK={data:null,loading:false,page:"m",open:false,tool:"pen",color:"#24407a",finger:false,strokes:[],undo:[],redo:[],ikey:"",ret:null,scale:1};
-try{ TBK.finger=localStorage.getItem("cbsr-tbkfinger")==="1"; }catch(e){} setTimeout(()=>{ if(window.CBSR_V2&&Y27&&innerWidth>=1024) tbkLoad(); },800); TBK.lw=innerWidth;
+try{ TBK.finger=localStorage.getItem("cbsr-tbkfinger")==="1"; }catch(e){} setTimeout(()=>{ if(window.CBSR_V2&&GBON&&innerWidth>=1024) tbkLoad(); },800); TBK.lw=innerWidth;
 function tbkPref(){ try{ return localStorage.getItem("cbsr-view")||"both"; }catch(e){ return "both"; } } /* both | text | guide */
 function tbkSetPref(v){ try{ localStorage.setItem("cbsr-view",v); }catch(e){} }
-function tbkLoad(){ if(TBK.data||TBK.loading) return; TBK.loading=true; fetch("guide_qt.json").then(r=>r.json()).then(j=>{ TBK.data=j; tbkSync(); }).catch(()=>{ TBK.loading=false; }); }
-function tbkDay(){ if((!Y27||view.tab!=="read"||view.pre)) return null; if(!TBK.data){ tbkLoad(); return null; }
+function tbkLoad(){ if(TBK.data||TBK.loading) return; TBK.loading=true; fetch(Y27?"guide_qt.json":"trial26_qt.json").then(r=>r.json()).then(j=>{ TBK.data=j; tbkSync(); }).catch(()=>{ TBK.loading=false; }); }
+function tbkDay(){ if((!GBON||view.tab!=="read"||view.pre)) return null; if(!TBK.data){ tbkLoad(); return null; }
   const n=dayNo(view.w,view.d), qt=TBK.data.qt&&TBK.data.qt[n]; return qt?{n,qt,p:dayPlan(view.w,view.d),key:keyOf(view.w,view.d)}:null; }
 const tbkWide=()=>innerWidth>=1024;
 /* 11-11 목사님: 가이드북 있는 날 넓은 태블릿에서는 묵상 탭도 본문+가이드북(스토리는 지금처럼 통독 마친 뒤) */
@@ -8147,16 +8151,16 @@ function tbkRefs(html,p){ if(!TBK_ABRE){ const A=PLAN.abbr.map((a,i)=>[a,i+1]).s
     if(!b) return m0; last=b; const inDay=p.ch.some(x=>x[0]===b&&x[1]===c);
     return `${pre}<button class="tbkref" data-ref="${b}-${c}-${v}-${v2}${inDay?"":"-x"}">${m0.slice(pre.length)}</button>`; }); }
 function tbkT(t,p){ return tbkRefs(esc(String(t||"")).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"),p); }
-function tbkChip(t,p){ let r=String(t||"").trim(), out="", m; while((m=r.match(/^((?:\?!|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞]))\s*(\S+)\s+([\s\S]*)$/))){ out+=TOOLS[m[2]]?`<button class="tbkchip" data-tdef="${esc(m[2])}">${esc(m[1]+" "+m[2])}</button>`:`<span class="tbkchip">${esc(m[1]+" "+m[2])}</span>`; r=m[3]; }
+function tbkChip(t,p){ let r=String(t||"").trim(), out="", m; while((m=r.match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(\S+)\s+([\s\S]*)$/))){ out+=TOOLS[m[2]]?`<button class="tbkchip" data-tdef="${esc(m[2])}">${esc(m[1]+" "+m[2])}</button>`:`<span class="tbkchip">${esc(m[1]+" "+m[2])}</span>`; r=m[3]; }
   if(!out&&(m=r.match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/))){ out=`<span class="tbkchip">${esc(m[1])}</span>`; r=m[2]; } return out+tbkT(r,p); }
 function tbkPageA(D){ const {qt,p,n}=D, g=qt.guide||{}, o=qt.obs||{}, dt=dateOf(view.w,view.d);
   return `<p class="tbkdate">${dt.getMonth()+1}월 ${dt.getDate()}일 · ${n}일째</p><h2>${esc(p.label)}</h2><p class="tbksub">${esc(qt.sub||p.topic||"")}</p>
   <div class="tbksec"><i>1</i>읽기 전</div>
   ${g.today?`<p class="tbkk">오늘의 흐름</p><p>${tbkT(g.today,p)}</p>`:""}
-  ${g.find?`<p class="tbkk">읽으며 둘 초점</p><p>${tbkChip(g.find,p)}</p>`:""}
+  ${g.find?`<p class="tbkk">오늘의 읽기 도구</p><p>${tbkChip(g.find,p)}</p>`:""}
   ${g.word?`<p class="tbkk">말뜻</p><p>${tbkT(g.word,p)}</p>`:""}
-  <p class="tbkgo">▶ 이제 ${esc(p.label)}을 읽습니다.</p>
-  <div class="tbksec"><i>2</i>읽은 뒤</div>
+  <div class="tbksec"><i>2</i>성경 읽기 <span class="tbkgo">— 성경책에서 ${esc(p.label)}을 읽습니다</span></div>
+  <div class="tbksec"><i>3</i>읽은 뒤</div>
   ${(o.look||[]).filter(x=>x[0]).length?`<p class="tbkk">다시 읽을 곳</p><div class="tbklook">${o.look.filter(x=>x[0]).map(([r,t])=>`<div><b>${tbkRefs(esc(r),p)}</b><span>${tbkT(t,p)}</span></div>`).join("")}</div>`:""}
   ${(o.pair||[]).length?`<div class="tbkbox"><p class="tbkk">눈여겨볼 것</p>${o.pair.map(([s,t])=>`<div><span class="tbkchip">${esc(s)}</span>${tbkT(t,p)}</div>`).join("")}</div>`:""}
   ${qt.map&&qt.map.cap?`<p class="tbkk">지도</p><p>${esc(qt.map.cap)}</p>${(()=>{ const g=gbRoute(n); return g?`<button class="tbkbtn tbkroute" id="tbkRoute">▶ 지도에서 길 따라가기 · ${esc(g.lab)}</button>`:""; })()}`:""}
@@ -8166,8 +8170,8 @@ function tbkPageM(D){ const {qt,p,key}=D, q=mem.qt[key]||{}, dt=dateOf(view.w,vi
   const Q={obs:tbkT((qt.obs||{}).q,p),god:"본문에서 본 하나님은 어떤 분입니까?",med:tbkT(qt.apply,p),pray:""};
   const blocks=TBK_F.map(([f,lab,nl],i)=>{ const tx=q[f]||""; return `<div class="tbkb" data-f="${f}"><p class="tbkk"><span>${i+1}</span>${lab}</p>${Q[f]?`<p class="tbkq">${Q[f]}</p>`:""}<div class="tbklines" data-f="${f}" style="height:${nl*34}px">${"<i></i>".repeat(nl)}<textarea class="tbkta" data-f="${f}" aria-label="${lab}" spellcheck="false" autocomplete="off">${esc(tx)}</textarea></div></div>`; }).join("");
   const ao=!!(q.ao||q.done); /* 11-12: 어디서든 묵상을 마친 날은 해설이 열린 상태 */
-  return `<p class="tbkdate">${dt.getMonth()+1}월 ${dt.getDate()}일 · ${esc(p.label)}</p><div class="tbksec" style="margin-top:8px"><i>3</i>나의 묵상</div>${blocks}
-  <div class="tbkafter"><div class="tbksec"><i>4</i>쓴 뒤에 읽기 — 해설과 기도</div>${ao?`<p>${tbkT(qt.note,p)}${qt.god?" "+tbkT(qt.god,p):""}</p><p class="tbkk">기도</p><p>${tbkT(qt.pray,p)}</p><button class="tbkbtn${q.done?" done":""}" id="tbkDone">${q.done?"오늘 묵상을 마쳤습니다 ✓":"오늘 묵상 마침"}</button>`:`<p>위의 네 칸을 쓴 뒤에 해설을 열어 내가 쓴 것과 견주어 읽습니다.</p><button class="tbkbtn" id="tbkAfter">쓴 뒤 해설 열기</button>`}</div>`; }
+  return `<p class="tbkdate">${dt.getMonth()+1}월 ${dt.getDate()}일 · ${esc(p.label)}</p><div class="tbksec" style="margin-top:8px"><i>4</i>나의 묵상</div>${blocks}
+  <div class="tbkafter"><div class="tbksec"><i>5</i>쓴 뒤에 읽기 — 해설과 기도</div>${ao?`<p>${tbkT(qt.note,p)}${qt.god?" "+tbkT(qt.god,p):""}</p><p class="tbkk">기도</p><p>${tbkT(qt.pray,p)}</p><button class="tbkbtn${q.done?" done":""}" id="tbkDone">${q.done?"오늘 묵상을 마쳤습니다 ✓":"오늘 묵상 마침"}</button>`:`<p>위의 네 칸을 쓴 뒤에 해설을 열어 내가 쓴 것과 견주어 읽습니다.</p><button class="tbkbtn" id="tbkAfter">쓴 뒤 해설 열기</button>`}</div>`; }
 const TBK_IC={pen:'<path d="M4 20l4-1 11-11-3-3L5 16z"/>',hl:'<path d="M9 15l-3 5h5l2-3 M8 14l8-10 4 3-8 10z"/>',er:'<path d="M3 17l8-8 7 7-4 4H7z M14 6l4-3 4 4-3 4"/>',un:'<path d="M9 8H4V3 M4 8a9 9 0 1 1 2 9"/>',re:'<path d="M15 8h5V3 M20 8a9 9 0 1 0-2 9"/>',fg:'<path d="M8 13V5a1.5 1.5 0 013 0v6 M11 11V4a1.5 1.5 0 013 0v7 M14 11V5.5a1.5 1.5 0 013 0V14c0 4-2.5 7-6 7s-5-2-6.5-5L3 12.5a1.5 1.5 0 012.5-1.6L8 13"/>'};
 const TBK_COL=["#1f2a44","#24407a","#c0392b"];
 /* 11-11 목사님: 가이드북은 하루 두 쪽(읽기 안내 → 묵상·해설)을 다 보여 줌. 본문 옆에서는 위아래로 이어서, '가이드북만'(넓은 화면)에서는 두 쪽 펼침 */
@@ -8181,7 +8185,7 @@ function tbkDraw(D0){ const pane=document.getElementById("tbkPane"); const sp=tb
   const D=TBK.useOld&&TBK.oldQt&&TBK.oldFor===D0.key?{...D0,qt:TBK.oldQt}:D0;
   const sc0=pane.querySelector(".tbksc"); if(sc0&&TBK.drawn){ TBK.sy[TBK.drawn]=sc0.scrollTop; tbkSySave(); } const keepY=TBK.sy[lay]||0;
   const pv=typeof NOWOFF!=="undefined"&&NOWOFF&&new Date()<new Date("2027-01-01T00:00:00");
-  pane.innerHTML=`<div class="tbkhd">${!document.body.classList.contains("tbksplit")?`<button class="tbkx" id="tbkClose">‹ 본문</button>${tbkWide()&&tbkPref()==="both"?`<span class="tbknote" title="보기 방식은 함께지만 이 화면 폭에서는 두 칸이 모두 읽기 좋은 크기가 되지 않습니다">지금은 한 칸씩</span>`:""}`:`<button class="tbkx" id="tbkView">보기: 함께 ▾</button>`}<button class="tbkx tbkone" id="tbkOne">${sp?"한 쪽씩":"두 쪽"}</button>${sp?`<span class="tbkspt">${esc(D.p.label)}${TBK.zoom>1.02?` · ${Math.round(TBK.zoom*100)}%`:""}</span>`:`<div class="tbkseg"><button data-tbkp="a" class="on">읽기 안내</button><button data-tbkp="m">묵상·해설</button></div>`}${pv?`<a class="tbkyr" href="?now=0" title="미리 보기 끄기">2027 미리 보기 · 끄기</a>`:"<span style='width:44px'></span>"}</div>
+  pane.innerHTML=`<div class="tbkhd">${!document.body.classList.contains("tbksplit")?`<button class="tbkx" id="tbkClose">‹ 본문</button>${tbkWide()&&tbkPref()==="both"?`<span class="tbknote" title="보기 방식은 함께지만 이 화면 폭에서는 두 칸이 모두 읽기 좋은 크기가 되지 않습니다">지금은 한 칸씩</span>`:""}`:`<button class="tbkx" id="tbkView">보기: 함께 ▾</button>`}<button class="tbkx tbkone" id="tbkOne">${sp?"한 쪽씩":"두 쪽"}</button>${sp?`<span class="tbkspt">${esc(D.p.label)}${TBK.zoom>1.02?` · ${Math.round(TBK.zoom*100)}%`:""}</span>`:`<div class="tbkseg"><button data-tbkp="a" class="on">읽기 안내</button><button data-tbkp="m">묵상·해설</button></div>`}${pv?`<a class="tbkyr" href="?now=0" title="미리 보기 끄기">${ED} 미리 보기 · 끄기</a>`:"<span style='width:44px'></span>"}</div>
   <div class="tbksc"><div class="tbkpages${sp?" spread":""}">${TBK_PG.map(g=>`<div class="tbkwrap" data-pg="${g}"><div class="tbkpage">${g==="a"?tbkPageA(D):tbkPageM(D)}</div><canvas class="tbkink" data-pg="${g}"></canvas></div>`).join("")}</div></div>
   <div class="tbktools"><button data-tt="pen" title="펜으로 쓰기" aria-label="펜으로 쓰기"><svg viewBox="0 0 24 24">${TBK_IC.pen}</svg></button>${TBK_COL.map((c,i)=>`<button class="sw" data-tc="${c}" style="--c:${c}" title="${["검정","파랑","빨강"][i]}" aria-label="${["검정","파랑","빨강"][i]}"><i></i></button>`).join("")}<i class="sep"></i><button data-tt="hl" title="형광펜"><svg viewBox="0 0 24 24">${TBK_IC.hl}</svg></button><button data-tt="er" title="지우개"><svg viewBox="0 0 24 24">${TBK_IC.er}</svg></button><button data-tt="tx" class="tbktxb" title="자판으로 글자 쓰기" aria-label="글자로 쓰기">글자</button><i class="sep"></i><button id="tbkUn" title="되돌리기"><svg viewBox="0 0 24 24">${TBK_IC.un}</svg></button><button id="tbkRe" title="다시"><svg viewBox="0 0 24 24">${TBK_IC.re}</svg></button><button id="tbkFg" title="손가락으로 쓰기" class="${TBK.finger?"on":""}"><svg viewBox="0 0 24 24">${TBK_IC.fg}</svg></button><button id="tbkMore" title="사진·백업">⋯</button><span class="tbkst" id="tbkSt"></span></div>`;
   TBK.drawn=lay;

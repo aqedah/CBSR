@@ -129,17 +129,32 @@ data+='const TOOLX='+(open('tools/toolx.json').read() if os.path.exists('tools/t
 # 가이드북이 쓴 서술자의 장치(2층 9가지)를 앱의 '오늘의 읽기 도구'에도(2026-11-11 목사님)
 import re as _re9
 _GQ=json.load(open('site_src/guide_qt.json')).get('qt',{})
+_GREX=r'(?:●|◆|◇|⇔|↗|□|∽|▲|○|◎|⋯|\?!|“”|♪|∥|if|¿|≒|☞|×|∞|※|☆) ?(이끎말|반복|점층|대조|틀|전형장면|전환|속말|속마음|침묵|공백|생략|아이러니|말씀 공식|후렴|평행|가정|수사적 질문|비유|호명|교차|언약 공식|상징|송영)'
 _GT={}
 for _n,_v in _GQ.items():
     _f=((_v or {}).get('guide') or {}).get('find','')
     _L=[]
-    for _m in _re9.findall(r'(?:●|◆|◇|⇔|↗|□|∽|▲|○|◎|⋯|\?!|“”|♪|∥|if|¿|≒|☞|×|∞|※|☆) ?(이끎말|반복|점층|대조|틀|전형장면|전환|속말|속마음|침묵|공백|생략|아이러니|말씀 공식|후렴|평행|가정|수사적 질문|비유|호명|교차|언약 공식|상징|송영)',_f):
+    for _m in _re9.findall(_GREX,_f):
         if _m not in _L: _L.append(_m)
     if _L and _n.isdigit(): _GT[int(_n)]=_L
 data+='const GTOOLS='+J(_GT)+';\n'
 # 11-12: 묵상 탭도 가이드북과 같은 질문(원고 한 벌) — 관찰·적용 질문만
 _GQT={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _GQ.items() if n.isdigit()}
 data+='const GQT='+J(_GQT)+';\n'
+# 11-12 목사님: 2026 체험판 가이드북(317–365일)도 앱에 — 2026년 화면에서만 씀
+try:
+    _TQ=json.load(open('site_src/trial26_qt.json')).get('qt',{})
+except Exception: _TQ={}
+_GT26={}
+for _n,_v in _TQ.items():
+    if not _n.isdigit(): continue
+    _f=((_v or {}).get('guide') or {}).get('find','')
+    _L=[]
+    for _m in _re9.findall(_GREX,_f):
+        if _m not in _L: _L.append(_m)
+    if _L: _GT26[int(_n)]=_L
+data+='const GTOOLS26='+J(_GT26)+';\n'
+data+='const GQT26='+J({int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _TQ.items() if n.isdigit()})+';\n'
 # 11-12: 원고 성구 약칭이 빠진 곳이 있으면 알림(다른 저장으로 덮였을 때)
 try:
     import subprocess as _sp
