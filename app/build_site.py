@@ -168,6 +168,14 @@ def _gdesc(Q):
                 if m and m.group(1) not in pm: pm[m.group(1)]=pr[1]
         if f or pm: out[int(n)]={'f':f,'p':pm}
     return out
+# 11-13 목사님: 도구 이름·기호·풀이·예는 가이드북 책머리(f0.syms·dsyms) 한 벌을 앱도 그대로 씀
+_GBS={}
+for _fk in ('syms','dsyms'):
+    for _ln in str(((_GQ.get('f0') or {}).get(_fk)) or '').split('\n'):
+        _pp=_ln.split('|')
+        _mm=_re9.match(r'^(\S{1,3}) (.+)$',_pp[0].strip()) if len(_pp)>=2 else None
+        if _mm: _GBS[_mm.group(2).strip()]=[_mm.group(1),_pp[1].strip(),(_pp[2].strip() if len(_pp)>2 else '')]
+data+='const GBSYMS='+J(_GBS)+';\n'
 data+='const GBDESC='+J(_gdesc(_GQ))+';\n'
 data+='const GBDESC26='+J(_gdesc(_TQ))+';\n'
 data+='const GQT26='+J({int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _TQ.items() if n.isdigit()})+';\n'

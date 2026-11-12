@@ -393,6 +393,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .try .weeknav,.try .strip,.try #revRow,.try #whereLine{display:none!important}
 .scopebtn{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 0;font:inherit;color:var(--muted);font-size:13px}.scopebtn b{color:var(--accent);font-weight:600;white-space:nowrap}
 .srh{margin:12px 0 4px;font-size:14px;color:var(--accent)}.srtext{line-height:1.85;margin:0}.srtext sup{color:var(--muted);font-size:11px;margin:0 2px 0 4px}
+.tooldef2 b.tdk,.eyeq .tooldef2 b.tdk,.obsdef b.tdk{margin:0;font-weight:700;color:var(--ink)!important;display:inline}.tooldef2 .tex{color:var(--muted);font-size:.95em}
 .toolbox .tnotes{margin-top:8px}.toolbox .tnotes summary{cursor:pointer;font:700 13px var(--f-ui);color:var(--accent)}.toolbox .tnotes .tooldef2{color:var(--ink)}
 .toolbox .tfind{margin:8px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
 .tooldef2{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.6}.tooldef2 b,.eyeq .tooldef2 b{display:inline;color:var(--ink);margin-right:4px;font-size:inherit}
@@ -3607,7 +3608,11 @@ const TOOLS={"장면":"언제, 어디서, 누가 있고, 장면은 어디서 바
 const TOOL_SYM={"이끎말":"●","반복":"◆","점층":"↗","대조":"⇔","틀":"□","전형장면":"∽","전환":"▲","속마음":"○","침묵":"◎","생략":"⋯","아이러니":"?!","말씀 공식":"“”","후렴":"♪","평행":"∥","가정":"if","수사적 질문":"¿","비유":"≒","호명":"☞","교차":"×","언약 공식":"∞","상징":"※","송영":"☆"};
 const TOOL_ORDER=Object.keys(TOOLS);
 /* 11-12: ⋯ 공백 → ⋯ 생략. 예전 자료의 "공백"도 생략으로 읽는다 */
-const TOOL_ALIAS={"공백":"생략","속말":"속마음"}; TOOLS["공백"]=TOOLS["생략"]; TOOL_SYM["공백"]=TOOL_SYM["생략"]; TOOLS["속말"]=TOOLS["속마음"]; TOOL_SYM["속말"]=TOOL_SYM["속마음"];
+/* 11-13 목사님: 가이드북 책머리에 쓴 도구 풀이를 그대로(굵은 글씨 ** 포함, 예 함께) — 빌드가 guide_qt.json f0에서 가져옴 */
+const TOOL_HTML={}, TOOL_EX={};
+if(typeof GBSYMS!=="undefined") for(const [n,[sy,df,ex]] of Object.entries(GBSYMS)){ const d=String(df).replace(/\s*\(\d+쪽\)/g,""); TOOLS[n]=d.replace(/\*\*(.+?)\*\*/g,"$1"); TOOL_HTML[n]=esc(d).replace(/\*\*(.+?)\*\*/g,"<b class=\"tdk\">$1</b>"); TOOL_SYM[n]=sy; if(ex) TOOL_EX[n]=ex; }
+const tDefH=t=>(TOOL_HTML[t]||esc(TOOLS[t]||""))+(TOOL_EX[t]?` <span class="tex">예) ${esc(TOOL_EX[t])}</span>`:"");
+const TOOL_ALIAS={"공백":"생략","속말":"속마음"}; TOOLS["공백"]=TOOLS["생략"]; TOOL_SYM["공백"]=TOOL_SYM["생략"]; TOOL_HTML["공백"]=TOOL_HTML["생략"]; TOOL_EX["공백"]=TOOL_EX["생략"]; TOOL_HTML["속말"]=TOOL_HTML["속마음"]; TOOL_EX["속말"]=TOOL_EX["속마음"]; TOOLS["속말"]=TOOLS["속마음"]; TOOL_SYM["속말"]=TOOL_SYM["속마음"];
 const tName=t=>{t=TOOL_ALIAS[t]||t; return (TOOL_SYM[t]?TOOL_SYM[t]+" ":"")+t};
 const CLUE_TOOL={turn:"전환",pair:"대조",scene:"반복",irony:"아이러니",aside:"화자"};
 const LENS_TOOL={"무대":"장면","줄거리":"전환","글쓴이의 손길":"반복","인물":"인물","편지 뒤의 이야기":"장면","구분":"반복"};
@@ -3624,9 +3629,9 @@ function toolLine(L,key,G){ let seen={}; try{ seen=JSON.parse(localStorage.getIt
   try{ localStorage.setItem("cbsr-tool-days",JSON.stringify(seen)); }catch(e){}
   /* 11-13 목사님: 가이드북이 있는 날은 가이드북에 쓴 그날의 설명을 그대로 — 초점 문장 + 도구마다 그날 본문에서 볼 자리. 그날 설명이 없는 도구만 일반 풀이(처음 세 날) */
   /* 11-13 목사님: 가이드북이 있는 날은 가이드북에 쓴 그날의 설명을 그대로 — ① 읽기 전 '오늘의 읽기 도구' 문장은 바로, ③ 읽은 뒤 '눈여겨볼 것'(도구마다 그날 볼 자리)은 읽고 나서 펼치게(답을 먼저 주지 않는 가이드북 순서) */
-  if(G&&(G.f||Object.keys(G.p||{}).length)){ const P=G.p||{}, gen=show.filter(tl=>!P[tl]||true).map(tl=>`<b>${tName(tl)}</b> ${esc(TOOLS[tl])}`), notes=L.filter(tl=>P[tl]).map(tl=>`<b>${tName(tl)}</b> ${esc(P[tl])}`);
+  if(G&&(G.f||Object.keys(G.p||{}).length)){ const P=G.p||{}, gen=show.map(tl=>`<b>${tName(tl)}</b> ${tDefH(tl)}`), notes=L.filter(tl=>P[tl]).map(tl=>`<b>${tName(tl)}</b> ${esc(P[tl])}`);
     return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${G.f?`<p class="tfind">${esc(G.f)}</p>`:""}${gen.length?`<p class="tooldef2">${gen.join("<br>")}</p>`:""}${notes.length?`<details class="tnotes"><summary>읽은 뒤 · 눈여겨볼 것</summary><p class="tooldef2">${notes.join("<br>")}</p></details>`:""}</div>`; }
-  return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tName(tl)}</b> ${esc(TOOLS[tl])}`).join("<br>")}</p>`:""}</div>`; }
+  return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tName(tl)}</b> ${tDefH(tl)}`).join("<br>")}</p>`:""}</div>`; }
 function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(tName(b.dataset.tool)+": "+TOOLS[b.dataset.tool]); }); }
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
 /* 11-12: 가이드북이 있는 날은 묵상 탭의 관찰·적용 질문을 가이드북과 같게(같은 칸에 저장되므로 질문도 같아야 함) */
@@ -5489,7 +5494,7 @@ function obsRecord(){
   E.sort((a,b)=>b.no-a.no);
   const used=TOOL_ORDER.filter(tl=>E.some(e=>e.tl.includes(tl))), f=used.includes(view.obsF)?view.obsF:"";
   const L=f?E.filter(e=>e.tl.includes(f)):E;
-  return `<section class="sec"><span class="label">관찰 기록${E.length?` · ${E.length}개`:""}</span><p class="lead" style="margin:0 0 6px">내가 직접 적은 관찰입니다. 이름표로 골라 볼 수 있습니다.</p>${E.length?`<div class="obsf"><button class="${f?"":"on"}" data-obsf="">모두</button>${used.map(tl=>`<button class="${f===tl?"on":""}" data-obsf="${tl}">${tName(tl)}</button>`).join("")}</div>${f?`<p class="lead obsdef"><b>${tName(f)}</b> ${esc(TOOLS[f])}</p>`:""}`+L.slice(0,view.obsAll?999:12).map(e=>`<div class="obsitem"><small>${esc(e.lab)} · ${esc(e.src)} ${e.tl.map(tl=>`<i class="tool">${tl}</i>`).join("")}</small><p>${esc(e.txt)}</p></div>`).join("")+(L.length>12&&!view.obsAll?`<button class="btn ghost small" id="obsAll">${L.length-12}개 더 보기</button>`:""):`<p class="lead">QT의 '내가 본문에서 본 것'이나 '더 깊이 관찰하기'에 글을 적으면 여기에 모입니다.</p>`}</section>`; }
+  return `<section class="sec"><span class="label">관찰 기록${E.length?` · ${E.length}개`:""}</span><p class="lead" style="margin:0 0 6px">내가 직접 적은 관찰입니다. 이름표로 골라 볼 수 있습니다.</p>${E.length?`<div class="obsf"><button class="${f?"":"on"}" data-obsf="">모두</button>${used.map(tl=>`<button class="${f===tl?"on":""}" data-obsf="${tl}">${tName(tl)}</button>`).join("")}</div>${f?`<p class="lead obsdef"><b>${tName(f)}</b> ${tDefH(f)}</p>`:""}`+L.slice(0,view.obsAll?999:12).map(e=>`<div class="obsitem"><small>${esc(e.lab)} · ${esc(e.src)} ${e.tl.map(tl=>`<i class="tool">${tl}</i>`).join("")}</small><p>${esc(e.txt)}</p></div>`).join("")+(L.length>12&&!view.obsAll?`<button class="btn ghost small" id="obsAll">${L.length-12}개 더 보기</button>`:""):`<p class="lead">QT의 '내가 본문에서 본 것'이나 '더 깊이 관찰하기'에 글을 적으면 여기에 모입니다.</p>`}</section>`; }
 function renderRecord(){
   let qd=0,s=0,t=0,perfect=0; for(const k in mem.q){const f=mem.q[k].first; if(f){qd++;s+=f.s;t+=f.t; if(mem.q[k].best&&mem.q[k].best.s===mem.q[k].best.t) perfect++;}}
   const doneN=Object.keys(mem.done).length, qtN=Object.values(mem.qt).filter(x=>x.done).length, hlN=Object.keys(HL).length;
