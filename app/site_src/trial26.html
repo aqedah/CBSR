@@ -744,8 +744,6 @@ function pTitle(q){ const f=F(q); return `<div class="pg fm r q${q}"><div class=
 <p class="ftk">${esc(f.cvk)}</p><p class="ftt">${esc(f.cvt).replace(/\n/g,' ')}</p><p class="fts">${esc(f.cvs)}</p><p class="ftc">${esc(f.ch)}</p>
 </div><div class="pn">1</div></div>`; }
 function pCopy(q){ const f=F(q); return `<div class="pg fm q${q}">
-<p class="fh">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p><p class="fp sm">${bold(f.rulead||'')}</p>
-<ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
 <div class="fmbot">
 <p class="cp"><b>${esc(f.cvt.replace(/\n/g,' '))}</b> ${esc(f.cvs)}</p>
 ${paras(f.cp).map(t=>t.split('\n').map(x=>`<p class="cp">${esc(x)}</p>`).join('')+'<p class="cp">&nbsp;</p>').join('')}
@@ -820,6 +818,8 @@ function pDivider(q){ const f=F(q); const ds=qDays(q);
 <p class="dvs">${esc(f.divs|| (ds[0].m+'월 '+ds[0].d+'일 — '+ds[ds.length-1].m+'월 '+ds[ds.length-1].d+'일'))}</p></div>
 <div class="pn">14</div></div>`; }
 function pDivider2(q){ const f=F(q); return `<div class="pg fm r q${q}">
+<p class="fh">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p><p class="fp sm">${bold(f.rulead||'')}</p>
+<ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
 <p class="dvnote">${esc(f.divnote)}</p><div class="pn">15</div></div>`; }
 /* ── 권 끝 부록: 여정 한눈에 · 성막 ── */
 const ATLAS=Object.assign({
