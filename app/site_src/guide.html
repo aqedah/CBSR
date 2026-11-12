@@ -276,7 +276,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .howmini{position:absolute;top:0;overflow:hidden;border:.2mm solid #bbb;background:#fff}
 .pg .howwrap.L .howmini{box-shadow:-.8mm .8mm 2mm rgba(0,0,0,.14)} .pg .howwrap.R .howmini{box-shadow:.8mm .8mm 2mm rgba(0,0,0,.14)}
 .pg .howmini .mplay{display:none}
-.pg .hco{position:absolute;font-family:"Noto Sans KR",sans-serif;font-size:7.6pt;line-height:1.42;color:#333}
+.pg .hco{position:absolute;font-family:"Noto Sans KR",sans-serif;font-size:7.3pt;line-height:1.4;color:#333}
 .pg .hco b{display:block;color:var(--main);font-size:9pt;margin-bottom:.2mm}
 .pg .howwrap.L .hco{left:0;text-align:right} .pg .howwrap.R .hco{right:0}
 .pg .howsvg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
@@ -680,7 +680,7 @@ const FDEF=q=>Object.assign({
  demo:'표시한다|39:2 "여호와께서 요셉과 함께 하시므로"와 39:21 "여호와께서 요셉과 함께 하시고"에 밑줄을 긋습니다.\n견준다|한 곳은 주인의 집, 한 곳은 감옥입니다. 자리는 낮아졌습니다.\n한 문장으로|자리가 바뀌어도 서술자의 말은 바뀌지 않습니다. 이 문장이 ③ 본문 관찰이 됩니다.',
  hmlead:'하루에 한 펼침면입니다. 왼쪽은 읽고, 오른쪽은 씁니다. 아래는 **1월 22일(출애굽기 14–15장)**을 실제로 써 본 모습입니다.',
  hmlead2:'오른쪽 쪽은 손으로 씁니다. 칸마다 한두 문장이면 넉넉합니다.',
- hcalL:'today|오늘의 흐름|줄거리를 먼저 잡고 읽기 시작합니다.\nfind|오늘의 읽기 도구|오늘 쓸 도구입니다. 색을 채운 첫 기호가 대표 도구이고, 관찰 질문은 여기서 나옵니다.\ngo|성경책 펴기|여기서 이 책을 내려놓고 성경책으로 본문을 읽습니다.\nbox|눈여겨볼 것|읽고 돌아와서 내가 본 것과 견주어 봅니다. 답이 아니라 확인입니다.\nmap|지도|오늘 이야기가 일어난 자리입니다.\nchrist|성경 전체로|오늘 본문에서 성경 전체로 나가는 길입니다. 도구와는 다릅니다.',
+ hcalL:'today|오늘의 흐름|줄거리를 먼저 잡고 읽기 시작합니다.\nfind|오늘의 읽기 도구|색을 채운 첫 기호가 대표 도구입니다. 관찰 질문이 여기서 나옵니다.\ngo|성경책 펴기|여기서 이 책을 내려놓고 성경책으로 본문을 읽습니다.\nbox|눈여겨볼 것|읽고 돌아와서 내가 본 것과 견주어 봅니다. 답이 아니라 확인입니다.\nmap|지도|오늘 이야기가 일어난 자리입니다.\nchrist|성경 전체로|오늘 본문에서 성경 전체로 나가는 길입니다. 도구와는 다릅니다.',
  hcalR:'q|본문 관찰|대표 도구에서 나온 물음에 내 말로 답합니다.\nlab1|하나님의 성품|본문에서 만난 하나님을 한 문장으로 적습니다.\napply|적용|오늘 내 삶에 대어 봅니다.\nlab3|오늘의 기도|한두 줄이면 넉넉합니다.\nafter|쓴 뒤에 읽기|③을 다 쓴 뒤에 해설과 기도를 읽고 내가 쓴 것과 견주어 봅니다.',
  hw:'백성: 애굽에 매장지가 없어서 데려왔느냐. 모세: 두려워 말고 가만히 서서 여호와의 구원을 보라. 건넌 뒤 여호와를 경외하고 믿었다.\n앞에서 길을 내시고 뒤에서 막아 주시는 하나님.\n맡길 일: 내일 받을 검사 결과. 내디딜 걸음: 오늘 먼저 사과하기.\n바다 앞에서도 주께서 길이 되심을 믿게 하소서.',
  rulead:'이 책을 쓰는 동안 지켜 주십시오.',
@@ -940,19 +940,29 @@ function pHowR(q){ const f=F(q); return `<div class="pg fm r q${q} howpgx">
 <div class="howwrap R">${howMini(1)}${howCallouts(f.hcalR)}<svg class="howsvg" width="100%" height="100%"></svg></div>
 ${howSteps(f,2)}<div class="pn">5</div></div>`; }
 function layoutHow(root){
-  root.querySelectorAll('.howwrap').forEach(w=>{
+  const W=[...root.querySelectorAll('.howwrap')]; if(!W.length) return;
+  /* 견본을 위 설명과 아래 네 걸음 사이 한가운데에 */
+  let A=0,B=1e9; const k0=W[0].getBoundingClientRect().width/W[0].offsetWidth||1;
+  W.forEach(w=>{ const pg=w.closest('.pg'), pr=pg.getBoundingClientRect(); const ld=pg.querySelector('.hlead'), st=pg.querySelector('.hsteps');
+    if(ld) A=Math.max(A,(ld.getBoundingClientRect().bottom-pr.top)/k0/MM); if(st) B=Math.min(B,(st.getBoundingClientRect().top-pr.top)/k0/MM) });
+  const H=210*HOW_S; if(B<1e9){ const top=A+(B-A-H)/2; W.forEach(w=>{ w.style.top=top.toFixed(2)+'mm'; w.style.height=H.toFixed(2)+'mm' }) }
+  W.forEach(w=>{
     const L=w.classList.contains('L'); const mini=w.querySelector('.howmini'); if(!mini) return;
     const wr=w.getBoundingClientRect(); const k=wr.width/w.offsetWidth||1; const mm=v=>v/k/MM;
-    const Hmm=mm(wr.height), Wmm=mm(wr.width), MW=148*HOW_S, CW=Wmm-MW-4;
+    const Hmm=mm(wr.height), Wmm=mm(wr.width), MW=148*HOW_S, CW=Wmm-MW-6;
     w.querySelectorAll('.hco').forEach(c=>{ c.style.width=CW.toFixed(2)+'mm' });
     const pick=t=>{ if(t==='lab1'||t==='lab3'){ return mini.querySelectorAll('p.lab')[+t.slice(3)] } const S={today:'[data-f="today"]',find:'[data-f="find"]',go:'p.go',box:'.box',map:'.map',christ:'[data-f="christ"]',q:'[data-f="q"]',apply:'[data-f="apply"]',after:'.after'}; return mini.querySelector(S[t]||t) };
+    const mr=mini.getBoundingClientRect(); const edge=L?mm(mr.left-wr.left):mm(mr.right-wr.left);
     let prev=-99; const paths=[];
-    const items=[...w.querySelectorAll('.hco')].map(c=>{ const e=pick(c.dataset.t); if(!e) return null; const r=e.getBoundingClientRect(); const y=mm(r.top-wr.top)+Math.min(mm(r.height),5)/2; const mr=mini.getBoundingClientRect(); const x=L?mm(mr.left-wr.left)+1.2:mm(mr.right-wr.left)-1.2; return {c,x,y} }).filter(Boolean).sort((a,b)=>a.y-b.y);
-    items.forEach(it=>{ it.h=mm(it.c.getBoundingClientRect().height); it.top=Math.max(it.y-2.4,prev+2.2); prev=it.top+it.h });
-    if(prev>Hmm){ for(let i=items.length-1;i>=0;i--){ const lim=i<items.length-1?items[i+1].top-items[i].h-2.2:Hmm-items[i].h; if(items[i].top>lim) items[i].top=lim } }
+    const items=[...w.querySelectorAll('.hco')].map(c=>{ const e=pick(c.dataset.t); if(!e) return null; const r=e.getBoundingClientRect(); const y=mm(r.top-wr.top)+Math.min(mm(r.height),4)/2; const x=L?mm(r.left-wr.left)-1:mm(r.right-wr.left)+1;
+      if(c.dataset.t==='map'){ const bx=mini.querySelector('.box')||e.closest('.box')||e; const br=bx.getBoundingClientRect(); const yb=mm(br.bottom-wr.top)+2.1; return {c,x:mm((r.left+r.right)/2-wr.left),y:yb,yt:mm(r.bottom-wr.top)+.6,under:true} }
+      return {c,x,y} }).filter(Boolean).sort((a,b)=>a.y-b.y);
+    items.forEach(it=>{ it.h=mm(it.c.getBoundingClientRect().height); it.top=Math.max(it.y-2.3,prev+2.4); prev=it.top+it.h });
+    if(prev>Hmm){ for(let i=items.length-1;i>=0;i--){ const lim=i<items.length-1?items[i+1].top-items[i].h-2.4:Hmm-items[i].h; if(items[i].top>lim) items[i].top=lim } }
     items.forEach(it=>{ it.c.style.top=it.top.toFixed(2)+'mm';
-      const x0=L?CW+0.8:Wmm-CW-0.8, y0=it.top+2.1, mx=(x0+it.x)/2;
-      paths.push(`<path d="M${x0} ${y0} C${mx} ${y0} ${mx} ${it.y} ${it.x} ${it.y}" fill="none" stroke="#fff" stroke-width="1.2" opacity=".9"/><path d="M${x0} ${y0} C${mx} ${y0} ${mx} ${it.y} ${it.x} ${it.y}" fill="none" stroke="var(--main)" stroke-width=".35"/><circle cx="${it.x}" cy="${it.y}" r=".8" fill="var(--main)"/>`) });
+      const x0=L?CW+0.8:Wmm-CW-0.8, y0=it.top+2.3, xm=L?edge-2.6:edge+2.6;
+      const d=it.under?`M${x0} ${y0} L${xm} ${y0} L${xm} ${it.y} L${it.x} ${it.y} L${it.x} ${it.yt}`:Math.abs(y0-it.y)<0.6?`M${x0} ${it.y} L${it.x} ${it.y}`:`M${x0} ${y0} L${xm} ${y0} L${xm} ${it.y} L${it.x} ${it.y}`;
+      paths.push(`<path d="${d}" fill="none" stroke="#fff" stroke-width="1.1" opacity=".9" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="var(--main)" stroke-width=".32" stroke-linejoin="round"/><circle cx="${it.x}" cy="${it.under?it.yt:it.y}" r=".85" fill="var(--main)"/>`) });
     const svg=w.querySelector('.howsvg'); svg.setAttribute('viewBox',`0 0 ${Wmm.toFixed(2)} ${Hmm.toFixed(2)}`); svg.setAttribute('preserveAspectRatio','none'); svg.innerHTML=paths.join('');
   }); }
 function howSpread(q){ const html=`<div class="spread">${pHowL(q)}${pHowR(q)}</div>`;
