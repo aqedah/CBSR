@@ -253,15 +253,36 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .ln{border-bottom:0.15mm dotted #999;height:6mm}
 .pg .lnw.hw{position:relative}
 .pg .hwt{position:absolute;left:1mm;right:0;top:0;font-family:'Nanum Pen Script',cursive;font-size:16pt;line-height:6mm;color:#27468a;padding-top:.3mm}
-.pg .howwrap{position:relative;margin-top:2mm}
-.pg .howmini{position:absolute;top:0;overflow:hidden;border:.2mm solid #bbb;box-shadow:0 .6mm 2mm rgba(0,0,0,.18);background:#fff}
+.pg .irgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.4mm}
+.pg .ircard{border:.2mm solid var(--mainL,#ddd);border-top:.9mm solid var(--main);padding:1.6mm 2mm;font-size:7.8pt;line-height:1.42;background:#fff}
+.pg .irn{font-family:"Noto Sans KR",sans-serif;font-weight:700;color:var(--main);font-size:8.4pt;margin:0 0 1.2mm}
+.pg .ire{margin:0 0 1mm} .pg .ire span{display:block;font-family:"Noto Sans KR",sans-serif;font-size:6.8pt;color:#888}
+.pg .gngrid{display:grid;grid-template-columns:1fr 1fr;gap:1.8mm 3mm}
+.pg .gncard{background:var(--gy);border-radius:1.2mm;padding:1.3mm 2.2mm;font-size:7.6pt;line-height:1.36}
+.pg .gncard.wide{grid-column:1/-1}
+.pg .gnn{font-family:"Noto Sans KR",sans-serif;font-weight:900;font-size:10pt;color:var(--main);margin:0}
+.pg .gnd{margin:.4mm 0} .pg .gnb{margin:0;color:#666;font-size:7.2pt} .pg .gnt{margin:.8mm 0 0} .pg .gnt .chip{font-size:6.6pt;margin:0 .8mm .5mm 0}
+.pg .wmap{position:relative;width:119mm;height:118mm;margin:2mm auto 0}
+.pg .wsvg{position:absolute;left:0;top:0}
+.pg .wbx{position:absolute;width:44mm;background:#fff;border:.25mm solid var(--main);border-radius:1.4mm;padding:1.4mm 2mm;font-size:7.6pt;line-height:1.4}
+.pg .wbn{margin:0 0 .6mm} .pg .wbd{margin:0} .pg .wbe{margin:.6mm 0 0;color:#555;font-size:7.2pt}
+.pg .wdiff{margin-top:2mm;font-size:8pt;line-height:1.4}
+.pg .wdr{display:grid;grid-template-columns:20mm 1fr 1fr;gap:2mm;padding:1.1mm 0;border-bottom:.15mm solid #e2e2e2}
+.pg .wdh{font-family:"Noto Sans KR",sans-serif;font-weight:700;color:var(--main);border-bottom:.35mm solid var(--main)}
+.pg .wdk{font-family:"Noto Sans KR",sans-serif;color:#666;font-size:7.4pt}
+.pg.howpgx .hlead{min-height:9mm;margin-bottom:0}
+.pg .howwrap{position:absolute;top:36mm;height:126mm}
+.pg .howwrap.L{left:14mm;right:0} .pg .howwrap.R{left:0;right:14mm}
+.pg .howmini{position:absolute;top:0;overflow:hidden;border:.2mm solid #bbb;background:#fff}
+.pg .howwrap.L .howmini{box-shadow:-.8mm .8mm 2mm rgba(0,0,0,.14)} .pg .howwrap.R .howmini{box-shadow:.8mm .8mm 2mm rgba(0,0,0,.14)}
 .pg .howmini .mplay{display:none}
-.pg .howmini .pg{box-shadow:none}
-.pg .hco{position:absolute;width:40mm;font-family:"Noto Sans KR",sans-serif;font-size:7.4pt;line-height:1.38;color:#333}
-.pg .hco b{display:block;color:var(--main);font-size:8.6pt;margin-bottom:.2mm}
-.pg .howpg.L .hco{left:0;text-align:right} .pg .howpg.R .hco{right:0}
+.pg .hco{position:absolute;font-family:"Noto Sans KR",sans-serif;font-size:7.6pt;line-height:1.42;color:#333}
+.pg .hco b{display:block;color:var(--main);font-size:9pt;margin-bottom:.2mm}
+.pg .howwrap.L .hco{left:0;text-align:right} .pg .howwrap.R .hco{right:0}
 .pg .howsvg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-.pg .howpg ol.rules{font-size:8.4pt!important;line-height:1.45!important;margin-top:1mm} .pg .howpg ol.rules li{margin-bottom:.8mm!important} .pg .howpg p.st4{font-size:8.6pt!important;line-height:1.45!important;margin:0 0 1.2mm!important} .pg .howpg p.fp{margin-bottom:1mm}
+.pg .hsteps{position:absolute;left:14mm;right:14mm;bottom:13mm;display:flex;gap:4mm}
+.pg .hstep{flex:1;border-top:.5mm solid var(--main);padding-top:1.6mm;font-size:8pt;line-height:1.45}
+.pg .hstep .stn{display:inline-block;width:4.2mm;height:4.2mm;line-height:4.2mm;border-radius:50%;background:var(--main);color:#fff;text-align:center;font-family:"Noto Sans KR",sans-serif;font-size:7pt;font-weight:700;margin-right:1.4mm;vertical-align:.2mm} .pg .hstep b{font-family:"Noto Sans KR",sans-serif;font-size:9pt} .pg .hstep span:last-child{display:block;margin-top:.6mm;color:#333}
 .pg .hold{border:0.2mm solid var(--main);background:#fff;height:8mm;margin-top:0.6mm}
 .pg .heard{position:absolute;left:14mm;right:14mm;bottom:11mm;border-top:0.1mm solid #bbb;padding-top:1.4mm;font-size:8.3pt;color:#777}
 .pg .heard .ln{height:6.3mm}
@@ -594,9 +615,9 @@ function findHtml(p,qt){
   let h=chip(qt.guide.find).replace('<span class="chip">','<span class="chip rep">');
   return h }
 function chip(t){ let r=String(t||'').trim(), out=''; let m;
-  while((m=r.match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
+  while((m=r.match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
   if(out) return out+vs(r);
-  m=String(t||'').match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
+  m=String(t||'').match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
 function pageL(p,qt){
   const q='q'+qOf(p);
   const look=(qt.obs.look||[]).filter(x=>x[0]);
@@ -662,6 +683,7 @@ const FDEF=q=>Object.assign({
  hcalL:'today|오늘의 흐름|줄거리를 먼저 잡고 읽기 시작합니다.\nfind|오늘의 읽기 도구|오늘 쓸 도구입니다. 색을 채운 첫 기호가 대표 도구이고, 관찰 질문은 여기서 나옵니다.\ngo|성경책 펴기|여기서 이 책을 내려놓고 성경책으로 본문을 읽습니다.\nbox|눈여겨볼 것|읽고 돌아와서 내가 본 것과 견주어 봅니다. 답이 아니라 확인입니다.\nmap|지도|오늘 이야기가 일어난 자리입니다.\nchrist|성경 전체로|오늘 본문에서 성경 전체로 나가는 길입니다. 도구와는 다릅니다.',
  hcalR:'q|본문 관찰|대표 도구에서 나온 물음에 내 말로 답합니다.\nlab1|하나님의 성품|본문에서 만난 하나님을 한 문장으로 적습니다.\napply|적용|오늘 내 삶에 대어 봅니다.\nlab3|오늘의 기도|한두 줄이면 넉넉합니다.\nafter|쓴 뒤에 읽기|③을 다 쓴 뒤에 해설과 기도를 읽고 내가 쓴 것과 견주어 봅니다.',
  hw:'백성: 애굽에 매장지가 없어서 데려왔느냐. 모세: 두려워 말고 가만히 서서 여호와의 구원을 보라. 건넌 뒤 여호와를 경외하고 믿었다.\n앞에서 길을 내시고 뒤에서 막아 주시는 하나님.\n맡길 일: 내일 받을 검사 결과. 내디딜 걸음: 오늘 먼저 사과하기.\n바다 앞에서도 주께서 길이 되심을 믿게 하소서.',
+ rulead:'이 책을 쓰는 동안 지켜 주십시오.',
  howcap:'성품 칸에 ‘함께하시는 하나님’이라고만 쓰면 오늘 본문이 없어도 쓸 수 있는 말이 됩니다. 본문의 어느 자리에서 그렇게 보았는지까지 적으십시오.',
  sample:'1|본문 관찰|서술자는 요셉이 형통한 까닭을 무엇이라 말하고, 요셉 자신은 꿈 해석의 출처를 무엇이라 말합니까?|서술자는 집에서 "여호와께서 요셉과 함께 하시므로"(39:2), 감옥에서 "여호와께서 요셉과 함께 하시고"(39:21) 하고 되풀이합니다. 요셉도 "해석은 하나님께 있지 아니하니이까"(40:8), "내가 아니라 하나님께서"(41:16) 합니다.\n2|하나님의 성품|본문에서 본 하나님은 어떤 분입니까?|자리가 낮아지고 사람이 잊은 동안에도 함께하시는 하나님. 주인의 집에서도 감옥에서도 서술자가 같은 말을 되풀이합니다.\n3|적용|지금 내가 잊힌 것 같은 자리에 있다면, 거기서 내가 할 수 있는 한 가지는 무엇입니까?|알아주지 않는다는 생각으로 미뤄 둔 공동 작업을 오늘 마무리하겠다.\n4|오늘의 기도|—|서운한 마음을 주께 말씀드립니다. 사람의 평가에 매여 지금 맡은 일을 놓지 않게 하소서.',
  steps:'읽기 전|오늘의 흐름으로 줄거리를 잡고, **오늘의 읽기 도구**에서 그날 쓸 도구를 받습니다. 말뜻은 낯선 낱말 하나를 풀어 줍니다.\n읽은 뒤|성경책을 다 읽고 돌아와서 봅니다. 눈여겨볼 것은 답이 아니라 확인입니다. 내가 본 것과 견주어 보십시오.\n나의 묵상|손으로 쓰는 자리입니다. 본문 관찰 · 하나님의 성품 · 적용 · 오늘의 기도. 칸마다 한두 문장이면 넉넉합니다.\n쓴 뒤에 읽기|쪽 아래 띠입니다. **③을 다 쓴 뒤에** 읽습니다.',
@@ -672,12 +694,12 @@ const FDEF=q=>Object.assign({
  irhead:'?! 아이러니의 세 가지',
  irlead:'기호는 **?! 하나**입니다. 어느 쪽인지는 그날 ② 눈여겨볼 것의 설명 첫머리로 알 수 있습니다.',
  irony:'뜻과 반대로 말합니다|소풍 가는 날 비가 오는데 "날씨 참 좋다"|삼상 26:15 다윗이 아브넬에게 "네가 용사가 아니냐".\n뜻한 것과 정반대의 결과가 옵니다|늦지 않으려고 지름길로 갔는데 더 늦었다|출 1:22 나일 강에 던지라던 명령이 모세를 왕궁에 들여놓습니다.\n읽는 사람은 아는데 인물은 모릅니다|깜짝 생일잔치가 준비된 줄 모르고 친구가 서운해한다|창 22:1 "하나님이 아브라함을 시험하시려고".',
- dshead:'말을 읽는 일곱 가지 도구',
+ dshead:'대화를 읽는 열한 가지 도구',
  dslead:'**담화 도구**입니다. 하나님, 선지자, 시인, 사도가 직접 하는 말에서 씁니다. 이야기 안의 긴 말(모세의 설교, 한나의 노래)에서도 씁니다.',
- dsyms:'“” 말씀 공식|누가 말하는지 알려 주는 정해진 말입니다. 부르며 말씀하시는 공식과, 말을 열고 닫는 공식이 있습니다.|레 1:1 "여호와께서 회막에서 모세를 부르시고 그에게 말씀하여 이르시되" · 사 1:20 "여호와의 입의 말씀이니라".\n♪ 후렴|단락 끝마다 같은 말이 돌아옵니다. 노래의 마디가 나뉘고, 돌아올 때마다 무게가 쌓입니다.|시 42:5, 11; 43:5 "내 영혼아 네가 어찌하여 낙심하며" · 암 4:6, 8 "너희가 내게로 돌아오지 아니하였느니라".\n∥ 평행|한 절의 두 줄이 같은 뜻으로 거듭하거나 반대 뜻으로 맞섭니다. 둘째 줄이 무엇을 더하는지 봅니다.|시 19:1 "하늘이 하나님의 영광을 선포하고 궁창이 그의 손으로 하신 일을 나타내는도다".\nif 가정|"만일 …하면 …하리라". 두 길과 그 끝이 나란히 놓입니다.|사 1:19–20 "너희가 즐겨 순종하면 … 거절하여 배반하면".\n¿ 수사적 질문|대답을 구하지 않는 물음입니다. 듣는 사람이 스스로 답하게 합니다.|롬 8:31 "누가 우리를 대적하리요" · 욥 38:4 "네가 어디 있었느냐".\n≒ 비유|하나님이나 사람을 다른 것에 빗댑니다. 무엇을 무엇에 빗댔는지, 어디까지 닮았는지 봅니다.|시 23:1 "여호와는 나의 목자시니".\n☞ 호명|듣는 사람을 이름으로 부릅니다. 누구에게 하는 말인지가 정해집니다.|신 6:4 "이스라엘아 들으라" · 잠 3:1 "내 아들아".',
+ dsyms:'“” 말씀 공식|누가 말하는지 알려 주는 정해진 말입니다. 부르는 공식과 여닫는 공식이 있습니다.|레 1:1 "여호와께서 회막에서 모세를 부르시고 그에게 말씀하여 이르시되" · 사 1:20 "여호와의 입의 말씀이니라".\n♪ 후렴|단락 끝마다 같은 말이 돌아옵니다. 노래의 마디가 나뉘고, 돌아올 때마다 무게가 쌓입니다.|시 42:5, 11; 43:5 "내 영혼아 네가 어찌하여 낙심하며" · 암 4:6, 8 "너희가 내게로 돌아오지 아니하였느니라".\n∥ 평행|한 절의 두 줄이 같은 뜻으로 거듭하거나 반대 뜻으로 맞섭니다. 둘째 줄이 무엇을 더하는지 봅니다.|시 19:1 "하늘이 하나님의 영광을 선포하고 궁창이 그의 손으로 하신 일을 나타내는도다".\nif 가정|"만일 …하면 …하리라". 두 길과 그 끝이 나란히 놓입니다.|사 1:19–20 "너희가 즐겨 순종하면 … 거절하여 배반하면".\n¿ 수사적 질문|대답을 구하지 않는 물음입니다. 듣는 사람이 스스로 답하게 합니다.|롬 8:31 "누가 우리를 대적하리요" · 욥 38:4 "네가 어디 있었느냐".\n≒ 비유|하나님이나 사람을 다른 것에 빗댑니다. 무엇을 무엇에 빗댔는지, 어디까지 닮았는지 봅니다.|시 23:1 "여호와는 나의 목자시니".\n☞ 호명|듣는 사람을 이름으로 부릅니다. 누구에게 하는 말인지가 정해집니다.|신 6:4 "이스라엘아 들으라" · 잠 3:1 "내 아들아".\n× 교차|말이 A–B–B′–A′로 되짚어 돌아옵니다. 한가운데가 가장 무겁습니다.|사 6:10 마음 – 귀 – 눈 – 눈 – 귀 – 마음.\n∞ 언약 공식|"나는 너희 하나님, 너희는 내 백성". 하나님과 백성 사이를 정하는 말이 성경 처음부터 끝까지 이어집니다.|레 26:12 "너희의 하나님이 되고 너희는 내 백성이 될 것이니라".\n※ 상징|숫자, 짐승, 색, 이름이 다른 것을 가리킵니다. 본문이 스스로 풀어 주는 자리부터 봅니다.|계 1:20 "일곱 별은 일곱 교회의 사자요 일곱 촛대는 일곱 교회니라".\n☆ 송영|하나님께 영광을 돌리며 단락을 닫습니다. 시편 다섯 권은 저마다 송영으로 끝나서, 탄식시 89편도 찬송으로 닫힙니다.|시 89:52 "여호와를 영원히 찬송할지어다 아멘 아멘" · 롬 11:36.',
  gnhead:'성경의 글 장르',
  gnlead:'장르에 따라 손에 드는 도구가 다릅니다. 한 책 안에서도 섞입니다. 이야기 속에 노래가 있고(출 15장, 삼상 2장), 율법 속에 이야기가 있습니다(레 10장).',
- genres:'이야기|서술자가 일어난 일을 들려줍니다. 말과 행동, 장면이 바뀌는 자리를 봅니다.|창세기, 여호수아–에스더, 복음서, 사도행전|\n율법|하나님이 백성에게 명령하십니다. 명령과 그 까닭, 조건을 봅니다.|출 20–40장, 레위기, 신명기|「」 if ☞\n노래|부르짖음과 찬양입니다. 두 줄의 짝과 돌아오는 말을 봅니다.|시편, 애가, 출 15장, 삼상 2장|∥ ♪ ≒\n지혜|삶의 이치를 짧게 가르칩니다.|잠언, 욥기, 전도서|∥ ≒ ¿ ☞\n예언|선지자가 하나님의 말씀을 전합니다.|이사야–말라기|「」 ♪ if ¿\n편지|사도가 교회에 씁니다. 말의 이음과 물음을 따라갑니다.|로마서–유다서|¿ ☞ if\n묵시|환상과 상징으로 마지막 일을 보입니다.|다니엘 7–12장, 요한계시록|≒ ♪',
+ genres:'이야기|서술자가 일어난 일을 들려줍니다. 말과 행동, 장면이 바뀌는 자리를 봅니다.|창세기, 여호수아–에스더, 복음서, 사도행전|\n율법|하나님이 백성에게 명령하십니다. 명령과 그 까닭, 조건을 봅니다.|출 20–40장, 레위기, 신명기|“” 말씀 공식 · if 가정 · ☞ 호명\n노래|부르짖음과 찬양입니다. 두 줄의 짝과 돌아오는 말을 봅니다.|시편, 애가, 출 15장, 삼상 2장|∥ 평행 · ♪ 후렴 · ☆ 송영\n지혜|삶의 이치를 짧게 가르칩니다.|잠언, 욥기, 전도서|∥ 평행 · ≒ 비유 · ¿ 수사적 질문 · ☞ 호명\n예언|선지자가 하나님의 말씀을 전합니다.|이사야–말라기|“” 말씀 공식 · ∞ 언약 공식 · × 교차 · ¿ 수사적 질문\n편지|사도가 교회에 씁니다. 말의 이음과 물음을 따라갑니다.|로마서–유다서|¿ 수사적 질문 · ☞ 호명 · ☆ 송영\n묵시|환상과 상징으로 마지막 일을 보입니다.|다니엘 7–12장, 요한계시록|※ 상징 · ≒ 비유 · ♪ 후렴',
  whhead:'‘성경 전체로’의 다섯 갈래',
  whlead:'왼쪽 쪽 아래, ② 눈여겨볼 것 밑에 붙는 줄입니다. 오늘 본문에서 성경 전체로 나가는 길을 보여 줍니다. **도구와는 다릅니다.**',
  whdiff:'어디를 봅니까|오늘 본문 안|오늘 본문 밖, 성경 전체\n언제 씁니까|읽기 전 ①에서 받아 읽으며 씀|읽은 뒤 ② 눈여겨볼 것 다음\n누가 찾습니까|내가 본문에서 찾습니다|이 책이 길을 안내합니다',
@@ -721,7 +743,10 @@ function blankPage(q){ return `<div class="pg q${q}"></div>` }
 function pTitle(q){ const f=F(q); return `<div class="pg fm r q${q}"><div class="fmmid">
 <p class="ftk">${esc(f.cvk)}</p><p class="ftt">${esc(f.cvt).replace(/\n/g,' ')}</p><p class="fts">${esc(f.cvs)}</p><p class="ftc">${esc(f.ch)}</p>
 </div><div class="pn">1</div></div>`; }
-function pCopy(q){ const f=F(q); return `<div class="pg fm q${q}"><div class="fmbot">
+function pCopy(q){ const f=F(q); return `<div class="pg fm q${q}">
+<p class="fh">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p><p class="fp sm">${bold(f.rulead||'')}</p>
+<ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
+<div class="fmbot">
 <p class="cp"><b>${esc(f.cvt.replace(/\n/g,' '))}</b> ${esc(f.cvs)}</p>
 ${paras(f.cp).map(t=>t.split('\n').map(x=>`<p class="cp">${esc(x)}</p>`).join('')+'<p class="cp">&nbsp;</p>').join('')}
 <p class="cp">펴낸 곳 ${esc(f.ch)}</p></div><div class="pn">2</div></div>`; }
@@ -736,7 +761,7 @@ function pHow1(q,sample){ const f=F(q);
 ${f.demo?`<table class="demo">${lines(f.demo).map(t=>{const [a,b]=t.split('|');return `<tr><td class="k">${esc(a||'')}</td><td>${boldv(b||'')}</td></tr>`}).join('')}</table>`:''}
 <div class="samp"><p class="sh2"><span class="n">3</span>나의 묵상 — 손으로 쓰는 자리</p>${rows}</div>
 <p class="fcap">${bold(f.howcap)}</p><div class="pn">5</div></div>`; }
-function pHow2(q){ const f=F(q); const N=['①','②','③','④'];
+function pHow2(q){ const f=F(q); const N=['1','2','3','4'];
   return `<div class="pg fm q${q}"><p class="fh2">네 걸음</p>
 ${lines(f.steps).map((t,i)=>{const [a,b]=t.split('|');return `<p class="st4"><span class="stn">${N[i]||'·'}</span><b>${esc(a)}</b> — ${bold(b||'')}</p>`}).join('')}
 <p class="fh2" style="margin-top:4mm">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p>
@@ -750,17 +775,28 @@ function pSym2(q){ const f=F(q); return `<div class="pg fm r q${q}">
 <p class="fh">${esc(f.dshead)}</p><p class="fp sm">${bold(f.dslead)}</p>
 <table class="symt tight">${lines(f.dsyms).map(t=>{const [s,d,e]=t.split('|');return `<tr><td class="sc">${chipSym(s||'')}</td><td>${bold(d||'')}<br><span class="ex">${boldv(e||'')}</span></td></tr>`}).join('')}</table>
 <div class="pn">7</div></div>`; }
-function pGenre(q){ const f=F(q); return `<div class="pg fm q${q}">
+function pGenre(q){ const f=F(q);
+  const ir=lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<div class="ircard"><p class="irn">“${esc(a||'')}”</p><p class="ire"><span>삶에서</span>${esc(b||'')}</p><p class="ire"><span>성경에서</span>${boldv(c||'')}</p></div>`}).join('');
+  const gn=lines(f.genres).map(t=>{const [a,b,c,d]=t.split('|');const tools=(d||'').split(' · ').map(x=>x.trim()).filter(Boolean);
+    return `<div class="gncard${tools.length?'':' wide'}"><p class="gnn">${esc(a||'')}</p><p class="gnd">${bold(b||'')}</p><p class="gnb">${esc(c||'')}</p>${tools.length?`<p class="gnt">${tools.map(chipSym).join('')}</p>`:''}</div>`}).join('');
+  return `<div class="pg fm q${q}">
 <p class="fh">${esc(f.irhead)}</p><p class="fp sm">${bold(f.irlead)}</p>
-<table class="symt">${lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc2">“${esc(a||'')}”</td><td><span class="ex">보기: ${esc(b||'')}</span><br>${boldv(c||'')}</td></tr>`}).join('')}</table>
+<div class="irgrid">${ir}</div>
 <p class="fh2" style="margin-top:4mm">${esc(f.gnhead)}</p><p class="fp sm">${bold(f.gnlead)}</p>
-<table class="symt gnt">${lines(f.genres).map(t=>{const [a,b,c,d]=t.split('|');return `<tr><td class="sc2">${esc(a||'')}</td><td>${bold(b||'')} <span class="ex">— ${esc(c||'')}</span></td><td class="gtool">${esc(d||'')}</td></tr>`}).join('')}</table>
+<div class="gngrid">${gn}</div>
 <div class="pn">8</div></div>`; }
-function pWhole(q){ const f=F(q); return `<div class="pg fm r q${q}">
-<p class="fh2">${esc(f.whhead)}</p><p class="fp sm">${bold(f.whlead)}</p>
-<table class="symt prt"><tr><th></th><th>도구</th><th>다섯 갈래</th></tr>${lines(f.whdiff).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc2">${esc(a||'')}</td><td>${esc(b||'')}</td><td>${esc(c||'')}</td></tr>`}).join('')}</table>
-<table class="symt" style="margin-top:3mm">${lines(f.whole).map(t=>{const [a,b,c]=t.split('|');return `<tr><td class="sc"><span class="chip">${esc(a||'')}</span></td><td>${bold(b||'')}${c?`<br><span class="ex">보기: ${boldv(c)}</span>`:''}</td></tr>`}).join('')}</table>
-${f.whfoot?`<p class="fp sm" style="margin-top:3mm">${bold(f.whfoot)}</p>`:''}
+function pWhole(q){ const f=F(q);
+  const L=lines(f.whole).map(t=>{const [a,b,c]=t.split('|');return {a,b,c}});
+  const POS=[[0,0],[75,0],[0,44],[75,44],[37.5,84]];
+  const boxes=L.slice(0,5).map((o,i)=>`<div class="wbx" style="left:${POS[i][0]}mm;top:${POS[i][1]}mm"><p class="wbn"><span class="chip">${esc(o.a||'')}</span></p><p class="wbd">${bold(o.b||'')}</p>${o.c?`<p class="wbe">${boldv(o.c)}</p>`:''}</div>`).join('');
+  const C=[59.5,52]; const ends=[[44,14],[75,14],[44,58],[75,58],[59.5,84]];
+  const lines_=ends.slice(0,L.length).map(([x,y])=>`<line x1="${C[0]}" y1="${C[1]}" x2="${x}" y2="${y}" stroke="var(--main)" stroke-width=".45" stroke-dasharray="1.2 .9"/><circle cx="${x}" cy="${y}" r=".9" fill="var(--main)"/>`).join('');
+  const diff=lines(f.whdiff).map(t=>{const [a,b,c]=t.split('|');return `<div class="wdr"><span class="wdk">${esc(a||'')}</span><span class="wdt">${esc(b||'')}</span><span class="wdw">${esc(c||'')}</span></div>`}).join('');
+  return `<div class="pg fm r q${q}">
+<p class="fh">${esc(f.whhead)}</p><p class="fp sm">${bold(f.whlead)}</p>
+<div class="wmap"><svg class="wsvg" viewBox="0 0 119 118" width="119mm" height="118mm">${lines_}<circle cx="${C[0]}" cy="${C[1]}" r="11" fill="var(--main)"/><text x="${C[0]}" y="${C[1]-1}" text-anchor="middle" font-size="3.6" fill="#fff" font-family="Noto Sans KR" font-weight="700">오늘</text><text x="${C[0]}" y="${C[1]+3.6}" text-anchor="middle" font-size="3.6" fill="#fff" font-family="Noto Sans KR" font-weight="700">본문</text></svg>${boxes}</div>
+<div class="wdiff"><div class="wdr wdh"><span class="wdk"></span><span class="wdt">🔍 도구 — 안을 봅니다</span><span class="wdw">→ 다섯 갈래 — 밖으로 나갑니다</span></div>${diff}</div>
+${f.whfoot?`<p class="fp sm" style="margin-top:2.5mm">${bold(f.whfoot)}</p>`:''}
 <div class="pn">9</div></div>`; }
 function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q);
   return `<div class="pg fm q${q}"><p class="fh">${esc(f.bkshead)}</p>
@@ -888,37 +924,35 @@ function appendixSpreads(q){
 }
 
 /* 4–5쪽: 실제 펼침면을 작게 넣고 자리마다 설명 — 왼쪽 쪽에는 그날의 왼쪽 쪽, 오른쪽 쪽에는 손글씨를 채운 오른쪽 쪽 */
-const HOW_S=0.45;
+const HOW_S=0.6;
 function howMini(side){ const D=HOWDAY; if(!D||!D.p) return '';
   const f=F(1); const hw=lines(f.hw||'');
   const inner=side?pageR(D.p,D.qt,hw):pageL(D.p,D.qt);
   return `<div class="howmini" style="${side?'left':'right'}:0;width:${(148*HOW_S).toFixed(2)}mm;height:${(210*HOW_S).toFixed(2)}mm"><div style="transform:scale(${HOW_S});transform-origin:0 0;width:148mm;height:210mm">${inner}</div></div>` }
 function howCallouts(txt){ return lines(txt||'').map(t=>{const [k,a,b]=t.split('|'); return `<div class="hco" data-t="${esc(k||'')}"><b>${esc(a||'')}</b>${bold(b||'')}</div>`}).join('') }
-function pHowL(q){ const f=F(q); return `<div class="pg fm q${q}"><div class="howpg L">
-<p class="fh">${esc(f.howhead)}</p><p class="fp sm">${bold(f.hmlead)}</p>
-<div class="howwrap" style="height:${(210*HOW_S).toFixed(2)}mm">${howMini(0)}${howCallouts(f.hcalL)}<svg class="howsvg" width="100%" height="100%"></svg></div>
-<p class="fh2" style="margin-top:4mm">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p>
-<ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
-</div><div class="pn">4</div></div>`; }
-function pHowR(q){ const f=F(q); const N=['①','②','③','④']; return `<div class="pg fm r q${q}"><div class="howpg R">
-<p class="fh">네 걸음</p><p class="fp sm">${bold(f.hmlead2)}</p>
-<div class="howwrap" style="height:${(210*HOW_S).toFixed(2)}mm">${howMini(1)}${howCallouts(f.hcalR)}<svg class="howsvg" width="100%" height="100%"></svg></div>
-<div style="margin-top:4mm">${lines(f.steps).map((t,i)=>{const [a,b]=t.split('|');return `<p class="st4"><span class="stn">${N[i]||'·'}</span><b>${esc(a)}</b> — ${bold(b||'')}</p>`}).join('')}</div>
-</div><div class="pn">5</div></div>`; }
+function howSteps(f,from){ const N=['1','2','3','4']; return `<div class="hsteps">${lines(f.steps).slice(from,from+2).map((t,i)=>{const [a,b]=t.split('|');return `<div class="hstep"><span class="stn">${N[from+i]}</span><b>${esc(a)}</b><span>${bold(b||'')}</span></div>`}).join('')}</div>` }
+function pHowL(q){ const f=F(q); return `<div class="pg fm q${q} howpgx">
+<p class="fh">${esc(f.howhead)}</p><p class="fp sm hlead">${bold(f.hmlead)}</p>
+<div class="howwrap L">${howMini(0)}${howCallouts(f.hcalL)}<svg class="howsvg" width="100%" height="100%"></svg></div>
+${howSteps(f,0)}<div class="pn">4</div></div>`; }
+function pHowR(q){ const f=F(q); return `<div class="pg fm r q${q} howpgx">
+<p class="fh">&nbsp;</p><p class="fp sm hlead">${bold(f.hmlead2)}</p>
+<div class="howwrap R">${howMini(1)}${howCallouts(f.hcalR)}<svg class="howsvg" width="100%" height="100%"></svg></div>
+${howSteps(f,2)}<div class="pn">5</div></div>`; }
 function layoutHow(root){
   root.querySelectorAll('.howwrap').forEach(w=>{
-    const L=!!w.closest('.howpg.L'); const mini=w.querySelector('.howmini'); if(!mini) return;
+    const L=w.classList.contains('L'); const mini=w.querySelector('.howmini'); if(!mini) return;
     const wr=w.getBoundingClientRect(); const k=wr.width/w.offsetWidth||1; const mm=v=>v/k/MM;
-    const Hmm=mm(wr.height), Wmm=mm(wr.width);
+    const Hmm=mm(wr.height), Wmm=mm(wr.width), MW=148*HOW_S, CW=Wmm-MW-4;
+    w.querySelectorAll('.hco').forEach(c=>{ c.style.width=CW.toFixed(2)+'mm' });
     const pick=t=>{ if(t==='lab1'||t==='lab3'){ return mini.querySelectorAll('p.lab')[+t.slice(3)] } const S={today:'[data-f="today"]',find:'[data-f="find"]',go:'p.go',box:'.box',map:'.map',christ:'[data-f="christ"]',q:'[data-f="q"]',apply:'[data-f="apply"]',after:'.after'}; return mini.querySelector(S[t]||t) };
     let prev=-99; const paths=[];
-    const cos=[...w.querySelectorAll('.hco')];
-    const items=cos.map(c=>{ const e=pick(c.dataset.t); if(!e) return null; const r=e.getBoundingClientRect(); const y=mm(r.top-wr.top)+Math.min(mm(r.height),4)/2; const x=L?mm(r.left-wr.left):mm(r.right-wr.left); return {c,x,y} }).filter(Boolean).sort((a,b)=>a.y-b.y);
-    items.forEach(it=>{ const h=mm(it.c.getBoundingClientRect().height); let top=Math.max(it.y-2.2,prev+1.6); it.top=top; it.h=h; prev=top+h });
-    const over=prev-Hmm; if(over>0){ for(let i=items.length-1;i>=0;i--){ const lim=i<items.length-1?items[i+1].top-items[i].h-1.6:Hmm-items[i].h; if(items[i].top>lim) items[i].top=lim } }
+    const items=[...w.querySelectorAll('.hco')].map(c=>{ const e=pick(c.dataset.t); if(!e) return null; const r=e.getBoundingClientRect(); const y=mm(r.top-wr.top)+Math.min(mm(r.height),5)/2; const mr=mini.getBoundingClientRect(); const x=L?mm(mr.left-wr.left)+1.2:mm(mr.right-wr.left)-1.2; return {c,x,y} }).filter(Boolean).sort((a,b)=>a.y-b.y);
+    items.forEach(it=>{ it.h=mm(it.c.getBoundingClientRect().height); it.top=Math.max(it.y-2.4,prev+2.2); prev=it.top+it.h });
+    if(prev>Hmm){ for(let i=items.length-1;i>=0;i--){ const lim=i<items.length-1?items[i+1].top-items[i].h-2.2:Hmm-items[i].h; if(items[i].top>lim) items[i].top=lim } }
     items.forEach(it=>{ it.c.style.top=it.top.toFixed(2)+'mm';
-      const x0=L?40.8:Wmm-40.8, y0=it.top+1.9, mx=(x0+it.x)/2;
-      paths.push(`<path d="M${x0} ${y0} C${mx} ${y0} ${mx} ${it.y} ${it.x} ${it.y}" fill="none" stroke="#fff" stroke-width="1.1" opacity=".9"/><path d="M${x0} ${y0} C${mx} ${y0} ${mx} ${it.y} ${it.x} ${it.y}" fill="none" stroke="var(--main)" stroke-width=".35"/><circle cx="${it.x}" cy="${it.y}" r=".75" fill="var(--main)"/>`) });
+      const x0=L?CW+0.8:Wmm-CW-0.8, y0=it.top+2.1, mx=(x0+it.x)/2;
+      paths.push(`<path d="M${x0} ${y0} C${mx} ${y0} ${mx} ${it.y} ${it.x} ${it.y}" fill="none" stroke="#fff" stroke-width="1.2" opacity=".9"/><path d="M${x0} ${y0} C${mx} ${y0} ${mx} ${it.y} ${it.x} ${it.y}" fill="none" stroke="var(--main)" stroke-width=".35"/><circle cx="${it.x}" cy="${it.y}" r=".8" fill="var(--main)"/>`) });
     const svg=w.querySelector('.howsvg'); svg.setAttribute('viewBox',`0 0 ${Wmm.toFixed(2)} ${Hmm.toFixed(2)}`); svg.setAttribute('preserveAspectRatio','none'); svg.innerHTML=paths.join('');
   }); }
 function howSpread(q){ const html=`<div class="spread">${pHowL(q)}${pHowR(q)}</div>`;
