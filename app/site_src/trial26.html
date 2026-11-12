@@ -844,8 +844,8 @@ ${f.whfoot?`<p class="wfoot">${bold(f.whfoot)}</p>`:''}
 function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q);
   return `<div class="pg fm q${q}"><p class="fh">${esc(f.bkshead)}</p>
 <p class="fp sm">${ds.length}일 · ${ds[0].m}월 ${ds[0].d}일부터 ${ds[ds.length-1].m}월 ${ds[ds.length-1].d}일까지</p>
-<table class="bkt2${bl.length>12?' dense':''}"><tr><th>책</th><th>시작</th><th>날수</th></tr>
-${bl.map(o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일</td><td>${o.n}일</td></tr>`).join('')}</table>
+<table class="bkt2${bl.length>12?' dense':''}"><tr><th>책</th><th>읽는 날짜</th><th>기간</th></tr>
+${bl.map(o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일${o.n>1?' – '+(o.to.m!==o.from.m?o.to.m+'월 ':'')+o.to.d+'일':''}</td><td>${o.n>1?o.n+'일 동안':'하루'}</td></tr>`).join('')}</table>
 <div class="pn">10</div></div>`; }
 function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.length/3);
   const seg=ds.slice(part*per,(part+1)*per); let last='';
