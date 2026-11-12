@@ -394,6 +394,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .scopebtn{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 0;font:inherit;color:var(--muted);font-size:13px}.scopebtn b{color:var(--accent);font-weight:600;white-space:nowrap}
 .srh{margin:12px 0 4px;font-size:14px;color:var(--accent)}.srtext{line-height:1.85;margin:0}.srtext sup{color:var(--muted);font-size:11px;margin:0 2px 0 4px}
 .tooldef2 b.tdk,.eyeq .tooldef2 b.tdk,.obsdef b.tdk{margin:0;font-weight:700;color:var(--ink)!important;display:inline}.tooldef2 .tex{color:var(--muted);font-size:.95em}
+.sumafter>summary{cursor:pointer;list-style:none}.sumafter>summary::-webkit-details-marker{display:none}.sumafter>summary::after{content:" ▾";color:var(--muted)}.sumafter[open]>summary::after{content:" ▴"}
 .toolbox .tnotes{margin-top:8px}.toolbox .tnotes summary{cursor:pointer;font:700 13px var(--f-ui);color:var(--accent)}.toolbox .tnotes .tooldef2{color:var(--ink)}
 .toolbox .tfind{margin:8px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
 .tooldef2{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.6}.tooldef2 b,.eyeq .tooldef2 b{display:inline;color:var(--ink);margin-right:4px;font-size:inherit}
@@ -2252,6 +2253,8 @@ const Y27=(ED===2027)&&typeof P27!=="undefined";
 const GB26=(ED===2026), GBON=Y27||GB26;
 const GBT=()=>Y27?(typeof GTOOLS!=="undefined"?GTOOLS:null):GB26?(typeof GTOOLS26!=="undefined"?GTOOLS26:null):null;
 const GBD=()=>Y27?(typeof GBDESC!=="undefined"?GBDESC:null):GB26?(typeof GBDESC26!=="undefined"?GBDESC26:null):null;
+/* 11-13 목사님: 오늘 탭 본문 설명은 가이드북의 '오늘의 흐름'으로 통일. 가이드북이 없는 날만 앱 요약 */
+const gbFlow=(w,d)=>{ const G=GBD(), x=G&&G[dayNo(w,d)]; return x&&x.t||""; };
 const GBQ=()=>Y27?(typeof GQT!=="undefined"?GQT:null):GB26?(typeof GQT26!=="undefined"?GQT26:null):null;
 if(Y27) Object.assign(PI,{name:"2027 성경통독",short:"365일",src:"CBSR 2027 성경통독표(365일)",start:"2027-01-01"});
 const DEFAULT_START=Y27?"2027-01-01":(ED+"-01-01");
@@ -3421,6 +3424,8 @@ function renderRead(){
   if(simple) h+=`</details>`;
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
+  /* 11-13 목사님: 긴 요약은 읽은 뒤로 — 오늘 탭이 가이드북 '오늘의 흐름'을 쓰는 날, 본문 끝에 접어 둠 */
+  { const lg=(SUMMARY[w-1]||[])[d]||""; if(lg&&gbFlow(w,d)) h+=`<details class="sec sumafter"><summary><span class="label" style="margin:0">다 읽은 뒤 · 오늘 줄거리 정리</span></summary><p class="summary" style="margin-top:10px">${esc(lg)}</p></details>`; }
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
   if(futLock(w,d)&&!done){ h+=`<p class="lead" style="text-align:center">본문은 미리 읽어 볼 수 있습니다.<br>통독 완료와 스토리 QT는 <b>${esc(futMsg(w,d))}</b>.</p>${flipHTML(w,d)}`; }
   else if(done){
@@ -3745,7 +3750,7 @@ function rgStory(w,d){ const L=rgDays(); let i=L.findIndex(([a,b])=>a===w&&b===d
   const close=pop=>{ stopT(); el.innerHTML=""; el.classList.remove("on"); document.body.style.overflow=""; if(pop!==true&&RGS) ovDone(RGS); RGS=null; };
   if(!RGS){ RGS=()=>close(true); ovOpen(RGS); }
   const page=k=>{ const [ww,dd]=L[k], p=dayPlan(ww,dd), key=keyOf(ww,dd), dt=dateOf(ww,dd), dd0=dayDiff(today0(),dt); let ph=null, cov=null; try{ const S=storySlides(ww,dd); ph=S[0]&&S[0].ph; cov=S[0]&&S[0].k==="cover"&&S[0].h?String(S[0].h).replace(/\*\*|__/g,""):null; }catch(e){}
-    const g=GUIDE[key]||{}, RD=false, line=g.today||(RD&&RD.text?RD.text.split(/(?<=[다요]\.)\s+/)[0]:"")||"", done=!!mem.done[key], fut=futLock(ww,dd), mins=tdMins(ww,dd);
+    const g=GUIDE[key]||{}, RD=false, line=gbFlow(ww,dd)||g.today||(RD&&RD.text?RD.text.split(/(?<=[다요]\.)\s+/)[0]:"")||"", done=!!mem.done[key], fut=futLock(ww,dd), mins=tdMins(ww,dd);
     const tag=dd0===0?"오늘":dd0<0?(done?"읽음 ✓":"지난 본문"):"미리 보기";
     const pg=document.createElement("div"); pg.className="rgsv"; pg.dataset.k=k;
     pg.innerHTML=`<div class="rgsbars"><i><b></b></i></div>
@@ -7323,7 +7328,7 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
   let h=td4Top(w,d,ph,live)+`
   <div class="td4head"><p class="td4k">${esc(dayName(w,d))}</p><h1>${esc(p.label)}</h1>${p.topic&&p.topic!==p.label?`<p class="td4r">${esc(p.topic)}</p>`:""}</div>
-  <div class="td4sumb">${(()=>{ const sm=(SUMMARY[w-1]||[])[d]||g.today||""; return sm?`<p class="td4sum">${esc(sm)}</p>`:""; })()}</div></div><div class="td4tx">`; /* 11-11 목사님: 본문 탭에 있던 본문 요약을 그림 아래로 */
+  <div class="td4sumb">${(()=>{ const sm=gbFlow(w,d)||(SUMMARY[w-1]||[])[d]||g.today||""; return sm?`<p class="td4sum">${esc(sm)}</p>`:""; })()}</div></div><div class="td4tx">`; /* 11-11 목사님: 본문 탭에 있던 본문 요약을 그림 아래로 */
   const n=(S||[]).length;
   let sec="";
   if(q.done) sec=`<button class="td4b2" id="tdNote"><b>묵상 노트</b><small>다시 보기</small></button>`;
