@@ -167,7 +167,8 @@ def _gdesc(Q):
                 m=_re9.match(r'\s*'+_GREX,pr[0] or '')
                 if m and m.group(1) not in pm: pm[m.group(1)]=pr[1]
         t=((v.get('guide') or {}).get('today') or '').strip()
-        if f or pm or t: out[int(n)]={'f':f,'p':pm,'t':t}  # t: 오늘의 흐름(11-13 앱 오늘 탭도 이것으로 통일)
+        wd=((v.get('guide') or {}).get('word') or '').strip()
+        if f or pm or t or wd: out[int(n)]={'f':f,'p':pm,'t':t,'w':wd}  # t: 오늘의 흐름(11-13 앱 오늘 탭도 이것으로 통일)
     return out
 # 11-13 목사님: 도구 이름·기호·풀이·예는 가이드북 책머리(f0.syms·dsyms) 한 벌을 앱도 그대로 씀
 _GBS={}

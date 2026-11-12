@@ -395,6 +395,9 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .srh{margin:12px 0 4px;font-size:14px;color:var(--accent)}.srtext{line-height:1.85;margin:0}.srtext sup{color:var(--muted);font-size:11px;margin:0 2px 0 4px}
 .tooldef2 b.tdk,.eyeq .tooldef2 b.tdk,.obsdef b.tdk{margin:0;font-weight:700;color:var(--ink)!important;display:inline}.tooldef2 .tex{color:var(--muted);font-size:.95em}
 .sumafter>summary{cursor:pointer;list-style:none}.sumafter>summary::-webkit-details-marker{display:none}.sumafter>summary::after{content:" ▾";color:var(--muted)}.sumafter[open]>summary::after{content:" ▴"}
+.v2aid .aidctx{margin:10px 0 0;padding:0 12px}.v2aid .aidctx dt{font:700 12.5px var(--f-ui);color:var(--muted);margin-top:8px}.v2aid .aidctx dd{margin:2px 0 0;line-height:1.6}
+.v2aid .aidsec{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.v2aid .aidk{display:block;font:700 13px var(--f-ui);color:var(--accent);margin-bottom:6px}.v2aid .aidsec .tline{margin:0}.v2aid .aidfocus{margin:8px 0 0;font-size:15px;line-height:1.7}.v2aid .aidhint{margin:6px 0 0;font-size:12px;color:var(--muted)}.v2aid .aidsec>p{margin:4px 0 0;line-height:1.65}
+.v2aid .aidbook{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.v2aid .aidbook>summary{cursor:pointer;font:700 14px var(--f-ui);color:var(--accent);list-style:none}.v2aid .aidbook>summary::-webkit-details-marker{display:none}.v2aid .aidbook p{line-height:1.65}
 .toolbox .tnotes{margin-top:8px}.toolbox .tnotes summary{cursor:pointer;font:700 13px var(--f-ui);color:var(--accent)}.toolbox .tnotes .tooldef2{color:var(--ink)}
 .toolbox .tfind{margin:8px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
 .tooldef2{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.6}.tooldef2 b,.eyeq .tooldef2 b{display:inline;color:var(--ink);margin-right:4px;font-size:inherit}
@@ -3222,6 +3225,20 @@ const WHERE_IDX=new Map();
 function whereOf(p){ if(typeof WHERE365==="undefined"||!p||!p.ch||!p.ch.length) return null; const [b,c]=p.ch[0]; const i=WHERE365.findIndex(x=>x[0]===b&&c>=x[1]&&c<=x[2]); if(i<0) return null;
   if(!WHERE_IDX.size){ for(let n=1;n<=TOTAL_DAYS;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7, q=dayPlan(w,d); if(!q||!q.ch||!q.ch.length) continue; const [b2,c2]=q.ch[0], j=WHERE365.findIndex(x=>x[0]===b2&&c2>=x[1]&&c2<=x[2]); if(j<0) continue; if(!WHERE_IDX.has(j)) WHERE_IDX.set(j,[]); WHERE_IDX.get(j).push(q); } }
   const L=WHERE_IDX.get(i)||[], k=L.indexOf(p); return {t:WHERE365[i][3],n:L.length,k:k+1}; }
+/* 11-13 목사님: 읽기 도우미 = 가이드북 ① 읽기 전과 같은 틀.
+   이어서 읽기(지금 어디쯤·지난 이야기) → 오늘의 읽기 도구(칩 + 초점 문장 하나) → 말뜻 → (책 첫날) 어떤 책인가요.
+   '읽으며 살펴볼 질문'은 묵상 탭의 관찰 질문과 겹쳐 뺌. '눈여겨볼 것'은 본문 끝(읽은 뒤)으로 옮김. 가이드북이 없는 날은 '읽으면서 찾기'가 초점 문장 */
+function readAid(p,w,d,key,tl,G){ const g=GUIDE[key]||{}, where=whereOf(p);
+  const ctx=[]; if(where) ctx.push(`<dt>지금 어디쯤?</dt><dd>${esc(where.t)}${where.n>1?` <small class="wherek">이 단락 ${where.n}일 가운데 ${where.k}일째</small>`:""}</dd>`); if(g.prev) ctx.push(`<dt>지난 이야기</dt><dd>${esc(g.prev)}</dd>`);
+  const focus=(G&&G.f)||g.find||"";
+  const seenT=new Set(); /* 도구 풀이는 처음 만나는 도구만 한 번 펼침, 나머지는 칩을 누르면 */
+  const shown=(mem.toolSeen ||= {}); const fresh=tl.filter(t=>!shown[t]||shown[t]===key); fresh.forEach(t=>{ if(!shown[t]){ shown[t]=key; seenT.add(t); } }); if(seenT.size) save();
+  const tools=tl.length||focus?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b>${tl.length?`<p class="tline">${tl.map(t=>toolChip(t)).join("")}</p>`:""}${focus?`<p class="aidfocus">${esc(focus)}</p>`:""}${fresh.length?`<p class="tooldef2">${fresh.map(t=>`<b>${tName(t)}</b> ${tDefH(t)}`).join("<br>")}</p>`:""}${tl.length?`<p class="aidhint">기호를 누르면 풀이가 나옵니다.</p>`:""}</div>`:"";
+  const word=G&&G.w?`<div class="aidsec"><b class="aidk">말뜻</b><p>${esc(G.w)}</p></div>`:"";
+  let book=""; for(const b of [...new Set(p.ch.filter(x=>x[1]===1).map(x=>x[0]))]){ const I=BOOKINFO[b]; if(!I) continue; const nm=PLAN.full[b-1];
+    book+=`<details class="aidbook"><summary>${esc(nm)}${hasB(nm)?"은":"는"} 어떤 책인가요? ›</summary><p>${esc(I.what)}</p><p><b>이 책을 읽을 때</b> ${esc(I.look)}</p><button class="btn ghost small" data-book="${b}">더 알아보기</button></details>`; }
+  if(!ctx.length&&!tools&&!word&&!book) return "";
+  return `<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>${[ctx.length?"지난 이야기":"",tl.length||focus?"오늘의 읽기 도구":"",word?"말뜻":""].filter(Boolean).join(" · ")}</small></summary>${ctx.length?`<dl class="aidctx">${ctx.join("")}</dl>`:""}${tools}${word}${book}</details>`; }
 function prepHelp(p,w,key){
   const g=GUIDE[key], where=whereOf(p);
   const rows=[];
@@ -3386,7 +3403,7 @@ function renderRead(){
   const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key,GDd):""}</div>`:(tl.length?`<div class="eyeq qbox">${toolLine(tl,MODE+key,GDd)}</div>`:""); /* 11-11: 질문이 없는 날도 읽기 도구는 보임 */
   const V2R=!!window.CBSR_V2;
   if(V2R&&!view.v2shut) view.open=true;
-  const aid=V2R&&(helpBox||eyeQ)?`<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>지난 이야기 · 살펴볼 질문</small></summary>${helpBox.replace('<details class="help30"','<details class="help30" open')}${eyeQ}</details>`:"";
+  const aid=V2R?readAid(p,w,d,key,tl,GDd):""; /* 11-13 목사님: 읽기 도우미를 가이드북 ① 읽기 전 틀로 정리 */
   if(!view.open){
     h+=V2R?`${aid}<button class="openbtn" id="openText">본문 펼치기</button>`:`${helpBox}${eyeQ}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else if(V2R){
@@ -3425,6 +3442,7 @@ function renderRead(){
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
   /* 11-13 목사님: 긴 요약은 읽은 뒤로 — 오늘 탭이 가이드북 '오늘의 흐름'을 쓰는 날, 본문 끝에 접어 둠 */
+  { const GD=GBD()&&GBD()[dayNo(w,d)], P=GD&&GD.p||{}, L=Object.keys(P); if(L.length) h+=`<details class="sec sumafter"><summary><span class="label" style="margin:0">다 읽은 뒤 · 눈여겨볼 것</span></summary><p class="tooldef2" style="margin-top:10px;color:var(--ink)">${L.map(t=>`<b>${tName(t)}</b> ${esc(P[t])}`).join("<br>")}</p></details>`; }
   { const lg=(SUMMARY[w-1]||[])[d]||""; if(lg&&gbFlow(w,d)) h+=`<details class="sec sumafter"><summary><span class="label" style="margin:0">다 읽은 뒤 · 오늘 줄거리 정리</span></summary><p class="summary" style="margin-top:10px">${esc(lg)}</p></details>`; }
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
   if(futLock(w,d)&&!done){ h+=`<p class="lead" style="text-align:center">본문은 미리 읽어 볼 수 있습니다.<br>통독 완료와 스토리 QT는 <b>${esc(futMsg(w,d))}</b>.</p>${flipHTML(w,d)}`; }
