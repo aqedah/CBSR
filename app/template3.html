@@ -3565,12 +3565,13 @@ const TOOLS={"장면":"언제, 어디서, 누가 있고, 장면은 어디서 바
  "대조":"두 자리를 나란히 놓아 갈라 보입니다. 무엇과 무엇을 견주는지 먼저 찾습니다.",
  "점층":"같은 일이 되풀이되면서 점점 커집니다. 마지막 자리가 가장 무겁습니다.",
  "틀":"처음과 끝이 맞물려 한 덩어리로 묶입니다. 묶인 안쪽이 그 단락입니다.",
+ "전형장면":"익숙한 장면의 틀이 다시 나옵니다. 틀이 같으니 달라진 한 군데가 뜻을 드러냅니다.",
  "전환":"흐름이 여기서 돌아섭니다. 교차대구로 짜인 본문에서는 한가운데가 그 자리입니다.",
  "속말":"화자가 인물의 속마음을 열어 보입니다. 겉으로 한 말과 견주어 읽습니다.",
  "침묵":"말해야 할 사람이 말하지 않습니다. 대답이 없다는 것까지만 봅니다.",
  "생략":"되풀이되던 말이 한 자리에서만 빠집니다. 빠진 것이 오히려 드러나 강조가 되고, 앞에서 세운 틀이 그 자리를 채웁니다. 본문의 틀로 채우되, 상상으로 채워 넣지는 않습니다.",
  "아이러니":"겉과 속이 어긋납니다. 뜻과 반대로 말하거나, 뜻한 것과 정반대의 결과가 오거나, 읽는 사람은 아는데 인물은 모릅니다."};
-const TOOL_SYM={"이끎말":"●","반복":"◆","점층":"↗","대조":"⇔","틀":"□","전환":"▲","속말":"○","침묵":"◎","생략":"⋯","아이러니":"?!"};
+const TOOL_SYM={"이끎말":"●","반복":"◆","점층":"↗","대조":"⇔","틀":"□","전형장면":"∽","전환":"▲","속말":"○","침묵":"◎","생략":"⋯","아이러니":"?!"};
 const TOOL_ORDER=Object.keys(TOOLS);
 /* 11-12: ⋯ 공백 → ⋯ 생략. 예전 자료의 "공백"도 생략으로 읽는다 */
 const TOOL_ALIAS={"공백":"생략"}; TOOLS["공백"]=TOOLS["생략"]; TOOL_SYM["공백"]=TOOL_SYM["생략"];
@@ -8135,7 +8136,7 @@ function tbkRefs(html,p){ if(!TBK_ABRE){ const A=PLAN.abbr.map((a,i)=>[a,i+1]).s
     if(!b) return m0; last=b; const inDay=p.ch.some(x=>x[0]===b&&x[1]===c);
     return `${pre}<button class="tbkref" data-ref="${b}-${c}-${v}-${v2}${inDay?"":"-x"}">${m0.slice(pre.length)}</button>`; }); }
 function tbkT(t,p){ return tbkRefs(esc(String(t||"")).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"),p); }
-function tbkChip(t,p){ let r=String(t||"").trim(), out="", m; while((m=r.match(/^((?:\?!|「」|if|[●◇◆○▲□◎⋯⇔↗♪∥¿≒☞]))\s*(\S+)\s+([\s\S]*)$/))){ out+=TOOLS[m[2]]?`<button class="tbkchip" data-tdef="${esc(m[2])}">${esc(m[1]+" "+m[2])}</button>`:`<span class="tbkchip">${esc(m[1]+" "+m[2])}</span>`; r=m[3]; }
+function tbkChip(t,p){ let r=String(t||"").trim(), out="", m; while((m=r.match(/^((?:\?!|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞]))\s*(\S+)\s+([\s\S]*)$/))){ out+=TOOLS[m[2]]?`<button class="tbkchip" data-tdef="${esc(m[2])}">${esc(m[1]+" "+m[2])}</button>`:`<span class="tbkchip">${esc(m[1]+" "+m[2])}</span>`; r=m[3]; }
   if(!out&&(m=r.match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/))){ out=`<span class="tbkchip">${esc(m[1])}</span>`; r=m[2]; } return out+tbkT(r,p); }
 function tbkPageA(D){ const {qt,p,n}=D, g=qt.guide||{}, o=qt.obs||{}, dt=dateOf(view.w,view.d);
   return `<p class="tbkdate">${dt.getMonth()+1}월 ${dt.getDate()}일 · ${n}일째</p><h2>${esc(p.label)}</h2><p class="tbksub">${esc(qt.sub||p.topic||"")}</p>

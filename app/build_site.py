@@ -133,7 +133,7 @@ _GT={}
 for _n,_v in _GQ.items():
     _f=((_v or {}).get('guide') or {}).get('find','')
     _L=[]
-    for _m in _re9.findall(r'(?:●|◆|◇|⇔|↗|□|▲|○|◎|⋯|\?!) ?(이끎말|반복|점층|대조|틀|전환|속말|침묵|공백|생략|아이러니)',_f):
+    for _m in _re9.findall(r'(?:●|◆|◇|⇔|↗|□|∽|▲|○|◎|⋯|\?!) ?(이끎말|반복|점층|대조|틀|전형장면|전환|속말|침묵|공백|생략|아이러니)',_f):
         if _m not in _L: _L.append(_m)
     if _L and _n.isdigit(): _GT[int(_n)]=_L
 data+='const GTOOLS='+J(_GT)+';\n'
