@@ -25,6 +25,9 @@ select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background
 #status{font-size:12px;color:var(--mute)}
 body{display:flex;flex-direction:column}
 html.embed,html.embed body{margin:0;padding:0;background:#fff;display:block;overflow:hidden} html.embed .embsc{transform-origin:0 0;width:max-content} html.embed .pg{margin:0;box-shadow:none}
+html.embed.aoblur .pg .after > *:not(.h):not(.aoBtn){filter:blur(3.5px);opacity:.75;user-select:none}
+html.embed .aoBtn{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);border:0;border-radius:99px;background:var(--main);color:#fff;font:700 9pt "Noto Sans KR",sans-serif;padding:2.2mm 5mm;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+html.embed:not(.aoblur) .aoBtn{display:none}
 header{flex:0 0 auto}
 main{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:420px 1fr}
 @media (max-width:980px){main{grid-template-columns:1fr;min-height:0;display:block}}
@@ -1353,16 +1356,22 @@ function syncPrintTarget(){ const el=$('ptar'); if(el) el.textContent=printLabel
 
 /* 11-12 목사님: 앱 태블릿에서 책 모양 그대로 보기 — ?embed=1&no=317&side=L|R 이면 그 쪽만 그림(작업실 화면 없이) */
 const EMBQ=new URLSearchParams(location.search);
-if(EMBQ.get('embed')){ (function(){
+if(EMBQ.get('embed')){ const embStart=(function(){
   const no=+EMBQ.get('no'), side=EMBQ.get('side')||'L', p=PLAN.find(x=>x.no===no);
   document.documentElement.classList.add('embed');
-  const draw=()=>{ const qt=get(no)||blank(); document.body.innerHTML=`<div id="scaled" class="embsc">${!p?'':side==='R'?pageR(p,qt):pageL(p,qt)}</div>`; const sc=document.getElementById('scaled'); try{ tighten(sc); matchMedia(sc,1) }catch(e){} fitE(); };
+  const MV=document.getElementById('mapview'); const play=EMBQ.get('play')==='1', blurAo=EMBQ.get('ao')==='0';
+  if(blurAo) document.documentElement.classList.add('aoblur');
+  const draw=()=>{ const qt=get(no)||blank(); document.body.innerHTML=`<div id="scaled" class="embsc">${!p?'':side==='R'?pageR(p,qt):pageL(p,qt)}</div>`; if(MV) document.body.appendChild(MV); const sc=document.getElementById('scaled'); try{ tighten(sc); matchMedia(sc,1); addPlayBtns() }catch(e){}
+    /* 11-12 목사님: 앱에서 ⑤ 해설은 쓰기 전까지 흐리게(인쇄본은 그대로) */
+    const af=sc.querySelector('.after'); if(af&&blurAo){ af.insertAdjacentHTML('beforeend','<button class="aoBtn" type="button">쓴 뒤 해설 열기</button>'); }
+    fitE();
+    if(play){ const m=sc.querySelector('.map[data-play]'); if(m&&MV){ MV.setAttribute('data-plan',m.getAttribute('data-play')||'[]'); mvOpen(m); const cl=MV.querySelector('.mvcl'); if(cl) cl.onclick=()=>{ try{ parent.postMessage('cbsr-mvclose','*') }catch(e){} }; } } };
   const fitE=()=>{ const sc=document.getElementById('scaled'); if(!sc) return; const w=sc.firstElementChild?sc.firstElementChild.offsetWidth:559; sc.style.transform=`scale(${innerWidth/w})`; };
   addEventListener('resize',fitE);
   draw();
   fetch(ED.pub,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{ const r=j&&(j.qt||j)[String(no)]; const l=DATA[String(no)]; if(r&&(!l||(r.u||0)>=(l.u||0))){ DATA[String(no)]=r; draw(); } }).catch(()=>{});
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(draw);
-})(); } else
+}); if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',embStart); else embStart(); } else
 (function init(){
   const sm=$('selM'); {const o=document.createElement('option');o.value='front';o.textContent='책 머리';sm.appendChild(o)}
   for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'월';sm.appendChild(o)}
