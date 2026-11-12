@@ -393,6 +393,8 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .try .weeknav,.try .strip,.try #revRow,.try #whereLine{display:none!important}
 .scopebtn{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 0;font:inherit;color:var(--muted);font-size:13px}.scopebtn b{color:var(--accent);font-weight:600;white-space:nowrap}
 .srh{margin:12px 0 4px;font-size:14px;color:var(--accent)}.srtext{line-height:1.85;margin:0}.srtext sup{color:var(--muted);font-size:11px;margin:0 2px 0 4px}
+.toolbox .tnotes{margin-top:8px}.toolbox .tnotes summary{cursor:pointer;font:700 13px var(--f-ui);color:var(--accent)}.toolbox .tnotes .tooldef2{color:var(--ink)}
+.toolbox .tfind{margin:8px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
 .tooldef2{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.6}.tooldef2 b,.eyeq .tooldef2 b{display:inline;color:var(--ink);margin-right:4px;font-size:inherit}
 .obsf{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 8px}.obsf button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 11px;font:inherit;font-size:13px}.obsf button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.obsdef{font-size:13px;margin:0 0 6px}.obsitem small .tool{font-style:normal;margin-left:3px;font-size:11px;padding:1px 6px}
 .trypick{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:8px}.trypick span{font-size:12px;font-weight:700}.trypick button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 10px;font:inherit;font-size:13px}.trypick button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -2096,6 +2098,7 @@ body.tbkfull .tbktools{bottom:18px}
 .tbktools .sep{width:1px;height:30px;background:var(--line);margin:0 4px;flex:none}
 .tbkst{font:600 11.5px var(--f-ui);color:var(--muted);white-space:nowrap;padding:0 4px;min-width:44px;text-align:center}
 .tbkst.bad{color:#b4422c}
+body:has(.totop.show) .tbkopen{bottom:calc(140px + env(safe-area-inset-bottom,0px))} /* 11-13: 맨 위로 단추와 겹치지 않게 */
 .tbkopen{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:9250;border:0;border-radius:99px;background:#5a4aa0;color:#fff;font:700 14px var(--f-ui);padding:11px 16px;box-shadow:0 4px 14px rgba(0,0,0,.2)}
 .tbkback{position:fixed;left:16px;bottom:calc(116px + env(safe-area-inset-bottom,0px));z-index:9250;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--accent);font:700 13.5px var(--f-ui);padding:9px 14px;box-shadow:0 3px 10px rgba(0,0,0,.14)}
 .v.tbkflash{animation:tbkfl 2.4s ease}
@@ -2247,6 +2250,7 @@ const Y27=(ED===2027)&&typeof P27!=="undefined";
 /* 11-12 목사님: 2026년에는 체험판 가이드북(317–365일, trial26_qt.json), 2027년에는 2027 가이드북 */
 const GB26=(ED===2026), GBON=Y27||GB26;
 const GBT=()=>Y27?(typeof GTOOLS!=="undefined"?GTOOLS:null):GB26?(typeof GTOOLS26!=="undefined"?GTOOLS26:null):null;
+const GBD=()=>Y27?(typeof GBDESC!=="undefined"?GBDESC:null):GB26?(typeof GBDESC26!=="undefined"?GBDESC26:null):null;
 const GBQ=()=>Y27?(typeof GQT!=="undefined"?GQT:null):GB26?(typeof GQT26!=="undefined"?GQT26:null):null;
 if(Y27) Object.assign(PI,{name:"2027 성경통독",short:"365일",src:"CBSR 2027 성경통독표(365일)",start:"2027-01-01"});
 const DEFAULT_START=Y27?"2027-01-01":(ED+"-01-01");
@@ -3374,8 +3378,8 @@ function renderRead(){
   h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl">${window.CBSR_V2?`<span class="rdk">${esc(dayK(w,d))}</span>`:""}<h2>${esc(p.label)}</h2>${window.CBSR_V2&&p.topic&&p.topic!==p.label?`<small class="rdt">${esc(p.topic)}</small>`:""}${window.CBSR_V2?placeBand(w,d):""}<p class="dmeta">${window.CBSR_V2?`<span class="dmtag ${tag[0]}">${TRY?tag[1]:tag[0]==="today"?"오늘 본문":tag[1]}</span>`:""}<span>${p.ch.length}${b0===19?"편":"장"}</span><span>약 ${mins}분</span>${(()=>{ const R=false; return R&&R.core&&!window.CBSR_V2?`<span>핵심 읽기 <b class="rjc">${esc(R.core)}</b></span>`:""; })()}${done?`<span class="okc">✓ 통독 완료</span>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:window.CBSR_V2&&envKind()==="kakao"?`<button class="kext" id="kakaoOut" aria-label="다른 브라우저로 열어 본문 듣기">${ICON_SPK}<span>듣기 ↗</span></button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
-  const GTd=GBT()&&GBT()[dayNo(w,d)], TXd=PVQ.has(key)?(GTd?{q:GTd}:null):dayTools(w,d), tl=TXd?TXd.q:[]; /* 가이드북이 있는 날은 가이드북의 장치 */
-  const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key):""}</div>`:(tl.length?`<div class="eyeq qbox">${toolLine(tl,MODE+key)}</div>`:""); /* 11-11: 질문이 없는 날도 읽기 도구는 보임 */
+  const GDd=GBD()&&GBD()[dayNo(w,d)], GTd=GBT()&&GBT()[dayNo(w,d)], TXd=PVQ.has(key)?(GTd?{q:GTd}:null):dayTools(w,d), tl=TXd?TXd.q:[]; /* 가이드북이 있는 날은 가이드북의 장치 */
+  const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key,GDd):""}</div>`:(tl.length?`<div class="eyeq qbox">${toolLine(tl,MODE+key,GDd)}</div>`:""); /* 11-11: 질문이 없는 날도 읽기 도구는 보임 */
   const V2R=!!window.CBSR_V2;
   if(V2R&&!view.v2shut) view.open=true;
   const aid=V2R&&(helpBox||eyeQ)?`<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>지난 이야기 · 살펴볼 질문</small></summary>${helpBox.replace('<details class="help30"','<details class="help30" open')}${eyeQ}</details>`:"";
@@ -3614,10 +3618,14 @@ function dayTools(w,d){ const X=(typeof TOOLX!=="undefined"&&TOOLX[MODE+":"+keyO
 const toolChip=(t,cls)=>t&&TOOLS[t]?`<button class="tool${cls?" "+cls:""}" data-tool="${t}">${tName(t)}</button>`:"";
 /* 한 줄 풀이: 도구마다 처음 세 날만 보입니다(이름표를 누르면 언제든 다시) */
 /* 질문 아래 '오늘의 읽기 도구'. 누르는 법 안내는 처음 세 날만 */
-function toolLine(L,key){ let seen={}; try{ seen=JSON.parse(localStorage.getItem("cbsr-tool-days")||"{}")||{}; }catch(e){}
+function toolLine(L,key,G){ let seen={}; try{ seen=JSON.parse(localStorage.getItem("cbsr-tool-days")||"{}")||{}; }catch(e){}
   /* 도구마다 처음 세 날(날짜 수)은 풀이를 함께 보여 줍니다 */
   const show=L.filter(tl=>{ const D=seen[tl]||[]; if(D.includes(key)) return D.indexOf(key)<3; if(D.length>=3) return false; D.push(key); seen[tl]=D; return true; });
   try{ localStorage.setItem("cbsr-tool-days",JSON.stringify(seen)); }catch(e){}
+  /* 11-13 목사님: 가이드북이 있는 날은 가이드북에 쓴 그날의 설명을 그대로 — 초점 문장 + 도구마다 그날 본문에서 볼 자리. 그날 설명이 없는 도구만 일반 풀이(처음 세 날) */
+  /* 11-13 목사님: 가이드북이 있는 날은 가이드북에 쓴 그날의 설명을 그대로 — ① 읽기 전 '오늘의 읽기 도구' 문장은 바로, ③ 읽은 뒤 '눈여겨볼 것'(도구마다 그날 볼 자리)은 읽고 나서 펼치게(답을 먼저 주지 않는 가이드북 순서) */
+  if(G&&(G.f||Object.keys(G.p||{}).length)){ const P=G.p||{}, gen=show.filter(tl=>!P[tl]||true).map(tl=>`<b>${tName(tl)}</b> ${esc(TOOLS[tl])}`), notes=L.filter(tl=>P[tl]).map(tl=>`<b>${tName(tl)}</b> ${esc(P[tl])}`);
+    return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${G.f?`<p class="tfind">${esc(G.f)}</p>`:""}${gen.length?`<p class="tooldef2">${gen.join("<br>")}</p>`:""}${notes.length?`<details class="tnotes"><summary>읽은 뒤 · 눈여겨볼 것</summary><p class="tooldef2">${notes.join("<br>")}</p></details>`:""}</div>`; }
   return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tName(tl)}</b> ${esc(TOOLS[tl])}`).join("<br>")}</p>`:""}</div>`; }
 function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(tName(b.dataset.tool)+": "+TOOLS[b.dataset.tool]); }); }
 const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};

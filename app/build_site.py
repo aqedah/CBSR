@@ -154,6 +154,22 @@ for _n,_v in _TQ.items():
         if _m not in _L: _L.append(_m)
     if _L: _GT26[int(_n)]=_L
 data+='const GTOOLS26='+J(_GT26)+';\n'
+# 11-13 목사님: 가이드북에 쓴 그날의 도구 설명(읽으며 둘 초점 문장 + 눈여겨볼 것의 도구별 설명)을 앱 '오늘의 읽기 도구'에도
+def _gdesc(Q):
+    out={}
+    for n,v in Q.items():
+        if not n.isdigit() or not v: continue
+        f=((v.get('guide') or {}).get('find') or '')
+        f=_re9.sub(r'^(?:\s*'+_GREX+r')+\s*','',f).strip()
+        pm={}
+        for pr in ((v.get('obs') or {}).get('pair') or []):
+            if isinstance(pr,list) and len(pr)>=2:
+                m=_re9.match(r'\s*'+_GREX,pr[0] or '')
+                if m and m.group(1) not in pm: pm[m.group(1)]=pr[1]
+        if f or pm: out[int(n)]={'f':f,'p':pm}
+    return out
+data+='const GBDESC='+J(_gdesc(_GQ))+';\n'
+data+='const GBDESC26='+J(_gdesc(_TQ))+';\n'
 data+='const GQT26='+J({int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _TQ.items() if n.isdigit()})+';\n'
 # 11-12: 원고 성구 약칭이 빠진 곳이 있으면 알림(다른 저장으로 덮였을 때)
 try:
