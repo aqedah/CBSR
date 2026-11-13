@@ -14024,18 +14024,22 @@ function tbkInput(D,sc){
     if(e.pointerType==="touch") touches.set(e.pointerId,[e.clientX,e.clientY]);
     if(e.pointerType==="touch"&&touches.size>1){ if(act&&act.k==="draw"){ TBK.cur=null; tbkPaint(); } act=tbkPinchStart(sc,touches); return; }
     const tool=TBK.tool;
-    if(tool==="tx"||!canWrite(e)){ act={k:"pan",y:e.clientY,x:e.clientX,y0:e.clientY,x0:e.clientX,t:Date.now(),id:e.pointerId}; cv.setPointerCapture(e.pointerId); return; }
+    if(tool==="tx"||!canWrite(e)){ cancelAnimationFrame(TBK.fling||0); act={k:"pan",y:e.clientY,x:e.clientX,y0:e.clientY,x0:e.clientX,t:Date.now(),id:e.pointerId,smp:[[e.clientX,e.clientY,performance.now()]]}; cv.setPointerCapture(e.pointerId); return; }
     cv.setPointerCapture(e.pointerId); const [x,y]=pt(e);
     if(tool==="er"){ act={k:"er",del:[]}; tbkErase(g,x,y,act); return; }
     const pr=e.pointerType==="pen"&&e.pressure>0&&e.pressure!==.5?+e.pressure.toFixed(2):null;
     TBK.cur={g,st:{c:TBK.color,w:tool==="hl"?16:2.3,h:tool==="hl"?1:0,p:[+x.toFixed(1),+y.toFixed(1),pr]}}; act={k:"draw",pt:e.pointerType,id:e.pointerId}; tbkPaint(); };
   cv.onpointermove=e=>{ if(e.pointerType==="touch"&&touches.has(e.pointerId)) touches.set(e.pointerId,[e.clientX,e.clientY]); if(!act) return; if(act.k==="draw"&&act.id!=null&&e.pointerId!==act.id) return;
     if(act.k==="pinch"){ tbkPinchMove(sc,act,touches); return; }
-    if(act.k==="pan"){ if(act.id!==e.pointerId&&touches.size>1) return; sc.scrollTop-=e.clientY-act.y; sc.scrollLeft-=e.clientX-act.x; act.y=e.clientY; act.x=e.clientX; return; }
+    if(act.k==="pan"){ if(act.id!==e.pointerId&&touches.size>1) return; sc.scrollTop-=e.clientY-act.y; sc.scrollLeft-=e.clientX-act.x; act.y=e.clientY; act.x=e.clientX; const tn=performance.now(); act.smp.push([e.clientX,e.clientY,tn]); while(act.smp.length>2&&tn-act.smp[0][2]>100) act.smp.shift(); return; }
     const [x,y]=pt(e);
     if(act.k==="er"){ tbkErase(g,x,y,act); return; }
     if(act.k==="draw"&&TBK.cur){ const ev=e.getCoalescedEvents?e.getCoalescedEvents():[e]; for(const ce of ev){ const [a,b]=pt(ce); const pr=ce.pointerType==="pen"&&ce.pressure>0&&ce.pressure!==.5?+ce.pressure.toFixed(2):null; TBK.cur.st.p.push(+a.toFixed(1),+b.toFixed(1),pr); } tbkPaint(); } };
   const end=e=>{ touches.delete(e.pointerId); if(!act) return; if(act.k==="draw"&&act.id!=null&&e.pointerId!==act.id) return; if(act.k==="pinch"){ if(touches.size<2){ tbkPinchEnd(sc,act); act=null; } return; } const a=act; act=null;
+    if(a.k==="pan"&&e.type!=="pointercancel"&&a.smp&&(Math.abs(e.clientY-a.y0)>=8||Math.abs(e.clientX-a.x0)>=8)){ /* 11-13 목사님: 손가락으로 밀면 놓은 뒤에도 미끄러지듯 이어서 움직임(관성) */
+      const S=a.smp, f=S[0], l=S[S.length-1], dt=Math.max(16,l[2]-f[2]); let vx=(l[0]-f[0])/dt, vy=(l[1]-f[1])/dt; if(performance.now()-l[2]>80){ vx=0; vy=0; }
+      if(Math.abs(vy)>.15||Math.abs(vx)>.15){ let lt=performance.now(); const step=n=>{ const d=Math.min(40,n-lt); lt=n; sc.scrollTop-=vy*d; sc.scrollLeft-=vx*d; const k=Math.pow(.95,d/16); vx*=k; vy*=k; if(Math.abs(vy)>.02||Math.abs(vx)>.02) TBK.fling=requestAnimationFrame(step); }; TBK.fling=requestAnimationFrame(step); }
+      return; }
     if(a.k==="pan"){ if(Math.abs(e.clientY-(a.y0??e.clientY))<8&&Math.abs(e.clientX-(a.x0??e.clientX))<8&&Date.now()-(a.t||0)<500){ /* 톡 누름: 단추·절 주소만(칸은 '가'에서 직접) */
         const el=tapAt(e); const rf=el&&el.closest(".tbkref"); if(rf){ tbkJump(rf.dataset.ref); return; }
         const bt=el&&el.closest("button"); if(bt){ bt.click(); return; }
