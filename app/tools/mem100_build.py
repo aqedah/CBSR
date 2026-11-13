@@ -12,7 +12,7 @@ for r in L:
     t=re.sub(r'^\[[^\]]*\]\s*','',t)  # 시편 표제([다윗의 시] 등)는 뺌
     out.append({'r':r.replace('-','–'),'b':bi+1,'c':c,'v':[a,b],'t':t})
 assert len(out)==100,len(out); assert len(set(L))==100
-json.dump({'title':'꼭 외울 말씀 100','note':'외워 둘 말씀은 이 백 구절이면 넉넉합니다. 날마다의 묵상에서는 외우라고 하지 않습니다. 표시해 두고 다시 읽으면 됩니다.','list':out},open('site_src/mem100.json','w'),ensure_ascii=False,indent=0)
+json.dump({'title':'꼭 외울 말씀 100','note':'외워 둘 말씀은 이 100구절이면 넉넉합니다. 날마다의 묵상에서는 외우라고 하지 않습니다. 표시해 두고 다시 읽으면 됩니다.','list':out},open('site_src/mem100.json','w'),ensure_ascii=False,indent=0)
 print(len(out), sum(len(x['t']) for x in out))
 
 # 가이드북 부록에 넣기: guide.html·trial26.html 안의 /*MEM100*/…/*MEM100 끝*/ 자리를 새로 채움
