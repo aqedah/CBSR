@@ -984,6 +984,7 @@ mark.wm{color:inherit;background:none;border-radius:2px}
 .wpen-g{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.wpent{width:auto!important;padding:0 10px!important;font:600 13px var(--f-ui);display:inline-flex;align-items:center;gap:6px}.wpent.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .wdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(255,214,64,.9)}.wdot.mk-g{background:rgba(110,214,140,.9)}.wdot.mk-p{background:rgba(255,140,180,.9)}.wdot.mk-b{background:rgba(110,180,255,.9)}.wdot.mk-y{background:rgba(255,214,64,.9)}
 .wpensw{display:inline-flex;gap:5px;align-items:center}.wpensw .sw{width:24px;height:24px;min-width:0;padding:0;flex:0 0 24px}.wpensw .sw.on{outline:2px solid var(--ink);outline-offset:1px}
+body.penhov #bible{touch-action:none}
 .hlbar .hlt{font:600 13px var(--f-ui);color:var(--muted);padding:0 4px}
 .hlbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:9600;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18);border-radius:16px;padding:10px 10px;display:flex;gap:8px;align-items:center;width:max-content;max-width:calc(100vw - 16px)}
 .hlbar[hidden]{display:none}
@@ -8000,7 +8001,7 @@ const HLC={y:"노랑",g:"초록",p:"분홍",b:"파랑"};
 /* ── 단어 형광펜 (11-13 목사님: "1:8의 증인"처럼 단어만 칠하기) ──
    길게 눌러 글자를 고르면(브라우저 기본 선택) 아래 막대에 색이 뜸 → 색을 누르면 고른 글자만 칠함. 칠한 글자를 누르면 그 부분이 골라지고 ✕로 지움.
    저장: HL[id]=[절색|"", 시각, [[시작,끝,색],…]] — 글자 위치(절 본문 기준)라 글자 크기·기기와 상관없음 */
-const WP={ts:null,tm:0,keep:false,sup:0};
+const WP={ts:null,tm:0,keep:false,sup:0,k:(()=>{ try{ return localStorage.getItem("cbsr-wpen")||"y"; }catch(e){ return "y"; } })(),pd:null};
 function wmText(el){ const out=[]; let o=0; const tw=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&n.parentElement.closest("sup,.bmk")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}); let n; while((n=tw.nextNode())){ out.push([n,o]); o+=n.data.length; } return {nodes:out,len:o,text:out.map(x=>x[0].data).join("")}; }
 function wmUnwrap(el){ el.querySelectorAll("mark.wm").forEach(m=>{ const pa=m.parentNode; while(m.firstChild) pa.insertBefore(m.firstChild,m); pa.removeChild(m); }); el.normalize(); }
 function wmApply(el,R){ wmUnwrap(el); R=R||((HL[el.dataset.v]||[])[2])||[]; if(!R.length) return;
@@ -8019,8 +8020,18 @@ function wmPaint(segs,k){ const t=Date.now(); for(const [id,a,b] of segs){ const
 document.addEventListener("selectionchange",()=>{ clearTimeout(WP.tm); WP.tm=setTimeout(()=>{ if(view.tab!=="read") return; const segs=wmFromSel();
   if(segs){ WP.ts=segs; if(HSEL.size){ HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); } syncHlBar(); }
   else if(WP.ts&&!WP.keep){ WP.ts=null; syncHlBar(); } },180); });
+function wmCaretAt(x,y){ if(document.caretPositionFromPoint){ const c=document.caretPositionFromPoint(x,y); return c&&{n:c.offsetNode,o:c.offset}; } if(document.caretRangeFromPoint){ const r=document.caretRangeFromPoint(x,y); return r&&{n:r.startContainer,o:r.startOffset}; } return null; }
 function wpenBind(root){ const bi=root.querySelector("#bible"); if(!bi) return;
-  bi.querySelectorAll(".v[data-v]").forEach(el=>{ const h=HL[el.dataset.v]; if(h&&h[2]&&h[2].length) wmApply(el); }); }
+  bi.querySelectorAll(".v[data-v]").forEach(el=>{ const h=HL[el.dataset.v]; if(h&&h[2]&&h[2].length) wmApply(el); });
+  /* 펜(11-13 목사님 "펜은 바로 그릴 수 있어야"): 펜이 화면 위에 떠 있으면(호버) 본문이 펜에 밀리지 않게 하고, 펜으로 그으면 그은 글자가 골라지며 바로 칠해짐(마지막에 쓴 색). 아래 막대로 색 바꾸기·✕ 지우기. 손가락은 길게 눌러 고르기 */
+  const penOn=on=>document.body.classList.toggle("penhov",on);
+  bi.addEventListener("pointermove",e=>{ if(e.pointerType==="pen"&&!WP.pd) penOn(true); });
+  bi.addEventListener("pointerleave",e=>{ if(e.pointerType==="pen"&&!WP.pd) penOn(false); });
+  bi.addEventListener("pointerdown",e=>{ if(e.pointerType!=="pen"){ penOn(false); return; } const c=wmCaretAt(e.clientX,e.clientY); if(!c) return; WP.pd={id:e.pointerId,x:e.clientX,y:e.clientY,a:c,moved:false}; });
+  if(WP.docB) return; WP.docB=1; /* 문서에는 한 번만 */
+  document.addEventListener("pointermove",e=>{ const P=WP.pd; if(!P||P.id!==e.pointerId) return; if(!P.moved&&Math.hypot(e.clientX-P.x,e.clientY-P.y)<6) return; P.moved=true; const c=wmCaretAt(e.clientX,e.clientY), B=document.getElementById("bible"); if(c&&B&&B.contains(c.n)){ try{ getSelection().setBaseAndExtent(P.a.n,P.a.o,c.n,c.o); }catch(_){} } });
+  const up=e=>{ const P=WP.pd; if(!P||P.id!==e.pointerId) return; WP.pd=null; if(!P.moved||e.type==="pointercancel") return; WP.sup=Date.now(); const segs=wmFromSel(); if(segs){ wmPaint(segs,WP.k); WP.ts=segs; syncHlBar(); } };
+  document.addEventListener("pointerup",up); document.addEventListener("pointercancel",up); }
 window.CBSR_WP={text:el=>wmText(el).text,hl:id=>HL[id],ts:()=>WP.ts,sel:()=>[...HSEL],clear:()=>{ HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); syncHlBar(); }}; /* 점검용 */
 function hlShow(id,tx){ const h=HL[id]||[]; if(h[0]||!h[2]||!h[2].length) return `<span class="v mk-${h[0]}">${esc(tx)}</span>`; return h[2].map(([a,b,k])=>`<span class="v"><mark class="wm mk-${k}">${esc(tx.slice(a,b))}</mark></span>`).join(" … "); }
 function toggleSel(id){
@@ -8032,7 +8043,7 @@ function syncHlBar(){
   [...HSEL].forEach(id=>{ if(!document.getElementById("v-"+id)) HSEL.delete(id); });
   if(WP.ts&&view.tab==="read"){ const has=WP.ts.some(([id,a,b])=>((HL[id]||[])[2]||[]).some(r=>r[0]<b&&r[1]>a));
     bar.innerHTML=`<span class="hlt">고른 글자</span><span class="hlsws">${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-tk="${k}" aria-label="${n}으로 칠하기"></button>`).join("")}${has?`<button class="sw x" data-tk="x" aria-label="칠한 것 지우기" title="칠한 것 지우기">✕</button>`:""}</span>`; bar.hidden=false;
-    bar.querySelectorAll("[data-tk]").forEach(b=>{ b.onpointerdown=e=>{ e.preventDefault(); WP.keep=true; }; b.onclick=()=>{ const segs=WP.ts; WP.keep=false; if(segs) wmPaint(segs,b.dataset.tk); WP.ts=null; try{ getSelection().removeAllRanges(); }catch(e){} syncHlBar(); }; }); return; }
+    bar.querySelectorAll("[data-tk]").forEach(b=>{ b.onpointerdown=e=>{ e.preventDefault(); WP.keep=true; }; b.onclick=()=>{ const segs=WP.ts; WP.keep=false; if(b.dataset.tk!=="x"){ WP.k=b.dataset.tk; try{ localStorage.setItem("cbsr-wpen",WP.k); }catch(e){} } if(segs) wmPaint(segs,b.dataset.tk); WP.ts=null; try{ getSelection().removeAllRanges(); }catch(e){} syncHlBar(); }; }); return; }
   if(!HSEL.size||view.tab!=="read"){ bar.hidden=true; bar.innerHTML=""; return; }
   const anyMk=[...HSEL].some(id=>HL[id]);
   /* 11/6 목사님: 순서 책갈피/재생/형광펜/메모/말씀 카드. 여러 절을 골라도 같은 막대 — 책갈피·재생·메모는 고른 절 가운데 맨 앞 절 기준 */
@@ -8316,6 +8327,7 @@ function afterRead(w,d,A){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||
     if(GD&&GD.m||box) h+=`<div class="aidsec"><b class="aidk">지도</b>${GD&&GD.m?`<p>${esc(GD.m)}</p>`:""}${GD&&GD.m&&R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}${box}</div>`; }
   { const ch=secIn(christHelp(w,d)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
     else if(ch.trim()) h+=`<div class="aidsec"><b class="aidk">성경 전체로</b>${ch}</div>`; }
+  if(!GD&&A){ const kw=renderKeyWords(A,w,d); if(kw) h+=`<div class="aidsec"><b class="aidk">본문을 읽는 단서</b>${kw}</div>`; } /* 가이드북 원고가 없는 날만(있는 날은 읽기 도구·성경 전체로와 겹침) */
   return h; }
 function prepHelp(p,w,key){
   const g=GUIDE[key], where=whereOf(p);
@@ -8512,17 +8524,15 @@ function renderRead(){
   /* 11-13 목사님: 본문 끝은 가이드북 ③ 읽은 뒤와 같게. 큰 여정 이어 보기·[더 알아보기](줄거리 정리, 인물·곳·말, 지도, 퀴즈)는 그 아래 */
   if(window.CBSR_V2){ const A3=afterRead(w,d,A), TH=tourHere(w,d); if(A3||TH) h+=`<details class="v2aid rd3" id="rd3"${view.rd3Open===false?"":" open"}><summary>③ 읽은 뒤<small>${[/눈여겨볼 것/.test(A3)?"눈여겨볼 것":"",/>지도</.test(A3)?"지도":"",/성경 전체로/.test(A3)?"성경 전체로":"",TH?"큰 여정":""].filter(Boolean).join(" · ")}</small></summary><div class="rd3in">${A3}${TH?`<div class="aidsec">${TH}</div>`:""}</div><button class="foldbtn" data-fold="rd3">③ 읽은 뒤 접기 ▲</button></details>`; } /* 11-13 목사님: ①과 같은 상자·같은 제목 크기 */
   // 이해가 필요할 때 (참고 자료)
-  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 인물·곳·말, 퀴즈</summary>`; }
+  const sm2=simple&&!window.CBSR_V2; /* 11-13 목사님: 인물·곳·말은 본문의 점선 밑줄로 보니 뺌 → 퀴즈만 남아 [더 알아보기] 상자 없이 퀴즈를 바로 */
+  if(sm2){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 인물·곳·말, 퀴즈</summary>`; }
   { /* 11-13: 늘 그려 두고 접기만(펼칠 때 다시 그리면 지도·가이드북 단추가 깜빡임) */
-  h+=`<div class="helpzone">`;
-  h+=window.CBSR_V2?entSection(p,A,b0,w,d):knowSection(p,A,b0)+moreSection(p,A,b0,w,d); /* 11-13 목사님: 줄거리는 오늘 탭으로. '오늘 알아둘 것'과 '더 자세히 살펴보기'의 인물·곳·말을 한 칸으로 */
-  if(!window.CBSR_V2) h+=renderMapBox(A); /* v2: 지도·성경 전체로는 ③ 읽은 뒤에 */
-  h+=`</div>`;
+  if(!window.CBSR_V2) h+=`<div class="helpzone">${knowSection(p,A,b0)+moreSection(p,A,b0,w,d)+renderMapBox(A)}</div>`;
   // 5 퀴즈
   if(!window.CBSR_V2) h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
   else if(!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
   }
-  if(simple) h+=`<button class="foldbtn" data-fold="simpleMore">더 알아보기 접기 ▲</button></details>`;
+  if(sm2) h+=`<button class="foldbtn" data-fold="simpleMore">더 알아보기 접기 ▲</button></details>`;
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
@@ -14269,7 +14279,7 @@ function bind(){
     view.tab="read"; view.open=true; render(); const el=document.getElementById("v-"+r.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2600);} };
   const rx=document.getElementById("resumeX"); if(rx) rx.onclick=()=>{ resumeShow=false; const y=window.scrollY; render(); window.scrollTo({top:y}); };
   m.querySelectorAll("[data-look]").forEach(b=>b.onclick=()=>showLook(+b.dataset.look));
-  m.querySelectorAll(".v[data-v]").forEach(el=>el.onclick=e=>{ if(!getSelection().isCollapsed) return; const mk=e.target.closest("mark.wm"); if(mk){ const r=document.createRange(); r.selectNodeContents(mk); const sl=getSelection(); sl.removeAllRanges(); sl.addRange(r); return; } if(e.target.closest(".g")) return; toggleSel(el.dataset.v); }); /* 칠한 글자를 누르면 그 부분이 골라져 지울 수 있음 */
+  m.querySelectorAll(".v[data-v]").forEach(el=>el.onclick=e=>{ if(Date.now()-WP.sup<500||!getSelection().isCollapsed) return; const mk=e.target.closest("mark.wm"); if(mk){ const r=document.createRange(); r.selectNodeContents(mk); const sl=getSelection(); sl.removeAllRanges(); sl.addRange(r); return; } if(e.target.closest(".g")) return; toggleSel(el.dataset.v); }); /* 칠한 글자를 누르면 그 부분이 골라져 지울 수 있음 */
   wpenBind(m);
   m.querySelectorAll("[data-hljump]").forEach(b=>b.onclick=()=>{const [bb,c,v]=b.dataset.hljump.split("-").map(Number); const at=dayOfRef([bb,c,v]); if(!at) return; view.w=at[0]; view.d=at[1]; view.tab="read"; seeVerse(bb,c,v);});
   bindProfile(m);
