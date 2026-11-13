@@ -2936,7 +2936,8 @@ function sheet(title,body,onClose){
   const sheetOff=pop=>{ root.innerHTML=""; if(pop!==true) ovDone(sheetOff); if(onClose){ const f=onClose; onClose=null; f(); } }; const close=()=>sheetOff();
   if(window.CBSR_V2){ for(const f of OVS.filter(f=>f.__sheet)) OVS.splice(OVS.indexOf(f),1); sheetOff.__sheet=1; ovOpen(sheetOff); }
   document.getElementById("sheetClose").onclick=close;
-  document.getElementById("sheetBg").onclick=e=>{if(e.target.id==="sheetBg")close();};
+  const t0=Date.now(); /* 11-13: 손가락을 뗄 때 뒤따르는 클릭이 막 열린 창 바깥을 눌러 바로 닫히지 않게(가이드북 절 주소 → 잠깐 보기) */
+  document.getElementById("sheetBg").onclick=e=>{ if(e.target.id==="sheetBg"&&Date.now()-t0>450) close(); };
   root.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.jump.split("-").map(Number); close(); go(w,d);});
   document.getElementById("sheetX").onclick=close;
   const sh=root.querySelector(".sheet"); sh.scrollTop=0; try{ document.getElementById("sheetX").focus({preventScroll:true}); }catch(e){}
