@@ -8342,6 +8342,15 @@ function prepHelp(p,w,key){
   const calm=seen.slice(0,2).map(gg=>`<p class="calm">${GENRE_MSG[gg][1]}</p>`).join("");
   if(!rows.length&&!extra&&!calm) return "";
   return `<details class="help30"${view.helpOpen?" open":""}><summary>읽기 전 30초 도움 <span aria-hidden="true">›</span></summary><dl>${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>${extra}${calm}</details>`; }
+function entSection(p,A,b0,w,d){
+  const K=keyEnts(p), E=entsIn(A), gl=glossInDay(A,b0).filter(x=>!NAME_SET.has(x.it.t));
+  const pe=[...K.pe.map(n=>[n,trName(n)]),...E.pe.filter(x=>!K.pe.includes(x.n)).map(x=>[x.n,x.s||x.n])];
+  const pl=[...K.pl.map(n=>[n,trName(n)]),...E.pl.filter(x=>!K.pl.includes(x.n)).map(x=>[x.n,x.s||x.n])];
+  const wd=[...K.w.map(n=>[n,trName(n)]),...gl.filter(x=>!K.w.includes(x.it.t)).map(x=>[x.it.t,x.it.t])];
+  const kwH=GBD()&&GBD()[dayNo(w,d)]?"":renderKeyWords(A,w,d); /* 가이드북이 있는 날은 '읽는 단서'를 뺌(읽기 도구·성경 전체로와 겹침) */
+  const row=(cls,lab,items)=>items.length?`<div class="krow"><b class="kh ${cls}">${lab}</b><div class="chips">${items.join("")}</div></div>`:"";
+  if(!pe.length&&!pl.length&&!wd.length&&!kwH) return "";
+  return `<section class="sec"><span class="label">오늘 본문의 인물 · 곳 · 말</span><div class="know">${row("pe","인물",pe.map(([n,l])=>`<button class="chip nm" data-pe="${esc(n)}">${esc(l)}</button>`))}${row("pl","곳",pl.map(([n,l])=>`<button class="chip pl" data-pl="${esc(n)}">${esc(l)}</button>`))}${row("w","말",wd.map(([n,l])=>`<button class="chip term" data-g="${esc(n)}">${esc(l)}</button>`))}</div>${kwH?`<details class="moreent" id="moreBox"${view.entAll?" open":""}><summary>본문을 읽는 단서</summary>${kwH}</details>`:""}</section>`; }
 function moreSection(p,A,b0,w,d){
   const K=keyEnts(p), E=entsIn(A), gl=glossInDay(A,b0).filter(x=>!NAME_SET.has(x.it.t));
   if(!K.pe.length) K.pe=E.pe.slice(0,3).map(x=>x.n); if(!K.pl.length) K.pl=E.pl.slice(0,3).map(x=>x.n);
@@ -8513,12 +8522,10 @@ function renderRead(){
   /* 11-13 목사님: 본문 끝은 가이드북 ③ 읽은 뒤와 같게. 큰 여정 이어 보기·[더 알아보기](줄거리 정리, 인물·곳·말, 지도, 퀴즈)는 그 아래 */
   if(window.CBSR_V2){ const A3=afterRead(w,d,A), TH=tourHere(w,d); if(A3||TH) h+=`<details class="v2aid rd3" id="rd3"${view.rd3Open===false?"":" open"}><summary>③ 읽은 뒤<small>${[/눈여겨볼 것/.test(A3)?"눈여겨볼 것":"",/>지도</.test(A3)?"지도":"",/성경 전체로/.test(A3)?"성경 전체로":"",TH?"큰 여정":""].filter(Boolean).join(" · ")}</small></summary><div class="rd3in">${A3}${TH?`<div class="aidsec">${TH}</div>`:""}</div><button class="foldbtn" data-fold="rd3">③ 읽은 뒤 접기 ▲</button></details>`; } /* 11-13 목사님: ①과 같은 상자·같은 제목 크기 */
   // 이해가 필요할 때 (참고 자료)
-  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 줄거리, 인물·곳·말, 퀴즈</summary>`; }
+  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 인물·곳·말, 퀴즈</summary>`; }
   { /* 11-13: 늘 그려 두고 접기만(펼칠 때 다시 그리면 지도·가이드북 단추가 깜빡임) */
   h+=`<div class="helpzone">`;
-  { const lg=(SUMMARY[w-1]||[])[d]||""; if(lg&&gbFlow(w,d)) h+=`<section class="sec"><span class="label">오늘 줄거리 정리</span><p class="summary">${esc(lg)}</p></section>`; } /* 11-13: 긴 요약은 읽은 뒤 [더 알아보기] 안에 */
-  h+=knowSection(p,A,b0);
-  h+=moreSection(p,A,b0,w,d);
+  h+=window.CBSR_V2?entSection(p,A,b0,w,d):knowSection(p,A,b0)+moreSection(p,A,b0,w,d); /* 11-13 목사님: 줄거리는 오늘 탭으로. '오늘 알아둘 것'과 '더 자세히 살펴보기'의 인물·곳·말을 한 칸으로 */
   if(!window.CBSR_V2) h+=renderMapBox(A); /* v2: 지도·성경 전체로는 ③ 읽은 뒤에 */
   h+=`</div>`;
   // 5 퀴즈
@@ -13112,7 +13119,7 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   /* 오늘 탭 L3(목사님 2026-11-02 채택): 그날 그림이 위에서 바탕으로 녹아드는 표지 하나 + 다음 할 일 단추 하나. 날 넘기기는 그림 위 ‹ ›, 달력은 위쪽 달력 단추 */
   let h=td4Top(w,d,ph,live)+`
   <div class="td4head"><p class="td4k">${esc(dayName(w,d))}</p><h1>${esc(p.label)}</h1>${p.topic&&p.topic!==p.label?`<p class="td4r">${esc(p.topic)}</p>`:""}</div>
-  <div class="td4sumb">${(()=>{ const sm=gbFlow(w,d)||(SUMMARY[w-1]||[])[d]||g.today||""; return sm?`<p class="td4sum">${esc(sm)}</p>`:""; })()}</div></div><div class="td4tx">`; /* 11-11 목사님: 본문 탭에 있던 본문 요약을 그림 아래로 */
+  <div class="td4sumb">${(()=>{ const sm=(SUMMARY[w-1]||[])[d]||gbFlow(w,d)||g.today||""; /* 11-13 목사님: 오늘 탭 설명은 다시 줄거리(본문 탭에서는 뺌). 가이드북 흐름은 본문 탭 ① 읽기 전에 */ return sm?`<p class="td4sum">${esc(sm)}</p>`:""; })()}</div></div><div class="td4tx">`; /* 11-11 목사님: 본문 탭에 있던 본문 요약을 그림 아래로 */
   const n=(S||[]).length;
   let sec="";
   if(q.done) sec=`<button class="td4b2" id="tdNote"><b>묵상 노트</b><small>다시 보기</small></button>`;
