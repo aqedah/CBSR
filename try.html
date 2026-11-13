@@ -985,6 +985,8 @@ mark.wm{color:inherit;background:none;border-radius:2px}
 .wdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(255,214,64,.9)}.wdot.mk-g{background:rgba(110,214,140,.9)}.wdot.mk-p{background:rgba(255,140,180,.9)}.wdot.mk-b{background:rgba(110,180,255,.9)}.wdot.mk-y{background:rgba(255,214,64,.9)}
 .wpensw{display:inline-flex;gap:5px;align-items:center}.wpensw .sw{width:24px;height:24px;min-width:0;padding:0;flex:0 0 24px}.wpensw .sw.on{outline:2px solid var(--ink);outline-offset:1px}
 body.penhov #bible{touch-action:none}
+.chmini{display:flex;flex-direction:column;gap:6px;margin-top:6px}.chml{display:flex;gap:8px;align-items:baseline;margin:0;font-family:var(--f-serif,serif);font-size:15px;line-height:1.55}.chml .chref{flex:0 0 auto;border:0;background:none;padding:0;color:var(--accent);font:700 13px var(--f-ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.chml span::before{content:"“"}.chml span::after{content:"”"}.chml.own .chref{color:var(--ink)}
+.chmr{margin:4px 0 0;padding-left:10px;border-left:2px solid var(--line);font-size:14.5px;line-height:1.65}.chmr b{display:block;font:700 12.5px var(--f-ui);color:var(--muted);margin-bottom:2px}
 .hlbar .hlt{font:600 13px var(--f-ui);color:var(--muted);padding:0 4px}
 .hlbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:9600;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18);border-radius:16px;padding:10px 10px;display:flex;gap:8px;align-items:center;width:max-content;max-width:calc(100vw - 16px)}
 .hlbar[hidden]{display:none}
@@ -7798,6 +7800,15 @@ function christSecV2(w,d,t,ck,det){ if(!t) return ""; const R=christRefs(t,w,d),
    ${role||(pair?`<div class="qcard chtx"><p>${esc(t)}</p></div>`:"")}
    ${det&&det.cm?`<div class="qcard chcm"><span class="label">무슨 뜻일까</span><p>${esc(det.cm)}</p></div>`:""}</section>`; }
 /* 11-10 목사님: '성경 전체로'는 참고·부록 → 본문 탭의 더 보기(요약·인물·지도 옆)에 둠 */
+/* 11-13 목사님 "인용 카드가 크고 앱의 다른 곳과 달라 이질적": 본문 탭 ③에서는 작은 줄로 — 장절(누르면 그 절이 뜸) + 인용 한 줄, 그 아래 뜻 풀이 */
+function christMini(w,d,noRole){ const det=DETAIL[w+"-"+(d+1)], key=keyOf(w,d), t=PVQ.has(key)?(det&&det.christ||""):(det&&det.christ?det.christ:(DAYC[key]||(WEEKS[w-1]||{}).christ||"")); if(!t) return "";
+  const R=christRefs(t,w,d), Q=christQuotes(t,w,d), nq=Q.filter(x=>x.own), oq=Q.filter(x=>!x.own), bk=(dayPlan(w,d).ch[0]||[0])[0];
+  const line=(b,c,v,e,q,own)=>`<p class="chml${own?" own":""}"><button class="chref" data-chv="${b}-${c}-${Math.max(1,v)}-${e}">${esc(PLAN.abbr[b-1])} ${c}:${v}${e>v?"–"+e:""}</button><span>${esc(q)}</span></p>`;
+  let L=""; if(nq.length&&oq.length) L=line(nq[0].b,nq[0].c,nq[0].v,nq[0].e,nq[0].q,1)+line(oq[0].b,oq[0].c,oq[0].v,oq[0].e,oq[0].q,0);
+  else L=R.map(r=>line(r.b,r.c,r.v,r.e,r.t,0)).join("");
+  let role=""; for(const r of [...oq,...R]){ const X=typeof CHROLE!=="undefined"&&(CHROLE[`${bk}|${r.b}:${r.c}:${r.v}`]||CHROLE[`*|${r.b}:${r.c}:${r.v}`]); if(X&&X.ok){ role=X.role; break; } }
+  if(noRole&&nq.length&&oq.length) role=""; /* 가이드북 '성경 전체로' 문장이 이미 뜻을 말하는 날은 짝만(같은 말 두 번 안 함) */
+  return `<div class="chmini">${L}${role?`<p class="chmr"><b>왜 이 말씀을 가져왔을까</b>${esc(role)}</p>`:(nq.length&&oq.length?"":`<p class="chmr">${esc(t)}</p>`)}</div>`; }
 function christHelp(w,d){ const det=DETAIL[w+"-"+(d+1)], key=keyOf(w,d), PVK=PVQ.has(key);
   const s=PVK?(det&&det.christ?christSecV2(w,d,det.christ,det.ck==="quote"?"인용":CHRIST_K[christKey(w,d)],det):""):christSecV2(w,d,det&&det.christ?det.christ:(DAYC[key]||(WEEKS[w-1]||{}).christ||""),CHRIST_K[christKey(w,d)],det);
   return s.replace('<div class="stage"><b>3</b><span>성경 전체로</span></div>','<span class="label">성경 전체로 · 참고</span>'); }
@@ -8498,7 +8509,7 @@ function afterRead(w,d,A){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||
   if(L.length) h+=`<div class="aidsec"><b class="aidk">눈여겨볼 것</b>${L.map(t=>`<p class="aidtool">${toolChip(t)}<span>${esc(P[t])}</span></p>`).join("")}</div>`;
   { let R=[]; try{ R=routesFor(w,d).filter(r=>r.p.filter(q=>q[0]).length>=2); }catch(e){} const box=A&&BIBLE&&[...A.places.values()].some(p=>PLACE.has(p.name))||R.length?secIn(renderMapBox(A)):"";
     if(GD&&GD.m||box) h+=`<div class="aidsec"><b class="aidk">지도</b>${GD&&GD.m?`<p>${esc(GD.m)}</p>`:""}${GD&&GD.m&&R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}${box}</div>`; }
-  { const ch=secIn(christHelp(w,d)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
+  { const ch=christMini(w,d,!!(GD&&GD.c)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
     else if(ch.trim()) h+=`<div class="aidsec"><b class="aidk">성경 전체로</b>${ch}</div>`; }
   if(!GD&&A){ const kw=renderKeyWords(A,w,d); if(kw) h+=`<div class="aidsec"><b class="aidk">본문을 읽는 단서</b>${kw}</div>`; } /* 가이드북 원고가 없는 날만(있는 날은 읽기 도구·성경 전체로와 겹침) */
   return h; }
