@@ -323,6 +323,9 @@ self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise
 self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(/firestore\\.googleapis\\.com|identitytoolkit|securetoken|firebaseinstallations/.test(u.hostname))return;
   const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/terr[hwm]i?\\/|\\/icons\\/|\\/img\\//.test(u.pathname);
+  /* 11-13: 앱 화면을 다시 열 때(탭이 지워졌다 돌아올 때 등) 망이 1.5초 안에 안 오면 보관본을 먼저 보여 주고, 새 판은 뒤에서 받아 둠(다음에 열 때 반영) */
+  if(shell&&r.mode==="navigate"){{const net=fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}});
+    e.respondWith(caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match("index.html")).then(m=>{{ if(!m) return net; let done=false; return Promise.race([net.then(x=>{{done=true;return x;}}).catch(()=>m),new Promise(ok=>setTimeout(()=>ok(m),1500))]); }}));return;}}
   if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match(/v1\\.html$/.test(u.pathname)?"v1.html":/v2\\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}}
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''
