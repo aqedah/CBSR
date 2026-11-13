@@ -861,7 +861,7 @@ function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q); const
     [(['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length)+' 가지 약속',15],
     ['통독표 — 날마다 읽을 곳',4],
     ['통독 — '+ds[0].m+'월 '+ds[0].d+'일부터 '+last.m+'월 '+last.d+'일까지',FRONT+1],
-    ['부록 · 지도와 그림',n],[(F(q).rvhead||'이 권을 마치며'),n+3],['부록 · '+((typeof MEM100!=='undefined'&&MEM100.title)||'꼭 외울 말씀 100'),n+4]];
+    ...(ED.trial?[]:[['부록 · 성막',n],[(F(q).rvhead||'이 권을 마치며'),n+1]]),['부록 · '+((typeof MEM100!=='undefined'&&MEM100.title)||'꼭 외울 말씀 100'),ED.trial?n:n+2]];
   rows.sort((a,b)=>a[1]-b[1]);
   return `<div class="pg fm r q${q}"><p class="fh">차례</p>
 <table class="ctoc">${rows.map(([t,pn])=>`<tr><td class="ct"><span>${esc(t)}</span></td><td class="cp">${pn}</td></tr>`).join('')}</table>
@@ -988,10 +988,10 @@ function pReview(q,no){
 <p class="fcap" style="margin-top:6mm">${esc(F(q).rvfoot||'다음 권에서 이어집니다.')}</p>
 <div class="pn">${no}</div></div>`;
 }
-function appendixSpreads(q){
+function appendixSpreads(q){ /* 11-13 목사님: 부록의 지도와 '체험판을 마치며'는 뺌 */
   const ds=qDays(q); const last=ds[ds.length-1]; const n=pageNo(last)+2;
-  return [`<div class="spread">${pAtlas(q,n,0,false)}${pAtlas(q,n+1,1,true)}</div>`,
-          `<div class="spread">${ED.ax2map?pAtlas(q,n+2,0,false,ED.ax2map):pTabernacle(q,n+2)}${pReview(q,n+3)}</div>`].concat(memSpreads(q,n+4));
+  if(ED.trial) return memSpreads(q,n);
+  return [`<div class="spread">${pTabernacle(q,n)}${pReview(q,n+1)}</div>`].concat(memSpreads(q,n+2));
 }
 /* 부록 · 꼭 외울 말씀 100 (2026-11-13 목사님: 이 백 구절 밖에서는 외우라고 하지 않는다). 본문은 tools/mem100_build.py가 개역개정에서 그대로 넣음 */
 const MEM_PG=8;
@@ -1053,12 +1053,11 @@ function howSpread(q){ const html=`<div class="spread">${pHowL(q)}${pHowR(q)}</d
   try{ tighten&&tighten(pr) }catch(e){} layoutHow(pr); const out=pr.innerHTML; pr.remove(); return out }
 function frontSpreads(q,sample){
   const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
-  return [ sp(coverBack(q),coverFront(q)), sp(endPaper(q),endPaper(q)), /* 11-12 목사님: 스프링 제본 — 앞·뒤표지를 한눈에 */ sp(blankPage(q),pTitle(q)),
+  return [ sp(coverBack(q),coverFront(q)), /* 11-13 목사님: 면지 뺌 */ /* 11-12 목사님: 스프링 제본 — 앞·뒤표지를 한눈에 */ sp(blankPage(q),pTitle(q)),
     sp(pCopy(q),pBooks(q)), sp(pToc(q,0),pToc(q,1)), sp(pToc(q,2),pPreface(q)),
     howSpread(q), sp(pSym(q),pSym2(q)), sp(pGenre(q),pWhole(q)), sp(pDivider(q),pDivider2(q)) ];
 }
-function backSpreads(q){ const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
-  return [ sp(endPaper(q),endPaper(q)) ]; }
+function backSpreads(q){ return []; } /* 11-13 목사님: 뒤 면지도 뺌 */
 function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</div>`}
 
 /* ── 미리보기와 맞춤 검사 ── */
@@ -1111,8 +1110,8 @@ function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fil
 function goBack(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); if($('frontbox')) $('frontbox').open=false; }
 function isFrontView(i){ return i<FLAB.length }
 /* ── 전자책처럼 넘겨 보기 ── */
-const FLAB=['앞표지','면지','속표지','저작권 · 차례','통독표','통독표 · 서문','네 걸음 · 이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','가름 — 여기서부터 가이드북'];
-const BLAB=['면지','뒤표지'];
+const FLAB=['앞표지','속표지','저작권 · 차례','통독표','통독표 · 서문','네 걸음 · 이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','가름 — 여기서부터 가이드북'];
+const BLAB=[];
 let VIEWS=[], VI=0, ANIM=false;
 let PV='both';   /* both | L | R */
 let ZOOM=1; /* 11-12 목사님: 확대·축소 */
@@ -1131,8 +1130,8 @@ function buildViews(){
   const sample=spread(sd,get(sd.no)||blank());
   const fs=frontSpreads(q,sample).map((h,i)=>({t:'s',h,lab:FLAB[i]||'책 머리'}));
   const dv=ds.map(p=>({t:'d',i:PLAN.indexOf(p)}));
-  const AXL=ED.axl||['부록 — 여정 한눈에','부록 — 성막 · 이 권을 마치며'];
-  const ax=appendixSpreads(q).map((h,i)=>({t:'s',h,lab:AXL[i]||(i>=2?'부록 — 꼭 외울 말씀 100':'부록')}));
+  const AXL=ED.trial?[]:['부록 — 성막 · 이 권을 마치며'];
+  const ax=appendixSpreads(q).map((h,i)=>({t:'s',h,lab:AXL[i]||'부록 — 꼭 외울 말씀 100'}));
   const bs=backSpreads(q).map((h,i)=>({t:'s',h,lab:BLAB[i]||'책 끝'}));
   VIEWS=fs.concat(dv,ax,bs);
 }
@@ -1506,7 +1505,7 @@ if(EMBQ.get('embed')){ const embStart=(function(){
     /* 11-12 목사님: 책 순서 — 앞표지 1쪽, 뒤표지 끝쪽, 전체 쪽수는 4의 배수(모자라면 뒤 면지 앞에 빈 쪽) */
     const pr=$('printroot'); let sheets=0;
     if(mode==='book'||mode==='spring'){ let P=[...pr.querySelectorAll(':scope > .pg')]; if(P.length>4&&P[0].classList.contains('back')){ pr.appendChild(P[0]); P=[...pr.querySelectorAll(':scope > .pg')];
-      const k=(4-P.length%4)%4; const at=P[P.length-3]; for(let i=0;i<k;i++) at.insertAdjacentHTML('beforebegin',blankPage(qOf(p))); } }
+      const k=(4-P.length%4)%4; const at=P[P.length-1]; for(let i=0;i<k;i++) at.insertAdjacentHTML('beforebegin',blankPage(qOf(p))); } }
     /* 스프링 제본: A4 가로 한 장에 두 쪽. 양면(짧은 쪽 넘김)으로 찍어 가운데를 자르고 왼쪽 묶음을 오른쪽 묶음 위에 얹으면 1쪽부터 차례대로 */
     if(mode==='spring'){ const P=[...pr.querySelectorAll(':scope > .pg')], N=P.length, S=N/4, out=[];
       for(let k=1;k<=S;k++){ out.push([2*k-1,2*S+2*k-1],[2*S+2*k,2*k]); }
