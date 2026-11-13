@@ -42,6 +42,7 @@ try:
   if _ch: json.dump(_lum,open('ux/phlum.json','w'),separators=(',',':'))
 except Exception as _x:
   _lum=json.load(open('ux/phlum.json')) if os.path.exists('ux/phlum.json') else {}
+data+="\nconst MEM100="+(json.dumps({"list":[{"r":x["r"],"t":x["t"]} for x in json.load(open('site_src/mem100.json'))["list"]]},ensure_ascii=False,separators=(',',':')) if os.path.exists('site_src/mem100.json') else "null")+";"  # 꼭 외울 말씀 100(도전 탭 놀이)
 data+="\nconst CHROLE="+(open('ux/christ_role.json').read() if os.path.exists('ux/christ_role.json') else "{}")+";"
 data+="\nconst PHLUM="+json.dumps(_lum,separators=(',',':'))+";"
 data+="\nconst NAME_SET=new Set(NAME_MEAN.map(x=>x[0])); for(const n of NAME_MEAN){ if(!GLOSSARY.some(g=>g[0]===n[0])) GLOSSARY.push(n); }"

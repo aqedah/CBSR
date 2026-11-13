@@ -603,6 +603,12 @@ html.v2 .brand{letter-spacing:0;align-items:center}#brandL{display:flex;align-it
 .tdcd{font:700 40px/1 var(--f-ui);font-variant-numeric:tabular-nums;letter-spacing:.05em;margin-top:12px}
 .tdnin em{font-style:normal;font-size:12.5px;color:#e2b874}
 .tdnin .btn{justify-self:center;margin-top:8px}
+.m100sec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px max(16px,4vw);margin:14px 0}
+.m100grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:10px 0 4px}.m100c{aspect-ratio:1;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--muted);font:600 11px var(--f-ui);padding:0;cursor:pointer}.m100c.half{border-color:var(--accent);color:var(--accent)}.m100c.ok{background:var(--accent);border-color:var(--accent);color:#fff}
+.m100all>summary{cursor:pointer;color:var(--accent);font:600 13.5px var(--f-ui);margin-top:12px}.m100ref{font:600 14px var(--f-ui);margin:4px 0 8px}.m100ref b{display:inline-block;min-width:26px;padding:1px 7px;margin-right:4px;border-radius:999px;background:var(--accent);color:#fff;text-align:center}.m100ref small{color:var(--muted);font-weight:500;margin-left:4px}
+.m100t{font:500 18px/1.9 var(--f-serif,serif);margin:6px 0 12px;word-break:keep-all}.m100bl{display:inline-block;border-bottom:2px solid var(--line);min-width:2.2em;line-height:1.2}.m100bl.cur{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}.m100ok{color:var(--accent);font-weight:700}.m100full{font-size:15.5px;color:var(--muted);border-left:3px solid var(--accent);padding-left:10px}
+.m100opts{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}.m100o{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 14px;font:600 15px var(--f-ui);cursor:pointer}.m100o.used{opacity:.35}.m100o.no{border-color:#c0392b;color:#c0392b;animation:m100sh .3s}.m100ch{border-radius:10px;text-align:left;font-weight:500}
+@keyframes m100sh{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 .gord,.gopts{display:grid;gap:8px;margin:6px 0 10px}.gopt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 12px;font-size:15px;line-height:1.55}
 .gopt b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--paper);border:1px solid var(--line);font-size:13px}.gopt.on b{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .gopt small{display:block;color:var(--muted);font-size:12px;margin-top:3px}.gopt.ok{border-color:var(--ok,#2e7d4f);background:color-mix(in srgb,var(--ok,#2e7d4f) 10%,var(--card))}.gopt.no{border-color:#c0563f;background:color-mix(in srgb,#c0563f 8%,var(--card))}
@@ -7554,6 +7560,15 @@ function cardGameHTML(){ const G=view.game&&view.game.kind==="card"?view.game:nu
   if(G.a) h+=`<div class="row"><button class="btn ghost" data-gstart="card" data-gnew="1">다음 카드</button><button class="btn ghost" data-gclose="1">닫기</button></div>`;
   return h+`</section>`; }
 function bindChallenge(){ const key=keyOf(view.w,view.d), rr=()=>keepScroll(()=>{});
+  const mr=()=>{ const a=document.getElementById("m100"), t=a?a.getBoundingClientRect().top:null; render(); const b=document.getElementById("m100"); if(b&&t!=null) scrollBy(0,b.getBoundingClientRect().top-t); };
+  const mDone=()=>{ const G=view.game, R=(mem.m100 ||= {}), r=R[G.i] ||= {}; r[G.mode]=(r[G.mode]||0)+1; save(); };
+  document.querySelectorAll("[data-m100go]").forEach(b=>b.onclick=()=>{ const m=b.dataset.m100go, from=b.dataset.m100from!=null?+b.dataset.m100from:-1; view.game=m100New(m100Next(from,m),m); mr(); });
+  document.querySelectorAll("[data-m100]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.m100, r=(mem.m100||{})[i]||{}; view.game=m100New(i,r.f&&!r.o?"o":"f"); mr(); });
+  document.querySelectorAll("[data-m100sw]").forEach(b=>b.onclick=()=>{ view.game=m100New(view.game.i,b.dataset.m100sw); mr(); });
+  document.querySelectorAll("[data-m100x]").forEach(b=>b.onclick=()=>{ view.game=null; mr(); });
+  document.querySelectorAll("[data-m100o]").forEach(b=>b.onclick=()=>{ const G=view.game, j=+b.dataset.m100o, o=G.opts[j], cur=G.bl.find(k=>G.fill[k]==null); if(cur==null) return;
+    if(o===m100Core(G.W[cur])){ G.fill[cur]=o; G.wrong=null; if(G.bl.every(k=>G.fill[k]!=null)) mDone(); } else { G.wrong=j; G.miss++; } mr(); });
+  document.querySelectorAll("[data-m100c]").forEach(b=>b.onclick=()=>{ const G=view.game, k=+b.dataset.m100c; if(k===G.got){ G.got++; G.wrong=null; if(G.got>=G.ch.length) mDone(); } else { G.wrong=k; G.miss++; } mr(); });
   document.querySelectorAll("[data-gstart]").forEach(b=>b.onclick=()=>{ const k=b.dataset.gstart, seed=key+(b.dataset.gnew?":"+Date.now():"");
     if(k==="order"){ const o=gOrder(view.w,view.d,seed); view.game={kind:k,key,...o,pickd:[]}; }
     else if(k==="who"){ const o=gWho(view.w,view.d,seed); view.game={kind:k,key,qs:o.qs,i:0,score:0}; }
@@ -7570,8 +7585,42 @@ function renderChallenge(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   let h=`<section class="sec"><span class="label">도전 · 언제든지 열려 있습니다</span><h2>${esc(p?p.label:"")}</h2><p class="lead">읽은 본문으로 풀어 봅니다. 날짜를 바꾸면 지난 본문도 풀 수 있습니다.</p></section>`;
   if(p) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
   if(p&&BIBLE) h+=["order","who","clue"].map(k=>gameHTML(k,w,d)).join("");
+  h+=m100HTML();
   h+=cardGameHTML();
   return h; }
+/* ===== 꼭 외울 말씀 100 (11-13 목사님: 가이드북 부록 그대로, 쉬운 놀이로 — 빈칸 채우기·순서 맞추기) =====
+   기록 mem.m100[번호]={f:빈칸 마친 횟수,o:순서 마친 횟수}. 둘 다 한 번 이상이면 ✓ */
+function m100Rnd(seed){ let x=0; for(const ch of String(seed)) x=(x*31+ch.charCodeAt(0))>>>0; return ()=>{ x=(x*1664525+1013904223)>>>0; return x/4294967296; }; }
+function m100Shuf(a,rn){ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(rn()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+const m100Core=w=>w.replace(/^[^가-힣A-Za-z0-9]+|[^가-힣A-Za-z0-9]+$/g,"");
+function m100Next(from,mode){ const L=MEM100.list, R=mem.m100||{}; for(let k=1;k<=L.length;k++){ const i=(from+k)%L.length, r=R[i]||{}; if(mode?!r[mode]:!(r.f&&r.o)) return i; } return (from+1)%L.length; }
+function m100New(i,mode){ const t=MEM100.list[i].t, W=t.split(" "), rn=m100Rnd(i+":"+mode+":"+Date.now());
+  if(mode==="f"){ const cand=W.map((w,k)=>[k,m100Core(w).length]).filter(x=>x[1]>=2).sort((a,b)=>b[1]-a[1]||rn()-.5);
+    const n=Math.max(1,Math.min(4,Math.round(W.length/6))), bl=cand.slice(0,Math.min(n,cand.length)).map(x=>x[0]).sort((a,b)=>a-b);
+    const ans=bl.map(k=>m100Core(W[k])), pool=[...new Set(MEM100.list.filter((_,j)=>j!==i).flatMap(x=>x.t.split(" ").map(m100Core)).filter(w=>w.length>=2&&!ans.includes(w)))];
+    const extra=m100Shuf(pool,rn).slice(0,Math.max(3,6-ans.length));
+    return {kind:"m100",i,mode,W,bl,fill:{},opts:m100Shuf([...ans,...extra],rn),miss:0}; }
+  const n=Math.max(3,Math.min(6,Math.round(W.length/3))), ch=[]; for(let k=0;k<n;k++){ const a=Math.round(k*W.length/n), b=Math.round((k+1)*W.length/n); if(b>a) ch.push(W.slice(a,b).join(" ")); }
+  let ord=m100Shuf(ch.map((_,k)=>k),rn); if(ord.every((x,k)=>x===k)&&ord.length>1) ord.reverse();
+  return {kind:"m100",i,mode,ch,ord,got:0,miss:0}; }
+function m100HTML(){ if(typeof MEM100==="undefined"||!MEM100) return ""; const L=MEM100.list, R=(mem.m100 ||= {}), G=view.game&&view.game.kind==="m100"?view.game:null;
+  const done=L.filter((_,i)=>R[i]&&R[i].f&&R[i].o).length;
+  let h=`<section class="sec gsec m100sec" id="m100"><span class="label">꼭 외울 말씀 100</span>`;
+  if(!G) return h+`<p class="lead">가이드북 부록의 백 구절입니다. 빈칸 채우기와 순서 맞추기를 둘 다 마치면 ✓가 됩니다. 지금 <b>${done}/100</b></p>
+    <div class="row"><button class="btn" data-m100go="f">빈칸 채우기</button><button class="btn ghost" data-m100go="o">순서 맞추기</button></div>
+    <details class="m100all"><summary>백 구절 모두 보기 · 번호를 누르면 그 구절로</summary><div class="m100grid">${L.map((x,i)=>{ const r=R[i]||{}; return `<button class="m100c${r.f&&r.o?" ok":r.f||r.o?" half":""}" data-m100="${i}" aria-label="${i+1}번 ${esc(x.r)}">${r.f&&r.o?"✓":i+1}</button>`; }).join("")}</div></details></section>`;
+  const x=L[G.i], r=R[G.i]||{};
+  h+=`<p class="m100ref"><b>${G.i+1}</b> ${esc(x.r)} <small>${G.mode==="f"?"빈칸 채우기":"순서 맞추기"}${r.f&&r.o?" · ✓":""}</small></p>`;
+  if(G.mode==="f"){ const cur=G.bl.find(k=>G.fill[k]==null), fin=cur==null;
+    h+=`<p class="m100t">${G.W.map((w,k)=>{ if(!G.bl.includes(k)) return esc(w); const core=m100Core(w), [pre,post]=w.split(core); return G.fill[k]!=null?`${esc(pre)}<b class="m100ok">${esc(core)}</b>${esc(post||"")}`:`${esc(pre)}<span class="m100bl${k===cur?" cur":""}">${"　".repeat(Math.max(2,Math.min(5,core.length)))}</span>${esc(post||"")}`; }).join(" ")}</p>`;
+    if(!fin) h+=`<div class="m100opts">${G.opts.map((o,j)=>{ const used=Object.values(G.fill).includes(o)&&!G.opts.slice(0,j).includes(o); return `<button class="m100o${G.wrong===j?" no":""}${used?" used":""}" data-m100o="${j}"${used?" disabled":""}>${esc(o)}</button>`; }).join("")}</div><p class="lead">빈칸에 들어갈 말을 차례로 누르세요.</p>`;
+  } else { const fin=G.got>=G.ch.length;
+    h+=`<p class="m100t m100build">${G.ch.slice(0,G.got).map(c=>`<span class="m100ok">${esc(c)}</span>`).join(" ")}${fin?"":` <span class="m100bl cur">　　　</span>`}</p>`;
+    if(!fin) h+=`<div class="m100opts">${G.ord.map(k=>k<G.got?"":`<button class="m100o m100ch${G.wrong===k?" no":""}" data-m100c="${k}">${esc(G.ch[k])}</button>`).join("")}</div><p class="lead">구절의 앞부분부터 차례로 누르세요.</p>`; }
+  const fin=G.mode==="f"?G.bl.every(k=>G.fill[k]!=null):G.got>=G.ch.length;
+  if(fin) h+=`<p class="gres">${G.miss?`다 맞췄습니다 · 틀린 횟수 ${G.miss}`:"한 번에 맞췄습니다!"}</p><p class="m100t m100full">${esc(x.t)}</p>`;
+  h+=`<div class="row">${fin?`<button class="btn" data-m100go="${G.mode}" data-m100from="${G.i}">다음 구절</button><button class="btn ghost" data-m100sw="${G.mode==="f"?"o":"f"}">이 구절 ${G.mode==="f"?"순서 맞추기":"빈칸 채우기"}</button>`:`<button class="btn ghost" data-m100sw="${G.mode}">새로 섞기</button>`}<button class="btn ghost" data-m100x="1">목록</button></div>`;
+  return h+`</section>`; }
 /* ===== 말씀 카드 만들기 (11/5 목사님: 말씀 카드를 그림으로 만들어 보내기. 다른 앱과 겹치지 않는 우리 방식으로)
    · 미리 보기 그림을 좌우로 밀어 그림을 바꿈(그림은 그 본문에 맞는 우리 그림 가운데서)
    · 꼴 셋: 그림 위에 / 책갈피 / 종이 — 명조, 왼쪽 맞춤
@@ -8128,6 +8177,7 @@ function v2ChallengeHTML(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d), R=
   const quiz=view.quizOpen&&p?`<div class="gquizin" id="quizSec">${renderQuiz(key,null,"day")}</div>`:"";
   let h=head(rows,band+`<div class="grows">${rows.map(x=>x.h).join("")}${nq?"":cardRow}</div>`+quiz);
   h+=gbCardHTML(); /* 성경 골든벨(11/3): 매일 숙제가 아니라 언제든 — 카드 밖에 */
+  h+=m100HTML(); /* 11-13: 꼭 외울 말씀 100 — 날짜와 상관없이 언제든 */
   h+=gWeekHTML();
   return h; }
 function gplayHTML(){ const G=view.gp; if(!G) return ""; const {w,d}=view, top=`<div class="gptop"><b>${esc({look:"본문에서 찾기",find:"오늘의 발견",order:"장면 순서",who:"누가 말했나",clue:"되풀이되는 말",trip:"여정 따라가기",card:"빈칸 채우기"}[G.k])}</b><span class="gpdots">${G.total?Array.from({length:G.total},(_,i)=>`<i class="${i<G.step?"on":""}"></i>`).join(""):""}</span><button class="gpx" data-gpx="1" aria-label="닫기">✕</button></div>`;
