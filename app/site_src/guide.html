@@ -404,7 +404,7 @@ A′|26장|언덕에서. &quot;여호와의 기름 부음 받은 자&quot;(26:9)
     <fieldset><legend><span class="n">4</span>나의 묵상 (오른쪽 물음)</legend>
       <label class="f"><span class="k"><b>[1] 본문 관찰 — 질문</b> <span class="cnt" data-for="q"></span></span><textarea id="q" data-max="85"></textarea></label>
       <div class="hint">본문의 말로 답할 수 있는 것. 절 주소 포함.</div>
-      <div class="hint">[2] 하나님의 성품은 매일 같은 물음("하나님이 하신 말씀이나 일에서, 그분은 어떤 분입니까?")이라 칸이 없습니다. 답 문장은 아래 ⑤에.</div>
+      <div class="hint">[2] 하나님의 성품은 매일 같은 물음("하나님이나 예수 그리스도에 대해 말하는 구절에서, 그분은 어떤 분입니까?")이라 칸이 없습니다. 답 문장은 아래 ⑤에.</div>
       <label class="f"><span class="k"><b>[3] 적용 — 질문</b> <span class="cnt" data-for="apply"></span></span><textarea id="apply" data-max="105"></textarea></label>
       <div class="hint">앞 문장 = 본문의 사실(절 주소), 뒤 문장 = 나에게 묻는 질문 하나. 질문은 **별표 둘**로 감싸면 굵게.</div>
       <div class="hint">[4] 오늘의 기도는 빈 줄 3 + "예수님의 이름으로 기도합니다. 아멘."이라 칸이 없습니다. 기도문은 아래 ⑤에.</div>
@@ -690,10 +690,10 @@ function pageR(p,qt,hw){
 <p class="date sans">${p.m}월 ${p.d}일 · ${esc(p.t)}</p>
 <p class="sec sans" style="margin-top:0.5mm"><span class="n">4</span>나의 묵상</p>
 <p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q" data-f="q">${vs(qt.obs.q)}</p>${ln(3)}
-<p class="lab sans"><span class="st">2</span>하나님의 성품 <span class="sm">— 하나님이 하신 말씀이나 일에서, 그분은 어떤 분입니까?</span></p>${ln(2)}
+<p class="lab sans"><span class="st">2</span>하나님의 성품</p><p class="q">하나님이나 예수 그리스도에 대해 말하는 구절에서, 그분은 어떤 분입니까?</p>${ln(2)}
 <p class="lab sans"><span class="st">3</span>적용</p><p class="q" data-f="apply">${mdv(qt.apply)}</p>${ln(2)}
 <p class="lab sans"><span class="st">4</span>오늘의 기도</p>${ln(3)}
-<div class="after"><p class="h sans"><span class="n">5</span>쓴 뒤에 읽기 — 해설과 기도<span class="stuck">막힌 칸은 궁금한 점 한 줄로 두고 와도 됩니다</span></p>
+<div class="after"><p class="h sans"><span class="n">5</span>쓴 뒤에 읽기 — 해설과 기도<span class="stuck">막힌 칸은 물음으로 남기고, 해설에서 근거를 찾으십시오</span></p>
 <p data-f="note">${vs(qt.note)}${qt.god?' <span data-f="god">'+vs(qt.god)+'</span>':''}</p>
 <p data-f="pray"><span class="k">기도</span>${vs(qt.pray)}</p></div>
 <div class="pn">${pageNo(p)+1}</div>
