@@ -398,6 +398,10 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .v2aid .aidctx{margin:10px 0 0;padding:0 12px}.v2aid .aidctx dt{font:700 12.5px var(--f-ui);color:var(--muted);margin-top:8px}.v2aid .aidctx dd{margin:2px 0 0;line-height:1.6}
 .v2aid .aidsec{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.v2aid .aidk{display:block;font:700 13px var(--f-ui);color:var(--accent);margin-bottom:6px}.v2aid .aidsec .tline{margin:0}.v2aid .aidfocus{margin:8px 0 0;font-size:15px;line-height:1.7}.v2aid .aidhint{margin:6px 0 0;font-size:12px;color:var(--muted)}.v2aid .aidsec>p{margin:4px 0 0;line-height:1.65}
 .v2aid .aidtools{display:flex;flex-direction:column;gap:10px}.v2aid .aidtool{display:flex;gap:10px;align-items:flex-start;margin:0;line-height:1.6}.v2aid .aidtool>.tool{flex:none;margin:0;width:6.4em;justify-content:center;text-align:center;white-space:nowrap}.v2aid .aidtool>span{flex:1;min-width:0}.v2aid .aidtool b.tdk{font-weight:700;color:var(--ink)}.v2aid .aidtool .tex{display:block;margin-top:2px;color:var(--muted);font-size:.93em}
+.v2aid .aidline{margin:2px 0;font-size:13px;line-height:1.55;color:var(--muted)}.v2aid .aidline b{color:var(--ink);font-weight:700;margin-right:4px}.v2aid .aidctx{padding:0 12px}
+.aidchip.on{background:var(--accent);color:#fff}.v2aid .aiddef{margin:8px 0 0;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:14px;line-height:1.65}.v2aid .aiddef b.tdk{color:var(--ink)}
+.rd3 .aidsec{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.rd3 .aidsec:first-of-type{border-top:0;padding-top:4px}.rd3 .aidk{display:block;font:700 13px var(--f-ui);color:var(--accent);margin-bottom:6px}.rd3 .aidtool{display:flex;gap:10px;align-items:flex-start;margin:8px 0 0;line-height:1.6}.rd3 .aidtool>.tool{flex:none;margin:0;width:6.4em;justify-content:center;white-space:nowrap}.rd3 .aidtool>span{flex:1;min-width:0}.rd3 p{line-height:1.65}
+.ckind{display:inline-block;font:700 12px var(--f-ui);padding:1px 8px;border-radius:999px;border:1.5px solid var(--accent);color:var(--accent);margin-right:4px}
 .v2aid .aidbook{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.v2aid .aidbook>summary{cursor:pointer;font:700 14px var(--f-ui);color:var(--accent);list-style:none}.v2aid .aidbook>summary::-webkit-details-marker{display:none}.v2aid .aidbook p{line-height:1.65}
 .toolbox .tnotes{margin-top:8px}.toolbox .tnotes summary{cursor:pointer;font:700 13px var(--f-ui);color:var(--accent)}.toolbox .tnotes .tooldef2{color:var(--ink)}
 .toolbox .tfind{margin:8px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
@@ -3230,16 +3234,25 @@ function whereOf(p){ if(typeof WHERE365==="undefined"||!p||!p.ch||!p.ch.length) 
 /* 11-13 목사님: 읽기 도우미 = 가이드북 ① 읽기 전과 같은 틀.
    이어서 읽기(지금 어디쯤·지난 이야기) → 오늘의 읽기 도구(칩 + 초점 문장 하나) → 말뜻 → (책 첫날) 어떤 책인가요.
    '읽으며 살펴볼 질문'은 묵상 탭의 관찰 질문과 겹쳐 뺌. '눈여겨볼 것'은 본문 끝(읽은 뒤)으로 옮김. 가이드북이 없는 날은 '읽으면서 찾기'가 초점 문장 */
+/* 11-13 목사님: 본문 탭의 '읽기 전'은 가이드북 ① 읽기 전과 같은 이름·순서·글.
+   (앱만의 덤) 지금 어디쯤·지난 이야기는 한 줄씩 작게. 도구 풀이는 앱의 '책머리' — 기호를 누르면 그 도구 하나만 펼침(처음 만나는 도구는 펼친 채로) */
 function readAid(p,w,d,key,tl,G){ const g=GUIDE[key]||{}, where=whereOf(p);
-  const ctx=[]; if(where) ctx.push(`<dt>지금 어디쯤?</dt><dd>${esc(where.t)}${where.n>1?` <small class="wherek">이 단락 ${where.n}일 가운데 ${where.k}일째</small>`:""}</dd>`); if(g.prev) ctx.push(`<dt>지난 이야기</dt><dd>${esc(g.prev)}</dd>`);
-  /* 11-13 목사님: 읽기 도구는 [도구 단추] + 설명만. 예는 오늘 본문에서(가이드북 '눈여겨볼 것'의 첫 문장), 없으면 뺌 */
-  const P=(G&&G.p)||{}, exOf=t=>{ const x=String(P[t]||"").trim(); if(!x) return ""; const m=x.match(/^.*?\d[)\]]?\.(?=\s|$)|^.*?[다요]\.(?=\s|$)/); return (m?m[0]:x).trim(); };
-  const tools=tl.length?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b><div class="aidtools">${tl.map(t=>{ const ex=exOf(t); return `<p class="aidtool">${toolChip(t)}<span>${TOOL_HTML[t]||esc(TOOLS[t]||"")}${ex?` <span class="tex">오늘 본문: ${esc(ex)}</span>`:""}</span></p>`; }).join("")}</div></div>`:"";
-  const focus=""; const word=G&&G.w?`<div class="aidsec"><b class="aidk">말뜻</b><p>${esc(G.w)}</p></div>`:"";
+  const ctx=[]; if(where) ctx.push(`<p class="aidline"><b>지금 어디쯤</b> ${esc(where.t)}${where.n>1?` <small class="wherek">· 이 단락 ${where.n}일 가운데 ${where.k}일째</small>`:""}</p>`); if(g.prev) ctx.push(`<p class="aidline"><b>지난 이야기</b> ${esc(g.prev)}</p>`);
+  const flow=(G&&G.t)||g.today||"", focus=(G&&G.f)||g.find||"";
+  const shown=(mem.toolSeen ||= {}); let nw=0; const openT=new Set(tl.filter(t=>{ if(!shown[t]){ shown[t]=key; nw=1; } return shown[t]===key; })); if(nw) save();
+  const tools=tl.length||focus?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b>${tl.length?`<p class="tline aidchips">${tl.map(t=>`<button class="tool aidchip${openT.has(t)?" on":""}" data-adef="${esc(t)}" aria-expanded="${openT.has(t)}">${tName(t)}</button>`).join("")}</p>`:""}${focus?`<p class="aidfocus">${esc(focus)}</p>`:""}${tl.map(t=>`<p class="aiddef" data-for="${esc(t)}"${openT.has(t)?"":" hidden"}><b>${tName(t)}</b> ${TOOL_HTML[t]||esc(TOOLS[t]||"")}</p>`).join("")}</div>`:"";
+  const word=G&&G.w?`<div class="aidsec"><b class="aidk">말뜻</b><p>${esc(G.w)}</p></div>`:"";
+  const fl=flow?`<div class="aidsec"><b class="aidk">오늘의 흐름</b><p>${esc(flow)}</p></div>`:"";
   let book=""; for(const b of [...new Set(p.ch.filter(x=>x[1]===1).map(x=>x[0]))]){ const I=BOOKINFO[b]; if(!I) continue; const nm=PLAN.full[b-1];
     book+=`<details class="aidbook"><summary>${esc(nm)}${hasB(nm)?"은":"는"} 어떤 책인가요? ›</summary><p>${esc(I.what)}</p><p><b>이 책을 읽을 때</b> ${esc(I.look)}</p><button class="btn ghost small" data-book="${b}">더 알아보기</button></details>`; }
-  if(!ctx.length&&!tools&&!word&&!book) return "";
-  return `<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>${[ctx.length?"지난 이야기":"",tl.length||focus?"오늘의 읽기 도구":"",word?"말뜻":""].filter(Boolean).join(" · ")}</small></summary>${ctx.length?`<dl class="aidctx">${ctx.join("")}</dl>`:""}${tools}${word}${book}</details>`; }
+  if(!ctx.length&&!fl&&!tools&&!word&&!book) return "";
+  return `<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>① 읽기 전<small>${[fl?"오늘의 흐름":"",tl.length||focus?"오늘의 읽기 도구":"",word?"말뜻":""].filter(Boolean).join(" · ")}</small></summary>${ctx.length?`<div class="aidctx">${ctx.join("")}</div>`:""}${fl}${tools}${word}${book}</details>`; }
+/* ③ 읽은 뒤 — 가이드북 ③과 같은 것(눈여겨볼 것 · 지도 · 성경 전체로)을 먼저, 앱만의 것은 [더 알아보기]에 */
+function afterRead(w,d){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||{}, L=Object.keys(P); let h="";
+  if(L.length) h+=`<div class="aidsec"><b class="aidk">눈여겨볼 것</b>${L.map(t=>`<p class="aidtool">${toolChip(t)}<span>${esc(P[t])}</span></p>`).join("")}</div>`;
+  if(GD&&GD.m){ let R=[]; try{ R=routesFor(w,d).filter(r=>r.p.filter(q=>q[0]).length>=2); }catch(e){} h+=`<div class="aidsec"><b class="aidk">지도</b><p>${esc(GD.m)}</p>${R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}</div>`; }
+  if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p></div>`; }
+  return h; }
 function prepHelp(p,w,key){
   const g=GUIDE[key], where=whereOf(p);
   const rows=[];
@@ -3423,13 +3436,13 @@ function renderRead(){
     h+=`<div class="row" style="margin-top:14px"><button class="btn ghost" data-close="1">본문 접기</button></div></div>`;
   }
   h+=`</section>`;
-  /* 오늘 본문이 큰 여정의 한 장면이면 그 장면부터 따라가기(목사님 2026-10-31) */
-  if(window.CBSR_V2){ const TH=tourHere(w,d); if(TH) h+=`<section class="sec">${TH}</section>`; }
+  /* 11-13 목사님: 본문 끝은 가이드북 ③ 읽은 뒤와 같게. 큰 여정 이어 보기·[더 알아보기](줄거리 정리, 인물·곳·말, 지도, 퀴즈)는 그 아래 */
+  if(window.CBSR_V2){ const A3=afterRead(w,d), TH=tourHere(w,d); if(A3||TH) h+=`<section class="sec rd3"><span class="label">③ 읽은 뒤</span>${A3}${TH?`<div class="aidsec">${TH}</div>`:""}</section>`; }
   // 이해가 필요할 때 (참고 자료)
-  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 보기 · 인물과 지도, 퀴즈</summary>`; }
+  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 줄거리, 인물·곳·말, 지도, 퀴즈</summary>`; }
   if(!simple||view.moreOpen){
   h+=`<div class="helpzone">`;
-  /* 본문 요약은 오늘 탭 그림 아래로 옮김(11-11 목사님) */
+  { const lg=(SUMMARY[w-1]||[])[d]||""; if(lg&&gbFlow(w,d)) h+=`<section class="sec"><span class="label">오늘 줄거리 정리</span><p class="summary">${esc(lg)}</p></section>`; } /* 11-13: 긴 요약은 읽은 뒤 [더 알아보기] 안에 */
   h+=knowSection(p,A,b0);
   h+=moreSection(p,A,b0,w,d);
   h+=renderMapBox(A);
@@ -3442,9 +3455,6 @@ function renderRead(){
   if(simple) h+=`</details>`;
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
-  /* 11-13 목사님: 긴 요약은 읽은 뒤로 — 오늘 탭이 가이드북 '오늘의 흐름'을 쓰는 날, 본문 끝에 접어 둠 */
-  { const GD=GBD()&&GBD()[dayNo(w,d)], P=GD&&GD.p||{}, L=Object.keys(P); if(L.length) h+=`<details class="sec sumafter"><summary><span class="label" style="margin:0">다 읽은 뒤 · 눈여겨볼 것</span></summary><p class="tooldef2" style="margin-top:10px;color:var(--ink)">${L.map(t=>`<b>${tName(t)}</b> ${esc(P[t])}`).join("<br>")}</p></details>`; }
-  { const lg=(SUMMARY[w-1]||[])[d]||""; if(lg&&gbFlow(w,d)) h+=`<details class="sec sumafter"><summary><span class="label" style="margin:0">다 읽은 뒤 · 오늘 줄거리 정리</span></summary><p class="summary" style="margin-top:10px">${esc(lg)}</p></details>`; }
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
   if(futLock(w,d)&&!done){ h+=`<p class="lead" style="text-align:center">본문은 미리 읽어 볼 수 있습니다.<br>통독 완료와 스토리 QT는 <b>${esc(futMsg(w,d))}</b>.</p>${flipHTML(w,d)}`; }
   else if(done){
@@ -8173,7 +8183,7 @@ function render(){
    - ④ 해설은 [쓴 뒤 해설 열기]로 열고, [오늘 묵상 마침]을 따로 눌러 마침. */
 const TBK_V="tg1", TBK_W=600, TBK_BH=Math.round(600*210/148);
 const TBK={data:null,loading:false,page:"m",open:false,tool:"pen",color:"#24407a",finger:false,strokes:[],undo:[],redo:[],ikey:"",ret:null,scale:1};
-try{ TBK.finger=localStorage.getItem("cbsr-tbkfinger")==="1"; TBK.book=localStorage.getItem("cbsr-tbkbook")!=="0"; }catch(e){ TBK.book=true; } /* 11-12 목사님: 기본은 책 모양 그대로(PDF처럼) */ setTimeout(()=>{ if(window.CBSR_V2&&GBON&&innerWidth>=1024) tbkLoad(); },800); TBK.lw=innerWidth;
+try{ TBK.finger=localStorage.getItem("cbsr-tbkfinger")==="1"; TBK.book=true; }catch(e){ TBK.book=true; } /* 11-13 목사님: 책 모양만(큰 글자 보기 없앰) */ /* 11-12 목사님: 기본은 책 모양 그대로(PDF처럼) */ setTimeout(()=>{ if(window.CBSR_V2&&GBON&&innerWidth>=1024) tbkLoad(); },800); TBK.lw=innerWidth;
 function tbkPref(){ try{ return localStorage.getItem("cbsr-view")||"both"; }catch(e){ return "both"; } } /* both | text | guide */
 function tbkSetPref(v){ try{ localStorage.setItem("cbsr-view",v); }catch(e){} }
 function tbkLoad(){ if(TBK.data||TBK.loading) return; TBK.loading=true; fetch(Y27?"guide_qt.json":"trial26_qt.json").then(r=>r.json()).then(j=>{ TBK.data=j; tbkSync(); }).catch(()=>{ TBK.loading=false; }); }
@@ -8194,7 +8204,7 @@ function tbkSync(){
   const split=!!D&&tbkWide()&&pref==="both"&&!TBK.open&&tbkFits(), full=!!D&&!split&&(TBK.open||(tbkWide()&&pref==="guide"));
   document.body.classList.toggle("tbksplit",split); document.body.classList.toggle("tbkfull",full); document.body.style.setProperty("--tbkr",tbkRatio());
   if(!D||(!split&&!full)){ if(pane) pane.hidden=true;
-    if(D){ /* 11-12 GPT 검수 R06: 휴대폰에서도 가이드북(쓴 글·손글씨)을 열 수 있게 */ const b=document.createElement("button"); b.className="tbkopen"; b.textContent="가이드북"; if(tbkWide()&&pref==="both") b.title="화면이 좁아 한 칸씩 봅니다"; b.onclick=()=>{ TBK.open=true; tbkSync(); }; document.body.appendChild(b); }
+    if(D){ /* 11-12 GPT 검수 R06: 휴대폰에서도 가이드북(쓴 글·손글씨)을 열 수 있게 */ const b=document.createElement("button"); b.className="tbkopen"; b.textContent="가이드북"; if(tbkWide()&&pref==="both") b.title="화면이 좁아 한 칸씩 봅니다"; b.onclick=()=>{ /* 11-13 목사님: 본문만으로 둔 뒤 [가이드북]을 누르면, 자리가 되면 본문과 함께 */ if(tbkWide()&&tbkFits()){ tbkSetPref("both"); TBK.open=false; } else TBK.open=true; tbkSync(); }; document.body.appendChild(b); }
     tbkRetBtn(); return; }
   if(!pane){ pane=document.createElement("aside"); pane.id="tbkPane"; document.body.appendChild(pane); }
   pane.hidden=false; { const bn=document.querySelector(".bnav"); document.body.style.setProperty("--tbknav",(bn?bn.offsetHeight:64)+"px"); } { const ae=document.activeElement; if(!(ae&&ae.classList.contains("tbkta")&&pane.contains(ae)&&TBK.drawn&&TBK.drawn.startsWith(D.key))) tbkDraw(D); } tbkRetBtn(); }
@@ -8241,11 +8251,13 @@ const tbkSpread=()=>!TBK.one; /* 11-11 목사님: 가이드북은 기본 두 쪽
 function tbkHash(o){ const t=JSON.stringify(o||{}); let h=5381; for(let i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36); }
 try{ TBK.sy=JSON.parse(localStorage.getItem("cbsr-tbksy")||"{}")||{}; }catch(e){ TBK.sy={}; }
 function tbkSySave(){ try{ const k=Object.keys(TBK.sy); if(k.length>40) k.slice(0,k.length-40).forEach(x=>delete TBK.sy[x]); localStorage.setItem("cbsr-tbksy",JSON.stringify(TBK.sy)); }catch(e){} }
-function tbkDraw(D0){ const pane=document.getElementById("tbkPane"); const sp=tbkSpread(), lay=D0.key+(sp?"s":"v"), full=document.body.classList.contains("tbkfull");
+/* 11-13 목사님: 앱 가이드북은 '묵상·해설' 쪽 중심. '읽기 안내' 쪽은 본문 화면의 ①·③에 같은 글이 있으므로 [인쇄본 쪽도 보기]로만(그 쪽에 필기가 있는 날은 함께) */
+function tbkShowA(D0){ const q=mem.qt[D0.key]||{}; return !!(TBK.showA||q.inkA); }
+function tbkDraw(D0){ TBK_PG.length=0; TBK_PG.push(...(tbkShowA(D0)?["a","m"]:["m"])); const pane=document.getElementById("tbkPane"); const sp=TBK_PG.length>1&&tbkSpread(), lay=D0.key+(sp?"s":"v"), full=document.body.classList.contains("tbkfull");
   const D=TBK.useOld&&TBK.oldQt&&TBK.oldFor===D0.key?{...D0,qt:TBK.oldQt}:D0;
   const sc0=pane.querySelector(".tbksc"); if(sc0&&TBK.drawn){ TBK.sy[TBK.drawn]=sc0.scrollTop; tbkSySave(); } const keepY=TBK.sy[lay]||0;
   const pv=typeof NOWOFF!=="undefined"&&NOWOFF&&new Date()<new Date("2027-01-01T00:00:00");
-  pane.innerHTML=`<div class="tbkhd">${!document.body.classList.contains("tbksplit")?`<button class="tbkx" id="tbkClose">‹ 본문</button>${tbkWide()&&tbkPref()==="both"?`<span class="tbknote" title="보기 방식은 함께지만 이 화면 폭에서는 두 칸이 모두 읽기 좋은 크기가 되지 않습니다">지금은 한 칸씩</span>`:""}`:`<button class="tbkx" id="tbkView">보기: 함께 ▾</button>`}${sp?`<span class="tbkspt">${esc(D.p.label)}${TBK.zoom>1.02?` · ${Math.round(TBK.zoom*100)}%`:""}</span>`:`<div class="tbkseg"><button data-tbkp="a" class="on">읽기 안내</button><button data-tbkp="m">묵상·해설</button></div>`}<button class="tbkx tbkmore" id="tbkVMore" aria-label="보기 설정" aria-expanded="false">보기 ▾</button><div class="tbkopts"><button class="tbkx tbkone" id="tbkOne">${sp?"한 쪽씩 보기":"두 쪽 보기"}</button><button class="tbkx" id="tbkBook" title="책 모양 그대로 / 태블릿용 큰 글자">${TBK.book?"큰 글자로 보기":"책 모양으로 보기"}</button>${pv?`<a class="tbkyr" href="?now=0" title="미리 보기 끄기">${ED} 미리 보기 · 끄기</a>`:""}</div></div>
+  pane.innerHTML=`<div class="tbkhd">${!document.body.classList.contains("tbksplit")?`<button class="tbkx" id="tbkClose">‹ 본문</button>${tbkWide()&&tbkPref()==="both"?`<span class="tbknote" title="보기 방식은 함께지만 이 화면 폭에서는 두 칸이 모두 읽기 좋은 크기가 되지 않습니다">지금은 한 칸씩</span>`:""}`:`<button class="tbkx" id="tbkView">보기: 함께 ▾</button>`}${sp||TBK_PG.length===1?`<span class="tbkspt">${TBK_PG.length===1?"묵상 · ":""}${esc(D.p.label)}${TBK.zoom>1.02?` · ${Math.round(TBK.zoom*100)}%`:""}</span>`:`<div class="tbkseg"><button data-tbkp="a" class="on">읽기 안내</button><button data-tbkp="m">묵상·해설</button></div>`}<button class="tbkx tbkmore" id="tbkVMore" aria-label="보기 설정" aria-expanded="false">보기 ▾</button><div class="tbkopts">${tbkWide()&&!document.body.classList.contains("tbksplit")&&tbkFits()?`<button class="tbkx" data-vset="both">본문과 함께 보기</button>`:""}<button class="tbkx" id="tbkShowA">${TBK_PG.length>1?"인쇄본 쪽(읽기 안내) 숨기기":"인쇄본 쪽(읽기 안내)도 보기"}</button>${TBK_PG.length>1?`<button class="tbkx tbkone" id="tbkOne">${sp?"한 쪽씩 보기":"두 쪽 나란히 보기"}</button>`:""}${pv?`<a class="tbkyr" href="?now=0" title="미리 보기 끄기">${ED} 미리 보기 · 끄기</a>`:""}</div></div>
   <div class="tbksc"><div class="tbkpages${sp?" spread":""}">${TBK_PG.map(g=>`<div class="tbkwrap" data-pg="${g}"><div class="tbkpage${TBK.book?" book":""}">${TBK.book?`<iframe class="tbkbook" src="${Y27?"guide.html":"trial26.html"}?embed=1&amp;no=${D.n}&amp;side=${g==="a"?"L":"R"}&amp;ao=${(()=>{ const q=mem.qt[D.key]||{}; return q.ao||q.done?1:0; })()}" title="가이드북 ${g==="a"?"왼쪽":"오른쪽"} 쪽" scrolling="no" tabindex="-1"></iframe>`:g==="a"?tbkPageA(D):tbkPageM(D)}</div><canvas class="tbkink" data-pg="${g}"></canvas></div>`).join("")}</div></div>
   <div class="tbktools"><button data-tt="pen" title="펜으로 쓰기" aria-label="펜"><svg viewBox="0 0 24 24">${TBK_IC.pen}</svg><span class="tl">펜</span></button><span class="tbkcols">${TBK_COL.map((c,i)=>`<button class="sw" data-tc="${c}" style="--c:${c}" title="${["검정","파랑","빨강"][i]}" aria-label="${["검정","파랑","빨강"][i]}"><i></i></button>`).join("")}</span><i class="sep"></i><button data-tt="hl" title="형광펜"><svg viewBox="0 0 24 24">${TBK_IC.hl}</svg><span class="tl">형광펜</span></button><button data-tt="er" title="지우개"><svg viewBox="0 0 24 24">${TBK_IC.er}</svg><span class="tl">지우개</span></button><button data-tt="tx" class="tbktxb" title="자판으로 글자 쓰기" aria-label="글자로 쓰기"><b class="tbkga">가</b><span class="tl">글자</span></button><i class="sep"></i><button id="tbkUn" title="되돌리기"><svg viewBox="0 0 24 24">${TBK_IC.un}</svg><span class="tl">되돌리기</span></button><button id="tbkRe" title="다시"><svg viewBox="0 0 24 24">${TBK_IC.re}</svg><span class="tl">다시</span></button><button id="tbkFg" title="손가락으로 쓰기" class="${TBK.finger?"on":""}"><svg viewBox="0 0 24 24">${TBK_IC.fg}</svg><span class="tl">손가락</span></button><button id="tbkMore" title="사진·백업"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg><span class="tl">더보기</span></button><span class="tbkst" id="tbkSt"></span></div>`;
   TBK.drawn=lay;
@@ -8262,6 +8274,8 @@ function tbkDraw(D0){ const pane=document.getElementById("tbkPane"); const sp=tb
     document.querySelectorAll("#sheetRoot [data-vs]").forEach(b=>b.onclick=()=>{ tbkSetPref(b.dataset.vs); TBK.open=b.dataset.vs==="guide"; document.getElementById("sheetClose").click(); tbkSync(); }); };
   const cl=pane.querySelector("#tbkClose"); if(cl) cl.onclick=()=>{ TBK.open=false; if(tbkPref()==="guide") tbkSetPref("both"); tbkSync(); };
   const mo=pane.querySelector("#tbkVMore"); if(mo) mo.onclick=e=>{ e.stopPropagation(); const hd=pane.querySelector(".tbkhd"), op=hd.classList.toggle("open"); mo.setAttribute("aria-expanded",op); if(op) setTimeout(()=>document.addEventListener("click",function f(ev){ if(!hd.contains(ev.target)){ hd.classList.remove("open"); mo.setAttribute("aria-expanded","false"); } document.removeEventListener("click",f); }),0); };
+  const sa=pane.querySelector("#tbkShowA"); if(sa) sa.onclick=()=>{ const q=mem.qt[D0.key]||{}; if(TBK_PG.length>1){ if(q.inkA){ toast("이 날은 인쇄본 쪽에 쓴 필기가 있어 함께 보입니다"); return; } TBK.showA=false; } else TBK.showA=true; TBK.ikey=""; tbkDraw(D0); tbkInkLoad(D0); };
+  pane.querySelectorAll("[data-vset]").forEach(b=>b.onclick=()=>{ tbkSetPref(b.dataset.vset); TBK.open=false; tbkSync(); });
   const bk=pane.querySelector("#tbkBook"); if(bk) bk.onclick=()=>{ TBK.book=!TBK.book; TBK.zoom=1; TBK.ikey=""; if(TBK.tool==="tx") TBK.tool="pen"; try{ localStorage.setItem("cbsr-tbkbook",TBK.book?"1":"0"); }catch(e){} tbkDraw(D0); tbkInkLoad(D0); };
   const one=pane.querySelector("#tbkOne"); if(one) one.onclick=()=>{ TBK.one=!TBK.one; TBK.zoom=1; try{ localStorage.setItem("cbsr-tbkone2",TBK.one?"1":"0"); }catch(e){} tbkDraw(D0); };
   sc.addEventListener("scroll",()=>{ clearTimeout(TBK.syT); TBK.syT=setTimeout(()=>{ TBK.sy[lay]=sc.scrollTop; tbkSySave(); },400); },{passive:true});
@@ -8279,7 +8293,7 @@ function tbkDraw(D0){ const pane=document.getElementById("tbkPane"); const sp=tb
   pane.querySelectorAll(".tbkref").forEach(r=>r.onclick=()=>tbkJump(r.dataset.ref));
   if(tbkPref()!=="guide"&&tbkWide()){ const g=document.createElement("div"); g.className="tbkgrip"; g.title="끌어서 나눔 비율 바꾸기 · 두 번 누르면 반반"; g.innerHTML="<i></i>"; pane.appendChild(g); tbkGrip(g); }
   requestAnimationFrame(()=>{ fit(); sc.scrollTop=keepY; if(TBK.focusM){ TBK.focusM=false; if(!sp) sc.scrollTop=W.m.wrap.offsetTop-8; } segOn(); });
-  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ if(pane.contains(W.a.cv)) fit(); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ if(pane.contains((W.a||W.m).cv)) fit(); });
   TBK.fit=fit; TBK.cur0=D0; tbkInkLoad(D0).then(()=>{ tbkPaint(); tbkRevNote(pane,D0); }); tbkInput(D,sc); }
 /* 원고가 고쳐진 뒤의 필기(11-11 GPT 검토 수용): 필기할 때의 원고를 함께 보관하고, 지금 원고와 다르면 알려서 그때 원고로 볼 수 있게 */
 function tbkRevNote(pane,D0){ pane.querySelector(".tbkrev")?.remove(); const lay=TBK.oldLay===D0.key; if((!TBK.oldQt||TBK.oldFor!==D0.key)&&!lay) return; const n=document.createElement("div"); n.className="tbkrev";
@@ -8291,9 +8305,13 @@ function tbkRevNote(pane,D0){ pane.querySelector(".tbkrev")?.remove(); const lay
 let TBKDB=null; function tbkDB(){ if(TBKDB) return TBKDB; TBKDB=new Promise((ok,no)=>{ try{ const r=indexedDB.open("cbsr-ink",1); r.onupgradeneeded=()=>r.result.createObjectStore("pages"); r.onsuccess=()=>ok(r.result); r.onerror=()=>no(r.error); }catch(e){ no(e); } }); return TBKDB; }
 function tbkIKey(D,g){ const pv=typeof NOWOFF!=="undefined"&&NOWOFF?"pv:"+((()=>{ try{ return sessionStorage.getItem("cbsr-now-id")||""; }catch(e){ return ""; } })())+":":""; /* 11-12: 손글씨도 타이핑과 같은 미리 보기 세션에 묶음 */ return `${pv}${ED}:${D.n}:${g}${TBK.book?":bk":""}`; }
 async function tbkInkLoad(D){ const base=tbkIKey(D,""); if(TBK.ikey===base) return; TBK.ikey=base; TBK.mkey=D.key; TBK.ink={a:[],m:[]}; TBK.undo=[]; TBK.redo=[]; TBK.rev=tbkHash(D.qt); TBK.qtNow=D.qt; TBK.oldQt=null; TBK.oldFor=null; TBK.useOld=false; TBK.oldLay=null;
-  try{ const db=await tbkDB(); for(const g of TBK_PG){ const k=tbkIKey(D,g); const v=await new Promise((ok,no)=>{ const r=db.transaction("pages").objectStore("pages").get(k); r.onsuccess=()=>ok(r.result); r.onerror=()=>no(r.error); }); if(TBK.ikey===base&&v&&v.s){ TBK.ink[g]=v.s; if(v.s.length&&v.v&&v.v!==TBK_V) TBK.oldLay=D.key; if(v.s.length&&v.rev&&v.rev!==TBK.rev&&v.qt){ TBK.oldQt=v.qt; TBK.oldFor=D.key; } } } }catch(e){ tbkStat("저장소를 열 수 없음",1); } }
+  try{ const db=await tbkDB(); for(const g of TBK_PG){ const k=tbkIKey(D,g); const v=await new Promise((ok,no)=>{ const r=db.transaction("pages").objectStore("pages").get(k); r.onsuccess=()=>ok(r.result); r.onerror=()=>no(r.error); }); if(TBK.ikey===base&&v&&v.s){ TBK.ink[g]=v.s; if(v.s.length&&v.v&&v.v!==TBK_V) TBK.oldLay=D.key; if(v.s.length&&v.rev&&v.rev!==TBK.rev&&v.qt){ TBK.oldQt=v.qt; TBK.oldFor=D.key; } } }
+    /* 11-13: 읽기 안내 쪽을 숨긴 날이라도 그 쪽에 예전 필기가 있으면 표지를 달고 함께 보여 줌(필기가 숨지 않게) */
+    if(TBK.ikey===base&&!TBK_PG.includes("a")){ const va=await new Promise(ok=>{ const r=db.transaction("pages").objectStore("pages").get(tbkIKey(D,"a")); r.onsuccess=()=>ok(r.result); r.onerror=()=>ok(null); }); if(va&&va.s&&va.s.length){ const q=mem.qt[D.key]||(mem.qt[D.key]={}); q.inkA=1; save(); TBK.ikey=""; tbkDraw(TBK.cur0||D); } }
+  }catch(e){ tbkStat("저장소를 열 수 없음",1); } }
 /* 11-12: 손글씨를 쓴 날은 공통 기록(mem.qt)에도 작은 표지(시각)를 남김 → 내 노트·이어 쓰기·다른 기기에서도 그날 손글씨가 있음을 앎 */
 function tbkInkMark(n){ const k=TBK.mkey; if(!k||!/^\d+-\d+$/.test(k)) return; const any=n||(TBK.ink.a||[]).length||(TBK.ink.m||[]).length; const q=mem.qt[k]||(mem.qt[k]={});
+  if(TBK_PG.includes("a")){ if((TBK.ink.a||[]).length) q.inkA=1; else delete q.inkA; }
   if(any){ q.ink=Date.now(); } else if(q.ink){ delete q.ink; } else return; q.ft=Object.assign(q.ft||{},{ink:Date.now()}); save(); }
 const tbkSaveT={}, tbkSaveF={}; function tbkSave(g){ const base=TBK.ikey, k=base+g, s=(TBK.ink[g]||[]).slice(), keepOld=TBK.oldQt&&TBK.useOld, rev=keepOld?tbkHash(TBK.oldQt):TBK.rev, qt=keepOld?TBK.oldQt:TBK.qtNow; tbkStat("저장 중"); clearTimeout(tbkSaveT[g]);
   const run=async()=>{ delete tbkSaveF[k]; try{ const db=await tbkDB(); await new Promise((ok,no)=>{ const t=db.transaction("pages","readwrite"); t.objectStore("pages").put({v:TBK_V,s,u:Date.now(),rev,qt},k); t.oncomplete=ok; t.onerror=()=>no(t.error); }); tbkInkMark(s.length); tbkStat("이 기기에 저장됨"); }catch(e){ tbkStat("저장 못 함 · 다시 그으면 다시 저장합니다",1); } };
@@ -8446,6 +8464,8 @@ function bind(){
   m.querySelectorAll("[data-pe]").forEach(el=>{el.onclick=()=>showPerson(el.dataset.pe); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showPerson(el.dataset.pe);}};});
   const hb=m.querySelector(".help30"); if(hb) hb.ontoggle=()=>{view.helpOpen=hb.open;};
   const va=document.getElementById("v2Aid"); if(va) va.ontoggle=()=>{ view.aidOpen=va.open; };
+  document.querySelectorAll("#v2Aid [data-adef]").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation(); const t=b.dataset.adef, P=document.querySelector(`#v2Aid .aiddef[data-for="${CSS.escape(t)}"]`); if(!P) return; const op=P.hidden; P.hidden=!op; b.classList.toggle("on",op); b.setAttribute("aria-expanded",op); });
+  const rr=document.getElementById("rdRoute"); if(rr) rr.onclick=()=>{ const R=routesFor(view.w,view.d).filter(r=>r.p.filter(q=>q[0]).length>=2); if(R[0]) bmOpenRoute(R[0]); };
   const qf=document.getElementById("qtFb"); if(qf) qf.onclick=()=>fbOpen("qt","QT",document.body,()=>{ const y=scrollY; render(); scrollTo({top:y}); });
   const qfc=document.getElementById("qtFbCopy"); if(qfc) qfc.onclick=()=>fbCopy(qfc);
   const mb=document.getElementById("moreBox"); if(mb) mb.ontoggle=()=>{view.entAll=mb.open;};
