@@ -2806,6 +2806,11 @@ button.tbkchip{background:none;cursor:pointer}
 .aidk .wk{display:inline-block;white-space:nowrap;margin-left:6px;padding:0 7px;border-radius:9px;background:var(--line);color:var(--ink);font:600 11.5px/1.6 var(--f-ui);vertical-align:1px}
 .v2aid .aidbody{padding:0 14px 4px}.v2aid .aidbody>.aidsec:first-child{margin-top:2px;padding-top:0;border-top:0}
 .v2aid .aidsec>p,.v2aid .aidsec .aidfocus,.v2aid .aidsec .aidtool span{font-size:15px;line-height:1.55;color:var(--ink)}.v2aid .aidbody .aidsec{margin-top:10px;padding-top:9px}.v2aid .aidbody .aidk{margin-bottom:3px}.v2aid .aidsec .aidfocus{margin-top:6px}
+/* 11-13 목사님: ③ 읽은 뒤도 ①과 같은 틀 */
+.v2aid.rd3 .rd3in .aidsec{margin-top:10px;padding-top:9px}.v2aid.rd3 .rd3in>.aidsec:first-child{margin-top:2px;padding-top:0;border-top:0}.v2aid.rd3 .aidk{margin-bottom:3px}
+.v2aid.rd3 .aidsec>p,.v2aid.rd3 .aidtool>span,.v2aid.rd3 .chml,.v2aid.rd3 .chmr{font-size:15px;line-height:1.55;color:var(--ink)}.v2aid.rd3 .aidtool{margin:6px 0 0;line-height:1.55}.v2aid.rd3 .chml{font-family:inherit}
+.v2aid.rd3 .chmr{padding:2px 0 2px 12px;border-left:3px solid color-mix(in srgb,var(--accent) 45%,transparent);font-size:14.5px}.v2aid.rd3 .chmr b{font:700 13px var(--f-ui);color:var(--accent);margin-bottom:1px}
+.v2aid.rd3 .rdmore>summary{font:700 13px var(--f-ui)}
 .v2aid .aiddef{margin:8px 0 0;padding:2px 0 2px 12px;border:0;border-left:3px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:0;background:none;font-size:14.5px;line-height:1.55;color:var(--ink)}
 .foldbtn{display:block;width:fit-content;margin:14px auto 2px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--muted);font:600 13px var(--f-ui);cursor:pointer}
 .rd3 .rdmore{margin-top:8px}.rd3 .rdmore>summary{cursor:pointer;color:var(--accent);font:600 13.5px var(--f-ui)}.rd3 .rdmore[open]>summary{margin-bottom:8px}.rd3 .mapfold{margin-top:8px}
@@ -8713,7 +8718,7 @@ function renderRead(){
   }
   h+=`</section>`;
   /* 11-13 목사님: 본문 끝은 가이드북 ③ 읽은 뒤와 같게. 큰 여정 이어 보기·[더 알아보기](줄거리 정리, 인물·곳·말, 지도, 퀴즈)는 그 아래 */
-  if(window.CBSR_V2){ const A3=afterRead(w,d,A), TH=tourHere(w,d); if(A3||TH) h+=`<details class="v2aid rd3" id="rd3"${view.rd3Open===false?"":" open"}><summary>③ 읽은 뒤<small>${[/눈여겨볼 것/.test(A3)?"눈여겨볼 것":"",/>지도</.test(A3)?"지도":"",/성경 전체로/.test(A3)?"성경 전체로":"",TH?"큰 여정":""].filter(Boolean).join(" · ")}</small></summary><div class="rd3in">${A3}${TH?`<div class="aidsec">${TH}</div>`:""}</div><button class="foldbtn" data-fold="rd3">③ 읽은 뒤 접기 ▲</button></details>`; } /* 11-13 목사님: ①과 같은 상자·같은 제목 크기 */
+  if(window.CBSR_V2){ const A3=afterRead(w,d,A), TH=tourHere(w,d); if(A3||TH) h+=`<details class="v2aid rd3" id="rd3"${view.rd3Open===false?"":" open"}><summary>③ 읽은 뒤<small>${[/눈여겨볼 것/.test(A3)?"눈여겨볼 것":"",/>지도</.test(A3)?"지도":"",/성경 전체로/.test(A3)?"성경 전체로":"",TH?"큰 여정":""].filter(Boolean).join(" · ")}</small></summary><div class="rd3in">${A3}${TH?`<div class="aidsec"><b class="aidk">큰 여정</b>${TH}</div>`:""}</div><button class="foldbtn" data-fold="rd3">③ 읽은 뒤 접기 ▲</button></details>`; } /* 11-13 목사님: ①과 같은 상자·같은 제목 크기 */
   // 이해가 필요할 때 (참고 자료)
   const sm2=simple&&!window.CBSR_V2; /* 11-13 목사님: 인물·곳·말은 본문의 점선 밑줄로 보니 뺌 → 퀴즈만 남아 [더 알아보기] 상자 없이 퀴즈를 바로 */
   if(sm2){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 인물·곳·말, 퀴즈</summary>`; }
