@@ -974,12 +974,17 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 /* 형광펜 */
 .v{cursor:pointer;border-radius:3px;transition:background .15s}
 .v.sel{background:var(--accent-soft);box-shadow:inset 0 -2px 0 var(--accent)}
-.v.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.55) 30%)}
-.v.mk-g{background:linear-gradient(transparent 30%,rgba(110,214,140,.5) 30%)}
-.v.mk-p{background:linear-gradient(transparent 30%,rgba(255,140,180,.45) 30%)}
-.v.mk-b{background:linear-gradient(transparent 30%,rgba(110,180,255,.45) 30%)}
-:root[data-theme="dark"] .v.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.3) 30%)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .v.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.3) 30%)}:root:not([data-theme="light"]) .v.mk-g{background:linear-gradient(transparent 30%,rgba(110,214,140,.28) 30%)}:root:not([data-theme="light"]) .v.mk-p{background:linear-gradient(transparent 30%,rgba(255,140,180,.28) 30%)}:root:not([data-theme="light"]) .v.mk-b{background:linear-gradient(transparent 30%,rgba(110,180,255,.28) 30%)}}
+.v.mk-y,.wm.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.55) 30%)}
+.v.mk-g,.wm.mk-g{background:linear-gradient(transparent 30%,rgba(110,214,140,.5) 30%)}
+.v.mk-p,.wm.mk-p{background:linear-gradient(transparent 30%,rgba(255,140,180,.45) 30%)}
+.v.mk-b,.wm.mk-b{background:linear-gradient(transparent 30%,rgba(110,180,255,.45) 30%)}
+:root[data-theme="dark"] .v.mk-y,:root[data-theme="dark"] .wm.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.3) 30%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .v.mk-y,:root:not([data-theme="light"]) .wm.mk-y{background:linear-gradient(transparent 30%,rgba(255,214,64,.3) 30%)}:root:not([data-theme="light"]) .v.mk-g,:root:not([data-theme="light"]) .wm.mk-g{background:linear-gradient(transparent 30%,rgba(110,214,140,.28) 30%)}:root:not([data-theme="light"]) .v.mk-p,:root:not([data-theme="light"]) .wm.mk-p{background:linear-gradient(transparent 30%,rgba(255,140,180,.28) 30%)}:root:not([data-theme="light"]) .v.mk-b,:root:not([data-theme="light"]) .wm.mk-b{background:linear-gradient(transparent 30%,rgba(110,180,255,.28) 30%)}}
+mark.wm{color:inherit;background:none;border-radius:2px}
+.wpen-g{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.wpent{width:auto!important;padding:0 10px!important;font:600 13px var(--f-ui);display:inline-flex;align-items:center;gap:6px}.wpent.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.wdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(255,214,64,.9)}.wdot.mk-g{background:rgba(110,214,140,.9)}.wdot.mk-p{background:rgba(255,140,180,.9)}.wdot.mk-b{background:rgba(110,180,255,.9)}.wdot.mk-y{background:rgba(255,214,64,.9)}
+.wpensw{display:inline-flex;gap:5px;align-items:center}.wpensw .sw{width:24px;height:24px;min-width:0;padding:0;flex:0 0 24px}.wpensw .sw.on{outline:2px solid var(--ink);outline-offset:1px}
+body.wpen #bible .v{touch-action:none;-webkit-user-select:none;user-select:none;cursor:crosshair}
 .hlbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:9600;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18);border-radius:16px;padding:10px 10px;display:flex;gap:8px;align-items:center;width:max-content;max-width:calc(100vw - 16px)}
 .hlbar[hidden]{display:none}
 .hlbar .cnt{font-size:12.5px;color:var(--muted);white-space:nowrap}
@@ -7992,6 +7997,45 @@ function wcIdbFill(root){ (root||document).querySelectorAll("img[data-idb]").for
 function wcsSave(){ try{ localStorage.setItem("cbsr-wcs",JSON.stringify(WCS)); }catch(e){} if(typeof syncSoon==="function") syncSoon(); }
 const saveHL=()=>{try{localStorage.setItem(HLKEY,JSON.stringify(HL)); localStorage.setItem("cbsr-hl-del",JSON.stringify(HLDEL));}catch(e){} if(typeof syncSoon==="function") syncSoon();};
 const HLC={y:"노랑",g:"초록",p:"분홍",b:"파랑"};
+/* ── 단어 형광펜 (11-13 목사님: "1:8의 증인"처럼 단어만 칠하기) ──
+   펜으로 그으면 그은 글자만 칠함(펜으로 톡 누르면 지금처럼 절 선택). 손가락·마우스는 [✎ 형광펜]을 켜고 그음(단어 단위로 맞춤).
+   칠한 곳이 이미 칠해진 데서 시작하면 지움. 저장: HL[id]=[절색|"", 시각, [[시작,끝,색],…]] — 글자 위치(절 본문 기준)라 글자 크기·기기와 상관없음 */
+const WP={on:false,k:(()=>{ try{ return localStorage.getItem("cbsr-wpen")||"y"; }catch(e){ return "y"; } })(),act:null,sup:0};
+function wmText(el){ const out=[]; let o=0; const tw=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&n.parentElement.closest("sup,.bmk")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}); let n; while((n=tw.nextNode())){ out.push([n,o]); o+=n.data.length; } return {nodes:out,len:o,text:out.map(x=>x[0].data).join("")}; }
+function wmUnwrap(el){ el.querySelectorAll("mark.wm").forEach(m=>{ const pa=m.parentNode; while(m.firstChild) pa.insertBefore(m.firstChild,m); pa.removeChild(m); }); el.normalize(); }
+function wmApply(el,R){ wmUnwrap(el); R=R||((HL[el.dataset.v]||[])[2])||[]; if(!R.length) return;
+  for(const [a,b,k] of R){ for(const [n,o] of wmText(el).nodes){ const L=n.data.length, s0=Math.max(a,o), e0=Math.min(b,o+L); if(s0>=e0) continue; let t=n; if(s0>o) t=t.splitText(s0-o); if(e0<o+L) t.splitText(e0-s0); const m=document.createElement("mark"); m.className="wm mk-"+k; t.parentNode.insertBefore(m,t); m.appendChild(t); } } }
+function wmMerge(R){ R=R.filter(r=>r[1]>r[0]).sort((x,y)=>x[0]-y[0]); const o=[]; for(const r of R){ const L=o[o.length-1]; if(L&&L[2]===r[2]&&r[0]<=L[1]) L[1]=Math.max(L[1],r[1]); else o.push([...r]); } return o; }
+function wmCut(R,a,b){ const o=[]; for(const [s,e,k] of R){ if(e<=a||s>=b){ o.push([s,e,k]); continue; } if(s<a) o.push([s,a,k]); if(e>b) o.push([b,e,k]); } return o; }
+function wmCaret(x,y){ let n=null,o=0; if(document.caretPositionFromPoint){ const c=document.caretPositionFromPoint(x,y); if(c){ n=c.offsetNode; o=c.offset; } } else if(document.caretRangeFromPoint){ const r=document.caretRangeFromPoint(x,y); if(r){ n=r.startContainer; o=r.startOffset; } }
+  if(!n) return null; const el=(n.nodeType===3?n.parentElement:n).closest(".bible .v[data-v]"); if(!el) return null; const T=wmText(el); let g=null;
+  if(n.nodeType===3){ const f=T.nodes.find(z=>z[0]===n); g=f?f[1]+o:(n.parentElement.closest("sup")?0:null); } if(g==null) g=0; return {el,g,T}; }
+function wmSegs(A,B,snap){ /* 시작·끝 위치 → 절마다 [시작,끝] */ const vs=[...document.querySelectorAll("#bible .v[data-v]")]; let i=vs.indexOf(A.el), j=vs.indexOf(B.el), a=A.g, b=B.g; if(i>j||(i===j&&a>b)){ [i,j]=[j,i]; [a,b]=[b,a]; }
+  const out=[]; for(let x=i;x<=j;x++){ const el=vs[x], T=x===i?A.el===el?A.T:B.T:x===j?(B.el===el?B.T:A.T):wmText(el); let s0=x===i?a:0, e0=x===j?b:T.len; const tx=T.text;
+    if(snap){ while(s0>0&&!/\s/.test(tx[s0-1])) s0--; while(e0<tx.length&&!/\s/.test(tx[e0])) e0++; }
+    while(s0<e0&&/\s/.test(tx[s0])) s0++; while(e0>s0&&/\s/.test(tx[e0-1])) e0--; if(e0>s0) out.push([el,s0,e0]); } return out; }
+function wmPreview(commit){ const A=WP.act; if(!A||!A.cur) return; const segs=wmSegs(A.st,A.cur,A.snap), touched=new Set();
+  for(const [el,a,b] of segs){ const id=el.dataset.v, base=(HL[id]||[])[2]||[]; const R=A.erase?wmCut(base,a,b):wmMerge(wmCut(base,a,b).concat([[a,b,WP.k]])); touched.add(el); wmApply(el,R);
+    if(commit){ const t=Date.now(), k0=(HL[id]||[])[0]||""; if(!R.length&&!k0){ delete HL[id]; HLDEL[id]=t; } else { HL[id]=[k0,t,R]; delete HLDEL[id]; } } }
+  (A.prev||[]).forEach(el=>{ if(!touched.has(el)) wmApply(el); }); A.prev=[...touched]; if(commit) saveHL(); }
+function wpenBind(root){ const bi=root.querySelector("#bible"); if(!bi) return;
+  bi.querySelectorAll(".v[data-v]").forEach(el=>{ const h=HL[el.dataset.v]; if(h&&h[2]&&h[2].length) wmApply(el); });
+  const pen=e=>e.pointerType==="pen"||(WP.on&&e.pointerType!=="pen");
+  bi.addEventListener("touchstart",e=>{ const t=e.touches[0]; if(t&&(t.touchType==="stylus"||WP.on)&&e.target.closest(".v[data-v]")) e.preventDefault(); },{passive:false});
+  bi.addEventListener("pointerdown",e=>{ if(!pen(e)||e.button>0) return; const c=wmCaret(e.clientX,e.clientY); if(!c) return; e.preventDefault(); try{ bi.setPointerCapture(e.pointerId); }catch(_){}
+    const hit=((HL[c.el.dataset.v]||[])[2]||[]).some(r=>c.g>=r[0]&&c.g<r[1]);
+    WP.act={id:e.pointerId,x:e.clientX,y:e.clientY,st:c,cur:null,erase:hit,snap:e.pointerType!=="pen",moved:false,prev:[]}; });
+  bi.addEventListener("pointermove",e=>{ const A=WP.act; if(!A||A.id!==e.pointerId) return; if(!A.moved&&Math.hypot(e.clientX-A.x,e.clientY-A.y)<6) return; A.moved=true; const c=wmCaret(e.clientX,e.clientY); if(c){ A.cur=c; if(!A.raf) A.raf=requestAnimationFrame(()=>{ A.raf=0; wmPreview(false); }); } });
+  const end=e=>{ const A=WP.act; if(!A||A.id!==e.pointerId) return; WP.act=null; WP.sup=Date.now(); if(A.raf) cancelAnimationFrame(A.raf);
+    if(!A.moved){ if(e.type==="pointerup"){ const g=e.target.closest&&e.target.closest(".g"); if(g&&!WP.on) g.click(); else toggleSel(A.st.el.dataset.v); } return; }
+    if(e.type==="pointercancel"){ (A.prev||[]).forEach(el=>wmApply(el)); return; } WP.act=A; wmPreview(true); WP.act=null; };
+  bi.addEventListener("pointerup",end); bi.addEventListener("pointercancel",end);
+  const tg=root.querySelector("#wpenT"); if(tg) tg.onclick=()=>{ WP.on=!WP.on; document.body.classList.toggle("wpen",WP.on); wpenUI(root); if(WP.on) toast("본문 위를 그으면 칠해집니다. 칠한 곳에서 시작해 그으면 지워집니다"); };
+  root.querySelectorAll("[data-wk]").forEach(b=>b.onclick=()=>{ WP.k=b.dataset.wk; try{ localStorage.setItem("cbsr-wpen",WP.k); }catch(e){} wpenUI(root); });
+  document.body.classList.toggle("wpen",WP.on); wpenUI(root); }
+function wpenUI(root){ const tg=root.querySelector("#wpenT"); if(tg){ tg.classList.toggle("on",WP.on); tg.setAttribute("aria-pressed",WP.on); const d=tg.querySelector("i"); if(d) d.className="wdot mk-"+WP.k; } const sw=root.querySelector("#wpenSw"); if(sw) sw.hidden=!WP.on; root.querySelectorAll("[data-wk]").forEach(b=>b.classList.toggle("on",b.dataset.wk===WP.k)); }
+window.CBSR_WP={text:el=>wmText(el).text,hl:id=>HL[id],sel:()=>[...HSEL],clear:()=>{ HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); syncHlBar(); }}; /* 점검용 */
+function hlShow(id,tx){ const h=HL[id]||[]; if(h[0]||!h[2]||!h[2].length) return `<span class="v mk-${h[0]}">${esc(tx)}</span>`; return h[2].map(([a,b,k])=>`<span class="v"><mark class="wm mk-${k}">${esc(tx.slice(a,b))}</mark></span>`).join(" … "); }
 function toggleSel(id){
   /* 듣는 중에 절을 누르면 그 절부터 다시 읽습니다 */
   if(TTS.on&&TTS.key===keyOf(view.w,view.d)&&!HSEL.size){ const i=TTS.q.findIndex(x=>x.id===id); if(i>=0){ TTS.i=i; TTS.curId=id; TTS.paused=false; ttsTok++; try{ speechSynthesis.cancel(); }catch(e){} ttsSpeak(); return; } }
@@ -8014,7 +8058,7 @@ function syncHlBar(){
     if(k==="tts"){ const id=first; HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); syncHlBar(); ttsStart(id); ttsBtnSync(); return; }
     if(k==="ln"){ const id=first; HSEL.forEach(x=>document.getElementById("v-"+x)?.classList.remove("sel")); HSEL.clear(); syncHlBar(); lnOpen(id,view.w,view.d); return; }
     if(k==="bm"){ const id=first; if(mem.bm&&mem.bm.v===id) mem.bm={at:Date.now()}; /* 지운 표시(다른 기기의 책갈피가 되살아나지 않게) */ else mem.bm={v:id,w:view.w,d:view.d,at:Date.now()}; save(); HSEL.clear(); const y=scrollY; render(); scrollTo({top:y}); syncHlBar(); return; }
-    if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x"){ delete HL[id]; HLDEL[id]=t; } else { HL[id]=[k,t]; delete HLDEL[id]; } const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]?" mk-"+HL[id][0]:""); } } saveHL(); }
+    if(k!=="close"){ const t=Date.now(); for(const id of HSEL){ if(k==="x"){ delete HL[id]; HLDEL[id]=t; } else { HL[id]=HL[id]&&HL[id][2]&&HL[id][2].length?[k,t,HL[id][2]]:[k,t]; delete HLDEL[id]; } const el=document.getElementById("v-"+id); if(el){ el.className="v"+(HL[id]&&HL[id][0]?" mk-"+HL[id][0]:""); } } saveHL(); }
     else for(const id of HSEL){ document.getElementById("v-"+id)?.classList.remove("sel"); }
     HSEL.clear(); syncHlBar(); });
 }
@@ -8354,7 +8398,7 @@ function chapHTML(b,c,s2){ LNDAY=((mem.qt||{})[keyOf(view.w,view.d)]||{}).ln; co
   BIBLE[b-1][c-1].forEach((t,i)=>{ const v=i+1, id=`${b}-${c}-${v}`, mk=HL[id];
     if(P.has(v)) h+=`</p><p class="para">`;
     const bm=mem.bm&&mem.bm.v===id;
-    h+=`<span class="v${mk?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}${bm?" bm":""}${window.CBSR_V2&&LNDAY&&LNDAY[id]&&LNDAY[id].t?" ln":""}" id="v-${id}" data-v="${id}">${bm?`<i class="bmk" aria-label="책갈피"></i>`:""}<sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
+    h+=`<span class="v${mk&&mk[0]?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}${bm?" bm":""}${window.CBSR_V2&&LNDAY&&LNDAY[id]&&LNDAY[id].t?" ln":""}" id="v-${id}" data-v="${id}">${bm?`<i class="bmk" aria-label="책갈피"></i>`:""}<sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
   return h+(o.para?`</p>`:""); }
 
 /* ── 본문 들려주기: 기기에 들어 있는 음성 읽기(한국어)로 절마다 읽습니다 ── */
@@ -8452,7 +8496,7 @@ function renderRead(){
     h+=V2R?`${aid}<button class="openbtn" id="openText">본문 펼치기</button>`:`${helpBox}${eyeQ}<button class="openbtn" id="openText">본문 펼치기</button>`;
   } else if(V2R){
     const bmHere=mem.bm&&mem.bm.w===w&&mem.bm.d===d;
-    h+=aid+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span></span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button></span></div>`;
+    h+=aid+(bmHere?`<button class="bmjump" id="bmJump">책갈피 ${esc(bmLabel(mem.bm.v))}로 가기 ↓</button>`:"")+`<div class="bible" id="bible"><div class="bible-tools"><span class="wpen-g"><button class="iconbtn wpent" id="wpenT" aria-pressed="false" title="그어서 단어만 칠하기(펜은 켜지 않아도 됩니다)">✎ 형광펜 <i class="wdot mk-y"></i></button><span id="wpenSw" class="wpensw" hidden>${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-wk="${k}" aria-label="${n}"></button>`).join("")}</span></span><span class="grp"><button class="iconbtn" id="fm" aria-label="글자 작게">가−</button><button class="iconbtn" id="fp" aria-label="글자 크게">가+</button></span></div>`;
     for(const [b,c] of p.ch){ const s2=new Set();
       h+=`<div class="chap" id="ch-${b}-${c}"><h3>${esc(PLAN.full[b-1])} ${c}${b===19?"편":"장"}${FLOW[b+"-"+c]?`<small class="chsub">${esc(FLOW[b+"-"+c].t.replace(/[.。]$/,""))}</small>`:""}</h3><div class="vtext">`+chapHTML(b,c,s2)+`</div></div>`; }
     h+=`</div>`;
@@ -10589,7 +10633,7 @@ function renderRecord(){
   const hls=Object.entries(HL).sort((a,b)=>b[1][1]-a[1][1]);
   h+=`<section class="sec"><span class="label">내 형광펜</span>`;
   if(!hls.length) h+=`<p class="lead">본문을 펼쳐 마음에 닿는 절을 누르면 형광펜을 칠할 수 있습니다. 칠한 절이 여기에 모입니다.</p>`;
-  else { const lim=view.hlAll?hls.length:5; h+=`<div class="hllist">${hls.slice(0,lim).map(([id,[k]])=>{const [b,c,v]=id.split("-").map(Number); const tx=BIBLE?BIBLE[b-1][c-1][v-1]:""; return `<button class="hlitem" data-hljump="${id}"><small>${esc(PLAN.abbr[b-1])} ${c}:${v} · ${HLC[k]}</small><span class="v mk-${k}">${esc(tx)}</span></button>`;}).join("")}</div>${hls.length>5&&!view.hlAll?`<button class="btn ghost small" id="hlAll">${hls.length}절 모두 보기</button>`:""}`; }
+  else { const lim=view.hlAll?hls.length:5; h+=`<div class="hllist">${hls.slice(0,lim).map(([id,[k]])=>{const [b,c,v]=id.split("-").map(Number); const tx=BIBLE?BIBLE[b-1][c-1][v-1]:""; return `<button class="hlitem" data-hljump="${id}"><small>${esc(PLAN.abbr[b-1])} ${c}:${v}${HLC[k]?" · "+HLC[k]:""}</small>${hlShow(id,tx)}</button>`;}).join("")}</div>${hls.length>5&&!view.hlAll?`<button class="btn ghost small" id="hlAll">${hls.length}절 모두 보기</button>`:""}`; }
   h+=`</section>`;
   // 최근 QT
   const qtl=Object.entries(mem.qt).filter(([k,q])=>q.med||q.pray||qtStoryText(q)).map(([k,q])=>{const [w,d]=k.split("-").map(Number); return {w,d,q};}).filter(x=>PLAN.plan[x.w-1]&&PLAN.plan[x.w-1][x.d]).sort((a,b)=>dayNo(b.w,b.d)-dayNo(a.w,a.d)).slice(0,5);
@@ -10650,7 +10694,7 @@ function recTLGroups(){ const G={}, add=(dt,key,kind,html,sort)=>{ if(!dt) retur
     /* 노트에 저장 시각이 없으면 오늘이 아니라 그 본문의 날짜로 둡니다(GPT 지적 2026-10-30) */
     if(q.med) add(q.doneAt||isoD(dateOf(w,d)),k,"note",`<button class="rti" data-qtjump="${k}"><span class="rtag rt3">✎ 노트</span>${esc(String(q.med).slice(0,140))}</button>`); }
   for(const id in HL){ const [kc,ts]=HL[id]; const [b,c,v]=id.split("-").map(Number); const tx=BIBLE&&BIBLE[b-1]&&BIBLE[b-1][c-1]?BIBLE[b-1][c-1][v-1]:""; if(!tx) continue; const dt=new Date(ts||0); const ds=ts?`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`:"";
-    add(ds,null,"hl",`<button class="rti" data-hljump="${id}"><span class="rtag rt2">형광펜</span><span class="v mk-${kc}">${esc(tx)}</span> <small>${esc(PLAN.abbr[b-1])} ${c}:${v}</small></button>`,ts); }
+    add(ds,null,"hl",`<button class="rti" data-hljump="${id}"><span class="rtag rt2">형광펜</span>${hlShow(id,tx)} <small>${esc(PLAN.abbr[b-1])} ${c}:${v}</small></button>`,ts); }
   return G; }
 function recTimeline(){ const G=recTLGroups(), F=view.tlF||"all";
   const days=Object.keys(G).sort().reverse().map(dt=>({dt,key:G[dt].key,items:G[dt].items.filter(x=>F==="all"||x.kind===F)})).filter(x=>x.items.length);
@@ -14228,7 +14272,8 @@ function bind(){
     view.tab="read"; view.open=true; render(); const el=document.getElementById("v-"+r.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2600);} };
   const rx=document.getElementById("resumeX"); if(rx) rx.onclick=()=>{ resumeShow=false; const y=window.scrollY; render(); window.scrollTo({top:y}); };
   m.querySelectorAll("[data-look]").forEach(b=>b.onclick=()=>showLook(+b.dataset.look));
-  m.querySelectorAll(".v[data-v]").forEach(el=>el.onclick=e=>{ if(e.target.closest(".g")) return; toggleSel(el.dataset.v); });
+  m.querySelectorAll(".v[data-v]").forEach(el=>el.onclick=e=>{ if(Date.now()-WP.sup<450) return; if(e.target.closest(".g")) return; toggleSel(el.dataset.v); });
+  wpenBind(m);
   m.querySelectorAll("[data-hljump]").forEach(b=>b.onclick=()=>{const [bb,c,v]=b.dataset.hljump.split("-").map(Number); const at=dayOfRef([bb,c,v]); if(!at) return; view.w=at[0]; view.d=at[1]; view.tab="read"; seeVerse(bb,c,v);});
   bindProfile(m);
   const pm=document.getElementById("pmini"); if(pm){const go2=()=>{view.tab="record";render();window.scrollTo({top:0});}; pm.onclick=go2; pm.onkeydown=e=>{if(e.key==="Enter")go2();};}
