@@ -2089,6 +2089,9 @@ button.tbkchip{background:none;cursor:pointer}
 .tbkafter .tbkk{color:#5a4aa0}
 .tbkrev{margin:0 auto 12px;max-width:560px;background:#fff6dc;border:1px solid #ecd9a0;border-radius:10px;padding:9px 12px;font:600 13.5px/1.5 var(--f-ui);color:#6b5413}.tbkrev button{border:0;background:none;color:var(--accent);font:700 13.5px var(--f-ui);text-decoration:underline;padding:0 0 0 4px}
 .vplab{margin:14px 0 6px;font:700 14px var(--f-ui)}.vplab small{font-weight:500;color:var(--muted);margin-left:6px}.vratio{display:flex}
+.aidline .wk{display:inline-block;white-space:nowrap;margin-right:6px;padding:0 7px;border-radius:9px;background:var(--line);color:var(--ink);font-size:11.5px;line-height:1.6;vertical-align:1px}
+.foldbtn{display:block;width:fit-content;margin:14px auto 2px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--muted);font:600 13px var(--f-ui);cursor:pointer}
+.rd3 .rdmore{margin-top:8px}.rd3 .rdmore>summary{cursor:pointer;color:var(--accent);font:600 13.5px var(--f-ui)}.rd3 .rdmore[open]>summary{margin-bottom:8px}.rd3 .mapfold{margin-top:8px}
 .wherek{display:block;margin-top:2px;font-size:12.5px;color:var(--muted)}
 .tbkink{position:absolute;left:0;top:0;touch-action:none}
 .tbkpages{display:flex;flex-direction:column;align-items:center;gap:22px;width:max-content;margin:0 auto;transform-origin:0 0}.tbkpages.spread{flex-direction:row;align-items:flex-start}
@@ -3237,21 +3240,26 @@ function whereOf(p){ if(typeof WHERE365==="undefined"||!p||!p.ch||!p.ch.length) 
 /* 11-13 목사님: 본문 탭의 '읽기 전'은 가이드북 ① 읽기 전과 같은 이름·순서·글.
    (앱만의 덤) 지금 어디쯤·지난 이야기는 한 줄씩 작게. 도구 풀이는 앱의 '책머리' — 기호를 누르면 그 도구 하나만 펼침(처음 만나는 도구는 펼친 채로) */
 function readAid(p,w,d,key,tl,G){ const g=GUIDE[key]||{}, where=whereOf(p);
-  const ctx=[]; if(where) ctx.push(`<p class="aidline"><b>지금 어디쯤</b> ${esc(where.t)}${where.n>1?` <small class="wherek">· 이 단락 ${where.n}일 가운데 ${where.k}일째</small>`:""}</p>`); if(g.prev) ctx.push(`<p class="aidline"><b>지난 이야기</b> ${esc(g.prev)}</p>`);
+  const ctx=[]; if(where) ctx.push(`<p class="aidline"><b>지금 어디쯤</b>${where.n>1?`<span class="wk">${where.n}일 중 ${where.k}일째</span>`:""}${esc(where.t)}</p>`); /* 11-13: 날 수는 이름 옆 작은 꼬리표로(글 끝에 붙으면 줄이 어색하게 넘어감) */ if(g.prev) ctx.push(`<p class="aidline"><b>지난 이야기</b> ${esc(g.prev)}</p>`);
   const flow=(G&&G.t)||g.today||"", focus=(G&&G.f)||g.find||"";
-  const shown=(mem.toolSeen ||= {}); let nw=0; const openT=new Set(tl.filter(t=>{ if(!shown[t]){ shown[t]=key; nw=1; } return shown[t]===key; })); if(nw) save();
+  const shown=(mem.toolSeen ||= {}); let nw=0; const fresh=tl.filter(t=>{ if(!shown[t]){ shown[t]=key; nw=1; } return shown[t]===key; }); if(nw) save();
+  const openT=new Set(tl.length?[fresh[0]||tl[0]]:[]); /* 11-13 목사님: 풀이는 대표 하나만 펼침(처음 만나는 도구가 있으면 그것), 나머지는 눌러서 */
   const tools=tl.length||focus?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b>${tl.length?`<p class="tline aidchips">${tl.map(t=>`<button class="tool aidchip${openT.has(t)?" on":""}" data-adef="${esc(t)}" aria-expanded="${openT.has(t)}">${tName(t)}</button>`).join("")}</p>`:""}${focus?`<p class="aidfocus">${esc(focus)}</p>`:""}${tl.map(t=>`<p class="aiddef" data-for="${esc(t)}"${openT.has(t)?"":" hidden"}><b>${tName(t)}</b> ${TOOL_HTML[t]||esc(TOOLS[t]||"")}</p>`).join("")}</div>`:"";
   const word=G&&G.w?`<div class="aidsec"><b class="aidk">말뜻</b><p>${esc(G.w)}</p></div>`:"";
   const fl=flow?`<div class="aidsec"><b class="aidk">오늘의 흐름</b><p>${esc(flow)}</p></div>`:"";
   let book=""; for(const b of [...new Set(p.ch.filter(x=>x[1]===1).map(x=>x[0]))]){ const I=BOOKINFO[b]; if(!I) continue; const nm=PLAN.full[b-1];
     book+=`<details class="aidbook"><summary>${esc(nm)}${hasB(nm)?"은":"는"} 어떤 책인가요? ›</summary><p>${esc(I.what)}</p><p><b>이 책을 읽을 때</b> ${esc(I.look)}</p><button class="btn ghost small" data-book="${b}">더 알아보기</button></details>`; }
   if(!ctx.length&&!fl&&!tools&&!word&&!book) return "";
-  return `<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>① 읽기 전<small>${[fl?"오늘의 흐름":"",tl.length||focus?"오늘의 읽기 도구":"",word?"말뜻":""].filter(Boolean).join(" · ")}</small></summary>${ctx.length?`<div class="aidctx">${ctx.join("")}</div>`:""}${fl}${tools}${word}${book}</details>`; }
+  return `<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>① 읽기 전<small>${[fl?"오늘의 흐름":"",tl.length||focus?"오늘의 읽기 도구":"",word?"말뜻":""].filter(Boolean).join(" · ")}</small></summary>${ctx.length?`<div class="aidctx">${ctx.join("")}</div>`:""}${fl}${tools}${word}${book}<button class="foldbtn" data-fold="v2Aid">① 읽기 전 접기 ▲</button></details>`; }
 /* ③ 읽은 뒤 — 가이드북 ③과 같은 것(눈여겨볼 것 · 지도 · 성경 전체로)을 먼저, 앱만의 것은 [더 알아보기]에 */
-function afterRead(w,d){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||{}, L=Object.keys(P); let h="";
+const secIn=x=>(x||"").replace(/^\s*<section[^>]*>/,"").replace(/<\/section>\s*$/,"").replace(/<span class="label">[^<]*<\/span>/,"");
+/* 11-13 목사님 "읽은 뒤와 더 알아보기가 겹친다": 지도·성경 전체로는 ③ 한 곳에만. [더 알아보기]에는 줄거리·인물·곳·말·퀴즈만 */
+function afterRead(w,d,A){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||{}, L=Object.keys(P); let h="";
   if(L.length) h+=`<div class="aidsec"><b class="aidk">눈여겨볼 것</b>${L.map(t=>`<p class="aidtool">${toolChip(t)}<span>${esc(P[t])}</span></p>`).join("")}</div>`;
-  if(GD&&GD.m){ let R=[]; try{ R=routesFor(w,d).filter(r=>r.p.filter(q=>q[0]).length>=2); }catch(e){} h+=`<div class="aidsec"><b class="aidk">지도</b><p>${esc(GD.m)}</p>${R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}</div>`; }
-  if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p></div>`; }
+  { let R=[]; try{ R=routesFor(w,d).filter(r=>r.p.filter(q=>q[0]).length>=2); }catch(e){} const box=A&&BIBLE&&[...A.places.values()].some(p=>PLACE.has(p.name))||R.length?secIn(renderMapBox(A)):"";
+    if(GD&&GD.m||box) h+=`<div class="aidsec"><b class="aidk">지도</b>${GD&&GD.m?`<p>${esc(GD.m)}</p>`:""}${GD&&GD.m&&R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}${box}</div>`; }
+  { const ch=secIn(christHelp(w,d)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
+    else if(ch.trim()) h+=`<div class="aidsec"><b class="aidk">성경 전체로</b>${ch}</div>`; }
   return h; }
 function prepHelp(p,w,key){
   const g=GUIDE[key], where=whereOf(p);
@@ -3437,22 +3445,21 @@ function renderRead(){
   }
   h+=`</section>`;
   /* 11-13 목사님: 본문 끝은 가이드북 ③ 읽은 뒤와 같게. 큰 여정 이어 보기·[더 알아보기](줄거리 정리, 인물·곳·말, 지도, 퀴즈)는 그 아래 */
-  if(window.CBSR_V2){ const A3=afterRead(w,d), TH=tourHere(w,d); if(A3||TH) h+=`<section class="sec rd3"><span class="label">③ 읽은 뒤</span>${A3}${TH?`<div class="aidsec">${TH}</div>`:""}</section>`; }
+  if(window.CBSR_V2){ const A3=afterRead(w,d,A), TH=tourHere(w,d); if(A3||TH) h+=`<section class="sec rd3"><span class="label">③ 읽은 뒤</span>${A3}${TH?`<div class="aidsec">${TH}</div>`:""}</section>`; }
   // 이해가 필요할 때 (참고 자료)
-  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 줄거리, 인물·곳·말, 지도, 퀴즈</summary>`; }
+  if(simple){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 줄거리, 인물·곳·말, 퀴즈</summary>`; }
   if(!simple||view.moreOpen){
   h+=`<div class="helpzone">`;
   { const lg=(SUMMARY[w-1]||[])[d]||""; if(lg&&gbFlow(w,d)) h+=`<section class="sec"><span class="label">오늘 줄거리 정리</span><p class="summary">${esc(lg)}</p></section>`; } /* 11-13: 긴 요약은 읽은 뒤 [더 알아보기] 안에 */
   h+=knowSection(p,A,b0);
   h+=moreSection(p,A,b0,w,d);
-  h+=renderMapBox(A);
-  if(window.CBSR_V2) h+=christHelp(w,d);
+  if(!window.CBSR_V2) h+=renderMapBox(A); /* v2: 지도·성경 전체로는 ③ 읽은 뒤에 */
   h+=`</div>`;
   // 5 퀴즈
   if(!window.CBSR_V2) h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
   else if(!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
   }
-  if(simple) h+=`</details>`;
+  if(simple) h+=`${view.moreOpen?`<button class="foldbtn" data-fold="simpleMore">더 알아보기 접기 ▲</button>`:""}</details>`;
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
@@ -8464,7 +8471,8 @@ function bind(){
   m.querySelectorAll("[data-pe]").forEach(el=>{el.onclick=()=>showPerson(el.dataset.pe); el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showPerson(el.dataset.pe);}};});
   const hb=m.querySelector(".help30"); if(hb) hb.ontoggle=()=>{view.helpOpen=hb.open;};
   const va=document.getElementById("v2Aid"); if(va) va.ontoggle=()=>{ view.aidOpen=va.open; };
-  document.querySelectorAll("#v2Aid [data-adef]").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation(); const t=b.dataset.adef, P=document.querySelector(`#v2Aid .aiddef[data-for="${CSS.escape(t)}"]`); if(!P) return; const op=P.hidden; P.hidden=!op; b.classList.toggle("on",op); b.setAttribute("aria-expanded",op); });
+  document.querySelectorAll("#v2Aid [data-adef]").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation(); const t=b.dataset.adef, P=document.querySelector(`#v2Aid .aiddef[data-for="${CSS.escape(t)}"]`); if(!P) return; const op=P.hidden; document.querySelectorAll("#v2Aid .aiddef").forEach(x=>x.hidden=true); document.querySelectorAll("#v2Aid [data-adef]").forEach(x=>{ x.classList.remove("on"); x.setAttribute("aria-expanded",false); }); P.hidden=!op; b.classList.toggle("on",op); b.setAttribute("aria-expanded",op); }); /* 한 번에 하나만 */
+  document.querySelectorAll("[data-fold]").forEach(b=>b.onclick=e=>{ e.preventDefault(); const id=b.dataset.fold, D=document.getElementById(id); if(!D) return; D.open=false; const go=()=>{ const X=document.getElementById(id); if(!X) return; const r=X.getBoundingClientRect(); if(r.top<70) window.scrollTo({top:window.scrollY+r.top-80}); }; go(); setTimeout(go,80); }); /* 11-13: 아래에서도 접기 */
   const rr=document.getElementById("rdRoute"); if(rr) rr.onclick=()=>{ const R=routesFor(view.w,view.d).filter(r=>r.p.filter(q=>q[0]).length>=2); if(R[0]) bmOpenRoute(R[0]); };
   const qf=document.getElementById("qtFb"); if(qf) qf.onclick=()=>fbOpen("qt","QT",document.body,()=>{ const y=scrollY; render(); scrollTo({top:y}); });
   const qfc=document.getElementById("qtFbCopy"); if(qfc) qfc.onclick=()=>fbCopy(qfc);
@@ -8521,7 +8529,7 @@ function bind(){
   m.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>showClue(+b.dataset.clue));
   bindAccount(m); bindInstall(); if(view.tab==="read") churchCounts();
   { const ts=document.getElementById("toStory"); if(ts) ts.onclick=()=>storyOpen(0); }
-  document.querySelectorAll(".helpzone .chsec [data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
+  document.querySelectorAll(".helpzone .chsec [data-chv], .rd3 [data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
   if(window.CBSR_V2) bindBanners(m);
   if(window.CBSR_V2){ if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>gpOpen(x.dataset.gplay)); document.querySelectorAll("[data-gbopen]").forEach(x=>x.onclick=()=>gbOpen()); document.querySelectorAll("[data-rgm]").forEach(x=>x.onclick=()=>rgmOpen(view.w,view.d,0)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const chh=document.getElementById("chHelp"); if(chh) chh.onclick=()=>sheet("도전은 이렇게",`<p>오늘 읽은 본문으로 네 가지를 해 봅니다. 하나를 마칠 때마다 위의 막대가 한 칸씩 찹니다.</p><p><b>본문에서 찾기</b> · 질문을 읽고 본문에서 답이 되는 절을 누릅니다.</p><p><b>이동 경로 맞추기</b> · 오늘 이야기의 인물이 지나간 곳을 순서대로 놓습니다.</p><p><b>본문 퀴즈</b> · O/X와 4지선다로 읽은 내용을 확인합니다.</p><p><b>빈칸 채우기</b> · 묵상 노트에서 붙잡은 구절의 빈칸을 채웁니다.</p><p>성경 골든벨은 매일 하는 것이 아니라 언제든 풀 수 있습니다.</p>`); const gq=document.getElementById("gQuizGo"); if(gq) gq.onclick=()=>{ view.quizOpen=!view.quizOpen; render(); if(view.quizOpen){ const qs=document.querySelector("#quizSec [data-qstart]"); if(qs) qs.click(); } if(view.quizOpen) requestAnimationFrame(()=>document.getElementById("quizSec")?.scrollIntoView({block:"start",behavior:"smooth"})); }; document.querySelectorAll("[data-cwd]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.cwd.split("-").map(Number); view.w=w; view.d=d; view.game=null; view.quizOpen=false; render(); }); } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge"||view.tab==="qt"||view.tab==="today") bindDayRing(); flipStart(); }
   bindQT(m);
