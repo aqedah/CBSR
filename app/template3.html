@@ -473,6 +473,8 @@ html.v2 main h2{font-family:var(--f-disp);font-weight:700;letter-spacing:-.01em}
 .v2aid.rd3{margin:14px 0 4px}.v2aid.rd3 .rd3in{padding:0 14px 4px}.v2aid.rd3 .rd3in>.aidsec:first-child{margin-top:2px}
 html.v2 .dmeta .dmbook{font:600 12.5px var(--f-ui);padding:4px 10px;border-radius:999px;border:1px solid var(--accent);background:none;color:var(--accent);cursor:pointer;white-space:nowrap}
 .v2aid>summary::-webkit-details-marker{display:none}
+html{-webkit-tap-highlight-color:transparent} /* 11-13 목사님 "뭐가 번쩍거린다": 휴대폰 브라우저가 누른 자리에 칠하는 파란 상자를 끔. 대신 아래처럼 살짝만 눌림 표시 */
+.v2aid>summary:active,.foldbtn:active,.bnav .tab:active{opacity:.6}
 .td4story{display:block;margin:8px auto 0;padding:6px 10px;border:0;background:none;color:inherit;opacity:.85;font:600 13px var(--f-ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .v2aid>summary small{font-weight:400;font-size:12.5px;color:var(--muted);flex:1}
 .v2aid>summary::after{content:"›";color:var(--muted);transition:transform .2s}.v2aid[open]>summary::after{transform:rotate(90deg)}
