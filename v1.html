@@ -8265,7 +8265,7 @@ function whereOf(p){ if(typeof WHERE365==="undefined"||!p||!p.ch||!p.ch.length) 
    (앱만의 덤) 지금 어디쯤·지난 이야기는 한 줄씩 작게. 도구 풀이는 앱의 '책머리' — 기호를 누르면 그 도구 하나만 펼침(처음 만나는 도구는 펼친 채로) */
 function readAid(p,w,d,key,tl,G){ const g=GUIDE[key]||{}, where=whereOf(p);
   const ctx=[]; if(where) ctx.push(`<p class="aidline"><b>지금 어디쯤</b>${where.n>1?`<span class="wk">${where.n}일 중 ${where.k}일째</span>`:""}${esc(where.t)}</p>`); /* 11-13: 날 수는 이름 옆 작은 꼬리표로(글 끝에 붙으면 줄이 어색하게 넘어감) */ if(g.prev) ctx.push(`<p class="aidline"><b>지난 이야기</b> ${esc(g.prev)}</p>`);
-  const flow=(G&&G.t)||g.today||"", focus=(G&&G.f)||g.find||"";
+  const flow=(G&&G.t)||g.today||"", focus=""; /* 11-13 목사님: "1:8에 표시해 두세요 · 이 책이 갈 길입니다"처럼 읽기 전에 가르치는 초점 문장은 앱 ①에서 뺌(도구 단추·풀이만) */
   const shown=(mem.toolSeen ||= {}); let nw=0; const fresh=tl.filter(t=>{ if(!shown[t]){ shown[t]=key; nw=1; } return shown[t]===key; }); if(nw) save();
   const openT=new Set(tl.length?[fresh[0]||tl[0]]:[]); /* 11-13 목사님: 풀이는 대표 하나만 펼침(처음 만나는 도구가 있으면 그것), 나머지는 눌러서 */
   const tools=tl.length||focus?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b>${tl.length?`<p class="tline aidchips">${tl.map(t=>`<button class="tool aidchip${openT.has(t)?" on":""}" data-adef="${esc(t)}" aria-expanded="${openT.has(t)}">${tName(t)}</button>`).join("")}</p>`:""}${focus?`<p class="aidfocus">${esc(focus)}</p>`:""}${tl.map(t=>`<p class="aiddef" data-for="${esc(t)}"${openT.has(t)?"":" hidden"}><b>${tName(t)}</b> ${TOOL_HTML[t]||esc(TOOLS[t]||"")}</p>`).join("")}</div>`:"";
