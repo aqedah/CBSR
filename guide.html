@@ -258,8 +258,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .box .h{font-weight:700;font-size:8.8pt;color:var(--ink);margin-bottom:0.6mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .box div.i{margin:0.5mm 0;text-align:left;word-break:keep-all;overflow-wrap:anywhere}
 .pg .box b{font-size:9.3pt}
-.pg .two{display:flow-root;border:0.15mm solid #bbb;background:#fff;padding:1.6mm 2.2mm;margin:1.6mm 0 1.2mm}
-.pg .two .c2{float:right;width:calc(100% - 70mm);margin:0 0 1.4mm 4mm;display:flex;min-width:0} .pg .two .c1{display:block}
+.pg .two{display:flex;gap:4mm;align-items:flex-start;border:0.15mm solid #bbb;background:#fff;padding:1.6mm 2.2mm;margin:1.6mm 0 1.2mm}
+.pg .two .c1{flex:0 0 66mm;display:flex;flex-direction:column} .pg .two .c2{flex:1 1 auto;display:flex;min-width:0}
 .pg .map{background:#fff;margin:0;display:flex;flex-direction:column;width:100%} .pg .map svg{flex:1 1 auto;width:100%;height:auto;min-height:0;display:block}
 .pg .pic{background:#fff;margin:0;display:flex;flex-direction:column;width:100%;min-height:0} .pg .pic .im{height:45mm;background:var(--main);display:flex} .pg .pic img{width:100%;height:100%;min-height:0;object-fit:cover;display:block;filter:grayscale(1) contrast(1.1) brightness(1.08);mix-blend-mode:screen;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .pg .map .cap,.pg .pic .cap{font-size:8.3pt;color:#444;padding:0.8mm 0 0;line-height:1.25}
@@ -663,7 +663,7 @@ function pageL(p,qt){
   const box=pair.length?`<div class="box"><div class="h">눈여겨볼 것</div>${pair.map(([s,t],i)=>`<div class="i">${i?chipSym(s):chipSym(s).replace('class="chip"','class="chip rep"')}${vs(t)}</div>`).join('')}</div>`:'';
   const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${vs(qt.img.cap||'')}</div></div>`:'';
   const stx=qt.stx&&qt.stx.rows&&qt.stx.rows.length?`<div class="stx" data-f="stx"><p class="sh">${esc(qt.stx.kind||'짜임')}</p>${(()=>{const rs=qt.stx.rows; const L=c=>{const u=(c||'').replace(/[^A-Za-z]/g,'').toUpperCase(); return u==='X'?99:(u?u.charCodeAt(0)-64:1)}; const mx=Math.max(1,...rs.map(r=>L(r[0])).filter(v=>v<99)); return rs.map(r=>{const [m,w,t]=r; const d=L(m); const flat=/반복평행/.test(qt.stx.kind||''); const lv=flat?1:(d===99?mx+1:d); return `<div class="sr" style="padding-left:${((lv-1)*4.5).toFixed(1)}mm"><span class="sm2">${esc(m||'')}</span><span class="sw">${esc(w||'')}</span><span class="st2">${vs(t||'')}</span></div>`}).join('')})()}</div>`:'';
-  const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c2" data-f="m_emph" data-m="${esc(JSON.stringify(qt.map)).replace(/"/g,'&quot;')}">${svgMap(qt.map,45)}</div><div class="c1" data-f="pair">${box}</div></div>`:hasPic?`<div class="two"><div class="c2">${pic}</div><div class="c1">${box}</div></div>`:box; /* 11-13 목사님: 그림은 오른쪽에 띄우고, 글이 길면 그림 밑으로 넓게 흘러 칸을 아낌 */
+  const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c1" data-f="pair">${box}</div><div class="c2" data-f="m_emph" data-m="${esc(JSON.stringify(qt.map))}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
   const whole=qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:'';
   return `<div class="pg ${q}">
 <p class="date sans">${p.m}월 ${p.d}일 · ${dayNoLab(p)} · 성경 읽기 약 ${p.min}분</p>
@@ -1045,11 +1045,11 @@ function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</
 /* 지도·그림의 높이를 왼쪽 글(눈여겨볼 것)에 맞춘다. 쪽의 남는 높이가 아니라 글 높이가 기준이고, 32–70mm 안에서만 따라간다 */
 function matchMedia(root,s){ root.querySelectorAll('.pg .two').forEach(two=>{ try{
   const c1=two.querySelector('.c1'), c2=two.querySelector('.c2'); if(!c1||!c2) return;
-  const h1=c1.offsetHeight/MM; /* 화면 확대(transform)와 상관없는 실제 크기 */
-  const cap=c2.querySelector('.cap'); const capH=cap?cap.offsetHeight/MM:0;
-  const target=Math.max(26,Math.min(40,h1)-capH); /* 11-13: 글이 길면 그림을 키우지 않고 글이 그림 밑으로 흐름(최대 40mm) */
+  const h1=c1.getBoundingClientRect().height/s/MM;
+  const cap=c2.querySelector('.cap'); const capH=cap?cap.getBoundingClientRect().height/s/MM:0;
+  const target=Math.max(26,Math.min(70,h1)-capH);
   const m=c2.getAttribute('data-m');
-  if(m){ const svg=c2.querySelector('svg'); const tmp=document.createElement('div'); const cw=Math.max(30,c2.offsetWidth/MM); tmp.innerHTML=svgMap(JSON.parse(m),cw,target); /* 실제 칸 너비로 그려야 높이가 target이 됨 */ const ns=tmp.querySelector('svg'); if(svg&&ns) svg.replaceWith(ns); }
+  if(m){ const svg=c2.querySelector('svg'); const tmp=document.createElement('div'); tmp.innerHTML=svgMap(JSON.parse(m),45,target); const ns=tmp.querySelector('svg'); if(svg&&ns) svg.replaceWith(ns); }
   else { const im=c2.querySelector('.pic .im'); if(im) im.style.height=target.toFixed(1)+'mm'; }
 }catch(e){} }) }
 function tighten(root){ root.querySelectorAll('.pg .ref, .pg .box .i').forEach(el=>{
