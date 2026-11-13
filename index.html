@@ -1093,6 +1093,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .sumafter>summary{cursor:pointer;list-style:none}.sumafter>summary::-webkit-details-marker{display:none}.sumafter>summary::after{content:" ▾";color:var(--muted)}.sumafter[open]>summary::after{content:" ▴"}
 .v2aid .aidctx{margin:10px 0 0;padding:0 12px}.v2aid .aidctx dt{font:700 12.5px var(--f-ui);color:var(--muted);margin-top:8px}.v2aid .aidctx dd{margin:2px 0 0;line-height:1.6}
 .v2aid .aidsec{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.v2aid .aidk{display:block;font:700 13px var(--f-ui);color:var(--accent);margin-bottom:6px}.v2aid .aidsec .tline{margin:0}.v2aid .aidfocus{margin:8px 0 0;font-size:15px;line-height:1.7}.v2aid .aidhint{margin:6px 0 0;font-size:12px;color:var(--muted)}.v2aid .aidsec>p{margin:4px 0 0;line-height:1.65}
+.v2aid .aidtools{display:flex;flex-direction:column;gap:10px}.v2aid .aidtool{display:flex;gap:10px;align-items:flex-start;margin:0;line-height:1.6}.v2aid .aidtool>.tool{flex:none;margin:0;width:6.4em;justify-content:center;text-align:center;white-space:nowrap}.v2aid .aidtool>span{flex:1;min-width:0}.v2aid .aidtool b.tdk{font-weight:700;color:var(--ink)}.v2aid .aidtool .tex{display:block;margin-top:2px;color:var(--muted);font-size:.93em}
 .v2aid .aidbook{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.v2aid .aidbook>summary{cursor:pointer;font:700 14px var(--f-ui);color:var(--accent);list-style:none}.v2aid .aidbook>summary::-webkit-details-marker{display:none}.v2aid .aidbook p{line-height:1.65}
 .toolbox .tnotes{margin-top:8px}.toolbox .tnotes summary{cursor:pointer;font:700 13px var(--f-ui);color:var(--accent)}.toolbox .tnotes .tooldef2{color:var(--ink)}
 .toolbox .tfind{margin:8px 0 0;font-size:14.5px;line-height:1.65;color:var(--ink)}
@@ -8253,11 +8254,10 @@ function whereOf(p){ if(typeof WHERE365==="undefined"||!p||!p.ch||!p.ch.length) 
    '읽으며 살펴볼 질문'은 묵상 탭의 관찰 질문과 겹쳐 뺌. '눈여겨볼 것'은 본문 끝(읽은 뒤)으로 옮김. 가이드북이 없는 날은 '읽으면서 찾기'가 초점 문장 */
 function readAid(p,w,d,key,tl,G){ const g=GUIDE[key]||{}, where=whereOf(p);
   const ctx=[]; if(where) ctx.push(`<dt>지금 어디쯤?</dt><dd>${esc(where.t)}${where.n>1?` <small class="wherek">이 단락 ${where.n}일 가운데 ${where.k}일째</small>`:""}</dd>`); if(g.prev) ctx.push(`<dt>지난 이야기</dt><dd>${esc(g.prev)}</dd>`);
-  const focus=(G&&G.f)||g.find||"";
-  const seenT=new Set(); /* 도구 풀이는 처음 만나는 도구만 한 번 펼침, 나머지는 칩을 누르면 */
-  const shown=(mem.toolSeen ||= {}); const fresh=tl.filter(t=>!shown[t]||shown[t]===key); fresh.forEach(t=>{ if(!shown[t]){ shown[t]=key; seenT.add(t); } }); if(seenT.size) save();
-  const tools=tl.length||focus?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b>${tl.length?`<p class="tline">${tl.map(t=>toolChip(t)).join("")}</p>`:""}${focus?`<p class="aidfocus">${esc(focus)}</p>`:""}${fresh.length?`<p class="tooldef2">${fresh.map(t=>`<b>${tName(t)}</b> ${tDefH(t)}`).join("<br>")}</p>`:""}${tl.length?`<p class="aidhint">기호를 누르면 풀이가 나옵니다.</p>`:""}</div>`:"";
-  const word=G&&G.w?`<div class="aidsec"><b class="aidk">말뜻</b><p>${esc(G.w)}</p></div>`:"";
+  /* 11-13 목사님: 읽기 도구는 [도구 단추] + 설명만. 예는 오늘 본문에서(가이드북 '눈여겨볼 것'의 첫 문장), 없으면 뺌 */
+  const P=(G&&G.p)||{}, exOf=t=>{ const x=String(P[t]||"").trim(); if(!x) return ""; const m=x.match(/^.*?\d[)\]]?\.(?=\s|$)|^.*?[다요]\.(?=\s|$)/); return (m?m[0]:x).trim(); };
+  const tools=tl.length?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b><div class="aidtools">${tl.map(t=>{ const ex=exOf(t); return `<p class="aidtool">${toolChip(t)}<span>${TOOL_HTML[t]||esc(TOOLS[t]||"")}${ex?` <span class="tex">오늘 본문: ${esc(ex)}</span>`:""}</span></p>`; }).join("")}</div></div>`:"";
+  const focus=""; const word=G&&G.w?`<div class="aidsec"><b class="aidk">말뜻</b><p>${esc(G.w)}</p></div>`:"";
   let book=""; for(const b of [...new Set(p.ch.filter(x=>x[1]===1).map(x=>x[0]))]){ const I=BOOKINFO[b]; if(!I) continue; const nm=PLAN.full[b-1];
     book+=`<details class="aidbook"><summary>${esc(nm)}${hasB(nm)?"은":"는"} 어떤 책인가요? ›</summary><p>${esc(I.what)}</p><p><b>이 책을 읽을 때</b> ${esc(I.look)}</p><button class="btn ghost small" data-book="${b}">더 알아보기</button></details>`; }
   if(!ctx.length&&!tools&&!word&&!book) return "";
