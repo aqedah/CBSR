@@ -8878,7 +8878,7 @@ function renderQT(){
   // 2 하나님은 어떤 분
   h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span>${V2Q?"":"<small>이 본문에서 하나님은 어떤 분인가</small>"}</div>`;
   /* 11-10 목사님: 가이드북과 같게 — 성품도 내가 먼저 쓰고(god), 해설은 맨 끝 '쓴 뒤에 읽기'에서 */
-  if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">하나님이나 예수 그리스도에 대해 말하는 구절에서, 그분은 어떤 분입니까?</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
+  if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">본문에서 하나님, 예수님, 성령님에 대해 말하는 구절이 있습니까? 그곳에서 나타난 하나님은 어떤 분이십니까?</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
   else if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
   let tH=""; /* 성품 이름+아멘: v2에서는 쓴 뒤에 읽기로 */
   if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); tH+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${window.CBSR_V2?`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`:""}</div>`;});
@@ -13952,7 +13952,7 @@ function tbkPageA(D){ const {qt,p,n}=D, g=qt.guide||{}, o=qt.obs||{}, dt=dateOf(
   ${o.christ?`<p class="tbkk">성경 전체로 · 참고</p><p>${tbkChip(o.christ,p)}</p>`:""}`; }
 const TBK_F=[["obs","본문 관찰",3],["god","하나님의 성품",2],["med","적용",2],["pray","오늘의 기도",3]];
 function tbkPageM(D){ const {qt,p,key}=D, q=mem.qt[key]||{}, dt=dateOf(view.w,view.d);
-  const Q={obs:tbkT((qt.obs||{}).q,p),god:"하나님이나 예수 그리스도에 대해 말하는 구절에서, 그분은 어떤 분입니까?",med:tbkT(qt.apply,p),pray:""};
+  const Q={obs:tbkT((qt.obs||{}).q,p),god:"본문에서 하나님, 예수님, 성령님에 대해 말하는 구절이 있습니까? 그곳에서 나타난 하나님은 어떤 분이십니까?",med:tbkT(qt.apply,p),pray:""};
   const blocks=TBK_F.map(([f,lab,nl],i)=>{ const tx=q[f]||""; return `<div class="tbkb" data-f="${f}"><p class="tbkk"><span>${i+1}</span>${lab}</p>${Q[f]?`<p class="tbkq">${Q[f]}</p>`:""}<div class="tbklines" data-f="${f}" style="height:${nl*34}px">${"<i></i>".repeat(nl)}<textarea class="tbkta" data-f="${f}" aria-label="${lab}" spellcheck="false" autocomplete="off">${esc(tx)}</textarea></div></div>`; }).join("");
   const ao=!!(q.ao||q.done); /* 11-12: 어디서든 묵상을 마친 날은 해설이 열린 상태 */
   return `<p class="tbkdate">${dt.getMonth()+1}월 ${dt.getDate()}일 · ${esc(p.label)}</p><div class="tbksec" style="margin-top:8px"><i>4</i>나의 묵상</div>${blocks}
