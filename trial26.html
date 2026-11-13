@@ -230,13 +230,25 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg table.bkt2 td{padding:1.7mm 0;border-bottom:0.1mm solid #e8e8e8}
 .pg table.bkt2.dense{font-size:9pt}
 .pg table.bkt2.dense td{padding:.75mm 0}
+.pg .bkcols{display:flex;gap:5mm}
+.pg .bkcols table{flex:1}
+.pg table.bkt2.dense2{font-size:7.3pt}
+.pg table.bkt2.dense2 th{font-size:7pt}
+.pg table.bkt2.dense2 td,.pg table.bkt2.dense2 th{white-space:nowrap;padding-right:1.6mm}
+.pg table.bkt2.dense2 td{padding-top:.35mm;padding-bottom:.35mm}
 .pg table.toc{width:100%;border-collapse:collapse;font-size:7.9pt;table-layout:fixed}
-.pg table.toc td{padding:0.38mm 0;border-bottom:0.1mm solid #eee;vertical-align:top;line-height:1.3}
+.pg table.toc td{padding:0.38mm 0;border-bottom:0.1mm solid #eee;vertical-align:middle;line-height:1.3}
 .pg table.toc col.c1{width:10mm} .pg table.toc col.c2{width:27mm} .pg table.toc col.c4{width:7mm}
 .pg table.toc td.dt{color:#666;white-space:nowrap}
 .pg table.toc td.tx{padding-right:2mm} .pg table.toc td.tx .nw{white-space:nowrap}
 .pg table.toc td.sb{color:#333;padding-right:2mm}
 .pg table.toc td.pgn{text-align:right;color:#666}
+.pg table.ctoc{width:100%;border-collapse:collapse;font-size:9.4pt;margin-top:2mm}
+.pg table.ctoc td{padding:1.15mm 0;vertical-align:bottom}
+.pg table.ctoc td.ct{overflow:hidden;white-space:nowrap}
+.pg table.ctoc td.ct span{background:#fff;padding-right:1.5mm;position:relative;z-index:1}
+.pg table.ctoc td.ct{background:linear-gradient(to right,#bbb 34%,transparent 0) repeat-x left 78%/1.6mm 0.25mm}
+.pg table.ctoc td.cp{width:9mm;text-align:right;color:#444}
 .pg table.toc tr.band td{background:var(--mainL);color:var(--main);font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:8.6pt;padding:0.7mm 1.4mm;border:0}
 .pg .mini{border:0.15mm solid #ccc;background:#fafafa;padding:2mm;margin:1mm 0 2mm;overflow:hidden;height:118mm}
 .pg .miniin{transform:scale(0.385);transform-origin:top left;width:296mm}
@@ -715,7 +727,7 @@ const FDEF=q=>Object.assign({
  howhead:'이 책 쓰는 법',
  howlead:'하루에 한 펼침면입니다. 왼쪽은 읽고, 오른쪽은 씁니다. 아래는 **1월 14일(창세기 39–41장)을 실제로 써 본 모습**입니다.',
  demo:'표시한다|39:2 "여호와께서 요셉과 함께 하시므로"와 39:21 "여호와께서 요셉과 함께 하시고"에 밑줄을 긋습니다.\n견준다|한 곳은 주인의 집, 한 곳은 감옥입니다. 자리는 낮아졌습니다.\n한 문장으로|자리가 바뀌어도 서술자의 말은 바뀌지 않습니다. 이 문장이 ④ 본문 관찰이 됩니다.',
- hmlead:'하루에 한 펼침면입니다. 왼쪽은 읽고, 오른쪽은 씁니다. 아래는 **1월 22일(출애굽기 14–15장)**을 실제로 써 본 모습입니다. 6–9쪽의 도구 설명은 먼저 익혀야 할 공부가 아니라, 필요할 때 찾아보는 사전입니다.',
+ hmlead:'하루에 한 펼침면입니다. 왼쪽은 읽고, 오른쪽은 씁니다. 아래는 **1월 22일(출애굽기 14–15장)**을 실제로 써 본 모습입니다. 10–13쪽의 도구 설명은 먼저 익혀야 할 공부가 아니라, 필요할 때 찾아보는 사전입니다.',
  hmlead2:'오른쪽 쪽은 손으로 씁니다. 칸마다 한두 문장이면 넉넉합니다.',
  hcalL:'today|오늘의 흐름|줄거리를 먼저 잡고 읽기 시작합니다.\nfind|오늘의 읽기 도구|색을 채운 첫 기호가 대표 도구입니다. 관찰 질문이 여기서 나옵니다.\ngo|성경 읽기|이 책을 내려놓고 성경책으로 본문을 읽습니다.\nbox|눈여겨볼 것|읽고 돌아와서 내가 본 것과 견주어 봅니다. 답이 아니라 확인입니다.\nmap|지도|오늘 이야기가 일어난 자리입니다.\nchrist|성경 전체로|오늘 본문에서 성경 전체로 나가는 길입니다. 도구와는 다릅니다.',
  hcalR:'q|본문 관찰|대표 도구에서 나온 물음에 내 말로 답합니다.\nlab1|하나님의 성품|본문에서 만난 하나님을 한 문장으로 적습니다.\napply|적용|오늘 내 삶에 대어 봅니다.\nlab3|오늘의 기도|한두 줄이면 넉넉합니다.\nafter|쓴 뒤에 읽기|④를 다 쓴 뒤에 해설과 기도를 읽습니다. 해설은 정답이 아닙니다. 내가 쓴 것과 견주어 보고, 다른 점은 본문에서 근거를 찾아보세요.',
@@ -743,7 +755,7 @@ const FDEF=q=>Object.assign({
  whole:'인용|뒤의 성경이 이 본문의 말을 그대로 가져다 씁니다. 누가, 왜 이 말을 집었는지 봅니다.|1/5 창 15:6 → 롬 4:3\n약속|여기서 하신 약속이 어디서 이루어지는지 봅니다. 약속과 성취 사이의 시간도 봅니다.|2/22 민 32:17 → 수 22:2–4\n주제|같은 주제가 성경 전체에서 어떻게 이어지고 자라는지 봅니다.|1/4 바벨의 흩으심 → 행 2:6 오순절\n모형|이 사람이나 이 일이 뒤에 오실 그리스도를 미리 보입니다. 닮은 점과 다른 점을 함께 봅니다.|1/21 유월절 양 → 고전 5:7\n흐름|구원의 큰 줄거리에서 이 본문이 어디쯤인지 봅니다.|1/13 유다와 다말 → 마 1:3',
  whfoot:'가까이 보고, 멀리 봅니다. 오늘 한 장이 성경 전체의 어디에 서 있는지 보입니다.',
  bkshead:'이 권에서 읽는 책들',
- tochead:'통독표 · 차례',
+ tochead:'통독표',
  divk:'여기까지가 안내입니다',
  divt:'이제부터\n하루 한 펼침면',
  divs:'',
@@ -787,7 +799,7 @@ ${paras(f.cp).map(t=>t.split('\n').map(x=>`<p class="cp">${esc(x)}</p>`).join(''
 <p class="cp">펴낸 곳 ${esc(f.ch)}</p></div><div class="pn">2</div></div>`; }
 function pPreface(q){ const f=F(q); return `<div class="pg fm r q${q}">
 <p class="fh">${esc(f.phead)}</p>${paras(f.pbody).map(t=>`<p class="fp">${bold(t)}</p>`).join('')}
-<p class="fsig">${esc(f.psig)}</p><div class="pn">3</div></div>`; }
+<p class="fsig">${esc(f.psig)}</p><div class="pn">7</div></div>`; }
 function pHow1(q,sample){ const f=F(q);
   const rows=lines(f.sample).map(t=>{ const [n,lab,qq,ans]=t.split(/(?<!\|)\|(?!\|)/).map(x=>(x||'').trim());
     return `<p class="slab"><span class="st">${esc(n)}</span>${esc(lab)}</p>${qq&&qq!=='—'?`<p class="sq">${vs(qq)}</p>`:''}<p class="sa">${vs(ans||'')}</p>` }).join('');
@@ -795,20 +807,20 @@ function pHow1(q,sample){ const f=F(q);
 <p class="fh">${esc(f.howhead)}</p><p class="fp">${bold(f.howlead)}</p>
 ${f.demo?`<table class="demo">${lines(f.demo).map(t=>{const [a,b]=t.split('|');return `<tr><td class="k">${esc(a||'')}</td><td>${boldv(b||'')}</td></tr>`}).join('')}</table>`:''}
 <div class="samp"><p class="sh2"><span class="n">4</span>나의 묵상 — 손으로 쓰는 자리</p>${rows}</div>
-<p class="fcap">${bold(f.howcap)}</p><div class="pn">5</div></div>`; }
+<p class="fcap">${bold(f.howcap)}</p><div class="pn">9</div></div>`; }
 function pHow2(q){ const f=F(q); const N=['1','2','3','4'];
   return `<div class="pg fm q${q}"><p class="fh2">네 걸음</p>
 ${lines(f.steps).map((t,i)=>{const [a,b]=t.split('|');return `<p class="st4"><span class="stn">${N[i]||'·'}</span><b>${esc(a)}</b> — ${bold(b||'')}</p>`}).join('')}
 <p class="fh2" style="margin-top:4mm">${['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length} 가지 약속</p>
 <ol class="rules">${lines(f.rules).map(r=>`<li>${bold(r)}</li>`).join('')}</ol>
-<div class="pn">4</div></div>`; }
+<div class="pn">8</div></div>`; }
 /* 11-12 목사님: 서술·담화 도구 두 쪽을 한 꼴로 — 맨 위에 열한 기호 한 줄, 칸마다 설명과 '보기' 띠 */
 function toolList(L){ return `<div class="tlist">${L.map(t=>{const [s,d,e]=t.split('|');return `<div class="trow"><div class="tsym">${(s||'').split(' · ').map(chipSym).join('<br>')}</div><div class="tbd"><p class="tds">${bold(d||'')}</p>${e?`<div class="tex"><span class="tek">보기</span><div class="tev">${exHtml(e)}</div></div>`:''}</div></div>`}).join('')}</div>`; }
 function toolStrip(L){ return `<p class="tstrip">${L.map(t=>chipSym((t.split('|')[0]||'').split(' · ')[0])).join('')}</p>`; }
 function pSym(q){ const f=F(q); const L=lines(f.syms); return `<div class="pg fm q${q} tpg">
 <p class="fh">${esc(f.symhead)}</p><p class="fp sm tlead">${bold(f.symlead)}</p>
 ${toolList(L)}
-<div class="pn">6</div></div>`; }
+<div class="pn">10</div></div>`; }
 /* 보기: ' // '에서 줄을 바꿈. 다음 줄이 성경 주소로 시작하면 새 보기, 아니면 같은 인용의 다음 줄(따옴표 첫머리에 맞춤). 보기가 둘이면 ' · '에서만 끊김 */
 function exHtml(e){ const seg=String(e).split(/\s*\/\/\s*/);
   if(seg.length>1){ const isRef=x=>/^(\d?[가-힣]{1,3}\s)?\d{1,3}:\d/.test(x.trim());
@@ -819,7 +831,7 @@ function exHtml(e){ const seg=String(e).split(/\s*\/\/\s*/);
 function pSym2(q){ const f=F(q); const L=lines(f.dsyms); return `<div class="pg fm r q${q} tpg">
 <p class="fh">${esc(f.dshead)}</p><p class="fp sm tlead">${bold(f.dslead)}</p>
 ${toolList(L)}
-<div class="pn">7</div></div>`; }
+<div class="pn">11</div></div>`; }
 function pGenre(q){ const f=F(q);
   const ir=lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<div class="ircard"><p class="irn">“${esc(a||'')}”</p><p class="ire"><span>삶에서</span>${esc(b||'')}</p><p class="ire"><span>성경에서</span>${boldv(c||'')}</p></div>`}).join('');
   const gn=lines(f.genres).map(t=>{const [a,b,c,d]=t.split('|');const tools=(d||'').split(' · ').map(x=>x.trim()).filter(Boolean);
@@ -829,7 +841,7 @@ function pGenre(q){ const f=F(q);
 <div class="irgrid">${ir}</div>
 <p class="fh2" style="margin-top:4mm">${esc(f.gnhead)}</p><p class="fp sm">${bold(f.gnlead)}</p>
 <div class="gngrid">${gn}</div>
-<div class="pn">8</div></div>`; }
+<div class="pn">12</div></div>`; }
 function pWhole(q){ const f=F(q);
   const L=lines(f.whole).map(t=>{const [a,b,c]=t.split('|');return {a,b,c}});
   const POS=[[0,0],[75,0],[0,44],[75,44],[37.5,84]];
@@ -843,13 +855,23 @@ function pWhole(q){ const f=F(q);
 <div class="wmap"><svg class="wsvg" viewBox="0 0 119 118" width="119mm" height="118mm">${lines_}<circle cx="${C[0]}" cy="${C[1]}" r="11" fill="var(--main)"/><text x="${C[0]}" y="${C[1]-1}" text-anchor="middle" font-size="3.6" fill="#fff" font-family="Noto Sans KR" font-weight="700">오늘</text><text x="${C[0]}" y="${C[1]+3.6}" text-anchor="middle" font-size="3.6" fill="#fff" font-family="Noto Sans KR" font-weight="700">본문</text></svg>${boxes}</div>
 ${diff}
 ${f.whfoot?`<p class="wfoot">${bold(f.whfoot)}</p>`:''}
-<div class="pn">9</div></div>`; }
-function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q);
-  return `<div class="pg fm q${q}"><p class="fh">${esc(f.bkshead)}</p>
-<p class="fp sm">${ds.length}일 · ${ds[0].m}월 ${ds[0].d}일부터 ${ds[ds.length-1].m}월 ${ds[ds.length-1].d}일까지</p>
-<table class="bkt2${bl.length>12?' dense':''}"><tr><th>책</th><th>읽는 날짜</th><th>기간</th></tr>
-${bl.map(o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일${o.n>1?' – '+(o.to.m!==o.from.m?o.to.m+'월 ':'')+o.to.d+'일':''}</td><td>${o.n>1?o.n+'일 동안':'하루'}</td></tr>`).join('')}</table>
-<div class="pn">10</div></div>`; }
+<div class="pn">13</div></div>`; }
+function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q); const last=ds[ds.length-1]; const n=pageNo(last)+2;
+  const rows=[[f.phead,7],[f.howhead,8],[f.symhead+' · '+f.dshead,10],[f.irhead.replace(/^\S+\s/,'')+' · '+f.gnhead+' · '+f.whhead,12],
+    [(['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length)+' 가지 약속',15],
+    ['통독표 — 날마다 읽을 곳',4],
+    ['통독 — '+ds[0].m+'월 '+ds[0].d+'일부터 '+last.m+'월 '+last.d+'일까지',FRONT+1],
+    ['부록 · 지도와 그림',n],[(F(q).rvhead||'이 권을 마치며'),n+3],['부록 · '+((typeof MEM100!=='undefined'&&MEM100.title)||'꼭 외울 말씀 100'),n+4]];
+  rows.sort((a,b)=>a[1]-b[1]);
+  return `<div class="pg fm r q${q}"><p class="fh">차례</p>
+<table class="ctoc">${rows.map(([t,pn])=>`<tr><td class="ct"><span>${esc(t)}</span></td><td class="cp">${pn}</td></tr>`).join('')}</table>
+<p class="fh2" style="margin-top:5mm">${esc(f.bkshead)}</p>
+<p class="fp sm">${ds.length}일 · ${ds[0].m}월 ${ds[0].d}일부터 ${last.m}월 ${last.d}일까지</p>
+${(()=>{ const row=o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일${o.n>1?' – '+(o.to.m!==o.from.m?o.to.m+'월 ':'')+o.to.d+'일':''}</td><td>${o.n>1?o.n+'일 동안':'하루'}</td></tr>`;
+  const hd='<tr><th>책</th><th>읽는 날짜</th><th>기간</th></tr>';
+  if(bl.length<=12) return `<table class="bkt2 dense">${hd}${bl.map(row).join('')}</table>`;
+  const h=Math.ceil(bl.length/2); return `<div class="bkcols"><table class="bkt2 dense dense2">${hd}${bl.slice(0,h).map(row).join('')}</table><table class="bkt2 dense dense2">${hd}${bl.slice(h).map(row).join('')}</table></div>` })()}
+<div class="pn">3</div></div>`; }
 function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.length/3);
   const seg=ds.slice(part*per,(part+1)*per); let last='';
   const rows=seg.map(p=>{ const bs=bookOf(p.t), b=bs[0]; let band='';
@@ -857,9 +879,9 @@ function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.l
     const qt=(typeof get==='function')?get(p.no):null;
     return band+`<tr><td class="dt">${p.m}/${p.d}</td><td class="tx">${(a=>a.map((x,i)=>`<span class="nw">${esc(x)}${i<a.length-1?' ·':''}</span>`).join(' '))(shortRef(p.t).split(' · '))}</td><td class="sb">${esc((qt&&qt.sub)||p.sub||'')}</td><td class="pgn">${pageNo(p)}</td></tr>`;
   }).join('');
-  return `<div class="pg fm ${part===1?'':'r'} q${q}">${part===0?`<p class="fh">${esc(f.tochead)}</p>`:`<p class="fh2">${esc(f.tochead)}</p>`}
+  return `<div class="pg fm ${part===1?'r':''} q${q}">${part===0?`<p class="fh">통독표</p>`:`<p class="fh2">통독표</p>`}
 <table class="toc"><colgroup><col class="c1"><col class="c2"><col><col class="c4"></colgroup>${rows}</table>
-<div class="pn">${11+part}</div></div>`; }
+<div class="pn">${4+part}</div></div>`; }
 function pDivider(q){ const f=F(q); const ds=qDays(q);
   return `<div class="pg dv q${q}"><div class="dvfield"></div>
 <div class="dvbox"><p class="dvk">${esc(f.divk)}</p><p class="dvt">${esc(f.divt).replace(/\n/g,'<br>')}</p>
@@ -995,11 +1017,11 @@ function howSteps(f,from,cnt){ const N=['1','2','3','4','5']; return `<div class
 function pHowL(q){ const f=F(q); return `<div class="pg fm q${q} howpgx">
 <p class="fh">${esc(f.howhead)}</p><p class="fp sm hlead">${bold(f.hmlead)}</p>
 <div class="howwrap L">${howMini(0)}${howCallouts(f.hcalL)}<svg class="howsvg" width="100%" height="100%"></svg></div>
-${howSteps(f,0,3)}<div class="pn">4</div></div>`; }
+${howSteps(f,0,3)}<div class="pn">8</div></div>`; }
 function pHowR(q){ const f=F(q); return `<div class="pg fm r q${q} howpgx">
 <p class="fh">&nbsp;</p><p class="fp sm hlead">${bold(f.hmlead2)}</p>
 <div class="howwrap R">${howMini(1)}${howCallouts(f.hcalR)}<svg class="howsvg" width="100%" height="100%"></svg></div>
-${howSteps(f,3,2)}<div class="pn">5</div></div>`; }
+${howSteps(f,3,2)}<div class="pn">9</div></div>`; }
 function layoutHow(root){
   const W=[...root.querySelectorAll('.howwrap')]; if(!W.length) return;
   /* 견본을 위 설명과 아래 네 걸음 사이 한가운데에 */
@@ -1032,8 +1054,8 @@ function howSpread(q){ const html=`<div class="spread">${pHowL(q)}${pHowR(q)}</d
 function frontSpreads(q,sample){
   const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
   return [ sp(coverBack(q),coverFront(q)), sp(endPaper(q),endPaper(q)), /* 11-12 목사님: 스프링 제본 — 앞·뒤표지를 한눈에 */ sp(blankPage(q),pTitle(q)),
-    sp(pCopy(q),pPreface(q)), howSpread(q), sp(pSym(q),pSym2(q)), sp(pGenre(q),pWhole(q)),
-    sp(pBooks(q),pToc(q,0)), sp(pToc(q,1),pToc(q,2)), sp(pDivider(q),pDivider2(q)) ];
+    sp(pCopy(q),pBooks(q)), sp(pToc(q,0),pToc(q,1)), sp(pToc(q,2),pPreface(q)),
+    howSpread(q), sp(pSym(q),pSym2(q)), sp(pGenre(q),pWhole(q)), sp(pDivider(q),pDivider2(q)) ];
 }
 function backSpreads(q){ const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
   return [ sp(endPaper(q),endPaper(q)) ]; }
@@ -1089,7 +1111,7 @@ function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fil
 function goBack(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); if($('frontbox')) $('frontbox').open=false; }
 function isFrontView(i){ return i<FLAB.length }
 /* ── 전자책처럼 넘겨 보기 ── */
-const FLAB=['앞표지','면지','속표지','저작권 · 서문','네 걸음 · 이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','이 권의 책들 · 통독표','통독표','가름 — 여기서부터 가이드북'];
+const FLAB=['앞표지','면지','속표지','저작권 · 차례','통독표','통독표 · 서문','네 걸음 · 이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','가름 — 여기서부터 가이드북'];
 const BLAB=['면지','뒤표지'];
 let VIEWS=[], VI=0, ANIM=false;
 let PV='both';   /* both | L | R */
