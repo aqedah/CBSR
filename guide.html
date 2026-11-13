@@ -507,7 +507,7 @@ function readForm(){
   const qt=blank();
   qt.sub=$('sub').value.trim(); qt.guide.today=$('today').value.trim(); qt.guide.find=$('find').value.trim(); qt.guide.word=$('word').value.trim();
   qt.obs.q=$('q').value.trim(); qt.obs.look=[1,2,3].map(i=>[$('r'+i).value.trim(),$('t'+i).value.trim()]);
-  qt.obs.pair=$('pair').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{const m=s.match(/^(\S+\s\S+)\s+(.*)$/);return m?[m[1],m[2]]:['',s]});
+  qt.obs.pair=$('pair').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{const m=s.match(/^(\S+\s(?:수사적 질문|말씀 공식|언약 공식|\S+))\s+(.*)$/);return m?[m[1],m[2]]:['',s]});
   qt.apply=$('apply').value.trim(); qt.note=$('note').value.trim(); qt.pray=$('pray').value.trim(); qt.obs.christ=$('christ').value.trim(); const at=$('attr').value.trim(); if(at) qt.attr=at;
   const g=$('god').value.trim(); if(g) qt.god=g;
   const pi=$('p_id').value.trim(); if(pi) qt.img={id:pi,cap:$('p_cap').value.trim()};
@@ -650,9 +650,9 @@ function findHtml(p,qt){
   let h=chip(qt.guide.find).replace('<span class="chip">','<span class="chip rep">');
   return h }
 function chip(t){ let r=String(t||'').trim(), out=''; let m;
-  while((m=r.match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
+  while((m=r.match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(수사적 질문|말씀 공식|언약 공식|\S+)\s+([\s\S]*)$/))){ out+=`<span class="chip">${esc(m[1]+' '+m[2])}</span>`; r=m[3] }
   if(out) return out+vs(r);
-  m=String(t||'').match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
+  m=String(t||'').match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(수사적 질문|말씀 공식|언약 공식|\S+)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1]+' '+m[2])}</span>${vs(m[3])}`; m=String(t||'').match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/); if(m) return `<span class="chip">${esc(m[1])}</span>${vs(m[2])}`; return vs(t) }
 function pageL(p,qt){
   const q='q'+qOf(p);
   const look=(qt.obs.look||[]).filter(x=>x[0]);
