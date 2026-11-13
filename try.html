@@ -13497,9 +13497,9 @@ function m100New(i,mode){ const t=MEM100.list[i].t, W=t.split(" "), rn=m100Rnd(i
 function m100HTML(){ if(typeof MEM100==="undefined"||!MEM100) return ""; const L=MEM100.list, R=(mem.m100 ||= {}), G=view.game&&view.game.kind==="m100"?view.game:null;
   const done=L.filter((_,i)=>R[i]&&R[i].f&&R[i].o).length;
   let h=`<section class="sec gsec m100sec" id="m100"><span class="label">꼭 외울 말씀 100</span>`;
-  if(!G) return h+`<p class="lead">가이드북 부록의 백 구절입니다. 빈칸 채우기와 순서 맞추기를 둘 다 마치면 ✓가 됩니다. 지금 <b>${done}/100</b></p>
+  if(!G) return h+`<p class="lead">가이드북 부록의 100구절입니다. 빈칸 채우기와 순서 맞추기를 둘 다 마치면 ✓가 됩니다. 지금 <b>${done}/100</b></p>
     <div class="row"><button class="btn" data-m100go="f">빈칸 채우기</button><button class="btn ghost" data-m100go="o">순서 맞추기</button></div>
-    <details class="m100all"><summary>백 구절 모두 보기 · 번호를 누르면 그 구절로</summary><div class="m100grid">${L.map((x,i)=>{ const r=R[i]||{}; return `<button class="m100c${r.f&&r.o?" ok":r.f||r.o?" half":""}" data-m100="${i}" aria-label="${i+1}번 ${esc(x.r)}">${r.f&&r.o?"✓":i+1}</button>`; }).join("")}</div></details></section>`;
+    <details class="m100all"><summary>100구절 모두 보기 · 번호를 누르면 그 구절로</summary><div class="m100grid">${L.map((x,i)=>{ const r=R[i]||{}; return `<button class="m100c${r.f&&r.o?" ok":r.f||r.o?" half":""}" data-m100="${i}" aria-label="${i+1}번 ${esc(x.r)}">${r.f&&r.o?"✓":i+1}</button>`; }).join("")}</div></details></section>`;
   const x=L[G.i], r=R[G.i]||{};
   h+=`<p class="m100ref"><b>${G.i+1}</b> ${esc(x.r)} <small>${G.mode==="f"?"빈칸 채우기":"순서 맞추기"}${r.f&&r.o?" · ✓":""}</small></p>`;
   if(G.mode==="f"){ const cur=G.bl.find(k=>G.fill[k]==null), fin=cur==null;
