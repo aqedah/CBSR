@@ -799,7 +799,7 @@ ${paras(f.cp).map(t=>t.split('\n').map(x=>`<p class="cp">${esc(x)}</p>`).join(''
 <p class="cp">펴낸 곳 ${esc(f.ch)}</p></div><div class="pn">2</div></div>`; }
 function pPreface(q){ const f=F(q); return `<div class="pg fm r q${q}">
 <p class="fh">${esc(f.phead)}</p>${paras(f.pbody).map(t=>`<p class="fp">${bold(t)}</p>`).join('')}
-<p class="fsig">${esc(f.psig)}</p><div class="pn">7</div></div>`; }
+<p class="fsig">${esc(f.psig)}</p><div class="pn">3</div></div>`; }
 function pHow1(q,sample){ const f=F(q);
   const rows=lines(f.sample).map(t=>{ const [n,lab,qq,ans]=t.split(/(?<!\|)\|(?!\|)/).map(x=>(x||'').trim());
     return `<p class="slab"><span class="st">${esc(n)}</span>${esc(lab)}</p>${qq&&qq!=='—'?`<p class="sq">${vs(qq)}</p>`:''}<p class="sa">${vs(ans||'')}</p>` }).join('');
@@ -857,13 +857,13 @@ ${diff}
 ${f.whfoot?`<p class="wfoot">${bold(f.whfoot)}</p>`:''}
 <div class="pn">13</div></div>`; }
 function pBooks(q){ const f=F(q); const bl=bookList(q); const ds=qDays(q); const last=ds[ds.length-1]; const n=pageNo(last)+2;
-  const rows=[[f.phead,7],[f.howhead,8],[f.symhead+' · '+f.dshead,10],[f.irhead.replace(/^\S+\s/,'')+' · '+f.gnhead+' · '+f.whhead,12],
+  const rows=[[f.phead,3],[f.howhead,8],[f.symhead+' · '+f.dshead,10],[f.irhead.replace(/^\S+\s/,'')+' · '+f.gnhead+' · '+f.whhead,12],
     [(['','한','두','세','네','다섯','여섯','일곱','여덟'][lines(f.rules).length]||lines(f.rules).length)+' 가지 약속',15],
-    ['통독표 — 날마다 읽을 곳',4],
+    ['통독표 — 날마다 읽을 곳',5],
     ['통독 — '+ds[0].m+'월 '+ds[0].d+'일부터 '+last.m+'월 '+last.d+'일까지',FRONT+1],
     ...(ED.trial?[]:[['부록 · 성막',n],[(F(q).rvhead||'이 권을 마치며'),n+1]]),['부록 · '+((typeof MEM100!=='undefined'&&MEM100.title)||'꼭 외울 말씀 100'),ED.trial?n:n+2]];
   rows.sort((a,b)=>a[1]-b[1]);
-  return `<div class="pg fm r q${q}"><p class="fh">차례</p>
+  return `<div class="pg fm q${q}"><p class="fh">차례</p>
 <table class="ctoc">${rows.map(([t,pn])=>`<tr><td class="ct"><span>${esc(t)}</span></td><td class="cp">${pn}</td></tr>`).join('')}</table>
 <p class="fh2" style="margin-top:5mm">${esc(f.bkshead)}</p>
 <p class="fp sm">${ds.length}일 · ${ds[0].m}월 ${ds[0].d}일부터 ${last.m}월 ${last.d}일까지</p>
@@ -871,7 +871,7 @@ ${(()=>{ const row=o=>`<tr><td>${esc(o.b)}</td><td>${o.from.m}월 ${o.from.d}일
   const hd='<tr><th>책</th><th>읽는 날짜</th><th>기간</th></tr>';
   if(bl.length<=12) return `<table class="bkt2 dense">${hd}${bl.map(row).join('')}</table>`;
   const h=Math.ceil(bl.length/2); return `<div class="bkcols"><table class="bkt2 dense dense2">${hd}${bl.slice(0,h).map(row).join('')}</table><table class="bkt2 dense dense2">${hd}${bl.slice(h).map(row).join('')}</table></div>` })()}
-<div class="pn">3</div></div>`; }
+<div class="pn">4</div></div>`; }
 function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.length/3);
   const seg=ds.slice(part*per,(part+1)*per); let last='';
   const rows=seg.map(p=>{ const bs=bookOf(p.t), b=bs[0]; let band='';
@@ -879,9 +879,9 @@ function pToc(q,part){ const f=F(q); const ds=qDays(q); const per=Math.ceil(ds.l
     const qt=(typeof get==='function')?get(p.no):null;
     return band+`<tr><td class="dt">${p.m}/${p.d}</td><td class="tx">${(a=>a.map((x,i)=>`<span class="nw">${esc(x)}${i<a.length-1?' ·':''}</span>`).join(' '))(shortRef(p.t).split(' · '))}</td><td class="sb">${esc((qt&&qt.sub)||p.sub||'')}</td><td class="pgn">${pageNo(p)}</td></tr>`;
   }).join('');
-  return `<div class="pg fm ${part===1?'r':''} q${q}">${part===0?`<p class="fh">통독표</p>`:`<p class="fh2">통독표</p>`}
+  return `<div class="pg fm ${part===1?'':'r'} q${q}">${part===0?`<p class="fh">통독표</p>`:`<p class="fh2">통독표</p>`}
 <table class="toc"><colgroup><col class="c1"><col class="c2"><col><col class="c4"></colgroup>${rows}</table>
-<div class="pn">${4+part}</div></div>`; }
+<div class="pn">${5+part}</div></div>`; }
 function pDivider(q){ const f=F(q); const ds=qDays(q);
   return `<div class="pg dv q${q}"><div class="dvfield"></div>
 <div class="dvbox"><p class="dvk">${esc(f.divk)}</p><p class="dvt">${esc(f.divt).replace(/\n/g,'<br>')}</p>
@@ -1054,7 +1054,7 @@ function howSpread(q){ const html=`<div class="spread">${pHowL(q)}${pHowR(q)}</d
 function frontSpreads(q,sample){
   const sp=(l,r)=>`<div class="spread">${l}${r}</div>`;
   return [ sp(coverBack(q),coverFront(q)), /* 11-13 목사님: 면지 뺌 */ /* 11-12 목사님: 스프링 제본 — 앞·뒤표지를 한눈에 */ sp(blankPage(q),pTitle(q)),
-    sp(pCopy(q),pBooks(q)), sp(pToc(q,0),pToc(q,1)), sp(pToc(q,2),pPreface(q)),
+    sp(pCopy(q),pPreface(q)), sp(pBooks(q),pToc(q,0)), sp(pToc(q,1),pToc(q,2)),
     howSpread(q), sp(pSym(q),pSym2(q)), sp(pGenre(q),pWhole(q)), sp(pDivider(q),pDivider2(q)) ];
 }
 function backSpreads(q){ return []; } /* 11-13 목사님: 뒤 면지도 뺌 */
@@ -1110,7 +1110,7 @@ function goFront(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); fil
 function goBack(k){ if(saveT){clearTimeout(saveT);save()} showView(k,true); if($('frontbox')) $('frontbox').open=false; }
 function isFrontView(i){ return i<FLAB.length }
 /* ── 전자책처럼 넘겨 보기 ── */
-const FLAB=['앞표지','속표지','저작권 · 차례','통독표','통독표 · 서문','네 걸음 · 이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','가름 — 여기서부터 가이드북'];
+const FLAB=['앞표지','속표지','저작권 · 서문','차례 · 통독표','통독표','네 걸음 · 이 책 쓰는 법','도구 — 서술 · 담화','아이러니 · 글 장르 · 성경 전체로','가름 — 여기서부터 가이드북'];
 const BLAB=[];
 let VIEWS=[], VI=0, ANIM=false;
 let PV='both';   /* both | L | R */
