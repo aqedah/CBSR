@@ -7769,7 +7769,8 @@ function finOpen(kind,w,d){ if(!window.CBSR_V2) return; document.querySelector("
   ovOpen(close);
   el.querySelectorAll("[data-fx]").forEach(b=>b.onclick=()=>{ close(); if(view.tab==="today"){ render(); scrollTo({top:0}); } else switchTab("today"); });
   el.querySelectorAll("[data-fgo]").forEach(b=>b.onclick=()=>{ close(); if(b.dataset.fgo==="story") storyOpen(0); else { view.qtDeep=true; if(view.tab==="qt"){ render(); scrollTo({top:0}); } else switchTab("qt"); } });
-  if(window.SYNC&&SYNC.available) setTimeout(()=>SYNC.counts(syncKey(k),syncKey(todayStr())).then(c=>{ const W=document.getElementById("finWith"); if(!c||!W) return; const n=c.day+(c.mine||!mem.done[k]?0:1); if(n<1) return;
+  /* 11-14 목사님: 교회 함께 읽기(몇 명이 읽었나) 삭제 — 누가 읽고 안 읽었는지 상상하게 됨 */
+  if(false) setTimeout(()=>SYNC.counts(syncKey(k),syncKey(todayStr())).then(c=>{ const W=document.getElementById("finWith"); if(!c||!W) return; const n=c.day+(c.mine||!mem.done[k]?0:1); if(n<1) return;
     W.innerHTML=`<span class="fdots"><i></i><i></i><i></i></span><span>${n>1?`우리 교회 <b>${n}명</b>이 이 본문을 함께 읽었습니다`:`이 본문을 마친 첫 번째 분입니다`}</span>`; W.hidden=false; }).catch(()=>{}),900);
 }
 /* 묵상 노트 1단계(GPT 제안 · 목사님 11/2 "바로 실행"): 원고를 더 쓰지 않고 이미 있는 글 속 구절 주소를 근거 카드로 보여 줌 */
@@ -8736,7 +8737,7 @@ function renderRead(){
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
   if(futLock(w,d)&&!done){ h+=`<p class="lead" style="text-align:center">본문은 미리 읽어 볼 수 있습니다.<br>통독 완료와 스토리 QT는 <b>${esc(futMsg(w,d))}</b>.</p>${flipHTML(w,d)}`; }
   else if(done){
-    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.<br>${n>=TOTAL_CH?"성경 일독을 마치셨습니다!":`남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?`<p class="readcnt" id="churchDay" aria-live="polite"></p>`:""}<div class="row" style="justify-content:center"><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
+    h+=`<div class="done-card"><span class="label" style="color:var(--ok)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.<br>${n>=TOTAL_CH?"성경 일독을 마치셨습니다!":`남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?``:""}<div class="row" style="justify-content:center"><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
     if(window.CBSR_V2) h+=`<button class="btn" id="toStory" style="width:100%;padding:15px;margin-top:10px">스토리 QT 시작 ›</button>`;
   } else {
     h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">진행률 ${pct1(n,TOTAL_CH)}% → ${pct1(after,TOTAL_CH)}%</p>`;
@@ -10843,7 +10844,7 @@ function renderRecord(){
   // 최근 QT
   const qtl=Object.entries(mem.qt).filter(([k,q])=>q.med||q.pray||qtStoryText(q)).map(([k,q])=>{const [w,d]=k.split("-").map(Number); return {w,d,q};}).filter(x=>PLAN.plan[x.w-1]&&PLAN.plan[x.w-1][x.d]).sort((a,b)=>dayNo(b.w,b.d)-dayNo(a.w,a.d)).slice(0,5);
   h+=`<section class="sec"><span class="label">최근 QT 노트</span>${qtl.length?qtl.map(x=>`<button class="hlitem" data-qtjump="${x.w}-${x.d}"><small>${dayName(x.w,x.d)} · ${esc(dayPlan(x.w,x.d).label)}${x.q.done?" · 완료":""}</small>${esc(x.q.med||qtStoryText(x.q)||x.q.pray)}</button>`).join(""):`<p class="lead">QT 탭에서 적은 내용이 여기에 모입니다.</p>`}</section>`;
-  h+=renderAccount();
+  /* 11-14: '우리 교회 함께 읽기' 칸 삭제 */
   // 주차별 점수
   let rows="";
   const hereW=weekOfDay(here.w,here.d);
@@ -12670,7 +12671,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   /* 첫 방문(기록 없음, 2026-11-02): 0이 늘어선 숫자판 대신 할 일 하나 */
   if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!recMine().n&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen||x.obs||x.god||x.med||x.pray||x.ink))){ const tp=dayPlan(here.w,here.d);
     h+=`<section class="rybox"><p class="ryfirst">오늘 본문을 읽고 묵상 노트를 마치면, 읽은 날과 붙잡은 말씀, 아멘이 여기에 모입니다.</p>${tp?`<button class="ryfirstb" data-tab-go="read" data-today="1"><b>오늘 본문 열기</b><small>${esc(fmt(dateOf(here.w,here.d),{month:"long",day:"numeric"}))} · ${esc(tp.label)}</small></button>`:""}</section>`;
-    h+=`<section class="rybox rymenu">${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`; return h; }
+    h+=`<section class="rybox rymenu">${row("more","hist","지난 회차 · 설정")}</section>`; return h; }
   /* 2) 통독 요약: 큰 숫자 + 막대 + 이번 주 */
   let OT=0, ot=0; try{ for(let b=1;b<=39;b++) OT+=BIBLE[b-1].length; const S=new Set(); for(const k in mem.done){ const [w,d]=k.split("-").map(Number), pl=dayPlan(w,d); if(pl) pl.ch.forEach(([b,c])=>{ if(b<=39) S.add(b+"-"+c); }); } ot=S.size; }catch(e){ OT=929; }
   const NT=TOTAL_CH-OT, nt=Math.max(0,n-ot), pc=Math.floor(n/TOTAL_CH*100), rs=readStreak();
@@ -12691,7 +12692,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
     if(it) h+=`<section class="rybox">${hd("내 노트","records","모두 보기")}<div class="mynotes">${it}</div></section>`; }
   /* 그 밖의 것은 접어서 한 줄씩 */
   const nL=lnAll().length;
-  h+=`<section class="rybox rymenu">${row("cards","album","말씀 카드")+row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`메모 · ${nL}`):""}${""}${row("church","church","우리 교회 함께 읽기")}${row("more","hist","지난 회차 · 설정")}</section>`;
+  h+=`<section class="rybox rymenu">${row("cards","album","말씀 카드")+row("records","qt","아멘 · 형광펜 · 노트")}${nL?row("lines","cards",`메모 · ${nL}`):""}${row("more","hist","지난 회차 · 설정")}</section>`;
   return h; }
 /* 프로필 숫자를 누르면 자세히(목사님 2026-11-01) */
 function recWeeks(on){ if(!here||here.state==="before") return ""; const W=[]; for(let w=Math.max(1,here.w-3);w<=here.w;w++) W.push(w);
@@ -14532,7 +14533,7 @@ function bind(){
   m.querySelectorAll("[data-em]").forEach(b=>b.onclick=()=>showEM(b.dataset.em));
   m.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>showINC(+b.dataset.inc));
   m.querySelectorAll("[data-clue]").forEach(b=>b.onclick=()=>showClue(+b.dataset.clue));
-  bindAccount(m); bindInstall(); if(view.tab==="read") churchCounts();
+  bindAccount(m); bindInstall();
   { const ts=document.getElementById("toStory"); if(ts) ts.onclick=()=>storyOpen(0); }
   document.querySelectorAll(".helpzone .chsec [data-chv], .rd3 [data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
   if(window.CBSR_V2) bindBanners(m);
