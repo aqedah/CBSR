@@ -3342,7 +3342,7 @@ function afterRead(w,d,A){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||
     if(GD&&GD.m||box) h+=`<div class="aidsec"><b class="aidk">지도</b>${GD&&GD.m?`<p>${esc(GD.m)}</p>`:""}${GD&&GD.m&&R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}${box}</div>`; }
   { const ch=christMini(w,d,!!(GD&&GD.c)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
     else if(ch.trim()) h+=`<div class="aidsec"><b class="aidk">성경 전체로</b>${ch}</div>`; }
-  if(!GD&&A){ const kw=renderKeyWords(A,w,d); if(kw) h+=`<div class="aidsec"><b class="aidk">본문을 읽는 단서</b>${kw}</div>`; } /* 가이드북 원고가 없는 날만(있는 날은 읽기 도구·성경 전체로와 겹침) */
+  if(!GD&&A){ const kw=renderKeyWords(A,w,d); if(kw) h+=`<div class="aidsec"><b class="aidk">읽기 도구</b>${kw}</div>`; } /* 가이드북 원고가 없는 날만(있는 날은 읽기 도구·성경 전체로와 겹침) */
   return h; }
 function prepHelp(p,w,key){
   const g=GUIDE[key], where=whereOf(p);
@@ -3375,10 +3375,10 @@ function moreSection(p,A,b0,w,d){
   const kwH=window.CBSR_V2&&GBD()&&GBD()[dayNo(w,d)]?"":renderKeyWords(A,w,d); /* 11-13 목사님: 가이드북이 있는 날은 '읽는 단서'(구약의 메아리 포함)가 읽기 도구·성경 전체로와 겹쳐 뺌 */
   if(!ope.length&&!opl.length&&!ow.length&&!kwH) return "";
   const row=(cls,lab,items)=>items.length?`<div class="krow"><b class="kh ${cls}">${lab}</b><div class="chips">${items.join("")}</div></div>`:"";
-  const cnt=[ope.length?`인물 ${ope.length}명`:"",opl.length?`지명 ${opl.length}곳`:"",ow.length?`말 ${ow.length}개`:"",kwH?"읽는 단서":""].filter(Boolean).join(" · ");
+  const cnt=[ope.length?`인물 ${ope.length}명`:"",opl.length?`지명 ${opl.length}곳`:"",ow.length?`말 ${ow.length}개`:"",kwH?"읽기 도구":""].filter(Boolean).join(" · ");
   return `<section class="sec"><details class="moreent"${view.entAll?" open":""} id="moreBox"><summary>본문을 더 자세히 살펴보기 <small>${cnt}</small></summary>
    <div class="know more">${row("pe","인물",ope.map(x=>`<button class="chip nm" data-pe="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("pl","곳",opl.map(x=>`<button class="chip pl" data-pl="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("w","말",ow.map(x=>`<button class="chip term" data-g="${esc(x.it.t)}">${esc(x.it.t)}</button>`))}</div>
-   ${kwH?`<span class="label" style="margin-top:12px">본문을 읽는 단서</span>${kwH}`:""}</details></section>`; }
+   ${kwH?`<span class="label" style="margin-top:12px">읽기 도구</span>${kwH}`:""}</details></section>`; }
 
 /* ===== 개발자 모드: 화면 글자를 눌러서 바꾸기 (관리자만, 바꾼 글자는 모든 사용자에게 적용) ===== */
 let TEXTMAP={}; try{ TEXTMAP=JSON.parse(localStorage.getItem("cbsr-texts")||"{}")||{}; }catch(e){}
@@ -3575,22 +3575,25 @@ function renderKeyWords(A,w,d){
   const lw=LEITWORT[k]||[], em=EMPH[k]||[], inc=INCL[k]||[];
   if(!ppl.length&&!lw.length&&!em.length&&!inc.length&&!(CLUES[k]||[]).length) return "";
   let h=`<div class="kw">`;
-  if(lw.length) h+=`<div class="kwrow"><p><b>되풀이되는 말</b> 같은 말이 여러 번 나옵니다. 처음 나올 때와 마지막에 나올 때 무엇이 달라지는지 살펴보세요.<small class="termnote">성경 연구에서는 이런 말을 ‘주도어’라고 부르기도 합니다.</small></p><div class="chips">${lw.map(x=>`<button class="chip lw" data-lw="${esc(x[0])}">${esc(x[0])}<small>${x[1]}</small></button>`).join("")}</div></div>`;
+  /* 11-15 목사님: "단서가 아니라 도구" — 이름표와 풀이를 읽기 도구(가이드북 기호)에 맞춤 */
+  const tl=(t,d)=>`<p><b>${tName(t)}</b> ${d||TOOL_HTML[t]||esc(TOOLS[t]||"")}`;
+  if(lw.length) h+=`<div class="kwrow">${tl("이끎말")}</p><div class="chips">${lw.map(x=>`<button class="chip lw" data-lw="${esc(x[0])}">${esc(x[0])}<small>${x[1]}</small></button>`).join("")}</div></div>`;
   const C=CLUES[k]||[], rows=[];
   const by=t=>C.filter(c=>c.t===t);
-  if(inc.length) rows.push(`<div class="kwrow"><p><b>처음과 끝이 닮은 곳</b> 같은 말이나 장면으로 시작하고 끝나는 부분입니다. 그 사이에 무엇이 들어 있는지 보세요.<small class="termnote">이런 짜임을 ‘봉투 구조’(inclusio)라고 부르기도 합니다.</small></p><div class="chips">${inc.map((x,i)=>`<button class="chip inc" data-inc="${i}">${esc(vref(x.a,b0))} ↔ ${esc(vref(x.z,b0))}</button>`).join("")}</div></div>`);
-  const ROWDEF=[["turn","꺾이는 곳","여기서 이야기의 방향이 바뀝니다. 바뀌기 전과 후를 비교해 보세요.",c=>vref(c.r,b0)],
-    ["scene","닮은 장면","전에 읽은 장면과 닮았습니다. 같은 점과 다른 점을 찾아보세요.",c=>c.g],
-    ["echo","구약의 메아리","신약이 구약의 말씀을 다시 부릅니다. 처음 그 말씀이 나온 장면을 떠올려 보세요.",c=>vref(c.r,b0)+" ← "+PLAN.abbr[c.o[0]-1]+" "+c.o[1]+":"+c.o[2]],
-    ["pair","나란히 보기","두 사람을 나란히 놓으면 차이가 보입니다. 누가 무엇을 택했나요?",c=>c.a+" ↔ "+c.b],
-    ["irony","독자만 아는 것","인물은 모르지만 읽는 우리는 아는 것이 있습니다. 그래서 이 장면이 더 아프거나 우습습니다.",c=>vref(c.r,b0)],
-    ["aside","글쓴이의 해설","이야기 중간에 글쓴이가 직접 설명을 덧붙인 곳입니다. 왜 여기서 멈추고 설명했을까요?",c=>vref(c.r,b0)]];
-  for(const [t,lab,desc,chip] of ROWDEF){
+  if(inc.length) rows.push(`<div class="kwrow">${tl("틀")}</p><div class="chips">${inc.map((x,i)=>`<button class="chip inc" data-inc="${i}">${esc(vref(x.a,b0))} ↔ ${esc(vref(x.z,b0))}</button>`).join("")}</div></div>`);
+  /* 구약 인용(echo)은 '성경 전체로'에 이미 나오므로 여기서는 뺌 */
+  const ROWDEF=[["turn","전환","",c=>vref(c.r,b0)],
+    ["scene","전형장면","",c=>c.g],
+    ["pair","대조","",c=>c.a+" ↔ "+c.b],
+    ["irony","아이러니","",c=>vref(c.r,b0)],
+    ["aside","화자","이야기 중간에 글쓴이가 직접 설명을 덧붙인 곳입니다. 왜 여기서 멈추고 설명했을까요?",c=>vref(c.r,b0)]];
+  for(const [t,tool,desc,chip] of ROWDEF){
     let list=by(t); if(t==="scene") list=list.filter(c=>c.prev.length);
-    if(list.length) rows.push(`<div class="kwrow"><p><b>${lab}</b> ${desc}</p><div class="chips">${list.map(c=>`<button class="chip cl cl-${t}" data-clue="${C.indexOf(c)}">${esc(chip(c))}</button>`).join("")}</div></div>`);
+    if(list.length) rows.push(`<div class="kwrow">${tl(tool,desc)}</p><div class="chips">${list.map(c=>`<button class="chip cl cl-${t}" data-clue="${C.indexOf(c)}">${esc(chip(c))}</button>`).join("")}</div></div>`);
   }
-  if(em.length) rows.push(`<div class="kwrow"><p><b>강조</b> 같은 말을 연달아 부르는 곳은 감정이 북받치거나 힘주어 말하는 자리입니다. 말하는 사람의 마음을 생각해 보세요.</p><div class="chips">${em.map(x=>`<button class="chip em" data-em="${esc(x[0])}">${esc(Array(x[1]).fill(x[0]).join(" "))}</button>`).join("")}</div></div>`);
+  if(em.length) rows.push(`<div class="kwrow">${tl("반복")}</p><div class="chips">${em.map(x=>`<button class="chip em" data-em="${esc(x[0])}">${esc(Array(x[1]).fill(x[0]).join(" "))}</button>`).join("")}</div></div>`);
   h+=rows.slice(0,3).join("");
+  if(h===`<div class="kw">`) return "";
   return h+`</div>`;
 }
 function showLW(word){
@@ -3617,18 +3620,18 @@ const fullRef=q=>PLAN.abbr[q[0]-1]+" "+q[1]+":"+q[2];
 const dayLink=(at,label)=>`<button class="btn ghost small" data-jump="${at[0]}-${at[1]}">${dayName(at[0],at[1])} · ${esc(label)}</button>`;
 function showClue(i){
   const k=view.w+"-"+(view.d+1), c=(CLUES[k]||[])[i]; if(!c) return;
-  if(c.t==="turn") return sheet("꺾이는 곳",`<p class="vq"><b>${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p>${esc(c.q)}</p>`);
+  if(c.t==="turn") return sheet(tName("전환"),`<p class="vq"><b>${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p>${esc(c.q)}</p>`);
   if(c.t==="echo"){ const at=dayOfRef(c.o); const past=at&&(at[0]<view.w||(at[0]===view.w&&at[1]<view.d));
-    return sheet("구약의 메아리",`<p class="vq"><b>오늘 · ${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p class="vq"><b>처음 나온 말씀 · ${esc(fullRef(c.o))}</b><br>${esc(vtext(c.o))}</p>${at?`<p class="src">${past?"이미 읽은 말씀입니다.":"앞으로 읽을 말씀입니다."}</p><div class="row">${dayLink(at,PLAN.plan[at[0]-1][at[1]].label)}</div>`:""}`); }
+    return sheet("구약 인용",`<p class="vq"><b>오늘 · ${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p class="vq"><b>처음 나온 말씀 · ${esc(fullRef(c.o))}</b><br>${esc(vtext(c.o))}</p>${at?`<p class="src">${past?"이미 읽은 말씀입니다.":"앞으로 읽을 말씀입니다."}</p><div class="row">${dayLink(at,PLAN.plan[at[0]-1][at[1]].label)}</div>`:""}`); }
   if(c.t==="pair") return sheet(c.a+" ↔ "+c.b,`<p class="vq"><b>${esc(c.a)} · ${esc(fullRef(c.ra))}</b><br>${esc(vtext(c.ra))}</p><p class="vq"><b>${esc(c.b)} · ${esc(fullRef(c.rb))}</b><br>${esc(vtext(c.rb))}</p><p>${esc(c.q)}</p>`);
-  if(c.t==="scene") return sheet(c.g,`<p class="vq"><b>오늘 · ${esc(c.n)} · ${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p class="src">앞에서 읽은 닮은 장면</p>${c.prev.map(p=>`<p class="vq"><b>${esc(p.o.n)} · ${esc(fullRef(p.o.r))}</b><br>${esc(vtext(p.o.r))}</p><div class="row">${dayLink(p.at,PLAN.plan[p.at[0]-1][p.at[1]].label)}</div>`).join("")}`);
-  if(c.t==="irony") return sheet("독자만 아는 것",`<p class="vq"><b>${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p>${esc(c.d)}</p>`);
-  if(c.t==="aside") return sheet("글쓴이의 해설",`<p class="vq"><b>${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p>${esc(c.q)}</p>`);
+  if(c.t==="scene") return sheet(c.g,`<p class="vq"><b>오늘 · ${esc(c.n)} · ${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p class="src">앞에서 읽은 같은 틀의 장면</p>${c.prev.map(p=>`<p class="vq"><b>${esc(p.o.n)} · ${esc(fullRef(p.o.r))}</b><br>${esc(vtext(p.o.r))}</p><div class="row">${dayLink(p.at,PLAN.plan[p.at[0]-1][p.at[1]].label)}</div>`).join("")}`);
+  if(c.t==="irony") return sheet(tName("아이러니"),`<p class="vq"><b>${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p>${esc(c.d)}</p>`);
+  if(c.t==="aside") return sheet(tName("화자"),`<p class="vq"><b>${esc(fullRef(c.r))}</b><br>${esc(vtext(c.r))}</p><p>${esc(c.q)}</p>`);
 }
 function showINC(i){
   const k=view.w+"-"+(view.d+1), x=(INCL[k]||[])[i]; if(!x) return; const b0=dayPlan(view.w,view.d).ch[0][0];
   const t=q=>BIBLE[q[0]-1][q[1]-1][q[2]-1];
-  sheet("처음과 끝이 닮은 곳",`<p class="vq"><b>여는 말 · ${esc(vref(x.a,b0))}</b><br>${esc(t(x.a))}</p><p class="vq"><b>닫는 말 · ${esc(vref(x.z,b0))}</b><br>${esc(t(x.z))}</p><p>${esc(x.d)}</p>`);
+  sheet(tName("틀"),`<p class="vq"><b>여는 말 · ${esc(vref(x.a,b0))}</b><br>${esc(t(x.a))}</p><p class="vq"><b>닫는 말 · ${esc(vref(x.z,b0))}</b><br>${esc(t(x.z))}</p><p>${esc(x.d)}</p>`);
 }
 /* QT */
 /* QT 완료 보상 */
@@ -3762,7 +3765,7 @@ function toolLine(L,key,G){ let seen={}; try{ seen=JSON.parse(localStorage.getIt
     return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${G.f?`<p class="tfind">${esc(G.f)}</p>`:""}${gen.length?`<p class="tooldef2">${gen.join("<br>")}</p>`:""}${notes.length?`<details class="tnotes"><summary>읽은 뒤 · 눈여겨볼 것</summary><p class="tooldef2">${notes.join("<br>")}</p></details>`:""}</div>`; }
   return `<div class="toolbox"><p class="tline"><span>오늘의 읽기 도구</span>${L.map(t=>toolChip(t)).join("")}</p>${show.length?`<p class="tooldef2">${show.map(tl=>`<b>${tName(tl)}</b> ${tDefH(tl)}`).join("<br>")}</p>`:""}</div>`; }
 function bindToolChips(root){ (root||document).querySelectorAll("[data-tool]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toast(tName(b.dataset.tool)+": "+TOOLS[b.dataset.tool]); }); }
-const CLUE_LAB={turn:"꺾이는 곳",echo:"구약의 메아리",pair:"나란히 보기",scene:"닮은 장면",irony:"독자만 아는 것",aside:"글쓴이의 해설"};
+const CLUE_LAB={turn:"▲ 전환",echo:"구약 인용",pair:"⇔ 대조",scene:"∽ 전형장면",irony:"?! 아이러니",aside:"화자"};
 /* 11-12: 가이드북이 있는 날은 묵상 탭의 관찰·적용 질문을 가이드북과 같게(같은 칸에 저장되므로 질문도 같아야 함) */
 function gqOf(w,d){ const Q=GBQ(); return Q?Q[dayNo(w,d)]||null:null; }
 const gqPlain=t=>String(t||"").replace(/\*\*(.+?)\*\*/g,"$1");
