@@ -277,7 +277,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .map .cap,.pg .pic .cap{font-size:8.3pt;color:#444;padding:0.8mm 0 0;line-height:1.25}
 .pg .after{position:absolute;left:var(--pl);right:var(--pr);bottom:10mm;background:color-mix(in srgb,var(--mainL) 55%,#fff);border-top:0.3mm solid var(--main);padding:1.1mm 2.2mm 1.1mm}
 .pg .after .h{font-size:9.5pt;font-weight:700;margin:0 0 1mm;color:var(--main)}
-.pg .lab .godh{float:right;margin-left:auto;font-weight:400;font-size:7.4pt;color:#8a8a8a;margin-top:.3mm}
+.pg .q .godh{float:right;font-weight:400;font-size:7.4pt;color:#8a8a8a;margin-top:.5mm}
 .pg .after .h .stuck{float:right;font-weight:400;font-size:7.6pt;color:#8a8a8a;margin-top:.6mm}
 .pg .after p{font-size:9.2pt;line-height:1.36;margin:0 0 0.5mm;text-align:justify;color:#111} .pg .after p .k{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif;font-weight:700;color:var(--main);margin-right:0.8mm}
 .pg .after p b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
@@ -703,7 +703,7 @@ function pageR(p,qt,hw){
 <p class="date sans">${p.m}월 ${p.d}일 · ${esc(p.t)}</p>
 <p class="sec sans" style="margin-top:0.5mm"><span class="n">4</span>나의 묵상</p>
 <p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q" data-f="q">${vs(qt.obs.q)}</p>${ln(3)}
-<p class="lab sans"><span class="st">2</span>하나님의 성품<span class="godh">규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요</span></p><p class="q">하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까?</p>${ln(2)}
+<p class="lab sans"><span class="st">2</span>하나님의 성품</p><p class="q">하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까?<span class="godh sans">규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요</span></p>${ln(2)}
 <p class="lab sans"><span class="st">3</span>적용</p><p class="q" data-f="apply">${mdv(qt.apply)}</p>${ln(2)}
 <p class="lab sans"><span class="st">4</span>오늘의 기도</p>${ln(3)}
 <div class="after"><p class="h sans"><span class="n">5</span>쓴 뒤에 읽기 — 해설과 기도<span class="stuck">해설은 정답이 아닙니다. 내 묵상과 견주어 보세요</span></p>
