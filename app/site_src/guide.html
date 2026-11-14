@@ -294,7 +294,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .hwt{position:absolute;left:1mm;right:0;top:0;font-family:'Nanum Pen Script',cursive;font-size:16pt;line-height:6mm;color:#27468a;padding-top:.3mm}
 .pg .irgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.4mm}
 .pg .ircard{border:.2mm solid var(--mainL,#ddd);border-top:.9mm solid var(--main);padding:1.6mm 2mm;font-size:7.8pt;line-height:1.42;background:#fff}
-.pg .irn{font-family:"Noto Sans KR",sans-serif;font-weight:700;color:var(--main);font-size:8.4pt;margin:0 0 1.2mm}
+.pg .irn{font-family:"Noto Sans KR",sans-serif;font-weight:700;color:var(--main);font-size:8.4pt;letter-spacing:-.04em;white-space:nowrap;margin:0 0 1.2mm}
 .pg .ire{margin:0 0 1mm} .pg .ire span{display:block;font-family:"Noto Sans KR",sans-serif;font-size:6.8pt;color:#888}
 .pg .gngrid{display:grid;grid-template-columns:1fr 1fr;gap:1.8mm 3mm}
 .pg .gncard{background:var(--gy);border-radius:1.2mm;padding:1.3mm 2.2mm;font-size:7.6pt;line-height:1.36}
@@ -834,7 +834,7 @@ function pSym2(q){ const f=F(q); const L=lines(f.dsyms); return `<div class="pg 
 ${toolList(L)}
 <div class="pn">11</div></div>`; }
 function pGenre(q){ const f=F(q);
-  const ir=lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<div class="ircard"><p class="irn">“${esc(a||'')}”</p><p class="ire"><span>삶에서</span>${esc(b||'')}</p><p class="ire"><span>성경에서</span>${boldv(c||'')}</p></div>`}).join('');
+  const ir=lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<div class="ircard"><p class="irn">${esc(a||'')}</p><p class="ire"><span>삶에서</span>${esc(b||'')}</p><p class="ire"><span>성경에서</span>${boldv(c||'')}</p></div>`}).join('');
   const gn=lines(f.genres).map(t=>{const [a,b,c,d]=t.split('|');const tools=(d||'').split(' · ').map(x=>x.trim()).filter(Boolean);
     return `<div class="gncard${tools.length?'':' wide'}"><p class="gnn">${esc(a||'')}</p><p class="gnd">${bold(b||'')}</p><p class="gnb">${esc(c||'')}</p>${tools.length?`<p class="gnt">${tools.map(chipSym).join('')}</p>`:''}</div>`}).join('');
   return `<div class="pg fm q${q}">
