@@ -326,8 +326,8 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .hco b{display:block;color:var(--main);font-size:9pt;margin-bottom:.2mm}
 .pg .howwrap.L .hco{left:0;text-align:right} .pg .howwrap.R .hco{right:0}
 .pg .howsvg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-.pg .hsteps{position:absolute;left:var(--pl);right:var(--pr);bottom:13mm;display:flex;gap:4mm}
-.pg .hstep{flex:1;border-top:.5mm solid var(--main);padding-top:1.6mm;font-size:8pt;line-height:1.45}
+.pg .hsteps{position:absolute;left:var(--pl);right:var(--pr);bottom:13mm;display:flex;gap:4mm;align-items:stretch} .pg .hstep.hsx{border-top:0}
+.pg .hstep{flex:1;min-height:21mm;border-top:.5mm solid var(--main);padding-top:1.6mm;font-size:8pt;line-height:1.45}
 .pg .hstep .stn{display:inline-block;width:4.2mm;height:4.2mm;line-height:4.2mm;border-radius:50%;background:var(--main);color:#fff;text-align:center;font-family:"Noto Sans KR",sans-serif;font-size:7pt;font-weight:700;margin-right:1.4mm;vertical-align:.2mm} .pg .hstep b{font-family:"Noto Sans KR",sans-serif;font-size:9pt} .pg .hstep span:last-child{display:block;margin-top:.6mm;color:#333}
 .pg .hold{border:0.2mm solid var(--main);background:#fff;height:8mm;margin-top:0.6mm}
 .pg .heard{position:absolute;left:var(--pl);right:var(--pr);bottom:11mm;border-top:0.1mm solid #bbb;padding-top:1.4mm;font-size:8.3pt;color:#777}
@@ -1014,7 +1014,7 @@ function howMini(side){ const D=HOWDAY; if(!D||!D.p) return '';
   const inner=side?pageR(D.p,D.qt,hw):pageL(D.p,D.qt);
   return `<div class="howmini" style="${side?'left':'right'}:0;width:${(148*HOW_S).toFixed(2)}mm;height:${(210*HOW_S).toFixed(2)}mm"><div style="transform:scale(${HOW_S});transform-origin:0 0;width:148mm;height:210mm">${inner}</div></div>` }
 function howCallouts(txt){ return lines(txt||'').map(t=>{const [k,a,b]=t.split('|'); return `<div class="hco" data-t="${esc(k||'')}"><b>${esc(a||'')}</b>${bold(b||'')}</div>`}).join('') }
-function howSteps(f,from,cnt){ const N=['1','2','3','4','5']; return `<div class="hsteps">${lines(f.steps).slice(from,from+(cnt||2)).map((t,i)=>{const [a,b]=t.split('|');return `<div class="hstep"><span class="stn">${N[from+i]}</span><b>${esc(a)}</b><span>${bold(b||'')}</span></div>`}).join('')}</div>` }
+function howSteps(f,from,cnt){ const N=['1','2','3','4','5']; return `<div class="hsteps">${lines(f.steps).slice(from,from+(cnt||2)).map((t,i)=>{const [a,b]=t.split('|');return `<div class="hstep"><span class="stn">${N[from+i]}</span><b>${esc(a)}</b><span>${bold(b||'')}</span></div>`}).join('')}${Array(Math.max(0,3-(cnt||2))).fill('<div class="hstep hsx"></div>').join('')}</div>` }
 function pHowL(q){ const f=F(q); return `<div class="pg fm q${q} howpgx">
 <p class="fh">${esc(f.howhead)}</p><p class="fp sm hlead">${bold(f.hmlead)}</p>
 <div class="howwrap L">${howMini(0)}${howCallouts(f.hcalL)}<svg class="howsvg" width="100%" height="100%"></svg></div>
@@ -1029,7 +1029,7 @@ function layoutHow(root){
   let A=0,B=1e9; const k0=W[0].getBoundingClientRect().width/W[0].offsetWidth||1;
   W.forEach(w=>{ const pg=w.closest('.pg'), pr=pg.getBoundingClientRect(); const ld=pg.querySelector('.hlead'), st=pg.querySelector('.hsteps');
     if(ld) A=Math.max(A,(ld.getBoundingClientRect().bottom-pr.top)/k0/MM); if(st) B=Math.min(B,(st.getBoundingClientRect().top-pr.top)/k0/MM) });
-  const H=210*HOW_S; if(B<1e9){ const top=A+(B-A-H)/2; W.forEach(w=>{ w.style.top=top.toFixed(2)+'mm'; w.style.height=H.toFixed(2)+'mm' }) }
+  const H=210*HOW_S; if(B<1e9){ const top=A+(B-A-H)/2-3; W.forEach(w=>{ w.style.top=top.toFixed(2)+'mm'; w.style.height=H.toFixed(2)+'mm' }) }
   W.forEach(w=>{
     const L=w.classList.contains('L'); const mini=w.querySelector('.howmini'); if(!mini) return;
     const wr=w.getBoundingClientRect(); const k=wr.width/w.offsetWidth||1; const mm=v=>v/k/MM;
