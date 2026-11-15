@@ -8118,7 +8118,8 @@ function gLook(w,d,seed){ const E=EYE[keyOf(w,d)]; if(!E||!E.look||!BIBLE) retur
     const k=2+Math.floor(r()*7); let a=Math.max(1,v-k), z=Math.min(C.length,a+10);
     if(Array.isArray(x.context)&&x.context.length===2&&x.context[0]<=v&&x.context[1]>=v){ a=Math.max(1,x.context[0]); z=Math.min(C.length,x.context[1]); }
     const also=(Array.isArray(x.also)?x.also:[]).filter(y=>y&&C[y[0]-1]); if(also.length){ const mx=Math.max(v,...also.map(y=>y[0])), mn=Math.min(v,...also.map(y=>y[0])); if(mn<a) a=Math.max(1,mn-1); if(mx>z) z=Math.min(C.length,mx+1); }
-    return {n:x.n,t:x.t||"",b,c,v,a,z,also,hint:x.hint||"",why:x.why||""}; }).filter(Boolean);
+    /* 11-15: 묵상 질문·안내문 문항은 찾기용 질문(fq)과 답(ft)을 따로 둠. 찾은 뒤 원래 묵상 질문을 보여 줌 */
+    return {n:x.fq||x.n,t:x.ft||x.t||"",b,c,v,a,z,also,hint:x.hint||"",why:x.why||(x.fq?x.n:"")}; }).filter(Boolean);
   return qs.length?{qs}:null; }
 /* 도전 탭(목사님 2026-10-29): 날짜 동그라미 대신 '이번 주 도전' 줄 → 오늘의 도전(본문에서 찾기) → 퀴즈·빈칸 카드 → 이번 주 다시 보기 */
 /* ===== 성경 골든벨(2026-11-03, GPT 제안 v2.0 + Claude 검수) =====
