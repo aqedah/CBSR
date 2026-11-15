@@ -9876,7 +9876,7 @@ function vSplit(r){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{}; con
   let n=na.filter(Boolean).join(" ").trim(); if((sp.length||gsp.length)&&core.join("").replace(/\s/g,"").length<16) n=""; /* '이르되' 같은 말 머리는 이름표가 대신함 */
   if(god&&GOD_RE.test(who)) who=""; /* 사람의 말풍선에 하나님 이름표가 붙지 않게 */
   return {sp:sp.join(" … "), segs, gsp:gsp.join(" … "), na:n, who:sp.length?who:"", god}; }
-if(/[?&]dbg=1/.test(location.search)) window.DBG=Object.assign(window.DBG||{},{vSplit:r=>vSplit(r), /* 점검용(2026-11-12): 가이드북 날 n의 경로 후보 */ dayRoutes:n=>{ for(let w=1;w<60;w++) for(let d=0;d<7;d++){ let k; try{ k=dayNo(w,d); }catch(e){ continue; } if(k===n){ const R=routesFor(w,d)||[], P=dayPlan(w,d); return {w,d,ch:P?P.ch:[],R:R.map(r=>({i:ROUTES_B.indexOf(r),n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}; } } return null; }, tour:(i,s)=>bmTour(i,s), gbRoute:n=>{ const g=gbRoute(n); return g?{lab:g.lab,r:g.r?g.r.n:null,ti:g.ti,s:g.s,e:g.e}:null; }, allRoutes:()=>ROUTES_B.map((r,i)=>({i,n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}); /* 시험용 */
+if(/[?&]dbg=1/.test(location.search)) window.DBG=Object.assign(window.DBG||{},{vSplit:r=>vSplit(r), /* 점검용(2026-11-12): 가이드북 날 n의 경로 후보 */ dayRoutes:n=>{ for(let w=1;w<60;w++) for(let d=0;d<7;d++){ let k; try{ k=dayNo(w,d); }catch(e){ continue; } if(k===n){ const R=routesFor(w,d)||[], P=dayPlan(w,d); return {w,d,ch:P?P.ch:[],R:R.map(r=>({i:ROUTES_B.indexOf(r),n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}; } } return null; }, tour:(i,s)=>bmTour(typeof i==="string"?BM_TOURS.findIndex(t=>t.id===i):i,s), gbRoute:n=>{ const g=gbRoute(n); return g?{lab:g.lab,r:g.r?g.r.n:null,ti:g.ti,s:g.s,e:g.e}:null; }, allRoutes:()=>ROUTES_B.map((r,i)=>({i,n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}); /* 시험용 */
 /* 말 앞뒤에 붙는 '이르되', '하고' 같은 말 머리·꼬리는 서술에서 뺍니다 */
 function vTrimIntro(t,afterSp,beforeSp){ t=t.trim(); if(afterSp) t=t.replace(/^(하[고니며매되여]|하니라|하더라|하시고|하시니|하시매|하시더라|하시니라|하였더라|하였느니라|하는지라|하거늘|하신대|한대|하였고|하였으나)(?=\s|$)\s*/,"");
   if(beforeSp) t=t.replace(/\s*\S*(이르되|이르시되|가로되|가라사대|말하되|말하기를|대답하되|대답하여|외치되|부르짖되|물어|물으시되|묻되|생각하되|하되)$/,m=>/^\s*\S*?(이르되|이르시되|가로되|가라사대|말하되|말하기를|대답하되|외치되|부르짖되|물으시되|묻되|생각하되|하되)$/.test(m)?"":m);
@@ -9947,7 +9947,9 @@ function declutterNames(root){ /* 통일안(2026-11-12): 인물 이름이 겹치
   const spk=new Set([...root.querySelectorAll(".tvb.say:not(.old)")].map(d=>{ try{ return d._m&&d._m.getElement&&d._m.getElement()?.querySelector(".chm"); }catch(x){ return null; } }).filter(Boolean));
   const wOf=e=>(spk.has(e.closest(".chm"))?1000:0)+(parseFloat(e.closest(".chm").style.getPropertyValue("--w"))||40); L.sort((a,b)=>wOf(b)-wOf(a)); const kept=[], ov=(r,q)=>r.left<q.right-1&&r.right>q.left+1&&r.top<q.bottom-1&&r.bottom>q.top+1;
   L.forEach(e=>{ const r=e.getBoundingClientRect(); if(!r.width) return; if(kept.some(q=>ov(r,q))) e.classList.add("hidn"); else kept.push(r); });
-  root.querySelectorAll(".spl").forEach(s=>{ s.classList.remove("hidn"); const r=s.getBoundingClientRect(); if(r.width&&kept.some(q=>ov(r,q))) s.classList.add("hidn"); }); }
+  /* 11/15 목사님("원래 경로지 이름표 안 떴나요?"): 인물이 서 있는 곳의 이름표가 인물 이름에 가려 늘 숨겨졌음 → 숨기지 않고 발 아래로 비켜 놓음 */
+  root.querySelectorAll(".spl").forEach(s=>{ s.classList.remove("hidn"); s.style.translate=""; let r=s.getBoundingClientRect(); if(!r.width||!kept.some(q=>ov(r,q))) return;
+    for(const dy of [24,48,72,96]){ s.style.translate=`0 ${dy}px`; r=s.getBoundingClientRect(); if(!kept.some(q=>ov(r,q))) return; } s.style.translate="0 24px"; }); }
 setInterval(()=>{ document.querySelectorAll(".bmtmap").forEach(m=>declutterNames(m.parentElement||m)); },400);
 /* 사물 그림(목사님 2026-10-30): 야곱의 관, 언약궤 — 사람처럼 걷지 않고 메고 가는 물건 */
 function OBJ(id){ if(id==="cart"){ /* 젖 나는 암소 두 마리가 끄는 새 수레와 언약궤(삼상 6:7–12 · 목사님 2026-11-01) */
@@ -10170,7 +10172,7 @@ function nmToggle(map,btn,nt,skip){ mem.nmOn=!nmOn(); save(); nmSet(map,nmOn(),n
 function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&!document.getElementById("mapFont")){ const l=document.createElement("link"); l.id="mapFont"; l.rel="stylesheet"; l.href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@700&display=swap"; document.head.appendChild(l); } MAPST.forEach(x=>el.classList.remove("mst-"+x)); el.classList.add("mst-"+st);
   if(st==="natural"){ /* 타일을 못 받으면(오프라인) 아래의 단순한 땅 모양이 보입니다 */ if(!map.getPane("nlbase")){ map.createPane("nlbase").style.zIndex=150; } NEARLAND.forEach(r=>L.polygon(r,{pane:"nlbase",className:"nl nlfb",interactive:false}).addTo(map));
     /* 확대·축소로 지도 조각을 새로 받는 동안 빈 곳이 파랗게 튀지 않도록, 6배율 지도를 아래에 한 겹 깔아 둠(5배율 이상에서만) */
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{minNativeZoom:6,maxNativeZoom:6,minZoom:5,maxZoom:13,keepBuffer:8,zIndex:0,updateWhenZooming:false}).addTo(map);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{minNativeZoom:6,maxNativeZoom:6,minZoom:5,maxZoom:13,keepBuffer:8,zIndex:0,updateWhenIdle:false,updateInterval:100,updateWhenZooming:true}).addTo(map);
     const tlNet=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",{maxNativeZoom:8,maxZoom:13,zIndex:1,keepBuffer:map.options.keepBuf||2,updateWhenIdle:false,updateInterval:150,className:"physb",attribution:"지도: Esri, US National Park Service · 해안선: Natural Earth"}).addTo(map);
     /* 산 그림자(목사님 2026-10-31): 몇 지역만 덧댄 지형 조각은 PC에서 네모 경계가 보여서 걷어 내고, 온 세계가 한 장으로 이어진 Esri 음영 지도를 곱하기로 겹침.
        바탕 지도는 8배율까지만 자세하지만 음영은 13배율까지 자세해서, 확대해도 산과 골짜기가 또렷함 */
@@ -10179,16 +10181,19 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
          곱하기·흐리기는 칸 전체에 한 번만 걸어 예전과 같은 진하기. 지형 조각은 예전처럼 음영 위(별도 칸) */
     if(!map.getPane("hsP")){ const hp=map.createPane("hsP"); hp.style.zIndex=201; hp.style.mixBlendMode="multiply"; hp.style.opacity=".55"; hp.style.pointerEvents="none"; const tp=map.createPane("terrP"); tp.style.zIndex=202; tp.style.pointerEvents="none"; }
     const HSU="https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}";
-    L.tileLayer(HSU,{pane:"hsP",minNativeZoom:6,maxNativeZoom:6,minZoom:3,maxZoom:13,keepBuffer:8,zIndex:0,updateWhenZooming:false}).addTo(map);
+    L.tileLayer(HSU,{pane:"hsP",minNativeZoom:6,maxNativeZoom:6,minZoom:3,maxZoom:13,keepBuffer:8,zIndex:0,updateWhenIdle:false,updateInterval:100,updateWhenZooming:true}).addTo(map);
     /* 깔아 두는 6배율 바탕·음영은 성경 땅 전체(이탈리아~메소보다미아)가 90장 남짓이라, 처음 한 번 미리 받아 둠 → 먼 곳으로 날아가도 빈 곳이 밝게 튀지 않음 */
-    if(!window._z6pre){ window._z6pre=1; setTimeout(()=>{ const B=["https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/6/","https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/6/"], U=[];
+    if(!window._z6pre){ window._z6pre=1; setTimeout(()=>{ try{ if(typeof TERRWIDE!=="undefined"&&TERRWIDE&&TERRWIDE.terrw) terrPrefetch(TERRWIDE.terrw.regs.map(r=>[r[2],r[0],r[3],r[1],5])); }catch(e){} /* 5배율 지형 바닥도 미리 */ const B=["https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/6/","https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/6/"], U=[];
       for(let y=23;y<=27;y++) for(let x=33;x<=41;x++) B.forEach(b=>U.push(`${b}${y}/${x}`)); let i=0; const nx=()=>{ if(i>=U.length) return; const im=new Image(); im.onload=im.onerror=nx; im.src=U[i++]; }; for(let k=0;k<4;k++) nx(); },600); }
-    L.tileLayer(HSU,{pane:"hsP",maxNativeZoom:13,maxZoom:13,zIndex:1,keepBuffer:map.options.keepBuf||3,attribution:"음영: Esri, USGS, NASA 외"}).addTo(map);
+    L.tileLayer(HSU,{pane:"hsP",maxNativeZoom:13,maxZoom:13,zIndex:1,keepBuffer:map.options.keepBuf||3,updateWhenIdle:false,updateInterval:150,attribution:"음영: Esri, USGS, NASA 외"}).addTo(map);
     /* 자세한 지형(목사님 2026-11-02 승인): 요단·갈릴리·사해 권역은 고도 원자료로 배율마다 만든 조각을 위에 덮음(8–13배율).
        사해는 물이 줄기 전 물가로. 가장자리는 투명하게 바깥 Esri 바탕과 이어짐 */
     /* 넓은 지역(이탈리아~메소보다미아 5–9배율, 레반트·시내·애굽 10–11배율)도 같은 방식의 지형 조각으로(11/2) */
     if(typeof TERRWIDE!=="undefined"&&TERRWIDE) [["terrw",6],["terrm",7]].forEach(([k,zi])=>{ const W=TERRWIDE[k]; if(!W) return; const R=W.regs, b=L.latLngBounds([[Math.min(...R.map(r=>r[2])),Math.min(...R.map(r=>r[0]))],[Math.max(...R.map(r=>r[3])),Math.max(...R.map(r=>r[1]))]]);
       /* 11/4: 7배율 지형을 맨 아래에 늘 깔던 것은 휴대폰에서 그림이 너무 많아 지형·지명이 그려지지 않아(목사님 영상) 뺌 */
+      /* 11/15 목사님(태블릿 영상, 아직 깜빡임): 지형 조각(짙은 황토색)이 오기 전 그 자리가 밝은 바탕 지도로 비어 네모가 번쩍임.
+         → 5배율 지형을 한 겹 늘 깔아 둠. 5배율은 성경 땅 전체가 수십 장이라 휴대폰에도 가벼움(11/4에 뺀 7배율 바닥보다 훨씬 적음). 날아가는 동안에도 계속 채움 */
+      if(k==="terrw") terrLayer(k,{pane:"terrP",minZoom:4,minNativeZoom:5,maxNativeZoom:5,maxZoom:13,bounds:b,zIndex:5,className:"terrhi",keepBuffer:6,updateWhenZooming:true,updateInterval:100}).addTo(map);
       terrLayer(k,{pane:"terrP",minZoom:W.minZoom,minNativeZoom:W.minZoom,maxNativeZoom:W.maxZoom,maxZoom:13,bounds:b,zIndex:zi,className:"terrhi",keepBuffer:map.options.keepBuf||3}).addTo(map); });
     if(typeof TERRHI!=="undefined"&&TERRHI) terrLayer("terrhi",{pane:"terrP",minZoom:TERRHI.minZoom,minNativeZoom:TERRHI.minZoom,maxNativeZoom:TERRHI.maxZoom,maxZoom:13,bounds:TERRHI.bounds,zIndex:8,className:"terrhi",keepBuffer:map.options.keepBuf||3,attribution:"지형: AWS Terrain Tiles(SRTM)"}).addTo(map);
     { const inTour=!!el.closest(".bmt2"); nmMarks(map,NMLS.filter(x=>x[3]==="lmk"),false,null).addTo(map); /* 랜드마크 산 넷은 늘(11/4 목사님) */
