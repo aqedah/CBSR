@@ -13243,7 +13243,7 @@ function openMenu(){
     if(ok){ document.getElementById("fbText").value=""; msg.textContent="고맙습니다! 피드백이 전달되었습니다."; }
     else msg.textContent="보내지 못했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요. 적은 글은 그대로 남아 있습니다.";
   };
-  const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); if(window.CBSR_V2) firstCoach(); else startTour(); };
+  const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); if(window.CBSR_V2) tour2Start(); else startTour(); };
   r.querySelectorAll("[data-rdopt]").forEach(x=>x.onchange=()=>{ setReadOpt(x.dataset.rdopt,x.checked); render(); });
   r.querySelectorAll("[data-simple]").forEach(b=>b.onclick=()=>{ try{ localStorage.setItem("cbsr-simple",b.dataset.simple); }catch(e){} r.querySelectorAll("[data-simple]").forEach(x=>x.setAttribute("aria-checked",x===b)); view.moreOpen=false; render(); });
   bindVoices(r);
@@ -14703,10 +14703,50 @@ const TOUR=window.CBSR_V2?[
  {sel:'.bnav [data-tab="qt"]',t:"QT",d:"읽은 말씀으로 묵상하고 한 줄을 적고 기도합니다."},
  {sel:'.bnav [data-tab="record"]',t:"나의 기록",d:"진행률, 배지, 형광펜, QT 노트를 봅니다. 여기서 휴대폰·PC 기록을 하나로 연동할 수 있습니다."},
  {sel:"#menuBtn",t:"메뉴",d:"통독표와 성경 번역, 시작일, 화면 설정을 바꿉니다. 둘러보기와 쓰는 방법, 의견 보내기도 여기에 있습니다."}];
+/* 11-16 목사님: 메뉴의 둘러보기가 한 곳(오늘 그림)만 짚고 끝나던 것 — 다섯 탭을 차례로 짚는 둘러보기로 */
+const TOUR2=[
+ {tab:"today",sel:"#tdHero",t:"오늘",d:"그날 그림과 줄거리, 지금 할 일 단추가 있습니다. 단추를 누르면 본문 → 묵상 순서로 이어집니다."},
+ {tab:"today",sel:"#rgDate",t:"날짜",d:"누르면 통독표가 열려 다른 날로 갈 수 있습니다. 지난 날은 스토리와 묵상까지, 내일부터는 본문만 열립니다."},
+ {tab:"today",sel:"#rgLib",t:"스토리 모음",d:"본문을 읽은 날의 스토리를 다시 봅니다."},
+ {tab:"today",sel:"#rgMap",t:"성경 지도",d:"오늘 이야기가 일어난 곳과 큰 여정을 지도에서 봅니다."},
+ {tab:"read",sel:"#v2Aid",t:"① 읽기 전",d:"읽기 전에 오늘의 읽기 도구와 어려운 말뜻을 짧게 봅니다."},
+ {tab:"read",sel:"#bible",t:"② 본문",d:"절을 누르면 형광펜 · 책갈피 · 말씀 카드가 나옵니다. 점선 밑줄 친 말을 누르면 뜻풀이가 나옵니다."},
+ {tab:"read",sel:"#rd3",t:"③ 읽은 뒤",d:"눈여겨볼 것, 지도, 성경 전체로 이어 보기, 읽기 도구가 모여 있습니다."},
+ {tab:"read",sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 누릅니다. 그다음 묵상으로 이어집니다."},
+ {tab:"read",sel:"#tbkPane",t:"가이드북",d:"태블릿에서는 오른쪽에 가이드북 묵상 쪽이 함께 열립니다. 펜으로 바로 쓰고, 이 기기에 저장됩니다."},
+ {tab:"qt",sel:"#main .qtcard",t:"묵상",d:"본문 관찰 · 하나님의 성품 · 적용 · 기도를 한 단계씩 씁니다. 다 쓰면 '쓴 뒤에 읽기' 해설이 열립니다."},
+ {tab:"challenge",sel:"#main .gbcard",t:"도전",d:"본문에서 찾기, 빈칸 채우기, 퀴즈 같은 놀이로 읽은 말씀을 다시 봅니다."},
+ {tab:"challenge",sel:"#m100",t:"꼭 외울 말씀 100",d:"꼭 붙잡을 100구절을 빈칸과 순서 맞추기로 익힙니다."},
+ {tab:"record",sel:"#main .ryprof",t:"나",d:"읽은 날, 묵상 노트, 형광펜을 모아 봅니다. 이름과 숫자 4자리로 이으면 휴대폰·태블릿 기록이 하나가 됩니다."},
+ {sel:"#menuBtn",t:"메뉴",d:"글자 크기·화면 설정, 쓰는 방법, 의견 보내기가 있습니다. 이 둘러보기도 여기서 다시 볼 수 있습니다."}];
+let t2I=0, T2=TOUR2;
+function tour2Start(){ closeMenu&&closeMenu(); document.getElementById("sheetRoot").innerHTML=""; document.getElementById("fcOv")?.remove(); T2=TOUR2.filter(st=>st.sel!=="#tbkPane"||(typeof tbkWide==="function"&&tbkWide())); t2I=0; tour2Step(1); }
+function tour2El(st){ const e=document.querySelector(st.sel); return e&&e.getClientRects().length&&e.getBoundingClientRect().width>0?e:null; }
+function tour2Step(dir){ if(t2I<0) t2I=0; if(t2I>=T2.length) return tourEnd();
+  const st=T2[t2I]; if(st.tab&&view.tab!==st.tab){ switchTab(st.tab); }
+  setTimeout(()=>{ if(!tour2El(st)){ t2I+=dir||1; if(t2I<0){ t2I=0; } return tour2Step(dir||1); }
+    let ov=document.getElementById("tourOv");
+    if(!ov){ ov=document.createElement("div"); ov.id="tourOv"; ov.className="devui tour"; ov.innerHTML=`<div class="tour-hole"></div><div class="tour-tip" role="dialog" aria-live="polite"></div>`; document.body.appendChild(ov); ov.addEventListener("click",e=>{ if(e.target===ov) e.stopPropagation(); }); window.addEventListener("resize",tour2Place); }
+    const el=tour2El(st); if(!el.closest(".bnav,header.top")&&getComputedStyle(el).position!=="fixed") el.scrollIntoView({block:"center"});
+    const tip=ov.querySelector(".tour-tip");
+    tip.innerHTML=`<span class="tour-n">${t2I+1} / ${T2.length}</span><b>${st.t}</b><p>${st.d}</p><div class="tour-row"><button class="tour-skip">건너뛰기</button><span>${t2I?`<button class="tour-prev">이전</button>`:""}<button class="tour-next">${t2I===T2.length-1?"끝내기":"다음"}</button></span></div>`;
+    tip.querySelector(".tour-skip").onclick=tourEnd;
+    tip.querySelector(".tour-next").onclick=()=>{ t2I++; tour2Step(1); };
+    const pv=tip.querySelector(".tour-prev"); if(pv) pv.onclick=()=>{ t2I--; tour2Step(-1); };
+    setTimeout(tour2Place,80); }, st.tab&&view.tab===st.tab?60:420); }
+function tour2Place(){ const ov=document.getElementById("tourOv"); if(!ov) return; const st=T2[t2I]; const el=st&&tour2El(st); if(!el) return;
+  const r=el.getBoundingClientRect(), pad=6, hole=ov.querySelector(".tour-hole"), tip=ov.querySelector(".tour-tip");
+  const top=Math.max(4,r.top-pad), h=Math.min(r.bottom+pad,innerHeight-4)-top;
+  Object.assign(hole.style,{left:(r.left-pad)+"px",top:top+"px",width:(r.width+pad*2)+"px",height:Math.max(20,h)+"px"});
+  const tw=Math.min(340,innerWidth-24); tip.style.width=tw+"px";
+  const th=tip.offsetHeight, below=top+h+10, above=top-th-10;
+  if(below+th<innerHeight-8){ tip.style.top=below+"px"; tip.style.left=Math.max(12,Math.min(innerWidth-tw-12,r.left+r.width/2-tw/2))+"px"; }
+  else if(above>8){ tip.style.top=above+"px"; tip.style.left=Math.max(12,Math.min(innerWidth-tw-12,r.left+r.width/2-tw/2))+"px"; }
+  else { /* 짚은 곳이 화면을 거의 채우면 그 안쪽 아래(아래 탭 막대 위)에 */ const bn=document.querySelector(".bnav"), bt=bn&&bn.getBoundingClientRect().width&&bn.getBoundingClientRect().top<innerHeight&&bn.getBoundingClientRect().top>innerHeight/2?bn.getBoundingClientRect().top:innerHeight; tip.style.top=Math.max(8,bt-th-14)+"px"; tip.style.left=Math.max(12,Math.min(innerWidth-tw-12,r.left+r.width/2-tw/2))+"px"; } }
 let tourI=0;
 function startTour(){ view.tourFull=true; if((view.tab!=="read"||view.pre||view.revW)){ view.tab="read"; view.pre=false; view.revW=null;  render(); }
   document.getElementById("sheetRoot").innerHTML=""; tourI=0; tourStep(); }
-function tourEnd(){ document.getElementById("tourOv")?.remove(); if(view.tourFull){ view.tourFull=false; render(); } try{ localStorage.setItem(TOUR_KEY,"1"); }catch(e){} tourBtnShow(); window.removeEventListener("resize",tourPlace); }
+function tourEnd(){ document.getElementById("tourOv")?.remove(); window.removeEventListener("resize",tour2Place); if(view.tourFull){ view.tourFull=false; render(); } try{ localStorage.setItem(TOUR_KEY,"1"); }catch(e){} tourBtnShow(); window.removeEventListener("resize",tourPlace); }
 function tourEl(){ const st=TOUR[tourI]; for(const q of st.sel.split(",")){ const e=document.querySelector(q.trim()); if(e&&e.getClientRects().length) return e; } return null; }
 function tourStep(){ while(tourI<TOUR.length&&!tourEl()) tourI++; if(tourI>=TOUR.length) return tourEnd();
   let ov=document.getElementById("tourOv");
@@ -14726,7 +14766,7 @@ function tourPlace(){ const ov=document.getElementById("tourOv"); if(!ov) return
   const tw=Math.min(340,innerWidth-24); tip.style.width=tw+"px"; tip.style.left=Math.max(12,Math.min(innerWidth-tw-12,r.left+r.width/2-tw/2))+"px";
   const below=top+h+10, th=tip.offsetHeight;
   if(below+th<innerHeight-8) { tip.style.top=below+"px"; } else { tip.style.top=Math.max(8,top-th-10)+"px"; } }
-document.getElementById("tourBtn").onclick=()=>{ if(window.CBSR_V2) firstCoach(); else startTour(); }; tourBtnShow();
+document.getElementById("tourBtn").onclick=()=>{ if(window.CBSR_V2) tour2Start(); else startTour(); }; tourBtnShow();
 document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,here.d); if(t!=="read"){view.tab=t;render();}};
 /* 탭마다 보던 자리 기억: 통독 ↔ QT를 오가도 읽던 곳으로 돌아옴 */
 const TAB_Y={};
