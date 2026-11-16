@@ -2884,6 +2884,10 @@ body.tbkfull .tbkgrip{display:none}
   html.v2 .bnav .tab[aria-selected="true"]::before{top:50%;left:0;width:3px;height:30px;margin:-15px 0 0;border-radius:0 3px 3px 0}
   html.v2 .wrap{margin-left:calc(var(--rail) + max(0px,(100vw - var(--rail) - 760px)/2));margin-right:max(0px,(100vw - var(--rail) - 760px)/2);max-width:760px}
   html.v2 body.tbksplit .wrap{max-width:none;margin-left:var(--rail);margin-right:var(--tbkw)}
+  /* 11-16 목사님: 탭마다 날짜 자리가 달랐음 — 오늘 탭과 같은 자리(왼쪽 메뉴 바로 옆, 위에서 같은 높이)로 */
+  html.v2:not([data-tab="today"]) body:not(.tbksplit) header.top{position:fixed!important;left:var(--rail)!important;right:0!important;width:auto!important;max-width:none!important;margin:0!important;top:0!important;height:58px;padding:18px 32px 0 48px!important;box-sizing:border-box;background:var(--bg)!important;z-index:30}
+  html.v2:not([data-tab="today"]) body:not(.tbksplit) .wrap{padding-top:58px}
+  html.v2:not([data-tab="today"]) body.tbksplit header.top{height:58px;padding-top:14px!important;padding-left:4px!important;box-sizing:border-box}
   html.v2 .hlbar{left:calc(var(--rail) + (100vw - var(--rail))/2);bottom:calc(20px + env(safe-area-inset-bottom,0px))}
   html.v2 .toast{left:calc(var(--rail) + (100vw - var(--rail))/2);bottom:calc(40px + env(safe-area-inset-bottom,0px))}
   html.v2 body.tbkfull #tbkPane{left:var(--rail);width:auto;bottom:0}
