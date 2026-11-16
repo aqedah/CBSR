@@ -5,14 +5,14 @@
 <script>window.CBSR_TRY=1;(function(){try{var L=window.localStorage,P="try:",S={getItem:function(k){return L.getItem(P+k)},setItem:function(k,v){L.setItem(P+k,String(v))},removeItem:function(k){L.removeItem(P+k)},clear:function(){}};Object.defineProperty(window,"localStorage",{value:S,configurable:true});}catch(e){}})();</script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>이야기 통독 노트</title>
+<title>이야기통독</title>
 <meta name="description" content="성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="이야기 통독 노트">
-<meta property="og:title" content="이야기 통독 노트">
+<meta property="og:site_name" content="이야기통독">
+<meta property="og:title" content="이야기통독">
 <meta property="og:description" content="성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
 <meta property="og:url" content="https://aqedah.github.io/CBSR/try.html">
-<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=3">
+<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=4">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -20,7 +20,7 @@
 <script>try{var t=localStorage.getItem("cbsr-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="통독 노트">
+<meta name="apple-mobile-web-app-title" content="이야기통독">
 
 <script>window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__bip=e;});</script>
 <link rel="icon" href="icons/icon-192.png">
@@ -32,7 +32,7 @@
 @media (prefers-reduced-motion: reduce){#appBoot .bar i{animation:none;width:100%}}</style>
 </head>
 <body>
-<div id="appBoot" role="status"><div><div class="k">이야기 통독 노트</div><div class="t">오늘 통독</div><div class="s">이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div>
+<div id="appBoot" role="status"><div><div class="k">이야기통독</div><div class="t">오늘 통독</div><div class="s">이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2926,7 +2926,7 @@ html.v2 body .rdt{display:block;font:600 14px var(--f-ui);color:var(--muted);mar
 
 <div class="wrap">
   <header class="top">
-    <div class="brand"><span id="brandL">이야기 통독 노트(시험판) · <span id="planName"></span></span><span class="topbtns"><span id="hdx"></span><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
+    <div class="brand"><span id="brandL">이야기통독(시험판) · <span id="planName"></span></span><span class="topbtns"><span id="hdx"></span><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
     <div id="newsBar"></div>
     <div class="date" id="dateLine"></div>
     <div class="where" id="whereLine"></div>
@@ -9026,7 +9026,7 @@ function godMark(t){
 /* 2026-10-29 첫 화면을 v2로 바꿈: v1을 쓰던 기기에서 처음 열면 한 번 알림 */
 function switchNotice(){ try{ if(!window.CBSR_V2||!window.CBSR_HADV1||window.CBSR_TRY||localStorage.getItem("cbsr-switch-seen")) return; if(/[?&](day|review)=/.test(location.search)) return; localStorage.setItem("cbsr-switch-seen",todayStr()); }catch(e){ return; }
   const lin=window.SYNC&&SYNC.available&&SYNC.loggedIn&&SYNC.loggedIn();
-  sheet("새 화면으로 바뀌었습니다",`<p>이야기 통독 노트가 새 화면으로 바뀌었습니다. 읽는 본문과 순서는 그대로입니다.</p><ul class="swl"><li><b>오늘</b>: 그날 이야기를 사진 카드로 따라가는 <b>스토리 QT</b>로 시작합니다.</li><li>맨 위 <b>동그라미</b>를 눌러 날짜를 옮깁니다. 맨 왼쪽 <b>나의 통독</b>에는 오늘 붙잡은 말씀이 모입니다.</li><li>아래 단추는 차례로 <b>오늘 · 본문 · 묵상 노트 · 도전 · 기록</b>입니다.</li></ul><p class="swrec"><b>기록 안내</b><br>${lin?"이름과 4자리 번호로 로그인하셨기 때문에 기록이 그대로 이어집니다.":"이름과 4자리 번호로 로그인해 쓰신 분은 기록이 그대로 이어집니다. 로그인 없이 쓰신 기록은 새 화면으로 옮겨지지 않았을 수 있습니다. 앞으로는 메뉴에서 로그인해 두시면 기기를 바꿔도 기록이 이어집니다."}</p><p class="lead">예전 화면은 메뉴 맨 아래 '이전 화면'에서 볼 수 있습니다.</p><button class="btn" id="swTour" style="width:100%;margin-top:6px">1분 둘러보기</button>`);
+  sheet("새 화면으로 바뀌었습니다",`<p>이야기통독가 새 화면으로 바뀌었습니다. 읽는 본문과 순서는 그대로입니다.</p><ul class="swl"><li><b>오늘</b>: 그날 이야기를 사진 카드로 따라가는 <b>스토리 QT</b>로 시작합니다.</li><li>맨 위 <b>동그라미</b>를 눌러 날짜를 옮깁니다. 맨 왼쪽 <b>나의 통독</b>에는 오늘 붙잡은 말씀이 모입니다.</li><li>아래 단추는 차례로 <b>오늘 · 본문 · 묵상 노트 · 도전 · 기록</b>입니다.</li></ul><p class="swrec"><b>기록 안내</b><br>${lin?"이름과 4자리 번호로 로그인하셨기 때문에 기록이 그대로 이어집니다.":"이름과 4자리 번호로 로그인해 쓰신 분은 기록이 그대로 이어집니다. 로그인 없이 쓰신 기록은 새 화면으로 옮겨지지 않았을 수 있습니다. 앞으로는 메뉴에서 로그인해 두시면 기기를 바꿔도 기록이 이어집니다."}</p><p class="lead">예전 화면은 메뉴 맨 아래 '이전 화면'에서 볼 수 있습니다.</p><button class="btn" id="swTour" style="width:100%;margin-top:6px">1분 둘러보기</button>`);
   const t=document.getElementById("swTour"); if(t) t.onclick=()=>{ document.getElementById("sheetClose").click(); setTimeout(startTour,250); };
 }
 /* 처음 온 사람: 한 번만 둘러보기 권하기(나중에 하면 메뉴 › 도움말 › 둘러보기) */
@@ -13183,7 +13183,7 @@ function renderGuideV2(){ const rj=false, sd=parseD(mem.start);
       <a class="mban yt" href="${CHURCH_YT}" target="_blank" rel="noopener"><span class="mbi">▶</span><span><b>교회 유튜브</b><small>예배와 말씀 영상</small></span><i aria-hidden="true">↗</i></a>
       <a class="mban mwv" href="https://aqedah.github.io/MILALWV/" target="_blank" rel="noopener"><span class="mbi">א</span><span><b>MILALWV</b><small>히브리어 원문 연구</small></span><i aria-hidden="true">↗</i></a></div>
     <p class="mgh">기타</p><div class="mgrp">${window.SYNC&&SYNC.available?row("fb","의견 보내기",""):""}${window.SYNC&&SYNC.available?row("together","함께 읽기",PROF.share?"켜짐":"꺼짐"):""}${row("data","기록 관리","")}</div>
-    <p class="mfoot">이야기 통독 노트 · 시험판 · <a class="linkbtn" href="v1.html">이전 화면</a>${window.SYNC&&SYNC.available?` · <button class="linkbtn" id="adminGo">관리자</button>`:""}</p></div>`;
+    <p class="mfoot">이야기통독 · 시험판 · <a class="linkbtn" href="v1.html">이전 화면</a>${window.SYNC&&SYNC.available?` · <button class="linkbtn" id="adminGo">관리자</button>`:""}</p></div>`;
   const pages=
    pg("plan","통독표",`<div class="plans" role="radiogroup">${(!rj)?"":`<button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다.</span></button>`}<button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>${Y27?"2027 성경통독":"365 성경통독"}</b><span class="lead">${Y27?"하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다.":"날마다 읽어 1년에 성경을 한 번 읽습니다."}</span></button></div><p class="lead">통독표마다 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다.</p>`)+
    pg("tr","성경 번역",`<div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${esc(v.name)}</b></button>`).join("")}</div><p class="lead">본문 읽기가 이 번역으로 보입니다. 스토리 QT·묵상 노트·도전은 원고가 개역개정으로 쓰여 늘 개역개정입니다.</p>`)+

@@ -1,6 +1,6 @@
 {
-  "name": "이야기 통독 노트",
-  "short_name": "통독 노트",
+  "name": "이야기통독",
+  "short_name": "이야기통독",
   "description": "성경통독 · 요약 · 퀴즈 · QT",
   "lang": "ko",
   "start_url": "./",
