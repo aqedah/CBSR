@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><!-- 이야기통독 아이콘 (2026-11-16 확정: 오늘 · 빛줄기 다섯) -->
+<rect width="120" height="120" fill="#EFE9DD"/>
+<g id="art">
+<g stroke="#D99A2B" stroke-width="7" stroke-linecap="round"><path d="M60 19 L60 29"/><path d="M36 27 L41 35"/><path d="M84 27 L79 35"/><path d="M19 46 L27 50"/><path d="M101 46 L93 50"/></g>
+<circle cx="60" cy="66" r="25" fill="#D99A2B"/>
+<g transform="translate(10 61) scale(0.8333 0.7667)"><path d="M6 14 C24 6 46 6 60 16 C74 6 96 6 114 14 L114 46 C96 40 74 40 60 50 C46 40 24 40 6 46 Z" fill="#FBF8F1" stroke="#26352C" stroke-width="6" stroke-linejoin="round"/><path d="M60 16 L60 50" stroke="#26352C" stroke-width="6"/><path d="M6 46 L6 52 C24 46 46 46 60 56 C74 46 96 46 114 52 L114 46" fill="none" stroke="#26352C" stroke-width="6" stroke-linejoin="round"/></g>
+</g></svg>
