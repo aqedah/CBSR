@@ -12784,7 +12784,7 @@ function tgPageHTML(){ const li=window.SYNC&&SYNC.available&&SYNC.loggedIn(), on
 function photoMenu(){
   sheet("프로필 사진",`<div class="row"><button class="btn" id="phNew">새 사진 고르기</button><button class="btn ghost" id="phDel">사진 지우기</button></div>`);
   document.getElementById("phNew").onclick=()=>{ document.getElementById("sheetRoot").innerHTML=""; document.getElementById("avFile").click(); };
-  document.getElementById("phDel").onclick=()=>{ delete PROF.photo; saveProf(); document.getElementById("sheetRoot").innerHTML=""; render(); };
+  document.getElementById("phDel").onclick=()=>{ delete PROF.photo; PROF.photoAt=Date.now(); saveProf(); document.getElementById("sheetRoot").innerHTML=""; render(); };
 }
 function openPhotoEditor(file){
   const url=URL.createObjectURL(file), img=new Image();
@@ -12817,8 +12817,8 @@ function openPhotoEditor(file){
     const close=()=>{ root.innerHTML=""; document.body.style.overflow=""; URL.revokeObjectURL(url); };
     document.getElementById("pedCancel").onclick=close;
     document.getElementById("pedSave").onclick=()=>{ const o=document.createElement("canvas"); o.width=o.height=320; paint(o.getContext("2d"),320);
-      const prev=PROF.photo; PROF.photo=o.toDataURL("image/jpeg",0.85);
-      if(!saveProf()){ PROF.photo=prev; close(); sheet("저장하지 못했습니다","<p>이 기기의 저장 공간이 부족합니다.</p>"); return; }
+      const prev=PROF.photo, prevAt=PROF.photoAt; PROF.photo=o.toDataURL("image/jpeg",0.85); PROF.photoAt=Date.now();
+      if(!saveProf()){ PROF.photo=prev; PROF.photoAt=prevAt; close(); sheet("저장하지 못했습니다","<p>이 기기의 저장 공간이 부족합니다.</p>"); return; }
       close(); render(); };
     draw();
   };
@@ -12845,7 +12845,7 @@ function bindProfile(m){
   const ne=document.getElementById("nickEdit"); if(ne) ne.onclick=()=>{view.editNick=true;render();document.getElementById("nickIn")?.focus();};
   m.querySelectorAll("[data-obsf]").forEach(b=>b.onclick=()=>{ view.obsF=b.dataset.obsf; const y=scrollY; render(); scrollTo({top:y}); });
   const oa=document.getElementById("obsAll"); if(oa) oa.onclick=()=>{ view.obsAll=true; const y=scrollY; render(); scrollTo({top:y}); };
-  const ns=document.getElementById("nickSave"); if(ns){ const sv=()=>{PROF.nick=document.getElementById("nickIn").value.trim(); saveProf(); view.editNick=false; render();}; ns.onclick=sv; document.getElementById("nickIn").onkeydown=e=>{if(e.key==="Enter")sv();}; }
+  const ns=document.getElementById("nickSave"); if(ns){ const sv=()=>{PROF.nick=document.getElementById("nickIn").value.trim(); PROF.nickAt=Date.now(); saveProf(); view.editNick=false; render();}; ns.onclick=sv; document.getElementById("nickIn").onkeydown=e=>{if(e.key==="Enter")sv();}; }
   const ha=document.getElementById("hlAll"); if(ha) ha.onclick=()=>{view.hlAll=true;const y=scrollY;render();scrollTo({top:y});};
   m.querySelectorAll("[data-qtjump]").forEach(b=>b.onclick=()=>{const [w,d]=b.dataset.qtjump.split("-").map(Number); view.w=w;view.d=d;view.tab="qt";render();scrollTo({top:0});});
 }
@@ -14831,7 +14831,13 @@ function mergeBundle(L,R){ if(!R||!Object.keys(R).length) return L; if(!R.v) R={
       const x=a[id], y=b[id], tx=x?(x[1]||0):-1, ty=y?(y[1]||0):-1, td=Math.max(da[id]||0,db[id]||0);
       const best=tx>=ty?x:y, tb=Math.max(tx,ty);
       if(td&&td>=tb) o.hld[id]=td; else if(best) o.hl[id]=best; } }
-  const a=L.prof||{}, b=R.prof||{}; o.prof=Object.assign({},b,a); if(!a.photo&&b.photo) o.prof.photo=b.photo; if(!a.nick&&b.nick) o.prof.nick=b.nick;
+  const a=L.prof||{}, b=R.prof||{}; o.prof=Object.assign({},b,a);
+  /* 11/16 목사님(태블릿 연동 뒤 휴대폰 프로필 사진이 안 보임): 예전에는 늘 '이 기기 것'이 이겨서 다른 기기에서 바꾼 사진·별명이 넘어오지 않았음
+     → 사진·별명은 바꾼 시각(photoAt·nickAt)이 늦은 쪽을 따름. 시각이 없는 옛 기록끼리는 다른 기기(연동 저장소) 쪽을 따름(새 기기를 이을 때 기존 사진이 보이게) */
+  for(const f of ["photo","nick"]){ const ta=a[f+"At"]||0, tb=b[f+"At"]||0; let w;
+    if(ta||tb) w=ta>=tb?a:b; else w=(b[f]!=null&&b[f]!=="")?b:a;
+    if(w[f]!=null&&w[f]!=="") o.prof[f]=w[f]; else delete o.prof[f];
+    if(ta||tb) o.prof[f+"At"]=Math.max(ta,tb); }
   if(a.since&&b.since) o.prof.since=a.since<b.since?a.since:b.since;
   { const x=L.wcs||{}, y=R.wcs||{}; o.wcs={}; for(const id of new Set([...Object.keys(x),...Object.keys(y)])){ const p=x[id], q=y[id]; o.wcs[id]=!p?q:!q?p:((q.at||0)>(p.at||0)?q:p); } }
   return o; }
