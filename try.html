@@ -13339,7 +13339,7 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   if(q.done) sec=`<button class="td4b2" id="tdNote"><b>묵상 노트</b><small>다시 보기</small></button>`;
   else if(read) sec=`<button class="td4b2" id="tdReread"><b>본문 다시</b><small>${p.ch.length}${p.ch[0][0]===19?"편":"장"}</small></button>`;
   else if(!futLock(w,d)) sec=`<button class="td4b2" id="tdStory0"><b>스토리</b><small>카드 ${n}장</small></button>`;
-  h+=`<div class="td4btns"><button class="td4b1" id="tdHero"><b>${N.e?"다음: ":""}${esc(N.t)}</b><small>${esc(N.s)}</small></button>${read&&!q.done&&S.length?`<button class="td4b2" id="tdStory"><b>이야기로 다시 보기</b><small>${N.sMid?N.sMid+"장째부터":"카드 "+S.length+"장"}</small></button>`:""}</div>`; /* 11/3 목사님: 단추는 하나만. 11-13: 읽은 뒤 스토리는 그 아래 작은 글 단추(묵상이 먼저) */
+  h+=`<div class="td4btns"><button class="td4b1" id="tdHero"><b>${N.e?"다음: ":""}${esc(N.t)}</b><small>${esc(N.s)}</small></button>${read&&!q.done&&S.length?`<button class="td4b2" id="tdStory"><b>이야기로 다시 보기</b><small>${N.sMid?N.sMid+"장째부터":"카드 "+S.length+"장"}</small></button>`:q.done&&S.length?`<button class="td4b2" id="tdStory"><b>스토리 다시 보기</b><small>카드 ${S.length}장</small></button>`:""}</div>`; /* 11-16 목사님: 마친 날(지난 요일)에도 본문 다시 보기 옆에 스토리 다시 보기 */ /* 11/3 목사님: 단추는 하나만. 11-13: 읽은 뒤 스토리는 그 아래 작은 글 단추(묵상이 먼저) */
   if(q.done&&kv) h+=`<div class="td4wc">${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}<button class="wcmk" data-wcmk="${w}-${d}">말씀 카드 만들어 보내기</button></div>`;
   h+=tdResume(w,d)+tdTrip(w,d)+`</div></section>`;
   return h; }
@@ -13363,7 +13363,7 @@ function bindToday(){ clearInterval(TD.cd);
   const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(window.CBSR_V2&&TD.act){ if(TD.act==="text"){ toText(); return; } if(TD.act==="note"){ view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); return; } storyOpen(null); return; } if(!TD.stage&&!TD.past){ toText(); return; } storyOpen(0); };
   const s0=document.getElementById("tdStory0"); if(s0) s0.onclick=e=>{ e.stopPropagation(); storyOpen(0); };
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
-  const tst=document.getElementById("tdStory"); if(tst) tst.onclick=e=>{ e.stopPropagation(); storyOpen(null); };
+  const tst=document.getElementById("tdStory"); if(tst) tst.onclick=e=>{ e.stopPropagation(); storyOpen(TD.stage===2?0:null); };
   const tg=document.getElementById("tdGo"); if(tg) tg.onclick=(!TD.stage&&TD.past)?(e=>{ e.stopPropagation(); toText(); }):go;
   const va2=document.getElementById("v2Aid"); if(va2) va2.ontoggle=()=>{ view.aidOpen=va2.open; };
   const tn=document.getElementById("tdNote"); if(tn) tn.onclick=()=>{ view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); };
