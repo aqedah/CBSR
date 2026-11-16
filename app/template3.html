@@ -709,9 +709,18 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sph.sblur img{filter:blur(16px) brightness(.5) saturate(.7);transform:scale(1.15)}
 #storyRoot .sfr{z-index:1}#storyRoot .sfr.sfirst{animation:sfin .45s ease}@keyframes sfin{from{opacity:.4}to{opacity:1}}
 #storyRoot .sfr.snew{opacity:0;transition:opacity .75s ease}#storyRoot .sfr.snew.in{opacity:1}
-/* 11-16: 카드 넘김 — 넘기는 쪽에서 밀려 들어오고 앞 카드는 반대로 비켜남 */
-#storyRoot .sfr.snew.sfw{transform:translateX(18%)}#storyRoot .sfr.snew.sbk{transform:translateX(-18%)}#storyRoot .sfr.snew.sfw,#storyRoot .sfr.snew.sbk{transition:opacity .4s ease,transform .45s cubic-bezier(.2,.8,.2,1)}#storyRoot .sfr.snew.in{transform:none}
-#storyRoot .sfr.sghost.sfw,#storyRoot .sfr.sghost.sbk{transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s ease}#storyRoot .sfr.sghost.sfw.go{transform:translateX(-12%) scale(.96);opacity:.5}#storyRoot .sfr.sghost.sbk.go{transform:translateX(12%) scale(.96);opacity:.5}
+/* 11-16 목사님: 카드 넘김을 인스타그램 스토리처럼 정육면체가 돌듯(날짜 고리 스토리와 같은 방식) — 지금 카드는 맞닿은 모서리를 축으로 접혀 나가고 옆 카드가 펴지며 들어옴 */
+#storyRoot{perspective:1100px;overflow:hidden}
+#storyRoot .sfr.sfw,#storyRoot .sfr.sbk{backface-visibility:hidden}
+#storyRoot .sfr.snew.sfw{transform-origin:left center;transform:translateX(100%) rotateY(90deg);opacity:1}
+#storyRoot .sfr.snew.sbk{transform-origin:right center;transform:translateX(-100%) rotateY(-90deg);opacity:1}
+#storyRoot .sfr.snew.sfw,#storyRoot .sfr.snew.sbk{transition:transform .5s cubic-bezier(.3,.7,.3,1)}
+#storyRoot .sfr.snew.sfw.in,#storyRoot .sfr.snew.sbk.in{transform:none}
+#storyRoot .sfr.sghost.sfw,#storyRoot .sfr.sghost.sbk{transition:transform .5s cubic-bezier(.3,.7,.3,1),filter .5s ease}
+#storyRoot .sfr.sghost.sfw{transform-origin:right center}#storyRoot .sfr.sghost.sbk{transform-origin:left center}
+#storyRoot .sfr.sghost.sfw.go{transform:translateX(-100%) rotateY(-90deg);filter:brightness(.55)}
+#storyRoot .sfr.sghost.sbk.go{transform:translateX(100%) rotateY(90deg);filter:brightness(.55)}
+@media (prefers-reduced-motion: reduce){#storyRoot .sfr.snew.sfw,#storyRoot .sfr.snew.sbk,#storyRoot .sfr.sghost.sfw,#storyRoot .sfr.sghost.sbk{transition:none}}
 #storyRoot .sfr.sghost{z-index:0;pointer-events:none}.sghost .sbox,.sghost .stapnote,.sghost .spanel{transition:opacity .25s ease;opacity:0}
 .sph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 42%,rgba(10,7,4,.9) 100%)}
 .scr{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);font-size:10px;color:rgba(255,255,255,.55);z-index:25;text-decoration:none;max-width:72%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -5175,7 +5184,7 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   r.querySelectorAll(".sfr.sghost").forEach(x=>x.remove());
   const old=r.querySelector(".sfr"); let ghost=null, oldM=null, oldPid=null;
   if(old){ const oi=old.querySelector(".sph img"); if(oi){ oldPid=oi.dataset.pid; try{ oldM=getComputedStyle(oi).transform; }catch(e){} }
-    if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst","sfw","sbk","go"); if(SV.dir){ ghost.classList.add(SV.dir>0?"sfw":"sbk"); requestAnimationFrame(()=>ghost.classList.add("go")); } ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); } else old.remove(); }
+    if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst","sfw","sbk","go"); if(SV.dir){ ghost.classList.add(SV.dir>0?"sfw":"sbk"); } ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); } else old.remove(); }
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
   const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew"+(SV.dir>0?" sfw":SV.dir<0?" sbk":""):old?"":" sfirst"}${window.CBSR_V2&&!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
    ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
@@ -5193,7 +5202,7 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   if(ni){ ni.onerror=()=>ni.remove();
     if(!quick&&kind!=="qt"){ const v=SKB[s.phv||0]||SKB[0], same=oldPid&&oldPid===ni.dataset.pid&&oldM&&oldM!=="none";
       try{ ni.animate([{transform:same?oldM:v[0]},{transform:v[1]}],{duration:same?14000:12000,easing:"ease-out",fill:"forwards"}); }catch(e){} } }
-  if(ghost){ let gone=false; const fade=()=>{ if(gone) return; gone=true; nf.classList.add("in"); setTimeout(()=>{ ghost.remove(); if(oldMap){ try{ oldMap.remove(); }catch(e){} } },800); };
+  if(ghost){ let gone=false; const fade=()=>{ if(gone) return; gone=true; nf.classList.add("in"); ghost.classList.add("go"); /* 정육면체: 두 면이 함께 돎 */ setTimeout(()=>{ ghost.remove(); if(oldMap){ try{ oldMap.remove(); }catch(e){} } },800); };
     ghost.querySelectorAll(".sbox,.stapnote").forEach(x=>x.style.opacity="0");
     requestAnimationFrame(()=>{ if(ni&&!ni.complete){ (ni.decode?ni.decode():Promise.reject()).then(fade,()=>{ ni.onload=fade; }); setTimeout(fade,1200); } else requestAnimationFrame(fade); }); }
   else if(oldMap){ try{ oldMap.remove(); }catch(e){} }
