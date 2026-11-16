@@ -13319,7 +13319,7 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
    제목 → (통독 완료 표시) → 그림(누르면 권하는 다음 행동, 그림 위 글 한 줄) → 완료 셋(통독·스토리·묵상 노트) → 오늘의 흐름 */
 function todayNext(w,d,o){ const {key,q,read,S,mins}=o, p=dayPlan(w,d), P=(mem.sp||{})[key], n=S.length, sDone=!!(P&&(P.m||0)>=P.n-1)||!!q.done, sMid=!!(P&&P.i>0&&!sDone), nMid=!q.done&&!!(q.obs||q.god||q.med||q.pray||q.kv||q.ink), bm=mem.bm&&mem.bm.w===w&&mem.bm.d===d, rd=`${p.ch.length}${p.ch[0][0]===19?"편":"장"} · 약 ${mins}분`;
   let r; if(!read) r=bm?{act:"text",e:"",t:"이어 읽기",s:"책갈피한 곳부터"}:{act:"text",e:"",t:"본문 읽기",s:rd};
-  else if(q.done) r={act:"text",e:"",t:"오늘 본문 다시 보기",s:p.label};
+  else if(q.done) r={act:"text",e:"",t:"본문 다시 보기",s:p.label}; /* 11-16 목사님: "오늘" 빼기 */
   else if(nMid) r={act:"note",e:"다음으로",t:"묵상 노트 이어 쓰기",s:"쓰던 곳부터"};
   else r={act:"note",e:"다음으로",t:"묵상 노트 쓰기",s:"관찰 · 성품 · 적용 · 기도"}; /* 11-13: 읽은 뒤에는 묵상이 먼저(스토리는 보조) */
   r.sDone=sDone; r.sMid=sMid?`${(P.m||P.i)+1}/${n}`:""; r.nMid=nMid; return r; }
