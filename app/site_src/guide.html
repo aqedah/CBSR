@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>/* 11-16 목사님: 앱 안에서 열 때 작업실 화면이 잠깐 비치지 않게 — 그리기 전까지 숨김 */if(/[?&]embed=/.test(location.search))document.documentElement.className+=" embed";</script><style>html.embed:not(.embok) body{visibility:hidden}</style>
 <title>통독 가이드북 작업실</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Noto+Serif+KR:wght@400;700&family=Nanum+Pen+Script&display=swap">
 <style>
@@ -1417,7 +1418,7 @@ if(EMBQ.get('embed')){ const embStart=(function(){
   document.documentElement.classList.add('embed');
   const MV=document.getElementById('mapview'); const play=EMBQ.get('play')==='1', blurAo=EMBQ.get('ao')==='0';
   if(blurAo) document.documentElement.classList.add('aoblur');
-  const draw=()=>{ const qt=get(no)||blank(); document.body.innerHTML=`<div id="scaled" class="embsc">${!p?'':side==='R'?pageR(p,qt):pageL(p,qt)}</div>`; if(MV) document.body.appendChild(MV); const sc=document.getElementById('scaled'); try{ tighten(sc); matchMedia(sc,1); addPlayBtns() }catch(e){}
+  const draw=()=>{ const qt=get(no)||blank(); document.body.innerHTML=`<div id="scaled" class="embsc">${!p?'':side==='R'?pageR(p,qt):pageL(p,qt)}</div>`; if(MV) document.body.appendChild(MV); const sc=document.getElementById('scaled'); document.documentElement.classList.add('embok'); try{ tighten(sc); matchMedia(sc,1); addPlayBtns() }catch(e){}
     /* 11-12 목사님: 앱에서 ⑤ 해설은 쓰기 전까지 흐리게(인쇄본은 그대로) */
     const af=sc.querySelector('.after'); if(af&&blurAo){ af.insertAdjacentHTML('beforeend','<button class="aoBtn" type="button">쓴 뒤 해설 열기</button>'); }
     fitE();
