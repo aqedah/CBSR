@@ -14311,7 +14311,7 @@ function tbkDraw(D0){ TBK_PG.length=0; TBK_PG.push(...(tbkShowA(D0)?["a","m"]:["
   pane.querySelector("#tbkUn").onclick=()=>tbkUndo(1); pane.querySelector("#tbkRe").onclick=()=>tbkUndo(0);
   pane.querySelector("#tbkFg").onclick=e=>{ TBK.finger=!TBK.finger; try{ localStorage.setItem("cbsr-tbkfinger",TBK.finger?"1":"0"); }catch(_){} e.currentTarget.classList.toggle("on",TBK.finger); toast(TBK.finger?"손가락으로도 씁니다 · 두 손가락으로 넘기기":"펜으로만 씁니다 · 손가락은 넘기기"); };
   tb(); pane.querySelector("#tbkMore").onclick=()=>tbkMore(D);
-  const rt=pane.querySelector("#tbkRoute"); if(rt) rt.onclick=()=>{ const g=gbRoute(D.n); if(!g) return; if(g.r){ /* R13: 탭을 옮기지 않고 가이드북 위에 겹쳐 열어, 닫으면 읽던 가이드북 문항으로 바로 돌아옴 */ const i=ROUTES_B.indexOf(g.r); if(i<0) return; view.bmWho=bmWhoOf(g.r); bmMapOpen("trip",{sel:i,from:"read"}); } else bmTour(g.ti,g.s,{stop:g.e}); };
+  const rt=pane.querySelector("#tbkRoute"); if(rt) rt.onclick=()=>tbkRouteOpen(D.n);
   pane.querySelectorAll("[data-tdef]").forEach(b=>b.onclick=()=>toast(tName(b.dataset.tdef)+": "+TOOLS[b.dataset.tdef])); /* 11-12: 가이드북의 기호를 누르면 풀이 */
   const af=pane.querySelector("#tbkAfter"); if(af) af.onclick=()=>{ const q=qtOf(D.key); q.ao=1; touchQ(q,"ao"); save(); tbkDraw(D0); };
   const dn=pane.querySelector("#tbkDone"); if(dn) dn.onclick=()=>{ const q=qtOf(D.key); if(q.done) return; q.done=true; if(!q.doneAt) q.doneAt=todayStr(); touchQ(q,"done"); save(); toast("오늘 묵상을 마쳤습니다"); tbkDraw(D0); };
@@ -14453,8 +14453,10 @@ function tbkBookHit(fr,e){ try{ const r=fr.getBoundingClientRect(), doc=fr.conte
     if(!b) return fr; const inDay=D.p.ch.some(x=>x[0]===b&&x[1]===c), ref=`${b}-${c}-${v}-${v2}${inDay?"":"-x"}`;
     const fake={dataset:{ref},classList:{contains:k=>k==="tbkref"},click:()=>tbkJump(ref)}; return {closest:k=>k===".tbkref"||k==="button"?fake:null};
   }catch(_){ return fr; } }
-/* 책 모양의 지도 ▶: 작업실의 여정 재생을 화면 가득 띄움(닫기를 누르면 돌아옴) */
-function tbkPlay(fr){ const u=fr.getAttribute("src").replace(/&ao=\d/,"")+"&play=1"; const o=document.createElement("div"); o.className="tbkplay"; o.innerHTML=`<iframe src="${u}" title="여정 재생"></iframe><button class="tbkplayx" aria-label="닫기">✕</button>`; document.body.appendChild(o);
+/* 가이드북 날의 짝 경로·여정(GB_ROUTE)을 가이드북 위에 겹쳐 엶. 열었으면 true */
+function tbkRouteOpen(n){ const g=gbRoute(n); if(!g) return false; if(g.r){ /* R13: 탭을 옮기지 않고 가이드북 위에 겹쳐 열어, 닫으면 읽던 가이드북 문항으로 바로 돌아옴 */ const i=ROUTES_B.indexOf(g.r); if(i<0) return false; view.bmWho=bmWhoOf(g.r); bmMapOpen("trip",{sel:i,from:"read"}); } else bmTour(g.ti,g.s,{stop:g.e}); return true; }
+/* 책 모양의 지도 ▶: 11-16 목사님 — 경로/여정 화면에서 만든 짝 경로·여정을 띄움. 짝이 없는 날만 작업실의 여정 재생을 화면 가득(닫기를 누르면 돌아옴) */
+function tbkPlay(fr){ const D=TBK.cur0; if(D&&tbkRouteOpen(D.n)) return; const u=fr.getAttribute("src").replace(/&ao=\d/,"")+"&play=1"; const o=document.createElement("div"); o.className="tbkplay"; o.innerHTML=`<iframe src="${u}" title="여정 재생"></iframe><button class="tbkplayx" aria-label="닫기">✕</button>`; document.body.appendChild(o);
   const close=()=>{ o.remove(); removeEventListener("message",onm); }; const onm=ev=>{ if(ev.data==="cbsr-mvclose") close(); }; addEventListener("message",onm); o.querySelector(".tbkplayx").onclick=close; }
 function tbkJump(ref){ const R=ref.split("-"), [b,c,v,v2]=R.map(Number); if(R[4]==="x"||!tbkWide()){ tbkPeek(b,c,v,v2||v); return; } /* 11-13 목사님: 휴대폰은 오늘 본문 안의 절이라도 그 자리에 떠서 보여 줌(본문으로 넘어가지 않음) */ const narrow=document.body.classList.contains("tbkfull");
   if(TBK.ret==null) TBK.ret=scrollY; if(narrow){ TBK.open=false; TBK.retOpen=true; if(tbkPref()==="guide") tbkSetPref("both"); }
