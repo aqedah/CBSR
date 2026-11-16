@@ -255,11 +255,11 @@ head=f'''<!doctype html>
 {title}
 <meta name="description" content="성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="이야기 통독 노트">
-<meta property="og:title" content="이야기 통독 노트">
+<meta property="og:site_name" content="이야기통독">
+<meta property="og:title" content="이야기통독">
 <meta property="og:description" content="성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
 <meta property="og:url" content="https://aqedah.github.io/CBSR/">
-<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=3">
+<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=4">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -267,7 +267,7 @@ head=f'''<!doctype html>
 <script>try{{var t=localStorage.getItem("cbsr-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="통독 노트">
+<meta name="apple-mobile-web-app-title" content="이야기통독">
 <link rel="manifest" href="manifest.webmanifest">
 <script>window.addEventListener("beforeinstallprompt",function(e){{e.preventDefault();window.__bip=e;}});</script>
 <link rel="icon" href="icons/icon-192.png">
@@ -279,7 +279,7 @@ head=f'''<!doctype html>
 @media (prefers-reduced-motion: reduce){{#appBoot .bar i{{animation:none;width:100%}}}}</style>
 </head>
 <body>
-<div id="appBoot" role="status"><div><div class="k">이야기 통독 노트</div><div class="t">오늘 통독</div><div class="s">이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div>
+<div id="appBoot" role="status"><div><div class="k">이야기통독</div><div class="t">오늘 통독</div><div class="s">이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div>
 '''
 html=head+body+'\n</body>\n</html>\n'
 # 2026-10-29 v2가 첫 화면(index.html)이 됨. v1은 v1.html로 남겨 둠(이전 화면)
