@@ -709,6 +709,9 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .sph.sblur img{filter:blur(16px) brightness(.5) saturate(.7);transform:scale(1.15)}
 #storyRoot .sfr{z-index:1}#storyRoot .sfr.sfirst{animation:sfin .45s ease}@keyframes sfin{from{opacity:.4}to{opacity:1}}
 #storyRoot .sfr.snew{opacity:0;transition:opacity .75s ease}#storyRoot .sfr.snew.in{opacity:1}
+/* 11-16: 카드 넘김 — 넘기는 쪽에서 밀려 들어오고 앞 카드는 반대로 비켜남 */
+#storyRoot .sfr.snew.sfw{transform:translateX(18%)}#storyRoot .sfr.snew.sbk{transform:translateX(-18%)}#storyRoot .sfr.snew.sfw,#storyRoot .sfr.snew.sbk{transition:opacity .4s ease,transform .45s cubic-bezier(.2,.8,.2,1)}#storyRoot .sfr.snew.in{transform:none}
+#storyRoot .sfr.sghost.sfw,#storyRoot .sfr.sghost.sbk{transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s ease}#storyRoot .sfr.sghost.sfw.go{transform:translateX(-12%) scale(.96);opacity:.5}#storyRoot .sfr.sghost.sbk.go{transform:translateX(12%) scale(.96);opacity:.5}
 #storyRoot .sfr.sghost{z-index:0;pointer-events:none}.sghost .sbox,.sghost .stapnote,.sghost .spanel{transition:opacity .25s ease;opacity:0}
 .sph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 42%,rgba(10,7,4,.9) 100%)}
 .scr{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);font-size:10px;color:rgba(255,255,255,.55);z-index:25;text-decoration:none;max-width:72%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1258,7 +1261,7 @@ html.v2 .grec small{font-size:12.5px;font-weight:700;color:#f3d9a4;letter-spacin
 .gllq{font-size:19px!important;line-height:1.5;font-weight:700;color:#fff;text-align:left!important}.glhint{margin:4px 0 10px;font:600 13px var(--f-ui);color:#e2b874}
 .glv{background:#fbf8f2;color:#1d1a16;border-radius:16px;padding:12px 10px 8px}.glch{margin:0 6px 6px;font:700 12.5px var(--f-ui);color:#8a6d3b}
 .glr{display:block;width:100%;text-align:left;border:0;background:none;color:inherit;font:16px/1.75 var(--f-body,inherit);padding:6px 8px;border-radius:10px;cursor:pointer}.glr sup{font:700 11px var(--f-ui);color:#a08660;margin-right:4px}
-.glr.no{background:rgba(229,140,120,.22);text-decoration:line-through;text-decoration-color:rgba(160,60,40,.5)}.glr.ok{background:#f3dfb5}.glr.ok b{background:#e2b874;border-radius:4px;padding:0 2px}.glr.dim{opacity:.45}
+.glr.no{background:rgba(229,140,120,.22);text-decoration:line-through;text-decoration-color:rgba(160,60,40,.5)}.glr.ok{background:#f3dfb5}.glr.ok b{border-radius:4px;padding:0 2px;background:linear-gradient(transparent 12%,#e2b874 12%,#e2b874 92%,transparent 92%) no-repeat 0 0/100% 100%;animation:glMark .6s .12s cubic-bezier(.3,.7,.3,1) both}@keyframes glMark{from{background-size:0 100%}to{background-size:100% 100%}}@media (prefers-reduced-motion:reduce){.glr.ok b{animation:none}}.glr.dim{opacity:.45}
 html.v2 .glrec b{margin-top:40px}
 .gfsteps{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}.gfsteps span{font:700 12px var(--f-ui);padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)}.gfsteps span.on{background:#e2b874;color:#1b130b}.gfsteps span.dn{color:#e2b874}
 .gfkick{margin:0;font:700 12.5px var(--f-ui);color:#e2b874}.gfh2{margin:4px 0 0;font-size:22px;line-height:1.35;color:#fff}
@@ -5148,7 +5151,7 @@ function storyOpen(i,mode){ useKRV(true); const {w,d}=view; if(futLock(w,d)&&!vi
 function storyMapOff(){ if(SV.map){ try{ SV.map.remove(); }catch(e){} SV.map=null; } }
 function storyClose(pop){ if(pop!==true) ovDone(storyClose); clearTimeout(SV.t); clearInterval(SV.cd); if(SV.mode==="fin"&&window.CBSR_V2){ view.tab="today"; SV.mode=""; scrollTo({top:0}); } storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); /* 날짜 표지에서 들어왔으면 표지로 돌아감(목사님 2026-10-30) */ if(SV.back){ const f=SV.back; SV.back=null; setTimeout(f,60); } }
 function curSlides(w,d){ if(SV.mode==="fin"){ const S=storySlides(w,d); return [{k:"fin",ph:S[0]&&S[0].ph},{k:"next"}]; } return storySlides(w,d); }
-function storyGo(i){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ return; } SV.i=i; storyShow(); }
+function storyGo(i){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ return; } SV.dir=i>SV.i?1:i<SV.i?-1:0; SV.i=i; storyShow(); }
 const SKB=[["scale(1.06) translate(0,0)","scale(1.14) translate(-2%,-1%)"],["scale(1.14) translate(-2%,-1%)","scale(1.16) translate(3%,1%)"],["scale(1.16) translate(3%,1%)","scale(1.16) translate(-3%,0)"]];
 function sPreload(S,i){ for(let j=i+1;j<=i+2&&j<S.length;j++){ const ph=S[j]&&S[j].ph; if(ph&&!SPRE[ph.u]){ const im=new Image(); im.referrerPolicy="no-referrer"; im.src=ph.u; SPRE[ph.u]=im; } } }
 const SPRE={};
@@ -5166,9 +5169,9 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   r.querySelectorAll(".sfr.sghost").forEach(x=>x.remove());
   const old=r.querySelector(".sfr"); let ghost=null, oldM=null, oldPid=null;
   if(old){ const oi=old.querySelector(".sph img"); if(oi){ oldPid=oi.dataset.pid; try{ oldM=getComputedStyle(oi).transform; }catch(e){} }
-    if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst"); ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); } else old.remove(); }
+    if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst","sfw","sbk","go"); if(SV.dir){ ghost.classList.add(SV.dir>0?"sfw":"sbk"); requestAnimationFrame(()=>ghost.classList.add("go")); } ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); } else old.remove(); }
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
-  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew":old?"":" sfirst"}${window.CBSR_V2&&!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
+  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew"+(SV.dir>0?" sfw":SV.dir<0?" sbk":""):old?"":" sfirst"}${window.CBSR_V2&&!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
    ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
    ${showPh?`<div class="sph v${s.phv||0}${s.phBlur?" sblur":""}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
