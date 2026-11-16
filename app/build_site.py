@@ -259,11 +259,11 @@ head=f'''<!doctype html>
 <meta property="og:title" content="이야기통독">
 <meta property="og:description" content="성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
 <meta property="og:url" content="https://aqedah.github.io/CBSR/">
-<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=7">
+<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=8">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#2C5C52">
+<meta name="theme-color" content="#F4EFE6">
 <script>try{{var t=localStorage.getItem("cbsr-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -273,9 +273,9 @@ head=f'''<!doctype html>
 <link rel="icon" href="icons/icon-192.png?v=3">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=3">
 <style>:root{{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}body{{margin:0}}img{{max-width:100%}}[hidden]{{display:none!important}}html{{-webkit-text-size-adjust:100%}}</style>
-<style>#appBoot{{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#F3F5F1;color:#1B2420;transition:opacity .3s ease;font-family:"Gowun Batang","Nanum Myeongjo","AppleMyungjo",serif;text-align:center}}#appBoot.out{{opacity:0;pointer-events:none}}#appBoot .k{{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:12.5px;letter-spacing:.14em;color:#5B6862}}#appBoot .t{{font-weight:700;font-size:30px;margin-top:10px;color:#2C5C52}}#appBoot .s{{font-size:15px;color:#5B6862;margin-top:8px}}#appBoot .bar{{width:160px;height:2px;background:#D9E0DA;margin:24px auto 0;overflow:hidden;border-radius:2px}}#appBoot .bar i{{display:block;height:100%;width:40%;background:#2C5C52;animation:bootBar 1s ease-in-out infinite}}@keyframes bootBar{{from{{transform:translateX(-100%)}}to{{transform:translateX(250%)}}}}
-@media (prefers-color-scheme: dark){{:root:not([data-theme="light"]) #appBoot{{background:#111714;color:#E4EAE6}}:root:not([data-theme="light"]) #appBoot .t{{color:#8FC4B5}}:root:not([data-theme="light"]) #appBoot .k,:root:not([data-theme="light"]) #appBoot .s{{color:#97A49D}}:root:not([data-theme="light"]) #appBoot .bar{{background:#2A3430}}:root:not([data-theme="light"]) #appBoot .bar i{{background:#8FC4B5}}}}
-:root[data-theme="dark"] #appBoot{{background:#111714;color:#E4EAE6}}:root[data-theme="dark"] #appBoot .t{{color:#8FC4B5}}:root[data-theme="dark"] #appBoot .k,:root[data-theme="dark"] #appBoot .s{{color:#97A49D}}:root[data-theme="dark"] #appBoot .bar{{background:#2A3430}}:root[data-theme="dark"] #appBoot .bar i{{background:#8FC4B5}}
+<style>#appBoot{{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#F4EFE6;color:#2A211B;transition:opacity .3s ease;font-family:"Gowun Batang","Nanum Myeongjo","AppleMyungjo",serif;text-align:center}}#appBoot.out{{opacity:0;pointer-events:none}}#appBoot .k{{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:12.5px;letter-spacing:.14em;color:#6E6152}}#appBoot .t{{font-weight:700;font-size:30px;margin-top:10px;color:#7A4528}}#appBoot .s{{font-size:15px;color:#6E6152;margin-top:8px}}#appBoot .bar{{width:160px;height:2px;background:#E5D9C8;margin:24px auto 0;overflow:hidden;border-radius:2px}}#appBoot .bar i{{display:block;height:100%;width:40%;background:#7A4528;animation:bootBar 1s ease-in-out infinite}}@keyframes bootBar{{from{{transform:translateX(-100%)}}to{{transform:translateX(250%)}}}}
+@media (prefers-color-scheme: dark){{:root:not([data-theme="light"]) #appBoot{{background:#16120F;color:#EEE5D8}}:root:not([data-theme="light"]) #appBoot .t{{color:#D9A27A}}:root:not([data-theme="light"]) #appBoot .k,:root:not([data-theme="light"]) #appBoot .s{{color:#A69887}}:root:not([data-theme="light"]) #appBoot .bar{{background:#352C24}}:root:not([data-theme="light"]) #appBoot .bar i{{background:#D9A27A}}}}
+:root[data-theme="dark"] #appBoot{{background:#16120F;color:#EEE5D8}}:root[data-theme="dark"] #appBoot .t{{color:#D9A27A}}:root[data-theme="dark"] #appBoot .k,:root[data-theme="dark"] #appBoot .s{{color:#A69887}}:root[data-theme="dark"] #appBoot .bar{{background:#352C24}}:root[data-theme="dark"] #appBoot .bar i{{background:#D9A27A}}
 @media (prefers-reduced-motion: reduce){{#appBoot .bar i{{animation:none;width:100%}}}}</style>
 </head>
 <body>
