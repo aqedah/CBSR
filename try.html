@@ -7958,7 +7958,7 @@ function easterOf(Y){ const a=Y%19,b=Math.floor(Y/100),c=Y%100,d=Math.floor(b/4)
 const addD=(dt,n)=>new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()+n);
 const nthSun=(Y,M,n)=>{ const f=new Date(Y,M,1); return addD(f,(7-f.getDay())%7+7*(n-1)); };
 const lastSun=(Y,M)=>{ const l=new Date(Y,M+1,0); return addD(l,-l.getDay()); };
-const sunWeek=s=>[addD(s,-6),s];
+const sunWeek=s=>[addD(s,-6),addD(s,6)] /* 11/16 목사님: 교회 주일 절기 카드는 주일 앞뒤로 한 주씩(앞 월요일–뒤 토요일) */;
 const SEASON={
  advent:{t:"대림절",c:"#5b3f8c",col:"보라",line:"오실 주님을 기다리는 네 주간",
   what:"성탄절 전 네 번의 주일을 대림절이라고 합니다. '대림(待臨)'은 '오심을 기다린다'는 뜻입니다. 2천 년 전 베들레헴에 오신 예수님을 기억하고, 다시 오실 주님을 기다리는 마음을 준비합니다. 교회력은 대림절에서 한 해를 시작합니다.",
@@ -8053,7 +8053,7 @@ function kbmHTML(){ const all=[]; KBM_CH.forEach(([pv,L])=>L.forEach(([c,n])=>n.
   return `<h4>함께하는 ${all.length}개 교회</h4><p class="kbmtd">오늘 이름을 불러 기도할 교회<b>${esc(t[0])}</b><small>${esc(t[1])}</small></p><div class="kbmap" id="kbmMap"></div><p class="lead kbmh">숫자를 누르면 확대되고, 지역을 누르면 교회 이름이 나옵니다. 빨간 테두리가 우리 교회 쪽입니다. (위치는 시·구 단위)</p><details class="kbmg"><summary>목록으로 보기</summary>${KBM_CH.map(([pv,L])=>{ const n=L.reduce((a,x)=>a+x[1].split("·").length,0); return `<div class="kbmp"><b>${esc(pv)} <span>${n}</span></b>${L.map(([c,x])=>`<p><small>${esc(c)}</small>${esc(x.replace(/·/g," · "))}</p>`).join("")}</div>`; }).join("")}</details>`; }
 function seasonRanges(Y){ const E=easterOf(Y), xmas=new Date(Y,11,25), adv1=addD(xmas,-((xmas.getDay()||7))-21);
   return [["christmas",new Date(Y-1,11,25),new Date(Y,0,5)],["epiphany",new Date(Y,0,6),new Date(Y,0,12)],["lent",addD(E,-46),addD(E,-8)],["holyweek",addD(E,-7),addD(E,-1)],["easter",E,addD(E,6)],["ascension",addD(E,39),addD(E,41)],["pentecost",addD(E,49),addD(E,55)],["trinity",addD(E,56),addD(E,62)],
-   ["kbu",...sunWeek(nthSun(Y,3,4))],["harvest1",...sunWeek(nthSun(Y,6,1))],["kbm",...sunWeek(nthSun(Y,8,1))],["reform",addD(lastSun(Y,9),-6),new Date(Y,9,31)>lastSun(Y,9)?new Date(Y,9,31):lastSun(Y,9)],["harvest2",...sunWeek(nthSun(Y,10,3))],["advent",adv1,new Date(Y,11,24)],["christmas",xmas,new Date(Y+1,0,5)]]; }
+   ["kbu",...sunWeek(nthSun(Y,3,4))],["harvest1",...sunWeek(nthSun(Y,6,1))],["kbm",...sunWeek(nthSun(Y,8,1))],["reform",addD(lastSun(Y,9),-6),addD(lastSun(Y,9),6)],["harvest2",...sunWeek(nthSun(Y,10,3))],["advent",adv1,new Date(Y,11,24)],["christmas",xmas,new Date(Y+1,0,5)]]; }
 function seasonsNow(){ const t=today0(), Y=t.getFullYear(); return seasonRanges(Y).filter(([k,a,b])=>t>=a&&t<=b).map(([k,a,b])=>({k,a,b,...SEASON[k]})); }
 const ssKey=s=>s.k+":"+isoD(s.a);
 function ssHidden(s){ try{ return (JSON.parse(localStorage.getItem("cbsr-ss-hide")||"{}"))[ssKey(s)]; }catch(e){ return false; } }
