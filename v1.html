@@ -2834,7 +2834,7 @@ body.tbkfull .tbktools{bottom:18px}
 .tbktools .sw i{display:block;width:7px;height:26px;border-radius:4px;background:var(--c);transition:width .12s}
 .tbktools .sw.on{background:none} .tbktools .sw.on i{width:11px;box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--c)}
 .tbktools .sep{width:1px;height:30px;background:var(--line);margin:0 4px;flex:none}
-.tbkst{font:600 11.5px var(--f-ui);color:var(--muted);white-space:nowrap;padding:0 4px;min-width:44px;text-align:center}
+.tbkst{font:600 11.5px var(--f-ui);color:var(--muted);white-space:nowrap;padding:0 4px;width:5em;flex:none;text-align:center;overflow:hidden}
 .tbkst.bad{color:#b4422c}
 body:has(.totop.show) .tbkopen{bottom:calc(140px + env(safe-area-inset-bottom,0px))} /* 11-13: 맨 위로 단추와 겹치지 않게 */
 .tbkopen{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:9250;border:0;border-radius:99px;background:#5a4aa0;color:#fff;font:700 14px var(--f-ui);padding:11px 16px;box-shadow:0 4px 14px rgba(0,0,0,.2)}
@@ -14353,7 +14353,7 @@ function tbkFlush(){ for(const g in tbkSaveT) clearTimeout(tbkSaveT[g]); Object.
 addEventListener("pagehide",tbkFlush); document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") tbkFlush(); });
 /* 자판이 올라오면 쓰던 칸이 보이게 */
 if(window.visualViewport) visualViewport.addEventListener("resize",()=>{ const a=document.activeElement; if(a&&a.classList&&a.classList.contains("tbkta")) setTimeout(()=>a.scrollIntoView({block:"center",behavior:"smooth"}),60); });
-function tbkStat(t,bad){ const e=document.getElementById("tbkSt"); if(e){ e.textContent=t; e.classList.toggle("bad",!!bad); e.onclick=bad?()=>{ tbkStat("저장 중"); Object.values(tbkSaveF).forEach(f=>f()); }:null; e.style.cursor=bad?"pointer":""; } }
+function tbkStat(t,bad){ const e=document.getElementById("tbkSt"); if(e){ /* 11-16 목사님: 글 길이에 따라 도구 막대 너비가 바뀌지 않게 짧은 말 하나로, 긴 안내는 알림으로 */ const sh=bad?"다시 저장":/중/.test(t)?"저장 중":"저장됨"; if(bad&&e.dataset.lastBad!==t) toast(t); e.dataset.lastBad=bad?t:""; e.title=t; e.setAttribute("aria-label",t); e.textContent=sh; e.classList.toggle("bad",!!bad); e.onclick=bad?()=>{ tbkStat("저장 중"); Object.values(tbkSaveF).forEach(f=>f()); }:null; e.style.cursor=bad?"pointer":""; } }
 function tbkPaint(){ document.querySelectorAll("#tbkPane .tbkink").forEach(cv=>{ const g=cv.dataset.pg, c=cv.getContext("2d"), s=TBK.scale*(devicePixelRatio||1); c.setTransform(1,0,0,1,0,0); c.clearRect(0,0,cv.width,cv.height); c.setTransform(s,0,0,s,0,0);
   const S=(TBK.ink&&TBK.ink[g])||[], L=[...S.filter(x=>x.h),...S.filter(x=>!x.h)]; if(TBK.cur&&TBK.cur.g===g) L.push(TBK.cur.st); L.forEach(st=>tbkStroke(c,st)); }); }
 function tbkStroke(c,st){ const P=st.p; if(!P.length) return; c.lineCap="round"; c.lineJoin="round"; c.strokeStyle=st.h?"rgba(255,214,0,.38)":st.c;
