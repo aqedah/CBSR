@@ -1117,6 +1117,21 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .elvs{display:block;width:100%;height:auto;touch-action:pan-y;overflow:visible}.elvl{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linejoin:round}
 .elvd{fill:var(--card);stroke:var(--accent);stroke-width:1.4}.elvn{font-size:9.5px;fill:var(--ink)}.elvt{font-size:8.5px;fill:var(--muted)}
 .elvz{stroke:#4F86A8;stroke-width:.8;stroke-dasharray:3 3}.elvw{fill:#4F86A8;opacity:.55}.elvcl{stroke:var(--ink);stroke-width:.7;opacity:.6}.elvct{fill:var(--ink);font-weight:700}
+.bmwho.bmdict{display:block;overflow:visible;margin:0;padding:6px 0 0;scroll-snap-type:none}
+.bmdict .pdq input{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.bmdict .pdch{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 6px}
+.bmdict .pdch button{width:auto;flex:none;display:block;min-width:34px;padding:6px 0;border-radius:8px;background:var(--card);border:1px solid var(--line);font:700 14px var(--f-ui);color:var(--muted)}
+.bmdict .pdch button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.bmdict .pdn{margin:6px 2px 4px;font-size:12.5px;color:var(--muted)}
+.bmdict .pdl{display:grid;gap:0}
+.bmdict .pdr{width:100%;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;justify-items:start;column-gap:10px;text-align:left;padding:10px 4px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);cursor:pointer;scroll-snap-align:none}
+.bmdict .pdr b{font-size:15.5px;text-align:left}.bmdict .pdr small{grid-column:1;font-size:12.5px;color:var(--muted)}
+.bmdict .pdr em{grid-column:2;grid-row:1/3;align-self:center;font-style:normal;font-size:12px;color:var(--accent)}
+.bmdict .pdnone{padding:12px 2px}
+.pdwhere{margin:4px 0 10px;font-size:15px;line-height:1.55}.pdwhere span{font-size:13.5px;color:var(--muted)}
+.pdv{display:grid;gap:10px;margin:12px 0}.pdvi{padding:10px 12px;border-radius:10px;background:var(--paper);border:1px solid var(--line)}
+.pdvi b{font-size:12.5px;color:var(--gold)}.pdvi p{margin:4px 0 2px;font-size:14.5px;line-height:1.6}
+.pdbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .bmest{margin:8px 0 0}
 html.v2 .bmmap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:min(50vh,440px);box-shadow:0 6px 14px -10px rgba(0,0,0,.35)}
 .bmwrap{display:flex;flex-direction:column}.bmside{display:contents}.bmwrap .bmsrch{order:1}.bmwrap .bmseg{order:2}.bmwrap .bmeras{order:3}.bmwrap>.bmmap{order:4}.bmwrap .bmpanel{order:5}
@@ -5965,12 +5980,54 @@ function elvSVG(E){ const e=E.e, n=e.length, V=e.filter(x=>x!=null); if(!V.lengt
     <text x="${X(hiI).toFixed(1)}" y="${(Y(top)-5).toFixed(1)}" text-anchor="${ha}" class="elvt elvtop">${nfm(top)}m</text>
     <g class="elvcur" style="display:none"><line y1="${Y0-6}" y2="${Y1}" class="elvcl"/><text y="${Y0-8}" class="elvt elvct"></text></g>
     <text x="${X0}" y="92" class="elvt">가장 낮은 곳 ${nfm(loV)}m</text><text x="${X1}" y="92" text-anchor="end" class="elvt">거리 약 ${nfm(E.km)}km</text></svg>`; }
-function elvFill(el){ const i=+el.dataset.elv; elevGet().then(J=>{ const E=J&&J[i]; if(!E||!document.body.contains(el)) return; const h=elvSVG(E); if(!h) return;
+function elvFill(el){ const i=+el.dataset.elv; elevGet().then(J=>{ const E=J&&J.r&&J.r[i]; if(!E||!document.body.contains(el)) return; const h=elvSVG(E); if(!h) return;
   el.innerHTML=`<p class="elvh">길의 높낮이 <small>지나간 곳을 곧게 이은 선 위의 땅 높이</small></p>${h}`;
   const sv=el.querySelector("svg"), cur=sv.querySelector(".elvcur"), cl=cur.querySelector("line"), ct=cur.querySelector("text"), tp=sv.querySelector(".elvtop"), n=E.e.length;
   const mv=ev=>{ const b=sv.getBoundingClientRect(), x=(ev.clientX-b.left)/b.width*320, k=Math.max(0,Math.min(n-1,Math.round((x-6)/308*(n-1)))), v=E.e[k], xx=6+308*k/(n-1);
     cur.style.display=""; tp.style.display="none"; cl.setAttribute("x1",xx); cl.setAttribute("x2",xx); ct.setAttribute("x",xx); ct.setAttribute("text-anchor",xx<50?"start":xx>270?"end":"middle"); ct.textContent=v==null?`바다 · ${nfm(E.km*k/(n-1))}km`:`${nfm(v)}m · ${nfm(E.km*k/(n-1))}km`; };
   sv.onpointermove=mv; sv.onpointerdown=mv; sv.onpointerleave=()=>{ cur.style.display="none"; tp.style.display=""; }; }); }
+/* 지명 사전(2026-11-17 목사님: 성경지도 사이트에서 따온 생각) — 성경의 곳 이름을 가나다로 찾고, 위치(이름난 곳에서 어느 쪽 몇 km)·땅 높이·책마다의 풀이·작은 지도·나오는 날.
+   지금 이름은 자료에 없어 쓰지 않음(지어내지 않음). 위치 줄은 좌표로 셈한 것. */
+const PD_CH=["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+function pdCho(n){ const c=(n||"").charCodeAt(0)-0xAC00; if(c<0||c>11171) return ""; const k="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"[Math.floor(c/588)]; return {"ㄲ":"ㄱ","ㄸ":"ㄷ","ㅃ":"ㅂ","ㅆ":"ㅅ","ㅉ":"ㅈ"}[k]||k; }
+let PD_LIST=null, PD_INFO={}; /* 띄어쓰기만 다른 같은 이름(가데스 바네아/가데스바네아)은 하나로: 풀이가 있는 쪽 이름을 쓰고 풀이는 합침 */
+function pdList(){ if(PD_LIST) return PD_LIST; const M=new Map(), add=n=>{ if(!pdCho(n)) return; const k=n.replace(/\s/g,""); const o=M.get(k)||{n,v:[],kk:""}; const i=PLACEINFO[n]; if(i){ if(!o.v.length||(PLACE.has(n)&&!PLACE.has(o.n))) o.n=n; i.v.forEach(e=>{ if(!o.v.some(x=>x[1]===e[1])) o.v.push(e); }); if(!o.kk&&i.k) o.kk=i.k; } else if(!M.has(k)) o.n=n; M.set(k,o); };
+  Object.keys(PLACEINFO).forEach(add); PLACE.forEach((v,k)=>add(k)); M.forEach(o=>{ if(o.v.length) PD_INFO[o.n]={k:o.kk,v:o.v}; }); PD_LIST=[...M.values()].map(o=>o.n).sort((a,b)=>a.localeCompare(b,"ko")); return PD_LIST; }
+function pdKind(n){ pdList(); const i=PD_INFO[n]||PLACEINFO[n]; if(i&&i.k&&i.k!=="기타") return i.k; const g=PLACE.get(n); return g?({c:"성읍",r:"지역",w:"강·바다",m:"산"}[g[3]]||""):""; }
+function pdBooks(n){ const i=PD_INFO[n]||PLACEINFO[n]; if(!i) return ""; const B=[...new Set(i.v.flatMap(x=>x[0]))].sort((a,b)=>a-b); return B.slice(0,4).map(b=>PLAN.abbr[b-1]).join(" ")+(B.length>4?` 외 ${B.length-4}`:""); }
+function pdRowsHTML(){ const q=(view.pdQ||"").replace(/\s/g,""), L=pdList(), ch=view.pdCh||"ㄱ";
+  const R=q?L.filter(n=>n.replace(/\s/g,"").includes(q)):L.filter(n=>pdCho(n)===ch);
+  if(!R.length) return `<p class="lead pdnone">‘${esc(view.pdQ)}’이(가) 들어간 곳 이름이 없습니다. 띄어쓰기 없이, 또는 앞 두 글자만 넣어 보세요.</p>`;
+  return `<p class="pdn">${q?`찾은 곳 ${R.length}`:`${esc(ch)} · ${R.length}곳`}</p>`+R.slice(0,300).map(n=>{ const g=plXY(n), k=pdKind(n), bk=pdBooks(n);
+    return `<button class="pdr" data-pd="${esc(n)}"><b>${esc(n)}</b><small>${esc([k,bk].filter(Boolean).join(" · "))}</small>${g?`<em>${g[4]?"추정 위치":"지도"}</em>`:""}</button>`; }).join(""); }
+function pdHTML(){ const ch=view.pdCh||"ㄱ";
+  return `<div class="bmwho bmdict"><div class="pdq"><input id="pdQ" type="search" placeholder="곳 이름 찾기 (예: 벧엘)" aria-label="지명 찾기" value="${esc(view.pdQ||"")}" autocomplete="off"></div>
+    <div class="pdch" role="tablist" aria-label="첫 글자">${PD_CH.map(c=>`<button role="tab" data-pdch="${c}" class="${!view.pdQ&&c===ch?"on":""}" aria-selected="${!view.pdQ&&c===ch}">${c}</button>`).join("")}</div>
+    <div class="pdl" id="pdL">${pdRowsHTML()}</div></div>`; }
+function pdBind(m){ const box=m.querySelector(".bmdict"); if(!box) return; const L=box.querySelector("#pdL"), Q=box.querySelector("#pdQ");
+  const rows=()=>{ L.innerHTML=pdRowsHTML(); L.querySelectorAll("[data-pd]").forEach(b=>b.onclick=()=>pdSheet(b.dataset.pd)); box.querySelectorAll("[data-pdch]").forEach(x=>{ const on=!view.pdQ&&x.dataset.pdch===(view.pdCh||"ㄱ"); x.classList.toggle("on",on); x.setAttribute("aria-selected",on); }); };
+  box.querySelectorAll("[data-pdch]").forEach(b=>b.onclick=()=>{ view.pdCh=b.dataset.pdch; view.pdQ=""; Q.value=""; rows(); });
+  let t=0; Q.oninput=()=>{ clearTimeout(t); t=setTimeout(()=>{ view.pdQ=Q.value.trim(); rows(); },150); };
+  rows(); elevGet(); }
+const PD_ANCH=["예루살렘","사마리아","나사렛","가버나움","헤브론","브엘세바","욥바","가사","두로","다메섹","안디옥","다소","에베소","빌립보","데살로니가","고린도","아덴","로마","바벨론","니느웨","하란","우르","수산","놉"];
+function pdWhere(n){ const g=plXY(n); if(!g) return "위치를 알 수 없는 곳입니다."; if(g[3]==="r") return "넓은 지역입니다. 지도에는 가운데쯤을 표시했습니다.";
+  const km=(a,b)=>{ const R=Math.PI/180, x=(b[2]-a[2])*R*Math.cos((a[1]+b[1])/2*R), y=(b[1]-a[1])*R; return Math.hypot(x,y)*6371; };
+  let best=null; const J=PLACE.get("예루살렘");
+  if(n!=="예루살렘"&&J&&km(J,g)<=80) best=["예루살렘",J]; else PD_ANCH.forEach(a=>{ if(a===n) return; const q=PLACE.get(a); if(!q) return; const d=km(q,g); if(d<400&&(!best||d<best[2])) best=[a,q,d]; });
+  if(!best) return ""; const [a,q]=best, d=km(q,g); if(d<3) return `${a} 바로 곁입니다.`;
+  const ang=Math.atan2(g[1]-q[1],(g[2]-q[2])*Math.cos(q[1]*Math.PI/180))*180/Math.PI, dir=["동","북동","북","북서","서","남서","남","남동"][((Math.round(ang/45)%8)+8)%8];
+  return `${a}에서 ${dir}쪽으로 약 ${d<20?Math.round(d):Math.round(d/5)*5}km${g[4]?"(위치 추정)":""}`; }
+function pdSheet(n){ pdList(); const info=PD_INFO[n]||PLACEINFO[n], k=pdKind(n);
+  const body=()=>{ const el=ELEV&&ELEV.p&&ELEV.p[n]!=null?ELEV.p[n]:null, wh=pdWhere(n);
+    return `<p class="src">${esc(k||"곳")}</p><p class="pdwhere">${esc(wh)}${el!=null?`<br><span>땅 높이 약 ${nfm(el)}m${el<0?" · 바다보다 낮은 곳":""}</span>`:""}</p>${plMiniHTML(n)}
+    ${info?`<div class="pdv">${info.v.map(([bs,tx,r])=>`<div class="pdvi"><b>${esc(bs.map(b=>PLAN.abbr[b-1]).join(" · "))}</b><p>${esc(tx)}</p>${r?`<button class="linkbtn" data-pdv="${r.join("-")}-${r[2]}">${esc(vLab(r))} 말씀 보기</button>`:""}</div>`).join("")}</div>`:""}
+    <div class="pdbtns">${plXY(n)?`<button class="btn small" id="pdMap">큰 지도에서 보기</button>`:""}<button class="btn small ghost" id="pdDays">이곳이 나오는 날</button></div>`; };
+  sheet(n,`<div id="pdS">${body()}</div>`);
+  const bind=()=>{ const root=document.getElementById("pdS"); if(!root) return; plMiniInit(n);
+    root.querySelectorAll("[data-pdv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.pdv,()=>pdSheet(n)));
+    const mp=root.querySelector("#pdMap"); if(mp) mp.onclick=()=>{ document.getElementById("sheetClose")?.click(); setTimeout(()=>bmMapOpen("land",{fly:n}),90); };
+    root.querySelector("#pdDays").onclick=()=>bmPlace(n); };
+  bind(); if(!ELEV) elevGet().then(()=>{ const root=document.getElementById("pdS"); if(root&&ELEV&&ELEV.p&&ELEV.p[n]!=null){ root.innerHTML=body(); bind(); } }); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.
    데이터: ux/big_tours.py → BM_TOURS. 단계(step): t 제목, s 때·곳, n 설명, p 지점들(배면 sea), land0/then 배 앞뒤의 뭍길, pre 움직이기 전 말씀, r 도착 말씀, z 확대, fx part|jordan, storm, stay(머묾), dash(방황), who/as_ 주인공 바뀜, add 동행 합류 ===== */
@@ -6654,8 +6711,9 @@ function bmLibHTML(){ if(view.bmFind==null){ try{ view.bmFind=localStorage.getIt
   const B=bmLit(), p=dayPlan(view.w,view.d); let np=0; try{ np=[...dayA(view.w,view.d).places.values()].filter(x=>PLACE.has(x.name)&&PLACE.get(x.name)[3]!=="r").length; }catch(e){}
   let h=`<div class="bmlibmap"><div class="bmmap" id="bmMap"></div><button class="bmbigbtn" id="bmBig" aria-label="지도 크게 보기">⤢ 크게</button></div>
   <div class="bmmapbar"><span><i class="dot red"></i>오늘 본문 · ${esc(p?p.label:"")}${np?` · ${np}곳`:""}</span></div>${""}`; /* v2: 통독하며 지나온 곳 뺌(목사님 11/2) */
-  const byEra=view.bmFind==="era", byWar=view.bmFind==="war", EG=bmEraGroups();
-  h+=`<div class="bmlibh"><div class="bmfind" role="tablist"><button role="tab" data-bmfind="who" class="${byEra||byWar?"":"on"}" aria-selected="${!byEra&&!byWar}">주인공</button><button role="tab" data-bmfind="era" class="${byEra?"on":""}" aria-selected="${byEra}">시대</button><button role="tab" data-bmfind="war" class="${byWar?"on":""}" aria-selected="${byWar}">전쟁</button></div><small class="bmwhoh">누르면 여정이 열립니다</small></div>`;
+  const byEra=view.bmFind==="era", byWar=view.bmFind==="war", byDict=view.bmFind==="dict", EG=bmEraGroups();
+  h+=`<div class="bmlibh"><div class="bmfind" role="tablist"><button role="tab" data-bmfind="who" class="${byEra||byWar||byDict?"":"on"}" aria-selected="${!byEra&&!byWar&&!byDict}">주인공</button><button role="tab" data-bmfind="era" class="${byEra?"on":""}" aria-selected="${byEra}">시대</button><button role="tab" data-bmfind="war" class="${byWar?"on":""}" aria-selected="${byWar}">전쟁</button><button role="tab" data-bmfind="dict" class="${byDict?"on":""}" aria-selected="${byDict}">지명</button></div><small class="bmwhoh">${byDict?"가나다로 찾는 곳 이름":"누르면 여정이 열립니다"}</small></div>`;
+  if(byDict){ h+=pdHTML(); return h; }
   if(byWar){ h+=`<div class="bmwho bmerarow" role="tablist">${BM_WAR.map((g,i)=>`<button role="tab" data-bmwar="${g.k}"><span class="px"><img data-px="${g.av}" alt=""><i>${i+1}</i></span><b>${esc(g.n)}</b></button>`).join("")}</div>`; return h; }
   if(byEra){ h+=`<div class="bmwho bmerarow" role="tablist">${BM_ERA9.map((g,i)=>`<button role="tab" data-bmera9="${g.k}"><span class="px"><img data-px="${g.av}" alt=""><i>${i+1}</i></span><b>${esc(g.n)}</b></button>`).join("")}</div>`; return h; }
   h+=`<div class="bmwho" role="tablist">${BM_WHO.map(g=>{ const n=G[g.k].length+(g.tour||[]).length; const rd=G[g.k].filter(i=>bmRouteRead(ROUTES_B[i]).all).length; return `<button role="tab" aria-selected="${g.k===view.bmWho}" class="${g.k===view.bmWho?"on":""}" data-bmwho="${g.k}"><span class="px"><img data-px="${g.av}" alt=""></span><b>${esc(g.n)}</b></button>`; }).join("")}</div>`;
@@ -6713,6 +6771,7 @@ function bmLibBind(m){ bmPx(m); view.bmSeg="lib"; setTimeout(()=>{ if(!BM_OV&&do
   bmLandBind(m.querySelector("#bmLandT"));
   const bb=m.querySelector("#bmBig"); if(bb) bb.onclick=()=>bmMapOpen("lib");
   m.querySelectorAll("[data-bmfind]").forEach(b=>b.onclick=()=>{ view.bmFind=b.dataset.bmfind; try{ localStorage.setItem("cbsr-bmfind",view.bmFind); }catch(e){} const w=m.querySelector(".bmlibh"); const x=document.createElement("div"); x.innerHTML=bmLibHTML(); const nh=x.querySelector(".bmlibh"), nr=x.querySelector(".bmwho"); w.replaceWith(nh); m.querySelector(".bmwho").replaceWith(nr); bmLibBind(m); });
+  pdBind(m);
   m.querySelectorAll("[data-bmera9]").forEach(b=>b.onclick=()=>bmEraSheet(b.dataset.bmera9));
   m.querySelectorAll("[data-bmwar]").forEach(b=>b.onclick=()=>bmWarSheet(b.dataset.bmwar));
   m.querySelectorAll("[data-bmwho]").forEach(b=>b.onclick=()=>{ const gw=b.closest(".bmwho"); if(gw) view.bmWhoX=gw.scrollLeft; m.querySelectorAll("[data-bmwho]").forEach(x=>{ x.classList.toggle("on",x===b); x.setAttribute("aria-selected",x===b); }); bmWhoSheet(b.dataset.bmwho); });

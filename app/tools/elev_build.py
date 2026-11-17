@@ -54,5 +54,16 @@ for it in plan:
         e=elev(la,lo,z)
         E.append(None if (e<=0 and not low_ok(la,lo)) or e<-440 else int(round(e)))
     out.append({"km":round(tot),"e":E,"m":marks})
-json.dump(out,open('elev.json','w'),ensure_ascii=False,separators=(',',':'))
+# 곳마다 땅 높이(지명 사전·스토리 지도 한 줄): gaz.json 좌표 그대로, z=11. 넓은 지역(r)·바다(0 이하, 요단 골짜기 밖)는 뺌
+G=json.load(open('gaz.json'))['places']; PJ=set()
+for q in G:
+    if q[3]!='r': x,y=txy(q[1],q[2],11); PJ.add((11,int(x),int(y)))
+with cf.ThreadPoolExecutor(16) as ex: list(ex.map(lambda a:tile(*a),sorted(PJ)))
+PE={}
+for q in G:
+    if q[3]=='r': continue
+    e=elev(q[1],q[2],11)
+    if (e<=0 and not low_ok(q[1],q[2])) or e<-440: continue
+    PE[q[0]]=int(round(e))
+json.dump({"r":out,"p":PE},open('elev.json','w'),ensure_ascii=False,separators=(',',':'))
 print('routes',sum(1 for x in out if x),'bytes',os.path.getsize('elev.json'))
