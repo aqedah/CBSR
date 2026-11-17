@@ -1831,7 +1831,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .pdbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 #storyRoot .smterr{margin:8px 0 0;font-size:13px;line-height:1.5;opacity:.85}
 .ldr{position:fixed;inset:0;z-index:100000;background:var(--paper);overflow-y:auto;-webkit-overflow-scrolling:touch}
-.ldrbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:6px;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px;background:var(--paper);border-bottom:1px solid var(--line)}
+.ldrbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:6px;padding:calc(8px + env(safe-area-inset-top,0px)) max(12px,calc((100% - 720px)/2 + 18px)) 8px;background:var(--paper);border-bottom:1px solid var(--line)}
 .ldrbar span{flex:1}.ldrbar .gpx{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:16px}.ldrnav{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:20px;color:var(--ink)}
 .ldrpage{max-width:720px;margin:0 auto;padding:18px 18px 40px;color:var(--ink)}
 .ldrh p{margin:0;font-size:13px;color:var(--muted)}.ldrh h1{margin:4px 0 0;font:700 24px var(--f-disp,serif)}.ldrh h2{margin:4px 0 0;font-size:16px;font-weight:600;color:var(--accent)}
