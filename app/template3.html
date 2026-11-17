@@ -2246,7 +2246,6 @@ html.v2 body .rdt{display:block;font:600 14px var(--f-ui);color:var(--muted);mar
 <div class="wrap">
   <header class="top">
     <div class="brand"><span id="brandL">이야기통독(시험판) · <span id="planName"></span></span><span class="topbtns"><span id="hdx"></span><button class="tourbtn" id="tourBtn" hidden>둘러보기</button><button class="menubtn" id="menuBtn" aria-label="메뉴 열기"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></span></div>
-    <div id="newsBar"></div>
     <div class="date" id="dateLine"></div>
     <div class="where" id="whereLine"></div>
     <div id="noticeBox"></div>
@@ -2284,7 +2283,7 @@ html.v2 body .rdt{display:block;font:600 14px var(--f-ui);color:var(--muted);mar
 <script>
 (function(){
 const DAYN=["주일","월","화","수","목","금","토"];
-const TRY=!!window.CBSR_TRY; if(TRY) document.documentElement.classList.add("try");
+const TRY=false; 
 const MODE=window.CBSR_MODE||"rj", PI=Object.assign({},PLAN_INFO[MODE]);
 /* 미리 보기 날짜(시험용): ?now=2027-01-01 로 오늘을 바꿔 보고, ?now=0 으로 되돌립니다(이 탭에서만) */
 const NOWOFF=(()=>{ try{ const u=new URLSearchParams(location.search).get("now"); if(u==="0") sessionStorage.removeItem("cbsr-now"); else if(u&&/^\d{4}-\d{2}-\d{2}$/.test(u)) sessionStorage.setItem("cbsr-now",u); const s=sessionStorage.getItem("cbsr-now"); if(!s) return 0; const [y,m,d]=s.split("-").map(Number), n=new Date(); return new Date(y,m-1,d,n.getHours(),n.getMinutes(),n.getSeconds())-n; }catch(e){ return 0; } })();
@@ -2406,7 +2405,7 @@ function posOfToday(){
   if(diff>=TOTAL_DAYS){ const L=TOTAL_DAYS-1; return {w:Math.floor(L/7)+1,d:L%7,state:"after",diff}; }
   return {w:Math.floor(diff/7)+1,d:diff%7,state:"in",diff};
 }
-const fmt=(dt,o)=>{ const t=dt.toLocaleDateString("ko-KR",o); return window.CBSR_V2&&o&&o.weekday?t.replace("(일)","(주일)").replace("일요일","주일"):t; }; /* v2: 일요일은 주일로(목사님 2026-11-01) */
+const fmt=(dt,o)=>{ const t=dt.toLocaleDateString("ko-KR",o); return o&&o.weekday?t.replace("(일)","(주일)").replace("일요일","주일"):t; }; /* v2: 일요일은 주일로(목사님 2026-11-01) */
 
 /* 데이터 준비 */
 const EI=buildEntityIndex(GAZ.places,GAZ.people);
@@ -2432,7 +2431,7 @@ async function loadBible(){
     const bin=Uint8Array.from(atob(B64),c=>c.charCodeAt(0));
     const ds=new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip"));
     BIBLE=JSON.parse(await new Response(ds).text()); BIBLE_SEL=BIBLE; BIBLE_K=BIBLE;
-    if(window.BIBLE_SRC!=="krv"&&window.CBSR_V2){ try{ const bk=Uint8Array.from(atob(BIBLE_B64),c=>c.charCodeAt(0)); BIBLE_K=JSON.parse(await new Response(new Blob([bk]).stream().pipeThrough(new DecompressionStream("gzip"))).text()); }catch(e){ BIBLE_K=BIBLE; } }
+    if(window.BIBLE_SRC!=="krv"&&true){ try{ const bk=Uint8Array.from(atob(BIBLE_B64),c=>c.charCodeAt(0)); BIBLE_K=JSON.parse(await new Response(new Blob([bk]).stream().pipeThrough(new DecompressionStream("gzip"))).text()); }catch(e){ BIBLE_K=BIBLE; } }
   }catch(e){bibleErr="이 브라우저에서는 본문을 열 수 없습니다. 최신 크롬이나 사파리에서 열어 주세요.";}
   render(); if(RESY!=null){ const y=RESY; RESY=null; requestAnimationFrame(()=>scrollTo(0,y)); }
 }
@@ -2441,7 +2440,7 @@ let BIBLE_SEL=null, BIBLE_K=null; const DC={sel:{},k:{}}, BC={sel:{},k:{}};
 const dayCacheOf=()=>BIBLE===BIBLE_K&&BIBLE_K!==BIBLE_SEL?DC.k:DC.sel, bookCacheOf=()=>BIBLE===BIBLE_K&&BIBLE_K!==BIBLE_SEL?BC.k:BC.sel;
 function useKRV(on){ if(!BIBLE_SEL) return; const want=on&&BIBLE_K?BIBLE_K:BIBLE_SEL; if(BIBLE!==want){ BIBLE=want; if(typeof SV!=="undefined"&&SV) SV.cache={}; } }
 function withKRV(fn){ const prev=BIBLE; useKRV(true); try{ return fn(); } finally{ BIBLE=prev; } }
-const qtTabKRV=()=>!!window.CBSR_V2&&(view.tab==="qt"||view.tab==="challenge"||!!document.getElementById("storyRoot"));
+const qtTabKRV=()=>view.tab==="qt"||view.tab==="challenge"||!!document.getElementById("storyRoot");
 function dayA(w,d){const k=w+"-"+d, C=dayCacheOf(); return C[k] ||= analyzeDay(PLAN.plan[w-1][d].ch,BIBLE,EI);}
 function bookA(b){const C=bookCacheOf(); return C[b] ||= analyzeDay(BIBLE[b-1].map((_,i)=>[b,i+1]),BIBLE,EI);}
 const CTX={abbr:PLAN.abbr,
@@ -2450,15 +2449,14 @@ const CTX={abbr:PLAN.abbr,
 
 /* 상태 */
 const here=posOfToday();
-let view={w:here.w,d:here.d,tab:window.CBSR_V2?"today":"read",open:false,quiz:null,wquiz:null,mapOpen:true};
+let view={w:here.w,d:here.d,tab:"today",open:false,quiz:null,wquiz:null,mapOpen:true};
 /* 11-13 목사님 "잠깐 홈에 갔다 와도 로딩창": 휴대폰 브라우저가 뒤로 간 탭을 지워 버리면 다시 열 때 처음부터 불러옴(앱이 막을 수 없음).
    그래서 ① 나갈 때 보던 탭·날짜·위치를 적어 두고 ② 30분 안에 다시 열리면 그 자리로 돌려놓음. 새 세션(30분 넘음)이면 오늘 화면부터 */
 let RESY=null; try{ const R=JSON.parse(sessionStorage.getItem("cbsr-resume")||"null"); if(R&&Date.now()-R.t<30*60*1000&&R.u===location.search){ Object.assign(view,{w:R.w,d:R.d,tab:R.tab,open:!!R.open}); RESY=R.y||0; } }catch(e){}
 const resSave=()=>{ try{ sessionStorage.setItem("cbsr-resume",JSON.stringify({t:Date.now(),u:location.search,w:view.w,d:view.d,tab:view.tab,open:view.open,y:Math.round(scrollY)})); }catch(e){} };
 addEventListener("pagehide",resSave); document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") resSave(); });
 const TRY_DAYS=[[35,0,"요 1–4장","장면·인물 비교"],[9,3,"삼상 16–20장","서술자의 정보·판단"],[16,0,"욥 1–7장","독자는 알고 인물은 모름"],[17,3,"시 19–24편","시에서 도구를 억지로 쓰지 않는지"]];
-if(TRY){ let k=0; try{ k=+localStorage.getItem("try-day")||0; }catch(e){} const x=TRY_DAYS[k]||TRY_DAYS[0]; view.w=x[0]; view.d=x[1]; }
-function tryPicker(){ return `<div class="trypick"><span>시험 본문</span>${TRY_DAYS.map((x,i)=>`<button class="${view.w===x[0]&&view.d===x[1]?"on":""}" data-tryday="${i}" title="${esc(x[3])}">${esc(x[2])}</button>`).join("")}</div>`; }
+
 /* 공유 링크(?p=rj&d=2026-10-20)로 들어오면 그날 본문을 엽니다 */
 try{ const dq=new URLSearchParams(location.search).get("d"); if(dq!==null){ if(/^\d{4}-\d{2}-\d{2}$/.test(dq)){ const n=dayDiff(parseD(mem.start),parseD(dq)); if(n>=0&&n<TOTAL_DAYS){ view.w=Math.floor(n/7)+1; view.d=n%7; view.linked=true; } } history.replaceState(null,"",location.pathname); } }catch(e){}
 const isoD=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
@@ -2585,9 +2583,9 @@ function finCal(){ const t0=today0(), mon=new Date(t0); mon.setDate(t0.getDate()
   const f=x=>`${x.getMonth()+1}월 ${x.getDate()}일`;
   return `<div class="fcal"><h3>최근 4주<span>${f(mon)} – ${f(end)}</span></h3><div class="fcg">${c}</div>${n?`<p>이 4주 동안 <b>${n}일</b> 말씀을 읽었습니다.</p>`:""}</div>`; }
 const objJ=t=>{ const ch=(t||"").trim().slice(-1), c=ch.charCodeAt(0)-0xAC00; return c>=0&&c<11172&&c%28===0?"를":"을"; };
-function finOpen(kind,w,d){ if(!window.CBSR_V2) return; document.querySelector(".finov")?.remove();
+function finOpen(kind,w,d){  document.querySelector(".finov")?.remove();
   const k=keyOf(w,d), p=dayPlan(w,d), dt=dateOf(w,d), q=mem.qt[k]||{}, kv=kind==="note"?storyQT(w,d).kv:null, sp=(mem.sp||{})[k];
-  const hasS=STORY()&&storySlides(w,d).length, sSeen=!!(sp&&sp.n&&sp.i>=sp.n-1);
+  const hasS=storySlides(w,d).length, sSeen=!!(sp&&sp.n&&sp.i>=sp.n-1);
   const go=kind==="read"&&!q.done?["note","묵상 노트 쓰기"]:null, alt=kind==="read"&&!q.done&&hasS; /* 11-15: 오늘 탭과 같게 — 스토리가 있으면 늘 아래에 */ /* 11-13 목사님 결정(GPT T06): 통독 뒤 첫 단추는 묵상, 스토리는 '이야기로 다시 보기'로 아래에 */
   const ttl=kind==="read"?`${esc(p.label)}${objJ(p.label)}<br>읽었습니다`:`오늘 묵상 노트를<br>마쳤습니다`;
   const el=document.createElement("div"); el.className="finov"; el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); el.setAttribute("aria-label",kind==="read"?"통독을 마쳤습니다":"묵상 노트를 마쳤습니다");
@@ -2603,8 +2601,7 @@ function finOpen(kind,w,d){ if(!window.CBSR_V2) return; document.querySelector("
   el.querySelectorAll("[data-fx]").forEach(b=>b.onclick=()=>{ close(); if(view.tab==="today"){ render(); scrollTo({top:0}); } else switchTab("today"); });
   el.querySelectorAll("[data-fgo]").forEach(b=>b.onclick=()=>{ close(); if(b.dataset.fgo==="story") storyOpen(0); else { view.qtDeep=true; if(view.tab==="qt"){ render(); scrollTo({top:0}); } else switchTab("qt"); } });
   /* 11-14 목사님: 교회 함께 읽기(몇 명이 읽었나) 삭제 — 누가 읽고 안 읽었는지 상상하게 됨 */
-  if(false) setTimeout(()=>SYNC.counts(syncKey(k),syncKey(todayStr())).then(c=>{ const W=document.getElementById("finWith"); if(!c||!W) return; const n=c.day+(c.mine||!mem.done[k]?0:1); if(n<1) return;
-    W.innerHTML=`<span class="fdots"><i></i><i></i><i></i></span><span>${n>1?`우리 교회 <b>${n}명</b>이 이 본문을 함께 읽었습니다`:`이 본문을 마친 첫 번째 분입니다`}</span>`; W.hidden=false; }).catch(()=>{}),900);
+  
 }
 /* 묵상 노트 1단계(GPT 제안 · 목사님 11/2 "바로 실행"): 원고를 더 쓰지 않고 이미 있는 글 속 구절 주소를 근거 카드로 보여 줌 */
 function qtRefs(t,w,d){ const p=dayPlan(w,d), out=[], seen=new Set(); if(!p) return out;
@@ -2883,7 +2880,7 @@ function seasonSheet(k){ const S=SEASON[k]; if(!S) return; const s=seasonsNow().
   sheet(S.t,`<p class="ssline" style="--sc:${S.c}">${esc(S.line)}</p>${s?`<p class="lead">올해: ${md(s.a)}${s.b-s.a>0?` – ${md(s.b)}`:""}${S.col?` · 절기 색 ${esc(S.col)}`:""}</p>`:""}<h4>어떤 절기인가요</h4><p>${esc(S.what)}</p><h4>이렇게 지내 보세요</h4><ul class="tgul">${S.how.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><h4>함께 읽을 말씀</h4>${S.r.map(x=>{ const r=vdbRef(x), t=vRange(r); return t?`<div class="yrkv lt"><q>${esc(t)}</q><small>${esc(thLab(r))}</small></div>`:""; }).join("")}${k==="kbm"?kbmHTML():""}`); if(k==="kbm") kbmMapInit(); }
 function bindBanners(root){ root.querySelectorAll("[data-yv]").forEach(b=>b.onclick=()=>yvOpen()); root.querySelectorAll("[data-yr]").forEach(b=>b.onclick=()=>yrOpen());
   root.querySelectorAll("[data-ss]").forEach(b=>b.onclick=()=>seasonSheet(b.dataset.ss)); root.querySelectorAll("[data-ssx]").forEach(b=>b.onclick=()=>{ const s=seasonsNow().find(x=>x.k===b.dataset.ssx); if(s) ssHide(s); b.closest(".sbnr").remove(); }); }
-function topBanners(tab){ if(!window.CBSR_V2||!BIBLE) return ""; let h="";
+function topBanners(tab){ if(!BIBLE) return ""; let h="";
   if(tab==="today"){ h+=seasonBanner(); const y=NOW().getFullYear(); if(yvOpenNow()&&!yvGet(y)) h+=yvBanner(); }
   else { h+=yrBanner(); h+=yvBanner(); h+=seasonBanner(); }
   return h?`<div class="sbnrs">${h}</div>`:""; }
@@ -2931,11 +2928,6 @@ function markGloss(text,b,seen){
     last=h.i+h.l; }
   return out+esc(text.slice(last));
 }
-function glossInDay(A,b){
-  const found=[]; const seen=new Set(); GI.re.lastIndex=0;
-  for(const v of A.verses){ GI.re.lastIndex=0; let m; while((m=GI.re.exec(v.t))){ const it=GI.by.get(m[1]); if(it&&inScope(it,v.b)&&!seen.has(it.t)){seen.add(it.t);found.push({it,ref:[v.b,v.c,v.v]});} } }
-  return found;
-}
 
 
 /* 지명: 본문에 나오는 땅 이름 풀이 */
@@ -2951,10 +2943,6 @@ const NOT_PERSON={"이삭":{a:/^(을|이|들)?\s?(자르|잘라|비비|비벼|�
 const NEED_NEAR={"이삭":{books:[1,24,25,26],near:/(아브라함|야곱|리브가|에서|이스마엘)/}};
 function notPerson(n,text,i,b){ const q=NEED_NEAR[n]; if(q&&b&&!q.books.includes(b)&&!q.near.test(text.slice(Math.max(0,i-30),i+n.length+30))) return true; const r=NOT_PERSON[n]; if(!r) return false; return r.a.test(text.slice(i+n.length,i+n.length+8))||r.b.test(text.slice(Math.max(0,i-6),i)); }
 function kindOf(n,b){ const a=plIn(n,b), h=peIn(n,b); if(a&&h){ return lists(PEOPLEINFO[n],b)&&!lists(PLACEINFO[n],b)?"h":"p"; } return a?"p":h?"h":null; }
-function entsIn(A){ const pl=[], pe=[], seen=new Set();
-  for(const v of A.verses){ const gs=[]; GI.re.lastIndex=0; let g; while((g=GI.re.exec(v.t))){ const it=GI.by.get(g[1]); if(it&&inScope(it,v.b)) gs.push([g.index,g.index+g[1].length]); }
-    PL_RE.lastIndex=0; let m; while((m=PL_RE.exec(v.t))){ const n=TR_ALIAS[m[1]]||m[1], a0=m.index, a1=a0+m[1].length; if(gs.some(([x,y])=>a0<y&&a1>x)) continue; let k=kindOf(n,v.b); if(k==="h"&&notPerson(n,v.t,a0,v.b)) k=plIn(n,v.b)?"p":null; if(k==="p"&&LANG_AFTER.test(v.t.slice(a1,a1+16))) continue; if(!k||seen.has(k+n)) continue; seen.add(k+n); (k==="p"?pl:pe).push({n,s:m[1],ref:[v.b,v.c,v.v]}); } }
-  return {pl,pe}; }
 function placeEntry(n,b){ const p=PLACEINFO[n]; if(!p) return null;
   let e=p.v.find(x=>x[0].includes(b)); if(!e){ e=p.v.slice().sort((x,y)=>(Math.min(...x[0],99))-(Math.min(...y[0],99)))[0]; }
   return e; }
@@ -2971,7 +2959,7 @@ function showPerson(n){
 const PLNS=new Map(); function plXY(n){ if(typeof PLACE==="undefined") return null; if(PLACE.has(n)) return PLACE.get(n); if(typeof PLX!=="undefined"&&PLX[n]) return PLX[n];
   if(!PLNS.size) PLACE.forEach((v,k)=>PLNS.set(k.replace(/\s/g,""),v)); const k=n.replace(/\s/g,""); if(PLNS.has(k)) return PLNS.get(k);
   for(const s of ["산지","광야","골짜기","평지","강","산","못","망대","동산","바위","언덕","샘","우물","호수"]) if(k.endsWith(s)&&PLNS.has(k.slice(0,-s.length))) return PLNS.get(k.slice(0,-s.length)); return null; }
-function plMiniHTML(n){ const g=window.CBSR_V2&&window.L?plXY(n):null; return g?`<div class="plmini" id="plMini" aria-label="${esc(n)} 위치 지도"></div>${g[4]?`<p class="src plest">위치는 추정입니다.</p>`:g[3]==="r"?`<p class="src plest">넓은 지역이라 가운데쯤을 표시했습니다.</p>`:""}`:""; }
+function plMiniHTML(n){ const g=window.L?plXY(n):null; return g?`<div class="plmini" id="plMini" aria-label="${esc(n)} 위치 지도"></div>${g[4]?`<p class="src plest">위치는 추정입니다.</p>`:g[3]==="r"?`<p class="src plest">넓은 지역이라 가운데쯤을 표시했습니다.</p>`:""}`:""; }
 function plMiniInit(n){ const el=document.getElementById("plMini"); if(!el||!window.L) return; const g=plXY(n); if(!g) return;
   setTimeout(()=>{ if(!document.body.contains(el)) return; let st="natural"; try{ if(!view.pre&&!view.revW) st=mapStyleOf(view.w,view.d)||"cartoon"; }catch(e){}
     const map=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,st);
@@ -2993,15 +2981,15 @@ function showPlace(n){
 /* 팝업 */
 /* 휴대폰 '뒤로 가기'로 열린 화면(본문 보기·스토리 QT·놀이·아래 창)만 닫고 페이지는 떠나지 않게 합니다 (v2) */
 const OVS=[]; let OVskip=0;
-try{ if(window.CBSR_V2&&"scrollRestoration" in history) history.scrollRestoration="manual"; }catch(e){}
-function ovOpen(f){ if(!window.CBSR_V2||OVS.includes(f)) return; OVS.push(f); try{ history.pushState({cbsrOv:OVS.length},""); }catch(e){} }
+try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }catch(e){}
+function ovOpen(f){ if(OVS.includes(f)) return; OVS.push(f); try{ history.pushState({cbsrOv:OVS.length},""); }catch(e){} }
 function ovDone(f){ const i=OVS.lastIndexOf(f); if(i<0) return; OVS.splice(i,1); OVskip++; try{ history.back(); }catch(e){ OVskip--; } }
 window.addEventListener("popstate",()=>{ if(OVskip>0){ OVskip--; return; } const f=OVS.pop(); if(f) f(true); });
 function sheet(title,body,onClose){
   const root=document.getElementById("sheetRoot");
   root.innerHTML=`<div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-head"><h3>${esc(title)}</h3><button class="iconbtn sheet-x" id="sheetX" aria-label="닫기">✕</button></div>${body}<div class="row sheet-foot"><button class="btn small" id="sheetClose">닫기</button></div></div></div>`;
   const sheetOff=pop=>{ root.innerHTML=""; if(pop!==true) ovDone(sheetOff); if(onClose){ const f=onClose; onClose=null; f(); } }; const close=()=>sheetOff();
-  if(window.CBSR_V2){ for(const f of OVS.filter(f=>f.__sheet)) OVS.splice(OVS.indexOf(f),1); sheetOff.__sheet=1; ovOpen(sheetOff); }
+  for(const f of OVS.filter(f=>f.__sheet)) OVS.splice(OVS.indexOf(f),1); sheetOff.__sheet=1; ovOpen(sheetOff);
   document.getElementById("sheetClose").onclick=close;
   const t0=Date.now(); /* 11-13: 손가락을 뗄 때 뒤따르는 클릭이 막 열린 창 바깥을 눌러 바로 닫히지 않게(가이드북 절 주소 → 잠깐 보기) */
   document.getElementById("sheetBg").onclick=e=>{ if(e.target.id==="sheetBg"&&Date.now()-t0>450) close(); };
@@ -3079,7 +3067,7 @@ function syncHlBar(){
   const anyMk=[...HSEL].some(id=>HL[id]);
   /* 11/6 목사님: 순서 책갈피/재생/형광펜/메모/말씀 카드. 여러 절을 골라도 같은 막대 — 책갈피·재생·메모는 고른 절 가운데 맨 앞 절 기준 */
   const vn=id=>id.split("-").map(Number), first=[...HSEL].sort((a,b)=>{const A=vn(a),B=vn(b);return A[0]-B[0]||A[1]-B[1]||A[2]-B[2];})[0];
-  const one=first, isBm=mem.bm&&mem.bm.v===one, V2=!!window.CBSR_V2;
+  const one=first, isBm=mem.bm&&mem.bm.v===one, V2=true;
   const lnHas=V2&&lnGet(keyOf(view.w,view.d),one);
   const ttsHere=ttsOK()&&!(TTS.on&&TTS.key===keyOf(view.w,view.d));
   bar.innerHTML=`<button class="bmb${isBm?" on":""}" data-mk="bm" aria-label="${isBm?"책갈피 빼기":"책갈피"}">${isBm?"책갈피 빼기":"책갈피"}</button>${ttsHere?`<button class="sw ttsb" data-mk="tts" aria-label="이 절부터 듣기" title="이 절부터 듣기">▶</button>`:""}<span class="hlsws">${Object.entries(HLC).map(([k,n])=>`<button class="sw ${k}" data-mk="${k}" aria-label="${n} 형광펜"></button>`).join("")}${anyMk?`<button class="sw x" data-mk="x" aria-label="형광펜 지우기" title="형광펜 지우기">✕</button>`:""}</span>${V2?`<i class="hlbr"></i><button class="bmb lnb${lnHas?" on":""}" data-mk="ln">메모</button><button class="bmb wcb" data-mk="wc">말씀 카드</button>`:""}<button class="hlx" data-mk="close" aria-label="닫기" title="닫기">✕</button>`;
@@ -3165,8 +3153,7 @@ function initMap(A){
   if(fid==="israel") terr.addLayer(L.imageOverlay(TERRAIN.israelhi.url,TERRAIN.israelhi.bounds));
   const water=L.layerGroup([...WATER.lakes.map(l=>L.polygon(l,{color:"#5f8fae",weight:1,fillColor:"#A8C6D6",fillOpacity:1,interactive:false})),...WATER.rivers.map(r=>L.polyline(r,{color:"#5f8fae",weight:2,interactive:false}))]);
   /* v2: 스토리 QT 지도와 같은 위성 사진으로(목사님 결정 2026-10-29). v1은 지형도 그대로 */
-  if(window.CBSR_V2){ mapBase(map,mapStyleOf(view.w,view.d)); map.attributionControl.addAttribution("추가 지명 위치: OpenBible.info(CC BY 4.0)"); }
-  else { terr.addTo(map); water.addTo(map); }
+  mapBase(map,mapStyleOf(view.w,view.d)); map.attributionControl.addAttribution("추가 지명 위치: OpenBible.info(CC BY 4.0)");
   // 처음엔 오늘 지역에 맞추고, 3단계까지 더 넓게 축소 가능
   map.fitBounds(FB,{animate:false}); { const z0=map.getZoom(), zw=map.getBoundsZoom(WB); map.setMinZoom(Math.max(zw,z0-3)); }
   const use=pts.filter(p=>inF(fid,p));
@@ -3237,7 +3224,7 @@ function renderHead(){
   if(here.state==="before"&&isToday) nb.innerHTML=`<div class="notice">통독 시작일까지 ${-here.diff}일 남았습니다. 1주차를 미리 볼 수 있습니다.</div>`;
   else if(here.state==="after"&&isToday) nb.innerHTML=`<div class="notice">${esc(PI.name)} 일정이 끝났습니다. '나의 기록'에서 한 해를 돌아보세요.</div>`;
   else nb.innerHTML="";
-  if(TRY){ document.getElementById("dateLine").textContent="시험 페이지 · "+dayPlan(view.w,view.d).label; nb.onclick=e=>{ const b=e.target.closest("[data-tryday]"); if(!b) return; const x=TRY_DAYS[+b.dataset.tryday]; try{ localStorage.setItem("try-day",b.dataset.tryday); }catch(er){} view.w=x[0]; view.d=x[1]; view.open=false; render(); scrollTo({top:0}); }; nb.innerHTML=`<div class="notice">처음 써 보는 분을 위한 시험 페이지입니다. <b>오늘 통독 → QT → 나의 기록</b> 순서로 해 보세요. 여기 적은 내용은 이 기기에만 남고 앱 기록과 섞이지 않습니다.${tryPicker()}</div>`; }
+  
   const a=cellOf(W,0).dt, z=cellOf(W,6).dt;
   document.getElementById("wkTitle").innerHTML=`<span class="wkt">${esc(dispTitle(W))}<i class="caret" aria-hidden="true">▾</i></span><small>${fmt(a,{month:"numeric",day:"numeric"})} – ${fmt(z,{month:"numeric",day:"numeric"})}</small>`;
   const st=document.getElementById("strip"); st.innerHTML=""; st._lastBk=null;
@@ -3271,7 +3258,7 @@ function renderHead(){
   document.getElementById("prevW").disabled=W<=1;
   document.getElementById("nextW").disabled=W>=NDWv;
   document.getElementById("planName").textContent=PI.name+(TR!=="krv"?" · "+TR_INFO[TR].name:"");
-  if(window.CBSR_V2){ const bl=document.getElementById("brandL"), hx=document.getElementById("hdx"); const isT=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d, MISS=TRY?[]:missedDays();
+  { const bl=document.getElementById("brandL"), hx=document.getElementById("hdx"); const isT=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d, MISS=missedDays();
     const REL=(()=>{ if(view.pre||view.revW) return null; const t0=today0(), dd=dayDiff(t0,dt); if(dd===0) return "오늘"; if(dd===-1) return "어제"; if(dd===1) return "내일"; const ws=x=>{ const y=new Date(x); y.setDate(y.getDate()-y.getDay()); return y; }, wd=Math.round(dayDiff(ws(t0),ws(dt))/7); return wd===0?"이번 주":wd===-1?"지난주":wd===1?"다음 주":wd<0?`${-wd}주 전`:`${wd}주 뒤`; })(); /* 11/3 목사님: 오늘/오늘로는 날짜 옆에, 지금 보는 날이 언제인지 말로 */
     if(bl) bl.innerHTML=`<button class="v2d" id="rgDate" aria-label="통독표 열기">${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}<svg class="v2dv" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${REL?(REL==="오늘"?`<button class="rgrel now" id="rgCal" aria-label="오늘 · 통독표 열기">오늘</button>`:`<button class="rgrel" id="rgToday" aria-label="${esc(REL)} · 오늘로 가기"><span>${esc(REL)}</span><i>오늘로</i><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`):""}<small class="v2p">${view.revW?esc(PI.name):esc(Y27?PI.name:(dayNo(view.w,view.d)+"일째"))}</small><span id="planName" hidden></span>`;
     if(hx) hx.innerHTML=`<button class="rgcal" id="rgLib" aria-label="스토리 모음"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg></button><button class="rgcal" id="rgMap" aria-label="성경 지도"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
@@ -3307,21 +3294,6 @@ function genreOf(b,c){ if(GENEAL.has(b+"-"+c)) return "gen"; if(b===66||(b===27&
   if(b===3||(b===2&&((c>=21&&c<=23)||(c>=25&&c<=31)||(c>=35&&c<=39)))||(b===4&&[5,6,15,18,19,28,29,30].includes(c))||(b===5&&c>=12&&c<=26)) return "law";
   if(b===18&&c>=3&&c<=41||b===20||b===21) return "wis";
   if((b>=23&&b<=39&&![25,27,32].includes(b))) return "pro"; if(b>=45&&b<=65) return "ep"; return ""; }
-function keyEnts(p){ const S={pe:new Map(),pl:new Map(),w:new Map()};
-  for(const [b,c] of p.ch){ const f=FLOW[b+"-"+c]; if(!f) continue; for(const t of ["pe","pl","w"]) (f[t]||[]).forEach((n,i)=>S[t].set(n,(S[t].get(n)||0)+(3-i))); }
-  const top=(m,k)=>[...m.entries()].sort((a,b)=>b[1]-a[1]).slice(0,k).map(x=>x[0]);
-  return {pe:top(S.pe,4).filter(n=>PEOPLEINFO[n]),pl:top(S.pl,4).filter(n=>PLACEINFO[n]),w:top(S.w,3).filter(n=>GI.by.get(n))}; }
-function knowSection(p,A,b0){
-  const K=keyEnts(p), E=entsIn(A), gl=glossInDay(A,b0).filter(x=>!NAME_SET.has(x.it.t));
-  if(!K.pe.length&&E.pe.length) K.pe=E.pe.slice(0,3).map(x=>x.n);
-  if(!K.pl.length&&E.pl.length) K.pl=E.pl.slice(0,3).map(x=>x.n);
-  const ope=E.pe.filter(x=>!K.pe.includes(x.n)), opl=E.pl.filter(x=>!K.pl.includes(x.n)), ow=gl.filter(x=>!K.w.includes(x.it.t));
-  const chip=(t,n,lab)=>t==="pe"?`<button class="chip nm" data-pe="${esc(n)}">${esc(lab)}</button>`:t==="pl"?`<button class="chip pl" data-pl="${esc(n)}">${esc(lab)}</button>`:`<button class="chip term" data-g="${esc(n)}">${esc(lab)}</button>`;
-  const row=(cls,lab,items)=>items.length?`<div class="krow"><b class="kh ${cls}">${lab}</b><div class="chips">${items.join("")}</div></div>`:"";
-  let h=`<section class="sec"><span class="label">오늘 알아둘 것</span>`;
-  if(!K.pe.length&&!K.pl.length&&!K.w.length&&!gl.length) return h+`<p class="lead">오늘 본문에는 따로 알아 둘 이름이나 어려운 말이 많지 않습니다.</p></section>`;
-  h+=`<div class="know">`+row("pe","인물",K.pe.map(n=>chip("pe",n,trName(n))))+row("pl","곳",K.pl.map(n=>chip("pl",n,trName(n))))+row("w","말",K.w.map(n=>chip("w",n,trName(n))))+`</div>`;
-  return h+`</section>`; }
 function qsumT(s,t){ return (s===t?`${t}문제를 모두 한 번에 찾았습니다.`:s?`처음에 ${s}문제를 바로 찾았고, ${t-s}문제는 본문을 다시 보고 찾았습니다.`:`${t}문제 모두 본문을 다시 보고 찾았습니다.`); }
 function flowQz(w,d){ const L=[]; for(const [b,c] of dayPlan(w,d).ch){ const f=FLOW[b+"-"+c]; if(f&&f.qz) L.push({t:"mc",kind:"본문 다시 찾기",...f.qz}); }
   for(let i=L.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [L[i],L[j]]=[L[j],L[i]]; } return L.slice(0,2); }
@@ -3376,26 +3348,6 @@ function prepHelp(p,w,key){
   const calm=seen.slice(0,2).map(gg=>`<p class="calm">${GENRE_MSG[gg][1]}</p>`).join("");
   if(!rows.length&&!extra&&!calm) return "";
   return `<details class="help30"${view.helpOpen?" open":""}><summary>읽기 전 30초 도움 <span aria-hidden="true">›</span></summary><dl>${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>${extra}${calm}</details>`; }
-function entSection(p,A,b0,w,d){
-  const K=keyEnts(p), E=entsIn(A), gl=glossInDay(A,b0).filter(x=>!NAME_SET.has(x.it.t));
-  const pe=[...K.pe.map(n=>[n,trName(n)]),...E.pe.filter(x=>!K.pe.includes(x.n)).map(x=>[x.n,x.s||x.n])];
-  const pl=[...K.pl.map(n=>[n,trName(n)]),...E.pl.filter(x=>!K.pl.includes(x.n)).map(x=>[x.n,x.s||x.n])];
-  const wd=[...K.w.map(n=>[n,trName(n)]),...gl.filter(x=>!K.w.includes(x.it.t)).map(x=>[x.it.t,x.it.t])];
-  const kwH=GBD()&&GBD()[dayNo(w,d)]?"":renderKeyWords(A,w,d); /* 가이드북이 있는 날은 '읽는 단서'를 뺌(읽기 도구·성경 전체로와 겹침) */
-  const row=(cls,lab,items)=>items.length?`<div class="krow"><b class="kh ${cls}">${lab}</b><div class="chips">${items.join("")}</div></div>`:"";
-  if(!pe.length&&!pl.length&&!wd.length&&!kwH) return "";
-  return `<section class="sec"><span class="label">오늘 본문의 인물 · 곳 · 말</span><div class="know">${row("pe","인물",pe.map(([n,l])=>`<button class="chip nm" data-pe="${esc(n)}">${esc(l)}</button>`))}${row("pl","곳",pl.map(([n,l])=>`<button class="chip pl" data-pl="${esc(n)}">${esc(l)}</button>`))}${row("w","말",wd.map(([n,l])=>`<button class="chip term" data-g="${esc(n)}">${esc(l)}</button>`))}</div>${kwH?`<details class="moreent" id="moreBox"${view.entAll?" open":""}><summary>본문을 읽는 단서</summary>${kwH}</details>`:""}</section>`; }
-function moreSection(p,A,b0,w,d){
-  const K=keyEnts(p), E=entsIn(A), gl=glossInDay(A,b0).filter(x=>!NAME_SET.has(x.it.t));
-  if(!K.pe.length) K.pe=E.pe.slice(0,3).map(x=>x.n); if(!K.pl.length) K.pl=E.pl.slice(0,3).map(x=>x.n);
-  const ope=E.pe.filter(x=>!K.pe.includes(x.n)), opl=E.pl.filter(x=>!K.pl.includes(x.n)), ow=gl.filter(x=>!K.w.includes(x.it.t));
-  const kwH=window.CBSR_V2&&GBD()&&GBD()[dayNo(w,d)]?"":renderKeyWords(A,w,d); /* 11-13 목사님: 가이드북이 있는 날은 '읽는 단서'(구약의 메아리 포함)가 읽기 도구·성경 전체로와 겹쳐 뺌 */
-  if(!ope.length&&!opl.length&&!ow.length&&!kwH) return "";
-  const row=(cls,lab,items)=>items.length?`<div class="krow"><b class="kh ${cls}">${lab}</b><div class="chips">${items.join("")}</div></div>`:"";
-  const cnt=[ope.length?`인물 ${ope.length}명`:"",opl.length?`지명 ${opl.length}곳`:"",ow.length?`말 ${ow.length}개`:"",kwH?"읽기 도구":""].filter(Boolean).join(" · ");
-  return `<section class="sec"><details class="moreent"${view.entAll?" open":""} id="moreBox"><summary>본문을 더 자세히 살펴보기 <small>${cnt}</small></summary>
-   <div class="know more">${row("pe","인물",ope.map(x=>`<button class="chip nm" data-pe="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("pl","곳",opl.map(x=>`<button class="chip pl" data-pl="${esc(x.n)}">${esc(x.s||x.n)}</button>`))}${row("w","말",ow.map(x=>`<button class="chip term" data-g="${esc(x.it.t)}">${esc(x.it.t)}</button>`))}</div>
-   ${kwH?`<span class="label" style="margin-top:12px">읽기 도구</span>${kwH}`:""}</details></section>`; }
 
 /* 예전에 바꿔 둔 화면 글자(서버에 저장된 것)를 적용 */
 let TEXTMAP={}; try{ TEXTMAP=JSON.parse(localStorage.getItem("cbsr-texts")||"{}")||{}; }catch(e){}
@@ -3417,7 +3369,7 @@ function chapHTML(b,c,s2){ LNDAY=((mem.qt||{})[keyOf(view.w,view.d)]||{}).ln; co
   BIBLE[b-1][c-1].forEach((t,i)=>{ const v=i+1, id=`${b}-${c}-${v}`, mk=HL[id];
     if(P.has(v)) h+=`</p><p class="para">`;
     const bm=mem.bm&&mem.bm.v===id;
-    h+=`<span class="v${mk&&mk[0]?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}${bm?" bm":""}${window.CBSR_V2&&LNDAY&&LNDAY[id]&&LNDAY[id].t?" ln":""}" id="v-${id}" data-v="${id}">${bm?`<i class="bmk" aria-label="책갈피"></i>`:""}<sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
+    h+=`<span class="v${mk&&mk[0]?" mk-"+mk[0]:""}${HSEL.has(id)?" sel":""}${bm?" bm":""}${LNDAY&&LNDAY[id]&&LNDAY[id].t?" ln":""}" id="v-${id}" data-v="${id}">${bm?`<i class="bmk" aria-label="책갈피"></i>`:""}<sup>${v}</sup>${verseHTML(t,b,c,v,s2,o.sp)}</span> `; });
   return h+(o.para?`</p>`:""); }
 
 /* ── 본문 들려주기: 기기에 들어 있는 음성 읽기(한국어)로 절마다 읽습니다 ── */
@@ -3434,7 +3386,7 @@ function ttsStart(fromId){ if(!ttsOK()||!BIBLE) return; ttsTok++; try{ speechSyn
   for(const [b,c] of p.ch){ TTS.q.push({t:`${PLAN.full[b-1]} ${c}${b===19?"편":"장"}`}); BIBLE[b-1][c-1].forEach((t,i)=>{ if(t) TTS.q.push({id:`${b}-${c}-${i+1}`,t:ttsClean(t)}); }); }
   TTS.i=fromId?Math.max(0,TTS.q.findIndex(x=>x.id===fromId)):0; TTS.on=true; TTS.paused=false; TTS.key=keyOf(w,d); TTS.w=w; TTS.d=d; ttsSpeak(); }
 /* 듣기도 읽음으로(2026-11-02 목사님): 그날 본문의 첫 절과 마지막 절을 모두 끝까지 들었을 때만 '오늘 통독 완료' */
-function ttsHeard(i){ if((!window.CBSR_V2)) return; const it=TTS.q[i]; if(!it||!it.id) return; const ids=TTS.q.filter(x=>x.id); if(TTS.hk!==TTS.key){ TTS.hk=TTS.key; TTS.hf=false; TTS.hl=false; }
+function ttsHeard(i){  const it=TTS.q[i]; if(!it||!it.id) return; const ids=TTS.q.filter(x=>x.id); if(TTS.hk!==TTS.key){ TTS.hk=TTS.key; TTS.hf=false; TTS.hl=false; }
   if(it.id===ids[0].id) TTS.hf=true; if(it.id===ids[ids.length-1].id) TTS.hl=true;
   const k=TTS.key; if(TTS.hf&&TTS.hl&&k&&!mem.done[k]){ touchDone(k); mem.done[k]=todayStr(); if(window.SYNC&&SYNC.available) countDone(k); save(); const w=TTS.w, d=TTS.d; setTimeout(()=>{ ttsStop(); if(view.tab==="read"){ const y=scrollY; render(); scrollTo({top:y}); } finOpen("read",w,d); },400); } }
 function ttsSpeak(){ if(!TTS.on||TTS.paused) return; if(TTS.i>=TTS.q.length){ ttsStop(); return; }
@@ -3500,15 +3452,15 @@ function renderRead(){
   const A=dayA(w,d), sc=dayScore(w,d), done=!!mem.done[key];
   const mins=Math.max(5,Math.round(A.text.length/450));
   let h=onbCard()+installCard("read")+resumeCard();
-  if(!TRY&&!window.CBSR_V2&&view.w===here.w&&view.d===here.d){ const M=missedDays(); if(M.length) h+=`<details class="missed"${view.missOpen?" open":""} id="missBox"><summary>읽지 않은 날 ${M.length}일 <span aria-hidden="true">›</span></summary><div class="qtstart-list">${M.map(([a,b])=>dayBtn(a,b)).join("")}</div></details>`; }
+  
   // 오늘 본문: 제목 → 분량·시간 → 본문 펼치기 → (접힌) 읽기 전 30초 도움
-  const dtv=dateOf(w,d), dd0=dayDiff(today0(),dtv), tag=TRY?["today","시험 본문"]:dd0===0?["today","오늘 읽을 본문"]:dd0<0?["past","지난 본문"]:["next","미리 보기"];
-  h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl">${window.CBSR_V2?`<span class="rdk">${esc(dayK(w,d))}</span>`:""}<h2>${esc(p.label)}</h2>${window.CBSR_V2&&p.topic&&p.topic!==p.label?`<small class="rdt">${esc(p.topic)}</small>`:""}${window.CBSR_V2?placeBand(w,d):""}<p class="dmeta">${window.CBSR_V2?`<span class="dmtag ${tag[0]}">${TRY?tag[1]:tag[0]==="today"?"오늘 본문":tag[1]}</span>`:""}<span>${p.ch.length}${b0===19?"편":"장"}</span><span>약 ${mins}분</span>${window.CBSR_V2?[...new Set(p.ch.filter(x=>x[1]===1).map(x=>x[0]))].filter(b=>BOOKINFO[b]).map(b=>`<button class="dmbook" data-book="${b}">${esc(PLAN.full[b-1])}${hasB(PLAN.full[b-1])?"은":"는"} 어떤 책? ›</button>`).join(""):""}${(()=>{ const R=false; return R&&R.core&&!window.CBSR_V2?`<span>핵심 읽기 <b class="rjc">${esc(R.core)}</b></span>`:""; })()}${done?`<span class="okc">✓ 통독 완료</span>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:window.CBSR_V2&&envKind()==="kakao"?`<button class="kext" id="kakaoOut" aria-label="다른 브라우저로 열어 본문 듣기">${ICON_SPK}<span>듣기 ↗</span></button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
+  const dtv=dateOf(w,d), dd0=dayDiff(today0(),dtv), tag=dd0===0?["today","오늘 읽을 본문"]:dd0<0?["past","지난 본문"]:["next","미리 보기"];
+  h+=`<section class="sec daycard" id="textSec"><span class="dtag ${tag[0]}">${tag[1]}</span><div class="dhead"><div class="dtl">${`<span class="rdk">${esc(dayK(w,d))}</span>`}<h2>${esc(p.label)}</h2>${p.topic&&p.topic!==p.label?`<small class="rdt">${esc(p.topic)}</small>`:""}${placeBand(w,d)}<p class="dmeta">${`<span class="dmtag ${tag[0]}">${tag[0]==="today"?"오늘 본문":tag[1]}</span>`}<span>${p.ch.length}${b0===19?"편":"장"}</span><span>약 ${mins}분</span>${[...new Set(p.ch.filter(x=>x[1]===1).map(x=>x[0]))].filter(b=>BOOKINFO[b]).map(b=>`<button class="dmbook" data-book="${b}">${esc(PLAN.full[b-1])}${hasB(PLAN.full[b-1])?"은":"는"} 어떤 책? ›</button>`).join("")}${(()=>{ const R=false; return R&&R.core&&false?`<span>핵심 읽기 <b class="rjc">${esc(R.core)}</b></span>`:""; })()}${done?`<span class="okc">✓ 통독 완료</span>`:""}</p></div><div class="dicons">${ttsOK()?`<button class="cbtn" id="ttsBtn" aria-label="본문 듣기" title="본문 듣기">${ICON_SPK}</button>`:envKind()==="kakao"?`<button class="kext" id="kakaoOut" aria-label="다른 브라우저로 열어 본문 듣기">${ICON_SPK}<span>듣기 ↗</span></button>`:""}<button class="cbtn" id="shareDay" aria-label="본문 보내기" title="본문 보내기">${ICON_SHARE}</button></div></div>`;
   const simple=SIMPLE()&&!view.tourFull;
   const helpBox=prepHelp(p,w,key);
   const GDd=GBD()&&GBD()[dayNo(w,d)], GTd=GBT()&&GBT()[dayNo(w,d)], TXd=PVQ.has(key)?(GTd?{q:GTd}:null):dayTools(w,d), tl=TXd?TXd.q:[]; /* 가이드북이 있는 날은 가이드북의 장치 */
   const eyeQ=EYE[key]&&EYE[key].q?`<div class="eyeq qbox"><b>읽으며 살펴볼 질문</b><p>${esc(EYE[key].q)}</p>${tl.length?toolLine(tl,MODE+key,GDd):""}</div>`:(tl.length?`<div class="eyeq qbox">${toolLine(tl,MODE+key,GDd)}</div>`:""); /* 11-11: 질문이 없는 날도 읽기 도구는 보임 */
-  const V2R=!!window.CBSR_V2;
+  const V2R=true;
   if(V2R&&!view.v2shut) view.open=true;
   const aid=V2R?readAid(p,w,d,key,tl,GDd):""; /* 11-13 목사님: 읽기 도우미를 가이드북 ① 읽기 전 틀로 정리 */
   if(!view.open){
@@ -3530,15 +3482,14 @@ function renderRead(){
   }
   h+=`</section>`;
   /* 11-13 목사님: 본문 끝은 가이드북 ③ 읽은 뒤와 같게. 큰 여정 이어 보기·[더 알아보기](줄거리 정리, 인물·곳·말, 지도, 퀴즈)는 그 아래 */
-  if(window.CBSR_V2){ const A3=afterRead(w,d,A), TH=tourHere(w,d); if(A3||TH) h+=`<details class="v2aid rd3" id="rd3"${view.rd3Open===false?"":" open"}><summary>③ 읽은 뒤<small>${[/눈여겨볼 것/.test(A3)?"눈여겨볼 것":"",/>지도</.test(A3)?"지도":"",/성경 전체로/.test(A3)?"성경 전체로":"",TH?"큰 여정":""].filter(Boolean).join(" · ")}</small></summary><div class="rd3in">${A3}${TH?`<div class="aidsec"><b class="aidk">큰 여정</b>${TH}</div>`:""}</div><button class="foldbtn" data-fold="rd3">③ 읽은 뒤 접기 ▲</button></details>`; } /* 11-13 목사님: ①과 같은 상자·같은 제목 크기 */
+  { const A3=afterRead(w,d,A), TH=tourHere(w,d); if(A3||TH) h+=`<details class="v2aid rd3" id="rd3"${view.rd3Open===false?"":" open"}><summary>③ 읽은 뒤<small>${[/눈여겨볼 것/.test(A3)?"눈여겨볼 것":"",/>지도</.test(A3)?"지도":"",/성경 전체로/.test(A3)?"성경 전체로":"",TH?"큰 여정":""].filter(Boolean).join(" · ")}</small></summary><div class="rd3in">${A3}${TH?`<div class="aidsec"><b class="aidk">큰 여정</b>${TH}</div>`:""}</div><button class="foldbtn" data-fold="rd3">③ 읽은 뒤 접기 ▲</button></details>`; } /* 11-13 목사님: ①과 같은 상자·같은 제목 크기 */
   // 이해가 필요할 때 (참고 자료)
-  const sm2=simple&&!window.CBSR_V2; /* 11-13 목사님: 인물·곳·말은 본문의 점선 밑줄로 보니 뺌 → 퀴즈만 남아 [더 알아보기] 상자 없이 퀴즈를 바로 */
+  const sm2=simple&&false; /* 11-13 목사님: 인물·곳·말은 본문의 점선 밑줄로 보니 뺌 → 퀴즈만 남아 [더 알아보기] 상자 없이 퀴즈를 바로 */
   if(sm2){ h+=`<details class="simplemore" id="simpleMore"${view.moreOpen?" open":""}><summary>더 알아보기 · 인물·곳·말, 퀴즈</summary>`; }
   { /* 11-13: 늘 그려 두고 접기만(펼칠 때 다시 그리면 지도·가이드북 단추가 깜빡임) */
-  if(!window.CBSR_V2) h+=`<div class="helpzone">${knowSection(p,A,b0)+moreSection(p,A,b0,w,d)+renderMapBox(A)}</div>`;
+  
   // 5 퀴즈
-  if(!window.CBSR_V2) h+=`<section class="sec" id="quizSec"><span class="label">퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
-  else if(!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
+  if(!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
   }
   if(sm2) h+=`<button class="foldbtn" data-fold="simpleMore">더 알아보기 접기 ▲</button></details>`;
   // 완료
@@ -3547,15 +3498,15 @@ function renderRead(){
   if(futLock(w,d)&&!done){ h+=`<p class="lead" style="text-align:center">본문은 미리 읽어 볼 수 있습니다.<br>통독 완료와 스토리 QT는 <b>${esc(futMsg(w,d))}</b>.</p>${flipHTML(w,d)}`; }
   else if(done){
     h+=`<div class="done-card"><span class="label" style="color:var(--accent)">${view.justDone?"오늘 통독을 마쳤습니다!":"통독 완료"}</span><b>${pct1(n,TOTAL_CH)}%</b><span>성경 ${TOTAL_CH.toLocaleString()}장 가운데 ${n.toLocaleString()}장을 읽었습니다.<br>${n>=TOTAL_CH?"성경 일독을 마치셨습니다!":`남은 장은 ${(TOTAL_CH-n).toLocaleString()}장입니다.`}</span>${window.SYNC&&SYNC.available?``:""}<div class="row" style="justify-content:center"><button class="btn ghost small" id="doneBtn">완료 취소</button></div></div>`;
-    if(window.CBSR_V2) h+=`<button class="btn" id="toStory" style="width:100%;padding:15px;margin-top:10px">스토리 QT 시작 ›</button>`;
+    h+=`<button class="btn" id="toStory" style="width:100%;padding:15px;margin-top:10px">스토리 QT 시작 ›</button>`;
   } else {
     h+=`<button class="btn" id="doneBtn" style="width:100%;padding:15px">오늘 통독 완료</button><p class="lead" style="text-align:center">진행률 ${pct1(n,TOTAL_CH)}% → ${pct1(after,TOTAL_CH)}%</p>`;
   }
-  if(window.CBSR_V2&&done&&dd0<0) h+=dayMeHTML(w,d);
+  if(done&&dd0<0) h+=dayMeHTML(w,d);
   h+=`</section>`;
-  if(window.CBSR_V2) h+=threadHTML(w,d);
+  h+=threadHTML(w,d);
   if((dateOf(w,d).getDay()===6||dayNo(w,d)===READ_DAYS)) h+=`<section class="sec"><div class="qcard"><span class="k">한 주를 마무리하는 날</span><p>이번 주 읽은 본문을 돌아보고 주간 도전 문제를 풀어 보세요.</p><div class="row"><button class="btn small" id="toRev">이번 주 돌아보기 ›</button></div></div></section>`;
-  if(!window.CBSR_V2) h+=`<section class="sec"><span class="label">QT</span><button class="btn toqt" data-toqt="1">QT로 이어 가기 <span aria-hidden="true">›</span></button><p class="lead" style="text-align:center">읽은 말씀을 이야기로 다시 보고, 묵상하고 기도합니다.</p></section>`;
+  
   view.justDone=false;
   return h;
 }
@@ -3653,12 +3604,12 @@ function qtDoneCard(w,d,kv,q){
   ${goal?`<span class="qtd-badge">★ ${esc(goal[1])}</span>`:""}
   <div class="qtd-stats"><div><b>${streak}일</b><span>연속 QT</span></div><div><b>${qdays}일</b><span>QT 한 날${total>qdays?` · ${total}편`:""}</span></div></div>
   <div><div class="stamps">${stamps}</div><p class="lead" style="margin:6px 0 0">이번 주 QT 도장${next?` · 다음 목표 ${next[0]}일까지 ${next[0]-qdays}일`:""}</p></div>
-  <p class="qtd-msg">${esc(QT_CHEER[hs%QT_CHEER.length]).replace(/([.?!]) /g,"$1<br>")}</p>${window.CBSR_V2?`<button class="tgrw lt" data-tgr="1" hidden></button>`:""}</div>
+  <p class="qtd-msg">${esc(QT_CHEER[hs%QT_CHEER.length]).replace(/([.?!]) /g,"$1<br>")}</p>${`<button class="tgrw lt" data-tgr="1" hidden></button>`}</div>
   ${nextUp(w,d)}
   <div class="row" style="justify-content:center"><button class="btn small" id="qtToRec">나의 기록 보기</button><button class="btn ghost small" id="qtDone">완료 취소</button></div></div>`;
 }
 function confetti(){
-  if(window.CBSR_STORY||window.CBSR_V2) return;
+  return;
   try{ if(matchMedia("(prefers-reduced-motion: reduce)").matches) return; }catch(e){}
   const c=document.createElement("canvas"); c.className="confetti"; const W=c.width=innerWidth, H=c.height=innerHeight; document.body.appendChild(c);
   const x=c.getContext("2d"), cs=getComputedStyle(document.documentElement), col=["--accent","--gold","--ok","--bad"].map(v=>cs.getPropertyValue(v).trim()||"#7A4528");
@@ -3766,7 +3717,7 @@ function eyeFor(w,d,L){ const r=eyeFor0(w,d,L), G=gqOf(w,d); if(G&&G.q&&r) r.q=G
 function eyeFor0(w,d,L){
   const k=keyOf(w,d), e=EYE[k];
   const TX=PVQ.has(k)?(e&&e.tools?{q:[],look:e.tools}:null):dayTools(w,d);
-  if(e) return {q:e.q,tools:TX?TX.q:[],looks:e.look.map((l,i)=>`<button class="lookbtn" data-look="${i}"><span>${esc(window.CBSR_V2&&l.n?l.n:l.t)}${window.CBSR_V2&&l.r?`<small class="lref">${esc(fullRef(l.r))} ›</small>`:""}</span>${TX&&TX.look&&TX.look[i]?`<i class="ltool">${tName(TX.look[i])}</i>`:""}</button>`)};
+  if(e) return {q:e.q,tools:TX?TX.q:[],looks:e.look.map((l,i)=>`<button class="lookbtn" data-look="${i}"><span>${esc(l.n?l.n:l.t)}${l.r?`<small class="lref">${esc(fullRef(l.r))} ›</small>`:""}</span>${TX&&TX.look&&TX.look[i]?`<i class="ltool">${tName(TX.look[i])}</i>`:""}</button>`)};
   const C=(CLUES[w+"-"+(d+1)]||[]).filter(c=>c.t!=="scene"||c.prev.length).slice(0,3);
   return {q:L[0].q,tools:[],looks:C.map(c=>`<button class="lookbtn" data-clue="${CLUES[w+"-"+(d+1)].indexOf(c)}"><span>${esc(CLUE_LAB[c.t]||"살펴보기")} · ${esc(c.t==="pair"?c.a+" ↔ "+c.b:c.t==="scene"?c.g:fullRef(c.r))}</span>${CLUE_TOOL[c.t]?`<i class="ltool">${tName(CLUE_TOOL[c.t])}</i>`:""}</button>`),skip0:true};
 }
@@ -3820,11 +3771,11 @@ function qtKV(q,A,cands,key){
   if(!q.kv&&(q.done||q.vi||q.med)){ const old=qtVerses(A,godTraits(A),key); const o=old[Math.min(q.vi||0,Math.max(0,old.length-1))]; if(o){ q.kv=vId(o); save(); } }
   return (vById(A,q.kv)||cands[0]); }
 /* 다음 일정과 그날의 질문 */
-function nextUp(w,d){ if(TRY) return view.tab==="qt"?`<div class="nextup"><span class="k">마지막 순서</span><b>나의 기록 · 관찰 기록</b><p>오늘 적은 관찰이 읽기 도구별로 모였는지 확인해 보세요.</p></div>`:`<div class="nextup"><span class="k">다음 순서</span><b>QT</b><p>아래 QT 탭에서 오늘 본문을 묵상합니다.</p></div>`; let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } if(!PLAN.plan[nw-1]) return "";
+function nextUp(w,d){  let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } if(!PLAN.plan[nw-1]) return "";
   const dt=dateOf(nw,nd2), when=fmt(dt,{month:"long",day:"numeric"})+"("+DAYN[dt.getDay()]+")";
   
   const e=EYE[keyOf(nw,nd2)];
-  const open=window.CBSR_V2?(isHere(w,d)?`<p class="nucd"><b id="qtCount">--:--:--</b> 뒤, 자정에 열립니다</p>`:`<p class="nucd">지금 바로 열 수 있습니다</p><button class="btn small" id="qtNextDay" data-nw="${nw}" data-nd="${nd2}">다음 본문으로 ›</button>`):"";
+  const open=isHere(w,d)?`<p class="nucd"><b id="qtCount">--:--:--</b> 뒤, 자정에 열립니다</p>`:`<p class="nucd">지금 바로 열 수 있습니다</p><button class="btn small" id="qtNextDay" data-nw="${nw}" data-nd="${nd2}">다음 본문으로 ›</button>`;
   return `<div class="nextup"><span class="k">다음 본문 · ${esc(when)}</span><b>${esc(dayPlan(nw,nd2).label)}</b>${e&&e.q?`<p>${esc(e.q)}</p>`:""}${open}</div>`; }
 /* 성품 풀이에서 '하나님은 …분입니다' 같은 문장에 형광펜 */
 function godMark(t){
@@ -3835,21 +3786,17 @@ function godMark(t){
   return ss.map((x,i)=>i===k?`<mark class="godhl">${esc(x.trim())}</mark>${/\s$/.test(x)?" ":""}`:esc(x)).join("");
 }
 /* 2026-10-29 첫 화면을 v2로 바꿈: v1을 쓰던 기기에서 처음 열면 한 번 알림 */
-function switchNotice(){ try{ if(!window.CBSR_V2||!window.CBSR_HADV1||window.CBSR_TRY||localStorage.getItem("cbsr-switch-seen")) return; if(/[?&](day|review)=/.test(location.search)) return; localStorage.setItem("cbsr-switch-seen",todayStr()); }catch(e){ return; }
+function switchNotice(){ try{ if(!window.CBSR_HADV1||false||localStorage.getItem("cbsr-switch-seen")) return; if(/[?&](day|review)=/.test(location.search)) return; localStorage.setItem("cbsr-switch-seen",todayStr()); }catch(e){ return; }
   const lin=window.SYNC&&SYNC.available&&SYNC.loggedIn&&SYNC.loggedIn();
   sheet("새 화면으로 바뀌었습니다",`<p>이야기통독가 새 화면으로 바뀌었습니다. 읽는 본문과 순서는 그대로입니다.</p><ul class="swl"><li><b>오늘</b>: 그날 이야기를 사진 카드로 따라가는 <b>스토리 QT</b>로 시작합니다.</li><li>맨 위 <b>동그라미</b>를 눌러 날짜를 옮깁니다. 맨 왼쪽 <b>나의 통독</b>에는 오늘 붙잡은 말씀이 모입니다.</li><li>아래 단추는 차례로 <b>오늘 · 본문 · 묵상 노트 · 도전 · 기록</b>입니다.</li></ul><p class="swrec"><b>기록 안내</b><br>${lin?"이름과 4자리 번호로 로그인하셨기 때문에 기록이 그대로 이어집니다.":"이름과 4자리 번호로 로그인해 쓰신 분은 기록이 그대로 이어집니다. 로그인 없이 쓰신 기록은 새 화면으로 옮겨지지 않았을 수 있습니다. 앞으로는 메뉴에서 로그인해 두시면 기기를 바꿔도 기록이 이어집니다."}</p><p class="lead">예전 화면은 메뉴 맨 아래 '이전 화면'에서 볼 수 있습니다.</p><button class="btn" id="swTour" style="width:100%;margin-top:6px">1분 둘러보기</button>`);
   const t=document.getElementById("swTour"); if(t) t.onclick=()=>{ document.getElementById("sheetClose").click(); setTimeout(startTour,250); };
 }
 /* 처음 온 사람: 한 번만 둘러보기 권하기(나중에 하면 메뉴 › 도움말 › 둘러보기) */
-function welcomeTour(){ try{ if(!window.CBSR_V2||window.CBSR_HADV1||window.CBSR_TRY||tourDone()||localStorage.getItem("cbsr-welcome-seen")) return; if(/[?&](day|review|now|pv)=/.test(location.search)) return; localStorage.setItem("cbsr-welcome-seen",todayStr()); }catch(e){ return; }
+function welcomeTour(){ try{ if(window.CBSR_HADV1||false||tourDone()||localStorage.getItem("cbsr-welcome-seen")) return; if(/[?&](day|review|now|pv)=/.test(location.search)) return; localStorage.setItem("cbsr-welcome-seen",todayStr()); }catch(e){ return; }
   /* 11/5: 덮는 안내 상자 대신 짧은 한 줄 안내(coachTick)로 바꿈 */ }
-function firstCoach(){ const go=()=>{ if(view.tab!=="today"){ view.tab="today"; render(); } setTimeout(()=>{ const h=document.getElementById("tdHero"); if(!h) return; h.scrollIntoView({block:"center"}); setTimeout(()=>{ const r=h.getBoundingClientRect(); const ov=document.createElement("div"); ov.id="fcOv"; ov.className="fcov";
-    ov.innerHTML=`<div class="fchole" style="left:${r.left-4}px;top:${r.top-4}px;width:${r.width+8}px;height:${r.height+8}px"></div><div class="fctip" style="top:${Math.min(innerHeight-170,r.bottom+14)}px"><b>오늘 본문 한 번 열어 보기</b><p>그림을 누르면 오늘 읽을 본문이 열립니다.</p><button id="fcGo">본문 열기</button><button id="fcX" class="ghost">닫기</button></div>`; document.body.appendChild(ov);
-    const end=()=>{ ov.remove(); try{ localStorage.setItem(TOUR_KEY,"1"); }catch(e){} };
-    ov.querySelector("#fcX").onclick=end; ov.querySelector("#fcGo").onclick=()=>{ end(); h.click(); }; ov.querySelector(".fchole").onclick=()=>{ end(); h.click(); }; },350); },120); }; go(); }
 /* 이전 화면(v1) 기록: 앞머리 없는 cbsr-·rjnote: 기록. v2는 localStorage를 'v2:' 앞머리로 감싸 두었으므로 진짜 저장소를 따로 꺼냄 */
 function rawLS(){ return window.__rawLS; }
-function v1Keys(){ const L=rawLS(); if(!L||!window.CBSR_V2) return []; const K=[]; try{ for(let i=0;i<L.length;i++){ const k=L.key(i); if(k&&/^(cbsr-|rjnote:)/.test(k)) K.push(k); } }catch(e){} return K; }
+function v1Keys(){ const L=rawLS(); if(!L||false) return []; const K=[]; try{ for(let i=0;i<L.length;i++){ const k=L.key(i); if(k&&/^(cbsr-|rjnote:)/.test(k)) K.push(k); } }catch(e){} return K; }
 const v1Count=()=>v1Keys().length;
 function v1Wipe(){ const L=rawLS(), K=v1Keys(); K.forEach(k=>{ try{ L.removeItem(k); }catch(e){} }); return K.length; }
 function rgGoDay(w,d,tab){ const t=tab||view.tab; view.pre=false; view.revW=null; view.w=w; view.d=d; view.open=false; view.game=null; view.tab=t; render(); scrollTo({top:0}); }
@@ -3913,14 +3860,14 @@ function renderQT(){
   if(view.revW) return renderQTWeek(weekDays(view.revW),dispTitle(view.revW));
   
   if(futLock(w,d)) return `<section class="sec glock"><span class="label">QT</span><p class="lead">이 날의 스토리 QT와 묵상 노트는 <b>${esc(futMsg(w,d))}</b>. 본문은 읽기 탭에서 미리 읽어 볼 수 있습니다.</p>${flipHTML(w,d)}</section>`;
-  if(window.CBSR_V2) view.qtDeep=true;
-  if(STORY()&&!view.qtDeep) return renderQTStory();
+  view.qtDeep=true;
+  if(!view.qtDeep) return renderQTStory();
   const p=dayPlan(w,d), key=keyOf(w,d), det=DETAIL[w+"-"+(d+1)], A=dayA(w,d), q=qtOf(key);
   const ST=sceneTraits(w,d,A,godTraits(A)), traits=ST.list, R=ST.R;
   const L=lensesFor(w,d), eye=eyeFor(w,d,L);
-  const V2Q=!!window.CBSR_V2;
+  const V2Q=true;
   let h=V2Q?`<section class="sec qthd"><div class="qthl"><span class="label">묵상 노트 · ${dayName(w,d)}</span><button class="qthelp" id="qtHelp" aria-label="묵상 노트 안내">?</button></div><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">묵상 노트의 말씀은 개역개정입니다.</p>`:""}</section>`
-    :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${STORY()?`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`:""}</section>`;
+    :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`}</section>`;
   // 1 본문 관찰
   h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${V2Q?(()=>{ const r=qtRefs(eye.q,w,d)[0]; return r?qEvi(r,"",3):""; })():""}${V2Q?(R?`<button class="qtlnk" id="scopeRead">본문 열기 · ${esc(sceneLabel(R))} ›</button>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
   if(V2Q) h+=lnQtHTML(key);
@@ -3931,7 +3878,7 @@ function renderQT(){
   if(gap) dp+=`<div class="qcard gapq"><span class="k"><i class="ltool">⋯ 생략</i> 말하지 않은 것</span><p>${esc(gap.q)}</p><p class="clue">${esc(fullRef(gap.r))} · 성경이 일부러 비워 둔 자리입니다. 정답은 없습니다.</p><textarea data-qt="gap" placeholder="내가 생각한 빈자리">${esc(q.gap||"")}</textarea></div>`;
   L.forEach((l,i)=>{ if(i===0&&eye.skip0&&!q.l0) return; if(l.k==="내 자리") return; const c=clueFor(l.k,A,w,d,l.q); dp+=`<div class="qcard"><span class="k">${LENS_TOOL[l.k]?`<i class="ltool">${tName(LENS_TOOL[l.k])}</i> `:""}${esc(LENS_TOOL[l.k]&&LENS_TOOL[l.k]===l.k?"":l.k)}</span><p>${esc(l.q)}</p>${c?`<p class="clue">${esc(c)}</p>`:""}<textarea data-qt="l${i}" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+i]||"")}</textarea></div>`;});
   if(q.story) dp+=`<div class="qcard"><span class="k">전에 적은 메모</span><textarea data-qt="story">${esc(q.story)}</textarea></div>`;
-  let moreTraits=""; if(traits.length>2) moreTraits=`<details class="mine"><summary>본문에서 찾은 하나님의 성품 더 보기</summary>`+traits.slice(2).map(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${window.CBSR_V2?`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`:""}</div>`;}).join("")+`</details>`;
+  let moreTraits=""; if(traits.length>2) moreTraits=`<details class="mine"><summary>본문에서 찾은 하나님의 성품 더 보기</summary>`+traits.slice(2).map(t=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); return `<div class="trait"><b>${esc(t.at.n)}</b><q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}${t.vs.length>1?` 외 ${t.vs.length-1}절`:""}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`}</div>`;}).join("")+`</details>`;
   dp+=`</details>`;
   if(!PVQ.has(key)) h+=`<section class="sec deepsec">${dp}</section>`;
   // 2 하나님은 어떤 분
@@ -3940,7 +3887,7 @@ function renderQT(){
   if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까? 규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요.</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
   else if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
   let tH=""; /* 성품 이름+아멘: v2에서는 쓴 뒤에 읽기로 */
-  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); tH+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${window.CBSR_V2?`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`:""}</div>`;});
+  if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); tH+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`}</div>`;});
   else if(!det&&!V2Q) h+=`<p class="lead">오늘 본문에서 하나님이 하신 말씀이나 행동을 하나 찾아보세요. 그 장면에서 하나님은 어떤 분으로 보이나요?</p>`;
   h+=(V2Q?"":tH+moreTraits)+`</section>`;
   // 읽다가 궁금한 점(이름·숫자 차이 등): 접어 두는 짧은 설명. 문제가 생기면 QA_ON을 false로
@@ -3989,7 +3936,6 @@ function renderQT(){
 /* ===== 본문 스토리 보기(v2): 오늘 본문을 스토리처럼 한 장씩 넘기며 읽습니다 ===== */
 const RV={pages:[],i:0,key:""};
 /* ===== QT 스토리 카드 (한 화면에 한 걸음) ===== */
-const STORY=()=>!!window.CBSR_STORY;
 const STORY_N=["오늘 장면","하나님은","이어 읽기","내 한 줄","마침"];
 function storyPair(w,d,txt){
   /* 오늘 본문 구절 ↔ 구약 구절: 단서의 '구약의 메아리'가 있으면 그것, 없으면 글의 첫 (장:절; 책 장:절) */
@@ -4155,7 +4101,7 @@ const QA_ON=true;
 /* 원고 묶음은 A(지금 원고)만 씀. 2028판(B)은 폐기(11-10 목사님) */
 function PV(){ return "A"; }
 /* 이야기 원고 묶음: 365일은 STORYC(날 번호), 리딩지저스 45주는 STORYC_RJ(주·요일로 만든 날 번호) */
-function SC_SRC(){ if(!window.CBSR_V2) return null; /* v1은 v2로 바꿀 때까지 그대로 */ return (typeof STORYC!=="undefined")?STORYC:null; }
+function SC_SRC(){  /* v1은 v2로 바꿀 때까지 그대로 */ return (typeof STORYC!=="undefined")?STORYC:null; }
 function storyDay(no){ const SC=SC_SRC(), C=SC?SC[no]:null; if(!C) return null; if(C.A) return C.A; return C; }
 const PV_ORIG={EYE:{},DETAIL:{},GUIDE:{},KWQ:{}};
 const PVQ=new Set();
@@ -4222,31 +4168,31 @@ const SN_LAB={obs:"본문 관찰",god:"하나님은",my:"나의 생각거리",en
 const SG_BG={narrative:["#3a2c1f","#15110d"],law:["#4a3418","#1a1209"],poetry:["#3a2c46","#17111d"],wisdom:["#353b1d","#15170b"],prophecy:["#4a2620","#1b0d0a"],letter:["#1f2f47","#0c1320"],apocalypse:["#2c2340","#100c18"]};
 const rlab2=r=>r?`${PLAN.abbr[r[0]-1]} ${r[1]}:${r[2]}${r[3]?"–"+r[3]:""}`:"";
 const S_KDUR={cover:7000,full:9000,split:9000,quote:10000,echo:10500,table:12000,line:7500};
-function sAutoOff(){ try{ return !!window.CBSR_V2&&localStorage.getItem("cbsr-sauto")==="0"; }catch(e){ return false; } }
-function sDur(s){ if(window.CBSR_V2&&((s.b||[]).filter(x=>x&&x.q).length+(s.big?1:0))>=2) return 0;
+function sAutoOff(){ try{ return localStorage.getItem("cbsr-sauto")==="0"; }catch(e){ return false; } }
+function sDur(s){ if(((s.b||[]).filter(x=>x&&x.q).length+(s.big?1:0))>=2) return 0;
   /* 읽는 사람이 넘기는 카드 더함(2026-11-02): 긴 인용(한 구절 60자 넘음)·나의 생각거리 */
-  if(window.CBSR_V2){ if(s.k==="my") return 0; const QL=[...(s.b||[]).filter(x=>x&&x.q).map(x=>String(x.q[0]||"")),String(s.big||"")]; if(QL.some(t=>t.replace(/\s+/g,"").length>60)) return 0; } if(s.qt||s.k==="table"||s.k==="echo"||s.k==="map"||s.k==="fin"||s.k==="next"||s.k==="ask") return 0; const n=sTxt(s).length; return 1000+Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
+  { if(s.k==="my") return 0; const QL=[...(s.b||[]).filter(x=>x&&x.q).map(x=>String(x.q[0]||"")),String(s.big||"")]; if(QL.some(t=>t.replace(/\s+/g,"").length>60)) return 0; } if(s.qt||s.k==="table"||s.k==="echo"||s.k==="map"||s.k==="fin"||s.k==="next"||s.k==="ask") return 0; const n=sTxt(s).length; return 1000+Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
 function sKind(s){ return s.qt?"qt":s.k; }
 function nextWD(w,d){ let nw=w, nd2=d+1; if(nd2>=nd(w)){ nw=w+1; nd2=0; } return PLAN.plan[nw-1]&&PLAN.plan[nw-1][nd2]?[nw,nd2]:null; }
 const isHere=(w,d)=>w===here.w&&d===here.d;
 function askQ(w,d){ const SK=storyDay(dayNo(w,d)); if(SK&&SK.kwq) return {q:SK.kwq.q,r:SK.kwq.r}; const K=(typeof KWQ!=="undefined"&&true)?KWQ[dayNo(w,d)]:null; if(K) return {q:K.q,r:K.r};
   const det=DETAIL[w+"-"+(d+1)]; if(det&&det.apply) return {q:det.apply}; const X=storyQT(w,d); return X.kv?{q:verseQuestion(X.kv),r:[X.kv.b,X.kv.c,X.kv.v]}:{q:APPLY_Q}; }
 function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
-  if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}${window.CBSR_V2?`<p class="sasknote">오늘 이야기의 짜임을 살펴보았습니다. 이제 발견한 것을 나의 말로 정리하고 기도할 수 있습니다.</p><button class="tgrw" data-tgr="1" hidden></button>`:""}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">${window.CBSR_V2?"묵상 노트로 이어가기":"QT로 이어가기"}</button></div></div>`; }
+  if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}${`<p class="sasknote">오늘 이야기의 짜임을 살펴보았습니다. 이제 발견한 것을 나의 말로 정리하고 기도할 수 있습니다.</p><button class="tgrw" data-tgr="1" hidden></button>`}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">${"묵상 노트로 이어가기"}</button></div></div>`; }
   if(s.k==="fin"){ if(!q.done) return `<div class="sbox"><span class="slab">오늘의 말씀 카드</span><h2>QT를 마치면 오늘의 말씀 카드가 만들어집니다</h2><div class="sfbtn"><button class="btn" data-sgo="-1">‹ 돌아가서 마치기</button></div></div>`;
     const kv=storyQT(w,d).kv, dt=dateOf(w,d);
     return `<div class="sbox sfin"><span class="slab">오늘의 말씀 카드 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}</span>${kv?`<div class="sbigq">${esc(kv.t)}</div><div class="sref">${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</div>`:`<h2>${esc(dayPlan(w,d).label)}</h2>`}${q.med?`<p class="smine">${esc(q.med)}<small>나의 한 줄</small></p>`:""}<button class="tgrw" data-tgr="1" hidden></button><p class="sstat">QT 한 날 ${qtDayCount()}일 · 연속 ${qtCalStreak()}일</p><div class="sfbtn"><button class="btn ghost" id="sShare">말씀 나누기</button><button class="btn" data-sgo="1">내일 본문 ›</button></div></div>`; }
   const N=nextWD(w,d); if(!N) return `<div class="sbox snext"><span class="slab">마지막 날</span><h1>통독을 마쳤습니다</h1><div class="sfbtn"><button class="btn" id="sEnd">닫기</button></div></div>`;
   const P2=dayPlan(N[0],N[1]), dt=dateOf(N[0],N[1]), live=isHere(w,d);
-  return `<div class="sbox snext"><span class="slab">내일 본문 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}(${DAYN[dt.getDay()]})</span><h1>${esc(P2.topic||P2.label)}</h1><p>${esc(P2.label)}</p>${live?`<div class="scount" id="sCount" aria-live="off">--:--:--</div><p class="scnote">자정에 열립니다</p>`:`<p class="scnote">지금 바로 열 수 있습니다</p>`}<div class="sfbtn">${window.CBSR_V2?`<button class="btn ghost" id="sToCh">도전 하나</button>`:""}<button class="btn ghost" id="sToRec">나의 기록</button><button class="btn" id="sEnd">닫기</button></div></div>`; }
+  return `<div class="sbox snext"><span class="slab">내일 본문 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}(${DAYN[dt.getDay()]})</span><h1>${esc(P2.topic||P2.label)}</h1><p>${esc(P2.label)}</p>${live?`<div class="scount" id="sCount" aria-live="off">--:--:--</div><p class="scnote">자정에 열립니다</p>`:`<p class="scnote">지금 바로 열 수 있습니다</p>`}<div class="sfbtn">${`<button class="btn ghost" id="sToCh">도전 하나</button>`}<button class="btn ghost" id="sToRec">나의 기록</button><button class="btn" id="sEnd">닫기</button></div></div>`; }
 function phPos(fx,v){ const m=String(fx||"50% 50%").match(/([\d.]+)%\s+([\d.]+)%/); let x=m?+m[1]:50, y=m?+m[2]:50; /* 11/4 목사님: 같은 그림을 이어 쓸 때 좌우로 18%씩 옮기던 것은 인물을 잘라서 뺌(확대·천천히 움직임으로만 다르게) */ return x+"% "+y+"%"; }
 function cdText(){ const n=new Date(), m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1), s=Math.max(0,Math.floor((m-n)/1000)); return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,"0")).join(":"); }
 /* (v2) 인용문의 출처 이름표: 원고에 적은 말한 사람(q[2])을 씁니다. 적지 않았으면, 그 절에 대화가 전혀 없을 때만 '본문의 설명'으로 붙입니다 */
-function sWho(q){ if(!window.CBSR_V2) return ""; if(q[2]) return `<span class="swho">${esc(q[2])}</span>`;
+function sWho(q){  if(q[2]) return `<span class="swho">${esc(q[2])}</span>`;
   const R=sParseRef(q[1]); if(!R) return ""; const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]; if(!S) return ""; for(let v=R[2];v<=(R[3]||R[2]);v++){ const g=S[`${R[0]}-${R[1]}-${v}`]; if(g&&g.length) return ""; } return `<span class="swho n">본문의 설명</span>`; }
 function sParseRef(t){ const m=String(t||"").match(/^([가-힣]{1,4})\s?(\d+):(\d+)(?:[–-](\d+))?/); if(!m) return null; const b=PLAN.abbr.indexOf(m[1])+1; if(!b) return null; return [b,+m[2],+m[3],m[4]?+m[4]:0]; }
 /* (v2) 카드 속 성경 주소를 누르면 그 구절이 아래에서 열립니다 */
-function sLinkRefs(h){ if(!window.CBSR_V2) return h; const p=dayPlan(view.w,view.d);
+function sLinkRefs(h){  const p=dayPlan(view.w,view.d);
   h=h.replace(/<small>([가-힣]{1,4}) (\d+):(\d+)(?:[–-](\d+))?/g,(m,a,c,v,e)=>{ const b=PLAN.abbr.indexOf(a)+1; if(!b) return m; return `<small><a class="sv" href="#" data-sv="${b}-${c}-${v}-${e||v}">${a} ${c}:${v}${e?"–"+e:""}</a>`; });
   h=h.replace(/<div class="sref">([가-힣]{1,4}) (\d+):(\d+)(?:[–-](\d+))?/g,(m,a,c,v,e)=>{ const b=PLAN.abbr.indexOf(a)+1; if(!b) return m; return `<div class="sref"><a class="sv" href="#" data-sv="${b}-${c}-${v}-${e||v}">${a} ${c}:${v}${e?"–"+e:""}</a>`; });
   h=h.replace(/(<p[^>]*>)([^<]*(?:<(?!\/p)[^<]*)*)(<\/p>)/g,(m,o,body,cl)=>o+body.replace(/([(;]\s?)(\d{1,3}):(\d{1,3})(?:[–-](\d{1,3}))?/g,(mm,pre,c,v,e)=>{ const ch=p&&p.ch.find(x=>x[1]===+c); if(!ch) return mm; return `${pre}<a class="sv" href="#" data-sv="${ch[0]}-${c}-${v}-${e||v}">${c}:${v}${e?"–"+e:""}</a>`; })+cl);
@@ -4266,7 +4212,7 @@ function storyCardHTML0(s){ const lab=s.lab?`<span class="slab">${esc(s.lab)}</s
   if(s.k==="cover") return `<div class="sbox"><div class="skick">${esc(s.kick||"")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}${TR!=="krv"?`<div class="strnote">말씀 인용: 개역개정</div>`:""}</div>`;
   if(s.k==="book") return `<div class="sbox"><div class="skick">${esc(s.kick||"이제 다른 책")}</div><h1>${smk(s.h)}</h1>${s.sub?`<div class="ssubt">${smk(s.sub)}</div>`:""}</div>`;
   if(s.k==="quote") return `<div class="sbox">${lab}${B}<div class="sbigq" style="margin-top:14px">${smk(s.big||(s.q&&s.q[0])||"")}</div><div class="sref">${esc(s.ref||(s.q&&s.q[1])||"")}</div></div>`;
-  if(s.k==="echo"){ const rv=!!s.reveal; return `<div class="sbox">${lab}${h2}<div class="spair2${rv?" hide-u":""}${(s.pair||[]).length===2&&window.CBSR_V2&&s.pair[0][2]&&s.pair[1][2]&&s.pair[0][2]!==s.pair[1][2]?" zig":""}">${(s.pair||[]).map(x=>`<div class="${wc(x[2]).trim()}">${x[2]&&window.CBSR_V2?`<span class="swho">${esc(x[2])}</span>`:""}${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 같은 말과 달라진 말 보기</button><div class="rvhide">${B}${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`:B}</div>`; }
+  if(s.k==="echo"){ const rv=!!s.reveal; return `<div class="sbox">${lab}${h2}<div class="spair2${rv?" hide-u":""}${(s.pair||[]).length===2&&true&&s.pair[0][2]&&s.pair[1][2]&&s.pair[0][2]!==s.pair[1][2]?" zig":""}">${(s.pair||[]).map(x=>`<div class="${wc(x[2]).trim()}">${x[2]&&true?`<span class="swho">${esc(x[2])}</span>`:""}${smk(x[0])}<small>${esc(x[1]||"")}</small></div>`).join("")}</div>${rv?`<button class="sreveal" data-reveal="1">먼저 비교해 보고, 같은 말과 달라진 말 보기</button><div class="rvhide">${B}${s.note?`<p class="snote">${smk(s.note)}</p>`:""}</div>`:B}</div>`; }
   if(s.k==="line"){ const one=s.r&&!s.r[3]?vtxt(s.r):""; return `<div class="sbox">${lab}<p class="sline2">${smk(s.t)}</p>${s.r?(one&&one.length<=90?`<div class="sq2">${esc(one)}<small>${esc(rlab2(s.r))}</small></div>`:`<div class="sref">${esc(rlab2(s.r))}</div>`):""}</div>`; }
   if(s.k==="table"){ const T=s.tbl, n=T.h.length, hl=new Set((T.hl||[]).map(x=>x.join(","))), mid=T.mid;
     let g=`<div></div>`+T.h.map((x,j)=>`<div class="h${j===mid?" mid":""}">${esc(x)}</div>`).join("");
@@ -4773,7 +4719,7 @@ function OBJ(id){ if(id==="cart"){ /* 젖 나는 암소 두 마리가 끄는 새
   return `<svg class="chsvg obj" viewBox="0 0 60 60" aria-hidden="true"><ellipse cx="30" cy="54" rx="22" ry="3" fill="rgba(60,40,20,.22)"/><g class="body"><line x1="2" y1="40" x2="58" y2="40" stroke="#8a6a1a" stroke-width="3" stroke-linecap="round"/><rect x="12" y="26" width="36" height="16" rx="2" fill="#e0b22e" stroke="#9a7414" stroke-width="1.6"/><rect x="11" y="23" width="38" height="4" rx="1.5" fill="#f1c84a" stroke="#9a7414" stroke-width="1"/><path d="M16 23 Q14 12 24 10 Q22 16 27 22 Z M44 23 Q46 12 36 10 Q38 16 33 22 Z" fill="#f1c84a" stroke="#9a7414" stroke-width="1"/></g></svg>`; }
 function LETTER(){ return `<svg class="chsvg letter" viewBox="0 0 60 60" aria-hidden="true"><ellipse cx="30" cy="55" rx="16" ry="3" fill="rgba(60,40,20,.2)"/><g class="body"><rect x="12" y="14" width="36" height="30" rx="4" fill="#f6ead0" stroke="#b08a4a" stroke-width="2"/><rect x="9" y="11" width="42" height="7" rx="3.5" fill="#c9a36a"/><rect x="9" y="40" width="42" height="7" rx="3.5" fill="#c9a36a"/><path d="M18 24h24M18 30h20M18 36h16" stroke="#b08a4a" stroke-width="2" stroke-linecap="round"/><circle cx="40" cy="36" r="5" fill="#b4432f"/></g></svg>`; }
 const mvWait=ms=>new Promise(r=>setTimeout(r,ms));
-function mapActors(map,M,s,w,d){ if(!window.CBSR_V2||typeof C!=="function") return; const still=!!(matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
+function mapActors(map,M,s,w,d){ if(typeof C!=="function") return; const still=!!(matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
   const bk=M.b||(dayPlan(w,d).ch[0]||[0])[0], X=(s.mkey&&routeMeta(s.mkey,bk))||routeMeta(M.name,bk)||routeMeta(s.h,bk)||{};
   const Mt=Object.assign({},X,s.mover?{who:s.mover}:{},s.mkind?{kind:s.mkind}:{},s.mbub?{end:s.mbub}:{});
   if(M.cut){ const over=r=>Array.isArray(r)&&r[0]===M.b&&r[1]>M.dc1; ["end","after"].forEach(k=>{ if(over(Mt[k])) delete Mt[k]; }); if(Mt.endBy) delete Mt.endBy; if(Mt.mid) Mt.mid=Mt.mid.filter(x=>!over(x[1])); if(Mt.pause&&Mt.pause.seq&&Mt.pause.seq.some(x=>over(x[1]))) delete Mt.pause; }
@@ -4895,7 +4841,7 @@ window.CBSR_mapDemo=function(nm){ const r=ROUTES_B.find(x=>rmBase(x.n)===nm||x.n
    const M={route:r.p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:r.n,b:r.b}; M.ul=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#fff",weight:10,opacity:.85,interactive:false}).addTo(map); M.rl=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#e2603f",weight:5,interactive:false}).addTo(map);
    const D0=(()=>{ for(let wi=0;wi<PLAN.plan.length;wi++) for(let di=0;di<(PLAN.plan[wi]||[]).length;di++){ const P=PLAN.plan[wi][di]; if(P&&P.ch.some(x=>x[0]===r.b&&x[1]>=r.c[0]&&x[1]<=r.c[1])) return [wi+1,di]; } return [1,0]; })();
    mapActors(map,M,{h:""},D0[0],D0[1]); },60); return true; };
-/* 샘플·검토용: ?tab=qt 처럼 처음 열 탭 */ try{ const tb=new URLSearchParams(location.search).get("tab"); if(tb&&window.CBSR_V2) setTimeout(()=>{ try{ switchTab(tb); }catch(e){} },900); }catch(e){}
+/* 샘플·검토용: ?tab=qt 처럼 처음 열 탭 */ try{ const tb=new URLSearchParams(location.search).get("tab"); if(tb&&true) setTimeout(()=>{ try{ switchTab(tb); }catch(e){} },900); }catch(e){}
 try{ const md=new URLSearchParams(location.search).get("mapdemo"); if(md) setTimeout(()=>window.CBSR_mapDemo(md),2500); }catch(e){}
 /* ===== 도전: 이동 경로 맞추기(2026-10-30 목사님): 이동 경로가 있는 날, 들른 곳을 순서대로 맞춥니다.
    이름표를 끌어서(또는 두 개를 차례로 눌러 자리 바꾸기) 순서를 고치고, 다 맞으면 인물이 그 길을 걷습니다 ===== */
@@ -5043,7 +4989,7 @@ function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||
   /* 지명 태그: 인스타 사람 태그처럼, 지명을 누르면 짧은 설명이 뜹니다. 지도 위 좌우 넘김 단추보다 먼저 받습니다 */
   const B0=(dayPlan(w,d).ch[0]||[0])[0], fr=el.parentNode;
   /* 지도 경로 카드에서만 확대(목사님 2026-11-02): 두 손가락 벌리기·좁히기, ＋/− 단추. 확대 중에는 좌우 넘김을 잠시 막음 */
-  if(window.CBSR_V2){ let P0=null; const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY), mid=t=>{ const b=el.getBoundingClientRect(); return L.point((t[0].clientX+t[1].clientX)/2-b.left,(t[0].clientY+t[1].clientY)/2-b.top); };
+  { let P0=null; const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY), mid=t=>{ const b=el.getBoundingClientRect(); return L.point((t[0].clientX+t[1].clientX)/2-b.left,(t[0].clientY+t[1].clientY)/2-b.top); };
     fr.addEventListener("touchstart",e=>{ if(e.touches.length===2){ P0={d:dist(e.touches),z:map.getZoom(),c:mid(e.touches)}; SV.pinchT=Date.now()+600; e.preventDefault(); } },{passive:false,capture:true});
     fr.addEventListener("touchmove",e=>{ if(P0&&e.touches.length===2){ e.preventDefault(); const z=Math.max(3,Math.min(12,P0.z+Math.log2(dist(e.touches)/P0.d))); map.setZoomAround(map.containerPointToLatLng(P0.c),z,{animate:false}); SV.pinchT=Date.now()+600; clearTimeout(SV.t); } },{passive:false,capture:true});
     fr.addEventListener("touchend",e=>{ if(e.touches.length<2&&P0){ P0=null; SV.pinchT=Date.now()+500; } },{capture:true});
@@ -5084,7 +5030,7 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
   return `<div class="sqt"><span class="slab">${esc(SN_LAB[s.k]||"")}</span>${c}</div>`; }
 const SV={i:0,t:0,start:0,left:0,hold:0,paused:false,map:null,ck:"",cs:null,dur:0};
 /* ===== 스토리 카드 아멘(2026-10-29 목사님): 이야기 카드를 두 번 톡톡 누르면 그 장면에 아멘. 함께 읽기를 켠 교우끼리 '○○님 외 n명' ===== */
-const sAmOK=s=>!!window.CBSR_V2&&!!s&&!s.qt&&!["map","fin","next","ask"].includes(s.k);
+const sAmOK=s=>!!s&&!s.qt&&!["map","fin","next","ask"].includes(s.k);
 const sAmKey=s=>"§"+(s._ci!=null?s._ci:SV.i);
 /* 반응 다섯 가지(2026-10-29 목사님 확정). 화남·웃음은 넣지 않음 */
 const RX=[["amen","🙏","아멘"],["wow","😮","놀라워요"],["sad","😢","마음 아파요"],["joy","🙌","감사해요"],["why","🤔","왜일까요?"]];
@@ -5125,7 +5071,7 @@ function storyOpen(i,mode){ useKRV(true); const {w,d}=view; if(futLock(w,d)&&!vi
   if(i==null){ const P=(mem.sp||{})[k]; i=P&&P.i>0&&P.i<P.n-1?P.i:0; SV.resumeAt=i; } else SV.resumeAt=0;
   SV.mode=mode||""; SV.i=i||0; SV.hinted=!!mode; document.body.style.overflow="hidden"; document.documentElement.classList.add("story-on"); storyShow(); }
 function storyMapOff(){ if(SV.map){ try{ SV.map.remove(); }catch(e){} SV.map=null; } }
-function storyClose(pop){ if(pop!==true) ovDone(storyClose); clearTimeout(SV.t); clearInterval(SV.cd); if(SV.mode==="fin"&&window.CBSR_V2){ view.tab="today"; SV.mode=""; scrollTo({top:0}); } storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); /* 날짜 표지에서 들어왔으면 표지로 돌아감(목사님 2026-10-30) */ if(SV.back){ const f=SV.back; SV.back=null; setTimeout(f,60); } }
+function storyClose(pop){ if(pop!==true) ovDone(storyClose); clearTimeout(SV.t); clearInterval(SV.cd); if(SV.mode==="fin"&&true){ view.tab="today"; SV.mode=""; scrollTo({top:0}); } storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); /* 날짜 표지에서 들어왔으면 표지로 돌아감(목사님 2026-10-30) */ if(SV.back){ const f=SV.back; SV.back=null; setTimeout(f,60); } }
 function curSlides(w,d){ if(SV.mode==="fin"){ const S=storySlides(w,d); return [{k:"fin",ph:S[0]&&S[0].ph},{k:"next"}]; } return storySlides(w,d); }
 function storyGo(i){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ return; } SV.dir=i>SV.i?1:i<SV.i?-1:0; SV.i=i; storyShow(); }
 const SKB=[["scale(1.06) translate(0,0)","scale(1.14) translate(-2%,-1%)"],["scale(1.14) translate(-2%,-1%)","scale(1.16) translate(3%,1%)"],["scale(1.16) translate(3%,1%)","scale(1.16) translate(-3%,0)"]];
@@ -5152,7 +5098,7 @@ function storySwipe(r){ if(r._sw) return; r._sw=1; let x0=null,y0=0,t0=0,mode=0,
     setTimeout(()=>{ SV.swiping=false; },60); };
   r.addEventListener("touchend",end); r.addEventListener("touchcancel",end); }
 function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return; storySwipe(r);
-  if(window.CBSR_V2&&!SV.mode&&!s.qt){ const k=keyOf(w,d); mem.sp ||= {}; const o=mem.sp[k]||{}; mem.sp[k]={i:SV.i,n:S.length,m:Math.max(o.m||0,SV.i)}; try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
+  if(!SV.mode&&!s.qt){ const k=keyOf(w,d); mem.sp ||= {}; const o=mem.sp[k]||{}; mem.sp[k]={i:SV.i,n:S.length,m:Math.max(o.m||0,SV.i)}; try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
   const quick=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches, dur=quick||sAutoOff()?0:sDur(s), auto=dur>0, kind=sKind(s), p=dayPlan(w,d); let ph=s.ph;
   if(s.k==="next"){ const N=nextWD(w,d); if(N){ const S2=storySlides(N[0],N[1]); ph=S2[0]&&S2[0].ph; } }
   const [c1,c2]=SG_BG[GENRE_OF(p.ch[0][0])]||SG_BG.narrative;
@@ -5162,12 +5108,12 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   if(old){ const oi=old.querySelector(".sph img"); if(oi){ oldPid=oi.dataset.pid; try{ oldM=getComputedStyle(oi).transform; }catch(e){} }
     if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst","sfw","sbk","go"); if(SV.dir){ ghost.classList.add(SV.dir>0?"sfw":"sbk"); } ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); ghost.style.transition=""; } else old.remove(); }
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
-  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew"+(SV.dir>0?" sfw":SV.dir<0?" sbk":""):old?"":" sfirst"}${window.CBSR_V2&&!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
+  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew"+(SV.dir>0?" sfw":SV.dir<0?" sbk":""):old?"":" sfirst"}${!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
    ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
    ${showPh?`<div class="sph v${s.phv||0}${s.phBlur?" sblur":""}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
    <div class="sbars2">${S.map((x,i)=>`<span class="${i<SV.i?"done":i===SV.i?(auto?"run":"done"):""}"><i${i===SV.i&&auto?` style="animation-duration:${dur}ms"`:""}></i></span>`).join("")}</div>
-   <div class="stop"><span class="sdot"><img alt="" src="icons/icon-192.png?v=3"></span><b>${esc(p.label)}</b><span></span>${window.CBSR_V2&&!s.qt?`<button class="sx sauto${sAutoOff()?"":" on"}" id="sAuto" aria-pressed="${!sAutoOff()}" title="자동 넘김">${sAutoOff()?"손으로":auto?"자동":"눌러서 넘김"}</button>`:""}${auto?`<button class="sx sps" id="sPause" aria-label="멈춤">❚❚</button>`:""}<button class="sx" id="sClose" aria-label="닫기">✕</button></div>
+   <div class="stop"><span class="sdot"><img alt="" src="icons/icon-192.png?v=3"></span><b>${esc(p.label)}</b><span></span>${!s.qt?`<button class="sx sauto${sAutoOff()?"":" on"}" id="sAuto" aria-pressed="${!sAutoOff()}" title="자동 넘김">${sAutoOff()?"손으로":auto?"자동":"눌러서 넘김"}</button>`:""}${auto?`<button class="sx sps" id="sPause" aria-label="멈춤">❚❚</button>`:""}<button class="sx" id="sClose" aria-label="닫기">✕</button></div>
    ${SV.i===0&&!mem.done[keyOf(w,d)]&&dayDiff(today0(),dateOf(w,d))===0?`<button class="snudge" id="sNudge">본문을 먼저 읽으면 이야기가 더 잘 보입니다 · <b>본문 읽기 ›</b></button>`:""}
    <div class="sstage" id="sStage">${s.qt?`${storySlideHTML(s,w,d)}<div class="snav2"><button class="btn ghost" id="sPrev2">‹ 이전</button>${SV.i<S.length-1?`<button class="btn" id="sNext2">다음 ›</button>`:`<button class="btn" id="sEnd">닫기</button>`}</div>`:storySlideHTML(s,w,d)}</div>
    ${showPh&&kind!=="qt"&&ph.link?`<a class="scr" href="${esc(ph.link)}" target="_blank" rel="noopener">${esc(ph.by||"")} · ${esc(ph.lic||"")}</a>`:""}
@@ -5199,7 +5145,7 @@ function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(k
   const sp=r.querySelector("#sPause"); if(sp) sp.onclick=()=>storyPause(!SV.paused);
   
   /* 이어 보기 알림: 보던 카드부터 열렸을 때 한 번 */
-  if(window.CBSR_V2&&SV.resumeAt&&SV.i===SV.resumeAt){ const nf=r.querySelector(".sfr:last-of-type")||r; const t=document.createElement("div"); t.className="sresume"; t.innerHTML=`<span>보던 <b>${SV.i+1}번째 카드</b>부터 이어 봅니다</span><button>처음부터</button>`; r.appendChild(t); t.querySelector("button").onclick=e=>{ e.stopPropagation(); SV.resumeAt=0; t.remove(); storyGo(0); }; setTimeout(()=>{ if(t.isConnected) t.remove(); },4500); SV.resumeAt=0; }
+  if(SV.resumeAt&&SV.i===SV.resumeAt){ const nf=r.querySelector(".sfr:last-of-type")||r; const t=document.createElement("div"); t.className="sresume"; t.innerHTML=`<span>보던 <b>${SV.i+1}번째 카드</b>부터 이어 봅니다</span><button>처음부터</button>`; r.appendChild(t); t.querySelector("button").onclick=e=>{ e.stopPropagation(); SV.resumeAt=0; t.remove(); storyGo(0); }; setTimeout(()=>{ if(t.isConnected) t.remove(); },4500); SV.resumeAt=0; }
   const sa=r.querySelector("#sAuto"); if(sa) sa.onclick=()=>{ const off=!sAutoOff(); try{ localStorage.setItem("cbsr-sauto",off?"0":"1"); }catch(e){} toast(off?"자동 넘김을 껐습니다. 오른쪽을 누르면 다음 카드로 갑니다.":"자동 넘김을 켰습니다."); storyShow(); };
   r.querySelectorAll("[data-sv]").forEach(a=>a.onclick=e=>{ e.preventDefault(); e.stopPropagation(); sVerseSheet(a.dataset.sv); });
   const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=storyClose;
@@ -5259,7 +5205,7 @@ let qtT;
 function bindQT(m){
   
   if((view.tab!=="qt")) return;
-  if(window.CBSR_V2) qtSteps(m);
+  qtSteps(m);
   m.querySelectorAll("[data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
   /* 기기 연동으로 기록이 새로 합쳐져도 늘 지금 기록을 고치도록, 누를 때마다 다시 찾습니다 */
   const key=keyOf(view.w,view.d), cur=()=>qtOf(key);
@@ -5272,7 +5218,7 @@ function bindQT(m){
     SR.querySelectorAll("[data-kvs]").forEach(b=>b.onclick=()=>{ const q=cur(); q.kv=b.dataset.kvs; touchQ(q,"kv"); save(); document.getElementById("sheetClose").click(); const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const al=document.getElementById("kvsAll"); if(al) al.onclick=()=>pickVerseSheet(key,cur); };
   const lm=document.getElementById("lookMore"); if(lm) lm.ontoggle=()=>{view.lookOpen=lm.open;};
-  const hp=document.getElementById("qtHelp"); if(hp) hp.onclick=()=>{ const det=DETAIL[view.w+"-"+(view.d+1)], hc=PVQ.has(key)?!!(det&&det.christ):true, st=window.CBSR_V2?["본문 관찰","하나님의 성품","적용","오늘의 기도"]:["본문 관찰","하나님의 성품",...(hc?["성경 전체로"]:[]),"적용"];
+  const hp=document.getElementById("qtHelp"); if(hp) hp.onclick=()=>{ const det=DETAIL[view.w+"-"+(view.d+1)], hc=PVQ.has(key)?!!(det&&det.christ):true, st=["본문 관찰","하나님의 성품","적용","오늘의 기도"];
     sheet("묵상 노트는 이렇게",`<p><b>${st.join(" → ")}</b> 순서로 갑니다. 마지막에 기도로 마칩니다.</p><p>정답을 고르는 문제가 아닙니다. 질문을 읽고 본문을 다시 본 뒤 <b>내 말로 한 줄</b> 적습니다.</p><p>막히면 '본문 열기'로 그 장면을 다시 읽거나, '다른 부분도 살펴보기'에서 작은 질문을 따라가 보세요.</p><p>적는 칸은 비워 두어도 마칠 수 있습니다. 적은 답은 '기록 → 관찰 기록'에 모입니다.</p><p>스토리 QT와 묵상 노트의 말씀은 개역개정입니다.</p>`); };
   const np=document.getElementById("qtNextP"); if(np) np.onclick=()=>{const q=cur(); q.pv=(q.pv||0)+1; touchQ(q,"pv"); save(); const y=window.scrollY; render(); window.scrollTo({top:y});};
   m.querySelectorAll("[data-amen]").forEach(b=>b.onclick=()=>{ const k=keyOf(view.w,view.d); const q=(mem.qt[k] ||= {}); q.amen ||= {}; const n=b.dataset.amen;
@@ -5280,11 +5226,11 @@ function bindQT(m){
     const on=!!q.amen[n]; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); b.textContent=on?"아멘 ✓":"아멘"; if(on){ b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); } });
   const db=document.getElementById("deepBox"); if(db) db.ontoggle=()=>{view.deepOpen=db.open;};
   const dn=document.getElementById("qtDone"); if(dn) dn.onclick=()=>{const q=cur(); q.done=!q.done; touchQ(q,"done"); if(q.done){ if(!q.doneAt) q.doneAt=todayStr(); if(!q.kv&&view.kvShown) q.kv=view.kvShown; view.qtJust=true;} save(); const y=window.scrollY; render(); window.scrollTo({top:y});
-    if(q.done&&window.CBSR_V2){ view.qtStep=0; finOpen("note",view.w,view.d); return; }
-    if(q.done){ if(STORY()){ const S=storySlides(view.w,view.d); if(S[0]&&S[0].ph){ q.cph=S[0].ph.id; save(); } storyOpen(0,"fin"); return; } document.getElementById("qtDoneSec")?.scrollIntoView({block:"center",behavior:"smooth"}); confetti(); } };
+    if(q.done&&true){ view.qtStep=0; finOpen("note",view.w,view.d); return; }
+    if(q.done){ { const S=storySlides(view.w,view.d); if(S[0]&&S[0].ph){ q.cph=S[0].ph.id; save(); } storyOpen(0,"fin"); return; } document.getElementById("qtDoneSec")?.scrollIntoView({block:"center",behavior:"smooth"}); confetti(); } };
   const tr=document.getElementById("qtToRec"); if(tr) tr.onclick=()=>{view.tab="record";render();window.scrollTo({top:0});};
-  const qs=document.getElementById("qtStory"); if(qs) qs.onclick=()=>{ if(window.CBSR_V2){ storyOpen(0); return; } view.qtDeep=false; render(); scrollTo({top:0}); };
-  if(STORY()&&!view.qtDeep) bindStory(m);
+  const qs=document.getElementById("qtStory"); if(qs) qs.onclick=()=>{ storyOpen(0); return; view.qtDeep=false; render(); scrollTo({top:0}); };
+  if(!view.qtDeep) bindStory(m);
   if(typeof tgFill==="function") tgFill(m,view.w,view.d);
 }
 
@@ -5458,16 +5404,13 @@ function churchCounts(){
     if(el2&&document.body.contains(el2)) el2.innerHTML=`<div class="stats"><div class="stat"><b>${c.date}</b><span>오늘 들어온 통독 완료(모든 본문)</span></div><div class="stat"><b>${c.day}</b><span>이 본문을 읽은 사람</span></div></div>`;
   });
 }
-function renderAccount(){
-  if(!(window.SYNC&&SYNC.available)) return "";
-  return `<section class="sec"><span class="label">우리 교회 함께 읽기</span><div id="churchBox"><p class="lead">불러오는 중…</p></div></section>`; }
 function acctHTML(){
   /* 미리 보기 날짜를 쓰는 동안에는 연동이 꺼져 있음 — 예전에는 '새로 등록했습니다'라고 잘못 알렸음(11/2) */
-  if(NOWOFF&&!DEMO) return `<div class="acct"><p><b>지금은 미리 보기 날짜(${esc(sessionStorage.getItem("cbsr-now")||"")})로 보고 있어 연동이 꺼져 있습니다.</b></p><p class="lead">미리 보기 중에 남긴 기록은 이 기기의 임시 사본에만 있고 다른 기기로 넘어가지 않습니다. 연동하려면 미리 보기를 끄고 다시 여세요.</p><div class="row"><button class="btn small" id="acctNowOff">미리 보기 끄기</button></div></div>`;
+  if(NOWOFF&&true) return `<div class="acct"><p><b>지금은 미리 보기 날짜(${esc(sessionStorage.getItem("cbsr-now")||"")})로 보고 있어 연동이 꺼져 있습니다.</b></p><p class="lead">미리 보기 중에 남긴 기록은 이 기기의 임시 사본에만 있고 다른 기기로 넘어가지 않습니다. 연동하려면 미리 보기를 끄고 다시 여세요.</p><div class="row"><button class="btn small" id="acctNowOff">미리 보기 끄기</button></div></div>`;
   if(SYNC.loggedIn()){ const t=SYNC.lastSaved();
     return `<div class="acct"><p><b>${esc(SYNC.name())}</b> 이름으로 기록이 이어지고 있습니다.${t?` <span class="lead">(마지막 저장 ${t.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})})</span>`:""}</p>${view.acctMsg?`<p class="church">${esc(view.acctMsg)}</p>`:""}<p class="lead">다른 휴대폰·태블릿·컴퓨터에서 같은 이름과 숫자 4자리를 넣으면 이 기록이 그대로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 통독 기록이 모두 함께 옮겨집니다.</p><div class="row"><button class="btn ghost small" id="acctOut">이 기기에서 연동 끊기</button></div></div>`; }
   return `<div class="acct"><p>휴대폰·태블릿·컴퓨터에서 <b>같은 이름과 숫자 4자리</b>를 넣으면 기록이 하나로 이어집니다. 진행률·퀴즈·QT 노트·형광펜·프로필, 리딩지저스와 365통독 기록이 모두 함께 옮겨집니다. 회원 가입은 필요 없습니다.</p>
-   <div class="acctform"><input id="acctName" type="text" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name"><input id="acctPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리"><button class="btn small" id="acctIn">시작하기</button></div>${window.CBSR_V2&&SYNC.together?`<label class="tgchk"><input type="checkbox" id="acctShare"${PROF.share?" checked":""}> 함께 읽기에 내 이름 보이기 <small>(스토리 QT에서 교우들이 내 별명과 '아멘'을 봅니다. 나중에 메뉴에서 바꿀 수 있습니다)</small></label>`:""}
+   <div class="acctform"><input id="acctName" type="text" maxlength="20" placeholder="이름 (예: 홍길동)" autocomplete="name"><input id="acctPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리"><button class="btn small" id="acctIn">시작하기</button></div>${SYNC.together?`<label class="tgchk"><input type="checkbox" id="acctShare"${PROF.share?" checked":""}> 함께 읽기에 내 이름 보이기 <small>(스토리 QT에서 교우들이 내 별명과 '아멘'을 봅니다. 나중에 메뉴에서 바꿀 수 있습니다)</small></label>`:""}
    <p class="lead">같은 이름을 쓰는 분이 있을 수 있으니, 숫자는 생일처럼 남이 짐작하기 쉬운 것은 피해 주세요. 이름과 숫자를 잊으면 기록을 다시 찾을 수 없습니다.</p><p class="lead" id="acctMsg" role="status"></p></div>`; }
 function openAcct(){ sheet("다른 기기와 연동",acctHTML()); bindAcctSheet(); }
 function bindAcctSheet(){
@@ -5738,15 +5681,15 @@ function recBack(){ if(!view.recD) return; if(bmReturn()) return; view.recD=null
 /* 성경 지도를 다른 탭에서 열었으면(위쪽 지도 단추·오늘의 여정·지도 도전) 닫을 때 그 자리로 돌아감 */
 function bmReturn(){ const f=view.bmFrom; if(!f) return false; view.bmFrom=null; view.recD=f.recD; view.tab=f.tab; render(); const y=f.y||0; [60,250,500].forEach(t=>setTimeout(()=>{ if(Math.abs(window.scrollY-y)>40) window.scrollTo({top:y}); },t)); return true; }
 const recBackOv=fromPop=>{ if(fromPop===true){ if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); } };
-function recGo(d){ view.recD=d; if(window.CBSR_V2) ovOpen(recBackOv); render(); window.scrollTo({top:0}); }
+function recGo(d){ view.recD=d; ovOpen(recBackOv); render(); window.scrollTo({top:0}); }
 function recCards(){ return Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q.kv).map(([k,q])=>{ const [w,d]=k.split("-").map(Number); if(!dayPlan(w,d)) return null; const v=String(q.kv).split(":").map(Number); if(v.length!==3) return null; const t=vtxt(v); if(!t) return null; return {k,w,d,q,v,t,dt:dateOf(w,d),at:String(q.doneAt||"")}; }).filter(Boolean).sort((a,b)=>b.at.localeCompare(a.at)||b.dt-a.dt); }
 function lastReadBook(){ /* 일정에서 가장 앞선 읽은 날의 책(뒤늦게 완료한 지난 날이 '지금 읽는 책'이 되지 않게) */ let best=null; for(const k in mem.done){ const [w,d]=k.split("-").map(Number); const p=dayPlan(w,d); if(!p) continue; const o=dayNo(w,d); if(!best||o>best.o) best={o,b:p.ch[p.ch.length-1][0]}; } return best?PLAN.full[best.b-1]:""; }
 const recRow=(go,t,sub)=>`<button class="rrow" data-recgo="${go}"><span><b>${t}</b><small>${sub}</small></span><i aria-hidden="true">›</i></button>`;
-function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">${window.CBSR_V2?"‹":`‹ ${back?"돌아가기":"기록"}`}</button><h2>${t}</h2></div>`;
+function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">${"‹"}</button><h2>${t}</h2></div>`;
   if(D==="lines") return head("메모")+lnDetailHTML();
   if(D==="notes") return head("내 노트")+`<section class="sec rsec lnwrap"><input class="lnq" id="ntQ" type="search" placeholder="낱말로 찾기" value="${esc(view.ntQ||"")}" aria-label="내 노트 찾기"><div class="mynotes" id="ntRes">${noteFind(view.ntQ||"")}</div></section>`;
   /* 통독표(목사님 2026-11-03): 달마다 날짜 · 본문 · 읽음. 지금 달만 펼치고 나머지는 접음. 줄을 누르면 그날 본문으로 */
-  if(D==="plan"&&window.CBSR_V2){ const t=today0(); if(view.pcStart){ PCM=view.pcStart; view.pcStart=null; } else if(!PCM) PCM=`${t.getFullYear()}-${t.getMonth()}`; return head("통독표")+`<section class="sec rsec">${pcSearchHTML()}<div id="pcBox" class="pcbox">${pcHTML()}</div><p class="lead rnote">${esc(PI.name)} 일정입니다. 날짜를 누르면 그날 본문으로 갑니다.</p></section>`; }
+  if(D==="plan"&&true){ const t=today0(); if(view.pcStart){ PCM=view.pcStart; view.pcStart=null; } else if(!PCM) PCM=`${t.getFullYear()}-${t.getMonth()}`; return head("통독표")+`<section class="sec rsec">${pcSearchHTML()}<div id="pcBox" class="pcbox">${pcHTML()}</div><p class="lead rnote">${esc(PI.name)} 일정입니다. 날짜를 누르면 그날 본문으로 갑니다.</p></section>`; }
   if(D==="plan"){ const t0=today0(), M=new Map();
     for(let nn=1;nn<=TOTAL_DAYS;nn++){ const w=Math.floor((nn-1)/7)+1, d=(nn-1)%7; if(!PLAN.plan[w-1]) break; const p=dayPlan(w,d); if((!p)) continue; 
       const dt=dateOf(w,d), mk=`${dt.getFullYear()}-${dt.getMonth()}`; if(!M.has(mk)) M.set(mk,{y:dt.getFullYear(),m:dt.getMonth()+1,rows:[],n:0,r:0});
@@ -5909,9 +5852,9 @@ function bmPlRef(nm,k){ try{ const [w,d]=k.split("-").map(Number), P=dayA(w,d).p
 function bmPlAll(nm,cb){ const keys=[]; PLAN.plan.forEach((W,wi)=>(W||[]).forEach((P,di)=>{ if(P) keys.push((wi+1)+"-"+di); })); let i=0; const out=[];
   const step=()=>{ const t=performance.now(); while(i<keys.length&&performance.now()-t<30){ const L2=bmDayPl(keys[i]); if(L2&&L2.includes(nm)) out.push(keys[i]); i++; } if(i<keys.length) setTimeout(step,0); else { bmPCSave(); cb(out); } }; step(); }
 function bmPlFirst(nm,cb){ bmPlAll(nm,L2=>cb(L2[0])); }
-function bmPlace(nm){ const B=window.CBSR_V2?null:bmLit(), k=B&&B.first.get(nm), g=PLACE.get(nm); let h=""; /* v2: 지나온 곳 표시 뺌(11/2) */
+function bmPlace(nm){ const B=null, k=B&&B.first.get(nm), g=PLACE.get(nm); let h=""; /* v2: 지나온 곳 표시 뺌(11/2) */
   if(k){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); h=`<p class="bmst on">● 지나온 곳</p><p>처음 지난 날: <b>${esc(fmt(dateOf(w,d),{month:"long",day:"numeric"}))}</b> · ${esc(p.label)}</p>${bmGoBtns(bmPlRef(nm,k),[w,d])}`; }
-  else h=`${window.CBSR_V2?"":`<p class="bmst">○ 아직 지나지 않은 곳</p><p class="lead">이곳이 나오는 본문을 읽으면 지도에 켜집니다.</p>`}<div id="bmPlFirst"><p class="lead">처음 나오는 날을 찾는 중…</p></div>`;
+  else h=`${""}<div id="bmPlFirst"><p class="lead">처음 나오는 날을 찾는 중…</p></div>`;
   const info=typeof PLACEINFO!=="undefined"&&PLACEINFO[nm]?PLACEINFO[nm]:null; let desc=""; try{ if(info) desc=placeEntry(nm,0)[1]; }catch(e){}
   sheet(nm,`${h}${desc?`<p class="src" style="margin-top:12px">${esc(desc)}</p>`:""}${g&&g[4]?`<p class="src plest">위치는 추정입니다.</p>`:""}<details class="bmother"><summary>이곳이 나오는 날 모두 보기</summary><div id="bmPlAll"><p class="lead">찾는 중…</p></div></details>`);
   const bindGo=root=>{ root.querySelectorAll("[data-bmv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.bmv,()=>bmPlace(nm)));
@@ -6517,8 +6460,7 @@ async function change(k,label,my){ const FX=fx, mk=(t,a)=>{ const e=document.cre
     const ring=mk("circle",{cx:x,cy:y-18,r:6,fill:"url(#at_smk)",filter:"url(#at_blur)"}); ring.animate([{r:6,opacity:0},{r:22,opacity:1},{r:26,opacity:0}],{duration:1300,fill:"forwards"});
     const im=g.querySelector(".atimg"); im.animate([{opacity:1},{opacity:0}],{duration:450,fill:"forwards"}); await sleep(480); if(my!==tok) return; dress(k); im.animate([{opacity:0},{opacity:1}],{duration:550,fill:"forwards"});
     jToast(el,label); await sleep(900); }
-const tag=(x,y,t)=>jToast(el,t); /* 통일안: 지도 위 꼬리표 → 아래 카드 위 안내 띠 */ const tagOld=(x,y,t,anchor)=>{ const e=document.createElementNS(NS,"text"); e.setAttribute("x",x); e.setAttribute("y",y); if(anchor) e.setAttribute("text-anchor",anchor); e.setAttribute("style","font:700 9.5px 'Noto Serif KR',serif;fill:#8f1d0f;paint-order:stroke;stroke:#f3e6c4;stroke-width:3px"); e.textContent=t; fx.appendChild(e); e.animate([{opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.85},{opacity:0}],{duration:2800,fill:"forwards"}); };
-async function effect(f,my){ const FX=fx, mk=(t,a)=>{ const e=document.createElementNS(NS,t); for(const q in a) e.setAttribute(q,a[q]); FX.appendChild(e); return e; }; /* 장면이 바뀌면 옛 효과는 떼어 낸 묶음에만 그려짐 */
+const tag=(x,y,t)=>jToast(el,t); /* 통일안: 지도 위 꼬리표 → 아래 카드 위 안내 띠 */ async function effect(f,my){ const FX=fx, mk=(t,a)=>{ const e=document.createElementNS(NS,t); for(const q in a) e.setAttribute(q,a[q]); FX.appendChild(e); return e; }; /* 장면이 바뀌면 옛 효과는 떼어 낸 묶음에만 그려짐 */
   if(f==="wash"){for(let r=0;r<3;r++){const c=mk("circle",{cx:150,cy:238,r:8,fill:"none",stroke:"#5b8fa8","stroke-width":1.6});c.animate([{r:8,opacity:.9},{r:22,opacity:0}],{duration:1200,delay:r*350,fill:"forwards"});} await sleep(1300); if(my!==tok) return; await change("aaron","세마포 옷으로 갈아입음",my); }
   if(f==="bull"){ for(const id of ["at_bull","at_rams"]){ const g=$(id); g.setAttribute("opacity",1); g.animate([{opacity:0},{opacity:1}],{duration:700}); } } /* 16:3, 5: 속죄제 수송아지와 번제 숫양 */
   if(f==="lots"){$("at_goats").style.opacity=1;await sleep(900);if(my!==tok)return;$("at_lot1").setAttribute("opacity",1);$("at_lot1b").setAttribute("opacity",1);await sleep(600);$("at_lot2").setAttribute("opacity",1);}
@@ -6641,7 +6583,7 @@ function bmLibHTML(){ if(view.bmFind==null){ try{ view.bmFind=localStorage.getIt
   /* 맨 위 지도(목사님 2026-11-01): 오늘 본문의 곳을 표시하고, '내가 지나온 땅'은 켜고 끌 수 있게 */
   const B=bmLit(), p=dayPlan(view.w,view.d); let np=0; try{ np=[...dayA(view.w,view.d).places.values()].filter(x=>PLACE.has(x.name)&&PLACE.get(x.name)[3]!=="r").length; }catch(e){}
   let h=`<div class="bmlibmap"><div class="bmmap" id="bmMap"></div><button class="bmbigbtn" id="bmBig" aria-label="지도 크게 보기">⤢ 크게</button></div>
-  <div class="bmmapbar"><span><i class="dot red"></i>오늘 본문 · ${esc(p?p.label:"")}${np?` · ${np}곳`:""}</span></div>${window.CBSR_V2?"":bmLandBtn("bmLandT",B)}`; /* v2: 통독하며 지나온 곳 뺌(목사님 11/2) */
+  <div class="bmmapbar"><span><i class="dot red"></i>오늘 본문 · ${esc(p?p.label:"")}${np?` · ${np}곳`:""}</span></div>${""}`; /* v2: 통독하며 지나온 곳 뺌(목사님 11/2) */
   const byEra=view.bmFind==="era", byWar=view.bmFind==="war", EG=bmEraGroups();
   h+=`<div class="bmlibh"><div class="bmfind" role="tablist"><button role="tab" data-bmfind="who" class="${byEra||byWar?"":"on"}" aria-selected="${!byEra&&!byWar}">주인공</button><button role="tab" data-bmfind="era" class="${byEra?"on":""}" aria-selected="${byEra}">시대</button><button role="tab" data-bmfind="war" class="${byWar?"on":""}" aria-selected="${byWar}">전쟁</button></div><small class="bmwhoh">누르면 여정이 열립니다</small></div>`;
   if(byWar){ h+=`<div class="bmwho bmerarow" role="tablist">${BM_WAR.map((g,i)=>`<button role="tab" data-bmwar="${g.k}"><span class="px"><img data-px="${g.av}" alt=""><i>${i+1}</i></span><b>${esc(g.n)}</b></button>`).join("")}</div>`; return h; }
@@ -6677,9 +6619,8 @@ function bmEraSheet(k){ const g=BM_ERA9.find(x=>x.k===k); if(!g) return; const E
   root.querySelectorAll("[data-bmprov]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.bmprov,()=>bmEraSheet(k)));
   const tr=root.querySelector(".bmtours.row"); if(tr) [0,60,200].forEach(t=>setTimeout(()=>{ tr.scrollLeft=0; },t)); }
 /* '내가 지나온 땅' 스위치(목사님 2026-11-01: 뜻이 바로 안 보이고 단추가 비뚤어 보임) → 이름과 한 줄 설명을 붙인 스위치 */
-function bmLandBtn(id,B){ const on=bmLandOn(); return `<button class="bmland" role="switch" aria-checked="${on}" id="${id}"><span class="bmsw" aria-hidden="true"></span><span class="tx"><b>통독하며 지나온 곳</b><small>통독을 마친 날의 본문에 나온 곳을 지도에 금색 점으로 켭니다${B?` · 지금 ${B.first.size}곳`:""}</small></span></button>`; }
 function bmLandBind(b){ if(!b) return; b.onclick=()=>{ const on=!bmLandOn(); view.bmLand=on; try{ localStorage.setItem("cbsr-bmland",on?"1":"0"); }catch(e){} b.setAttribute("aria-checked",on); bmDraw(false); }; }
-function bmLandOn(){ if(window.CBSR_V2) return false; if(view.bmLand!=null) return view.bmLand; try{ return localStorage.getItem("cbsr-bmland")==="1"; }catch(e){ return false; } }
+function bmLandOn(){ return false; if(view.bmLand!=null) return view.bmLand; try{ return localStorage.getItem("cbsr-bmland")==="1"; }catch(e){ return false; } }
 /* 주인공을 누르면 아래 창으로 그 주인공의 여정(목사님 2026-11-01: 아래에 길게 펼치지 말고 탭·창으로) */
 function bmShelfHTML(sel){ const G=bmWhoGroups(), T=BMT(); let h="";
   const g=BM_WHO.find(x=>x.k===sel)||BM_WHO[0], tours=T.map((t,i)=>[t,i]).filter(([t])=>(g.tour||[]).includes(t.id)), L=G[g.k];
@@ -6714,7 +6655,7 @@ function bmLibBind(m){ bmPx(m); view.bmSeg="lib"; setTimeout(()=>{ if(!BM_OV&&do
 /* 지도는 전체 화면으로: 위 막대(돌아가기·제목), 지도, 아래 짧은 설명판 */
 let BM_OV=null;
 function bmMapOpen(seg,o){ o=o||{}; if(BM_OV) BM_OV.close(true); view.bmSeg=seg; if(seg==="trip"){ const r=ROUTES_B[o.sel]; view.bmEra=r?bmEra(r.b,r.c[0]):0; view.bmSel=o.sel; } if(seg==="big") view.bmBig=null; if(o.fly) view.bmFly=o.fly;
-  const el=document.createElement("div"); el.className="bmov"; try{ document.body.dataset.bmov=o.from||(view.bmFrom&&view.bmFrom.tab)||"record"; }catch(e){} /* 태블릿: 여정 화면을 연 탭을 왼쪽 메뉴에 표시 */ const T={lib:"성경 지도",day:"오늘 본문의 곳",land:window.CBSR_V2?"성경 지도":"통독하며 지나온 곳",big:"성경의 큰 흐름",trip:"여정"}[seg]||"성경 지도";
+  const el=document.createElement("div"); el.className="bmov"; try{ document.body.dataset.bmov=o.from||(view.bmFrom&&view.bmFrom.tab)||"record"; }catch(e){} /* 태블릿: 여정 화면을 연 탭을 왼쪽 메뉴에 표시 */ const T={lib:"성경 지도",day:"오늘 본문의 곳",land:"성경 지도",big:"성경의 큰 흐름",trip:"여정"}[seg]||"성경 지도";
   el.innerHTML=`<div class="bmovtop"><button class="bmovx" aria-label="돌아가기">‹</button><b>${T}</b></div><div class="bmovmap"><div class="bmmap" id="bmMap"></div></div><div class="bmovp" id="bmOvP"></div>`; document.body.appendChild(el); document.body.style.overflow="hidden";
   const close=pop=>{ if(pop!==true) ovDone(close); try{ delete document.body.dataset.bmov; }catch(e){} try{ BM_MAP&&BM_MAP.remove(); }catch(e){} BM_MAP=null; BM_LY=null; el.remove(); document.body.style.overflow=""; BM_OV=null; if(view.recD==="map"){ const y=scrollY; render(); scrollTo({top:y}); } };
   BM_OV={close,list:o.list}; ovOpen(close); el.querySelector(".bmovx").onclick=()=>close();
@@ -6726,7 +6667,7 @@ function bmOvPanel(){ const P=document.getElementById("bmOvP"); if(!P) return; c
       <div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${bmGoBtns(bmRouteRef(r),D)}</div>${est?`<p class="bmest">점선 테두리의 곳은 위치가 추정입니다.</p>`:""}</div>`;
     /* 단추 한 줄(목사님 2026-11-02): 장 정보는 위에 있으니 날짜만 */
     P.querySelectorAll(".bmrb [data-bmv]").forEach(b=>b.textContent="📖 본문"); P.querySelectorAll(".bmrb [data-bmday]").forEach(b=>{ if(D) b.textContent=`${fmt(dateOf(D[0],D[1]),{month:"numeric",day:"numeric"}).replace(/\.\s?/g,"/").replace(/\/$/,"")} 읽는 날 ›`; }); }
-  else if(seg==="lib"){ const B=bmLit(); P.innerHTML=`${window.CBSR_V2?"":bmLandBtn("bmLandT2",B)}<div class="bmpanel">${bmDayPanel()}</div>`; bmLandBind(P.querySelector("#bmLandT2")); }
+  else if(seg==="lib"){ const B=bmLit(); P.innerHTML=`${""}<div class="bmpanel">${bmDayPanel()}</div>`; bmLandBind(P.querySelector("#bmLandT2")); }
   else { const t=document.createElement("div"); t.innerHTML=bmDetailHTML(); const p=t.querySelector(".bmpanel"); P.innerHTML=""; if(p){ p.querySelectorAll("[data-bmgo]").forEach(x=>x.remove()); P.appendChild(p); } }
   bmBindIn(P); bmOvBind(P); }
 function bmOvBind(P){ P.querySelectorAll("[data-bmnav]").forEach(b=>b.onclick=()=>{ view.bmSel=+b.dataset.bmnav; bmOvPanel(); bmDraw(false); });
@@ -6848,7 +6789,7 @@ function badgeSheet(name,on){ let perfect=0; for(const k in mem.q){ const b=mem.
   if(!I) return; const [how,cur,goal,u]=I;
   sheet(name,`<p class="bdgst ${on?"on":""}">${on?"받았습니다 ✓":"아직 받지 않았습니다"}</p><p>${esc(how)}</p><p class="lead">지금: <b>${Math.min(cur,goal)}${esc(u)}</b> / ${goal}${esc(u)}</p><div class="bdgbar"><i style="width:${Math.min(100,Math.round(cur/goal*100))}%"></i></div>`); }
 /* ===== 함께 읽기(2026-10-29): 이름 공개를 켠 교우끼리 스토리 QT에서 '아멘한 교우', '함께 읽은 교우'를 봄. 시험판은 기본 꺼짐, 메뉴·연동 창에서 켬 ===== */
-const TG_OK=()=>!!(window.CBSR_V2&&window.SYNC&&SYNC.available&&SYNC.together);
+const TG_OK=()=>!!(window.SYNC&&SYNC.available&&SYNC.together);
 const TG_ON=()=>TG_OK()&&!!PROF.share&&SYNC.loggedIn();
 let tgT=null; const TGC={};
 function tgSoon(){ if(!TG_ON()) return; const k=keyOf(view.w,view.d); clearTimeout(tgT); tgT=setTimeout(()=>tgPush(k),2500); }
@@ -6948,7 +6889,7 @@ function bindProfile(m){
   const ac=document.getElementById("avCam"), af=document.getElementById("avFile");
   if(ac) ac.onclick=()=>{ if(PROF.photo) photoMenu(); else af.click(); };
   /* (v2) 프로필 사진을 누르면 인스타처럼 '나의 통독' 스토리, 사진 바꾸기는 카메라 단추 */
-  const avb=document.querySelector(".rprof .avatar,.igprof .avatar"); if(avb&&window.CBSR_V2&&typeof myStoryOpen==="function"){ avb.setAttribute("role","button"); avb.setAttribute("aria-label","나의 통독 스토리 보기"); avb.removeAttribute("aria-hidden"); avb.onclick=()=>myStoryOpen(); }
+  const avb=document.querySelector(".rprof .avatar,.igprof .avatar"); if(avb&&true&&typeof myStoryOpen==="function"){ avb.setAttribute("role","button"); avb.setAttribute("aria-label","나의 통독 스토리 보기"); avb.removeAttribute("aria-hidden"); avb.onclick=()=>myStoryOpen(); }
   if(af) af.onchange=()=>{ const f=af.files&&af.files[0]; af.value=""; if(f) openPhotoEditor(f); };
   const ne=document.getElementById("nickEdit"); if(ne) ne.onclick=()=>{view.editNick=true;render();document.getElementById("nickIn")?.focus();};
   m.querySelectorAll("[data-obsf]").forEach(b=>b.onclick=()=>{ view.obsF=b.dataset.obsf; const y=scrollY; render(); scrollTo({top:y}); });
@@ -7024,66 +6965,6 @@ function renderAdmin(){ document.documentElement.classList.add("admwide");
 function bindDash(m){ const back=document.getElementById("adminBack"); if(back) back.onclick=()=>{ document.documentElement.classList.remove("admwide"); view.tab="today"; render(); window.scrollTo({top:0}); };
   m.querySelectorAll("[data-adsel]").forEach(b=>b.onclick=()=>{ view.admSel=+b.dataset.adsel; const y=scrollY; render(); scrollTo({top:y}); });
   m.querySelectorAll("[data-adgo]").forEach(b=>b.onclick=()=>{ const [w,d]=dayWD(+b.dataset.adgo); document.documentElement.classList.remove("admwide"); view.w=w; view.d=d; view.tab="today"; render(); window.scrollTo({top:0}); }); }
-/* 새 소식(큰 변경만) */
-const NEWS_ALL=[
- ["2026-10-23","성경연구 탭은 MILALWV로 옮겼어요. ☰ 메뉴의 MILALWV 배너를 누르면 히브리어 원문 연구로 넘어갑니다"],
- ["2026-10-19","QT 본문 관찰에 '내가 본문에서 본 것'을 적는 칸이 생겼어요. 적은 관찰은 나의 기록 → 관찰 기록에 도구별로 모여요"],
- ["2026-10-18","책갈피: 본문에서 절을 누르고 '책갈피'를 누르면 다음에 그 자리부터 이어 읽어요"],
- ["2026-10-19","본문 듣기 목소리를 고를 수 있어요 (☰ 메뉴 → 본문 듣기 목소리)"],
- ["2026-10-19","본문 듣기: 오늘 본문을 소리로 들을 수 있어요 (본문 제목 옆 스피커 단추)"],
- ["2026-10-19","본문 보내기: 오늘 본문과 질문을 카톡으로 보낼 수 있어요"],
- ["2026-10-19","통독 화면을 '간단히 보기'로 바꿀 수 있어요: 본문과 완료 단추만 보이고 나머지는 접혀요 (☰ 메뉴 → 통독 화면)"],
- ["2026-10-17","본문이 장면마다 문단으로 나뉘어요 (☰ 메뉴 → 본문 보기에서 끌 수 있어요)"],
- ["2026-10-12","QT '하나님은 어떤 분인가'에 아멘 단추가 생겼어요. 나의 기록에서 모아 봅니다"],
- ["2026-10-11","처음 오신 분은 위쪽 '둘러보기'를 눌러 보세요 (☰ 메뉴에서 다시 볼 수 있어요)"],
- ["2026-10-08","야간 모드가 생겼어요 (☰ 메뉴 → 화면 밝기)"],
- ["2026-10-08","휴대폰·태블릿·PC 기록을 하나로 이어요: 나의 기록 → 다른 기기와 연동"],
- ["2026-10-08","통독 화면을 본문 중심으로: 본문 펼치기가 맨 위, 읽기 전 도움은 접어 두었어요"],
- ["2026-10-08","처음 읽는 분을 위해: 오늘 알아둘 인물·곳·말, 책 처음 읽기 안내, 장마다 소제목이 생겼어요"],
- ["2026-10-08","퀴즈에 '본문 다시 찾기' 문제가 들어가고, 요약·지도 같은 도움은 '이해가 필요할 때'로 모였어요"],
- ["2026-10-08","성경 번역을 고를 수 있어요: 개역개정 · 새번역 · 새한글성경 (☰ 메뉴)"],
- ["2026-10-08","지도에 이동 경로가 크게 늘었어요: 성경 본문 기준 229개, 두 통독표 공통"],
- ["2026-10-08","인물 680명 · 지명 1,100여 곳 설명이 생겼어요 (단어 설명에서 눌러 보세요)"],
- ["2026-10-08","주차 고르기에서 장으로 찾기: '창 12', '요 3'처럼 넣으면 그날로 가요"],
- ["2026-10-07","365 성경통독을 고를 수 있어요 (☰ 메뉴 → 통독표)"],
- ["2026-10-07","읽기 전 30초 길잡이 · 오늘의 읽는 눈 · 이해 퀴즈가 날마다 들어갔어요"],
- ["2026-10-07","본문에 형광펜을 칠할 수 있어요 (절을 누르세요)"]
-];
-const NEWS_KEY="cbsr-news-seen";
-/* 날짜 순으로 정렬하고, 관리자가 지운 소식은 뺍니다 */
-const newsId=n=>n[0]+"|"+n[1];
-let NEWS_HID=[]; try{ NEWS_HID=JSON.parse(localStorage.getItem("cbsr-news-hidden")||"[]")||[]; }catch(e){}
-let NEWS=[];
-function buildNews(){ NEWS=NEWS_ALL.filter(n=>!NEWS_HID.includes(newsId(n))).sort((a,b)=>a[0]<b[0]?1:a[0]>b[0]?-1:0); }
-buildNews();
-let NEWS_ADMIN=false;
-if(window.SYNC&&SYNC.available&&SYNC.news) SYNC.news.get().then(h=>{ if(JSON.stringify(h)!==JSON.stringify(NEWS_HID)){ NEWS_HID=h; try{ localStorage.setItem("cbsr-news-hidden",JSON.stringify(h)); }catch(e){} buildNews(); renderNews(); } }).catch(()=>{});
-/* 새 소식: 메뉴 단추의 점으로 알리고, 메뉴 맨 위에 보여 줍니다 */
-function freshNews(){ let seen=""; try{ seen=localStorage.getItem(NEWS_KEY)||""; }catch(e){} return NEWS.filter(n=>n[0]>seen); }
-function renderNews(){ const el=document.getElementById("newsBar"); if(el) el.innerHTML=""; if(window.CBSR_V2) return; const mb=document.getElementById("menuBtn"); if(mb) mb.classList.toggle("has-news",freshNews().length>0); }
-/* 메뉴 안 전광판: 최근 소식을 한 줄씩 넘깁니다. 누르면 전체 소식. 관리자에게만 닫기(✕) */
-function newsBlock(){ const R=NEWS.slice(0,8); if(!R.length) return "";
-  return `<div class="news inmenu" id="menuNews"><button class="news-tag" id="newsOpen">새 소식</button><div class="news-track" id="newsTrack">${R.map((n,i)=>`<span class="ni${i?"":" on"}">${esc(n[1])}</span>`).join("")}</div></div>`; }
-function bindMenuNews(){ const el=document.getElementById("menuNews"); if(!el) return;
-  clearInterval(window._newsT); const L=el.querySelectorAll(".news-track .ni");
-  if(L.length>1){ let i=0; window._newsT=setInterval(()=>{ if(!document.body.contains(L[0])) return clearInterval(window._newsT);
-    const cur=L[i]; i=(i+1)%L.length; const nx=L[i]; nx.style.transition="none"; nx.classList.remove("out","on"); void nx.offsetWidth; nx.style.transition="";
-    cur.classList.remove("on"); cur.classList.add("out"); nx.classList.add("on"); },3500); }
-  const all=()=>{ closeMenu(); showNews(); };
-  el.querySelector("#newsTrack").onclick=all; el.querySelector("#newsOpen").onclick=all;
- }
-function showNews(){
-  const byDay={}; NEWS.forEach(n=>{ (byDay[n[0]] ||= []).push(n); });
-  sheet("새 소식",Object.entries(byDay).map(([d,L])=>`<p class="src">${fmt(parseD(d),{month:"long",day:"numeric"})}</p><ul class="newslist">${L.map(n=>`<li data-nid="${esc(newsId(n))}"><span>${esc(n[1])}</span><button class="news-del" data-ndel="${esc(newsId(n))}" aria-label="이 소식 지우기" hidden>✕</button></li>`).join("")}</ul>`).join("")+`<div class="row"><button class="btn ghost small" id="newsDone">닫기</button></div>`);
-  try{ localStorage.setItem(NEWS_KEY,NEWS.length?NEWS[0][0]:""); }catch(e){} renderNews();
-  document.getElementById("newsDone").onclick=()=>{ document.getElementById("sheetRoot").innerHTML=""; };
-  const arm=()=>document.querySelectorAll("[data-ndel]").forEach(x=>{ x.hidden=false; x.onclick=async()=>{
-    if(!x.classList.contains("sure")){ x.classList.add("sure"); x.textContent="지우기"; setTimeout(()=>{ if(x.isConnected){ x.classList.remove("sure"); x.textContent="✕"; } },3000); return; }
-    const id=x.dataset.ndel, next=[...new Set([...NEWS_HID,id])]; x.disabled=true;
-    try{ await SYNC.news.set(next); NEWS_HID=next; try{ localStorage.setItem("cbsr-news-hidden",JSON.stringify(next)); }catch(e){} buildNews(); renderNews(); const li=x.closest("li"), ul=li.parentElement; li.remove(); if(!ul.children.length){ ul.previousElementSibling?.remove(); ul.remove(); } toast("소식을 지웠습니다. 모든 사용자에게서 사라집니다."); }
-    catch(e){ x.disabled=false; toast(/permission/.test(e.code||"")?"지울 권한이 없습니다. Firestore 규칙 게시와 관리자 로그인을 확인해 주세요.":"지우지 못했습니다."); } }; });
-  if(NEWS_ADMIN) arm(); else if(window.SYNC&&SYNC.available&&SYNC.admin) SYNC.admin.state().then(st=>{ if(st&&st.ok){ NEWS_ADMIN=true; arm(); } }).catch(()=>{});
-}
 /* 사용법 */
 /* 홈 화면에 추가 (독립 웹앱에서만) */
 let INSTALL_EVT=window.__bip;
@@ -7107,7 +6988,7 @@ function installBody(){
 }
 function installCard(where){
   if(!window.SYNC||isStandalone()) return "";
-  if(TRY) return "";
+  
   if(where==="read"){ if(!Object.values(mem.qt||{}).some(q=>q&&q.done)) return ""; let hide=false; try{hide=localStorage.getItem("cbsr-install-hide")==="1";}catch(e){} if(hide) return "";
     return `<section class="sec"><div class="instcard"><div class="insthead"><b>홈 화면에 추가하기</b><button class="instx" id="instHide" aria-label="닫기">✕</button></div>${installBody()}</div></section>`; }
   return `<section class="sec msec"><h3 class="mh">홈 화면에 추가</h3><div class="instcard">${installBody()}</div></section>`;
@@ -7116,35 +6997,6 @@ function bindInstall(){
   const b=document.getElementById("instBtn"); if(b) b.onclick=async()=>{ if(!INSTALL_EVT) return; INSTALL_EVT.prompt(); try{ await INSTALL_EVT.userChoice; }catch(e){} INSTALL_EVT=null; render(); };
   const x=document.getElementById("instExt"); if(x) x.onclick=()=>{ location.href="kakaotalk://web/openExternal?url="+encodeURIComponent(location.href.split("#")[0]); };
   const h=document.getElementById("instHide"); if(h) h.onclick=()=>{ try{localStorage.setItem("cbsr-install-hide","1");}catch(e){} render(); };
-}
-function renderGuide(){
-  const rj=false;
-  /* 메뉴 차례: 통독(통독표·번역·시작일) → 화면 → 설치 → 도움말 → 원문 연구 → 의견 → 기록 관리 */
-  return `<section class="sec msec"><h3 class="mh">통독</h3><span class="label" style="margin-top:0px">통독표</span><div class="plans" role="radiogroup">
-   ${(!rj)?"":`<button class="plan" role="radio" aria-checked="${rj}" data-plan="rj"><i class="dot"></i><b>리딩지저스 45주</b><span class="lead">한 주에 엿새 읽고 주일에는 돌아봅니다. 성경 이야기의 흐름을 따라 읽습니다.</span></button>`}
-   <button class="plan" role="radio" aria-checked="${!rj}" data-plan="y365"><i class="dot"></i><b>365 성경통독</b><span class="lead">하루도 쉬지 않고 날마다 읽어 1년에 성경을 한 번 읽습니다. 창세기부터 요한계시록까지 차례대로 읽습니다.</span></button></div>
-   <p class="lead">통독표마다 진행률·퀴즈·QT 기록이 따로 저장됩니다. 바꿔도 다른 통독표의 기록은 지워지지 않습니다. 형광펜은 함께 씁니다.</p><span class="label" style="margin-top:12px">성경 번역</span><div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${v.name}</b><span class="lead">${k==="krv"?"교회 예배에서 많이 사용하는 번역입니다.":k==="snb"?"처음 성경을 읽을 때 비교적 쉽게 읽을 수 있습니다.":"현대 한국어 표현을 사용한 새 번역입니다."}</span></button>`).join("")}</div>
-   <p class="lead">번역을 바꾸면 본문, 자동 퀴즈, QT의 붙잡을 구절과 기도문이 그 번역으로 바뀝니다.</p><span class="label" style="margin-top:12px">시작일</span><p class="lead">${rj?"1주차 1일째가 시작된 날입니다. 그날부터 엿새는 1–6일째, 일곱째 날은 한 주 돌아보기로 계산합니다.":"1일째를 읽기 시작한 날입니다. 그날부터 하루에 하나씩 365일째까지 이어집니다."} 지금 설정: ${fmt(parseD(mem.start),{year:"numeric",month:"long",day:"numeric",weekday:"short"})}</p>
-   <div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>
-   <span class="label" style="margin-top:10px">중간부터 쓰기 시작했다면</span><p class="lead">오늘 이전 날을 모두 읽은 것으로 표시해 진행률을 맞춥니다.</p><div class="row"><button class="btn ghost small" id="markPast">오늘 이전 날 모두 완료로 표시</button></div></section>
-  <section class="sec msec"><h3 class="mh">화면</h3><span class="label" style="margin-top:0px">통독 화면</span><div class="plans" role="radiogroup">
-     <button class="plan" role="radio" aria-checked="${!SIMPLE()}" data-simple="0"><i class="dot"></i><b>모두 펼쳐 보기</b><span class="lead">본문 아래에 인물·곳·말, 지도, 퀴즈가 차례로 나옵니다.</span></button>
-     <button class="plan" role="radio" aria-checked="${SIMPLE()}" data-simple="1"><i class="dot"></i><b>간단히 보기</b><span class="lead">본문과 '오늘 통독 완료' 단추만 보입니다. 요약·인물·지도·퀴즈는 '더 보기' 상자 하나에 접혀 있다가 누르면 펼쳐집니다. 처음 읽는 분께 알맞습니다.</span></button></div>
-   <span class="label" style="margin-top:12px">본문 보기</span><div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div><span class="label" style="margin-top:12px">화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기 설정대로"],["light","주간 모드"],["dark","야간 모드"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div>
-   <span class="label" style="margin-top:12px">본문 듣기 목소리</span><div id="voiceList"></div></section>`
-  +installCard("guide")+`<section class="sec msec guide"><h3 class="mh">도움말</h3><button class="btn ghost small" id="tourAgain">둘러보기 다시 보기</button>
-  <details class="mdet"><summary>쓰는 방법 자세히</summary>
-  <ol><li>아래 <b>오늘 통독</b>: '본문 펼치기'로 본문을 읽습니다. 읽기 전 30초 도움, 요약·오늘 알아둘 것·지도·읽는 단서, 퀴즈가 함께 있습니다. 퀴즈를 끝까지 풀거나 '오늘 통독 완료'를 누르면 진행률이 올라갑니다.</li>
-  <li><b>본문 보기</b>: 장면이 바뀌는 곳에서 문단이 나뉩니다. ☰ 메뉴의 '본문 보기'에서 끄고 켤 수 있습니다.</li>
-  <li><b>책갈피</b>: 절 하나를 누르고 아래 '책갈피'를 누르면 표시됩니다. 다음에 본문을 펼치면 그 자리로 가고, 다른 날을 보고 있으면 위에 '이어 읽기'가 나옵니다.</li>
-  <li><b>형광펜</b>: 본문에서 절을 누르면(여러 절도 됩니다) 아래에 색이 나옵니다. 칠한 절은 '나의 기록'에 모입니다.</li>
-  <li>아래 <b>QT</b>: 이야기로 읽기, 하나님의 성품, 묵상, 오늘의 기도 순서로 말씀을 깊이 붙잡습니다. 칸마다 적은 내용은 이 기기에 저장됩니다.</li>
-  <li>아래 <b>나의 기록</b>: 진행률, 연속 기록, 배지, 책별로 읽은 곳, 형광펜, QT 노트를 봅니다.</li>
-  <li><b>지도</b>는 두 손가락으로 벌리거나 +/− 버튼으로 확대·축소합니다. 이동이 있으면 점선과 화살표로 경로를 보여 줍니다.</li>
-  ${rj?`<li>한 주의 마지막 날(${DAYN[dateOf(1,6).getDay()]})에는 한 주 점수를 보고 주간 도전 문제를 풉니다.</li>`:`<li>날짜 칸 아래 <b>이번 주 돌아보기</b>를 누르면 한 주 점수와 주간 도전 문제가 나옵니다. 다시 누르면 접힙니다.</li>`}</ol></details></section>
-  <section class="sec msec"><h3 class="mh">원문 연구</h3><a class="mwvban" href="https://aqedah.github.io/MILALWV/" target="_blank" rel="noopener"><span class="mwvh">בְּרֵאשִׁית</span><span class="mwvt"><b>MILALWV</b><small>히브리어 원문 연구 — 구약 원문 읽기, 낱말 풀이, 장 구조, 원문 검색</small></span><i aria-hidden="true">↗</i></a></section>
-  <section class="sec msec"><h3 class="mh">기록 관리</h3><p class="lead">이 통독표의 퀴즈, 진행률, QT 기록을 지웁니다. 되돌릴 수 없습니다.</p><div id="resetBox"><button class="btn ghost small" id="resetAsk">이 통독표의 기록 모두 지우기</button></div></section>
-`;
 }
 /* v2 메뉴: 한 화면 목록 → 누르면 안쪽 화면(설정 앱처럼). 안쪽 화면의 단추는 v1 메뉴와 같은 id를 써서 같은 동작 */
 const CHURCH_URL="https://www.centralbible.net/", CHURCH_YT="https://www.youtube.com/@%EC%A4%91%EC%95%99%EC%84%B1%EC%84%9C%EA%B5%90%ED%9A%8C";
@@ -7186,8 +7038,8 @@ function closeMenu(fromPop){ const r=document.getElementById("drawerRoot"); if(r
   MENU_OV=null; MPAGE_OV=null; }
 function openMenu(){
   const r=document.getElementById("drawerRoot");
-  r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="메뉴"><div class="drawer-head">${window.CBSR_V2?`<button class="iconbtn mhback" id="mHBack" hidden aria-label="메뉴로 돌아가기">‹</button>`:""}<b>메뉴</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${window.CBSR_V2?renderGuideV2():newsBlock()+renderGuide()}</aside></div>`;
-  if(window.CBSR_V2){ MPAGE_OV=null; MENU_OV=()=>closeMenu(true); ovOpen(MENU_OV); bindMenuV2(r); } else { bindMenuNews(); try{ if(NEWS.length) localStorage.setItem(NEWS_KEY,NEWS[0][0]); }catch(e){} renderNews(); }
+  r.innerHTML=`<div class="drawer-bg" id="drawerBg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="메뉴"><div class="drawer-head">${`<button class="iconbtn mhback" id="mHBack" hidden aria-label="메뉴로 돌아가기">‹</button>`}<b>메뉴</b><button class="iconbtn" id="drawerX" aria-label="닫기">✕</button></div>${renderGuideV2()}</aside></div>`;
+  MPAGE_OV=null; MENU_OV=()=>closeMenu(true); ovOpen(MENU_OV); bindMenuV2(r);
   document.body.style.overflow="hidden";
   document.getElementById("drawerX").onclick=closeMenu;
   /* 메뉴를 오른쪽으로 밀면 닫힙니다 */
@@ -7200,7 +7052,7 @@ function openMenu(){
       if(dx>dr.offsetWidth*0.3||fast){ dr.style.transform="translateX(100%)"; setTimeout(closeMenu,190); } else dr.style.transform=""; }); }
   document.getElementById("drawerBg").onclick=e=>{if(e.target.id==="drawerBg")closeMenu();};
   const ag=document.getElementById("adminGo"); if(ag) ag.onclick=()=>{ closeMenu(); view.tab="admin"; render(); window.scrollTo({top:0}); };
-  const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); if(window.CBSR_V2) tour2Start(); else startTour(); };
+  const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); tour2Start(); };
   r.querySelectorAll("[data-rdopt]").forEach(x=>x.onchange=()=>{ setReadOpt(x.dataset.rdopt,x.checked); render(); });
   r.querySelectorAll("[data-simple]").forEach(b=>b.onclick=()=>{ try{ localStorage.setItem("cbsr-simple",b.dataset.simple); }catch(e){} r.querySelectorAll("[data-simple]").forEach(x=>x.setAttribute("aria-checked",x===b)); view.moreOpen=false; render(); });
   bindVoices(r);
@@ -7228,7 +7080,7 @@ function openMenu(){
 /* 그리기 */
 /*STUDY*/
 /* ===== 개편 시험(V2): 오늘 · 본문 · 도전 · 기록 ===== */
-const V2=()=>!!window.CBSR_V2;
+const V2=()=>true;
 const TD={cd:0};
 const phImg=(ph,cls)=>ph?`<img class="${cls||""}" src="${esc(ph.u)}" alt="" referrerpolicy="no-referrer" style="object-position:${esc(ph.fx||"50% 50%")}" onerror="this.remove()">`:"";
 /* 말씀 카드 그림(2026-10-30): 표지 그림이 아니라 '붙잡은 구절'에 맞춘 그림.
@@ -7251,7 +7103,7 @@ function renderToday(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
   if(!BIBLE) return `<section class="tdh"><div class="tdin"><p class="tdk" style="margin-top:auto">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1><p class="tdsub">본문을 불러오는 중입니다…</p></div></section>`;
   const q=qtOf(key), read=!!mem.done[key], S=storySlides(w,d), ph=S[0]&&S[0].ph, dt=dateOf(w,d), live=isHere(w,d), kv=q.done?storyQT(w,d).kv:null, g=GUIDE[key]||{}, mins=tdMins(w,d);
   const stage=q.done?2:read?1:0; TD.stage=stage;
-  if(window.CBSR_V2) return renderTodayV3(w,d,p,{key,q,read,S,ph,dt,live,kv,g,mins});
+  return renderTodayV3(w,d,p,{key,q,read,S,ph,dt,live,kv,g,mins});
   let h=`<section class="tdh" id="tdHero">${phImg(ph,"tdbg")}<div class="tdin">
     <div class="tdtop"><span>${esc(fmt(dt,{month:"long",day:"numeric",weekday:"long"}))}</span>${live?((!Y27)?`<span>${dayNo(w,d)}일째</span>`:""):`<button class="tdtoday" id="tdGoToday">오늘로 ›</button>`}</div>
     <div class="tdttl"><p class="tdk">${esc(p.label)}</p><h1>${esc(p.topic||p.label)}</h1></div></div>
@@ -7318,9 +7170,9 @@ function tdAid(w,d,p){ const key=keyOf(w,d), g=GUIDE[key]||{};
   if(!prev&&!eq) return "";
   return `<details class="v2aid tdaid" id="v2Aid"${view.aidOpen?" open":""}><summary>읽기 도우미<small>지난 이야기 · 살펴볼 질문</small></summary>${prev}${eq}</details>`; }
 function bindToday(){ clearInterval(TD.cd); 
-  const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); if(window.CBSR_V2){ const B=mem.bm&&mem.bm.v&&mem.bm.w===view.w&&mem.bm.d===view.d?mem.bm:null; /* 11/4: 이어 읽기는 책갈피 절로 */ const jump=()=>{ const el=B&&document.getElementById("v-"+B.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2200); return true; } window.scrollTo({top:0}); return false; }; jump(); requestAnimationFrame(jump); return; } requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
+  const toText=()=>{ view.open=true; view.v2shut=false; mem.seen ||= {}; mem.seen[keyOf(view.w,view.d)]=1; save(); switchTab("read"); { const B=mem.bm&&mem.bm.v&&mem.bm.w===view.w&&mem.bm.d===view.d?mem.bm:null; /* 11/4: 이어 읽기는 책갈피 절로 */ const jump=()=>{ const el=B&&document.getElementById("v-"+B.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2200); return true; } window.scrollTo({top:0}); return false; }; jump(); requestAnimationFrame(jump); return; } requestAnimationFrame(()=>{ const t=document.getElementById("textSec"); if(t) window.scrollTo({top:t.getBoundingClientRect().top+scrollY-8}); }); };
   /* 화면에 보이는 단계(TD.stage)를 따릅니다: 0이면 본문 읽기, 그 뒤는 스토리 QT. 화면을 그린 뒤 기록이 바뀌어도(다른 기기 동기화 등) 버튼 이름과 동작이 어긋나지 않게 */
-  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(window.CBSR_V2&&TD.act){ if(TD.act==="text"){ toText(); return; } if(TD.act==="note"){ view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); return; } storyOpen(null); return; } if(!TD.stage&&!TD.past){ toText(); return; } storyOpen(0); };
+  const go=e=>{ if(e&&e.target.closest("a,#tdGoToday")) return; if(TD.act){ if(TD.act==="text"){ toText(); return; } if(TD.act==="note"){ view.tab="qt"; view.qtDeep=true; render(); scrollTo({top:0}); return; } storyOpen(null); return; } if(!TD.stage&&!TD.past){ toText(); return; } storyOpen(0); };
   const s0=document.getElementById("tdStory0"); if(s0) s0.onclick=e=>{ e.stopPropagation(); storyOpen(0); };
   const hero=document.getElementById("tdHero"); if(hero) hero.onclick=go;
   const tst=document.getElementById("tdStory"); if(tst) tst.onclick=e=>{ e.stopPropagation(); storyOpen(TD.stage===2?0:null); };
@@ -7397,23 +7249,6 @@ function gClue(w,d,seed){ const A=dayA(w,d), cnt=new Map(), at=new Map();
   const vs=at.get(ans); return {ans,n:L[0][1],opts:shuf([ans,...shuf(low,r).slice(0,3)],r),first:vs[0],last:vs[vs.length-1],all:vs}; }
 const vref2=v=>`${PLAN.abbr[v.b-1]} ${v.c}:${v.v}`;
 function chRec(key){ mem.ch ||= {}; return mem.ch[key] ||= {}; }
-function gameHTML(kind,w,d){ const key=keyOf(w,d), G=view.game&&view.game.kind===kind&&view.game.key===key?view.game:null, R=chRec(key)[kind];
-  const head={order:["장면 순서 맞추기","오늘 본문에서 뽑은 네 장면을 일어난 차례대로 누릅니다"],who:["누가 한 말일까","본문 속 말과 말한 사람을 짝짓습니다"],clue:["단서 찾기","오늘 본문에 가장 여러 번 되풀이된 말을 찾습니다"]}[kind];
-  let h=`<section class="sec gsec"><span class="label">${head[0]}</span>`;
-  if(!G){ const ok=kind==="order"?gOrder(w,d,key):kind==="who"?gWho(w,d,key):gClue(w,d,key);
-    if(!ok) return h+`<p class="lead">오늘 본문으로는 이 도전을 만들기 어렵습니다.</p></section>`;
-    return h+`<p class="lead">${head[1]}${R?` · 지난 결과 <b>${esc(R)}</b>`:""}</p><button class="btn" data-gstart="${kind}">${R?"다시 하기":"시작"}</button></section>`; }
-  if(kind==="order"){ const {items,shown,pickd=[] ,done}=G;
-    h+=`<div class="gord">${shown.map(i=>{ const pos=pickd.indexOf(i); const v=items[i]; const right=done?(pos===i):null;
-      return `<button class="gopt${pos>=0?" on":""}${done?(right?" ok":" no"):""}" data-gord="${i}"${done?" disabled":""}><b>${pos>=0?pos+1:""}</b><span>${esc(gcut(v.t,80))}${done?`<small>${esc(vref2(v))}${right?"":` · ${i+1}번째`}</small>`:""}</span></button>`; }).join("")}</div>`;
-    h+=done?`<p class="gres">${G.score}/4 맞혔습니다</p><div class="row"><button class="btn ghost" data-gstart="order" data-gnew="1">다른 장면으로</button><button class="btn ghost" data-gclose="1">닫기</button></div>`:`<p class="lead">${pickd.length?"다시 누르면 순서를 지웁니다":"먼저 일어난 장면부터 누르세요"}</p>`; }
-  else if(kind==="who"){ const q=G.qs[G.i];
-    if(G.i>=G.qs.length) h+=`<p class="gres">${G.score}/${G.qs.length} 맞혔습니다</p><div class="row"><button class="btn ghost" data-gstart="who" data-gnew="1">다른 말로</button><button class="btn ghost" data-gclose="1">닫기</button></div>`;
-    else { h+=`<p class="gq">“${esc(gcut(q.t,120))}”</p><div class="gopts">${q.opts.map(o=>`<button class="gopt${G.a?(o===q.ans?" ok":o===G.a?" no":""):""}" data-gwho="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
-      if(G.a) h+=`<p class="lead">${G.a===q.ans?"맞습니다.":`${esc(q.ans)}의 말입니다.`} ${esc(vref2(q.v))}</p><button class="btn" data-gnext="1">${G.i<G.qs.length-1?"다음":"결과 보기"}</button>`; } }
-  else { const C=G.c; h+=`<p class="gq">오늘 본문에 가장 여러 번 나오는 말은?</p><div class="gopts">${C.opts.map(o=>`<button class="gopt${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gclue="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
-    if(G.a) h+=`<p class="lead"><b>${esc(C.ans)}</b> — ${C.n}번 나옵니다. 처음은 ${esc(vref2(C.first))}, 마지막은 ${esc(vref2(C.last))}. 처음과 마지막에 무엇이 달라졌는지 본문에서 찾아보세요.</p><div class="row"><button class="btn ghost" data-gclose="1">닫기</button></div>`; }
-  return h+`</section>`; }
 let CARD_KEYS=null; /* 11-13: '이번 주에 고른 구절로 복습하기'는 이번 주 카드만(전에는 전체 카드에서 뽑아 '빈칸 채우기'와 똑같았음) */
 function weekCardKeys(){ const hn=dayNo(here.w,here.d), out=new Set(); for(let n=hn;n>=Math.max(1,hn-6);n--){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; const k=keyOf(w,d), q=mem.qt[k]; if(q&&q.done&&q.kv) out.add(k); } return out; }
 function gCard(seed){ const L=Object.entries(mem.qt).filter(([k,q])=>q.done&&q.kv&&(!CARD_KEYS||CARD_KEYS.has(k))).map(([,q])=>q).map(q=>{ const v=q.kv.split(":").map(Number); return {r:v,t:vtxt(v)}; }).filter(x=>x.t); if(!L.length) return null;
@@ -7424,13 +7259,6 @@ function gCard(seed){ const L=Object.entries(mem.qt).filter(([k,q])=>q.done&&q.k
   const extra=["말씀","은혜","생명","평강","진리","능력","영광","소망","믿음","사랑","구원","의로움"].filter(w=>w!==ans);
   const opts=shuf([ans,...shuf(pool.length>=3?pool:pool.concat(extra),r).slice(0,3)],r);
   return {ref:`${PLAN.abbr[it.r[0]-1]} ${it.r[1]}:${it.r[2]}`, text:toks.map((w,i)=>i===idx?w.replace(ans,"＿＿＿"):w).join(" "), ans, opts}; }
-function cardGameHTML(){ const G=view.game&&view.game.kind==="card"?view.game:null, n=Object.values(mem.qt).filter(q=>q.done&&q.kv).length;
-  let h=`<section class="sec gsec"><span class="label">말씀 카드 다시 맞히기</span>`;
-  if(!n) return h+`<p class="lead">묵상 노트를 마치고 말씀 카드를 모으면 열립니다.</p></section>`;
-  if(!G) return h+`<p class="lead">모은 말씀 카드 ${n}장에서 빈칸을 채웁니다.</p><button class="btn" data-gstart="card">시작</button></section>`;
-  const C=G.c; h+=`<p class="gq">${esc(C.text)}<small style="display:block;color:var(--muted);font-size:12.5px">${esc(C.ref)}</small></p><div class="gopts">${C.opts.map(o=>`<button class="gopt${G.a?(o===C.ans?" ok":o===G.a?" no":""):""}" data-gcard="${esc(o)}"${G.a?" disabled":""}>${esc(o)}</button>`).join("")}</div>`;
-  if(G.a) h+=`<div class="row"><button class="btn ghost" data-gstart="card" data-gnew="1">다음 카드</button><button class="btn ghost" data-gclose="1">닫기</button></div>`;
-  return h+`</section>`; }
 function bindChallenge(){ const key=keyOf(view.w,view.d), rr=()=>keepScroll(()=>{});
   const mr=()=>{ const a=document.getElementById("m100"), t=a?a.getBoundingClientRect().top:null; render(); const b=document.getElementById("m100"); if(b&&t!=null) scrollBy(0,b.getBoundingClientRect().top-t); };
   const mDone=()=>{ const G=view.game, R=(mem.m100 ||= {}), r=R[G.i] ||= {}; r[G.mode]=(r[G.mode]||0)+1; save(); };
@@ -7453,13 +7281,6 @@ function bindChallenge(){ const key=keyOf(view.w,view.d), rr=()=>keepScroll(()=>
   document.querySelectorAll("[data-gwho]").forEach(b=>b.onclick=()=>{ const G=view.game; G.a=b.dataset.gwho; if(G.a===G.qs[G.i].ans) G.score++; rr(); });
   document.querySelectorAll("[data-gnext]").forEach(b=>b.onclick=()=>{ const G=view.game; G.i++; G.a=null; if(G.i>=G.qs.length){ chRec(key).who=`${G.score}/${G.qs.length}`; save(); } rr(); });
   document.querySelectorAll("[data-gclue]").forEach(b=>b.onclick=()=>{ const G=view.game; G.a=b.dataset.gclue; chRec(key).clue=G.a===G.c.ans?"찾음":"다시"; save(); rr(); }); }
-function renderChallenge(){ const {w,d}=view, key=keyOf(w,d), p=dayPlan(w,d);
-  let h=`<section class="sec"><span class="label">도전 · 언제든지 열려 있습니다</span><h2>${esc(p?p.label:"")}</h2><p class="lead">읽은 본문으로 풀어 봅니다. 날짜를 바꾸면 지난 본문도 풀 수 있습니다.</p></section>`;
-  if(p) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}</section>`;
-  if(p&&BIBLE) h+=["order","who","clue"].map(k=>gameHTML(k,w,d)).join("");
-  h+=m100HTML();
-  h+=cardGameHTML();
-  return h; }
 /* ===== 꼭 외울 말씀 100 (11-13 목사님: 가이드북 부록 그대로, 쉬운 놀이로 — 빈칸 채우기·순서 맞추기) =====
    기록 mem.m100[번호]={f:빈칸 마친 횟수,o:순서 마친 횟수}. 둘 다 한 번 이상이면 ✓ */
 function m100Rnd(seed){ let x=0; for(const ch of String(seed)) x=(x*31+ch.charCodeAt(0))>>>0; return ()=>{ x=(x*1664525+1013904223)>>>0; return x/4294967296; }; }
@@ -7588,7 +7409,7 @@ function coach(id,el,text,opt){ opt=opt||{}; if(!el||!el.isConnected) return; le
   setTimeout(off,opt.ms||3600); setTimeout(()=>addEventListener("pointerdown",off,true),300); }
 /* 처음 한 번 안내의 차례(11/5 목사님 채택). 화면이 그려진 뒤 그 자리에 맞는 것 하나만. 저절로 뜨는 것(위 아이콘·날 넘기기)은 한 번 켤 때 하나만 */
 function coachSeen(id){ try{ return !!JSON.parse(localStorage.getItem("cbsr-coach")||"{}")[id]; }catch(e){ return true; } }
-function coachTick(){ if(!window.CBSR_V2||document.querySelector(".coach,.bmt2,.wcm,.sheet-bg")) return; if(/[?&](review|pv)=/.test(location.search)) return;
+function coachTick(){ if(document.querySelector(".coach,.bmt2,.wcm,.sheet-bg")) return; if(/[?&](review|pv)=/.test(location.search)) return;
   const q=s=>{ const e=document.querySelector(s); return e&&e.offsetParent?e:null; };
   let once=false; try{ once=!!sessionStorage.getItem("cbsr-coach-s"); }catch(e){}
   const passive=(id,el,t)=>{ if(once||!el||coachSeen(id)) return false; try{ sessionStorage.setItem("cbsr-coach-s","1"); }catch(e){} coach(id,el,t,{ms:4200}); return true; };
@@ -7801,7 +7622,7 @@ document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closes
   const [w,d]=b.dataset.wcmk.split("-").map(Number), q=mem.qt[keyOf(w,d)]||{}, v=String(q.kv||"").split(":").map(Number); if(v.length!==3) return;
   const sh=document.getElementById("sheetRoot"); if(sh&&sh.contains(b)) sh.querySelector("#sheetX")?.click();
   wcOpen({b:v[0],c:v[1],v1:v[2],v2:v[2],w,d,ph:wordCardPh(w,d,q),mine:q.med||""}); });
-function bindRecordCards(){ document.querySelectorAll("[data-wck]").forEach(b=>b.onclick=()=>{ const k=b.dataset.wck, [w,d]=k.split("-").map(Number), q=mem.qt[k]; const v=(q.kv||"").split(":"), kv={b:+v[0],c:+v[1],v:+v[2]}; kv.t=vtxt([kv.b,kv.c,kv.v]); sheet(dayPlan(w,d).label,wordCard(w,d,q,kv,wordCardPh(w,d,q),true)+(window.CBSR_V2?`<button class="wcmk" data-wcmk="${w}-${d}">말씀 카드 만들어 보내기</button>`:"")); });
+function bindRecordCards(){ document.querySelectorAll("[data-wck]").forEach(b=>b.onclick=()=>{ const k=b.dataset.wck, [w,d]=k.split("-").map(Number), q=mem.qt[k]; const v=(q.kv||"").split(":"), kv={b:+v[0],c:+v[1],v:+v[2]}; kv.t=vtxt([kv.b,kv.c,kv.v]); sheet(dayPlan(w,d).label,wordCard(w,d,q,kv,wordCardPh(w,d,q),true)+(`<button class="wcmk" data-wcmk="${w}-${d}">말씀 카드 만들어 보내기</button>`)); });
   const a=document.getElementById("wcAll"); if(a) a.onclick=()=>{ view.wcAll=!view.wcAll; render(); }; }
 
 /* ===== V2: 인스타그램식 요일 고리(본문·도전 탭 위) ===== */
@@ -7853,7 +7674,7 @@ function bindDayRing(){ const me=document.getElementById("rgMe"); if(me) me.oncl
   const mi=document.getElementById("rgMiss"); if(mi) mi.onclick=()=>{ const M=missedDays(); sheet("읽지 않은 날",`<p class="lead">지난 2주 가운데 아직 통독 완료를 누르지 않은 날입니다.</p><div class="qtstart-list">${M.map(([a,b])=>dayBtn(a,b)).join("")}</div>`); document.querySelectorAll("#sheetRoot [data-jump]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.jump.split("-").map(Number); document.getElementById("sheetRoot").innerHTML=""; view.w=w; view.d=d; view.pre=false; view.revW=null; view.tab="read"; render(); scrollTo({top:0}); }); };
   /* 동그라미를 누르면 인스타 스토리처럼 그날 표지를 먼저 띄우고, 거기서 본문으로(목사님 2026-10-29) */
   document.querySelectorAll("[data-rgsun]").forEach(b=>b.onclick=()=>rgGoDay(+b.dataset.rgsun,6,"today"));
-  document.querySelectorAll("[data-rg]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.rg.split("-").map(Number); if(window.CBSR_V2) rgStory(w,d); else rgGoDay(w,d); });
+  document.querySelectorAll("[data-rg]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.rg.split("-").map(Number); rgStory(w,d); });
   document.querySelectorAll("[data-rp]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.rp.split("-").map(Number); if(b.classList.contains("cur")) rgStory(w,d); else rgGoDay(w,d); });
   { const P=document.querySelector(".rpath #rgScroll"); if(P){ const c=P.querySelector("#rgSel")||P.querySelector(".rp.tod")||[...P.querySelectorAll(".rp:not(.fut)")].pop(); if(c) P.scrollLeft=c.offsetLeft-(P.clientWidth-c.offsetWidth)/2; P._snap=1; P._path=1; } }
   const sc=document.getElementById("rgScroll"), se=document.getElementById("rgSel")||[...document.querySelectorAll("#rgScroll .rg:not(.fut)")].pop();
@@ -7914,7 +7735,7 @@ const chFuture=(w,d)=>dayDiff(today0(),dateOf(w,d))>0;
 /* 앞날: 본문은 미리 읽을 수 있고, 통독 완료·스토리 QT·QT·도전은 그날 열립니다(목사님 결정 2026-10-29). 검토 링크(?day=, ?review=)는 예외 */
 const FUT_OK=(()=>{ try{ const q=new URLSearchParams(location.search); return q.has("day")||q.has("review"); }catch(e){ return false; } })();
 /* 날짜별 열림 원칙(목사님 2026-11-09 확정): 지난 날·오늘 = 본문·스토리·묵상 모두 열림(오늘은 본문 먼저 권함, 막지 않음) / 내일부터 = 본문만 열림, 스토리·묵상·도전은 그날 열림 */
-const futLock=(w,d)=>!!window.CBSR_V2&&!TRY&&!FUT_OK&&chFuture(w,d);
+const futLock=(w,d)=>!FUT_OK&&chFuture(w,d);
 const futMsg=(w,d)=>`${fmt(dateOf(w,d),{month:"long",day:"numeric"})}에 열립니다`;
 /* 열릴 때까지 남은 시간: 플립 시계 */
 function flipHTML(w,d){ const t=dateOf(w,d).getTime(), dg=n=>`<span class="fd"><b>${n}</b></span>`, g=`<span class="fg">${dg(0)}${dg(0)}</span>`;
@@ -8127,38 +7948,38 @@ function v2Nav(){ const n=document.querySelector(".bnav-in"); if(!n) return; con
   const dl=document.getElementById("dateLine"), tp=document.querySelector("header.top"); if(dl&&tp&&!dl._v2){ dl._v2=1; dl.setAttribute("role","button"); dl.tabIndex=0; const t=()=>tp.classList.toggle("wkopen"); dl.onclick=t; dl.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); t(); } }; } }
 function render(){
   useKRV(qtTabKRV());
-  renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today"); document.body.dataset.tab=view.tab; document.body.classList.toggle("recsub",!!(window.CBSR_V2&&view.tab==="record"&&view.recD)); /* 기록의 하위 화면(성경 지도·통독표 등)은 스토리 모음처럼 ‹ 제목 막대만 */ document.body.classList.toggle("tdcov",!!(window.CBSR_V2&&view.tab==="today"&&BIBLE)); if(window.CBSR_V2&&view.tab==="today"){ setTimeout(tdTone,0); tdFit(); setTimeout(tdFit,0); }
+  renderHead(); clearInterval(TD.cd); document.body.classList.toggle("tab-today",view.tab==="today"); document.body.dataset.tab=view.tab; document.body.classList.toggle("recsub",!!(view.tab==="record"&&view.recD)); /* 기록의 하위 화면(성경 지도·통독표 등)은 스토리 모음처럼 ‹ 제목 막대만 */ document.body.classList.toggle("tdcov",!!(view.tab==="today"&&BIBLE)); if(view.tab==="today"){ setTimeout(tdTone,0); tdFit(); setTimeout(tdFit,0); }
   const m=document.getElementById("main");
   if(view.tab==="guide") view.tab="read";
-  try{ m.innerHTML=view.tab==="today"?((window.CBSR_V2&&BIBLE?topBanners("today"):"")+renderToday()):view.tab==="challenge"?(window.CBSR_V2?v2ChallengeHTML():renderChallenge()):view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():(window.CBSR_V2?renderRecordV2():renderRecord()); }
+  try{ m.innerHTML=view.tab==="today"?((BIBLE?topBanners("today"):"")+renderToday()):view.tab==="challenge"?(v2ChallengeHTML()):view.tab==="read"?renderRead():view.tab==="qt"?renderQT():view.tab==="study"?renderStudy():view.tab==="admin"?renderAdmin():(renderRecordV2()); }
   catch(e){ console.error(e); m.innerHTML=`<section class="sec"><h2>화면을 그리다 문제가 생겼습니다</h2><p class="lead">다른 탭으로 갔다가 다시 와 보세요. 계속되면 이 문구를 제작자에게 알려 주세요: ${esc(String(e&&e.message||e))}</p></section>`; }
   /* 11/5: 오늘 탭은 윗줄(날짜·버튼)이 사진 위에 떠 있어 맨 위 배너가 그 줄을 가림 → 사진 카드 아래로 옮김 */
   if(view.tab==="today"){ const bn=m.querySelector(":scope>.sbnrs"), td=m.querySelector(":scope>.td4"); if(bn&&td){ td.after(bn); bn.classList.add("aft"); } }
   document.querySelectorAll(".coach").forEach(c=>c.remove()); clearTimeout(window.__ct); window.__ct=setTimeout(coachTick,900);
-  if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-bdg]").forEach(b=>b.onclick=()=>badgeSheet(b.dataset.bdg,!b.classList.contains("off"))); if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-bkf]").forEach(b=>b.onclick=()=>bookCover(+b.dataset.bkf));
-  if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-rt]").forEach(b=>b.onclick=()=>{ view.recT=b.dataset.rt; const y=window.scrollY; render(); window.scrollTo({top:y}); });
-  if(window.CBSR_V2&&view.tab==="record"){ const keep=f=>()=>{ f(); const y=window.scrollY; render(); window.scrollTo({top:y}); };
+  if(view.tab==="record") m.querySelectorAll("[data-bdg]").forEach(b=>b.onclick=()=>badgeSheet(b.dataset.bdg,!b.classList.contains("off"))); if(view.tab==="record") m.querySelectorAll("[data-bkf]").forEach(b=>b.onclick=()=>bookCover(+b.dataset.bkf));
+  if(view.tab==="record") m.querySelectorAll("[data-rt]").forEach(b=>b.onclick=()=>{ view.recT=b.dataset.rt; const y=window.scrollY; render(); window.scrollTo({top:y}); });
+  if(view.tab==="record"){ const keep=f=>()=>{ f(); const y=window.scrollY; render(); window.scrollTo({top:y}); };
     m.querySelectorAll("[data-tlf]").forEach(b=>b.onclick=keep(()=>{ view.tlF=b.dataset.tlf; view.tlAll=false; }));
     m.querySelectorAll("[data-alm]").forEach(b=>b.onclick=keep(()=>{ view.alM=+b.dataset.alm; }));
     m.querySelectorAll("[data-alk]").forEach(b=>b.onclick=keep(()=>{ view.alK=b.dataset.alk; }));
     const ta=m.querySelector("#tlAll"); if(ta) ta.onclick=keep(()=>{ view.tlAll=!view.tlAll; });
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
-  if(window.CBSR_V2&&view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
-  if(window.CBSR_V2&&view.tab==="record"){ pcBind(m,(w,d)=>{ const f=view.bmFrom, t=(f&&f.tab!=="record"?f.tab:"read"); /* 주일은 오늘 탭의 주일 화면으로 */ view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }); m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
-  if(window.CBSR_V2&&view.tab==="record"){ const nq=m.querySelector("#ntQ"); if(nq) nq.oninput=()=>{ view.ntQ=nq.value; const r=m.querySelector("#ntRes"); if(r){ r.innerHTML=noteFind(nq.value); r.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b)); } }; }
+  if(view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
+  if(view.tab==="record"){ pcBind(m,(w,d)=>{ const f=view.bmFrom, t=(f&&f.tab!=="record"?f.tab:"read"); /* 주일은 오늘 탭의 주일 화면으로 */ view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }); m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
+  if(view.tab==="record"){ const nq=m.querySelector("#ntQ"); if(nq) nq.oninput=()=>{ view.ntQ=nq.value; const r=m.querySelector("#ntRes"); if(r){ r.innerHTML=noteFind(nq.value); r.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b)); } }; }
   const myGo=b=>noteGo(b.dataset.myn);
-  if(window.CBSR_V2&&view.tab==="record") m.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b));
-  if(window.CBSR_V2&&view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
+  if(view.tab==="record") m.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b));
+  if(view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
     m.querySelectorAll("[data-recseg]").forEach(b=>b.onclick=()=>{ view.recSeg=b.dataset.recseg; const y=window.scrollY; render(); window.scrollTo({top:y}); });
     const rb=m.querySelector("#recBack"); if(rb) rb.onclick=()=>{ ovDone(recBackOv); recBack(); };
     lnBind(m);
     bmBind(m);
     m.querySelectorAll("[data-tab-go]").forEach(b=>b.onclick=()=>{ if(b.dataset.today){ view.pre=false; view.revW=null; view.w=here.w; view.d=here.d; view.open=true; } view.tab=b.dataset.tabGo; render(); window.scrollTo({top:0}); }); }
-  bind(); if(view.tab==="admin"&&window.CBSR_V2) bindDash(m); else document.documentElement.classList.remove("admwide"); if(view.tab==="study") bindStudy(m); else if(typeof bindStudyNotes==="function") bindStudyNotes(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); } if(TTS.on) ttsMark(false);
+  bind(); if(view.tab==="admin"&&true) bindDash(m); else document.documentElement.classList.remove("admwide"); if(view.tab==="study") bindStudy(m); else if(typeof bindStudyNotes==="function") bindStudyNotes(); syncHlBar(); if(typeof trackPos==="function"){ lastT=0; trackPos(); } if(TTS.on) ttsMark(false);
   
   if(view.tab==="read"&&true&&BIBLE&&view.mapOpen) initMap(dayA(view.w,view.d)); else destroyMap();
   document.documentElement.dataset.tab=view.tab;
-  if(window.CBSR_V2) tbkSync();
+  tbkSync();
 }
 /* ===== 태블릿 가이드북(11-10 목사님 지시, GPT 검토 반영) =====
    - 2027 365일표 날 중 가이드북 원고(guide_qt.json, 1–93일)가 있는 날, 본문 탭에서만.
@@ -8169,7 +7990,7 @@ function render(){
    - ④ 해설은 [쓴 뒤 해설 열기]로 열고, [오늘 묵상 마침]을 따로 눌러 마침. */
 const TBK_V="tg1", TBK_W=600, TBK_BH=Math.round(600*210/148);
 const TBK={data:null,loading:false,page:"m",open:false,tool:"pen",color:"#24407a",finger:false,strokes:[],undo:[],redo:[],ikey:"",ret:null,scale:1};
-try{ TBK.finger=localStorage.getItem("cbsr-tbkfinger")==="1"; TBK.book=true; }catch(e){ TBK.book=true; } /* 11-13 목사님: 책 모양만(큰 글자 보기 없앰) */ /* 11-12 목사님: 기본은 책 모양 그대로(PDF처럼) */ setTimeout(()=>{ if(window.CBSR_V2&&GBON&&innerWidth>=1024) tbkLoad(); },800); TBK.lw=innerWidth;
+try{ TBK.finger=localStorage.getItem("cbsr-tbkfinger")==="1"; TBK.book=true; }catch(e){ TBK.book=true; } /* 11-13 목사님: 책 모양만(큰 글자 보기 없앰) */ /* 11-12 목사님: 기본은 책 모양 그대로(PDF처럼) */ setTimeout(()=>{ if(GBON&&innerWidth>=1024) tbkLoad(); },800); TBK.lw=innerWidth;
 function tbkPref(){ try{ return localStorage.getItem("cbsr-view")||"both"; }catch(e){ return "both"; } } /* both | text | guide */
 function tbkSetPref(v){ try{ localStorage.setItem("cbsr-view",v); }catch(e){} }
 function tbkLoad(){ if(TBK.data||TBK.loading) return; TBK.loading=true; fetch(Y27?"guide_qt.json":"trial26_qt.json").then(r=>r.json()).then(j=>{ TBK.data=j; tbkSync(); }).catch(()=>{ TBK.loading=false; }); }
@@ -8488,7 +8309,7 @@ function bind(){
   const bg=document.getElementById("bmGo"); if(bg) bg.onclick=()=>{ const B=mem.bm; view.pre=false; view.revW=null; view.w=B.w; view.d=B.d; view.tab="read"; view.open=true; render(); const el=document.getElementById("v-"+B.v); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2200);} };
 
   m.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{view.open=false;render();document.getElementById("textSec")?.scrollIntoView({block:"start"});});
-  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); touchDone(k); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k);} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was&&window.CBSR_V2){ finOpen("read",view.w,view.d); return; } if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
+  const dn=document.getElementById("doneBtn"); if(dn) dn.onclick=()=>{const k=keyOf(view.w,view.d); touchDone(k); if(mem.done[k]) delete mem.done[k]; else {mem.done[k]=todayStr(); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(k);} const was=view.justDone; save(); render(); document.getElementById("doneSec")?.scrollIntoView({block:"center"}); if(was&&true){ finOpen("read",view.w,view.d); return; } if(was) confetti(); if(was) setTimeout(churchCounts,1500);};
   const toQT=()=>switchTab("qt");
   const tqt=document.getElementById("toQT"); if(tqt) tqt.onclick=toQT;
   m.querySelectorAll("[data-toqt]").forEach(b=>b.onclick=toQT);
@@ -8514,8 +8335,8 @@ function bind(){
   bindAccount(m); bindInstall();
   { const ts=document.getElementById("toStory"); if(ts) ts.onclick=()=>storyOpen(0); }
   document.querySelectorAll(".helpzone .chsec [data-chv], .rd3 [data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
-  if(window.CBSR_V2) bindBanners(m);
-  if(window.CBSR_V2){ if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>{ const k=x.dataset.gplay; CARD_KEYS=k==="cardw"?weekCardKeys():null; gpOpen(k==="cardw"?"card":k); }); document.querySelectorAll("[data-gbopen]").forEach(x=>x.onclick=()=>gbOpen()); document.querySelectorAll("[data-rgm]").forEach(x=>x.onclick=()=>rgmOpen(view.w,view.d,0)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const chh=document.getElementById("chHelp"); if(chh) chh.onclick=()=>sheet("도전은 이렇게",`<p>오늘 읽은 본문으로 네 가지를 해 봅니다. 하나를 마칠 때마다 위의 막대가 한 칸씩 찹니다.</p><p><b>본문에서 찾기</b> · 질문을 읽고 본문에서 답이 되는 절을 누릅니다.</p><p><b>이동 경로 맞추기</b> · 오늘 이야기의 인물이 지나간 곳을 순서대로 놓습니다.</p><p><b>본문 퀴즈</b> · O/X와 4지선다로 읽은 내용을 확인합니다.</p><p><b>빈칸 채우기</b> · 묵상 노트에서 붙잡은 구절의 빈칸을 채웁니다.</p><p>성경 골든벨은 매일 하는 것이 아니라 언제든 풀 수 있습니다.</p>`); const gq=document.getElementById("gQuizGo"); if(gq) gq.onclick=()=>{ view.quizOpen=!view.quizOpen; render(); if(view.quizOpen){ const qs=document.querySelector("#quizSec [data-qstart]"); if(qs) qs.click(); } if(view.quizOpen) requestAnimationFrame(()=>document.getElementById("quizSec")?.scrollIntoView({block:"start",behavior:"smooth"})); }; document.querySelectorAll("[data-cwd]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.cwd.split("-").map(Number); view.w=w; view.d=d; view.game=null; view.quizOpen=false; render(); }); } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge"||view.tab==="qt"||view.tab==="today") bindDayRing(); flipStart(); }
+  bindBanners(m);
+  if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>{ const k=x.dataset.gplay; CARD_KEYS=k==="cardw"?weekCardKeys():null; gpOpen(k==="cardw"?"card":k); }); document.querySelectorAll("[data-gbopen]").forEach(x=>x.onclick=()=>gbOpen()); document.querySelectorAll("[data-rgm]").forEach(x=>x.onclick=()=>rgmOpen(view.w,view.d,0)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const chh=document.getElementById("chHelp"); if(chh) chh.onclick=()=>sheet("도전은 이렇게",`<p>오늘 읽은 본문으로 네 가지를 해 봅니다. 하나를 마칠 때마다 위의 막대가 한 칸씩 찹니다.</p><p><b>본문에서 찾기</b> · 질문을 읽고 본문에서 답이 되는 절을 누릅니다.</p><p><b>이동 경로 맞추기</b> · 오늘 이야기의 인물이 지나간 곳을 순서대로 놓습니다.</p><p><b>본문 퀴즈</b> · O/X와 4지선다로 읽은 내용을 확인합니다.</p><p><b>빈칸 채우기</b> · 묵상 노트에서 붙잡은 구절의 빈칸을 채웁니다.</p><p>성경 골든벨은 매일 하는 것이 아니라 언제든 풀 수 있습니다.</p>`); const gq=document.getElementById("gQuizGo"); if(gq) gq.onclick=()=>{ view.quizOpen=!view.quizOpen; render(); if(view.quizOpen){ const qs=document.querySelector("#quizSec [data-qstart]"); if(qs) qs.click(); } if(view.quizOpen) requestAnimationFrame(()=>document.getElementById("quizSec")?.scrollIntoView({block:"start",behavior:"smooth"})); }; document.querySelectorAll("[data-cwd]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.cwd.split("-").map(Number); view.w=w; view.d=d; view.game=null; view.quizOpen=false; render(); }); } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge"||view.tab==="qt"||view.tab==="today") bindDayRing(); flipStart();
   bindQT(m);
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
@@ -8608,7 +8429,7 @@ function pcBind(root,onGo){ const box=root.querySelector("#pcBox"); if(!box) ret
       if(!r.day){ msg.textContent=`${r.label}은(는) 이 통독표에 없습니다.`; return; } onGo(r.day[0],r.day[1]); };
     cg.onclick=go2; fi.onkeydown=e=>{ if(e.key==="Enter") go2(); }; } }
 function openWeekPicker(){
-  if(window.CBSR_V2){ if(view.tab==="record"&&view.recD==="plan"){ recBack(); return; } let pm=null; try{ const dt=dateOf(view.w,view.d||0); pm=`${dt.getFullYear()}-${dt.getMonth()}`; }catch(e){}
+  { if(view.tab==="record"&&view.recD==="plan"){ recBack(); return; } let pm=null; try{ const dt=dateOf(view.w,view.d||0); pm=`${dt.getFullYear()}-${dt.getMonth()}`; }catch(e){}
     view.bmFrom={tab:view.tab,recD:view.recD,y:window.scrollY}; view.pcStart=pm; view.tab="record"; view.recD=null; recGo("plan"); return; } /* 11/3: 위쪽 달력 = 통독표 전체 화면(성경 지도처럼, ‹ 로 보던 곳에 돌아감) */
   const N=NDW(), cur=dispW(), td=today0(); let h=`<div class="wklist" id="wkList">`;
   for(let W=1;W<=N;W++){
@@ -8637,7 +8458,7 @@ document.getElementById("menuBtn").onclick=openMenu;
 const TOUR_KEY="cbsr-tour-done";
 const tourDone=()=>{ try{ return !!localStorage.getItem(TOUR_KEY); }catch(e){ return true; } };
 function tourBtnShow(){ const b=document.getElementById("tourBtn"); if(b) b.hidden=tourDone(); }
-const TOUR=window.CBSR_V2?[
+const TOUR=[
  {sel:"#rgMe",t:"나의 통독",d:"오늘 내게 주시는 말씀과, 아멘한 말씀, 지난날 고른 말씀이 스토리로 이어집니다."},
  {sel:".rgs",t:"날짜",d:"동그라미를 누르면 그날 이야기 표지가 뜨고, 거기서 본문 읽기나 스토리 QT로 갑니다. 옆으로 밀면 지난날과 앞날이 나옵니다."},
  {sel:"#textSec",t:"오늘 본문",d:"오늘 읽을 본문입니다. 절을 누르면 형광펜·책갈피·듣기를 고를 수 있고, 점선 밑줄 친 말을 누르면 풀이가 나옵니다."},
@@ -8646,16 +8467,7 @@ const TOUR=window.CBSR_V2?[
  {sel:'.bnav [data-tab="qt"]',t:"QT",d:"스토리 QT로 본문의 이야기를 따라가고, 묵상 노트에 관찰·하나님·나의 생각·기도를 적습니다."},
  {sel:'.bnav [data-tab="challenge"]',t:"도전",d:"본문에서 찾기, 빈칸 채우기, 본문 퀴즈로 오늘 읽은 말씀을 다시 봅니다."},
  {sel:'.bnav [data-tab="record"]',t:"기록",d:"진행률과 QT 노트, 형광펜을 봅니다. 이름과 숫자 4자리로 휴대폰·PC 기록을 하나로 이을 수 있습니다."},
- {sel:"#menuBtn",t:"메뉴",d:"통독표와 성경 번역, 화면 설정을 바꿉니다. 둘러보기와 의견 보내기도 여기에 있습니다."}]:[
- {sel:"#strip",t:"날짜",d:"날짜 칸을 누르면 그날 본문으로 갑니다. 위의 주차 제목을 누르면 다른 주를 고르거나 장으로 찾을 수 있습니다."},
- {sel:"#openText, #bible",t:"오늘 본문",d:"여기서 오늘 본문을 펼쳐 읽습니다. 절을 누르면 형광펜을 칠할 수 있고, 점선 밑줄 친 말을 누르면 풀이가 나옵니다."},
- {sel:".help30",t:"오늘 이야기 · 읽기 전 도움",d:"지금 어디쯤인지, 지난 이야기, 읽으면서 찾을 것이 접혀 있습니다."},
- {sel:".helpzone",t:"읽은 뒤에",d:"오늘 알아둘 인물·곳·말, 지도가 모여 있습니다."},
- {sel:"#quizSec",t:"퀴즈",d:"읽은 내용을 퀴즈로 확인합니다. 틀리면 힌트가 나오고 본문으로 돌아가 다시 찾습니다."},
- {sel:"#doneSec",t:"통독 완료",d:"다 읽었으면 '오늘 통독 완료'를 누릅니다. 진행률이 올라갑니다."},
- {sel:'.bnav [data-tab="qt"]',t:"QT",d:"읽은 말씀으로 묵상하고 한 줄을 적고 기도합니다."},
- {sel:'.bnav [data-tab="record"]',t:"나의 기록",d:"진행률, 배지, 형광펜, QT 노트를 봅니다. 여기서 휴대폰·PC 기록을 하나로 연동할 수 있습니다."},
- {sel:"#menuBtn",t:"메뉴",d:"통독표와 성경 번역, 시작일, 화면 설정을 바꿉니다. 둘러보기와 쓰는 방법, 의견 보내기도 여기에 있습니다."}];
+ {sel:"#menuBtn",t:"메뉴",d:"통독표와 성경 번역, 화면 설정을 바꿉니다. 둘러보기와 의견 보내기도 여기에 있습니다."}];
 /* 11-16 목사님: 메뉴의 둘러보기가 한 곳(오늘 그림)만 짚고 끝나던 것 — 다섯 탭을 차례로 짚는 둘러보기로 */
 const TOUR2=[
  {tab:"today",sel:"#tdHero",t:"오늘",d:"그날 그림과 줄거리, 지금 할 일 단추가 있습니다. 단추를 누르면 본문 → 묵상 순서로 이어집니다."},
@@ -8720,15 +8532,15 @@ function tourPlace(){ const ov=document.getElementById("tourOv"); if(!ov) return
   const tw=Math.min(340,innerWidth-24); tip.style.width=tw+"px"; tip.style.left=Math.max(12,Math.min(innerWidth-tw-12,r.left+r.width/2-tw/2))+"px";
   const below=top+h+10, th=tip.offsetHeight;
   if(below+th<innerHeight-8) { tip.style.top=below+"px"; } else { tip.style.top=Math.max(8,top-th-10)+"px"; } }
-document.getElementById("tourBtn").onclick=()=>{ if(window.CBSR_V2) tour2Start(); else startTour(); }; tourBtnShow();
+document.getElementById("tourBtn").onclick=()=>{ tour2Start(); }; tourBtnShow();
 document.getElementById("todayBtn").onclick=()=>{const t=view.tab; go(here.w,here.d); if(t!=="read"){view.tab=t;render();}};
 /* 탭마다 보던 자리 기억: 통독 ↔ QT를 오가도 읽던 곳으로 돌아옴 */
 const TAB_Y={};
 const tabPosKey=t=>t+"|"+(view.pre?"pre":view.revW?"r"+view.revW:view.w+"-"+view.d);
 function switchTab(t){
-  if(view.tab===t){ if(window.CBSR_V2&&t==="record"&&view.recD){ if(BM_OV) try{ BM_OV.close(true); }catch(e){} try{ ovDone(recBackOv); }catch(e){} view.recD=null; view.bmFrom=null; render(); window.scrollTo({top:0}); return; } /* 11/9 목사님: 나 탭 안 세부 화면에서 '나'를 누르면 나 첫 화면으로 */ window.scrollTo({top:0,behavior:"smooth"}); return; } view.rgOpen=false;
+  if(view.tab===t){ if(t==="record"&&view.recD){ if(BM_OV) try{ BM_OV.close(true); }catch(e){} try{ ovDone(recBackOv); }catch(e){} view.recD=null; view.bmFrom=null; render(); window.scrollTo({top:0}); return; } /* 11/9 목사님: 나 탭 안 세부 화면에서 '나'를 누르면 나 첫 화면으로 */ window.scrollTo({top:0,behavior:"smooth"}); return; } view.rgOpen=false;
   /* 기록 탭에서 연 지도·책장 같은 세부 화면은 다른 탭으로 가면 닫음(목사님 2026-11-02) */
-  if(window.CBSR_V2&&view.tab==="record"&&t!=="record"&&view.recD){ if(BM_OV) try{ BM_OV.close(true); }catch(e){} try{ ovDone(recBackOv); }catch(e){} view.recD=null; }
+  if(view.tab==="record"&&t!=="record"&&view.recD){ if(BM_OV) try{ BM_OV.close(true); }catch(e){} try{ ovDone(recBackOv); }catch(e){} view.recD=null; }
   TAB_Y[tabPosKey(view.tab)]=window.scrollY; if(t==="study"&&typeof studyIntro==="function") studyIntro(); else if(view.tab==="study"&&t!=="study"&&typeof studyOutro==="function") studyOutro(t); view.tab=t; HSEL.clear(); render();
   const y=TAB_Y[tabPosKey(t)]; window.scrollTo({top:y||0}); if(y) requestAnimationFrame(()=>window.scrollTo({top:y})); }
 applyPV();
@@ -8743,8 +8555,8 @@ document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==
 /* 2026-11-10 목사님: 리딩지저스 삭제 — 365 통독만 둠(원고 파일도 지움) */
 /* 11/4 목사님: 1/1 정식 출시부터 리딩지저스·옛 365판은 없앰(최신 통독표만). 기기에 저장된 기록은 지우지 않음 */
 
-if(window.CBSR_V2) v2Nav(); if(window.CBSR_V2) setTimeout(()=>{ switchNotice(); welcomeTour(); },1200);
-if(window.CBSR_V2&&/[?&]admin=1/.test(location.search)){ try{ localStorage.setItem("cbsr-admin","1"); }catch(e){} view.tab="admin"; view.admBoot=true; render(); setTimeout(()=>{ view.admBoot=false; if(view.tab==="admin") render(); },1500); }
+v2Nav(); setTimeout(()=>{ switchNotice(); welcomeTour(); },1200);
+if(/[?&]admin=1/.test(location.search)){ try{ localStorage.setItem("cbsr-admin","1"); }catch(e){} view.tab="admin"; view.admBoot=true; render(); setTimeout(()=>{ view.admBoot=false; if(view.tab==="admin") render(); },1500); }
 /* 검토용: v2.html?day=80 → 그날 이야기 바로 열기(통독 완료 여부와 상관없이) */
 /* 스토리 작업실(story_edit.html, 2026-11-11): 같은 출처의 창이 보낸 그날 원고를 STORYC에 넣고 다시 그립니다. 2027판이면 새 번호(n27)를 씁니다 */
 window.addEventListener("message",e=>{ try{ if(e.origin!==location.origin||!e.data||!e.data.cbsrStory||typeof STORYC==="undefined") return; const no=String((typeof Y27!=="undefined"&&Y27&&e.data.n27)?e.data.n27:e.data.n26); if(!(+no>=1)) return;
@@ -8752,13 +8564,13 @@ window.addEventListener("message",e=>{ try{ if(e.origin!==location.origin||!e.da
   const n=+no; view.w=Math.floor((n-1)/7)+1; view.d=(n-1)%7; view.tab="today"; const r=document.getElementById("storyRoot"), i=(typeof e.data.card==="number")?e.data.card:(r&&SV?SV.i:0);
   /* 이미 스토리가 열려 있으면 닫지 않고(닫으면 history.back()이 부모 창까지 되돌림) 그 자리에서 다시 그림 */
   const go=()=>{ if(!BIBLE){ setTimeout(go,300); return; } view.allowFut=true; if(r){ render(); SV.i=Math.min(i||0,Math.max(0,(storySlides(view.w,view.d)||[]).length-1)); storyShow(); } else { render(); storyOpen(i||0); } }; go(); }catch(x){ console.warn("story preview",x); } });
-if(window.CBSR_V2){ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=(365)&&true){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const ci=+(new URLSearchParams(location.search).get("card")||0); const go=()=>{ if(BIBLE){ render(); storyOpen(Math.max(0,ci)); } else setTimeout(go,300); }; setTimeout(go,300); } }
+{ const sd=+(new URLSearchParams(location.search).get("day")||0); if(sd>=1&&sd<=(365)&&true){ view.w=Math.floor((sd-1)/7)+1; view.d=(sd-1)%7; view.tab="today"; const ci=+(new URLSearchParams(location.search).get("card")||0); const go=()=>{ if(BIBLE){ render(); storyOpen(Math.max(0,ci)); } else setTimeout(go,300); }; setTimeout(go,300); } }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){ const sr=document.getElementById("sheetRoot"); if(sr&&sr.innerHTML){ const cb=document.getElementById("sheetClose"); if(cb) cb.click(); else sr.innerHTML=""; return; } /* 3차 R3-12: Esc도 닫기 단추와 같은 길로(멈춤 복원) */ if(window.CBSR_V2&&OVS.length){ try{ history.back(); }catch(x){} return; } closeMenu();}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){ const sr=document.getElementById("sheetRoot"); if(sr&&sr.innerHTML){ const cb=document.getElementById("sheetClose"); if(cb) cb.click(); else sr.innerHTML=""; return; } /* 3차 R3-12: Esc도 닫기 단추와 같은 길로(멈춤 복원) */ if(OVS.length){ try{ history.back(); }catch(x){} return; } closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
-studyTabSync(); applySize(); render(); loadBible(); renderNews();
+studyTabSync(); applySize(); render(); loadBible();
 
-if(NOWOFF&&!DEMO){ try{ const s=sessionStorage.getItem("cbsr-now"); const bd=document.createElement("div"); bd.id="nowBadge"; bd.style.cssText="position:fixed;left:8px;bottom:72px;z-index:9999;background:#5a3d12;color:#fff;font:600 12px system-ui;padding:6px 10px;border-radius:14px;opacity:.9"; bd.textContent="미리 보기 날짜 "+s+" · 기록은 따로 보관 · 끄기"; bd.onclick=()=>{ location.search="?now=0"; }; document.body.appendChild(bd); }catch(e){} }
+if(NOWOFF&&true){ try{ const s=sessionStorage.getItem("cbsr-now"); const bd=document.createElement("div"); bd.id="nowBadge"; bd.style.cssText="position:fixed;left:8px;bottom:72px;z-index:9999;background:#5a3d12;color:#fff;font:600 12px system-ui;padding:6px 10px;border-radius:14px;opacity:.9"; bd.textContent="미리 보기 날짜 "+s+" · 기록은 따로 보관 · 끄기"; bd.onclick=()=>{ location.search="?now=0"; }; document.body.appendChild(bd); }catch(e){} }
 (function(){ const el=document.getElementById("appBoot"); if(!el) return; const quick=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches; let done=false; const close=()=>{ if(done) return; done=true; el.classList.add("out"); setTimeout(()=>el.remove(),320); };
   el.onclick=close; setTimeout(close,quick?300:Math.max(700,1200-performance.now())); })();
 /* ===== 여러 기기 기록 잇기: 이름+숫자 4자리 열쇠 하나에 두 통독표·형광펜·프로필을 함께 저장 ===== */

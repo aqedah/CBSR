@@ -55,6 +55,7 @@ jobs:
           rm -rf img/g img/gx
           rm -f rj.html  # 리딩지저스 삭제(2026-11-10)
           rm -f review.html jan.html feb.html rest.html  # 카드 검토 페이지 → 스토리 작업실로 대체(2026-11-13)
+          rm -f v1.html try.html demo.html story.html sample_story.html phreview.html ui1.html ui2.html ui3.html  # 옛 화면·시험 페이지 삭제(2026-11-17)
           cp -r ../src/app/site/. .
           git add -A
           if git diff --cached --quiet; then echo "바뀐 것 없음"; exit 0; fi

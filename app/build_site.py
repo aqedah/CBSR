@@ -284,13 +284,6 @@ head=f'''<!doctype html>
 '''
 html=head+body+'\n</body>\n</html>\n'
 # 11/17: 옛 화면(v1.html)·옛 체험판(demo.html)·스토리 시험(story.html)·UI 시안은 정식 배포에서 뺌
-# 시험 페이지(요 1-4장 하루): 연동 없음, 기록은 'try:' 앞머리를 붙여 앱 기록과 분리
-SHIM='<script>window.CBSR_TRY=1;(function(){try{var L=window.localStorage,P="try:",S={getItem:function(k){return L.getItem(P+k)},setItem:function(k,v){L.setItem(P+k,String(v))},removeItem:function(k){L.removeItem(P+k)},clear:function(){}};Object.defineProperty(window,"localStorage",{value:S,configurable:true});}catch(e){}})();</script>\n'
-btag=f'<script src="bible.js?v={h(bible[:5000]+str(len(bible)))}"></script>\n'
-tbody=t.replace('<script>\n/*DATA*/','\n'+btag+'<script>\n'+data)
-tbody=tbody.replace(title,'',1)
-thead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/try.html"')
-open(f'{OUT}/try.html','w').write(thead+tbody+'\n</body>\n</html>\n')
 # QT 스토리 카드 시험 페이지: 기록은 'story:' 앞머리로 앱 기록과 분리, 365 통독표로 시작
 SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="story:",S={getItem:function(k){return L.getItem(P+k)},setItem:function(k,v){L.setItem(P+k,String(v))},removeItem:function(k){L.removeItem(P+k)},clear:function(){}};Object.defineProperty(window,"localStorage",{value:S,configurable:true});if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","y365");}catch(e){}})();</script>\n'
 shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
