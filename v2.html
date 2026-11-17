@@ -8140,7 +8140,7 @@ function placeBand(w,d){ const I=placeInfo(w,d); if(!I||I.N<2) return ""; const 
   const past=new Set(); I.D.slice(0,Math.max(0,I.i)).forEach(([a,c])=>dayPlan(a,c).ch.forEach(x=>{ if(x[0]===I.b) past.add(x[1]); })); /* 일정상 지난 날의 장 */
   const st=Array.from({length:I.N},(_,k)=>{ const c=k+1; return I.td.has(c)?"t":I.rd.has(c)?"r":past.has(c)?"m":"f"; });
   const runs=[]; st.forEach((x,k)=>{ const L=runs[runs.length-1]; if(L&&L.s===x) L.e=k+1; else runs.push({s:x,a:k,e:k+1}); });
-  const COL={r:"var(--accent)",m:"var(--line)",t:"var(--gold)",f:"var(--line)"}, P=k=>(k/I.N*100).toFixed(3)+"%", H="0px"; /* 11/2 목사님: 큰 화면에서 섞인 경계·빗금이 자글자글해 보여 색만 남김 */
+  const COL={r:"var(--accent)",m:"var(--line)",t:"var(--hi)",f:"var(--line)"} /* 11-17 목사님: 새 팔레트에서 읽은 장(갈색)과 오늘 장(금빛)이 구분 안 됨 → 오늘 장은 '오늘' 표시와 같은 노랑 */, P=k=>(k/I.N*100).toFixed(3)+"%", H="0px"; /* 11/2 목사님: 큰 화면에서 섞인 경계·빗금이 자글자글해 보여 색만 남김 */
   /* 색과 색 사이는 경계 앞뒤 5px씩 부드럽게 섞음 */
   const stops=runs.map((R,j)=>`${COL[R.s]} ${j?`calc(${P(R.a)} + ${H})`:"0%"} ${j<runs.length-1?`calc(${P(R.e)} - ${H})`:"100%"}`).join(",");
   const mask=runs.map((R,j)=>{ const v=R.s==="m"?"#000":"transparent"; return `${v} ${j?`calc(${P(R.a)} + ${H})`:"0%"} ${j<runs.length-1?`calc(${P(R.e)} - ${H})`:"100%"}`; }).join(",");
