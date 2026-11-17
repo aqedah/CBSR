@@ -1416,6 +1416,16 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 #storyRoot .sfr.snew.sbk.in{transform:none}
 #storyRoot .sfr.sghost.sbk{transition:filter .55s ease}
 #storyRoot .sfr.sghost.sbk.go{filter:brightness(.62)}
+#storyRoot .sfr.spv{pointer-events:none;transform-origin:left center;backface-visibility:hidden}
+#storyRoot .sfr.spvu{z-index:0;filter:brightness(.62)}
+#storyRoot .sfr.spvo{z-index:4;transform:rotateY(-105deg)}
+#storyRoot .scover{position:absolute;inset:0;max-width:520px;margin:0 auto;z-index:20;transform-origin:left center;transform:rotateY(-178deg);backface-visibility:hidden;transition:transform .75s cubic-bezier(.45,.05,.35,1);background:linear-gradient(120deg,#5A2F18,#3A2418 60%,#2A190F);box-shadow:inset 10px 0 18px rgba(0,0,0,.35);display:grid;place-items:center}
+#storyRoot .scover.on{transform:none}
+#storyRoot .scover::before{content:"";position:absolute;inset:14px;border:1.5px solid rgba(242,184,63,.35);border-radius:6px}
+#storyRoot .scvin{display:grid;gap:10px;justify-items:center;color:#F3E6D0;text-align:center;opacity:0;transition:opacity .3s .55s}
+#storyRoot .scover.on .scvin{opacity:1}
+#storyRoot .scvin img{width:72px;height:72px;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+#storyRoot .scvin b{font:700 22px var(--f-disp,serif)}#storyRoot .scvin small{font-size:13.5px;color:#D9C2A0}
 #storyRoot .sghost.sfw :is(.sbox,.stapnote,.spanel),#storyRoot .sghost.sbk :is(.sbox,.stapnote,.spanel){opacity:1}
 @media (prefers-reduced-motion: reduce){#storyRoot .sfr.snew.sfw,#storyRoot .sfr.snew.sbk,#storyRoot .sfr.sghost.sfw,#storyRoot .sfr.sghost.sbk{transition:none}}
 #storyRoot .sfr.sghost{z-index:0;pointer-events:none}.sghost .sbox,.sghost .stapnote,.sghost .spanel{transition:opacity .25s ease;opacity:0}
@@ -8548,7 +8558,7 @@ let txtQ=false; new MutationObserver(()=>{ if(txtQ) return; txtQ=true; queueMicr
 applyTexts();
 if(window.SYNC&&SYNC.available&&SYNC.texts) SYNC.texts.get().then(m=>{ const ch=JSON.stringify(m)!==JSON.stringify(TEXTMAP); TEXTMAP=m||{}; try{ localStorage.setItem("cbsr-texts",JSON.stringify(TEXTMAP)); }catch(e){} if(ch){ render(); applyTexts(); } }).catch(()=>{});
 /* 본문: 문단 나누기 + 대화 글씨체 */
-const RD_OPT=()=>{ let o={}; try{ o=JSON.parse(localStorage.getItem("cbsr-read")||"{}")||{}; }catch(e){} return {para:o.para!==false,sp:o.sp!==false}; };
+const RD_OPT=()=>{ let o={}; try{ o=JSON.parse(localStorage.getItem("cbsr-read")||"{}")||{}; }catch(e){} return {para:o.para!==false,sp:o.sp!==false,snd:o.snd===true,vib:o.vib!==false}; };
 function setReadOpt(k,v){ const o=RD_OPT(); o[k]=v; try{ localStorage.setItem("cbsr-read",JSON.stringify(o)); }catch(e){} }
 function verseHTML(t,b,c,v,s2,useSp){
   const R=useSp?((window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{})[`${b}-${c}-${v}`]):null;
@@ -10262,7 +10272,25 @@ function storyOpen(i,mode){ useKRV(true); const {w,d}=view; if(futLock(w,d)&&!vi
 function storyMapOff(){ if(SV.map){ try{ SV.map.remove(); }catch(e){} SV.map=null; } }
 function storyClose(pop){ if(pop!==true) ovDone(storyClose); clearTimeout(SV.t); clearInterval(SV.cd); if(SV.mode==="fin"&&true){ view.tab="today"; SV.mode=""; scrollTo({top:0}); } storyMapOff(); const r=document.getElementById("storyRoot"); if(r) r.remove(); document.body.style.overflow=""; document.documentElement.classList.remove("story-on"); render(); /* 날짜 표지에서 들어왔으면 표지로 돌아감(목사님 2026-10-30) */ if(SV.back){ const f=SV.back; SV.back=null; setTimeout(f,60); } }
 function curSlides(w,d){ if(SV.mode==="fin"){ const S=storySlides(w,d); return [{k:"fin",ph:S[0]&&S[0].ph},{k:"next"}]; } return storySlides(w,d); }
-function storyGo(i){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ return; } SV.dir=i>SV.i?1:i<SV.i?-1:0; SV.i=i; storyShow(); }
+/* 11-17 목사님: 책장 넘김 소리·진동(읽기 설정에서 켜고 끔, 소리는 처음엔 꺼 둠) — 종이 스치는 소리를 그 자리에서 합성(파일 없음) */
+let SNDCTX=null;
+function sTurnFx(){ const o=RD_OPT(); if(o.vib){ try{ navigator.vibrate&&navigator.vibrate(8); }catch(e){} }
+  if(!o.snd) return; try{ SNDCTX=SNDCTX||new (window.AudioContext||window.webkitAudioContext)(); const c=SNDCTX, t=c.currentTime, n=Math.floor(c.sampleRate*0.22), b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<n;i++){ const x=i/n; d[i]=(Math.random()*2-1)*Math.pow(1-x,2)*(0.6+0.4*Math.sin(x*40)); }
+    const src=c.createBufferSource(); src.buffer=b; const f=c.createBiquadFilter(); f.type="bandpass"; f.frequency.setValueAtTime(2600,t); f.frequency.linearRampToValueAtTime(1200,t+0.2); f.Q.value=0.8;
+    const g=c.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.22,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+0.22);
+    src.connect(f); f.connect(g); g.connect(c.destination); src.start(t); }catch(e){} }
+/* 손가락으로 넘기는 동안 밑에(또는 위에) 깔 다음·앞 장 미리 보기: 그 장의 그림만 먼저 그려 둠(글은 넘어간 뒤 나타남) */
+function sPreview(i){ const S=curSlides(view.w,view.d), s=S[i]; if(!s) return null; const kind=sKind(s), ph=s.ph, showPh=ph&&kind!=="table"&&kind!=="map";
+  const el=document.createElement("div"); el.className=`sfr spv k-${kind}${!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}`;
+  el.innerHTML=(kind==="table"||kind==="qt"?`<div class="spaper"></div>`:"")+(showPh?`<div class="sph v${s.phv||0}${s.phBlur?" sblur":""}"><img alt="" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:"");
+  return el; }
+/* 마지막 장에서 더 넘기면(또는 마지막 장에서 닫으면) 책을 덮듯 표지가 왼쪽에서 넘어와 닫힘 */
+function sBookClose(){ const r=document.getElementById("storyRoot"); if(!r||r.querySelector(".scover")||matchMedia("(prefers-reduced-motion: reduce)").matches){ storyClose(); return; }
+  clearTimeout(SV.t); const p=dayPlan(view.w,view.d), cv=document.createElement("div"); cv.className="scover";
+  cv.innerHTML=`<div class="scvin"><img alt="" src="icons/icon-192.png?v=3"><b>${esc(p.label)}</b><small>오늘 이야기를 덮습니다</small></div>`; r.appendChild(cv); sTurnFx();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>cv.classList.add("on"))); setTimeout(()=>storyClose(),1150); }
+function storyGo(i,auto){ const S=curSlides(view.w,view.d); if(i<0) i=0; if(i>=S.length){ if(!auto&&SV.i===S.length-1) sBookClose(); return; } SV.dir=i>SV.i?1:i<SV.i?-1:0; SV.i=i; storyShow(); }
 const SKB=[["scale(1.06) translate(0,0)","scale(1.14) translate(-2%,-1%)"],["scale(1.14) translate(-2%,-1%)","scale(1.16) translate(3%,1%)"],["scale(1.16) translate(3%,1%)","scale(1.16) translate(-3%,0)"]];
 function sPreload(S,i){ for(let j=i+1;j<=i+2&&j<S.length;j++){ const ph=S[j]&&S[j].ph; if(ph&&!SPRE[ph.u]){ const im=new Image(); im.referrerPolicy="no-referrer"; im.src=ph.u; SPRE[ph.u]=im; } } }
 const SPRE={};
@@ -10272,20 +10300,24 @@ document.addEventListener("click",e=>{ if(!e.target.closest||!e.target.closest("
 function storyMood(S){ const k=keyOf(view.w,view.d); if(SV.moodK===k) return SV.mood; const L=[]; (S||[]).forEach(x=>{ const m=x&&x.ph&&String(x.ph.u||"").match(/img\/g\/([^.?\/]+)/); if(m&&typeof PHLUM!=="undefined"&&PHLUM[m[1]]!=null) L.push(PHLUM[m[1]]); });
   SV.moodK=k; SV.mood=L.length&&L.reduce((a,b)=>a+b,0)/L.length>=100?"light":"dark"; return SV.mood; }
 /* 11-16 목사님: 손가락으로 밀어도 넘어가게 — 11/17 책장으로: 왼쪽으로 밀면 지금 장이 책등(왼쪽 끝)을 축으로 들려 넘어가고, 오른쪽으로 밀면 살짝 밀려나며 앞 장이 넘어올 자리를 냄. 4분의 1 넘게(또는 빠르게) 밀고 놓으면 넘어감 */
-function storySwipe(r){ if(r._sw) return; r._sw=1; let x0=null,y0=0,t0=0,mode=0,fr=null,dir=0,p=0;
+function storySwipe(r){ if(r._sw) return; r._sw=1; let x0=null,y0=0,t0=0,mode=0,fr=null,dir=0,p=0,pv=null;
   const skip=e=>e.target.closest("button,a,input,textarea,select,summary,.leaflet-container,.smap,.ped");
   r.addEventListener("touchstart",e=>{ if(e.touches.length!==1||skip(e)){ x0=null; return; } x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now(); mode=0; p=0; fr=r.querySelector(".sfr:not(.sghost)"); },{passive:true});
   r.addEventListener("touchmove",e=>{ if(x0==null||!fr) return; const dx=e.touches[0].clientX-x0, dy=e.touches[0].clientY-y0;
     if(!mode){ if(Math.abs(dx)<10&&Math.abs(dy)<10) return; mode=Math.abs(dx)>Math.abs(dy)*1.2?1:2;
-      if(mode===1){ dir=dx<0?1:-1; const S=curSlides(view.w,view.d); clearTimeout(SV.hold); SV.swiping=true; if(SV.i+dir<0||SV.i+dir>=S.length) mode=3; fr.style.transition="none"; } }
-    if(mode===3){ fr.style.transform=`translateX(${dx*0.12}px)`; return; }
+      if(mode===1){ dir=dx<0?1:-1; const S=curSlides(view.w,view.d); clearTimeout(SV.hold); SV.swiping=true; if(SV.i+dir<0||SV.i+dir>=S.length) mode=3; fr.style.transition="none";
+        if(mode===1){ pv=sPreview(SV.i+dir); if(pv){ pv.classList.add(dir>0?"spvu":"spvo"); r.insertBefore(pv,dir>0?fr:fr.nextSibling); } } } }
+    if(mode===3){ fr.style.transform=`translateX(${dx*0.12}px)`; p=Math.max(0,-dx/(fr.offsetWidth||innerWidth)); return; }
     if(mode!==1) return; const W=fr.offsetWidth||innerWidth; p=Math.min(1,Math.max(0,-dir*dx/W));
     fr.style.transformOrigin="left center";
+    if(pv){ if(dir>0) pv.style.filter=`brightness(${(0.62+0.38*p).toFixed(3)})`; else pv.style.transform=`rotateY(${(-105*(1-p)).toFixed(1)}deg)`; }
     if(dir>0){ fr.style.transform=`rotateY(${(-105*p).toFixed(1)}deg)`; let sh=fr.querySelector(".sturn"); if(!sh){ sh=document.createElement("i"); sh.className="sturn"; fr.appendChild(sh); } sh.style.transition="none"; sh.style.opacity=Math.min(1,p*1.6).toFixed(2); }
     else { fr.style.transform=`translateX(${(p*14).toFixed(1)}%)`; fr.style.filter=`brightness(${(1-p*.35).toFixed(3)})`; } },{passive:true});
   const end=()=>{ if(x0==null) return; x0=null; const f=fr, m=mode; mode=0; if(!f||!m||m===2){ return; }
-    if(m===1&&(p>0.25||(Date.now()-t0<300&&p>0.06))){ if(dir<0){ f.style.transform=""; f.style.filter=""; } SV.dragP=dir>0?p:0.0001; storyGo(SV.i+dir); }
-    else { f.style.transition="transform .25s ease-out, filter .25s ease-out"; f.style.transform=""; f.style.filter=""; const sh=f.querySelector(".sturn"); if(sh){ sh.style.transition="opacity .25s"; sh.style.opacity="0"; } setTimeout(()=>{ f.style.transition=""; f.style.transformOrigin=""; if(sh) sh.remove(); },270); if(SV.paused) storyPause(false); }
+    if(m===3&&dir>0&&!SV.mode&&SV.i===curSlides(view.w,view.d).length-1&&p>0.3){ f.style.transform=""; setTimeout(()=>{ SV.swiping=false; },60); sBookClose(); return; }
+    if(m===1&&(p>0.25||(Date.now()-t0<300&&p>0.06))){ if(dir<0){ f.style.transform=""; f.style.filter=""; } SV.dragP=p; pv=null; storyGo(SV.i+dir); }
+    else { if(pv){ const q=pv; pv=null; q.style.transition="transform .25s ease-out, filter .25s ease-out"; if(dir<0) q.style.transform="rotateY(-105deg)"; setTimeout(()=>q.remove(),270); }
+      f.style.transition="transform .25s ease-out, filter .25s ease-out"; f.style.transform=""; f.style.filter=""; const sh=f.querySelector(".sturn"); if(sh){ sh.style.transition="opacity .25s"; sh.style.opacity="0"; } setTimeout(()=>{ f.style.transition=""; f.style.transformOrigin=""; if(sh) sh.remove(); },270); if(SV.paused) storyPause(false); }
     setTimeout(()=>{ SV.swiping=false; },60); };
   r.addEventListener("touchend",end); r.addEventListener("touchcancel",end); }
 function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return; storySwipe(r);
@@ -10295,7 +10327,7 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   const [c1,c2]=SG_BG[GENRE_OF(p.ch[0][0])]||SG_BG.narrative;
   r.className="story-root"; r.style.setProperty("--sg1",c1); r.style.setProperty("--sg2",c2);
   r.querySelectorAll(".sfr.sghost").forEach(x=>x.remove());
-  const old=r.querySelector(".sfr"); let ghost=null, oldM=null, oldPid=null;
+  const old=r.querySelector(".sfr:not(.spv)"); let ghost=null, oldM=null, oldPid=null;
   if(old){ const oi=old.querySelector(".sph img"); if(oi){ oldPid=oi.dataset.pid; try{ oldM=getComputedStyle(oi).transform; }catch(e){} }
     if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst","sfw","sbk","go"); if(SV.dir){ ghost.classList.add(SV.dir>0?"sfw":"sbk"); if(SV.dir>0&&!ghost.querySelector(".sturn")){ const sh=document.createElement("i"); sh.className="sturn"; ghost.appendChild(sh); } } ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); ghost.style.transition=""; } else old.remove(); }
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
@@ -10312,8 +10344,8 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   if(hint){ SV.hinted=true; }
   const nf=tmp.firstElementChild;
   /* 손가락으로 밀다 놓았으면: 새 면은 손가락이 멈춘 자리에서 이어 돌고, 남은 만큼만 짧게 */
-  const dp=SV.dragP||0; SV.dragP=0; if(ghost&&dp&&SV.dir){ const q=1-dp, t=(0.2+0.35*q).toFixed(2)+"s"; nf.style.transitionDuration=t; ghost.style.transitionDuration=t; if(SV.dir<0){ nf.style.transform=`rotateY(${-105*q}deg)`; } else { ghost.style.transform=`rotateY(${-105*dp}deg)`; } } /* 손가락으로 넘기다 놓았으면 멈춘 자리에서 이어서 */
-  if(sAmOK(s)) sAmUI(nf,s,w,d); r.appendChild(nf); if(sAmOK(s)){ sFit(nf); setTimeout(()=>sFit(nf),400); } if(typeof tgFill==="function") tgFill(nf,w,d);
+  const dp=SV.dragP||0; SV.dragP=0; if(ghost&&dp&&SV.dir){ const q=1-dp, t=(0.2+0.35*q).toFixed(2)+"s"; nf.style.transitionDuration=t; ghost.style.transitionDuration=t; if(SV.dir<0){ nf.style.transform=`rotateY(${(-105*q).toFixed(1)}deg)`; nf.style.filter="none"; } else { ghost.style.transform=`rotateY(${-105*dp}deg)`; } } /* 손가락으로 넘기다 놓았으면 멈춘 자리에서 이어서 */
+  if(sAmOK(s)) sAmUI(nf,s,w,d); r.appendChild(nf); r.querySelectorAll(".spv").forEach(x=>x.remove()); if(ghost&&SV.dir) sTurnFx(); if(sAmOK(s)){ sFit(nf); setTimeout(()=>sFit(nf),400); } if(typeof tgFill==="function") tgFill(nf,w,d);
   const ni=nf.querySelector(".sph img");
   if(ni){ ni.onerror=()=>ni.remove();
     if(!quick&&kind!=="qt"){ const v=SKB[s.phv||0]||SKB[0], same=oldPid&&oldPid===ni.dataset.pid&&oldM&&oldM!=="none";
@@ -10326,20 +10358,20 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   bindStoryRoot(r,s,auto);
   if(kind==="map") storyMapInit(w,d,s);
   const cdEl=r.querySelector("#sCount"); if(cdEl){ const tk=()=>{ const t=cdText(); cdEl.textContent=t; if(t==="00:00:00"){ clearInterval(SV.cd); cdEl.nextElementSibling.textContent="열렸습니다"; } }; tk(); SV.cd=setInterval(tk,1000); }
-  if(auto){ SV.dur=dur; SV.start=Date.now(); SV.left=dur; SV.paused=false; SV.t=setTimeout(()=>storyGo(SV.i+1),dur); } }
+  if(auto){ SV.dur=dur; SV.start=Date.now(); SV.left=dur; SV.paused=false; SV.t=setTimeout(()=>storyGo(SV.i+1,1),dur); } }
 function storyPause(on){ const r=document.getElementById("storyRoot"); if(!r) return; const bar=r.querySelector(".sbars2 .run i"); if(!bar) return;
   const spb=r.querySelector("#sPause"); if(spb){ spb.textContent=on?"▶":"❚❚"; spb.setAttribute("aria-label",on?"이어 보기":"멈춤"); }
   if(on&&!SV.paused){ SV.paused=true; clearTimeout(SV.t); SV.left-=Date.now()-SV.start; bar.style.animationPlayState="paused"; r.classList.add("paused"); }
-  else if(!on&&SV.paused){ SV.paused=false; SV.start=Date.now(); bar.style.animationPlayState="running"; r.classList.remove("paused"); SV.t=setTimeout(()=>storyGo(SV.i+1),Math.max(300,SV.left)); } }
+  else if(!on&&SV.paused){ SV.paused=false; SV.start=Date.now(); bar.style.animationPlayState="running"; r.classList.remove("paused"); SV.t=setTimeout(()=>storyGo(SV.i+1,1),Math.max(300,SV.left)); } }
 function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(key);
-  r.querySelector("#sClose").onclick=storyClose;
+  r.querySelector("#sClose").onclick=()=>{ const S2=curSlides(view.w,view.d); if(SV.i===S2.length-1&&!SV.mode) sBookClose(); else storyClose(); };
   const sp=r.querySelector("#sPause"); if(sp) sp.onclick=()=>storyPause(!SV.paused);
   
   /* 이어 보기 알림: 보던 카드부터 열렸을 때 한 번 */
   if(SV.resumeAt&&SV.i===SV.resumeAt){ const nf=r.querySelector(".sfr:last-of-type")||r; const t=document.createElement("div"); t.className="sresume"; t.innerHTML=`<span>보던 <b>${SV.i+1}번째 카드</b>부터 이어 봅니다</span><button>처음부터</button>`; r.appendChild(t); t.querySelector("button").onclick=e=>{ e.stopPropagation(); SV.resumeAt=0; t.remove(); storyGo(0); }; setTimeout(()=>{ if(t.isConnected) t.remove(); },4500); SV.resumeAt=0; }
   const sa=r.querySelector("#sAuto"); if(sa) sa.onclick=()=>{ const off=!sAutoOff(); try{ localStorage.setItem("cbsr-sauto",off?"0":"1"); }catch(e){} toast(off?"자동 넘김을 껐습니다. 오른쪽을 누르면 다음 카드로 갑니다.":"자동 넘김을 켰습니다."); storyShow(); };
   r.querySelectorAll("[data-sv]").forEach(a=>a.onclick=e=>{ e.preventDefault(); e.stopPropagation(); sVerseSheet(a.dataset.sv); });
-  const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=storyClose;
+  const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=sBookClose;
   r.querySelectorAll("[data-sgo]").forEach(b=>b.onclick=()=>{ if(Date.now()-(SV.shownAt||0)<450) return; storyGo(SV.i+(+b.dataset.sgo)); });
   const g0=r.querySelector("[data-sgo0]"); if(g0) g0.onclick=()=>storyGo(0);
   const rvb=r.querySelector("[data-reveal]"); if(rvb) rvb.onclick=()=>{ const bx=rvb.closest(".sbox"); bx.querySelectorAll(".hide-hl,.hide-u").forEach(x=>x.classList.remove("hide-hl","hide-u")); bx.querySelectorAll(".rvhide").forEach(x=>x.classList.remove("rvhide")); rvb.remove(); };
@@ -12889,7 +12921,7 @@ function renderGuideV2(){ const rj=false, sd=parseD(mem.start);
   const pages=
    pg("tr","성경 번역",`<div class="plans" role="radiogroup">${Object.entries(TR_INFO).map(([k,v])=>`<button class="plan" role="radio" aria-checked="${TR===k}" data-tr="${k}"><i class="dot"></i><b>${esc(v.name)}</b></button>`).join("")}</div><p class="lead">본문 읽기가 이 번역으로 보입니다. 스토리·묵상 노트·도전은 원고가 개역개정으로 쓰여 늘 개역개정입니다.</p>`)+
    pg("start","시작일",`<p class="lead">${rj?"1주차 1일째가 시작된 날입니다.":"1일째가 시작된 날입니다."}</p><div class="row"><input type="date" id="startIn" value="${mem.start}"><button class="btn small" id="startSave">적용</button></div>`)+
-   pg("view","읽기 설정",`<div class="rdopts">${[["para","문단 나누기"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div><span class="label" style="margin-top:14px">본문 듣기 목소리</span><div id="voiceList"></div>`)+
+   pg("view","읽기 설정",`<div class="rdopts">${[["para","문단 나누기"],["snd","스토리 넘길 때 종이 소리"],["vib","스토리 넘길 때 진동"]].map(([k,n])=>`<label class="rdopt"><input type="checkbox" data-rdopt="${k}" ${RD_OPT()[k]?"checked":""}> ${n}</label>`).join("")}</div><span class="label" style="margin-top:14px">본문 듣기 목소리</span><div id="voiceList"></div>`)+
    pg("howto","쓰는 방법",`<ol class="mhow"><li><b>오늘</b>: 그날 그림과 줄거리, 지금 할 일 단추가 있습니다. 위의 날짜를 누르면 통독표가 열려 다른 날로 갈 수 있습니다.</li><li><b>본문</b>: ① 읽기 전 도움을 보고 본문을 읽은 뒤 '오늘 통독 완료'를 누릅니다. 절을 누르면 형광펜·책갈피·말씀 카드, 점선 밑줄 말을 누르면 뜻풀이가 나옵니다.</li><li><b>스토리</b>: 통독을 마치면 오늘 이야기를 카드로 따라갑니다. 옆을 누르거나 밀어서 넘깁니다.</li><li><b>묵상</b>: 본문 관찰 · 하나님의 성품 · 적용 · 기도를 한 단계씩 적습니다. 다 쓰면 해설이 열립니다.</li><li><b>도전</b>: 본문에서 찾기, 빈칸 채우기, 퀴즈, 꼭 외울 말씀 100으로 읽은 말씀을 다시 봅니다.</li><li><b>나</b>: 읽은 날, 묵상 노트, 형광펜을 모아 봅니다. 이름과 숫자 4자리로 이으면 휴대폰·태블릿 기록이 하나가 됩니다.</li></ol>`)+
    pg("install","홈 화면에 추가",installCard("guide"))+
    pg("together","함께 읽기",tgPageHTML())+
