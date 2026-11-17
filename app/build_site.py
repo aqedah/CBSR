@@ -233,7 +233,7 @@ for tk in ('snb','shg'):
     open(f'{OUT}/bible_{tk}.js','w').write('window.BIBLE_TR=window.BIBLE_TR||{};BIBLE_TR.'+tk+'="'+open(f'bible_{tk}.b64').read()+'";\nwindow.SPEECH_'+tk+'='+open(f'speech/bible_{tk}.json').read()+';\n')
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
-for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','sample_story.html','phreview.html','ui1.html','ui2.html','ui3.html','guide.html','guide_qt.json','trial26.html','trial26_qt.json']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
+for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','guide.html','guide_qt.json','trial26.html','trial26_qt.json']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
 # 스토리 작업실(2026-11-11): 원고를 붙여 카드로 나누고 앱(v2) 미리보기로 보고 GitHub(ux/story_in)에 저장 → 다음 빌드가 story_cards.json에 합침
 _PE=[{'id':p['id'],'memo':p.get('memo',''),'refs':p.get('refs',[]),'role':p.get('role','')} for p in (json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else [])]
 _P26=[{'n':x['n'],'label':x['label'],'ch':x['ch'],'topic':x.get('topic','')} for x in P365]
@@ -283,8 +283,7 @@ head=f'''<!doctype html>
 <div id="appBoot" role="status"><div><img src="icons/icon-192.png?v=3" width="76" height="76" alt="" style="display:block;margin:0 auto 16px;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.12)"><div class="k">이야기통독</div><div class="t" id="bootD">&nbsp;</div><div class="s">성경의 이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div><script>(function(){{try{{var q=location.search.match(/[?&]now=(\d{{4}})-(\d\d)-(\d\d)/),d=q?new Date(+q[1],q[2]-1,+q[3]):new Date();document.getElementById("bootD").textContent=(d.getMonth()+1)+"월 "+d.getDate()+"일 ("+["주일","월","화","수","목","금","토"][d.getDay()]+")";}}catch(e){{}}}})();</script>
 '''
 html=head+body+'\n</body>\n</html>\n'
-# 2026-10-29 v2가 첫 화면(index.html)이 됨. v1은 v1.html로 남겨 둠(이전 화면)
-open(f'{OUT}/v1.html','w').write(html.replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/v1.html"'))
+# 11/17: 옛 화면(v1.html)·옛 체험판(demo.html)·스토리 시험(story.html)·UI 시안은 정식 배포에서 뺌
 # 시험 페이지(요 1-4장 하루): 연동 없음, 기록은 'try:' 앞머리를 붙여 앱 기록과 분리
 SHIM='<script>window.CBSR_TRY=1;(function(){try{var L=window.localStorage,P="try:",S={getItem:function(k){return L.getItem(P+k)},setItem:function(k,v){L.setItem(P+k,String(v))},removeItem:function(k){L.removeItem(P+k)},clear:function(){}};Object.defineProperty(window,"localStorage",{value:S,configurable:true});}catch(e){}})();</script>\n'
 btag=f'<script src="bible.js?v={h(bible[:5000]+str(len(bible)))}"></script>\n'
@@ -295,11 +294,9 @@ open(f'{OUT}/try.html','w').write(thead+tbody+'\n</body>\n</html>\n')
 # QT 스토리 카드 시험 페이지: 기록은 'story:' 앞머리로 앱 기록과 분리, 365 통독표로 시작
 SSHIM='<script>window.CBSR_STORY=1;(function(){try{var L=window.localStorage,P="story:",S={getItem:function(k){return L.getItem(P+k)},setItem:function(k,v){L.setItem(P+k,String(v))},removeItem:function(k){L.removeItem(P+k)},clear:function(){}};Object.defineProperty(window,"localStorage",{value:S,configurable:true});if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","y365");}catch(e){}})();</script>\n'
 shead=head.replace('<meta charset="utf-8">','<meta charset="utf-8">\n'+SSHIM).replace('<link rel="manifest" href="manifest.webmanifest">','').replace('content="https://aqedah.github.io/CBSR/"','content="https://aqedah.github.io/CBSR/story.html"')
-open(f'{OUT}/story.html','w').write(shead+body+'\n</body>\n</html>\n')
 # 전체 개편 시험(v2.html): 오늘·본문·도전·기록, 이야기 QT, 말씀 카드, 내일 본문 시계. 기록은 v2: 앞머리로 따로
 VSHIM=SSHIM.replace('window.CBSR_STORY=1;','window.CBSR_STORY=1;window.CBSR_V2=1;').replace('Object.defineProperty(window,"localStorage"','/* v1 기록 가져오기: v2를 처음 열 때 한 번, v1(앞머리 없는 기록)을 v2: 쪽에 복사(이미 있는 v2 기록은 그대로) */if(!L.getItem("v2:cbsr-v1import")){var K=[];for(var i=0;i<L.length;i++){var k=L.key(i);if(k&&/^(cbsr-|rjnote:)/.test(k))K.push(k);}K.forEach(function(k){if(L.getItem("v2:"+k)==null)L.setItem("v2:"+k,L.getItem(k));});L.setItem("v2:cbsr-v1import",new Date().toISOString()+" "+K.length);}try{for(var j=0;j<L.length;j++){var kk=L.key(j);if(kk&&/^(cbsr-|rjnote:)/.test(kk)&&kk!=="cbsr-login-v1"){window.CBSR_HADV1=1;break;}}}catch(e){}window.__rawLS=L;Object.defineProperty(window,"localStorage"',1).replace('P="story:"','P="v2:"').replace('if(S.getItem("cbsr-mode")==null)','if(/[?&]p=rj/.test(location.search))S.setItem("cbsr-mode","rj");else if(/[?&]day=/.test(location.search))S.setItem("cbsr-mode","y365");else if(S.getItem("cbsr-mode")==null)S.setItem("cbsr-mode","y365");if(0)')
 exec(open('review_build.py').read())
-open(OUT+'/demo.html','w').write(open('site_src/demo.html').read().replace('<!--FB-->',_GFB))  # 스토리 QT 체험판(2026-10-30)
 import base64 as _b64,gzip as _gz
 _BB=json.loads(_gz.decompress(_b64.b64decode(open('bible.b64').read())).decode()); _NM={}; _NR=_re.compile(r'^([가-힣]{2,})(을|를|의|에게|과|와|께서|에서|으로)$')
 for _bk in _BB:
@@ -319,7 +316,7 @@ V=h(html+v2html+bible)
 sw=f'''/* 오프라인 지원: 앱 화면은 인터넷이 되면 늘 새로 받고(network first),
    성경 본문·지형도·아이콘·글꼴·라이브러리는 처음 받은 뒤 보관해 둡니다(cache first). 기록은 Firestore가 따로 보관합니다. */
 const V="cbsr-{V}";
-const SHELL=["./","index.html","v2.html","v1.html","config.js","sync.js","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png"];
+const SHELL=["./","index.html","v2.html","config.js","sync.js","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png"];
 self.addEventListener("install",e=>{{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));}});
 self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>/^cbsr-/.test(k)&&k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));}});
 self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
@@ -328,7 +325,7 @@ self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;
   /* 11-13: 앱 화면을 다시 열 때(탭이 지워졌다 돌아올 때 등) 망이 1.5초 안에 안 오면 보관본을 먼저 보여 주고, 새 판은 뒤에서 받아 둠(다음에 열 때 반영) */
   if(shell&&r.mode==="navigate"){{const net=fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}});
     e.respondWith(caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match("index.html")).then(m=>{{ if(!m) return net; let done=false; return Promise.race([net.then(x=>{{done=true;return x;}}).catch(()=>m),new Promise(ok=>setTimeout(()=>ok(m),1500))]); }}));return;}}
-  if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match(/v1\\.html$/.test(u.pathname)?"v1.html":/v2\\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}}
+  if(shell){{e.respondWith(fetch(r).then(res=>{{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||caches.match(/v2\\.html$/.test(u.pathname)?"v2.html":"index.html"))));return;}}
   e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
 '''
 open(f'{OUT}/sw.js','w').write(sw)
