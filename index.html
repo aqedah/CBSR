@@ -1830,6 +1830,33 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .pdvi b{font-size:12.5px;color:var(--gold)}.pdvi p{margin:4px 0 2px;font-size:14.5px;line-height:1.6}
 .pdbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 #storyRoot .smterr{margin:8px 0 0;font-size:13px;line-height:1.5;opacity:.85}
+.ldr{position:fixed;inset:0;z-index:100000;background:var(--paper);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ldrbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:6px;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px;background:var(--paper);border-bottom:1px solid var(--line)}
+.ldrbar span{flex:1}.ldrbar .gpx{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:16px}.ldrnav{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:20px;color:var(--ink)}
+.ldrpage{max-width:720px;margin:0 auto;padding:18px 18px 40px;color:var(--ink)}
+.ldrh p{margin:0;font-size:13px;color:var(--muted)}.ldrh h1{margin:4px 0 0;font:700 24px var(--f-disp,serif)}.ldrh h2{margin:4px 0 0;font-size:16px;font-weight:600;color:var(--accent)}
+.ldrpage section{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);break-inside:avoid}
+.ldrpage h3{margin:0 0 6px;font-size:13px;letter-spacing:.02em;color:var(--gold)}
+.ldrpage p{margin:0 0 6px;font-size:15px;line-height:1.65}.ldrq{font-weight:600}
+.ldrpage blockquote{margin:6px 0 0;padding:8px 12px;border-left:3px solid var(--hi);background:var(--card);font-size:14.5px;line-height:1.6}
+.ldrpage cite{display:block;margin-top:2px;font-style:normal;font-size:12px;color:var(--muted)}
+.ldrnm{font-weight:600}.ldrterr{font-size:13.5px!important;color:var(--muted)}
+.ldrmapbox{height:220px;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-top:6px}
+.ldrf{margin-top:22px;font-size:11.5px;color:var(--muted);text-align:center}
+@media print{
+  body.ldron>*:not(.ldr){display:none!important}
+  body.ldron .ldr{position:static;overflow:visible;background:#fff}
+  body.ldron .ldrbar{display:none}
+  body.ldron .ldrpage{max-width:none;padding:0;color:#000}
+  body.ldron .ldrh h1{font-size:18pt}body.ldron .ldrh h2{font-size:12pt}
+  body.ldron .ldrpage p{font-size:10pt;line-height:1.45;margin-bottom:3px}
+  body.ldron .ldrpage h3{font-size:9pt;margin-bottom:3px}
+  body.ldron .ldrpage blockquote{background:none;font-size:9.5pt;padding:3px 10px;margin-top:3px}
+  body.ldron .ldrmapbox{height:150px}
+  body.ldron .ldrpage section{margin-top:7px;padding-top:6px}
+  body.ldron .ldrf{margin-top:10px}
+  @page{size:A4;margin:12mm}
+}
 .bmest{margin:8px 0 0}
 html.v2 .bmmap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:min(50vh,440px);box-shadow:0 6px 14px -10px rgba(0,0,0,.35)}
 .bmwrap{display:flex;flex-direction:column}.bmside{display:contents}.bmwrap .bmsrch{order:1}.bmwrap .bmseg{order:2}.bmwrap .bmeras{order:3}.bmwrap>.bmmap{order:4}.bmwrap .bmpanel{order:5}
@@ -11221,6 +11248,38 @@ function smtText(s){ const P=ELEV&&ELEV.p; if(!P) return ""; const N=String((s.b
     const jw=t=>{ const c=t.charCodeAt(t.length-1); return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?"과":"와"; }; return `${a}${jw(a)} ${b}는 땅 높이가 비슷합니다(약 ${nfm(x)}m · ${nfm(y)}m).`; }
   const a=N.find(n=>P[n]!=null); if(!a) return ""; const wh=PD_ANCH.includes(a)?"":pdWhere(a); return `${a}: ${wh&&!/^넓은|^위치를/.test(wh)?wh+", ":""}땅 높이 약 ${nfm(P[a])}m${P[a]<0?"로 바다보다 낮습니다":"입니다"}.`; }
 function smtFill(nf,s){ const el=nf.querySelector(".smterr"); if(!el) return; elevGet().then(()=>{ const t=smtText(s); if(t&&document.body.contains(el)){ el.textContent=t; el.hidden=false; try{ sFit(nf); }catch(e){} } }); }
+/* 소그룹 인도자용 한 장(2026-11-17 목사님: 성경지도 사이트의 '인도자용 자료'에서 따온 생각) — 그날 앱에 이미 있는 것만 모아 한 장으로: 줄거리·지도와 땅 한 줄·관찰 질문·하나님의 성품·나눔 질문·붙잡을 구절·마무리 기도.
+   새 글은 지어 넣지 않음. 인쇄(종이 한 장)와 화면 보기 둘 다. */
+function leaderHTML(w,d){ const p=dayPlan(w,d); if(!p) return ""; const X=storyQT(w,d), det=X.det, kv=X.kv, A=askQ(w,d);
+  const sum=String((SUMMARY[w-1]||[])[d]||"").trim(), M=storyMapPts(w,d,null), route=M.route.length>1, names=(route?M.route:M.extra).map(x=>x[0]).filter((x,i,a)=>x&&a.indexOf(x)===i);
+  const t0=X.traits&&X.traits[0], pray=prayEnd((det&&det.pray)||makePrayer(X.key,vId(kv),X.q.pv,p.label,kv,X.traits));
+  const terr=names.length?smtText({lab:route?"이동":"",b:[names.join(" · ")]}):"";
+  const same=(r,v)=>r&&v&&r[0]===v.b&&r[1]===v.c&&r[2]===v.v, vq=r=>r&&vtxt(r)&&!same(r,kv)&&!same(r,t0&&t0.verse)?`<blockquote>${esc(vtxt(r))}<cite>${esc(rlab(r))}</cite></blockquote>`:"";
+  return `<header class="ldrh"><p>${esc(fmt(dateOf(w,d),{year:"numeric",month:"long",day:"numeric",weekday:"short"}))} · 소그룹 인도자용</p><h1>${esc(p.label)}</h1>${p.topic?`<h2>${esc(p.topic)}</h2>`:""}</header>
+    ${sum?`<section><h3>오늘 이야기</h3><p>${esc(sum)}</p></section>`:""}
+    ${names.length?`<section class="ldrmap"><h3>${route?"이동":"오늘 나오는 곳"}</h3><p class="ldrnm">${esc(names.join(route?" → ":" · "))}</p>${terr?`<p class="ldrterr">${esc(terr)}</p>`:""}<div class="ldrmapbox" id="ldrMap"></div></section>`:""}
+    <section><h3>함께 찾기 · 본문 관찰</h3><p class="ldrq">${esc(X.eye.q)}</p></section>
+    ${t0?`<section><h3>이 본문에서 하나님은${kv&&t0.verse&&t0.verse.b===kv.b&&t0.verse.c===kv.c&&t0.verse.v===kv.v?" · 붙잡을 한 구절":""}</h3><p><b>${esc(t0.at.n)}</b></p>${t0.verse?`<blockquote>${esc(t0.verse.t)}<cite>${esc(PLAN.abbr[t0.verse.b-1])} ${t0.verse.c}:${t0.verse.v}</cite></blockquote>`:""}</section>`:""}
+    <section><h3>나눔</h3><p class="ldrq">${smk(A.q)}</p>${vq(A.r)}</section>
+    ${kv&&!(t0&&t0.verse&&t0.verse.b===kv.b&&t0.verse.c===kv.c&&t0.verse.v===kv.v)?`<section><h3>붙잡을 한 구절</h3><blockquote>${esc(kv.t)}<cite>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</cite></blockquote></section>`:""}
+    <section><h3>마무리 기도</h3><p>${esc(pray)}</p></section>
+    <footer class="ldrf">이야기통독 · 중앙성서교회</footer>`; }
+function leaderOpen(w,d){ document.querySelector(".ldr")?.remove(); let cw=w, cd=d, map=null;
+  const el=document.createElement("div"); el.className="ldr"; el.setAttribute("role","dialog"); el.setAttribute("aria-label","소그룹 인도자용 한 장"); document.body.appendChild(el); document.body.classList.add("ldron");
+  const close=pop=>{ if(pop!==true) ovDone(close); try{ map&&map.remove(); }catch(e){} el.remove(); document.body.classList.remove("ldron"); }; ovOpen(close);
+  const step=k=>{ let n=dayNo(cw,cd)+k; if(n<1) return; const [w2,d2]=dayWD(n); if(!phDayOk(w2,d2)) return; cw=w2; cd=d2; draw(); };
+  function draw(){ try{ map&&map.remove(); }catch(e){} map=null;
+    el.innerHTML=`<div class="ldrbar"><button class="gpx" data-ldrx aria-label="닫기">✕</button><button class="ldrnav" data-ldrk="-1" aria-label="앞날">‹</button><button class="ldrnav" data-ldrk="1" aria-label="다음날">›</button><span></span><button class="btn small" data-ldrp>인쇄</button></div><article class="ldrpage">${leaderHTML(cw,cd)}</article>`;
+    el.querySelector("[data-ldrx]").onclick=()=>close(); el.querySelectorAll("[data-ldrk]").forEach(b=>b.onclick=()=>step(+b.dataset.ldrk)); el.querySelector("[data-ldrp]").onclick=()=>{ try{ window.print(); }catch(e){} };
+    el.scrollTop=0;
+    const mb=el.querySelector("#ldrMap"); if(mb&&window.L) setTimeout(()=>{ if(!document.body.contains(mb)) return; const M=storyMapPts(cw,cd,null), pts=(M.route.length>1?M.route:M.extra).filter(x=>x&&x[1]!=null);
+      if(!pts.length){ mb.remove(); return; }
+      map=L.map(mb,{zoomControl:false,attributionControl:true,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,zoomSnap:.25}); map.attributionControl.setPrefix(false); mapBase(map,"natural");
+      if(M.route.length>1) L.polyline(M.route.map(x=>[x[1],x[2]]),{color:"#7A4528",weight:3,opacity:.9,interactive:false}).addTo(map);
+      pts.forEach(x=>{ if(!x[0]) return; L.marker([x[1],x[2]],{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl">${esc(x[0])}</span>`,iconSize:[0,0],iconAnchor:[6,8]})}).addTo(map); });
+      if(pts.length===1) map.setView([pts[0][1],pts[0][2]],8); else map.fitBounds(L.latLngBounds(pts.map(x=>[x[1],x[2]])),{padding:[28,28],maxZoom:10}); },60);
+    elevGet().then(()=>{ const t=el.querySelector(".ldrterr"); if(!t&&ELEV){ const h=el.querySelector(".ldrnm"); if(h){ const M=storyMapPts(cw,cd,null), r=M.route.length>1, N=(r?M.route:M.extra).map(x=>x[0]).filter(Boolean), s=smtText({lab:r?"이동":"",b:[N.join(" · ")]}); if(s) h.insertAdjacentHTML("afterend",`<p class="ldrterr">${esc(s)}</p>`); } } }); }
+  draw(); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.
    데이터: ux/big_tours.py → BM_TOURS. 단계(step): t 제목, s 때·곳, n 설명, p 지점들(배면 sea), land0/then 배 앞뒤의 뭍길, pre 움직이기 전 말씀, r 도착 말씀, z 확대, fx part|jordan, storm, stay(머묾), dash(방황), who/as_ 주인공 바뀜, add 동행 합류 ===== */
@@ -13009,7 +13068,7 @@ function renderGuideV2(){ const rj=false, sd=parseD(mem.start);
   const row=(pg,t,v)=>`<button class="mrow" data-mgo="${pg}"><span>${t}</span><em>${v||""}</em><i aria-hidden="true">›</i></button>`;
   const pg=(id,t,body)=>`<section class="mpage" data-pg="${id}" hidden><button class="mback" data-mback="1">‹ 메뉴</button><h3 class="mpt">${t}</h3>${body}</section>`;
   const top=`<div class="mtop">
-    <p class="mgh">통독</p><div class="mgrp">${row("tr","성경 번역",esc(TR_INFO[TR].name))}${Y27?"":row("start","시작일",esc(fmt(sd,{month:"long",day:"numeric"})))}${row("view","읽기 설정",RD_OPT().para?"문단 나누기":"")}</div>
+    <p class="mgh">통독</p><div class="mgrp">${row("tr","성경 번역",esc(TR_INFO[TR].name))}${Y27?"":row("start","시작일",esc(fmt(sd,{month:"long",day:"numeric"})))}${row("view","읽기 설정",RD_OPT().para?"문단 나누기":"")}<button class="mrow" id="leaderGo"><span>소그룹 인도자용 한 장</span><em>보고 있는 날</em><i aria-hidden="true">›</i></button></div>
     <p class="mgh">화면</p><div class="mgrp"><div class="mrow mseg"><span>화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기"],["light","주간"],["dark","야간"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div></div>${innerWidth>=700?`<div class="mrow mseg mstack"><span>보기 방식<small style="display:block;font-size:11.5px;color:var(--muted);font-weight:400">가이드북이 있는 날, 본문 화면에 보일 내용</small></span><div class="seg" role="radiogroup">${[["both","함께"],["text","본문만"],["guide","가이드북만"]].map(([k,n])=>`<button role="radio" aria-checked="${tbkPref()===k}" data-view-set="${k}">${n}</button>`).join("")}</div></div>`:""}</div>
     <p class="mgh">도움말</p><div class="mgrp"><button class="mrow" id="tourAgain"><span>둘러보기</span><i aria-hidden="true">›</i></button>${row("howto","쓰는 방법","")}${row("install","홈 화면에 추가","")}</div>
     <p class="mgh">바로 가기</p><div class="mbans">
@@ -13058,6 +13117,7 @@ function openMenu(){
   document.getElementById("drawerBg").onclick=e=>{if(e.target.id==="drawerBg")closeMenu();};
   const ag=document.getElementById("adminGo"); if(ag) ag.onclick=()=>{ closeMenu(); view.tab="admin"; render(); window.scrollTo({top:0}); };
   const ta=document.getElementById("tourAgain"); if(ta) ta.onclick=()=>{ closeMenu(); tour2Start(); };
+  const lg=document.getElementById("leaderGo"); if(lg) lg.onclick=()=>{ closeMenu(); leaderOpen(view.w,view.d); };
   r.querySelectorAll("[data-rdopt]").forEach(x=>x.onchange=()=>{ setReadOpt(x.dataset.rdopt,x.checked); render(); });
   r.querySelectorAll("[data-simple]").forEach(b=>b.onclick=()=>{ try{ localStorage.setItem("cbsr-simple",b.dataset.simple); }catch(e){} r.querySelectorAll("[data-simple]").forEach(x=>x.setAttribute("aria-checked",x===b)); view.moreOpen=false; render(); });
   bindVoices(r);
