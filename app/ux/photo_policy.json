@@ -145,13 +145,6 @@
     "note": "photos_master의 기존 out 사유에서 옮김"
    }
   },
-  "g49_10": {
-   "reviewStatus": "out",
-   "review": {
-    "reason": "빛나는 성모상처럼 보임",
-    "note": "photos_master의 기존 out 사유에서 옮김"
-   }
-  },
   "g49_11": {
    "reviewStatus": "out",
    "review": {
@@ -4641,19 +4634,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g12_14": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D2",
-   "assignmentPolicy": "strict",
-   "reviewStatus": "hold",
-   "note": "누운 노인이 두 손을 한 소년의 머리에 얹고 옆에 다른 소년. 창 48:14의 '팔을 엇바꾸어' 각 아들에게 얹음과 어긋나고, 소년의 짐승 가죽 옷은 창 27(야곱의 염소 가죽)을 연상시켜 혼동 위험. 후보: 창 48:13–14",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g12_15": {
    "assetKind": "scene",
    "relation": "event",
@@ -5509,19 +5489,6 @@
    ],
    "reviewStatus": "approved",
    "note": "진흙에 박힌 병거와 튀는 흙, 뒤에 강. 진흙에 빠짐은 5:21에 근거한 해석적 연출",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
-  "g16_04": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D2",
-   "assignmentPolicy": "strict",
-   "reviewStatus": "hold",
-   "note": "밤 언덕에서 금속 나팔을 부는 사람과 항아리를 든 사람, 아래 횃불 든 무리. 삿 7 기드온의 나팔은 뿔나팔(쇼파르)인데 화면은 요즘 금관 악기 같은 쇠 나팔이라 어긋남. 후보: 삿 7:19–20",
    "review": {
     "by": "claude-visual",
     "at": "2026-10-30",
@@ -7834,28 +7801,6 @@
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
-  "g23_14": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 42,
-     "chapter": 24,
-     "fromVerse": 30,
-     "toVerse": 31,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "hold",
-   "note": "식탁에 남자 넷이 있고 두 사람이 떡을 맞잡아 찢음 — 본문은 두 제자와 예수님 셋, 예수님이 떼심. 인원·동작이 어긋남",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
-    "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
-   }
-  },
   "g23_15": {
    "assetKind": "scene",
    "relation": "event",
@@ -8858,11 +8803,11 @@
      "basis": "explicit"
     }
    ],
-   "reviewStatus": "hold",
+   "reviewStatus": "approved",
    "note": "화면 문제: 여우마다 제 꼬리에 홰를 따로 달고 달림. 본문은 두 꼬리를 매고 그 사이에 한 홰(15:4)",
    "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
+    "by": "gallery-admin",
+    "at": "2026-11-17",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
@@ -10023,11 +9968,11 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "hold",
+   "reviewStatus": "approved",
    "note": "화면 문제: 번개 치는 하늘 아래 바위 위 양각 나팔이 여섯 개뿐(일곱 나팔과 어긋남)",
    "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
+    "by": "gallery-admin",
+    "at": "2026-11-17",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
@@ -12335,11 +12280,11 @@
     "목수",
     "목공"
    ],
-   "reviewStatus": "hold",
+   "reviewStatus": "approved",
    "note": "손이 끌을 들고 나무를 깎으며 옆에 쇠 대패. 대패 몸통이 현대식 주철 대패(손잡이·노브 달린 형태)처럼 보여 보류",
    "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
+    "by": "gallery-admin",
+    "at": "2026-11-17",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
@@ -14625,11 +14570,11 @@
      "basis": "illustrative"
     }
    ],
-   "reviewStatus": "hold",
+   "reviewStatus": "approved",
    "note": "흰 두건·흰 옷의 여인 뒷모습과 떡·포도·무화과가 차려진 잔칫상. 흰 두건이 수녀 복장처럼 읽힘 → hold",
    "review": {
-    "by": "claude-visual",
-    "at": "2026-10-30",
+    "by": "gallery-admin",
+    "at": "2026-11-17",
     "basis": "그림 원본을 직접 보고 분류(전체 692장 분류 작업)"
    }
   },
@@ -19056,35 +19001,6 @@
     "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
-  "g64_04": {
-   "assetKind": "object",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 4,
-     "chapter": 4,
-     "fromVerse": 5,
-     "toVerse": 6,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "requireAny": [
-    "보자기",
-    "덮어",
-    "덮고",
-    "언약궤",
-    "궤를"
-   ],
-   "note": "광야 모래 위 청색 보자기로 덮인 궤, 채 끝만 보임",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
   "g64_07": {
    "assetKind": "scene",
    "relation": "event",
@@ -19101,49 +19017,6 @@
    ],
    "reviewStatus": "hold",
    "note": "향 연기 속에서 손가락으로 피를 튕기는 흰 옷 대제사장 보류: 피가 공중에 방울로 날리고 궤 위에 피 자국 — 불편. 궤의 그룹이 잘림",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
-  "g64_08": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 4,
-     "chapter": 4,
-     "fromVerse": 15,
-     "toVerse": 15,
-     "basis": "explicit"
-    },
-    {
-     "book": 4,
-     "chapter": 10,
-     "fromVerse": 33,
-     "toVerse": 36,
-     "basis": "explicit"
-    },
-    {
-     "book": 5,
-     "chapter": 31,
-     "fromVerse": 9,
-     "toVerse": 9,
-     "basis": "illustrative"
-    }
-   ],
-   "reviewStatus": "approved",
-   "requireAny": [
-    "메고",
-    "멜 것",
-    "고핫",
-    "언약궤",
-    "궤를"
-   ],
-   "note": "진영 앞 흰 옷 레위 사람 넷이 채를 메고 걸음",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
@@ -19179,28 +19052,6 @@
     "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
    }
   },
-  "g64_10": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 6,
-     "chapter": 6,
-     "fromVerse": 6,
-     "toVerse": 16,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "온전한 성벽 곁, 군사·나팔 제사장 일곱·궤 행렬",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
   "g64_11": {
    "assetKind": "scene",
    "relation": "event",
@@ -19217,28 +19068,6 @@
    ],
    "reviewStatus": "approved",
    "note": "돌 바닥에 궤, 앞에 머리·두 손이 떨어진 물고기 꼬리 석상",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "PDF 원본(Gemini Notebook, 64회 언약궤 전용·지시 3판)을 한 장씩 직접 보고 분류"
-   }
-  },
-  "g64_12": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 9,
-     "chapter": 6,
-     "fromVerse": 7,
-     "toVerse": 15,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "밀밭 길, 암소 두 마리가 끄는 수레 위 궤와 금 상자, 낫 든 사람들",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",
@@ -19352,34 +19181,6 @@
     "여호와의 궤"
    ]
   },
-  "g65_03": {
-   "assetKind": "object",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 2,
-     "chapter": 25,
-     "fromVerse": 12,
-     "toVerse": 15,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "언약궤를 짧은 변 쪽 옆에서 — 그룹 하나만 보이고 채 두 개가 좌우로 길게. 채 방향이 분명한 그림",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "65회 둘째 출력(산문 소스+참고 사진)을 한 장씩 보고 분류. 채 방향은 메고 가는 장면에서 확인"
-   },
-   "requireAny": [
-    "채를",
-    "고리",
-    "언약궤",
-    "궤를"
-   ]
-  },
   "g65_04": {
    "assetKind": "object",
    "relation": "event",
@@ -19488,50 +19289,6 @@
     "basis": "65회 둘째 출력(산문 소스+참고 사진)을 한 장씩 보고 분류. 채 방향은 메고 가는 장면에서 확인"
    }
   },
-  "g65_08": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "narrow",
-   "verseAnchors": [
-    {
-     "book": 4,
-     "chapter": 4,
-     "fromVerse": 5,
-     "toVerse": 6,
-     "basis": "explicit"
-    },
-    {
-     "book": 4,
-     "chapter": 4,
-     "fromVerse": 15,
-     "toVerse": 15,
-     "basis": "explicit"
-    },
-    {
-     "book": 4,
-     "chapter": 10,
-     "fromVerse": 33,
-     "toVerse": 36,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "청색 보자기로 덮인 궤를 앞뒤 둘씩 메고 감 — 긴 면이 걷는 방향을 향함(바른 방향)",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "65회 둘째 출력(산문 소스+참고 사진)을 한 장씩 보고 분류. 채 방향은 메고 가는 장면에서 확인"
-   },
-   "requireAny": [
-    "보자기",
-    "메고",
-    "멜 것",
-    "고핫",
-    "언약궤",
-    "궤를"
-   ]
-  },
   "g65_09": {
    "assetKind": "scene",
    "relation": "event",
@@ -19628,28 +19385,6 @@
    ],
    "reviewStatus": "hold",
    "note": "다곤 신전 보류: 아치형 문(중세풍), 궤가 받침대 위",
-   "review": {
-    "by": "claude-visual",
-    "at": "2026-11-11",
-    "basis": "65회 둘째 출력(산문 소스+참고 사진)을 한 장씩 보고 분류. 채 방향은 메고 가는 장면에서 확인"
-   }
-  },
-  "g65_13": {
-   "assetKind": "scene",
-   "relation": "event",
-   "directness": "D1",
-   "assignmentPolicy": "strict",
-   "verseAnchors": [
-    {
-     "book": 9,
-     "chapter": 6,
-     "fromVerse": 7,
-     "toVerse": 15,
-     "basis": "explicit"
-    }
-   ],
-   "reviewStatus": "approved",
-   "note": "벧세메스로 오는 새 수레 위의 궤, 낫 든 사람들, 큰 돌",
    "review": {
     "by": "claude-visual",
     "at": "2026-11-11",

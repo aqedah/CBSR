@@ -186,7 +186,6 @@ g12_10|s|1:24|들에 나가 묵상/낙타들이 오|camel,man,dusk||2|dark|50|�
 g12_11|s|1:25|팥죽/장자의 명분|bread,bow,clay_jar||2|dark|50|팥죽 한 그릇과 활|||object
 g12_12|s|1:30-31|얼룩/아롱진/껍질을 벗겨/물구유|sheep,water,staff||2|warm|50|물구유의 가지와 양 떼|||scene
 g12_13|s|1:28;1:35|기둥으로 세우/기둥 위에 기름|stones,oil,dawn|벧엘|2|bright|60|돌기둥에 붓는 기름|||scene
-g12_14|s|1:48|므낫세와 에브라임/두 아들을 축복|elder,child,hands||2|dark|50|노인이 손을 얹어 축복함|||scene
 g12_15|s|1:23;1:25;1:35;1:49-50|막벨라|cave,crowd,graves||2|warm|40|굴로 향하는 장례 행렬|||setting
 g13_01|s|1:37|곡식 단/단이 일어/첫 꿈/두 번의 꿈|wheat_field,sheaves||2|warm|50|가운데 선 단과 둘레의 단들|||symbolic
 g13_02|s|1:39|보디발|house,egypt,curtain|애굽|3|warm|55|애굽 귀족의 집 안뜰|||setting
@@ -216,7 +215,6 @@ g21_13|s|1:6-8|홍수/방주|ark_noah,rain,flood,sea,storm_sky||11|dark|40|홍�
 g21_14|s|1:8|비둘기가 감람/감람나무 잎|dove,olive_leaf,mountain_peak|아라랏|11|dark|60|비둘기와 방주(둘째 그림)|||scene
 g21_15|s|1:8-9|무지개/노아가 제단|rainbow,clouds,stone_altar,smoke||11|bright|50|무지개와 제단(둘째 그림)|||symbolic
 g16_03|s|7:4-5|병거/기손|chariot,mud,river|기손|5|warm|55|진흙에 빠진 병거|||object
-g16_04|s|7:7|기드온/항아리와 횃불|trumpet,clay_jar,night_sky,army||5|dark|60|밤 언덕의 나팔과 항아리||은 나팔|scene
 g16_05|s|9:17;9:4;7:20;10:10;13:19;14:13|진을 치/두 진영|army,valley,sunrise_light_rays||5,6|dark|50|골짜기 양쪽의 두 군대|||scene
 g16_06|s|9:31;10:1|길보아|spear,shield,dusk||6|dark|50|버려진 창과 방패|||setting
 g16_07|g|||fire,city_wall,watchman,night_sky||6,7|dark|45|성벽 위의 봉화|||scene
@@ -307,7 +305,6 @@ g23_10|s|40:27;41:15;42:23;43:19|멀리서 바라보/십자가 곁에는/여자�
 g23_11|s|40:27;41:15;42:23;43:19|세마포로 싸/아리마대 사람 요셉/아리마대 요셉/몰약과 침향|linen,burial,tomb|예루살렘|9|dark|50|세마포로 시신을 싸는 사람들|||scene
 g23_12|s|40:28;41:16;42:24;43:20|빈 무덤/세마포가 놓/머리를 쌌던 수건|rock_tomb,linen,sunrise_light_rays|예루살렘|9|bright|50|세마포만 놓인 빈 무덤(둘째 그림)|보류: 빈 무덤에 황금빛 광선 폭발 — 과장. 세마포만 남은 빈 무덤으로||scene
 g23_13|s|43:20;40:28|막달라 마리아/마리아야/랍오니/동산지기/나를 붙들지 말라|garden,woman,jesus,dawn|예루살렘|9|bright|50|동산에서 부활하신 예수님을 만난 마리아|||scene
-g23_14|s|42:24|엠마오/떡을 가지사 축사하시고 떼어/눈이 밝아져|bread,table,disciples,jesus|엠마오|9|warm|50|엠마오에서 떡을 떼심|||scene
 g23_15|s|43:21|숯불/디베랴 호수/조반을 먹으라/내 양을 먹이라/나를 사랑하느냐|charcoal_fire,fish,bread,sea,jesus|갈릴리|9|warm|50|바닷가 숯불 곁의 떡과 생선|||scene
 g24_02|s|43:2|항아리에 물을/아귀까지/물을 채우|clay_jar,water,servants|가나|9|warm|50|돌 항아리에 물을 붓는 손(가까이)|||scene
 g24_03|s|43:9|실로암/가서 씻으라/씻고 밝은 눈|pool,water,blind_man|예루살렘|9|warm|50|실로암 못에서 눈을 씻는 사람||망대|scene
@@ -642,7 +639,6 @@ g49_02|s|66:8|향연/성도의 기도/금 향로/금 제단|censer,incense,altar
 g49_05|s|66:9|무저갱/연기/황충|smoke,storm,darkness||10|dark|50|하늘을 덮는 연기 기둥(계 9:2)|||landscape
 g49_08|s|66:10|두루마리를 먹/작은 두루마리를|old_man,scroll,hands||10|dark|50|작은 두루마리를 든 노인(계 10:9–10)|||scene
 g49_09|s|66:11|두 증인/두 감람나무/굵은 베옷|olive_tree,two_men,torch,night||10|dark|50|감람나무와 불 사이에 선 두 사람(계 11:3–4)|||scene
-g49_10|s|66:12|해를 옷 입은/열두 별|woman,light,stars,moon||10|bright|50|해와 별에 둘러싸인 여인(계 12:1)|빛나는 성모상처럼 보임||scene
 g49_11|s|66:12|붉은 용|dragon,storm||10|dark|50|폭풍 구름 속 용(계 12:3)|||scene
 g49_12|s|66:12|독수리의 두 날개/광야로/광야에서|eagle,desert,woman,canyon||10|warm|50|광야 협곡으로 피하는 여인과 독수리 그림자(계 12:14)|보류: 사람 뒤에 독수리 날개 그림자가 뚜렷 — 위와 같음|붉은 빛 짐승|scene
 g49_13|s|66:13|바다에서 한 짐승|sea,storm,beast||10|dark|50|폭풍 바다의 짐승 그림자(계 13:1)|||scene
@@ -836,25 +832,18 @@ g63_07|s|27:5|벨사살/왕궁 석회벽에 글자/손가락이 나타나서|bel
 g64_01|s|2:25;2:37|언약궤/속죄소/그룹 둘/채를 고리에|ark,cherubim,poles,gold,front||5|warm|50|언약궤 정면 — 출 25 규격(바닥 고리의 채, 위로 솟아 덮는 날개, 숙인 얼굴)|보류: 그룹 모양이 잘못된 해석||object
 g64_02|s|2:25|언약궤 비스듬히|ark,poles,angle||5|warm|50|언약궤 45도|보류: 그룹 하나·막대 높이||object
 g64_03|s|2:25|속죄소/그룹들은 그 날개를 높이 펴서/얼굴을 서로 대하여|mercy_seat,cherubim,wings,closeup||5|warm|50|속죄소 위의 두 그룹 (출 25:17–22)|보류: 그룹 모양이 잘못된 해석||object
-g64_04|s|4:4|청색 보자기/궤를 덮/메는 채|ark_covered,blue_cloth,poles,desert||5|bright|50|청색 보자기로 덮인 궤 (민 4)|||object
 g64_07|s|3:16|속죄일/피를 속죄소에 뿌리|high_priest,blood_sprinkle,ark,smoke||5|dark|50|속죄일, 피를 뿌리는 대제사장 (레 16)|보류: 피 날림||scene
-g64_08|s|4:4;4:10|고핫 자손이 와서 멜 것/궤를 메고|levites,carrying_ark,blue_cover,camp||5|bright|50|청색 보자기로 덮인 궤를 메고 가는 레위 사람들 (민 4·10)|||scene
 g64_09|s|6:3|요단/제사장들/궤를 멘/물이 그쳐서 쌓이고|priests,ark,jordan,water_wall|요단 강|6|bright|50|요단 가운데 궤를 멘 제사장들 (수 3)|보류: 폭포||scene
-g64_10|s|6:6|여리고/양각 나팔/일곱 제사장/궤가 그 뒤를 따르며|jericho,wall,priests,ram_horns,ark,soldiers|여리고|6|bright|50|여리고 성을 도는 행렬 — 나팔 든 제사장과 궤 (수 6)|||scene
 g64_11|s|9:5|다곤/엎드러져/머리와 두 손목은 끊어져 문지방|dagon,fallen_idol,ark,temple_floor|아스돗|6|dark|50|다곤 신전 바닥에 엎어진 다곤과 궤 (삼상 5)|||scene
-g64_12|s|9:6|새 수레/젖 나는 소 두 마리/벧세메스/밀을 베다가|cart,cows,ark,wheat_field,reapers|벧세메스|6|bright|50|새 수레에 실려 벧세메스로 오는 궤 (삼상 6)|||scene
 g64_15|s|11:6;11:8|내소/감람나무로 그룹 둘/날개를 펴서/궤를 그 처소로|temple,great_cherubim,ark,priests|예루살렘|6|warm|50|솔로몬 성전 지성소로 들어가는 궤 (왕상 6·8)|보류: 천사상||scene
 g65_01|s|2:25;2:37|언약궤/속죄소/그룹 둘/채를 고리에/금 관|ark,cherubim,poles,crown_molding,front||5|warm|50|언약궤 정면 — 바른 모양(65회)|보류: 채 방향 틀림||object
 g65_02|s|2:25;2:37|언약궤/속죄소/그룹 둘/금 관|ark,front,cherubim,poles||6|warm|50|언약궤 정면(65회 둘째). 정면 구도는 g35_05와 같음 — 채 방향|||object
-g65_03|s|2:25|고리/채/언약궤 옆|ark,side,poles||6|warm|50|언약궤를 짧은 변 쪽 옆에서 — 그룹 하나만 보이고 채 두 개가 좌우로 |||object
 g65_04|s|2:25|속죄소/그룹/날개를 높이 펴서|mercy_seat,cherubim,closeup||6|warm|50|속죄소 위 두 그룹 가까이, 톱니 관|||object
 g65_05|s|58:9|금 항아리/싹 난 지팡이/돌판|manna_jar,rod,tablets||6|warm|50|궤 앞의 금 항아리·꽃 핀 지팡이·돌판|보류: 돌판에 글자가 새겨짐||object
 g65_07|s|3:16|속죄일/피를 속죄소에 뿌리|high_priest,blood,ark||6|warm|50|속죄일 대제사장|보류: 피가 공중에 방울로 날림(지시대로 안 됨)||scene
-g65_08|s|4:4;4:10|보자기/메고/고핫|levites,carrying,blue_cover||6|warm|50|청색 보자기로 덮인 궤를 앞뒤 둘씩 메고 감 — 긴 면이 걷는 방향을 향|||scene
 g65_09|s|6:3|요단/제사장/궤를 멘|priests,ark,jordan||6|warm|50|요단 가운데 제사장들 — 그룹이 좌우, 채가 앞뒤(바른 방향)|보류: 상류 물이 둑처럼 멈추지 않고 댐 물처럼 쏟아짐||scene
 g65_10|s|6:4|열두 돌/길갈/궤를 멘 제사장|twelve_stones,priests,ark,jordan||6|warm|50|길갈의 열두 돌 — 제사장들이 궤를 멘 채 서 있고 남자 열둘이 돌을 쌓|||scene
 g65_11|s|6:6|여리고/나팔/궤|jericho,procession,ark||6|warm|50|여리고 행렬|보류: 로마식 투구·정강이받이 군사, 궤의 긴 면이 행진 방향과 나란함(채 방향||scene
 g65_12|s|9:5|다곤/문지방|dagon,ark,temple||6|warm|50|다곤 신전|보류: 아치형 문(중세풍), 궤가 받침대 위||scene
-g65_13|s|9:6|새 수레/암소/벧세메스|cart,cows,ark,wheat||6|warm|50|벧세메스로 오는 새 수레 위의 궤, 낫 든 사람들, 큰 돌|||scene
 g65_15|s|10:6;13:15|다윗이 춤추며/베 에봇/미갈|david_dancing,ark,priests,michal||6|warm|50|다윗이 춤추며 궤를 들여옴 — 그룹이 좌우, 채가 앞뒤(바른 방향, 목사|||scene
 g65_16|s|11:6;11:8|내소/그룹 둘/궤|temple,cherubim,ark||6|warm|50|솔로몬 성전 내소|보류: 큰 그룹의 날개가 위로 솟음, 채가 거대함||scene
