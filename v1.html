@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>이야기통독</title>
-<meta name="description" content="성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
+<meta name="description" content="성경의 이야기를 따라 읽고, 묵상으로 마음에 새깁니다">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="이야기통독">
 <meta property="og:title" content="이야기통독">
-<meta property="og:description" content="성경통독 · 오늘 본문, 요약, 지도, 퀴즈, QT">
+<meta property="og:description" content="성경의 이야기를 따라 읽고, 묵상으로 마음에 새깁니다">
 <meta property="og:url" content="https://aqedah.github.io/CBSR/v1.html">
-<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=8">
+<meta property="og:image" content="https://aqedah.github.io/CBSR/og.png?v=9">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -21,7 +21,8 @@
 <meta name="apple-mobile-web-app-title" content="이야기통독">
 
 <script>window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__bip=e;});</script>
-<link rel="icon" href="icons/icon-192.png?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=1">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=3">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=3">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}html{-webkit-text-size-adjust:100%}</style>
 <style>#appBoot{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#F8F5EF;color:#2A211B;transition:opacity .3s ease;font-family:"Gowun Batang","Nanum Myeongjo","AppleMyungjo",serif;text-align:center}#appBoot.out{opacity:0;pointer-events:none}#appBoot .k{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:12.5px;letter-spacing:.14em;color:#6E6152}#appBoot .t{font-weight:700;font-size:30px;margin-top:10px;color:#7A4528}#appBoot .s{font-size:15px;color:#6E6152;margin-top:8px}#appBoot .bar{width:160px;height:2px;background:#E5D9C8;margin:24px auto 0;overflow:hidden;border-radius:2px}#appBoot .bar i{display:block;height:100%;width:40%;background:#7A4528;animation:bootBar 1s ease-in-out infinite}@keyframes bootBar{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
@@ -30,7 +31,7 @@
 @media (prefers-reduced-motion: reduce){#appBoot .bar i{animation:none;width:100%}}</style>
 </head>
 <body>
-<div id="appBoot" role="status"><div><img src="icons/icon-192.png?v=3" width="76" height="76" alt="" style="display:block;margin:0 auto 16px;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.12)"><div class="k">이야기통독</div><div class="t">오늘 통독</div><div class="s">이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div>
+<div id="appBoot" role="status"><div><img src="icons/icon-192.png?v=3" width="76" height="76" alt="" style="display:block;margin:0 auto 16px;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.12)"><div class="k">이야기통독</div><div class="t" id="bootD">&nbsp;</div><div class="s">성경의 이야기를 따라 읽습니다</div><div class="bar"><i></i></div></div></div><script>(function(){try{var q=location.search.match(/[?&]now=(\d{4})-(\d\d)-(\d\d)/),d=q?new Date(+q[1],q[2]-1,+q[3]):new Date();document.getElementById("bootD").textContent=(d.getMonth()+1)+"월 "+d.getDate()+"일 ("+["주일","월","화","수","목","금","토"][d.getDay()]+")";}catch(e){}})();</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
