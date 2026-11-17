@@ -328,5 +328,6 @@ for f in []:
   if os.path.exists('study/'+f): shutil.copy('study/'+f,f'{OUT}/study/'+f)
 open(f'{OUT}/.nojekyll','w').write('')
 shutil.copy('site_src/README.md',OUT+'/README.md')
+if os.path.exists('elev.json'): shutil.copy('elev.json',OUT+'/elev.json')  # 여정 높낮이(tools/elev_build.py, 2026-11-17)
 for f in ['CLAUDE.md']: shutil.copy('site_src/'+f,OUT+'/'+f); shutil.copy('site_src/'+f,OUT+'/AGENTS.md')
 print({f:os.path.getsize(os.path.join(OUT,f)) for f in os.listdir(OUT) if os.path.isfile(os.path.join(OUT,f))})
