@@ -30,7 +30,6 @@ body{margin:0;background:#ddd}.spread{display:flex;gap:6mm;padding:6mm;width:max
 .pg .wd .wdl{font-size:7.2pt;font-weight:700;color:var(--main);margin-right:1.6mm}
 .pg .wd b{font-weight:700;margin-right:0.8mm}
 .pg .two{align-items:stretch}
-.pg .two .c1{flex:0 0 80mm}
 .pg .two .c2 .pic{height:100%}
 .pg .two .c2 .im{flex:1 1 auto;height:auto!important;min-height:0}
 .pg .hd2 .ts{margin:0;line-height:1.25}
@@ -56,12 +55,13 @@ body{margin:0;background:#ddd}.spread{display:flex;gap:6mm;padding:6mm;width:max
 .pg .mk .mi .bx{border:0.25mm solid #111;padding:0 0.6mm;white-space:nowrap}
 .pg .mk .mi .bn{display:inline-block;background:var(--main);color:#fff;font-family:"Noto Sans KR",sans-serif;font-size:6.6pt;padding:0 0.8mm;margin-right:0.3mm;border-radius:0.4mm;line-height:1.4}
 
-.pg .two.wmap .c1{flex:0 0 70mm}
-.pg .two.wmap .c2{align-self:flex-start}
-.pg .two.wmap .map .cap{font-size:7.4pt}
-.pg .two.wmap{align-items:flex-start;min-height:0;height:auto}
-.pg .two.wmap .c2,.pg .two.wmap .c1{height:auto;min-height:0}
-.pg .two.wmap .map{height:auto}
-.pg .two.wmap .map svg{flex:none;height:auto}
+/* 지도와 사진: 같은 칸 너비, 같은 높이(눈여겨볼 것 상자 높이에 맞춤) */
+.pg .two .c1,.pg .two.wmap .c1{flex:0 0 72mm}
+.pg .two.wmap{align-items:stretch;height:auto;width:auto;margin:1.6mm 0 1.2mm;min-height:0}
+.pg .two.wmap .c2{display:flex;flex-direction:column}
+.pg .two.wmap .map{height:100%;display:flex;flex-direction:column;min-height:0}
+.pg .two.wmap .mfr{flex:1 1 0;position:relative;min-height:0;overflow:hidden}
+.pg .two.wmap .map .mfr svg{position:absolute;inset:0;width:100%;height:100%}
+.pg .two.wmap .map .cap{font-size:8.3pt}
 
 .abl{margin-left:-.28em;margin-right:-.06em}.abr{margin-left:-.06em;margin-right:-.28em}
