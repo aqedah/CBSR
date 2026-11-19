@@ -3,11 +3,20 @@ css=open('css.css').read()+open('extra.css').read()
 DIST=open('dist.js').read()
 def vs(t): return re.sub(r'(?<=\()([^()]*\d+:\d+[^()]*)(?=\))',r'<span class="vs">\1</span>',t)
 def vsm(t): return re.sub(r'(?<![\d:>])(\d+:\d+(?:–\d+)?(?:(?:, |; )(?:\d+:)?\d+(?:–\d+)?)*)(?=에서|까지|과 |와 )',r'<span class="vs">\1</span>',vs(t))
+import base64,os
+_TC={}
+def tile(m):
+    p=m.group(1)
+    if p not in _TC:
+        f='/home/claude/cbsr/app/'+p
+        _TC[p]=('data:image/webp;base64,'+base64.b64encode(open(f,'rb').read()).decode()) if os.path.exists(f) else ''
+    return 'href="'+_TC[p]+'"'
 WDN={'월':'월요일','화':'화요일','수':'수요일','목':'목요일','금':'금요일','토':'토요일','일':'일요일'}
 def page(D,pn=22):
     date=D['date'].split(' (')[0]; wd=WDN[D['date'].split('(')[1][0]]
     pic=D.get('pic'); mp=MAPS.get(str(D['no']),{}).get('html') if not D.get('nomap') else None
     if mp: mp=re.sub(r'<button class="mplay".*?</button>','',mp,flags=re.S)
+    if mp: mp=re.sub(r'href="https://aqedah\.github\.io/CBSR/([^"]+)"',tile,mp)
     look=''.join(f'<div class="i">{"<span class=ck>✓</span>" if x["ck"] else ""}<span class="chip">{x["tool"]}</span>{vs(x["text"])}</div>' for x in D['looks'])
     if mp: lookblk=f'<div class="two wmap"><div class="c1"><div class="box lk">{look}</div></div><div class="c2">{mp}</div></div>'
     elif pic: lookblk=f'<div class="two"><div class="c1"><div class="box lk">{look}</div></div><div class="c2"><div class="pic"><div class="im"><img src="{pic[0]}" alt=""></div><div class="cap">{pic[1]}</div></div></div></div>'
