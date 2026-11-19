@@ -13,7 +13,7 @@
   } else {
    const secs=[...pg.querySelectorAll(':scope > .sec')].slice(1).concat([...pg.querySelectorAll(':scope > .lab')]);
    bump(secs,6,'marginTop');
-   bump([...pg.querySelectorAll('.mk .mi, .lk .i')],1.6,'marginBottom');
+   bump([...pg.querySelectorAll('.mk .mi, .lk .i')],2.6,'marginBottom');
    bump([pg.querySelector(':scope > .sec'),pg.querySelector(':scope > .wd')],2,'marginTop');
   }
  });

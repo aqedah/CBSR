@@ -33,6 +33,6 @@ def page(D,pn=22):
 <div class="pn">{pn+1}</div></div>'''
     return f'<div class="spread" id="d{D["no"]}">{L}{R}</div>'
 days=json.load(open(sys.argv[1]))
-out=''.join(page(D,20+2*i) for i,D in enumerate(days))
+out=''.join(page(D,18+2*D['no']) for D in days)
 ZOOM="<script>(function(){function z(){const sp=document.querySelector('.spread');if(!sp)return;document.body.style.zoom=1;const w=sp.getBoundingClientRect().width;document.body.style.zoom=Math.min(1,(innerWidth-8)/w);}z();addEventListener('resize',z);})();</script>"
 open(sys.argv[2],'w').write('<!doctype html><html><head><meta charset="utf-8"><title>2027 새 틀 1권</title><style>'+css+'</style></head><body>'+out+'<script>'+DIST+'</script>'+ZOOM+'</body></html>')
