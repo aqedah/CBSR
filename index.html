@@ -2953,15 +2953,18 @@ body.tbkfull .tbkgrip{display:none}
   html.v2[data-tab="today"] header.top{position:fixed!important;left:var(--rail)!important;right:0!important;width:auto;top:0;padding:18px 32px 0 48px!important;box-sizing:border-box}
 }
 /* 태블릿 틀(11-11 목사님): 넓은 가로 화면은 왼쪽 세로 메뉴 */
-/* 11-19 목사님: 넓은 화면은 세 칸 — 왼쪽 줄거리 · 가운데 카드(말씀 카드·쓰다 만 노트·오늘의 여정·교회력) · 오른쪽 단추(맨 아래 고정). 오른쪽 칸이 짧아져 › 화살표는 다시 화면 끝 */
+/* 11-19 목사님: 휴대폰 오늘 탭 — 오늘의 여정과 교회력 띠 사이가 52px(격자 틈 22+띠 위 14+칸 아래 16)이라 16px로 */
+@media (max-width:1023.98px),(max-height:559.98px){ html.v2[data-tab="today"] #main{row-gap:0} html.v2[data-tab="today"] #main>.sbnrs.aft{margin-top:0} }
+/* 11-19 목사님: 넓은 화면은 세 칸 — 왼쪽 줄거리 · 가운데 말씀 카드 · 오른쪽 여정·노트·교회력 위에 단추(맨 아래 고정). 오른쪽 칸이 짧아져 › 화살표는 다시 화면 끝 */
 @media (min-width:1280px) and (min-height:560px){
   html.v2[data-tab="today"] #main{grid-template-columns:minmax(0,1fr) minmax(300px,min(22vw,380px)) minmax(340px,min(24vw,420px));column-gap:28px;row-gap:0}
   html.v2[data-tab="today"] .td4head,html.v2[data-tab="today"] .td4sumb{width:min(calc(100% - 46vw - 140px),720px)}
   html.v2[data-tab="today"] .td4tx{display:contents}
-  html.v2[data-tab="today"] .td4tx>.td4btns{grid-column:3;grid-row:1 / span 6;align-self:end;position:relative;z-index:2}
-  html.v2[data-tab="today"] .td4sec{grid-column:2;grid-row:auto;align-self:end;position:relative;z-index:2}
-  html.v2[data-tab="today"] #main>*:not(.td4){grid-column:2}
-  html.v2[data-tab="today"] #main>.sbnrs{margin:0 0 14px}
+  /* 11-19 목사님 둘째: 가운데는 말씀 카드만, 여정·쓰다 만 노트·교회력은 오른쪽 단추 위로(두 칸 높이가 비슷해 균형) */
+  html.v2[data-tab="today"] .td4sec{display:contents}
+  html.v2[data-tab="today"] .td4wc{grid-column:2;grid-row:1 / span 8;align-self:end;margin-top:-2000px;position:relative;z-index:2} /* 음수 위 여백: 말씀 카드가 줄 높이를 늘리지 않게(아래 맞춤만) */
+  html.v2[data-tab="today"] .td4sec>:not(.td4wc),html.v2[data-tab="today"] #main>*:not(.td4),html.v2[data-tab="today"] .td4tx>.td4btns{grid-column:3;position:relative;z-index:2;margin:12px 0 0}
+  html.v2[data-tab="today"] #main>.sbnrs{order:-1;margin-top:0}html.v2[data-tab="today"] .td4sec>:not(.td4wc){order:1}html.v2[data-tab="today"] .td4tx>.td4btns{order:2}
   html.v2[data-tab="today"] .td4ar.r{right:max(24px,env(safe-area-inset-right,0px))}
 }
 @media (min-width:1024px) and (min-height:560px){
