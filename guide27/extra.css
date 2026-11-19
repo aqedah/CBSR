@@ -1,0 +1,57 @@
+
+body{margin:0;background:#ddd}.spread{display:flex;gap:6mm;padding:6mm;width:max-content}
+.pg .after > *:not(.h):not(.aoBtn){filter:none!important;opacity:1!important}
+.pg .hd1{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:2.2mm;border-bottom:0.7mm solid var(--main);padding-bottom:0.6mm;margin:0 0 1.4mm}
+.pg .hd1 .dt{font-size:8.8pt;color:var(--main);font-weight:700}
+.pg .hd1 .tt{font-size:15pt;font-weight:700;letter-spacing:-0.3px}
+.pg .hd1 .sbt{font-family:"Noto Serif KR","Noto Serif CJK KR",serif;font-size:10.5pt;font-weight:700;color:#333}
+.pg .scn{display:inline-flex;flex-wrap:wrap;gap:0.8mm;margin:0 0 0 2.4mm;vertical-align:0.4mm;font-weight:400;letter-spacing:0}
+.pg .scn i{font-style:normal;font-size:8pt;letter-spacing:-0.02em;border:0.2mm solid var(--main);color:var(--main);border-radius:0.8mm;padding:0 0.9mm;line-height:1.55;white-space:nowrap}
+.pg .scnote{color:#555}
+.pg .mk .mi{display:flex;gap:1.6mm;font-size:9.4pt;line-height:1.4;margin:0 0 1mm;text-align:justify}
+.pg .mk .mi.rep{background:color-mix(in srgb,var(--mainL) 55%,#fff);margin-left:-1mm;margin-right:-1mm;padding:0.4mm 1mm}
+.pg .mk1{flex:0 0 3mm;font-weight:700;color:var(--main);font-size:9pt}
+.pg .pen{font-family:"Noto Sans KR",sans-serif;font-size:7.6pt;margin-right:1mm;white-space:nowrap}
+.pg .pen .o{border:0.25mm solid #111;border-radius:50%/55%;padding:0 0.8mm}
+.pg .pen .b{border:0.25mm solid #111;padding:0 0.6mm}
+.pg .pen .hy{background:rgba(255,214,0,.5);padding:0 0.4mm}
+.pg .pen .w{text-decoration:underline wavy;text-underline-offset:1mm}
+.pg .pen .bn{display:inline-block;background:var(--main);color:#fff;font-size:6.6pt;padding:0 0.8mm;margin-right:0.3mm;border-radius:0.4mm}
+.pg .star{font-family:"Noto Sans KR",sans-serif;font-size:6.8pt;background:#111;color:#fff;border-radius:0.5mm;padding:0 1mm;margin-right:0.6mm}
+.pg .lk .ck{color:var(--main);font-weight:700;font-family:"Noto Sans KR",sans-serif;margin-right:0.6mm}
+.pg .hint{display:block;font-size:8pt;color:#777;margin-top:0.3mm}
+.pg .fill{margin-top:1.4mm}
+.pg .fill .blank{display:inline-block;width:46mm;border-bottom:0.15mm dotted #999}
+.pg .fill .blank.b2{width:100mm}
+.pg .fill + .fill{margin-top:2.4mm}
+#d37 .pic img{object-position:85% 50%}
+.pg .fu{margin:0}
+.pg .wd{margin:1.2mm 0 0;font-size:8.4pt;line-height:1.5;color:#222;background:color-mix(in srgb,var(--main) 9%,#fff);border-left:0.8mm solid var(--main);padding:0.6mm 2mm 0.6mm 1.6mm}
+.pg .wd .wdl{font-size:7.2pt;font-weight:700;color:var(--main);margin-right:1.6mm}
+.pg .wd b{font-weight:700;margin-right:0.8mm}
+.pg .two{align-items:stretch}
+.pg .two .c1{flex:0 0 80mm}
+.pg .two .c2 .pic{height:100%}
+.pg .two .c2 .im{flex:1 1 auto;height:auto!important;min-height:0}
+.pg .hd2 .ts{margin:0;line-height:1.25}
+.pg .hd2 .ts b{display:inline;margin-right:1.6mm}
+.pg .hd2 .ts span{display:inline;margin:0;white-space:normal}
+.pg .mk .mi .o,.pg .mk .mi .hy,.pg .mk .mi .w{white-space:nowrap}
+.pg .mk .mi .o{border:0.25mm solid #111;border-radius:50%/55%;padding:0 0.7mm}
+.pg .mk .mi .hy{background:color-mix(in srgb,var(--main) 28%,#fff);padding:0 0.4mm}
+.pg .mk .mi .w{text-decoration:underline wavy;text-decoration-thickness:0.2mm;text-underline-offset:1mm}
+.pg .mk .mi b{font-family:"Noto Sans KR",sans-serif}
+.pg{padding-top:9mm}
+.pg .hd2{display:flex;align-items:stretch;gap:3mm;border-bottom:0.7mm solid var(--main);padding-bottom:1.6mm;margin:0 0 1mm}
+.pg .hd2 .dd{flex:0 0 21mm;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;border-right:0.3mm solid var(--main);padding-right:2.6mm}
+.pg .hd2 .dd b{font-size:12pt;font-weight:700;color:var(--main);line-height:1.2;white-space:nowrap}
+.pg .hd2 .dd span{font-size:7.6pt;color:#666;line-height:1.3;white-space:nowrap;margin-top:0.4mm}
+.pg .hd2 .tb{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.pg .hd2 .tb b{font-size:15pt;font-weight:700;letter-spacing:-0.3px;line-height:1.15}
+.pg .hd2 .tb span{font-size:9.6pt;font-weight:500;color:#333;line-height:1.3;margin-top:0.6mm}
+.pg .sec{margin-top:2.6mm}
+.pg .hd2 + .sec{margin-top:2mm}
+.pg.r > .sec:first-child{margin-top:0}
+.pg .mk .mi .ht{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--main) 30%,#fff) 0 0.4mm,#fff 0.4mm 0.9mm);padding:0 0.4mm;white-space:nowrap}
+.pg .mk .mi .bx{border:0.25mm solid #111;padding:0 0.6mm;white-space:nowrap}
+.pg .mk .mi .bn{display:inline-block;background:var(--main);color:#fff;font-family:"Noto Sans KR",sans-serif;font-size:6.6pt;padding:0 0.8mm;margin-right:0.3mm;border-radius:0.4mm;line-height:1.4}
