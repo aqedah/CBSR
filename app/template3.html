@@ -1905,13 +1905,13 @@ html.v2 .td4sumb:empty{padding:24px 0 0}
   html.v2 body.tab-today .td4hero .tdcr{z-index:3}
 }
 html.v2 .td4sum{margin:0;font:400 16px/1.7 var(--f-text);color:var(--ink);word-break:keep-all}
-html.v2 .td4tx{position:relative;padding:4px 20px 0;display:flex;flex-direction:column;gap:10px}
+html.v2 .td4tx{position:relative;padding:4px 20px 0;display:flex;flex-direction:column;gap:10px}html.v2 .td4sec{display:flex;flex-direction:column;gap:10px}
 html.v2 .td4btns{display:flex;gap:10px;margin-top:6px}
 html.v2 .td4b1,html.v2 .td4b2{min-height:58px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;font-family:var(--f-ui)}
 html.v2 .td4b1{flex:1.4;border:0;background:var(--accent);color:var(--accent-ink)}html.v2 .td4b1 b{font-size:17px}html.v2 .td4b1 small{font-size:12.5px;opacity:.9}
 html.v2 .td4b2{flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--ink)}html.v2 .td4b2 b{font-size:16px}html.v2 .td4b2 small{font-size:12.5px;color:var(--rysub,#6B7570)}
 html.v2 .td4b1:active,html.v2 .td4b2:active{transform:scale(.98)}
-html.v2 .td4tx .tdtrip{margin-top:4px}
+html.v2 .td4tx .tdtrip{margin-top:4px}html.v2 .td4sec .tdtrip{margin-top:0}
 html.v2 .rgwrap.v3{margin-top:0}
 html.v2 .rgwk{display:flex;align-items:baseline;gap:8px;margin:0 0 6px;padding:0 16px;font-size:12.5px}
 html.v2 .rgwk b{font-weight:700}html.v2 .rgwk span{color:var(--muted)}
@@ -2242,17 +2242,31 @@ body.tbkfull .tbkgrip{display:none}
   html.v2[data-tab="today"] .td4sumb{padding-top:0;padding-bottom:44px}
   html.v2[data-tab="today"] .td4sum{color:rgba(255,255,255,.93);font-size:17.5px;line-height:1.75;text-shadow:0 1px 8px rgba(0,0,0,.45)}
   html.v2[data-tab="today"] .td4top{z-index:1}
-  html.v2[data-tab="today"] .td4ar{top:40%}html.v2[data-tab="today"] .td4ar.l{left:24px}html.v2[data-tab="today"] .td4ar.r{right:calc(max(360px,min(34vw,440px)) + 46px)} /* 11-19 목사님: 오른쪽 칸 카드가 많아지면 화면 끝 화살표가 가려짐 → 그림과 오른쪽 칸 사이 틈으로 */
+  html.v2[data-tab="today"] .td4ar{top:40%}html.v2[data-tab="today"] .td4ar.l{left:24px}html.v2[data-tab="today"] .td4ar.r{right:calc(max(360px,min(34vw,440px)) + 46px)} /* 11-19: 두 칸일 때는 오른쪽 칸이 길어질 수 있어 그림과 칸 사이 틈으로(세 칸이면 아래에서 화면 끝으로) */
   html.v2[data-tab="today"] .td4hero .tdcr{top:auto;bottom:12px;right:auto;left:48px}
   html.v2[data-tab="today"] #main>*:not(.td4),html.v2[data-tab="today"] .td4tx{grid-column:2;position:relative;z-index:2}
   html.v2[data-tab="today"] .td4tx{padding:0;gap:12px}
-  html.v2[data-tab="today"] .td4tx>*{box-shadow:0 8px 30px rgba(0,0,0,.28)}html.v2[data-tab="today"] .td4tx .td4btns{box-shadow:none}html.v2[data-tab="today"] .td4tx .td4btns>*{box-shadow:0 8px 30px rgba(0,0,0,.28)}
+  html.v2[data-tab="today"] .td4tx>*,html.v2[data-tab="today"] .td4sec>*{box-shadow:0 8px 30px rgba(0,0,0,.28)}html.v2[data-tab="today"] .td4tx>.td4sec{box-shadow:none}
+  /* 11-19 목사님: 단추는 늘 오른쪽 맨 아래(카드가 늘어도 자리 그대로), 카드들은 그 위. 띠(교회력 등)도 단추 위로 */
+  html.v2[data-tab="today"] .td4sec{gap:12px;order:1}html.v2[data-tab="today"] .td4tx>.td4btns{order:2}
+  html.v2[data-tab="today"] #main>.sbnrs{order:-1;margin-top:0;margin-bottom:14px}html.v2[data-tab="today"] .td4tx .td4btns{box-shadow:none}html.v2[data-tab="today"] .td4tx .td4btns>*{box-shadow:0 8px 30px rgba(0,0,0,.28)}
   html.v2[data-tab="today"] #main>*:not(.td4){box-shadow:0 8px 30px rgba(0,0,0,.28)}
   html.v2[data-tab="today"] #main>*:not(.td4){margin-top:14px}
   html.v2[data-tab="today"] #main>.sec:not(.td4),html.v2[data-tab="today"] #main>section:not(.td4){background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
   html.v2[data-tab="today"] header.top{position:fixed!important;left:var(--rail)!important;right:0!important;width:auto;top:0;padding:18px 32px 0 48px!important;box-sizing:border-box}
 }
 /* 태블릿 틀(11-11 목사님): 넓은 가로 화면은 왼쪽 세로 메뉴 */
+/* 11-19 목사님: 넓은 화면은 세 칸 — 왼쪽 줄거리 · 가운데 카드(말씀 카드·쓰다 만 노트·오늘의 여정·교회력) · 오른쪽 단추(맨 아래 고정). 오른쪽 칸이 짧아져 › 화살표는 다시 화면 끝 */
+@media (min-width:1280px) and (min-height:560px){
+  html.v2[data-tab="today"] #main{grid-template-columns:minmax(0,1fr) minmax(300px,min(22vw,380px)) minmax(340px,min(24vw,420px));column-gap:28px;row-gap:0}
+  html.v2[data-tab="today"] .td4head,html.v2[data-tab="today"] .td4sumb{width:min(calc(100% - 46vw - 140px),720px)}
+  html.v2[data-tab="today"] .td4tx{display:contents}
+  html.v2[data-tab="today"] .td4tx>.td4btns{grid-column:3;grid-row:1 / span 6;align-self:end;position:relative;z-index:2}
+  html.v2[data-tab="today"] .td4sec{grid-column:2;grid-row:auto;align-self:end;position:relative;z-index:2}
+  html.v2[data-tab="today"] #main>*:not(.td4){grid-column:2}
+  html.v2[data-tab="today"] #main>.sbnrs{margin:0 0 14px}
+  html.v2[data-tab="today"] .td4ar.r{right:max(24px,env(safe-area-inset-right,0px))}
+}
 @media (min-width:1024px) and (min-height:560px){
   :root{--rail:88px}
   html.v2 body{padding-bottom:0}
@@ -7350,8 +7364,9 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   else if(read) sec=`<button class="td4b2" id="tdReread"><b>본문 다시</b><small>${p.ch.length}${p.ch[0][0]===19?"편":"장"}</small></button>`;
   else if(!futLock(w,d)) sec=`<button class="td4b2" id="tdStory0"><b>스토리</b><small>카드 ${n}장</small></button>`;
   h+=`<div class="td4btns"><button class="td4b1" id="tdHero"><b>${N.e?"다음: ":""}${esc(N.t)}</b><small>${esc(N.s)}</small></button>${read&&!q.done&&S.length?`<button class="td4b2" id="tdStory"><b>이야기로 다시 보기</b><small>${N.sMid?N.sMid+"장째부터":"카드 "+S.length+"장"}</small></button>`:q.done&&S.length?`<button class="td4b2" id="tdStory"><b>스토리 다시 보기</b><small>카드 ${S.length}장</small></button>`:""}</div>`; /* 11-16 목사님: 마친 날(지난 요일)에도 본문 다시 보기 옆에 스토리 다시 보기 */ /* 11/3 목사님: 단추는 하나만. 11-13: 읽은 뒤 스토리는 그 아래 작은 글 단추(묵상이 먼저) */
-  if(q.done&&kv) h+=`<div class="td4wc">${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}<button class="wcmk" data-wcmk="${w}-${d}">말씀 카드 만들어 보내기</button></div>`;
-  h+=tdResume(w,d)+tdTrip(w,d)+`</div></section>`;
+  /* 11-19 목사님: 단추(본문·스토리 다시 보기)는 자리를 못 박고, 나머지 카드는 한 묶음(td4sec)으로 — 넓은 화면에서는 가운데 칸으로 */
+  const sec2=(q.done&&kv?`<div class="td4wc">${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}<button class="wcmk" data-wcmk="${w}-${d}">말씀 카드 만들어 보내기</button></div>`:"")+tdResume(w,d)+tdTrip(w,d);
+  h+=(sec2?`<div class="td4sec">${sec2}</div>`:"")+`</div></section>`;
   return h; }
 /* 그림 위쪽 밝기를 재서 머리줄 아이콘 색을 고름(11/3) */
 function tdFit(){ const S=document.querySelector(".td4"), T=S&&S.querySelector(".td4tx .td4btns"); if(!T) return; const f=()=>{ document.documentElement.style.setProperty("--txh",(T.isConnected?T.offsetHeight+22:0)+"px"); const H=S.querySelector(".td4hero"), hd=S.querySelector(".td4head"), tp=document.querySelector("header.top"); if(H&&hd&&tp){ const hr=H.getBoundingClientRect(), y1=tp.getBoundingClientRect().bottom-hr.top, y2=hd.getBoundingClientRect().top-hr.top+parseFloat(getComputedStyle(hd).paddingTop||0); const room=y2>y1+60; if(room) H.style.setProperty("--arT",Math.round((y1+y2)/2)+"px"); else H.style.removeProperty("--arT"); H.classList.toggle("noar",!room&&innerWidth<1024); /* 빈 곳이 없으면(작은 폰) 화살표를 숨김 — 밀어 넘기기는 그대로 */ } }; /* 11-11: 그림 위에는 본문 읽기 단추까지만 */ f(); if(window.ResizeObserver){ if(tdFit.ro) tdFit.ro.disconnect(); tdFit.ro=new ResizeObserver(f); tdFit.ro.observe(T); const H0=S.querySelector(".td4hero"); if(H0) tdFit.ro.observe(H0); } }
