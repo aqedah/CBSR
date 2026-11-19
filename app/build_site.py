@@ -134,6 +134,7 @@ _GREX=r'(?:●|◆|◇|⇔|↗|□|∽|▲|○|◎|⋯|\?!|“”|♪|∥|if|¿|
 _GT={}
 for _n,_v in _GQ.items():
     _f=((_v or {}).get('guide') or {}).get('find','')
+    if isinstance(_v,dict) and _v.get('v27'): _f=' '.join(m.get('tool','') for m in _v['v27'].get('marks',[])).replace('[ ] 틀','□ 틀')  # 11-20 새 틀: ② 표시의 도구
     _L=[]
     for _m in _re9.findall(_GREX,_f):
         if _m not in _L: _L.append(_m)
@@ -141,6 +142,8 @@ for _n,_v in _GQ.items():
 data+='const GTOOLS='+J(_GT)+';\n'
 # 11-12: 묵상 탭도 가이드북과 같은 질문(원고 한 벌) — 관찰·적용 질문만
 _GQT={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _GQ.items() if n.isdigit()}
+for _n,_v in _GQ.items():  # 11-20 새 틀: 성품 물음도 가이드북과 같게
+    if _n.isdigit() and isinstance(_v,dict) and _v.get('v27') and (_v['v27'].get('god') or ['',''])[1]: _GQT[int(_n)]['god']=' '.join(_v['v27']['god'])
 data+='const GQT='+J(_GQT)+';\n'
 # 11-12 목사님: 2026 체험판 가이드북(317–365일)도 앱에 — 2026년 화면에서만 씀
 try:
@@ -171,7 +174,12 @@ def _gdesc(Q):
         wd=((v.get('guide') or {}).get('word') or '').strip()
         ch=((v.get('obs') or {}).get('christ') or '').strip(); mp=((v.get('map') or {}).get('cap') or '').strip()  # 11-13: ③ 읽은 뒤(성경 전체로·지도)도 앱에
         em=str((v.get('map') or {}).get('emph') or '').strip()  # 11-15: 앱 스토리 '오늘 본문의 무대'도 가이드북 지도 강조 지명으로
-        if f or pm or t or wd: out[int(n)]={'f':f,'p':pm,'t':t,'w':wd,'c':ch,'m':mp,'e':em}  # t: 오늘의 흐름(11-13 앱 오늘 탭도 이것으로 통일)
+        k=None
+        if v.get('v27'):  # 11-20 새 틀: ① 읽기 전에 가이드북 ② 표시를 그대로(표시 낱말은 글자로)
+            def _pl(x): return _re9.sub(r'\{번호 ([^}]*)\}',lambda m:'번호 '+m.group(1),_re9.sub(r'\{(동그라미|형광펜|물결 밑줄|빗금 형광펜|네모|괄호)\}',r'\1',x)).replace('**','')
+            k=[[m.get('tool',''),1 if m.get('rep') else 0,_pl(m.get('text',''))] for m in v['v27'].get('marks',[])]; f=''
+            if ' — ' in wd: wd=wd.split(' — ',1)[0]+': '+wd.split(' — ',1)[1]
+        if f or pm or t or wd or k: out[int(n)]=dict({'f':f,'p':pm,'t':t,'w':wd,'c':ch,'m':mp,'e':em},**({'k':k} if k else {}))  # t: 오늘의 흐름(11-13 앱 오늘 탭도 이것으로 통일)
     return out
 # 11-13 목사님: 도구 이름·기호·풀이·예는 가이드북 책머리(f0.syms·dsyms) 한 벌을 앱도 그대로 씀
 _GBS={}

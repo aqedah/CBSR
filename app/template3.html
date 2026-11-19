@@ -2325,6 +2325,8 @@ html.v2 body #textSec .dtl h2,html.v2 body .qtcard .qphin h2{font-size:26px;line
 html.v2 body .qtcard .qphin small{font:600 14px var(--f-ui);color:var(--muted)}
 html.v2 body .qtcard section.q3>.label{display:flex!important;align-items:center;gap:8px}html.v2 body .qtcard .stn{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink,#fff);font:700 12px var(--f-ui)}
 html.v2 body .rdt{display:block;font:600 14px var(--f-ui);color:var(--muted);margin:2px 0 6px}
+
+/* 11-20 새 틀: ① 읽기 전의 ② 표시 */ .aidmk{margin:.35em 0;line-height:1.6} .aidmk.rep{background:color-mix(in srgb,var(--accent,#2E7D4F) 9%,transparent);border-radius:6px;padding:.25em .45em;margin-left:-.45em;margin-right:-.45em} .aidmk .aidchip{margin-right:.35em;font-size:.82em;padding:.05em .5em;cursor:default} .aidrep{display:inline-block;font-size:.72em;background:#222;color:#fff;border-radius:3px;padding:0 .4em;margin-right:.2em;vertical-align:.1em}
 </style>
 
 <div class="wrap">
@@ -3397,15 +3399,16 @@ function whereOf(p){ if(typeof WHERE365==="undefined"||!p||!p.ch||!p.ch.length) 
 function readAid(p,w,d,key,tl,G){ const g=GUIDE[key]||{}, where=whereOf(p);
   /* 11-13 목사님 "글씨 크기·층위가 제각각": ①의 모든 칸을 같은 틀(작은 초록 제목 + 같은 크기 글)로 */
   const ctx=[]; if(where) ctx.push(`<div class="aidsec"><b class="aidk">지금 어디쯤${where.n>1?` <span class="wk">${where.n}일 중 ${where.k}일째</span>`:""}</b><p>${esc(where.t)}</p></div>`); if(g.prev) ctx.push(`<div class="aidsec"><b class="aidk">지난 이야기</b><p>${esc(g.prev)}</p></div>`);
-  const flow=(G&&G.t)||g.today||"", focus=(G&&G.f)||g.find||""; /* 11-13 목사님: 초점 문장은 둠('표시해 두세요'는 괜찮음). 외우라는 말만 원고에서 '표시해 두세요'로 바꿈 */
+  const flow=(G&&G.t)||g.today||"", focus=G&&G.k?"":((G&&G.f)||g.find||""); /* 11-20 새 틀 날은 가이드북 ② 표시(G.k)를 그대로 */
+  const marks=G&&G.k?`<div class="aidsec"><b class="aidk">성경에 표시하며 읽기</b>${G.k.map(([t,r,x])=>`<p class="aidmk${r?" rep":""}"><span class="tool aidchip">${esc(t)}</span>${r?'<span class="aidrep">대표</span>':""} ${esc(x)}</p>`).join("")}</div>`:""; /* 11-13 목사님: 초점 문장은 둠('표시해 두세요'는 괜찮음). 외우라는 말만 원고에서 '표시해 두세요'로 바꿈 */
   const shown=(mem.toolSeen ||= {}); let nw=0; const fresh=tl.filter(t=>{ if(!shown[t]){ shown[t]=key; nw=1; } return shown[t]===key; }); if(nw) save();
   const openT=new Set(tl.length?[fresh[0]||tl[0]]:[]); /* 11-13 목사님: 풀이는 대표 하나만 펼침(처음 만나는 도구가 있으면 그것), 나머지는 눌러서 */
   const tools=tl.length||focus?`<div class="aidsec"><b class="aidk">오늘의 읽기 도구</b>${tl.length?`<p class="tline aidchips">${tl.map(t=>`<button class="tool aidchip${openT.has(t)?" on":""}" data-adef="${esc(t)}" aria-expanded="${openT.has(t)}">${tName(t)}</button>`).join("")}</p>`:""}${focus?`<p class="aidfocus">${esc(focus)}</p>`:""}${tl.map(t=>`<p class="aiddef" data-for="${esc(t)}"${openT.has(t)?"":" hidden"}><b>${tName(t)}</b> ${TOOL_HTML[t]||esc(TOOLS[t]||"")}</p>`).join("")}</div>`:"";
   const word=G&&G.w?`<div class="aidsec"><b class="aidk">말뜻</b><p>${esc(G.w)}</p></div>`:"";
   const fl=""; /* 11-13 목사님: 오늘의 흐름은 오늘 탭 줄거리와 같은 구실이라 앱 ①에서는 뺌(가이드북에는 줄거리가 없어 둔 것) */
   const book=""; /* 11-13 목사님: '어떤 책인가요?'는 ① 밖으로 — 본문 머리의 칩(2장 · 약 9분 옆) */
-  if(!ctx.length&&!fl&&!tools&&!word&&!book) return "";
-  return `<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>① 읽기 전<small>${[fl?"오늘의 흐름":"",tl.length||focus?"오늘의 읽기 도구":"",word?"말뜻":""].filter(Boolean).join(" · ")}</small></summary><div class="aidbody">${ctx.join("")}${fl}${tools}${word}${book}</div><button class="foldbtn" data-fold="v2Aid">① 읽기 전 접기 ▲</button></details>`; }
+  if(!ctx.length&&!fl&&!tools&&!marks&&!word&&!book) return "";
+  return `<details class="v2aid" id="v2Aid"${view.aidOpen?" open":""}><summary>① 읽기 전<small>${[fl?"오늘의 흐름":"",tl.length||focus?"오늘의 읽기 도구":"",word?"말뜻":""].filter(Boolean).join(" · ")}</small></summary><div class="aidbody">${ctx.join("")}${fl}${tools}${marks}${word}${book}</div><button class="foldbtn" data-fold="v2Aid">① 읽기 전 접기 ▲</button></details>`; }
 /* ③ 읽은 뒤 — 가이드북 ③과 같은 것(눈여겨볼 것 · 지도 · 성경 전체로)을 먼저, 앱만의 것은 [더 알아보기]에 */
 const secIn=x=>(x||"").replace(/^\s*<section[^>]*>/,"").replace(/<\/section>\s*$/,"").replace(/<span class="label">[^<]*<\/span>/,"");
 /* 11-13 목사님 "읽은 뒤와 더 알아보기가 겹친다": 지도·성경 전체로는 ③ 한 곳에만. [더 알아보기]에는 줄거리·인물·곳·말·퀴즈만 */
@@ -3968,7 +3971,7 @@ function renderQT(){
   // 2 하나님은 어떤 분
   h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span>${V2Q?"":"<small>이 본문에서 하나님은 어떤 분인가</small>"}</div>`;
   /* 11-10 목사님: 가이드북과 같게 — 성품도 내가 먼저 쓰고(god), 해설은 맨 끝 '쓴 뒤에 읽기'에서 */
-  if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까? 규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요.</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
+  if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">${ /* 11-20: 2027 새 틀 날은 가이드북 성품 물음 그대로 */ esc(gqOf(w,d)&&gqOf(w,d).god?gqPlain(gqOf(w,d).god):"하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까? 규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요.") }</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
   else if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
   let tH=""; /* 성품 이름+아멘: v2에서는 쓴 뒤에 읽기로 */
   if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); tH+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`}</div>`;});
