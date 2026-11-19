@@ -1457,7 +1457,7 @@ if(EMBQ.get('embed')){ const embStart=(function(){
   document.addEventListener('keydown',e=>{ if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return; if(e.key==='ArrowLeft'){e.preventDefault();flip(-1)} if(e.key==='ArrowRight'){e.preventDefault();flip(1)} });
   fetch(ED.pub,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;takeRemote(j.qt||j,'공개 원고')}).catch(()=>{});
   /* 11-12 목사님: 책머리(f0)는 2027판과 체험판이 한 벌 — 다른 판에서 더 늦게 고친 공통 칸을 받음(판마다 다른 칸은 그대로) */
-  const OWNF=['bkp','cp','divk','divt','divnote','bkfoot','_u'];
+  const OWNF=['bkp','cp','divk','divt','divnote','bkfoot','rules','_u']; /* 11-20: 약속은 판마다(2027 새 틀 / 2026 체험판) 다름 */
   const OTHER=ED.trial?{pub:'guide_qt.json',path:'app/site_src/guide_qt.json'}:{pub:'trial26_qt.json',path:'app/site_src/trial26_qt.json'};
   const takeF0=(o,lab)=>{ if(!o||!(o._u>((DATA.f0||{})._u||0))) return false; DATA.f0=Object.assign({},DATA.f0||{}); for(const k in o) if(!OWNF.includes(k)) DATA.f0[k]=o[k]; DATA.f0._u=o._u; localStorage.setItem(ED.key,JSON.stringify(DATA)); buildViews(); showView(VI,true); $('status').textContent='책머리를 '+lab+'에서 받음'; return true };
   fetch(OTHER.pub,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{ if(j) takeF0((j.qt||j).f0,ED.trial?'2027판':'체험판') }).catch(()=>{});
