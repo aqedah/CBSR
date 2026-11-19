@@ -168,5 +168,7 @@ js=r'''<script>
  });
 })();
 </script>'''
+P10=P10.replace('〈','<span class="abl">〈</span>').replace('〉','<span class="abr">〉</span>')
+fcss+='.abl{margin-left:-.28em;margin-right:-.06em}.abr{margin-left:-.06em;margin-right:-.28em}'
 html=f'<!doctype html><html><head><meta charset="utf-8"><style>{css}\n{bcss}\n{fcss}</style></head><body><div class="spread" id="s89">{P8}{P9}</div><div class="spread" id="s1011">{P10}{P11}</div><div class="spread" id="s1213">{P12}{P13}</div>{js}</body></html>'
 open('front.html','w').write(html)

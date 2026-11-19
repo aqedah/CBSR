@@ -63,3 +63,5 @@ body{margin:0;background:#ddd}.spread{display:flex;gap:6mm;padding:6mm;width:max
 .pg .two.wmap .c2,.pg .two.wmap .c1{height:auto;min-height:0}
 .pg .two.wmap .map{height:auto}
 .pg .two.wmap .map svg{flex:none;height:auto}
+
+.abl{margin-left:-.28em;margin-right:-.06em}.abr{margin-left:-.06em;margin-right:-.28em}

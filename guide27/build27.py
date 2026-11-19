@@ -48,5 +48,6 @@ import os
 MAPS=json.load(open('maps.json')) if os.path.exists('maps.json') else {}
 days=json.load(open(sys.argv[1]))
 out=''.join(page(D,18+2*D['no']) for D in days)
+out=out.replace('〈','<span class="abl">〈</span>').replace('〉','<span class="abr">〉</span>')
 ZOOM="<script>(function(){function z(){const sp=document.querySelector('.spread');if(!sp)return;document.body.style.zoom=1;const w=sp.getBoundingClientRect().width;document.body.style.zoom=Math.min(1,(innerWidth-8)/w);}z();addEventListener('resize',z);})();</script>"
 open(sys.argv[2],'w').write('<!doctype html><html><head><meta charset="utf-8"><title>2027 새 틀 1권</title><style>'+css+'</style></head><body>'+out+'<script>'+DIST+'</script>'+ZOOM+'</body></html>')
