@@ -28,7 +28,7 @@ for D in json.load(open(B)):
     else: x.pop('img',None)
     x['v27']={'scenes':D['scenes'],'marks':[{'tool':m['tool'],'rep':bool(m['rep']),'text':tok(m['text'])} for m in D['marks']],
               'looks':[{'ck':bool(l['ck']),'tool':l['tool'],'text':tok(l['text'])} for l in D['looks']],
-              'god':[D['god'][0],tok(D['god'][1])]}
+              'god':[tok(D['god'][0]),tok(D['god'][1])]}
     x['u']=now
 j['updated']=time.strftime('%Y-%m-%dT%H:%M:%S')
 json.dump(j,open(GQ,'w'),ensure_ascii=False,indent=1)
