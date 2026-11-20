@@ -376,18 +376,21 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .qr27 .qrs{display:block;width:12mm;height:12mm;margin:0 0 0.4mm}
 .pg:not(.n27) > .qr27{width:10mm;margin-top:-1.2mm} .pg:not(.n27) > .qr27 .qrs{width:10mm;height:10mm}
 .pg.n27 .hd2 .qr27{float:none;margin-left:auto;flex:none;align-self:center}
-/* 11-21 목사님 K안: 종이 위 끝에서 내려오는 권 색 날짜 칸 + 명조 제목 + 오른쪽 작은 정보 두 줄(며칠째·읽기 시간 / 새찬송가) */
-.pg.n27 .hd2.hdk{display:flex;align-items:flex-end;gap:3.4mm;border-bottom:0.25mm solid #333;padding-bottom:2mm;margin:0 0 1mm}
-.pg.n27 .hdk .kd{flex:0 0 16mm;align-self:stretch;box-sizing:border-box;background:var(--main);color:#fff;text-align:center;margin-top:-9mm;padding:9.6mm 0 1.6mm;border-radius:0 0 1mm 1mm;display:flex;flex-direction:column;justify-content:flex-end}
-.pg.n27 .hdk .kd b{display:block;font-size:14pt;font-weight:700;line-height:1;letter-spacing:-0.3px}
-.pg.n27 .hdk .kd small{display:block;font-size:6.8pt;line-height:1.5;opacity:.9;margin-top:0.4mm}
-.pg.n27 .hdk .kt{flex:1 1 auto;min-width:0}
-.pg.n27 .hdk .kt b{display:block;font-size:15pt;font-weight:700;line-height:1.2;letter-spacing:-0.3px}
-.pg.n27 .hdk .kt span{display:block;font-size:9.4pt;color:#555;line-height:1.35;margin-top:0.4mm}
-.pg.n27 .hdk .ki{flex:none;text-align:right;font-size:7.2pt;line-height:1.65;color:#555;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end}
-.pg.n27 .hdk .ki b{color:var(--main);font-weight:700}
-.pg.n27 .hdk .hy27{cursor:pointer}
-.pg.n27 .hdk .qr27{align-self:center;margin:0}
+/* 11-21 목사님 5-A안: 날짜 | 제목 | (주일)QR 세 칸을 14mm 높이로 맞추고, 아래 연한 정보 띠(읽기 시간 · 새찬송가)를 지면 폭 전체로 */
+.pg.n27 .hd2.hd5{display:block;margin:0 0 1mm;border:0;padding:0}
+.pg.n27 .hd5 .h5{display:grid;grid-template-columns:19mm minmax(0,1fr) auto;align-items:center;height:12mm;column-gap:3.6mm}
+.pg.n27 .hd5 .d5{height:100%;display:flex;align-items:center;gap:1.6mm;border-right:0.3mm solid var(--main)}
+.pg.n27 .hd5 .d5 b{font-size:23pt;font-weight:300;line-height:1;color:var(--main);letter-spacing:-1px}
+.pg.n27 .hd5 .d5 small{font-size:6.6pt;font-weight:500;line-height:1.35;color:#555}
+.pg.n27 .hd5 .t5 b{display:block;font-size:14.5pt;font-weight:700;line-height:1.15;letter-spacing:-0.3px}
+.pg.n27 .hd5 .t5 span{display:block;font-size:9pt;color:#555;line-height:1.3;margin-top:0.8mm}
+.pg.n27 .hd5 .qr27{float:none;width:13mm;height:12mm;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:4.8pt;line-height:1;color:#555}
+.pg.n27 .hd5 .qr27 .qrs,.pg.n27 .hd5 .qr27 svg{width:10mm;height:10mm;display:block}
+.pg.n27 .hd5 .qr27 span{margin-top:0.7mm;white-space:nowrap}
+.pg.n27 .hd5 .s5{display:flex;justify-content:space-between;align-items:center;margin-top:1.4mm;height:4.4mm;background:var(--mainL);padding:0 2.6mm;font-size:7.2pt;color:#444;border-bottom:0.5mm solid var(--main)}
+.pg.n27 .hd5 .s5 b{color:var(--main);font-weight:700}
+.pg.n27 .hd5 .hy27{cursor:pointer}
+.pg.n27 .hd2.hd5 + .sec{margin-top:1.4mm}
 .pg.n27 .hd2 .tb{min-width:0}
 /* ── 11-20 책머리 새 틀: 도구 10–13쪽, 쓰는 법 다섯 걸음 ── */
 .howpgx .hsteps.s3,.howpgx .hsteps.s2{display:flex;gap:2.4mm}
@@ -442,7 +445,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .pg.n27 .mk .mi .hy{background:color-mix(in srgb,var(--main) 28%,#fff);padding:0 0.4mm}
 .pg.n27 .mk .mi .w{text-decoration:underline wavy;text-decoration-thickness:0.2mm;text-underline-offset:1mm}
 .pg.n27 .mk .mi b{font-family:"Noto Sans KR",sans-serif}
-.pg.n27{padding-top:9mm}
+.pg.n27{padding-top:7.6mm}
 .pg.n27 .hd2{display:flex;align-items:stretch;gap:3mm;border-bottom:0.7mm solid var(--main);padding-bottom:1.6mm;margin:0 0 1mm}
 .pg.n27 .hd2 .dd{flex:0 0 21mm;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;border-right:0.3mm solid var(--main);padding-right:2.6mm}
 .pg.n27 .hd2 .dd b{font-size:12pt;font-weight:700;color:var(--main);line-height:1.2;white-space:nowrap}
@@ -830,7 +833,8 @@ const QR27={"3":"fec57bfc14a6506e926abb7597a5dba2b1aec10a3907faaaafe0151f00b7155
 function qrSvg(hex,n){ n=n||29; let b=''; for(const c of hex) b+=parseInt(c,16).toString(2).padStart(4,'0'); let d=''; for(let y=0;y<n;y++){ let x=0; while(x<n){ if(b[y*n+x]==='1'){ let w=1; while(x+w<n&&b[y*n+x+w]==='1') w++; d+=`M${x} ${y}h${w}v1h-${w}z`; x+=w } else x++ } } return `<svg viewBox="-1 -1 ${n+2} ${n+2}" class="qrs"><rect x="-1" y="-1" width="${n+2}" height="${n+2}" fill="#fff"/><path d="${d}" fill="#111"/></svg>` }
 /* 11-21 목사님: 본문에 맞는 새찬송가 한 장 — 머리 오른쪽 작은 단추(앱에서 누르면 찬송 안내). 가사는 싣지 않음 */
 function hyBox(qt){ const h=qt&&qt.hymn; if(!h||!h.no) return ''; return `<span class="hy27" data-no="${esc(h.no)}" data-t="${esc(h.t||'')}" data-why="${esc(h.why||'')}">새찬송가 <b>${esc(h.no)}장</b> · ${esc(h.t||'')}</span>` }
-function qrBox(p){ if(ED.trial||!p||!QR27[p.no]) return ''; return `<div class="qr27">${qrSvg(QR27[p.no])}<span>소그룹 인도자</span></div>` }
+const QR26={"319": "fe8963fc12e1d06e949ebb754a65dba956aec17d2d07faaaafe0115e008bfaffcd242b1fca986bc2b065d4baf329414e28d1fddaa611b9b06cc3a666081566dd1ec8abe00a5afa9a3cb951fc807bc447fb446bb0454f13bac79fcdd348686e89431f048c94bfee56ed0", "326": "fea963fc10e1d06e8c9ebb75fa65dba8d6aec15d2d07faaaafe0195e008beaffcfe72b1fed836bc37311d4b0aca9410812d1ff1f1e11ba882cc3237e0815271d1ec3f9e00a3aca9a3ce951fc8057c447fbc46bb04e4f13badf9fcdd348686e8ec31f046c94bfefd6ed0", "333": "fed67bfc14c2506e97cabb755ba5dba591aec1347907faaaafe01e2f00b760525c0313fc6de9884d4baf7e18a658863efce91e4f6344e02470b29b4a79d340084ba58bd8e870ad8644277bfe00444c7ffb0a6b5052e519ba488fbdd6cbe66ebd164b049953afef31f10", "340": "fee8a3fc1250106eb910bb74d9e5dba64aaec1723107faaaafe0056600a34b392ba49ad8cfd965fa29b25a88b2b530a869cd8d28def2373814201397cf0ba1acd9fdec6e327259140c74cdfd0070dc77fb7caa30477710ba2e5fd5d2d9af6eac4d2704b31a8fedca9c8", "347": "fea163fc1321d06e949ebb75ea65dbaad6aec15d2d07faaaafe0175e008be2ffcc262b1fd9ecebc2e921d4b9e9294118b2d1fd9ade11ad116cc3aeee0814649d1ecc81e00a290a9a3fa051fc8043c447fb646bb0444f13baaf9fcdd308686e90c31f04e894bfefd6ed0", "354": "fe5df3fc10de106e90d6bb747345dba656aec15dbd07faaaafe0035e0096bc250641307269e3143cb9c86263f2e0658c812e000a4a83edbdbe8aa36e08106c143a669b3b66485a9a39e5bcfa004a745ff99baa5052951eba330f85d6f797ae8c0a3b0411b02fecf6ed0", "361": "fe6e7bfc1199106eb8a6bb75bba5dbada72ec146a107faaaafe0164200be6de3e4e993fc59c9d3212a1013a66d588646fd5fc448e59f811070b29ba91465a0e5fd66f9d8e9533b5d2ae5a0fb807c4c7ff927eb90575312bac08fbdd6d08beebafbfd04a153afeca72a0"}; /* 11-21 체험판 주일 인도자 QR(?ldr26=날) — guide27/qr.py 참고 */
+function qrBox(p){ const Q=ED.trial?QR26:QR27; if(!p||!Q[p.no]) return ''; return `<div class="qr27">${qrSvg(Q[p.no])}<span>소그룹 인도자</span></div>` }
 /* ── 2027 새 틀(11-20) — qt.v27 = {scenes, marks:[{tool,rep,text}], looks:[{ck,tool,text}], god:[인용, 물음]}; 나머지 칸은 옛 칸을 같이 씀 ── */
 function pageL(p,qt){ return qt&&qt.v27?pageL27(p,qt):pageL0(p,qt) }
 function pageR(p,qt,hw){ return qt&&qt.v27?pageR27(p,qt,hw):pageR0(p,qt,hw) }
@@ -847,7 +851,7 @@ function pageL27(p,qt){ const v=qt.v27, q='q'+qOf(p);
   const word=w?`<p class="wd sans" data-f="word"><span class="wdl">말뜻</span>${wi>0?`<b>${esc(w.slice(0,wi))}</b> ${t27(w.slice(wi+3))}`:t27(w)}</p>`:'';
   const marks=(v.marks||[]).map(m=>`<div class="mi${m.rep?' rep':''}"><div><span class="chip${m.rep?' rep':''}">${esc(m.tool)}</span> ${t27(m.text)}</div></div>`).join('');
   return `<div class="pg n27 ${q}">
-<div class="hd2 hdk"><div class="kd sans"><b>${p.m}/${p.d}</b><small>${wd27(p)}</small></div><div class="kt"><b>${esc(p.t)}</b><span class="sans" data-f="sub">${esc(qt.sub||p.sub)}</span></div><div class="ki sans"><span>${dayNoLab(p)} · 성경 읽기 약 ${p.min}분</span>${hyBox(qt)}</div>${qrBox(p)}</div>
+<div class="hd2 hd5"><div class="h5"><div class="d5 sans"><b>${p.d}</b><small>${p.m}월<br>${wd27(p)}</small></div><div class="t5"><b>${esc(p.t)}</b><span class="sans" data-f="sub">${esc(qt.sub||p.sub)}</span></div>${qrBox(p)}</div><div class="s5 sans"><span>성경 읽기 약 <b>${p.min}분</b></span>${hyBox(qt)}</div></div>
 <p class="sec sans"><span class="n">1</span>오늘의 흐름</p>
 <p class="b" data-f="today">${qt.guide.today?t27(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
 ${word}
