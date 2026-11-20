@@ -1136,7 +1136,10 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 #storyRoot .smterr{margin:8px 0 0;font-size:13px;line-height:1.5;opacity:.85}
 /* 소그룹 인도자(11-20): 모임 전 준비 / 모임 진행 / 기록 */
 body:has(.ldr) .coach{display:none!important}
-.ldr{position:fixed;inset:0;z-index:100000;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;font-family:var(--f-ui)}
+/* 11-21 목사님 화면 녹화: 인도자 화면을 밀면 뒤의 앱(본문)이 함께 밀려 아래로 비쳐 보임 → 뒤쪽 스크롤을 막고, 주소창이 접혀도 화면 끝까지 덮음 */
+html:has(body>.ldr),body:has(>.ldr){overflow:hidden!important;overscroll-behavior:none}
+.ldr .ldrbody{overscroll-behavior:contain}
+.ldr{position:fixed;inset:0;height:100vh;height:100dvh;z-index:100000;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;font-family:var(--f-ui)}
 .ldr button{font:inherit;color:inherit;cursor:pointer}
 .ldrtop{flex:none;border-bottom:1px solid var(--line);padding:calc(8px + env(safe-area-inset-top,0px)) max(12px,calc((100% - 720px)/2 + 12px)) 0}
 .ldrbar{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:8px} /* 11-20 목사님: 제목은 늘 가운데, 단추는 한 크기 */
