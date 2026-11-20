@@ -1,7 +1,9 @@
 # 새 틀 원고(book1.json)를 통독 작업대 원고(app/site_src/guide_qt.json)의 v27 칸과 옛 칸으로 옮깁니다. (11-20)
 import json,re,time,sys
-import os; R=os.path.dirname(os.path.abspath(__file__)); GQ=os.path.join(R,'..','app','site_src','guide_qt.json')
-B=os.path.join(R,'book1.json')
+import os; R=os.path.dirname(os.path.abspath(__file__))
+# 쓰는 법: python3 to_guide_qt.py [원고.json] [guide|trial]  (기본: book1.json → 2027 가이드북)
+A=sys.argv[1:]; B=os.path.join(R,A[0] if A else 'book1.json')
+GQ=os.path.join(R,'..','app','site_src','trial26_qt.json' if len(A)>1 and A[1]=='trial' else 'guide_qt.json')
 TOK=[('<span class="o">동그라미</span>','{동그라미}'),('<span class="hy">형광펜</span>','{형광펜}'),('<span class="w">물결 밑줄</span>','{물결 밑줄}'),
 ('<span class="ht">빗금 형광펜</span>','{빗금 형광펜}'),('<span class="bx">네모</span>','{네모}'),('<b>[괄호]</b>','{괄호}')]
 def tok(s):
@@ -14,18 +16,25 @@ def plain(s): return re.sub(r'<[^>]+>','',s)
 j=json.load(open(GQ)); q=j['qt']; now=int(time.time()*1000)
 for D in json.load(open(B)):
     n=str(D['no']); x=q[n]
-    x['sub']=D['sub']
-    g=x.setdefault('guide',{}); g['today']=D['today']; g['word']=D['word'][0]+' — '+D['word'][1]
+    if 'sub' in D: x['sub']=D['sub']
+    g=x.setdefault('guide',{})
+    if 'today' in D: g['today']=D['today']
+    if 'word' in D: g['word']=D['word'][0]+' — '+D['word'][1]
     g['find']=' '.join(dict.fromkeys(m['tool'] for m in D['marks']))
-    o=x.setdefault('obs',{}); o['q']=D['q']; o['christ']=D['christ'][0]+' '+D['christ'][1]
+    o=x.setdefault('obs',{}); o['q']=D['q']
+    if 'christ' in D: o['christ']=D['christ'][0]+' '+D['christ'][1]
     o['pair']=[[l['tool'],tok(l['text'])] for l in D['looks']]
     ap=D['apply']; x['apply']=tok(ap['lead'])+''.join(f' **→ {f}**' for f in ap['fu'])
-    x['note']=D['note']; x['pray']=D['pray']
-    s=[t for t in re.split(r'(?<=[.])\s+',D['note']) if t.startswith('하나님은')]
-    if s: x['god']=s[-1]
-    if D.get('pic'):
-        x['img']={'id':re.search(r'(g\d+_\d+)',D['pic'][0]).group(1),'cap':plain(D['pic'][1])}
-    else: x.pop('img',None)
+    if 'note' in D:
+        x['note']=D['note']
+        s=[t for t in re.split(r'(?<=[.])\s+',D['note']) if t.startswith('하나님은')]
+        if s: x['god']=s[-1]
+    if 'pray' in D: x['pray']=D['pray']
+    # 체험판: 옛 원고는 해설과 맺음 문장(god)을 따로 두었으므로, 새 틀처럼 해설 끝에 맺음 문장을 붙임
+    if GQ.endswith('trial26_qt.json') and x.get('god') and x['god'] not in x.get('note',''): x['note']=(x.get('note','').rstrip()+' '+x['god']).strip()
+    if 'pic' in D:
+        if D['pic']: x['img']={'id':re.search(r'(g\d+_\d+)',D['pic'][0]).group(1),'cap':plain(D['pic'][1])}
+        else: x.pop('img',None)
     x['v27']={'scenes':D['scenes'],'marks':[{'tool':m['tool'],'rep':bool(m['rep']),'text':tok(m['text'])} for m in D['marks']],
               'looks':[{'ck':bool(l['ck']),'tool':l['tool'],'text':tok(l['text'])} for l in D['looks']],
               'god':[tok(D['god'][0]),tok(D['god'][1])]}

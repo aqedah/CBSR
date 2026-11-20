@@ -191,7 +191,10 @@ for _fk in ('syms','dsyms'):
 data+='const GBSYMS='+J(_GBS)+';\n'
 data+='const GBDESC='+J(_gdesc(_GQ))+';\n'
 data+='const GBDESC26='+J(_gdesc(_TQ))+';\n'
-data+='const GQT26='+J({int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _TQ.items() if n.isdigit()})+';\n'
+_GQT26={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _TQ.items() if n.isdigit()}
+for _n,_v in _TQ.items():  # 11-20 체험판도 새 틀로 바꾸는 날부터 성품 물음을 가이드북과 같게
+    if _n.isdigit() and isinstance(_v,dict) and _v.get('v27') and (_v['v27'].get('god') or ['',''])[1]: _GQT26[int(_n)]['god']=' '.join(_v['v27']['god'])
+data+='const GQT26='+J(_GQT26)+';\n'
 
 # 11-20 소그룹 인도자(목사님 시안 승인): 날마다 인도자 화면이 쓰는 가이드북 칸 + 주일 인도자 전용 칸(qt.ldr)
 def _ldrd(Q):
