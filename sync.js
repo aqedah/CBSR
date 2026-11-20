@@ -41,7 +41,7 @@
   async function write(mem){ await init(); const r=docOf(); if(!r) return; const s=JSON.stringify(mem), b=bytes(s), name=String(login.name||"").slice(0,40);
     if(!login.g){ if(b>LEGACY_MAX){ const e=new Error("too-big"); e.code="too-big"; throw e; } await r.set({name,data:s,updatedAt:Date.now()},{merge:true}); return; }
     const B=fs.batch();
-    if(b<=INLINE_MAX){ B.set(r,{name,data:s,n:0,updatedAt:Date.now()},{merge:true}); for(let i=0;i<partsN;i++) B.delete(r.collection("c").doc(String(i))); await B.commit(); partsN=0; return; }
+    if(b<=INLINE_MAX){ const doc={name,data:s,updatedAt:Date.now()}; if(partsN>0) doc.n=0; /* 조각을 쓴 적 없으면 n 칸을 만들지 않음(예전 규칙에서도 저장되게) */ B.set(r,doc,{merge:true}); for(let i=0;i<partsN;i++) B.delete(r.collection("c").doc(String(i))); await B.commit(); partsN=0; return; }
     const P=[]; for(let i=0;i<s.length;){ let j=Math.min(s.length,i+PART); const c=s.charCodeAt(j-1); if(j<s.length&&c>=0xD800&&c<=0xDBFF) j--; /* 이모지 반쪽으로 자르지 않게 */ P.push(s.slice(i,j)); i=j; } if(P.length>60){ const e=new Error("too-big"); e.code="too-big"; throw e; }
     P.forEach((t,i)=>B.set(r.collection("c").doc(String(i)),{s:t})); for(let i=P.length;i<partsN;i++) B.delete(r.collection("c").doc(String(i)));
     B.set(r,{name,data:"",n:P.length,updatedAt:Date.now()},{merge:true}); await B.commit(); partsN=P.length; }
