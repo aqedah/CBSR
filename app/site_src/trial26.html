@@ -651,7 +651,8 @@ function save(){
   try{localStorage.setItem(ED.key,JSON.stringify(DATA));$('status').textContent='이 기기에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' · GitHub에는 아직'}catch(e){$('status').textContent='이 브라우저에 저장하지 못했습니다 — JSON으로 내보내 두세요'}
 }
 function counters(){
-  document.querySelectorAll('.cnt').forEach(c=>{const id=c.dataset.for;const n=($(id).value||'').replace(/\*\*/g,'').length;const L=LIM[id];c.textContent=n+' / '+L;c.classList.toggle('over',n>L)});
+  const is27=true; /* 11-20 목사님: 글자 수 한도는 지면과 맞지 않아 보이지 않음. 넘침은 지면 맞춤(mm)으로 잼 */
+  document.querySelectorAll('.cnt').forEach(c=>{const id=c.dataset.for;const n=($(id).value||'').replace(/\*\*/g,'').length;const L=LIM[id];c.textContent=is27?n+'자':n+' / '+L;c.classList.toggle('over',!is27&&n>L)});
 }
 
 /* ── 지도(SVG) ── */
@@ -1284,9 +1285,9 @@ function render(){
   const res=[]; sc.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM*s;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});res.push((abt-mb)/s/MM)});
   const f=$('fit'); const worst=Math.min(...res);
   const NM={sub:'소제목',today:'흐름',find:'초점',word:'말뜻',q:'관찰',apply:'적용',note:'해설',pray:'기도',pair:'눈여겨볼 것',god:'성품 한 문장',christ:'성경 전체로'};
-  const overL=Object.keys(LIM).filter(k=>$(k)&&($(k).value||'').replace(/\*\*/g,'').length>LIM[k]).map(k=>`${NM[k]||k} ${($(k).value||'').replace(/\*\*/g,'').length}/${LIM[k]}`); const over=overL.length;
+  const is27=true; const overL=is27?[]:Object.keys(LIM).filter(k=>$(k)&&($(k).value||'').replace(/\*\*/g,'').length>LIM[k]).map(k=>`${NM[k]||k} ${($(k).value||'').replace(/\*\*/g,'').length}/${LIM[k]}`); const over=overL.length;
   const fitTxt=worst<0?`지면 넘침 ${res[0]<0?'왼쪽 ':''}${res[1]<0?'오른쪽 ':''}${Math.abs(worst).toFixed(1)}mm — 해설·눈여겨볼 것부터 줄이기`:`지면 들어감 (여유 왼 ${res[0].toFixed(0)}mm · 오른 ${res[1].toFixed(0)}mm)`;
-  f.className=worst<0?'bad':over?'warn':'good'; f.textContent=fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
+  f.className=worst<0?'bad':over?'warn':'good'; f.textContent=is27?fitTxt:fitTxt+' · '+(over?`글자 수 넘음(참고): ${overL.join(', ')}`:'글자 수 안');
 }
 function gotoDay(i){ document.body.classList.remove('onback'); if(saveT){clearTimeout(saveT);save()} cur=Math.max(0,Math.min(PLAN.length-1,i)); const p=PLAN[cur]; $('selM').value=p.m; fillDays(); $('selD').value=cur; fillForm(get(p.no)); document.body.classList.remove('onfront'); if($('frontbox')) $('frontbox').open=false; if($('selPrint')&&($('selPrint').value==='front'||$('selPrint').value==='ax')){$('selPrint').value='day'} if(typeof syncPrintTarget==='function') syncPrintTarget(); render(); if(typeof VIEWS!=='undefined'&&VIEWS.length){ if(qOf(p)!==qOf(PLAN[VIEWS.find(v=>v.t==='d').i])) buildViews(); const k=viewOfDay(cur); if(k>=0){VI=k; updateBar()} } if(typeof fillFrontForm==='function'&&$('frontbox')&&$('frontbox').open) fillFrontForm(); }
 function fillDays(){const mv=$('selM').value; const s=$('selD'); s.innerHTML='';
