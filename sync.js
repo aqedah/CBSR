@@ -6,7 +6,7 @@
   const LOGIN="cbsr-login-v1";
   const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
   const LOGIN_ON=window.CBSR_LOGIN!==false;
-  let fs=null,ready=null,login=LOGIN_ON?ls.get(LOGIN,null):null,pushT=null,lastSaved=null,listeners=[];
+  let fs=null,ready=null,login=LOGIN_ON?ls.get(LOGIN,null):null,pushT=null,lastSaved=null,lastErr=null,listeners=[];
   const inc=n=>firebase.firestore.FieldValue.increment(n);
   function init(){ if(ready) return ready;
     ready=(async()=>{
@@ -29,6 +29,7 @@
     loggedIn:()=>!!login,
     name:()=>login?login.name:"",
     lastSaved:()=>lastSaved,
+    lastError:()=>lastErr, /* 11-20 GPT 감사: 저장 실패를 화면에 알리기 위해 */
     onChange(f){listeners.push(f);},
     /* 들어가기: 서버에 있던 기록(없으면 null)을 돌려줍니다 */
     async login(name,pin){
@@ -47,7 +48,7 @@
     logout(){ login=null; ls.del(LOGIN); notify(); },
     async pull(){ if(!login) return null; await init(); const s=await fs.doc(`readers/${login.key}`).get(); if(!s.exists) return null; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return null; } },
     push(mem,wait){ if(!login) return; clearTimeout(pushT);
-      pushT=setTimeout(async()=>{ try{ await init(); await fs.doc(`readers/${login.key}`).set({name:login.name,data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); notify(); }catch(e){ console.warn("sync",e); } },wait==null?1500:wait); },
+      pushT=setTimeout(async()=>{ try{ await init(); await fs.doc(`readers/${login.key}`).set({name:login.name,data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); lastErr=null; notify(); }catch(e){ console.warn("sync",e); lastErr={at:new Date(),code:e&&e.code||""}; notify(); /* 30초 뒤 다시 */ clearTimeout(pushT); pushT=setTimeout(()=>window.SYNC.push(mem,0),30000); } },wait==null?1500:wait); },
     /* 관리자: 구글 계정으로 로그인 → admins/{uid} 문서가 있으면 관리자 */
     admin:{
       async state(){ await init(); const u=firebase.auth().currentUser; if(!u||u.isAnonymous) return {in:false};

@@ -410,7 +410,7 @@ function check(){ const L=[]; const C=D.cards||[]; const p=plan(cur);
 
 /* ───────── 미리보기(앱 v2) ───────── */
 let pvReady=false, pvTimer=null;
-function loadPreview(){ pvReady=false; const x=P27BY[cur]; $('pv').src=SITE+'v2.html?day='+cur+'&pv=edit&now=0'; $('pv').onload=()=>{ pvReady=true; setTimeout(sendPreview,900); }; }
+function loadPreview(){ pvReady=false; const x=P27BY[cur]; $('pv').src=SITE+'index.html?day='+cur+'&pv=edit&now=0'; $('pv').onload=()=>{ pvReady=true; setTimeout(sendPreview,900); }; }
 function sendPreview(card,wait){ clearTimeout(pvTimer); pvTimer=setTimeout(()=>{ if(!pvReady) return; const x=P27BY[cur]; try{ $('pv').contentWindow.postMessage({cbsrStory:1,n26:cur,n27:x?x.gi+1:0,card:(typeof card==='number')?card:undefined,draft:(D.cards&&D.cards.length)?{A:cleanD()}:null},'*'); }catch(e){} markDirty(); },wait||300); }
 /* 저장 안 됨 표시: 마지막으로 불러오거나 게시한 내용과 다르면 */
 let BASE=''; function setBase(){ BASE=JSON.stringify(cleanD()); markDirty(); } function markDirty(){ $('dirty').hidden=!(D.cards.length&&JSON.stringify(cleanD())!==BASE); }
