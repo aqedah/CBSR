@@ -334,7 +334,9 @@ for _bk in _BB:
       for _tk in _re.sub(r'[^가-힣\s]',' ',_v).split():
         _m=_NR.match(_tk)
         if _m: _NM.setdefault(_m.group(1),set()).add(_m.group(2))
-NOUNSHIM='<script>window.NOUNS_KRV='+json.dumps(sorted(k for k,v in _NM.items() if len(v)>=2),ensure_ascii=False,separators=(',',':'))+';</script>'
+import datetime as _dt
+_BUILD=(_dt.datetime.utcnow()+_dt.timedelta(hours=9)).strftime('%Y-%m-%d %H:%M')
+NOUNSHIM='<script>window.CBSR_BUILD="'+_BUILD+'";window.NOUNS_KRV='+json.dumps(sorted(k for k,v in _NM.items() if len(v)>=2),ensure_ascii=False,separators=(',',':'))+';</script>'
 body_v2=body.replace('스토리 QT','스토리') # v2: 이름은 '스토리'만(2026-11-02)
 v2html=shead.replace(SSHIM,VSHIM+NOUNSHIM).replace('story.html','v2.html')+body_v2+'\n</body>\n</html>\n'
 # 11-20 GPT 감사: index.html과 v2.html이 같은 앱(각 8.9MB)이라 오프라인 설치 때 두 번 받았음 → v2.html은 index.html로 넘기는 작은 쪽(옛 즐겨찾기·링크는 그대로 열림)
@@ -344,10 +346,12 @@ open(f'{OUT}/index.html','w').write(ihead+body_v2+'\n</body>\n</html>\n')
 V=h(html+v2html+bible)
 sw=f'''/* 오프라인 지원: 앱 화면은 인터넷이 되면 늘 새로 받고(network first),
    성경 본문·지형도·아이콘·글꼴·라이브러리는 처음 받은 뒤 보관해 둡니다(cache first). 기록은 Firestore가 따로 보관합니다. */
-const V="cbsr-{V}";
+const V="cbsr-{V}", D="cbsr-data-1", KEEP=["bible.js?v={h(bible[:5000]+str(len(bible)))}","bible_snb.js?v={TRV}","bible_shg.js?v={TRV}"];
+/* 11-20 GPT 2차: 새 판마다 본문·지형도·그림까지 모두 지우던 것을 고침 — 앱 화면(V)만 판마다 바꾸고, 한 번 받은 자료(D)는 남김. 본문 파일은 지금 판이 아닌 것만 정리 */
 const SHELL=["./","index.html","config.js","sync.js","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png"];
 self.addEventListener("install",e=>{{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));}});
-self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>/^cbsr-/.test(k)&&k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));}});
+self.addEventListener("activate",e=>{{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>/^cbsr-/.test(k)&&k!==V&&k!==D).map(k=>caches.delete(k))))
+  .then(()=>caches.open(D)).then(c=>c.keys().then(rs=>Promise.all(rs.filter(q=>{{const u=new URL(q.url);return /\/bible(_[a-z]+)?\.js$/.test(u.pathname)&&!KEEP.includes(u.pathname.split("/").pop()+u.search);}}).map(q=>c.delete(q))))).then(()=>self.clients.claim()));}});
 self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(/firestore\\.googleapis\\.com|identitytoolkit|securetoken|firebaseinstallations/.test(u.hostname))return;
   const shell=u.origin===location.origin&&!/bible\\.js|\\/terrain\\/|\\/terr[hwm]i?\\/|\\/icons\\/|\\/img\\//.test(u.pathname);
@@ -357,7 +361,7 @@ self.addEventListener("fetch",e=>{{const r=e.request;if(r.method!=="GET")return;
     e.respondWith(caches.match(r,{{ignoreSearch:true}}).then(m=>m||(appPage?caches.match("index.html"):null)).then(m=>{{ if(!m) return net; let done=false; return Promise.race([net.then(x=>{{done=true;return x;}}).catch(()=>m),new Promise(ok=>setTimeout(()=>ok(m),1500))]); }}));return;}}
   /* 11-20 GPT 감사 P1-7: 망이 끊겼을 때 앱 화면 대신 index.html을 돌려주는 것은 앱 화면을 열 때만. 자료(json 등)·다른 쪽은 보관본이 없으면 분명한 오류로 */
   if(shell){{e.respondWith(fetch(r).then(res=>{{if(res.ok){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}}).catch(()=>caches.match(r,{{ignoreSearch:true}}).then(m=>m||new Response("오프라인: 아직 받아 두지 않은 자료입니다.",{{status:503,headers:{{"Content-Type":"text/plain; charset=utf-8"}}}}))));return;}}
-  e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}}return res;}})));}});
+  e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{{if(res.ok||res.type==="opaque"){{const cp=res.clone();caches.open(D).then(c=>c.put(r,cp));}}return res;}})));}});
 '''
 open(f'{OUT}/sw.js','w').write(sw)
 # 성경 골든벨 문제(도전 탭에서 처음 열 때만 받음, 2026-11-03)

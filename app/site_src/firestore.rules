@@ -16,9 +16,18 @@ service cloud.firestore {
       allow get, delete: if isGoogle() && request.auth.uid == uid;
       allow list: if false;
       allow create, update: if isGoogle() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['name', 'data', 'createdAt', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(['name', 'data', 'n', 'createdAt', 'updatedAt'])
         && request.resource.data.name is string && request.resource.data.name.size() <= 40
-        && request.resource.data.data is string && request.resource.data.data.size() < 900000;
+        && request.resource.data.data is string && request.resource.data.data.size() < 900000
+        && (!('n' in request.resource.data) || (request.resource.data.n is int && request.resource.data.n >= 0 && request.resource.data.n <= 60));
+    }
+    // 기록이 커졌을 때 나눠 두는 조각(2026-11-20 GPT 2차): 주인만 읽고 씁니다. 조각 하나는 20만 자 이하.
+    match /users/{uid}/c/{part} {
+      allow get, delete: if isGoogle() && request.auth.uid == uid;
+      allow list: if false;
+      allow create, update: if isGoogle() && request.auth.uid == uid && part.size() <= 2
+        && request.resource.data.keys().hasOnly(['s'])
+        && request.resource.data.s is string && request.resource.data.s.size() <= 200000;
     }
     // 예전 개인 기록(이름+숫자 4자리 열쇠): 구글 계정으로 옮겨 오는 동안만 읽기. 새로 쓰거나 고칠 수 없습니다. 2027-03-01부터는 읽기도 닫힙니다.
     match /readers/{key} {
@@ -63,12 +72,9 @@ service cloud.firestore {
       allow update: if signedIn() && myAddedMark();
       allow delete: if false;
     }
-    // 피드백: 누구나 쓰기만, 읽기·지우기는 관리자만.
+    // 피드백: 앱의 '의견 보내기'를 뺐으므로(11-17) 새로 쓰기는 닫음. 남은 것은 관리자만 읽고 지움.
     match /feedback/{id} {
-      allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['text', 'name', 'plan', 'day', 'ua', 'at'])
-        && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 3000
-        && request.resource.data.name is string && request.resource.data.name.size() <= 20;
+      allow create: if false;
       allow read, delete: if isAdmin();
       allow update: if false;
     }
