@@ -368,8 +368,11 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 #mapview .trav{filter:drop-shadow(0 0 1.2px rgba(255,255,255,.95))}
 
 
-.qr27{float:right;width:15mm;margin:1.4mm 0 0 2.4mm;text-align:center;font-family:"Noto Sans KR",sans-serif;font-size:5.6pt;line-height:1.2;color:#333;font-weight:700}
-.qr27 .qrs{display:block;width:15mm;height:15mm;margin-bottom:0.5mm}
+/* 주일 QR: 머리 오른쪽 여백(11-20 목사님) */ .qr27{float:right;width:12mm;margin:0 0 0 2mm;text-align:center;font-family:"Noto Sans KR",sans-serif;font-size:5pt;line-height:1.15;color:#333;font-weight:700;white-space:nowrap}
+.qr27 .qrs{display:block;width:12mm;height:12mm;margin:0 0 0.4mm}
+.pg:not(.n27) > .qr27{width:10mm;margin-top:-1.2mm} .pg:not(.n27) > .qr27 .qrs{width:10mm;height:10mm}
+.pg.n27 .hd2 .qr27{float:none;margin-left:auto;flex:none;align-self:center}
+.pg.n27 .hd2 .tb{min-width:0}
 /* ── 11-20 책머리 새 틀: 도구 10–13쪽, 쓰는 법 다섯 걸음 ── */
 .howpgx .hsteps.s3,.howpgx .hsteps.s2{display:flex;gap:2.4mm}
 .howpgx .hsteps.s2 .hstep,.howpgx .hsteps.s3 .hstep{flex:1}
@@ -767,9 +770,9 @@ function pageL0(p,qt){
   const pic=hasPic?`<div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${vs(qt.img.cap||'')}</div></div>`:'';
   const stx=qt.stx&&qt.stx.rows&&qt.stx.rows.length?`<div class="stx" data-f="stx"><p class="sh">${esc(qt.stx.kind||'짜임')}</p>${(()=>{const rs=qt.stx.rows; const L=c=>{const u=(c||'').replace(/[^A-Za-z]/g,'').toUpperCase(); return u==='X'?99:(u?u.charCodeAt(0)-64:1)}; const mx=Math.max(1,...rs.map(r=>L(r[0])).filter(v=>v<99)); return rs.map(r=>{const [m,w,t]=r; const d=L(m); const flat=/반복평행/.test(qt.stx.kind||''); const lv=flat?1:(d===99?mx+1:d); return `<div class="sr" style="padding-left:${((lv-1)*4.5).toFixed(1)}mm"><span class="sm2">${esc(m||'')}</span><span class="sw">${esc(w||'')}</span><span class="st2">${vs(t||'')}</span></div>`}).join('')})()}</div>`:'';
   const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c1" data-f="pair">${box}</div><div class="c2" data-f="m_emph" data-m="${esc(JSON.stringify(qt.map)).replace(/"/g,'&quot;')}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
-  const whole=qrBox(p)+(qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:'');
+  const whole=(qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:'');
   return `<div class="pg ${q}">
-<p class="date sans">${p.m}월 ${p.d}일 · ${dayNoLab(p)} · 성경 읽기 약 ${p.min}분</p>
+${qrBox(p)}<p class="date sans">${p.m}월 ${p.d}일 · ${dayNoLab(p)} · 성경 읽기 약 ${p.min}분</p>
 <p class="title sans">${esc(p.t)}</p>
 <p class="sub" data-f="sub">${esc(qt.sub||p.sub)}</p>
 <p class="sec sans"><span class="n">1</span>읽기 전</p>
@@ -823,7 +826,7 @@ function pageL27(p,qt){ const v=qt.v27, q='q'+qOf(p);
   const word=w?`<p class="wd sans" data-f="word"><span class="wdl">말뜻</span>${wi>0?`<b>${esc(w.slice(0,wi))}</b> ${t27(w.slice(wi+3))}`:t27(w)}</p>`:'';
   const marks=(v.marks||[]).map(m=>`<div class="mi${m.rep?' rep':''}"><div><span class="chip${m.rep?' rep':''}">${esc(m.tool)}</span>${m.rep?'<span class="star">대표</span>':''} ${t27(m.text)}</div></div>`).join('');
   return `<div class="pg n27 ${q}">
-<div class="hd2 sans"><div class="dd"><b>${p.m}월 ${p.d}일</b><span>${wd27(p)} · ${dayNoLab(p)}</span><span>성경 읽기 약 ${p.min}분</span></div><div class="tb"><b>${esc(p.t)}</b><span data-f="sub">${esc(qt.sub||p.sub)}</span></div></div>
+<div class="hd2 sans"><div class="dd"><b>${p.m}월 ${p.d}일</b><span>${wd27(p)} · ${dayNoLab(p)}</span><span>성경 읽기 약 ${p.min}분</span></div><div class="tb"><b>${esc(p.t)}</b><span data-f="sub">${esc(qt.sub||p.sub)}</span></div>${qrBox(p)}</div>
 <p class="sec sans"><span class="n">1</span>오늘의 흐름</p>
 <p class="b" data-f="today">${qt.guide.today?t27(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
 ${word}
@@ -831,7 +834,7 @@ ${word}
 <div class="mk" data-f="k27">${marks}</div>
 <p class="sec sans"><span class="n">3</span>눈여겨볼 것</p>
 ${sec3}
-${qrBox(p)}${qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:''}
+${qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:''}
 <div class="pn">${pageNo(p)}</div>
 </div>` }
 function pageR27(p,qt,hw){ const v=qt.v27, q='q'+qOf(p), g=v.god||['',''];
