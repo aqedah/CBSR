@@ -215,6 +215,7 @@ def _ldrd(Q):
             ss=[t for t in _r.split(r'(?<=[.])\s+',str(v.get('note',''))) if t.startswith('하나님은')]; ctr=ss[-1] if ss else ''
         d={'f':g.get('today',''),'r':rep,'q':o.get('q',''),'a':v.get('apply',''),'p':v.get('pray',''),'c':ctr}
         if (v27.get('god') or ['',''])[1]: d['g']=v27['god']
+        if v27.get('scenes'): d['s']=v27['scenes']  # 11-20 인도자 화면 '읽을 차례'의 단락 이름
         if isinstance(v.get('ldr'),dict): d['l']=v['ldr']
         out[int(n)]=d
     return out

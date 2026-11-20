@@ -1139,11 +1139,15 @@ body:has(.ldr) .coach{display:none!important}
 .ldr{position:fixed;inset:0;z-index:100000;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;font-family:var(--f-ui)}
 .ldr button{font:inherit;color:inherit;cursor:pointer}
 .ldrtop{flex:none;border-bottom:1px solid var(--line);padding:calc(8px + env(safe-area-inset-top,0px)) max(12px,calc((100% - 720px)/2 + 12px)) 0}
-.ldrbar{display:flex;align-items:center;gap:6px}
+.ldrbar{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:8px} /* 11-20 목사님: 제목은 늘 가운데, 단추는 한 크기 */
 .ldrbar .ldrti{flex:1;min-width:0;text-align:center;line-height:1.3}
 .ldrbar .ldrti b{display:block;font:700 17px var(--f-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ldrbar .ldrti small{font-size:12px;color:var(--muted)}
-.ldrbar button{width:38px;height:38px;flex:none;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:18px}
+.ldrbar button{width:40px;height:40px;flex:none;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:17px}
+.ldrwk{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 0}
+.ldrwk button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:15px;line-height:1;flex:none}
+.ldrwk button:disabled{opacity:.3;cursor:default}
+.ldrwk span{font-size:13px;color:var(--muted);min-width:120px;text-align:center;font-variant-numeric:tabular-nums}
 .ldrbar button:disabled{opacity:.35;cursor:default}
 .ldrtabs{display:flex;gap:4px;margin-top:6px}
 .ldrtabs button{flex:1;border:0;background:transparent;padding:8px 0 10px;font-size:14.5px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent}
@@ -1258,6 +1262,32 @@ body:has(.ldr) .coach{display:none!important}
 .ldr .lrecv .rh{font-size:12px;color:var(--accent);font-weight:700;margin:0 0 4px}
 .ldr .lrecv ul{margin:0;padding-left:18px;font-size:13.5px}
 .ldr .lrecv p{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+
+/* 11-20 목사님 정리: 순서 머리(층위), 이어가기 단추, 본문 함께 읽기의 세 걸음과 읽을 차례 */
+.ldr .lstep{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 6px}
+.ldr .lstep .lpart{margin:0}
+.ldr .ldots{display:flex;gap:4px;margin:0 0 12px}.ldr .ldots i{flex:1;height:4px;border-radius:2px;background:var(--line)}.ldr .ldots i.on{background:var(--accent)}
+.ldr .lstt{margin-bottom:6px}
+.ldr .ldo{color:var(--muted);font-size:14px}
+.ldr .lres{display:flex;flex-direction:column;align-items:center;gap:3px}.ldr .lres small{font-size:12.5px;font-weight:500;opacity:.9}
+.ldr .lsteps{list-style:none;padding:0;margin:4px 0 6px}
+.ldr .lsteps>li{position:relative;padding-left:36px;margin:0 0 18px}
+.ldr .lsteps>li::before{content:"";position:absolute;left:11px;top:28px;bottom:-14px;border-left:2px solid var(--line)}
+.ldr .lsteps>li:last-child::before{display:none}
+.ldr .lsh{font-weight:700;font-size:15px;margin:2px 0 8px;line-height:1.4}
+.ldr .lsh .no{position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:12.5px}
+.ldr .lsh small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:4px}
+.ldr .lsteps .lsay{margin-top:0}
+.ldr .lread{list-style:none;padding:0;margin:0;border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden}
+.ldr .lread li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.ldr .lread li:last-child{border-bottom:0}
+.ldr .lread .rn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.ldr .lread .rt{flex:1;min-width:0}.ldr .lread .rt b{display:block;font-size:14.5px;font-variant-numeric:tabular-nums}.ldr .lread .rt small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
+.ldr .lread input{width:86px;flex:none;font:13.5px var(--f-ui);border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--paper);color:var(--ink)}
+.ldr .lread .rw{font-size:12.5px;color:var(--accent);font-weight:700;flex:none;max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ldr .lread li[data-lrd]{cursor:pointer}.ldr .lread li.now{background:var(--accent-soft)}
+.ldr .lread li.done .rn{background:var(--accent);color:var(--accent-ink)}.ldr .lread li.done .rt{opacity:.5}
+.ldr .lrdh{font-size:12px;color:var(--muted);margin:6px 0 0}
 .ldrget ul{margin:6px 0;padding-left:18px;font-size:14px;line-height:1.6}.ldrget p{font-size:14px;line-height:1.6;margin:6px 0}
 .bmest{margin:8px 0 0}
 html.v2 .bmmap{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:min(50vh,440px);box-shadow:0 6px 14px -10px rgba(0,0,0,.35)}
@@ -6284,10 +6314,9 @@ function ldrModel(n){ const [w,d]=dayWD(n), p=dayPlan(w,d)||{label:"",ch:[]}, D=
     say:"한 주 동안 어떻게 지내셨어요? 이번 주에 읽은 말씀이 삶에서 어떻게 적용되었는지, 지난주에 나눈 다짐과 기도제목은 어떻게 되었는지 들려주세요.",fol:fol(1),
     more:week.length?`<details><summary>이번 주 읽은 곳</summary><ul class="lweek">${week.map(x=>`<li><span>${esc(x[0])}</span><span>${esc(x[1])}</span></li>`).join("")}</ul></details>`:"",
     nx:nx(1,`나눠 주셔서 고맙습니다. 이제 오늘 본문 ${lab}을 함께 읽겠습니다.`)},
-   {part:"오늘의 말씀",t:"오늘 본문 함께 읽기",do:`${lab}을 단락별로 돌아가며 읽습니다. 본문 읽기는 약 ${rt}분입니다. 읽기 전에 흐름을 한 번 말해 줍니다.`,
-    pre:L.say3?"":(D.f?`<p class="lfrom">${N("가이드북 ① 오늘의 흐름")}</p><p class="lq">${esc(D.f)}</p>`:""),
-    say:L.say3||"오늘 본문을 단락별로 돌아가며 읽겠습니다. 각자 성경책을 펴 주세요.",
-    more:`${paras.length?`<details><summary>읽을 단락 (${paras.length}단락)</summary><ul class="lparas">${paras.map((x,k)=>`<li>${k+1}. ${esc(x)}</li>`).join("")}</ul></details>`:""}${(L.rq||D.r)?`<p class="lfrom">다 읽은 뒤, 성경을 펴 둔 채로 (${Y?"가이드북 ② 대표 표시":"가이드북 읽기 도구"})</p><p class="lq">${esc(L.rq||D.r)}</p>`:""}`,
+   {part:"오늘의 말씀",t:"오늘 본문 함께 읽기",read:1,do:`${lab}, 본문 읽기 약 ${rt}분`,
+    say3:L.say3||(D.f?`${D.f} 각자 성경책을 펴 주세요.`:"오늘 본문을 단락별로 돌아가며 읽겠습니다. 각자 성경책을 펴 주세요."),
+    rq:L.rq||D.r||"", rqFrom:Y?"가이드북 ② 대표 표시":"가이드북 읽기 도구",
     nx:nx(2,"방금 읽은 본문을 붙들고 질문 하나를 나눠 보겠습니다.")},
    {part:"오늘의 말씀",t:"본문 관찰 나눔",do:"가이드북의 본문 관찰 질문을 던지고, 목원들의 대답을 충분히 듣습니다.",from:N("가이드북 ④ 본문 관찰"),
     q:D.q?ldrB(D.q):"오늘 본문에서 가장 눈에 들어온 장면은 어디입니까? 그 장면에서 하나님은 무엇을 하십니까?",vr:vrow(D.q),fol:fol(3),folT:"본문 근거를 확인할 때",
@@ -6304,7 +6333,17 @@ function ldrModel(n){ const [w,d]=dayWD(n), p=dayPlan(w,d)||{label:"",ch:[]}, D=
   ];
   ["시작 기도","삶과 말씀 나눔","본문 함께 읽기","본문 관찰","하나님의 성품","적용과 기도제목","마무리 기도"].forEach((x,k)=>{ if(S[k]) S[k].sh=x; });
   S[1].folT="이야기가 짧을 때";
-  return {n,w,d,p,D,L,lab,md,rt,paras,flow,guide,S,ctr:D.c||""}; }
+  /* 11-20 목사님: '읽을 차례'는 단락 이름(가이드북 장면 띠)과 함께. 인도자 원고에 단락이 있으면 그 단락에 장면 이름을 붙임 */
+  const units=ldrUnits(p,paras,D.s,!!(L.paras&&L.paras.length));
+  return {n,w,d,p,D,L,lab,md,rt,paras,units,flow,guide,S,ctr:D.c||""}; }
+function ldrUnits(p,paras,scenes,custom){ const bk=p.ch&&p.ch[0]?PLAN.abbr[p.ch[0][0]-1]:"";
+  const sc=(scenes||[]).map(x=>{ const m=String(x).match(/^(\S+)\s+(.*)$/)||[0,String(x),""], r=m[1]; let a=null; let q;
+    if((q=r.match(/^(\d+)(?:[–-](\d+))?장$/))) a={c1:+q[1],v1:1,c2:+(q[2]||q[1]),v2:999};
+    else if((q=r.match(/^(\d+):(\d+)[–-](?:(\d+):)?(\d+)$/))) a={c1:+q[1],v1:+q[2],c2:+(q[3]||q[1]),v2:+q[4]};
+    return {r,name:m[2],a}; });
+  const inA=(a,c,v)=>a&&(c>a.c1||(c===a.c1&&v>=a.v1))&&(c<a.c2||(c===a.c2&&v<=a.v2));
+  if(!custom&&sc.length&&sc.every(x=>x.a||!/^\d/.test(x.r))) return sc.map(x=>({ref:/^\d/.test(x.r)?`${bk} ${x.r}`:x.r,name:x.name}));
+  return paras.map(x=>{ const m=String(x).match(/(\d+):(\d+)/); const c=m?+m[1]:0, v=m?+m[2]:0; const f=sc.find(y=>inA(y.a,c,v)); return {ref:x,name:f?f.name:""}; }); }
 
 function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt||{};
   let n=opt.exact?dayNo(w,d):ldrSun(dayNo(w,d)), M=null, R=null;
@@ -6313,7 +6352,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
   const el=document.createElement("div"); el.className="ldr"; el.setAttribute("role","dialog"); el.setAttribute("aria-label","소그룹 인도자"); document.body.appendChild(el);
   let shOff=null;
   const close=pop=>{ if(shOff) shOff(true); if(pop!==true) ovDone(close); el.remove(); }; ovOpen(close);
-  const keepUI=()=>{ try{ localStorage.setItem("cbsr-ldr-ui",JSON.stringify({n,y:LDR_Y(),mode:ui.mode,i:ui.i,done:ui.done,st:ui.st})); }catch(e){} };
+  const keepUI=()=>{ try{ localStorage.setItem("cbsr-ldr-ui",JSON.stringify({n,y:LDR_Y(),mode:ui.mode,i:ui.i,done:ui.done,st:ui.st,rd:ui.rd||null})); }catch(e){} };
   const seed=()=>{ const P=ldrRec(n-7); return P&&P.mem&&P.mem.length?P.mem.map(m=>({n:m.n,ok:!!m.ok,p:"",r:""})):[{n:"",ok:false,p:"",r:""},{n:"",ok:false,p:"",r:""}]; };
   const load=()=>{ M=ldrModel(n); const r=ldrRec(n); R=r?JSON.parse(JSON.stringify(r)):{mem:seed(),memo:"",chk:{}}; R.mem=Array.isArray(R.mem)?R.mem:[]; R.chk=R.chk||{}; ui.i=Math.max(0,Math.min(M.S.length-1,+ui.i||0)); };
   /* 11-20 GPT 감사 P0-2: '기록 동의'를 하지 않은 목원의 이름·다짐·기도제목은 저장하지 않음(화면에서 쓰는 동안만 보이고, 기기·계정에는 빈칸으로) */
@@ -6325,16 +6364,19 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     try{ sh.querySelector("[data-lshx]").focus({preventScroll:true}); }catch(e){} return sh; }
   const closeSh=()=>{ if(shOff) shOff(); };
 
+  function readList(edit){ const U=M.units||[]; if(!U.length) return ""; ui.rd=ui.rd||{as:{},ok:{}}; const as=ui.rd.as||{}, ok=ui.rd.ok||{}; const now=U.findIndex((x,k)=>!ok[k]);
+    return `<ol class="lread">${U.map((x,k)=>edit?`<li><span class="rn">${k+1}</span><span class="rt"><b>${esc(x.ref)}</b>${x.name?`<small>${esc(x.name)}</small>`:""}</span><input type="text" data-las="${k}" value="${esc(as[k]||"")}" placeholder="읽을 사람" aria-label="${k+1}단락 읽을 사람"></li>`
+      :`<li data-lrd="${k}" class="${ok[k]?"done":k===now?"now":""}" role="button" aria-pressed="${!!ok[k]}"><span class="rn">${ok[k]?"✓":k+1}</span><span class="rt"><b>${esc(x.ref)}</b>${x.name?`<small>${esc(x.name)}</small>`:""}</span>${as[k]?`<span class="rw">${esc(as[k])}</span>`:""}</li>`).join("")}</ol>`; }
   function prep(){ const p=M.p;
     return `${M.ctr?`<p class="lh3">오늘의 중심</p><p class="lctr">${esc(M.ctr)}</p>`:""}
     <p class="lh3">준비할 것</p><ul class="lchk">${[["c1",`${M.lab} 읽기`],["c2",`가이드북 ${M.md} 묵상 써 오기`],["c3","읽을 단락을 목원에게 나눠 두기"],["c4","시작 기도를 부탁할 사람 정하기"],["c5","지난주 다짐과 기도제목 다시 보기"]].map(([id,t])=>`<li><input type="checkbox" id="lck_${id}" data-lck="${id}" ${R.chk[id]?"checked":""}><label for="lck_${id}">${esc(t)}</label></li>`).join("")}</ul>
     ${M.flow?`<details><summary>오늘의 흐름</summary>${M.flow}</details>`:""}
-    ${M.paras.length?`<details><summary>읽을 단락 · 본문 읽기 약 ${M.rt}분</summary><ul class="lparas">${M.paras.map((x,k)=>`<li>${k+1}. ${esc(x)}</li>`).join("")}</ul></details>`:""}
+    ${M.units&&M.units.length?`<p class="lh3">읽을 차례 · 본문 읽기 약 ${M.rt}분</p>${readList(true)}<p class="lrdh">읽을 사람을 적어 두면 모임 진행 화면에 함께 보입니다. 이름은 이 기기에만 남습니다.</p>`:""}
     ${M.L.mark&&M.L.mark.length?`<details><summary>미리 표시할 구절</summary><div class="lvl">${M.L.mark.map(ldrVB).join("")}</div></details>`:""}
     ${M.guide?`<details><summary>인도자 가이드</summary>${M.guide}</details>`:""}
     <p class="lsm">모임은 1시간 안팎이고, 시간은 인도자가 정합니다.</p>
     ${ui.done?`<button class="lbig" data-lgo="rec">모임 기록 보기</button><button class="llink" data-lgo="run0">처음부터 다시 진행</button>`
-      :ui.st?`<button class="lbig" data-lgo="resume">모임 이어가기 · ${esc((M.S[ui.i]||M.S[0]).sh)} ${ui.i+1}/${M.S.length}</button><button class="llink" data-lgo="run0">처음부터 다시 시작</button>`
+      :ui.st?`<button class="lbig lres" data-lgo="resume"><span>모임 이어가기</span><small>${ui.i+1} / ${M.S.length} · ${esc((M.S[ui.i]||M.S[0]).sh)}</small></button><button class="llink" data-lgo="run0">처음부터 다시 시작</button>`
       :`<button class="lbig" data-lgo="run0">모임 진행 시작</button>`}`; }
 
   function lastBox(){ const own=ldrRec(n-7), O=own?(own.mem||[]).filter(m=>m.ok&&(m.p||m.r)):[], I=ldrIns(n);
@@ -6349,9 +6391,13 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     /* 11-20 GPT 인도자 UX: 모든 순서에서 '지금 소리 내어 읽을 문장'은 같은 모양(갈색 상자) — 가이드북 질문이 있으면 그것, 없으면 인도자가 할 말.
        보충 질문은 쓰는 때를 밝혀 한 단계 약하게 */
     const main=s.q?`<div class="lsay"><small>${s.t==="마무리 기도"?"함께 드릴 기도":"목원에게 물을 질문"}${s.from?` · ${esc(s.from.replace(/[①②③④⑤]\s?/,"· ").replace("가이드북 · ","가이드북 · "))}`:""}</small>${s.q}</div>${s.say?`<p class="lq">${esc(s.say)}</p>`:""}`:(s.say?`<div class="lsay"><small>인도자가 할 말</small>${esc(s.say)}</div>`:"");
-    return `<div class="lprog"><div class="bar"><i style="width:${(ui.i+1)/S.length*100}%"></i></div><button class="lord" data-lgo="order" aria-label="순서 보기">${ui.i+1} / ${S.length} · 순서 보기</button></div>
-    ${s.part?`<p class="lpart">${s.part}</p>`:""}<h2 class="lstt">${esc(s.t)}${s.must?'<span class="tag">꼭</span>':""}</h2>
-    ${s.do?`<p class="ldo">${esc(s.do)}</p>`:""}${s.last?lastBox():""}${s.pre||""}
+    const head=`<div class="lstep"><p class="lpart">${esc(s.part||(ui.i===0?"모임의 시작":"모임의 끝"))}</p><button class="lord" data-lgo="order" aria-label="모임 순서 보기">${ui.i+1} / ${S.length} 순서 ▾</button></div><div class="ldots" aria-hidden="true">${S.map((x,k)=>`<i class="${k<=ui.i?"on":""}"></i>`).join("")}</div><h2 class="lstt">${esc(s.t)}${s.must?'<span class="tag">꼭</span>':""}</h2>${s.do?`<p class="ldo">${esc(s.do)}</p>`:""}`;
+    if(s.read) return `${head}<ol class="lsteps">
+      <li><p class="lsh"><span class="no">1</span>읽기 전에 흐름을 말해 줍니다</p><div class="lsay"><small>인도자가 할 말</small>${esc(s.say3)}</div></li>
+      <li><p class="lsh"><span class="no">2</span>돌아가며 읽습니다<small>약 ${M.rt}분</small></p>${readList(false)}<p class="lrdh">다 읽은 단락을 누르면 표시되어, 다음 차례가 보입니다.</p></li>
+      ${s.rq?`<li><p class="lsh"><span class="no">3</span>다 읽은 뒤, 성경을 펴 둔 채로 묻습니다</p><div class="lsay"><small>목원에게 물을 질문 · ${esc(s.rqFrom)}</small>${esc(s.rq)}</div></li>`:""}
+    </ol>${s.nx?`<div class="lnx"><small>다음 순서로 넘어가는 말</small>${esc(s.nx)}</div>`:""}`;
+    return `${head}${s.last?lastBox():""}${s.pre||""}
     ${s.quote||""}${main}${s.add?`<p class="ladd">${esc(s.add)}</p>`:""}${s.vr||""}
     ${s.fol&&!s.add?`<div class="lfol"><small>${esc(s.folT||"답이 짧을 때")}</small>${esc(s.fol)}</div>`:""}
     ${s.more||""}${s.nx?`<div class="lnx"><small>다음 순서로 넘어가는 말</small>${esc(s.nx)}</div>`:""}`; }
@@ -6397,7 +6443,8 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
 
   function draw(keep){ load(); const S=M.S, [w2,d2]=dayWD(n); let wd=""; try{ wd=fmt(dateOf(w2,d2),{weekday:"long"}); }catch(e){}
     const pv=n-7>=1&&phDayOk(...dayWD(n-7)), nxk=n+7<=365&&phDayOk(...dayWD(n+7));
-    el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><button class="lwk" data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹<small>지난주</small></button><div class="ldrti"><b>${esc(M.lab)}</b><small>${esc(M.md)} ${esc(wd)} · 소그룹 인도자</small></div><button class="lwk" data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›<small>다음주</small></button>${ui.mode==="run"&&!ui.done?"":`<button data-lgo="help" aria-label="막힐 때" style="font-size:14px">?</button>`}</div>
+    el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><div class="ldrti"><b>${esc(M.lab)}</b><small>소그룹 인도자</small></div><span aria-hidden="true"></span></div>
+      <div class="ldrwk"><button data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹</button><span>${esc(M.md)} ${esc(wd)}</span><button data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›</button></div>
       <div class="ldrtabs" role="tablist">${[["prep","모임 전 준비"],["run","모임 진행"],["rec","기록"]].map(([k,t])=>`<button role="tab" data-ltab="${k}" aria-selected="${ui.mode===k}">${t}</button>`).join("")}</div></div>
       <div class="ldrbody"><div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div></div>
       ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 앞</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
@@ -6409,6 +6456,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     if(t.closest("[data-lshx]")||t.classList.contains("ldrsh")){ closeSh(); return; }
     const lv=t.closest("[data-lv]"); if(lv){ openSh(lv.dataset.lv,`<p class="lvt">${ldrVText(lv.dataset.lv)||"본문을 불러오지 못했습니다."}</p>`); return; }
     const lk=t.closest("[data-lk]"); if(lk&&!lk.disabled){ n+=+lk.dataset.lk; ui={mode:ui.mode==="rec"?"rec":"prep",i:0,done:false,st:false}; draw(); return; }
+    const rd=t.closest("[data-lrd]"); if(rd){ ui.rd=ui.rd||{as:{},ok:{}}; ui.rd.ok=ui.rd.ok||{}; const k=rd.dataset.lrd; ui.rd.ok[k]=!ui.rd.ok[k]; draw(true); return; }
     const oj=t.closest("[data-ljump]"); if(oj){ ui.mode="run"; ui.st=true; ui.done=false; ui.i=+oj.dataset.ljump; draw(); return; }
     const tb=t.closest("[data-ltab]"); if(tb){ ui.mode=tb.dataset.ltab; if(ui.mode==="run") ui.st=true; draw(); return; }
     const dl=t.closest("[data-ldel]"); if(dl){ const k=dl.dataset.ldel; mem.ldrIn=(mem.ldrIn||[]).filter(x=>x.from+"|"+x.at!==k); mem.ldrInDel=[...(mem.ldrInDel||[]),k].slice(-200); save(); draw(true); return; }
@@ -6428,6 +6476,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     if(t.dataset.lck){ R.chk[t.dataset.lck]=t.checked; store(); }
     if(t.dataset.lok!==undefined){ R.mem[+t.dataset.lok].ok=t.checked; store(); draw(true); } });
   el.addEventListener("input",e=>{ const t=e.target; let ch=true;
+    if(t.dataset.las!==undefined){ ui.rd=ui.rd||{as:{},ok:{}}; ui.rd.as=ui.rd.as||{}; ui.rd.as[t.dataset.las]=t.value.slice(0,20); keepUI(); return; }
     if(t.dataset.ln!==undefined) R.mem[+t.dataset.ln].n=t.value; else if(t.dataset.lp!==undefined) R.mem[+t.dataset.lp].p=t.value; else if(t.dataset.lr!==undefined) R.mem[+t.dataset.lr].r=t.value; else if(t.hasAttribute("data-lmemo")) R.memo=t.value; else ch=false;
     if(ch){ store(); const sv=el.querySelector(".lsaved"); if(sv) sv.textContent=ldrSavedTxt(R.at); } });
   draw(); }
