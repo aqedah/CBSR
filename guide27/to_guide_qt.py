@@ -25,10 +25,14 @@ for D in json.load(open(B)):
     if 'christ' in D: o['christ']=D['christ'][0]+' '+D['christ'][1]
     o['pair']=[[l['tool'],tok(l['text'])] for l in D['looks']]
     ap=D['apply']; x['apply']=tok(ap['lead'])+''.join(f' **→ {f}**' for f in ap['fu'])
+    if 'godline' in D:   # 맺음 문장 바꾸기: 해설 끝에 붙은 옛 맺음 문장을 떼고 새 문장으로
+        og=x.get('god','')
+        if og and x.get('note','').rstrip().endswith(og): x['note']=x['note'].rstrip()[:-len(og)].rstrip()
+        x['god']=D['godline']
     if 'note' in D:
         x['note']=D['note']
         s=[t for t in re.split(r'(?<=[.])\s+',D['note']) if t.startswith('하나님은')]
-        if s: x['god']=s[-1]
+        if s and 'godline' not in D: x['god']=s[-1]
     if 'pray' in D: x['pray']=D['pray']
     # 체험판: 옛 원고는 해설과 맺음 문장(god)을 따로 두었으므로, 새 틀처럼 해설 끝에 맺음 문장을 붙임
     if GQ.endswith('trial26_qt.json') and x.get('god') and x['god'] not in x.get('note',''): x['note']=(x.get('note','').rstrip()+' '+x['god']).strip()
