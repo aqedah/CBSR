@@ -8898,11 +8898,15 @@ function tbkPeek(b,c,v,v2,c2){ const C=BIBLE&&BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!C
   const L=[]; for(let ch=c;ch<=c2;ch++){ const X=BIBLE[b-1][ch-1]; if(!X) break; const a=ch===c?v:1, z=ch===c2?Math.max(a,ch===c?Math.max(v,v2):v2):X.length; if(ch>c) L.push(`<b class="srch">${ch}장</b>`); for(let i=a;i<=z;i++) if(X[i-1]) L.push(`<sup>${i}</sup>${esc(X[i-1])}`); }
   sheet(`${PLAN.full[b-1]} ${c}:${v}${c2>c?"–"+c2+":"+v2:v2>v?"–"+v2:""}`,`<p class="srtext">${L.join(" ")}</p>${dayPlan(view.w,view.d).ch.some(x=>x[0]===b&&x[1]===c)?"":`<p class="lead" style="margin-top:8px">오늘 범위 밖의 말씀이라 잠깐 펴 봅니다. 오늘 날짜와 읽던 곳은 그대로입니다.</p>`}`); }
 /* 11-12 목사님: 책 모양(작업실 쪽을 그대로 띄운 창)에서도 절 주소를 누르면 본문으로 — 누른 자리의 주소를 읽어 같은 길(tbkJump)로 보냄 */
+/* 11-21: 새찬송가 안내 — 가사는 싣지 않고, 장·제목·고른 까닭과 찾아 듣기 */
+function hymnSheet(no,t,why){ if(!no) return; const q=encodeURIComponent(`새찬송가 ${no}장 ${t||""}`.trim());
+  sheet(`새찬송가 ${esc(no)}장`,`<div class="ldrget"><p><b>${esc(t||"")}</b></p>${why?`<p class="lead">오늘 본문과 잇는 곳: ${esc(why)}</p>`:""}<p class="lead">찬송가를 펴서 함께 부르거나 읽고 묵상을 시작해 보세요.</p><div class="row"><a class="btn" href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">찬송 찾아 듣기</a></div></div>`); }
 function tbkBookHit(fr,e){ try{ const r=fr.getBoundingClientRect(), doc=fr.contentDocument; if(!doc) return fr;
     const el=doc.elementFromPoint((e.clientX-r.left)*fr.offsetWidth/r.width,(e.clientY-r.top)*fr.offsetHeight/r.height), vs=el&&el.closest&&el.closest(".vs");
     const mk=fn=>{ const f={dataset:{},classList:{contains:()=>false},click:fn}; return {closest:k=>k==="button"?f:null}; };
     if(el&&el.closest&&doc.documentElement.classList.contains("aoblur")&&el.closest(".after")) return mk(()=>{ const D=TBK.cur0; if(!D) return; const q=qtOf(D.key); q.ao=1; touchQ(q,"ao"); save(); doc.documentElement.classList.remove("aoblur"); });
     if(el&&el.closest&&(el.closest(".mplay")||el.closest(".map[data-play]"))) return mk(()=>tbkPlay(fr));
+    { const hy=el&&el.closest&&el.closest(".hy27"); if(hy) return mk(()=>hymnSheet(hy.dataset.no,hy.dataset.t,hy.dataset.why)); } /* 11-21 목사님: 가이드북 새찬송가 단추 */
     if(el&&el.closest&&el.closest(".qr27")) return mk(()=>{ const D=TBK.cur0; if(!D) return; const [w,d]=dayWD(D.n); leaderOpen(w,d,{exact:dateOf(w,d).getDay()===0}); }); /* 11-20 목사님: 가이드북 주일 QR을 누르면 앱 안에서 인도자 화면 */
     if(!vs) return fr;
     const D=TBK.cur0; if(!D) return fr; tbkRefs("",D.p); const ab=TBK_ABRE.m;
