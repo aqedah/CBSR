@@ -2,6 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
+    function isGoogle() { return signedIn() && request.auth.token.firebase.sign_in_provider == 'google.com'; }
     function isAdmin() { return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
 
     // 관리자 명단: 콘솔에서만 추가합니다. 앱은 자기 문서가 있는지만 확인합니다.
@@ -10,15 +11,30 @@ service cloud.firestore {
       allow list, create, update, delete: if false;
     }
 
-    // 개인 기록: 이름+숫자 4자리로 만든 열쇠(64자)를 아는 사람만 읽고 씁니다. 목록 보기는 막아 둡니다.
-    match /readers/{key} {
-      allow get: if signedIn();
-      allow list, delete: if false;
-      allow create, update: if signedIn()
-        && key.size() == 64
+    // 개인 기록(2026-11-20~): 구글 계정 주인만 자기 문서를 읽고 씁니다.
+    match /users/{uid} {
+      allow get, delete: if isGoogle() && request.auth.uid == uid;
+      allow list: if false;
+      allow create, update: if isGoogle() && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['name', 'data', 'createdAt', 'updatedAt'])
-        && request.resource.data.name is string && request.resource.data.name.size() <= 20
-        && request.resource.data.data is string && request.resource.data.data.size() < 800000;
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40
+        && request.resource.data.data is string && request.resource.data.data.size() < 900000;
+    }
+    // 예전 개인 기록(이름+숫자 4자리 열쇠): 구글 계정으로 옮겨 오는 동안만 읽기. 새로 쓰거나 고칠 수 없습니다. 2027-03-01부터는 읽기도 닫힙니다.
+    match /readers/{key} {
+      allow get: if signedIn() && key.size() == 64 && request.time < timestamp.date(2027, 3, 1);
+      allow list, create, update, delete: if false;
+    }
+    // 소그룹 기록 넘겨주기: 링크의 번호(24자, 추측 불가)를 아는 사람만 열고, 14일 뒤에는 열리지 않습니다. 받은 사람이 담으면 지웁니다.
+    match /handoff/{code} {
+      allow get: if signedIn() && code.size() >= 22 && request.time < resource.data.exp;
+      allow list, update: if false;
+      allow create: if signedIn() && code.size() >= 22
+        && request.resource.data.keys().hasOnly(['d', 'by', 'at', 'exp'])
+        && request.resource.data.d is string && request.resource.data.d.size() < 30000
+        && request.resource.data.by == request.auth.uid
+        && request.resource.data.exp is timestamp && request.resource.data.exp < request.time + duration.value(15, 'd');
+      allow delete: if signedIn() && code.size() >= 22;
     }
 
     // 함께 읽기 숫자(예전 방식): 2026-10-30부터 쓰지 않습니다. 읽기만 남겨 둡니다.
@@ -61,17 +77,17 @@ service cloud.firestore {
       allow read: if signedIn();
       allow write: if isAdmin();
     }
-    // 함께 읽기(이름 공개를 켠 사람만): 별명·작은 사진·아멘한 성품·붙잡은 구절. 문서 이름은 열쇠에서 만든 공개 번호(24자)
+    // 함께 읽기(이름 공개를 켠 사람만): 별명·작은 사진·아멘한 성품·붙잡은 구절. 문서 이름은 내 구글 계정 번호 — 자기 문서만 쓰고 지움
     match /together/{day}/p/{who} {
       allow read: if signedIn();
-      allow create, update: if signedIn() && who.size() == 24 && day.size() <= 20
+      allow create, update: if isGoogle() && who == request.auth.uid && day.size() <= 20
         && request.resource.data.keys().hasOnly(['nick', 'ph', 'amen', 'kv', 'read', 'at'])
         && request.resource.data.nick is string && request.resource.data.nick.size() > 0 && request.resource.data.nick.size() <= 20
         && (request.resource.data.ph == null || (request.resource.data.ph is string && request.resource.data.ph.size() < 20000))
         && request.resource.data.amen is list && request.resource.data.amen.size() <= 60
         && request.resource.data.kv is string && request.resource.data.kv.size() <= 20
         && request.resource.data.read is bool && request.resource.data.at is number;
-      allow delete: if signedIn() && who.size() == 24;
+      allow delete: if isGoogle() && who == request.auth.uid;
     }
     match /stats/church {
       allow read: if signedIn();

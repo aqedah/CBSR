@@ -1,9 +1,10 @@
-/* 이야기통독 — 독립 웹앱용 기록 동기화 (Firebase: 익명 로그인 + Firestore)
-   이름 + 숫자 4자리로 '열쇠'를 만들어, 같은 이름·번호를 넣은 기기끼리 기록을 이어 봅니다. */
+/* 이야기통독 — 독립 웹앱용 기록 동기화 (Firebase + Firestore)
+   2026-11-20 목사님: 기록은 구글 계정으로 잇습니다(users/{구글 uid}, 본인만 읽고 씀).
+   예전의 이름 + 숫자 4자리 기록(readers/{열쇠})은 구글로 들어갈 때 한 번 옮겨 오고, 새로 쓰지 않습니다. */
 (function(){
   "use strict";
   const cfg=window.CBSR_FIREBASE_CONFIG;
-  const LOGIN="cbsr-login-v1";
+  const LOGIN="cbsr-login-v1", LEGACY="cbsr-login-legacy";
   const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
   const LOGIN_ON=window.CBSR_LOGIN!==false;
   let fs=null,ready=null,login=LOGIN_ON?ls.get(LOGIN,null):null,pushT=null,lastSaved=null,lastErr=null,listeners=[];
@@ -16,7 +17,18 @@
       try{ await fs.enablePersistence({synchronizeTabs:true}); }catch(e){}
       try{ await auth.getRedirectResult(); }catch(e){ console.warn("redirect",e); }
       await new Promise((res,rej)=>{ let first=true; const off=auth.onAuthStateChanged(u=>{ if(u){off();res();} else if(first){ first=false; auth.signInAnonymously().catch(rej); } }); });
+      await adopt();
+      auth.onAuthStateChanged(()=>{ adopt().catch(()=>{}); });
     })(); return ready; }
+  /* 구글로 들어와 있으면 그 계정을 기록 주인으로. 예전 이름·숫자 기록이 이 기기에 있었으면 옮길 것으로 남겨 둠 */
+  const isG=u=>!!(u&&!u.isAnonymous&&(u.providerData||[]).some(p=>p&&p.providerId==="google.com"));
+  async function adopt(){ const u=firebase.auth().currentUser;
+    if(isG(u)){ if(!login||!login.g||login.uid!==u.uid){ if(login&&login.key&&!login.g) ls.set(LEGACY,{name:login.name,key:login.key});
+        login={g:1,uid:u.uid,name:u.displayName||(u.email||"").split("@")[0]||"",email:u.email||""}; ls.set(LOGIN,login);
+        try{ const ref=fs.doc(`users/${u.uid}`); const s=await ref.get(); if(!s.exists){ await ref.set({name:login.name.slice(0,40),data:"{}",createdAt:Date.now(),updatedAt:Date.now()}); fs.doc("stats/church").set({readers:inc(1)},{merge:true}).catch(()=>{}); } }catch(e){ lastErr={at:new Date(),code:e&&e.code||""}; console.warn("users",e); }
+        notify(); } }
+    else if(login&&login.g){ login=null; ls.del(LOGIN); notify(); } }
+  const docOf=()=>login&&login.g?fs.doc(`users/${login.uid}`):login&&login.key?fs.doc(`readers/${login.key}`):null;
   async function keyOf(name,pin){
     const s=`cbsr|${name.replace(/\s+/g,"")}|${pin}`;
     const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
@@ -27,11 +39,27 @@
     available:!!(cfg&&cfg.apiKey),
     loginEnabled:LOGIN_ON,
     loggedIn:()=>!!login,
+    google:()=>!!(login&&login.g), /* 구글 계정으로 잇는 중 */
+    legacyOnly:()=>!!(login&&login.key&&!login.g), /* 예전 이름·숫자로만 잇는 중(구글로 옮겨야 함) */
+    email:()=>login&&login.email||"",
     name:()=>login?login.name:"",
     lastSaved:()=>lastSaved,
     lastError:()=>lastErr, /* 11-20 GPT 감사: 저장 실패를 화면에 알리기 위해 */
     onChange(f){listeners.push(f);},
-    /* 들어가기: 서버에 있던 기록(없으면 null)을 돌려줍니다 */
+    /* 구글 계정으로 들어가기(휴대폰에서 창이 막히면 페이지를 옮겨 다녀옴 — 돌아오면 init()이 마저 처리) */
+    async loginGoogle(){ await init(); const pv=new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({prompt:"select_account"});
+      try{ await firebase.auth().signInWithPopup(pv); }
+      catch(e){ if(/popup|operation-not-supported|web-storage/.test(e.code||"")){ await firebase.auth().signInWithRedirect(pv); return "redirect"; } throw e; }
+      await adopt(); return login&&login.g?"ok":"fail"; },
+    /* 예전 이름·숫자 기록: 옮길 것이 있는지, 가져오기, 다 옮겼다고 표시 */
+    legacyPending:()=>!!(login&&login.g&&ls.get(LEGACY,null)),
+    async legacyPull(){ const L=ls.get(LEGACY,null); if(!L) return null; await init(); const s=await fs.doc(`readers/${L.key}`).get(); if(!s.exists) return {}; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return {}; } },
+    legacyDone(){ ls.del(LEGACY); },
+    async importOld(name,pin){ name=String(name||"").trim(); pin=String(pin||"").trim();
+      if(!name) throw new Error("이름을 넣어 주세요."); if(!/^\d{4}$/.test(pin)) throw new Error("숫자 4자리를 넣어 주세요.");
+      await init(); const s=await fs.doc(`readers/${await keyOf(name,pin)}`).get(); if(!s.exists) throw new Error("그 이름과 숫자로 남긴 기록을 찾지 못했습니다.");
+      try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return {}; } },
+    /* 예전 방식 들어가기(이제 새로 쓰지 않음 — 옮겨 오기에만) */
     async login(name,pin){
       name=String(name||"").trim(); pin=String(pin||"").trim();
       if(!name) throw new Error("이름을 넣어 주세요.");
@@ -45,10 +73,10 @@
       login={name,key}; ls.set(LOGIN,login); notify();
       return remote;
     },
-    logout(){ login=null; ls.del(LOGIN); notify(); },
-    async pull(){ if(!login) return null; await init(); const s=await fs.doc(`readers/${login.key}`).get(); if(!s.exists) return null; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return null; } },
+    async logout(){ const g=login&&login.g; login=null; ls.del(LOGIN); notify(); if(g){ try{ await init(); await firebase.auth().signOut(); await firebase.auth().signInAnonymously(); }catch(e){} } },
+    async pull(){ if(!login) return null; await init(); const r=docOf(); if(!r) return null; const s=await r.get(); if(!s.exists) return null; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return null; } },
     push(mem,wait){ if(!login) return; clearTimeout(pushT);
-      pushT=setTimeout(async()=>{ try{ await init(); await fs.doc(`readers/${login.key}`).set({name:login.name,data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); lastErr=null; notify(); }catch(e){ console.warn("sync",e); lastErr={at:new Date(),code:e&&e.code||""}; notify(); /* 30초 뒤 다시 */ clearTimeout(pushT); pushT=setTimeout(()=>window.SYNC.push(mem,0),30000); } },wait==null?1500:wait); },
+      pushT=setTimeout(async()=>{ try{ await init(); const r=docOf(); if(!r) return; await r.set({name:String(login.name||"").slice(0,40),data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); lastErr=null; notify(); }catch(e){ console.warn("sync",e); lastErr={at:new Date(),code:e&&e.code||""}; notify(); /* 30초 뒤 다시 */ clearTimeout(pushT); pushT=setTimeout(()=>window.SYNC.push(mem,0),30000); } },wait==null?1500:wait); },
     /* 관리자: 구글 계정으로 로그인 → admins/{uid} 문서가 있으면 관리자 */
     admin:{
       async state(){ await init(); const u=firebase.auth().currentUser; if(!u||u.isAnonymous) return {in:false};
@@ -88,10 +116,17 @@
       await Promise.race([w,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),12000))]); return true; }catch(e){ console.warn("feedback",e); return false; } },
     /* 함께 읽기(이름 공개를 켠 사람만): together/{날}/p/{공개 번호} 에 별명·작은 사진·아멘한 성품·붙잡은 구절 */
     together:{
-      async who(){ if(!login) return null; if(login.pub) return login.pub; const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("together|"+login.key)); login.pub=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("").slice(0,24); ls.set(LOGIN,login); return login.pub; },
+      async who(){ if(!login) return null; if(login.g) return login.uid; /* 구글: 문서 이름이 곧 내 계정 번호(남이 고치거나 지울 수 없게 규칙에서 확인) */ if(login.pub) return login.pub; const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("together|"+login.key)); login.pub=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("").slice(0,24); ls.set(LOGIN,login); return login.pub; },
       async put(day,doc){ const w=await this.who(); if(!w) return false; await init(); await fs.doc(`together/${day}/p/${w}`).set(doc); return true; },
       async del(day){ const w=await this.who(); if(!w) return; await init(); await fs.doc(`together/${day}/p/${w}`).delete(); },
       async list(day){ await init(); const q=await fs.collection(`together/${day}/p`).limit(300).get(); return q.docs.map(d=>({who:d.id,...d.data()})); }
+    },
+    /* 소그룹 기록 넘겨주기(2026-11-20): 내용은 서버에 두고 링크에는 추측할 수 없는 번호만. 14일이 지나거나 받은 사람이 담으면 사라짐 */
+    handoff:{
+      async put(obj){ await init(); const b=crypto.getRandomValues(new Uint8Array(18)); const code=btoa(String.fromCharCode(...b)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+        const u=firebase.auth().currentUser; await fs.doc(`handoff/${code}`).set({d:JSON.stringify(obj),by:u?u.uid:"",at:Date.now(),exp:firebase.firestore.Timestamp.fromMillis(Date.now()+14*864e5)}); return code; },
+      async get(code){ await init(); const s=await fs.doc(`handoff/${code}`).get(); if(!s.exists) return null; const x=s.data(); if(x.exp&&x.exp.toMillis&&x.exp.toMillis()<Date.now()) return null; try{ return JSON.parse(x.d); }catch(e){ return null; } },
+      async del(code){ try{ await init(); await fs.doc(`handoff/${code}`).delete(); }catch(e){} }
     },
     /* 함께 읽기 숫자(2026-10-30 고침): 예전에는 숫자를 1씩 더해서, 한 기기가 여러 번 더하면 숫자가 부풀었습니다(누가복음 14–16장 하루에 194).
        이제는 그 날 문서에 '읽은 사람 표시(기기 번호)'를 하나씩 남기고 그 개수를 셉니다. 같은 기기는 몇 번을 눌러도 한 번입니다. */
