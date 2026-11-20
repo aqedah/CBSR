@@ -1278,6 +1278,9 @@ body:has(.ldr) .coach{display:none!important}
 .ldr .lsh .no{position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:12.5px}
 .ldr .lsh small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:4px}
 .ldr .lsteps .lsay{margin-top:0}
+.ldr .lweek li{grid-template-columns:34px minmax(0,1fr)} .ldr .lweek b{font-weight:700}
+.ldr .lscn{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 6px}.ldr .lscn small{color:var(--muted);font-size:12px;margin-right:2px}.ldr .lscn span{font-size:13px;padding:2px 9px;border:1px solid var(--line);border-radius:99px;background:var(--card)}
+.ldr .linrec{margin:14px 0 4px;padding:12px;border:1.5px solid var(--acc,#8a5a2b);border-radius:12px;background:var(--card)} .ldr .linrec .lh3{margin-top:0}
 .ldr .lread{list-style:none;padding:0;margin:0;border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden}
 .ldr .lread li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
 .ldr .lread li:last-child{border-bottom:0}
@@ -6300,7 +6303,9 @@ function ldrModel(n){ const [w,d]=dayWD(n), p=dayPlan(w,d)||{label:"",ch:[]}, D=
   const flow=(L.flow&&L.flow.length)?`<ul class="lflow2">${L.flow.map(x=>{ const [a,b]=String(x).split("|"); return b!=null?`<li><b>${esc(a)}</b><span>${esc(b)}</span></li>`:`<li><span></span><span>${esc(x)}</span></li>`; }).join("")}</ul>`:(D.f?`<p class="lflow">${esc(D.f)}</p>`:"");
   const guide=(L.core&&L.core.length)||(L.grd&&L.grd.length)?`${L.core&&L.core.length?`<ol class="lcore">${L.core.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}${L.grd&&L.grd.length?`<div class="lgrd"><p><b>말씀의 근거</b> 설명은 짐작으로 덧붙이지 않고, 아래 구절을 함께 펴서 안내합니다.</p>${L.grd.map(g=>`<p>${ldrVB(g[0])} ${esc(g[1]||"")}</p>`).join("")}</div>`:""}`:"";
   const fol=k=>(L.fol&&L.fol[k])||LDR_FOL0[k]||"", nx=(k,def)=>(L.nx&&L.nx[k])||def;
-  const week=[]; for(let k=n-6;k<=n;k++){ if(k<1) continue; const [w2,d2]=dayWD(k), p2=dayPlan(w2,d2); if(!p2) continue; let dl=""; try{ dl=fmt(dateOf(w2,d2),{day:"numeric",weekday:"short"}); }catch(e){} week.push([dl,`${p2.label||""} ${k===n?"오늘 함께 읽을 본문":(p2.topic||"")}`]); }
+  const week=[]; for(let k=n-6;k<n;k++){ if(k<1) continue; const [w2,d2]=dayWD(k), p2=dayPlan(w2,d2); if(!p2) continue; let dl=""; try{ dl=fmt(dateOf(w2,d2),{weekday:"short"}); }catch(e){} week.push([dl,p2.label||"",p2.topic||""]); }
+  /* 11-20 목사님: 본문 읽기 전에는 앞으로 읽을 사건이 아니라 '지난 이야기'를 이어 준다 — 왜 오늘 이야기가 여기서 시작하는지. 원고에 L.prev가 있으면 그것 */
+  const Dp=ldrD(n-1)||{}, prevSay=L.prev||(week.length?`지난 한 주 동안 우리는 ${week[0][1]}부터 ${week[week.length-1][1]}까지 읽었습니다.${Dp.f?` 어제 읽은 이야기는 이렇습니다. ${Dp.f}`:""} 오늘은 바로 그다음 이야기, ${lab}을 읽습니다.`:`오늘은 ${lab}을 읽습니다.`);
   const N=x=>Y?x:x.replace(/^가이드북 [①②③④⑤] /,"가이드북 ");
   let gq="", gquote="";
   if(D.g&&D.g[1]){ const m=String(D.g[0]||"").match(/^(.*?)\s*\(([^()]*)\)\s*$/); const ref=m&&m[2]?(/^\d/.test(m[2])&&p.ch&&p.ch[0]?`${PLAN.abbr[p.ch[0][0]-1]} ${m[2]}`:m[2]):""; gquote=D.g[0]?`<blockquote>${esc(m?m[1]:D.g[0])}${ref?`<cite>${esc(ref)}</cite>`:""}</blockquote>`:""; gq=ldrB(D.g[1]); }
@@ -6310,12 +6315,11 @@ function ldrModel(n){ const [w,d]=dayWD(n), p=dayPlan(w,d)||{label:"",ch:[]}, D=
   const vrow=t=>{ const R=[], seen=new Set(); String(t||"").replace(/(?:([1-3]?[가-힣]{1,2})\s?)?(\d{1,3}):(\d{1,3}(?:[–-]\d{1,3})?)/g,(m0,ab,c,v)=>{ const b=ab&&PLAN.abbr.includes(ab)?ab:bk; if(!b) return m0; const r=`${b} ${c}:${v}`; if(!seen.has(r)&&ldrRef(r)){ seen.add(r); R.push(r); } return m0; }); return R.length?`<div class="lvrow"><small>본문 확인</small>${R.map(ldrVB).join("")}</div>`:""; };
   const S=[
    {t:"시작 기도",do:"인도자가 짧게 기도하거나, 미리 부탁한 목원이 기도합니다.",say:"오늘도 함께 말씀을 읽고 서로의 삶을 나누겠습니다. 먼저 기도로 시작하겠습니다.",nx:nx(0,"함께 기도한 뒤, 한 주 동안 살아온 이야기와 읽은 말씀으로 시작합니다.")},
-   {part:"모임의 머리",t:"한 주의 삶과 말씀 나누기",last:1,do:"한 주간 어떻게 살았는지, 한 주 동안 읽은 말씀이 삶에서 어떻게 적용되었는지 나눕니다. 지난주 다짐을 어떻게 실천했는지, 기도제목을 두고 어떻게 기도했는지도 함께 나눕니다.",
-    say:"한 주 동안 어떻게 지내셨어요? 이번 주에 읽은 말씀이 삶에서 어떻게 적용되었는지, 지난주에 나눈 다짐과 기도제목은 어떻게 되었는지 들려주세요.",fol:fol(1),
-    more:week.length?`<details><summary>이번 주 읽은 곳</summary><ul class="lweek">${week.map(x=>`<li><span>${esc(x[0])}</span><span>${esc(x[1])}</span></li>`).join("")}</ul></details>`:"",
+   {part:"모임의 머리",t:"한 주의 삶과 말씀 나누기",share:1,week,fol:fol(1),
+    q2:L.ask||"이번 주에 읽은 말씀 가운데 마음에 남은 장면 하나와, 그 말씀이 내 한 주에 이어진 일을 들려주세요. 읽지 못한 분은 방금 함께 떠올린 이야기 가운데 마음에 걸리는 장면 하나를 골라 말씀해 주세요.",
     nx:nx(1,`나눠 주셔서 고맙습니다. 이제 오늘 본문 ${lab}을 함께 읽겠습니다.`)},
    {part:"오늘의 말씀",t:"오늘 본문 함께 읽기",read:1,do:`${lab}, 본문 읽기 약 ${rt}분`,
-    say3:L.say3||(D.f?`${D.f} 각자 성경책을 펴 주세요.`:"오늘 본문을 단락별로 돌아가며 읽겠습니다. 각자 성경책을 펴 주세요."),
+    say3:prevSay+" 각자 성경책을 펴 주세요.",
     rq:L.rq||D.r||"", rqFrom:Y?"가이드북 ② 대표 표시":"가이드북 읽기 도구",
     nx:nx(2,"방금 읽은 본문을 붙들고 질문 하나를 나눠 보겠습니다.")},
    {part:"오늘의 말씀",t:"본문 관찰 나눔",do:"가이드북의 본문 관찰 질문을 던지고, 목원들의 대답을 충분히 듣습니다.",from:N("가이드북 ④ 본문 관찰"),
@@ -6327,9 +6331,9 @@ function ldrModel(n){ const [w,d]=dayWD(n), p=dayPlan(w,d)||{label:"",ch:[]}, D=
    /* 11-20 GPT 인도자 UX: 그날의 적용 질문이 있으면 그것이 중심. 같은 요구를 되풀이하던 일반 문구·보충 질문·보기는 '답을 구체화하려면' 안에 접음 */
    {part:"오늘의 말씀",t:"적용과 다짐, 그리고 기도제목",must:1,from:D.a?N("가이드북 ④ 적용"):"",q:D.a?ldrB(D.a):"",vr:vrow(D.a),
     say:D.a?"":"오늘 말씀을 붙들고 이번 주에 무엇을 하겠습니까? 누구에게, 언제, 무엇을 할지 나눠 주세요.",add:"이어서 함께 기도할 제목도 나눠 주세요.",
-    more:`<details class="lmore"><summary>답을 구체화하려면</summary><div class="lfol"><small>답이 막연할 때</small>${esc(fol(5)||"이번 주 어느 때, 어떤 말이나 행동으로 해 볼 수 있을까요?")}</div><p class="lform">누구에게 · 언제 · 무엇을 — 이 셋이 들어가면 구체적인 다짐입니다.</p><div class="lex"><small>보기</small>이번 주 목요일 점심에, 요즘 힘들어하는 직장 동료와 밥을 먹으며 이야기를 들어 주겠습니다.</div><p class="lsm">이번 주 안에 실천할 수 있는 한 가지로 정하도록 돕습니다. 답이 이미 구체적이면 묻지 않고 다음 분의 이야기를 듣습니다.</p></details><p class="lsm">다짐과 기도제목은 "기록 열기"에서 적습니다. 생명이나 안전에 관한 이야기를 들으면 담당 교역자에게 알립니다.</p><button class="lrecgo" data-lgo="rec">다짐·기도제목 기록 열기</button>`,
+    inrec:1,more:`<details class="lmore"><summary>답을 구체화하려면</summary><div class="lfol"><small>답이 막연할 때</small>${esc(fol(5)||"이번 주 어느 때, 어떤 말이나 행동으로 해 볼 수 있을까요?")}</div><p class="lform">누구에게 · 언제 · 무엇을 — 이 셋이 들어가면 구체적인 다짐입니다.</p><div class="lex"><small>보기</small>이번 주 목요일 점심에, 요즘 힘들어하는 직장 동료와 밥을 먹으며 이야기를 들어 주겠습니다.</div><p class="lsm">이번 주 안에 실천할 수 있는 한 가지로 정하도록 돕습니다. 답이 이미 구체적이면 묻지 않고 다음 분의 이야기를 듣습니다.</p></details><p class="lsm">생명이나 안전에 관한 이야기를 들으면 담당 교역자에게 알립니다.</p>`,
     nx:nx(5,"나눈 다짐과 기도제목을 품고 함께 기도하겠습니다.")},
-   {t:"마무리 기도",do:D.p?"나눈 다짐과 기도제목을 품고, 가이드북의 기도로 모임을 마칩니다.":"나눈 다짐과 기도제목을 품고, 인도자가 기도로 모임을 마칩니다.",from:D.p?N("가이드북 ⑤ 기도"):"",q:D.p?esc(D.p):""}
+   {t:"마무리 기도",pray:1,do:D.p?"나눈 다짐과 기도제목을 품고, 가이드북의 기도로 모임을 마칩니다.":"나눈 다짐과 기도제목을 품고, 인도자가 기도로 모임을 마칩니다.",from:D.p?N("가이드북 ⑤ 기도"):"",q:D.p?esc(D.p):""}
   ];
   ["시작 기도","삶과 말씀 나눔","본문 함께 읽기","본문 관찰","하나님의 성품","적용과 기도제목","마무리 기도"].forEach((x,k)=>{ if(S[k]) S[k].sh=x; });
   S[1].folT="이야기가 짧을 때";
@@ -6364,14 +6368,17 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     try{ sh.querySelector("[data-lshx]").focus({preventScroll:true}); }catch(e){} return sh; }
   const closeSh=()=>{ if(shOff) shOff(); };
 
+  function sceneLine(){ const U=M.units||[]; const N=[...new Set(U.map(x=>x.name).filter(Boolean))]; return N.length?`<p class="lscn"><small>오늘 장면</small>${N.map(x=>`<span>${esc(x)}</span>`).join("")}</p>`:""; }
+  function memRows(){ return R.mem.map((m,k)=>`<div class="lmem${m.ok?"":" off"}"><div class="mh"><input type="text" data-ln="${k}" value="${esc(m.n)}" placeholder="이름" aria-label="이름"><label class="ok"><input type="checkbox" data-lok="${k}" ${m.ok?"checked":""}> 기록 동의</label><button class="mx" data-lrm="${k}" aria-label="이 목원 칸 지우기">✕</button></div>
+     <div class="f"><span>다짐</span><input type="text" data-lp="${k}" value="${esc(m.p)}" placeholder="누구에게, 언제, 무엇을" aria-label="다짐"></div>
+     <div class="f"><span>기도제목</span><input type="text" data-lr="${k}" value="${esc(m.r)}" placeholder="함께 기도할 제목" aria-label="기도제목"></div></div>`).join("")+`<button class="laddm" data-lgo="add">+ 목원 더하기</button>`; }
   function readList(edit){ const U=M.units||[]; if(!U.length) return ""; ui.rd=ui.rd||{as:{},ok:{}}; const as=ui.rd.as||{}, ok=ui.rd.ok||{}; const now=U.findIndex((x,k)=>!ok[k]);
     return `<ol class="lread">${U.map((x,k)=>edit?`<li><span class="rn">${k+1}</span><span class="rt"><b>${esc(x.ref)}</b>${x.name?`<small>${esc(x.name)}</small>`:""}</span><input type="text" data-las="${k}" value="${esc(as[k]||"")}" placeholder="읽을 사람" aria-label="${k+1}단락 읽을 사람"></li>`
       :`<li data-lrd="${k}" class="${ok[k]?"done":k===now?"now":""}" role="button" aria-pressed="${!!ok[k]}"><span class="rn">${ok[k]?"✓":k+1}</span><span class="rt"><b>${esc(x.ref)}</b>${x.name?`<small>${esc(x.name)}</small>`:""}</span>${as[k]?`<span class="rw">${esc(as[k])}</span>`:""}</li>`).join("")}</ol>`; }
   function prep(){ const p=M.p;
     return `${M.ctr?`<p class="lh3">오늘의 중심</p><p class="lctr">${esc(M.ctr)}</p>`:""}
-    <p class="lh3">준비할 것</p><ul class="lchk">${[["c1",`${M.lab} 읽기`],["c2",`가이드북 ${M.md} 묵상 써 오기`],["c3","읽을 단락을 목원에게 나눠 두기"],["c4","시작 기도를 부탁할 사람 정하기"],["c5","지난주 다짐과 기도제목 다시 보기"]].map(([id,t])=>`<li><input type="checkbox" id="lck_${id}" data-lck="${id}" ${R.chk[id]?"checked":""}><label for="lck_${id}">${esc(t)}</label></li>`).join("")}</ul>
+    <p class="lh3">준비할 것</p><ul class="lchk">${[["c1",`${M.lab} 읽기`],["c2",`가이드북 ${M.md} 묵상 써 오기`],["c4","시작 기도를 부탁할 사람 정하기"],["c5","지난주 다짐과 기도제목 다시 보기"]].map(([id,t])=>`<li><input type="checkbox" id="lck_${id}" data-lck="${id}" ${R.chk[id]?"checked":""}><label for="lck_${id}">${esc(t)}</label></li>`).join("")}</ul>
     ${M.flow?`<details><summary>오늘의 흐름</summary>${M.flow}</details>`:""}
-    ${M.units&&M.units.length?`<p class="lh3">읽을 차례 · 본문 읽기 약 ${M.rt}분</p>${readList(true)}<p class="lrdh">읽을 사람을 적어 두면 모임 진행 화면에 함께 보입니다. 이름은 이 기기에만 남습니다.</p>`:""}
     ${M.L.mark&&M.L.mark.length?`<details><summary>미리 표시할 구절</summary><div class="lvl">${M.L.mark.map(ldrVB).join("")}</div></details>`:""}
     ${M.guide?`<details><summary>인도자 가이드</summary>${M.guide}</details>`:""}
     <p class="lsm">모임은 1시간 안팎이고, 시간은 인도자가 정합니다.</p>
@@ -6392,25 +6399,29 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
        보충 질문은 쓰는 때를 밝혀 한 단계 약하게 */
     const main=s.q?`<div class="lsay"><small>${s.t==="마무리 기도"?"함께 드릴 기도":"목원에게 물을 질문"}${s.from?` · ${esc(s.from.replace(/[①②③④⑤]\s?/,"· ").replace("가이드북 · ","가이드북 · "))}`:""}</small>${s.q}</div>${s.say?`<p class="lq">${esc(s.say)}</p>`:""}`:(s.say?`<div class="lsay"><small>인도자가 할 말</small>${esc(s.say)}</div>`:"");
     const head=`<div class="lstep"><p class="lpart">${esc(s.part||(ui.i===0?"모임의 시작":"모임의 끝"))}</p><button class="lord" data-lgo="order" aria-label="모임 순서 보기">${ui.i+1} / ${S.length} 순서 ▾</button></div><div class="ldots" aria-hidden="true">${S.map((x,k)=>`<i class="${k<=ui.i?"on":""}"></i>`).join("")}</div><h2 class="lstt">${esc(s.t)}${s.must?'<span class="tag">꼭</span>':""}</h2>${s.do?`<p class="ldo">${esc(s.do)}</p>`:""}`;
+    /* 11-20 목사님: 나눔의 기준을 '이번 주 읽은 말씀'으로 — 먼저 한 주 이야기를 함께 떠올려 읽은 사람과 못 읽은 사람의 차이를 줄이고, 인도자가 먼저 본보기로 나눈 뒤 돌아가며 */
+    if(s.share) return `${head}<ol class="lsteps">
+      <li><p class="lsh"><span class="no">1</span>이번 주 이야기를 함께 떠올립니다</p><div class="lsay"><small>인도자가 할 말</small>이번 주에 우리가 읽은 이야기를 먼저 함께 떠올려 보겠습니다.</div>${s.week.length?`<ul class="lweek">${s.week.map(x=>`<li><span>${esc(x[0])}</span><span><b>${esc(x[1])}</b>${x[2]?` ${esc(x[2])}`:""}</span></li>`).join("")}</ul>`:""}<p class="lsm">날마다 한 줄씩 소리 내어 읽어 주면, 이번 주 말씀을 읽지 못한 분도 같은 이야기에서 출발합니다.</p></li>
+      <li><p class="lsh"><span class="no">2</span>인도자가 먼저 나눕니다<small>1분</small></p><p class="lsm">마음에 남은 장면 하나와, 그 말씀이 내 한 주에 이어진 일을 짧게 나눕니다. 인도자의 본보기가 오늘 나눔의 기준이 됩니다.</p></li>
+      <li><p class="lsh"><span class="no">3</span>돌아가며 나눕니다</p><div class="lsay"><small>목원에게 물을 질문</small>${esc(s.q2)}</div><p class="lsm">먼저 나서는 사람이 없으면 인도자 옆자리부터 차례로 넘깁니다. 지난주 다짐과 기도제목이 있는 분에게는 어떻게 되었는지 이어서 묻습니다.</p>${lastBox()}</li>
+    </ol>${s.fol?`<div class="lfol"><small>${esc(s.folT||"답이 짧을 때")}</small>${esc(s.fol)}</div>`:""}${s.nx?`<div class="lnx"><small>다음 순서로 넘어가는 말</small>${esc(s.nx)}</div>`:""}`;
     if(s.read) return `${head}<ol class="lsteps">
-      <li><p class="lsh"><span class="no">1</span>읽기 전에 흐름을 말해 줍니다</p><div class="lsay"><small>인도자가 할 말</small>${esc(s.say3)}</div></li>
-      <li><p class="lsh"><span class="no">2</span>돌아가며 읽습니다<small>약 ${M.rt}분</small></p>${readList(false)}<p class="lrdh">다 읽은 단락을 누르면 표시되어, 다음 차례가 보입니다.</p></li>
+      <li><p class="lsh"><span class="no">1</span>지난 이야기를 이어 줍니다</p><div class="lsay"><small>인도자가 할 말</small>${esc(s.say3)}</div><p class="lsm">왜 오늘 이야기가 여기서 시작하는지 잡아 주면, 지난 본문을 읽지 못한 분도 따라 읽을 수 있습니다.</p></li>
+      <li><p class="lsh"><span class="no">2</span>함께 읽습니다<small>약 ${M.rt}분</small></p>${sceneLine()}<p class="lsm">돌아가며 읽을지, 교독할지, 함께 소리 내어 읽을지는 인도자가 정합니다.</p></li>
       ${s.rq?`<li><p class="lsh"><span class="no">3</span>다 읽은 뒤, 성경을 펴 둔 채로 묻습니다</p><div class="lsay"><small>목원에게 물을 질문 · ${esc(s.rqFrom)}</small>${esc(s.rq)}</div></li>`:""}
     </ol>${s.nx?`<div class="lnx"><small>다음 순서로 넘어가는 말</small>${esc(s.nx)}</div>`:""}`;
-    return `${head}${s.last?lastBox():""}${s.pre||""}
+    const prl=s.pray?R.mem.filter(m=>m.r&&m.n):[];
+    return `${head}${s.last?lastBox():""}${s.pre||""}${prl.length?`<details open><summary>오늘 나눈 기도제목 ${prl.length}</summary><ul class="llast">${prl.map(m=>`<li>${esc(m.n)}<small>${esc(m.r)}</small></li>`).join("")}</ul></details>`:""}
     ${s.quote||""}${main}${s.add?`<p class="ladd">${esc(s.add)}</p>`:""}${s.vr||""}
     ${s.fol&&!s.add?`<div class="lfol"><small>${esc(s.folT||"답이 짧을 때")}</small>${esc(s.fol)}</div>`:""}
-    ${s.more||""}${s.nx?`<div class="lnx"><small>다음 순서로 넘어가는 말</small>${esc(s.nx)}</div>`:""}`; }
+    ${s.more||""}${s.inrec?`<div class="linrec"><p class="lh3">나누는 대로 바로 적습니다</p><p class="lsm" style="margin:0 0 8px">기록 동의를 받은 사람의 다짐과 기도제목만 저장됩니다. 마무리 기도 때 이 목록을 보며 기도합니다.</p><p class="lsaved" aria-live="polite">${R.at?ldrSavedTxt(R.at):""}</p>${memRows()}</div>`:""}${s.nx?`<div class="lnx"><small>다음 순서로 넘어가는 말</small>${esc(s.nx)}</div>`:""}`; }
 
   function rec(){ const I=ldrIns(n), lin=!LDRPRE&&window.SYNC&&SYNC.loggedIn&&SYNC.loggedIn(), live=ui.st&&!ui.done, cur=M.S[ui.i]||M.S[0], all=(mem.ldrIn||[]).filter(x=>(x.y||LDR_Y())===LDR_Y()).slice().reverse();
     return `${live?`<p class="lctx">${esc(cur.sh||cur.t)} 나눔 중 기록 · ${ui.i+1}/${M.S.length}</p>`:""}${I.length?`<div class="linbox"><b>받은 기록 ${I.length}</b> · ${I.map(x=>`${esc(x.from)}이(가) ${esc(x.date||"")} 모임 기록을 넘겨주었습니다`).join(", ")}. 진행 화면 "한 주의 삶과 말씀 나누기"에 보입니다.</div>`:""}
     <p class="lh3">${esc(M.md)} 다짐과 기도제목</p>
     <p class="lsm" style="margin:0 0 8px">기록 동의를 받은 사람만 적습니다. ${LDRPRE?"지금 적는 것은 이 기기의 2027 준비 칸에 남았다가, 1월 1일부터 앱 기록으로 이어집니다.":lin?"이 기록은 내 계정에만 남습니다.":"이 기록은 이 기기에만 남습니다. 메뉴에서 로그인하면 내 계정에 남아 다른 기기에서도 볼 수 있습니다."}</p>
     <p class="lsaved" aria-live="polite">${R.at?ldrSavedTxt(R.at):""}</p>
-    ${R.mem.map((m,k)=>`<div class="lmem${m.ok?"":" off"}"><div class="mh"><input type="text" data-ln="${k}" value="${esc(m.n)}" placeholder="이름" aria-label="이름"><label class="ok"><input type="checkbox" data-lok="${k}" ${m.ok?"checked":""}> 기록 동의</label><button class="mx" data-lrm="${k}" aria-label="이 목원 칸 지우기">✕</button></div>
-     <div class="f"><span>다짐</span><input type="text" data-lp="${k}" value="${esc(m.p)}" placeholder="${m.ok?"누구에게, 언제, 무엇을":"기록 동의를 고르면 적을 수 있습니다"}" aria-label="다짐"></div>
-     <div class="f"><span>기도제목</span><input type="text" data-lr="${k}" value="${esc(m.r)}" placeholder="${m.ok?"함께 기도할 제목":"기록 동의를 고르면 적을 수 있습니다"}" aria-label="기도제목"></div></div>`).join("")}
-    <button class="laddm" data-lgo="add">+ 목원 더하기</button>
+    ${memRows()}
     <p class="lh3">모임 메모</p>
     <div class="lmem"><input type="text" data-lmemo value="${esc(R.memo||"")}" placeholder="다음 인도자나 교역자가 알면 좋을 일" aria-label="모임 메모"></div>
     ${live?`<button class="lbig" data-lgo="resume">‘${esc(cur.sh||cur.t)}’ 순서로 돌아가기 · ${ui.i+1}/${M.S.length}</button><div class="lrow2"><button data-lgo="share">기록 넘겨주기</button></div>`:`<div class="lrow2"><button class="pri" data-lgo="share">기록 넘겨주기</button></div>`}
@@ -6441,7 +6452,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     catch(e){ if(e&&e.name==="AbortError") return; try{ await navigator.clipboard.writeText(txt); how="복사했습니다. 메시지에 붙여 넣어 보내 주세요"; }catch(x){ how=""; } }
     sh.querySelector("#lsent").innerHTML=`<div class="lrecv"><p class="rh">${how?esc(how):"아래 글을 길게 눌러 복사해 보내 주세요"} · ${to==="b"?"대신 인도할 목원":"담당 교역자"}</p><ul>${items.map(m=>`<li>${esc(m.n)}: ${m.p?"다짐 "+esc(m.p):""}${m.p&&m.r?", ":""}${m.r?"기도제목 "+esc(m.r):""}</li>`).join("")}${memo?`<li>모임 메모: ${esc(memo)}</li>`:""}</ul>${note?`<p>${esc(note)}</p>`:""}<p>${to==="b"?"받은 사람이 링크를 열면, 그 사람의 다음 주일 진행 화면에 이 기록이 보입니다.":"교역자가 링크를 열면 교역자 계정의 받은 기록에 남습니다."}</p>${how?"":`<textarea rows="5" readonly style="margin-top:8px">${esc(txt)}</textarea>`}</div>`; }
 
-  function draw(keep){ load(); const S=M.S, [w2,d2]=dayWD(n); let wd=""; try{ wd=fmt(dateOf(w2,d2),{weekday:"long"}); }catch(e){}
+  function draw(keep){ const sy=keep?(($(".ldrbody")||{}).scrollTop||0):0; load(); const S=M.S, [w2,d2]=dayWD(n); let wd=""; try{ wd=fmt(dateOf(w2,d2),{weekday:"long"}); }catch(e){}
     const pv=n-7>=1&&phDayOk(...dayWD(n-7)), nxk=n+7<=365&&phDayOk(...dayWD(n+7));
     el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><div class="ldrti"><b>${esc(M.lab)}</b><small>소그룹 인도자</small></div><span aria-hidden="true"></span></div>
       <div class="ldrwk"><button data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹</button><span>${esc(M.md)} ${esc(wd)}</span><button data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›</button></div>
@@ -6449,7 +6460,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
       <div class="ldrbody"><div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div></div>
       ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 앞</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
     shOff&&(shOff(),0);
-    if(!keep){ const b=$(".ldrbody"); if(b) b.scrollTop=0; } keepUI(); }
+    { const b=$(".ldrbody"); if(b) b.scrollTop=keep?sy:0; } keepUI(); }
 
   el.addEventListener("click",e=>{ const t=e.target;
     if(t.closest("[data-lx]")){ close(); return; }
@@ -6474,7 +6485,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     else if(a==="send") send(); });
   el.addEventListener("change",e=>{ const t=e.target;
     if(t.dataset.lck){ R.chk[t.dataset.lck]=t.checked; store(); }
-    if(t.dataset.lok!==undefined){ R.mem[+t.dataset.lok].ok=t.checked; store(); draw(true); } });
+    if(t.dataset.lok!==undefined){ R.mem[+t.dataset.lok].ok=t.checked; store(); const b=t.closest(".lmem"); if(b) b.classList.toggle("off",!t.checked); } });
   el.addEventListener("input",e=>{ const t=e.target; let ch=true;
     if(t.dataset.las!==undefined){ ui.rd=ui.rd||{as:{},ok:{}}; ui.rd.as=ui.rd.as||{}; ui.rd.as[t.dataset.las]=t.value.slice(0,20); keepUI(); return; }
     if(t.dataset.ln!==undefined) R.mem[+t.dataset.ln].n=t.value; else if(t.dataset.lp!==undefined) R.mem[+t.dataset.lp].p=t.value; else if(t.dataset.lr!==undefined) R.mem[+t.dataset.lr].r=t.value; else if(t.hasAttribute("data-lmemo")) R.memo=t.value; else ch=false;
