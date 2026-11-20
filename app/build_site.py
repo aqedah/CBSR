@@ -192,6 +192,30 @@ data+='const GBSYMS='+J(_GBS)+';\n'
 data+='const GBDESC='+J(_gdesc(_GQ))+';\n'
 data+='const GBDESC26='+J(_gdesc(_TQ))+';\n'
 data+='const GQT26='+J({int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply','')} for n,v in _TQ.items() if n.isdigit()})+';\n'
+
+# 11-20 소그룹 인도자(목사님 시안 승인): 날마다 인도자 화면이 쓰는 가이드북 칸 + 주일 인도자 전용 칸(qt.ldr)
+def _ldrd(Q):
+    import re as _r
+    def pl(x): return _r.sub(r'\{번호 ([^}]*)\}',lambda m:m.group(1),_r.sub(r'\{(동그라미|형광펜|물결 밑줄|빗금 형광펜|네모|괄호)\}',r'\1',str(x or ''))).replace('**','')
+    out={}
+    for n,v in Q.items():
+        if not n.isdigit() or not isinstance(v,dict): continue
+        g=v.get('guide') or {}; o=v.get('obs') or {}; v27=v.get('v27') or {}
+        if not (o.get('q') or v.get('apply')): continue
+        rep=''
+        if v27.get('marks'):
+            m=[x for x in v27['marks'] if x.get('rep')] or v27['marks']; rep=pl(m[0].get('text',''))
+        else:
+            f=str(g.get('find','')); rep=_r.sub(r'^(?:\s*(?:\S{1,3}|\[ \])\s+(?:이끎말|반복|점층|대조|틀|전형장면|전환|속마음|침묵|생략|아이러니|주도어|속말|말씀 공식|후렴|평행|가정|수사적 질문|비유|호명|교차|언약 공식|상징|송영))+\s*','',f).strip()
+        ctr=v.get('god','') or ''
+        if not ctr:
+            ss=[t for t in _r.split(r'(?<=[.])\s+',str(v.get('note',''))) if t.startswith('하나님은')]; ctr=ss[-1] if ss else ''
+        d={'f':g.get('today',''),'r':rep,'q':o.get('q',''),'a':v.get('apply',''),'p':v.get('pray',''),'c':ctr}
+        if (v27.get('god') or ['',''])[1]: d['g']=v27['god']
+        if isinstance(v.get('ldr'),dict): d['l']=v['ldr']
+        out[int(n)]=d
+    return out
+data+='const LDRD27='+J(_ldrd(_GQ))+';\nconst LDRD26='+J(_ldrd(_TQ))+';\n'
 # 11-12: 원고 성구 약칭이 빠진 곳이 있으면 알림(다른 저장으로 덮였을 때)
 try:
     import subprocess as _sp
