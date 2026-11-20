@@ -1175,6 +1175,7 @@ body:has(.ldr) .coach{display:none!important}
 .ldr .lsaved{font-size:12px;color:var(--muted);margin:-2px 0 8px;min-height:1em}
 .ldr .llink{display:block;margin:10px auto 0;border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13.5px;padding:8px}
 .ldr details.lmore{margin:4px 0 10px}
+.ldr .lrecgo{display:block;width:100%;margin:8px 0 4px;border:1px solid var(--accent);background:var(--card);color:var(--accent);border-radius:10px;padding:11px;font-weight:700;font-size:14.5px}
 .ldrbar button.lwk{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;width:46px;height:42px}.ldrbar button.lwk small{font-size:10px;color:var(--muted);margin-top:2px}
 .ldr .lvl{display:flex;flex-wrap:wrap;gap:6px}
 .ldr .lvb{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;font-size:13px;color:var(--accent)}
@@ -1199,7 +1200,8 @@ body:has(.ldr) .coach{display:none!important}
 .ldr .lsay small{color:var(--accent)}
 .ldr .lfol{font:14.5px/1.7 var(--f-text);margin:8px 0;padding:8px 12px;border:1px dashed var(--line);border-radius:8px}
 .ldr .lfol small,.ldr .lnx small{color:var(--muted)}
-.ldr .lnx{font:14.5px/1.7 var(--f-text);margin:8px 0;padding:8px 12px;background:var(--card);border-radius:8px}
+.ldr .lnx{font:14.5px/1.7 var(--f-text);margin:14px 0 8px;padding:8px 0 0;border-top:1px dotted var(--line)} /* 11-20 GPT 디자인: 넘어가는 말은 상자 없이 */
+.ldr .lsay{font-size:17.5px!important;line-height:1.7!important}@media(min-width:768px){.ldr .lsay{font-size:20px!important}} /* 소리 내어 읽을 질문을 가장 크게 */
 .ldr .lfrom{font-size:11.5px;color:var(--accent);font-weight:700;margin:10px 0 2px}
 .ldr .lq{font:15.5px/1.7 var(--f-text);margin:0 0 8px}
 .ldr blockquote{margin:6px 0 8px;font:14.5px/1.7 var(--f-text);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
@@ -1211,8 +1213,7 @@ body:has(.ldr) .coach{display:none!important}
 .ldr .llast li{font-size:13.5px;padding:5px 0;border-bottom:1px solid var(--line)}
 .ldr .llast li:last-child{border-bottom:0}.ldr .llast small{display:block;color:var(--muted)}
 .ldr .ltag{display:inline-block;font-size:11px;background:var(--gold-soft);color:var(--gold);border-radius:4px;padding:0 6px;margin-left:4px;font-weight:700}
-.ldr .lform{display:flex;gap:6px;margin:6px 0}
-.ldr .lform span{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--card)}
+.ldr .lform{margin:6px 0;font-size:13.5px;color:var(--muted)}
 .ldr .lex{font:14px/1.65 var(--f-text);background:var(--card);border-radius:8px;padding:8px 10px;margin:6px 0 8px}
 .ldr .lex small{display:block;font:11px var(--f-ui);color:var(--muted)}
 .ldr .lmem{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0 0 8px;background:var(--card)}
@@ -1222,9 +1223,9 @@ body:has(.ldr) .coach{display:none!important}
 .ldr .lmem label.ok input{accent-color:var(--accent)}
 .ldr .lmem .mx{border:0;background:transparent;color:var(--muted);font-size:15px;width:28px;height:28px;flex:none}
 .ldr .lmem .f{display:grid;grid-template-columns:56px minmax(0,1fr);gap:6px;align-items:center;margin-top:6px}
-.ldr .lmem .f span{font-size:12.5px;color:var(--muted)}
+.ldr .lmem .f span{font-size:13px;color:var(--ink)}
 .ldr .lmem input[type=text],.ldr textarea{font:14px var(--f-ui);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 8px;min-width:0;width:100%}
-.ldr .lmem.off .f{opacity:.45}.ldr .lmem.off .f input{pointer-events:none}
+.ldr .lmem.off .f input{opacity:.5}.ldr .lmem.off .f input{pointer-events:none}
 .ldr .laddm{border:1px dashed var(--line);background:transparent;border-radius:10px;width:100%;padding:9px;font-size:13.5px;color:var(--muted)}
 .ldr .lrow2{display:flex;gap:8px;margin-top:10px}
 .ldr .lrow2 button{flex:1;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:11px;font-weight:700;font-size:14px}
@@ -6314,7 +6315,7 @@ function ldrModel(n){ const [w,d]=dayWD(n), p=dayPlan(w,d)||{label:"",ch:[]}, D=
    /* 11-20 GPT 인도자 UX: 그날의 적용 질문이 있으면 그것이 중심. 같은 요구를 되풀이하던 일반 문구·보충 질문·보기는 '답을 구체화하려면' 안에 접음 */
    {part:"오늘의 말씀",t:"적용과 다짐, 그리고 기도제목",must:1,from:D.a?N("가이드북 ④ 적용"):"",q:D.a?ldrB(D.a):"",vr:vrow(D.a),
     say:D.a?"":"오늘 말씀을 붙들고 이번 주에 무엇을 하겠습니까? 누구에게, 언제, 무엇을 할지 나눠 주세요.",add:"이어서 함께 기도할 제목도 나눠 주세요.",
-    more:`<details class="lmore"><summary>답을 구체화하려면</summary><div class="lfol"><small>답이 막연할 때</small>${esc(fol(5)||"이번 주 어느 때, 어떤 말이나 행동으로 해 볼 수 있을까요?")}</div><div class="lform"><span>누구에게</span><span>언제</span><span>무엇을</span></div><div class="lex"><small>보기</small>이번 주 목요일 점심에, 요즘 힘들어하는 직장 동료와 밥을 먹으며 이야기를 들어 주겠습니다.</div><p class="lsm">이번 주 안에 실천할 수 있는 한 가지로 정하도록 돕습니다. 답이 이미 구체적이면 묻지 않고 다음 분의 이야기를 듣습니다.</p></details><p class="lsm">다짐과 기도제목은 "기록 열기"에서 적습니다. 생명이나 안전에 관한 이야기를 들으면 담당 교역자에게 알립니다.</p><button class="lvb" data-lgo="rec" style="margin-top:6px">기록 열기 ›</button>`,
+    more:`<details class="lmore"><summary>답을 구체화하려면</summary><div class="lfol"><small>답이 막연할 때</small>${esc(fol(5)||"이번 주 어느 때, 어떤 말이나 행동으로 해 볼 수 있을까요?")}</div><p class="lform">누구에게 · 언제 · 무엇을 — 이 셋이 들어가면 구체적인 다짐입니다.</p><div class="lex"><small>보기</small>이번 주 목요일 점심에, 요즘 힘들어하는 직장 동료와 밥을 먹으며 이야기를 들어 주겠습니다.</div><p class="lsm">이번 주 안에 실천할 수 있는 한 가지로 정하도록 돕습니다. 답이 이미 구체적이면 묻지 않고 다음 분의 이야기를 듣습니다.</p></details><p class="lsm">다짐과 기도제목은 "기록 열기"에서 적습니다. 생명이나 안전에 관한 이야기를 들으면 담당 교역자에게 알립니다.</p><button class="lrecgo" data-lgo="rec">다짐·기도제목 기록 열기</button>`,
     nx:nx(5,"나눈 다짐과 기도제목을 품고 함께 기도하겠습니다.")},
    {t:"마무리 기도",do:D.p?"나눈 다짐과 기도제목을 품고, 가이드북의 기도로 모임을 마칩니다.":"나눈 다짐과 기도제목을 품고, 인도자가 기도로 모임을 마칩니다.",from:D.p?N("가이드북 ⑤ 기도"):"",q:D.p?esc(D.p):""}
   ];
@@ -6364,7 +6365,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     const s=S[ui.i];
     /* 11-20 GPT 인도자 UX: 모든 순서에서 '지금 소리 내어 읽을 문장'은 같은 모양(갈색 상자) — 가이드북 질문이 있으면 그것, 없으면 인도자가 할 말.
        보충 질문은 쓰는 때를 밝혀 한 단계 약하게 */
-    const main=s.q?`<div class="lsay"><small>${s.t==="마무리 기도"?"함께 드릴 기도":"목원에게 물을 질문"}${s.from?` · ${esc(s.from)}`:""}</small>${s.q}</div>${s.say?`<p class="lq">${esc(s.say)}</p>`:""}`:(s.say?`<div class="lsay"><small>인도자가 할 말</small>${esc(s.say)}</div>`:"");
+    const main=s.q?`<div class="lsay"><small>${s.t==="마무리 기도"?"함께 드릴 기도":"목원에게 물을 질문"}${s.from?` · ${esc(s.from.replace(/[①②③④⑤]\s?/,"· ").replace("가이드북 · ","가이드북 · "))}`:""}</small>${s.q}</div>${s.say?`<p class="lq">${esc(s.say)}</p>`:""}`:(s.say?`<div class="lsay"><small>인도자가 할 말</small>${esc(s.say)}</div>`:"");
     return `<div class="lprog"><div class="bar"><i style="width:${(ui.i+1)/S.length*100}%"></i></div><button class="lord" data-lgo="order" aria-label="순서 보기">${ui.i+1} / ${S.length} · 순서 보기</button></div>
     ${s.part?`<p class="lpart">${s.part}</p>`:""}<h2 class="lstt">${esc(s.t)}${s.must?'<span class="tag">꼭</span>':""}</h2>
     ${s.do?`<p class="ldo">${esc(s.do)}</p>`:""}${s.last?lastBox():""}${s.pre||""}
@@ -6378,8 +6379,8 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     <p class="lsm" style="margin:0 0 8px">기록 동의를 받은 사람만 적습니다. ${LDRPRE?"지금 적는 것은 이 기기의 2027 준비 칸에 남았다가, 1월 1일부터 앱 기록으로 이어집니다.":lin?"이 기록은 내 계정에만 남습니다.":"이 기록은 이 기기에만 남습니다. 메뉴에서 로그인하면 내 계정에 남아 다른 기기에서도 볼 수 있습니다."}</p>
     <p class="lsaved" aria-live="polite">${R.at?ldrSavedTxt(R.at):""}</p>
     ${R.mem.map((m,k)=>`<div class="lmem${m.ok?"":" off"}"><div class="mh"><input type="text" data-ln="${k}" value="${esc(m.n)}" placeholder="이름" aria-label="이름"><label class="ok"><input type="checkbox" data-lok="${k}" ${m.ok?"checked":""}> 기록 동의</label><button class="mx" data-lrm="${k}" aria-label="이 목원 칸 지우기">✕</button></div>
-     <div class="f"><span>다짐</span><input type="text" data-lp="${k}" value="${esc(m.p)}" placeholder="누구에게, 언제, 무엇을" aria-label="다짐"></div>
-     <div class="f"><span>기도제목</span><input type="text" data-lr="${k}" value="${esc(m.r)}" placeholder="함께 기도할 제목" aria-label="기도제목"></div></div>`).join("")}
+     <div class="f"><span>다짐</span><input type="text" data-lp="${k}" value="${esc(m.p)}" placeholder="${m.ok?"누구에게, 언제, 무엇을":"기록 동의를 고르면 적을 수 있습니다"}" aria-label="다짐"></div>
+     <div class="f"><span>기도제목</span><input type="text" data-lr="${k}" value="${esc(m.r)}" placeholder="${m.ok?"함께 기도할 제목":"기록 동의를 고르면 적을 수 있습니다"}" aria-label="기도제목"></div></div>`).join("")}
     <button class="laddm" data-lgo="add">+ 목원 더하기</button>
     <p class="lh3">모임 메모</p>
     <div class="lmem"><input type="text" data-lmemo value="${esc(R.memo||"")}" placeholder="다음 인도자나 교역자가 알면 좋을 일" aria-label="모임 메모"></div>
@@ -6413,7 +6414,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
 
   function draw(keep){ load(); const S=M.S, [w2,d2]=dayWD(n); let wd=""; try{ wd=fmt(dateOf(w2,d2),{weekday:"long"}); }catch(e){}
     const pv=n-7>=1&&phDayOk(...dayWD(n-7)), nxk=n+7<=365&&phDayOk(...dayWD(n+7));
-    el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><button class="lwk" data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹<small>지난주</small></button><div class="ldrti"><b>${esc(M.lab)}</b><small>${esc(M.md)} ${esc(wd)} · 소그룹 인도자</small></div><button class="lwk" data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›<small>다음주</small></button><button data-lgo="help" aria-label="막힐 때" style="font-size:14px">?</button></div>
+    el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><button class="lwk" data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹<small>지난주</small></button><div class="ldrti"><b>${esc(M.lab)}</b><small>${esc(M.md)} ${esc(wd)} · 소그룹 인도자</small></div><button class="lwk" data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›<small>다음주</small></button>${ui.mode==="run"&&!ui.done?"":`<button data-lgo="help" aria-label="막힐 때" style="font-size:14px">?</button>`}</div>
       <div class="ldrtabs" role="tablist">${[["prep","모임 전 준비"],["run","모임 진행"],["rec","기록"]].map(([k,t])=>`<button role="tab" data-ltab="${k}" aria-selected="${ui.mode===k}">${t}</button>`).join("")}</div></div>
       <div class="ldrbody"><div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div></div>
       ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 앞</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
