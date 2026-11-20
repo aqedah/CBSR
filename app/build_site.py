@@ -217,6 +217,7 @@ def _ldrd(Q):
         if (v27.get('god') or ['',''])[1]: d['g']=v27['god']
         if v27.get('scenes'): d['s']=v27['scenes']  # 11-20 인도자 화면 '읽을 차례'의 단락 이름
         if isinstance(v.get('ldr'),dict): d['l']=v['ldr']
+        if v.get('sub'): d['t']=v['sub']  # 11-21 인도자 '이번 주 읽은 곳'은 가이드북 소제목 먼저
         out[int(n)]=d
     return out
 data+='const LDRD27='+J(_ldrd(_GQ))+';\nconst LDRD26='+J(_ldrd(_TQ))+';\n'
