@@ -1117,11 +1117,7 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 .bmovmap{flex:1;min-height:0;position:relative}.bmov .bmmap{position:absolute!important;inset:0;height:auto!important;margin:0!important;border-radius:0;border:0;box-shadow:none}
 .bmovp{max-height:42vh;overflow:auto;padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--paper,#f6f3ec)}.bmovp .bmpanel{margin:0}
 .bmovnav{display:grid;grid-template-columns:40px 1fr 40px;gap:8px;align-items:center;margin-bottom:8px}.bmovnav b{display:block;font-size:16px}.bmovnav small{display:block;color:var(--muted);font-size:12.5px}.bmovnav button{font:inherit;font-size:22px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
-.bmovr .bmrb{padding:0}.bmovr .elv:empty{display:none}.elv{margin:10px 0 2px;padding:10px 10px 4px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
-.elvh{margin:0 0 4px;font-size:13px;font-weight:700;color:var(--ink)}.elvh small{font-weight:400;color:var(--muted);margin-left:6px;font-size:11.5px}
-.elvs{display:block;width:100%;height:auto;touch-action:pan-y;overflow:visible}.elvl{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linejoin:round}
-.elvd{fill:var(--card);stroke:var(--accent);stroke-width:1.4}.elvn{font-size:9.5px;fill:var(--ink)}.elvt{font-size:8.5px;fill:var(--muted)}
-.elvz{stroke:#4F86A8;stroke-width:.8;stroke-dasharray:3 3}.elvw{fill:#4F86A8;opacity:.55}.elvcl{stroke:var(--ink);stroke-width:.7;opacity:.6}.elvct{fill:var(--ink);font-weight:700}
+.bmovr .bmrb{padding:0}
 .bmwho.bmdict{display:block;overflow:visible;margin:0;padding:6px 0 0;scroll-snap-type:none}
 .bmdict .pdq input{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
 .bmdict .pdch{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 6px}
@@ -6088,7 +6084,7 @@ function bmDetailHTML(){ const seg=bmSegX(), tab=seg==="big"?"trip":seg; let h=`
   if(seg==="trip"){ const e=view.bmEra==null?0:view.bmEra, R=ROUTES_B.map((r,i)=>[r,i]).filter(([r])=>bmEra(r.b,r.c[0])===e), sel=view.bmSel;
     const rd=R.filter(([r])=>bmRouteRead(r).all).length;
     h+=`<p class="bmstat">${esc(BM_ERA[e][0])} 시대 여정 <b>${R.length}</b>개 · 읽은 여정 <b>${rd}</b>개 <small>(${esc(BM_ERA[e][1])})</small></p><div class="bmrl">${R.map(([r,i])=>{ const D=bmRouteDay(r), RD=bmRouteRead(r), done=RD.all, on=sel===i;
-      return `<div class="bmr${on?" on":""}${done?" done":RD.some?" part":""}" id="bmr${i}"><button class="bmrh" data-bmr="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${done?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:""}</em></button>${on?`<div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${bmGoBtns(bmRouteRef(r),D)}</div><div class="elv" data-elv="${i}"></div>${r.p.some(q=>q[0]&&PLACE.get(q[0])&&PLACE.get(q[0])[4])?`<p class="bmest">점선 테두리의 곳은 위치가 추정입니다. 선은 실제 옛길이 아니라 지나간 차례를 이은 것입니다.</p>`:`<p class="bmest">선은 실제 옛길이 아니라 지나간 차례를 이은 것입니다.</p>`}`:""}</div>`; }).join("")}</div>`; }
+      return `<div class="bmr${on?" on":""}${done?" done":RD.some?" part":""}" id="bmr${i}"><button class="bmrh" data-bmr="${i}"><span class="bmrd"></span><span><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장${D?` · ${esc(fmt(dateOf(D[0],D[1]),{month:"long",day:"numeric"}))}`:""}</small></span><em>${done?"✓ 읽음":RD.some?`${RD.t}장 중 ${RD.n}장`:""}</em></button>${on?`<div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${bmGoBtns(bmRouteRef(r),D)}</div>${r.p.some(q=>q[0]&&PLACE.get(q[0])&&PLACE.get(q[0])[4])?`<p class="bmest">점선 테두리의 곳은 위치가 추정입니다. 선은 실제 옛길이 아니라 지나간 차례를 이은 것입니다.</p>`:`<p class="bmest">선은 실제 옛길이 아니라 지나간 차례를 이은 것입니다.</p>`}`:""}</div>`; }).join("")}</div>`; }
   return h+`</div></div><div class="bmmap" id="bmMap"></div></div>`; }
 function bmInit(){ const ALL=document.querySelectorAll("#bmMap"), el=ALL[ALL.length-1]; /* 전체 화면 지도가 열려 있으면 그쪽(맨 뒤)에 그림 */ if(BM_MAP){ try{ BM_MAP.remove(); }catch(e){} BM_MAP=null; } if(!el||!window.L) return; const seg=bmSegX();
   const map=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false,zoomSnap:.25,dragging:!mapTouch()}); map.attributionControl.setPrefix(false); mapBase(map,"natural"); BM_MAP=map; BM_LY=L.layerGroup().addTo(map); BM_KD=null; mapTwoFinger(map);
@@ -6199,29 +6195,7 @@ function bmOpen(seg,o){ o=o||{}; if(seg==="big"){ seg="trip"; o.era=-1; } const 
 let ELEV=null, ELEVP=null;
 function elevGet(){ if(ELEV) return Promise.resolve(ELEV); return ELEVP||(ELEVP=fetch("elev.json").then(r=>r.json()).then(j=>ELEV=j).catch(()=>{ ELEVP=null; return null; })); }
 const nfm=n=>Math.round(n).toLocaleString("ko-KR");
-function elvSVG(E){ const e=E.e, n=e.length, V=e.filter(x=>x!=null); if(!V.length||n<2) return "";
-  const lo0=Math.min(...V,...(V.length<n?[0]:[])), hi0=Math.max(...V), sp=Math.max(hi0-lo0,300), lo=lo0-sp*.1, hi=hi0+sp*.04, W=320, X0=6, X1=314, Y0=16, Y1=62, X=i=>X0+(X1-X0)*i/(n-1), Y=v=>Y1-(Y1-Y0)*(v-lo)/(hi-lo), sea=Y(0);
-  let line="", area="", seg=[]; const flush=()=>{ if(seg.length>1){ const d=seg.map(([i,v],k)=>`${k?"L":"M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(""); line+=d; area+=`${d}L${X(seg[seg.length-1][0]).toFixed(1)} ${Y1}L${X(seg[0][0]).toFixed(1)} ${Y1}Z`; } seg=[]; };
-  const wet=[]; e.forEach((v,i)=>{ if(v==null){ flush(); wet.push(i); } else seg.push([i,v]); }); flush();
-  const wetR=[]; wet.forEach(i=>{ const L=wetR[wetR.length-1]; if(L&&L[1]===i-1) L[1]=i; else wetR.push([i,i]); });
-  const top=Math.max(...V), hiI=e.indexOf(top), loV=Math.min(...V);
-  const shown=[]; (E.m||[]).forEach((m,k,A)=>{ if(shown.length&&m[1]-shown[shown.length-1][1]<0.17){ if(k===A.length-1&&shown.length>1) shown[shown.length-1]=m; return; } shown.push(m); });
-  const lab=shown.map(([nm,f],k)=>{ const i=Math.round(f*(n-1)), v=e[i]!=null?e[i]:0, x=X(i), anc=x<30?"start":x>W-30?"end":"middle"; return `<circle cx="${x.toFixed(1)}" cy="${Y(v).toFixed(1)}" r="2.6" class="elvd"/><text x="${x.toFixed(1)}" y="76" text-anchor="${anc}" class="elvn">${esc(nm)}</text>`; }).join("");
-  const ha=X(hiI)<40?"start":X(hiI)>W-40?"end":"middle";
-  return `<svg viewBox="0 0 ${W} 96" class="elvs" role="img" aria-label="길의 높낮이: 가장 높은 곳 ${nfm(top)}미터, 가장 낮은 곳 ${nfm(loV)}미터, 거리 약 ${nfm(E.km)}킬로미터">
-    <defs><linearGradient id="elvG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".42"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".05"/></linearGradient></defs>
-    ${wetR.map(([a,b])=>{ const xa=X(Math.max(0,a-.5)), xb=X(Math.min(n-1,b+.5)); return `<rect x="${xa.toFixed(1)}" y="${(sea-2).toFixed(1)}" width="${Math.max(2,xb-xa).toFixed(1)}" height="4" rx="2" class="elvw"/>`; }).join("")}
-    ${lo<0&&hi>0?`<line x1="${X0}" x2="${X1}" y1="${sea.toFixed(1)}" y2="${sea.toFixed(1)}" class="elvz"/><text x="${X1}" y="${(sea-3).toFixed(1)}" text-anchor="end" class="elvt">바다 높이</text>`:""}
-    <path d="${area}" fill="url(#elvG)"/><path d="${line}" class="elvl"/>${lab}
-    <text x="${X(hiI).toFixed(1)}" y="${(Y(top)-5).toFixed(1)}" text-anchor="${ha}" class="elvt elvtop">${nfm(top)}m</text>
-    <g class="elvcur" style="display:none"><line y1="${Y0-6}" y2="${Y1}" class="elvcl"/><text y="${Y0-8}" class="elvt elvct"></text></g>
-    <text x="${X0}" y="92" class="elvt">가장 낮은 곳 ${nfm(loV)}m</text><text x="${X1}" y="92" text-anchor="end" class="elvt">거리 약 ${nfm(E.km)}km</text></svg>`; }
-function elvFill(el){ const i=+el.dataset.elv; elevGet().then(J=>{ const E=J&&J.r&&J.r[i]; if(!E||!document.body.contains(el)) return; const h=elvSVG(E); if(!h) return;
-  el.innerHTML=`<p class="elvh">길의 높낮이 <small>지나간 곳을 곧게 이은 선 위의 땅 높이</small></p>${h}`;
-  const sv=el.querySelector("svg"), cur=sv.querySelector(".elvcur"), cl=cur.querySelector("line"), ct=cur.querySelector("text"), tp=sv.querySelector(".elvtop"), n=E.e.length;
-  const mv=ev=>{ const b=sv.getBoundingClientRect(), x=(ev.clientX-b.left)/b.width*320, k=Math.max(0,Math.min(n-1,Math.round((x-6)/308*(n-1)))), v=E.e[k], xx=6+308*k/(n-1);
-    cur.style.display=""; tp.style.display="none"; cl.setAttribute("x1",xx); cl.setAttribute("x2",xx); ct.setAttribute("x",xx); ct.setAttribute("text-anchor",xx<50?"start":xx>270?"end":"middle"); ct.textContent=v==null?`바다 · ${nfm(E.km*k/(n-1))}km`:`${nfm(v)}m · ${nfm(E.km*k/(n-1))}km`; };
-  sv.onpointermove=mv; sv.onpointerdown=mv; sv.onpointerleave=()=>{ cur.style.display="none"; tp.style.display=""; }; }); }
+/* 11/20 목사님: 여정마다 붙였던 '길의 높낮이' 띠는 쓸모가 적어 뺌(땅 높이 자료 elev.json은 지명 사전이 계속 씀) */
 /* 지명 사전(2026-11-17 목사님: 성경지도 사이트에서 따온 생각) — 성경의 곳 이름을 가나다로 찾고, 위치(이름난 곳에서 어느 쪽 몇 km)·땅 높이·책마다의 풀이·작은 지도·나오는 날.
    지금 이름은 자료에 없어 쓰지 않음(지어내지 않음). 위치 줄은 좌표로 셈한 것. */
 const PD_CH=["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
@@ -7232,7 +7206,7 @@ function bmOvPanel(){ const P=document.getElementById("bmOvP"); if(!P) return; c
   if(seg==="trip"){ const i=view.bmSel, r=ROUTES_B[i]; if(!r){ P.innerHTML=""; return; } const D=bmRouteDay(r), RD=bmRouteRead(r), L=(BM_OV&&BM_OV.list)||bmWhoGroups()[bmWhoOf(r)], k=L.indexOf(i);
     const est=r.p.some(q=>q[0]&&PLACE.get(q[0])&&PLACE.get(q[0])[4]);
     P.innerHTML=`<div class="bmovr"><div class="bmovnav">${k>0?`<button data-bmnav="${L[k-1]}" aria-label="이전 여정">‹</button>`:"<span></span>"}<div><b>${esc(rmBase(r.n))}</b><small>${esc(PLAN.abbr[r.b-1])} ${r.c[0]}${r.c[1]!==r.c[0]?"–"+r.c[1]:""}장 · ${esc(r.p.map(q=>q[0]).filter(Boolean).join(" → "))}</small><small>${RD.all?"✓ 모두 읽음":RD.some?`${RD.t}장 중 ${RD.n}장 읽음`:"아직 읽지 않음"}${k>=0?` · ${k+1}/${L.length}`:""}</small></div>${k>=0&&k<L.length-1?`<button data-bmnav="${L[k+1]}" aria-label="다음 여정">›</button>`:"<span></span>"}</div>
-      <div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${bmGoBtns(bmRouteRef(r),D)}</div><div class="elv" data-elv="${i}"></div>${est?`<p class="bmest">점선 테두리의 곳은 위치가 추정입니다.</p>`:""}</div>`;
+      <div class="bmrb"><button class="btn small" data-bmplay="${i}">▶ 걸어 보기</button>${bmGoBtns(bmRouteRef(r),D)}</div>${est?`<p class="bmest">점선 테두리의 곳은 위치가 추정입니다.</p>`:""}</div>`;
     /* 단추 한 줄(목사님 2026-11-02): 장 정보는 위에 있으니 날짜만 */
     P.querySelectorAll(".bmrb [data-bmv]").forEach(b=>b.textContent="📖 본문"); P.querySelectorAll(".bmrb [data-bmday]").forEach(b=>{ if(D) b.textContent=`${fmt(dateOf(D[0],D[1]),{month:"numeric",day:"numeric"}).replace(/\.\s?/g,"/").replace(/\/$/,"")} 읽는 날 ›`; }); }
   else if(seg==="lib"){ const B=bmLit(); P.innerHTML=`${""}<div class="bmpanel">${bmDayPanel()}</div>`; bmLandBind(P.querySelector("#bmLandT2")); }
@@ -7251,7 +7225,7 @@ function bmBindIn(m){
   m.querySelectorAll("[data-bmgo]").forEach(b=>b.onclick=()=>{ view.bmSeg="trip"; view.bmEra=+b.dataset.bmgo; view.bmSel=null; render(); window.scrollTo({top:0}); });
   m.querySelectorAll("[data-bmr]").forEach(b=>b.onclick=()=>bmRouteSel(+b.dataset.bmr));
   m.querySelectorAll("[data-bmplay]").forEach(b=>b.onclick=()=>bmPlay(+b.dataset.bmplay));
-  m.querySelectorAll("[data-elv]").forEach(elvFill);
+  
   m.querySelectorAll("[data-bmtour]").forEach(b=>b.onclick=()=>bmTour(+b.dataset.bmtour));
   m.querySelectorAll("[data-bmday]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.bmday.split("-").map(Number); bmLeave(); go(w,d); });
   m.querySelectorAll("[data-bmpl]").forEach(b=>b.onclick=()=>{ const g=PLACE.get(b.dataset.bmpl); if(g&&BM_MAP) BM_MAP.flyTo([g[1],g[2]],8.5,{duration:.8}); bmPlace(b.dataset.bmpl); });
