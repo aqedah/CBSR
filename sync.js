@@ -35,6 +35,22 @@
     return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
   }
   const notify=()=>listeners.forEach(f=>{try{f();}catch(e){}});
+  /* 저장(11-20 GPT 2차 검토): ① 바이트로 크기를 재고 ② 크면 조각으로 나눠 한 번에(batch) 쓰고 ③ 고쳐지지 않는 오류(권한·형식·너무 큼)는 되풀이하지 않음 */
+  let pend=null, partsN=0; const INLINE_MAX=700000, PART=200000, LEGACY_MAX=850000;
+  const bytes=s=>new TextEncoder().encode(s).length;
+  async function write(mem){ await init(); const r=docOf(); if(!r) return; const s=JSON.stringify(mem), b=bytes(s), name=String(login.name||"").slice(0,40);
+    if(!login.g){ if(b>LEGACY_MAX){ const e=new Error("too-big"); e.code="too-big"; throw e; } await r.set({name,data:s,updatedAt:Date.now()},{merge:true}); return; }
+    const B=fs.batch();
+    if(b<=INLINE_MAX){ B.set(r,{name,data:s,n:0,updatedAt:Date.now()},{merge:true}); for(let i=0;i<partsN;i++) B.delete(r.collection("c").doc(String(i))); await B.commit(); partsN=0; return; }
+    const P=[]; for(let i=0;i<s.length;){ let j=Math.min(s.length,i+PART); const c=s.charCodeAt(j-1); if(j<s.length&&c>=0xD800&&c<=0xDBFF) j--; /* 이모지 반쪽으로 자르지 않게 */ P.push(s.slice(i,j)); i=j; } if(P.length>60){ const e=new Error("too-big"); e.code="too-big"; throw e; }
+    P.forEach((t,i)=>B.set(r.collection("c").doc(String(i)),{s:t})); for(let i=P.length;i<partsN;i++) B.delete(r.collection("c").doc(String(i)));
+    B.set(r,{name,data:"",n:P.length,updatedAt:Date.now()},{merge:true}); await B.commit(); partsN=P.length; }
+  const PERM=/permission-denied|invalid-argument|too-big|unauthenticated|failed-precondition|out-of-range/;
+  async function run(now){ const m=pend; if(!m||!login) return; pend=null;
+    try{ await Promise.race([write(m),new Promise((_,rej)=>setTimeout(()=>{ const e=new Error("timeout"); e.code="timeout"; rej(e); },20000))]); lastSaved=new Date(); lastErr=null; notify(); }
+    catch(e){ console.warn("sync",e); const c=e&&e.code||""; lastErr={at:new Date(),code:c}; notify();
+      if(!PERM.test(c)){ if(!pend) pend=m; clearTimeout(pushT); pushT=setTimeout(run,/resource-exhausted/.test(c)?300000:30000); }
+      if(now) throw e; } }
   window.SYNC={
     available:!!(cfg&&cfg.apiKey),
     loginEnabled:LOGIN_ON,
@@ -42,14 +58,19 @@
     google:()=>!!(login&&login.g), /* 구글 계정으로 잇는 중 */
     legacyOnly:()=>!!(login&&login.key&&!login.g), /* 예전 이름·숫자로만 잇는 중(구글로 옮겨야 함) */
     email:()=>login&&login.email||"",
+    /* 이 기기 기록의 주인 표시(계정을 바꿀 때 앞사람 기록이 뒷사람 계정에 섞이지 않게) */
+    uid:()=>login&&login.g?"g:"+login.uid:login&&login.key?"k:"+login.key:"",
     name:()=>login?login.name:"",
     lastSaved:()=>lastSaved,
     lastError:()=>lastErr, /* 11-20 GPT 감사: 저장 실패를 화면에 알리기 위해 */
+    pending:()=>!!pend,
     onChange(f){listeners.push(f);},
     /* 구글 계정으로 들어가기(휴대폰에서 창이 막히면 페이지를 옮겨 다녀옴 — 돌아오면 init()이 마저 처리) */
     async loginGoogle(){ await init(); const pv=new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({prompt:"select_account"});
+      /* 11-20 GPT 2차: 사용자가 창을 닫은 것(popup-closed-by-user·cancelled-popup-request)은 취소로 끝냄. 창이 막혔거나 지원하지 않을 때만 페이지를 다녀옴 */
       try{ await firebase.auth().signInWithPopup(pv); }
-      catch(e){ if(/popup|operation-not-supported|web-storage/.test(e.code||"")){ await firebase.auth().signInWithRedirect(pv); return "redirect"; } throw e; }
+      catch(e){ const c=e&&e.code||""; if(/popup-closed-by-user|cancelled-popup-request|user-cancelled/.test(c)) return "cancel";
+        if(/popup-blocked|operation-not-supported|web-storage-unsupported/.test(c)){ await firebase.auth().signInWithRedirect(pv); return "redirect"; } throw e; }
       await adopt(); return login&&login.g?"ok":"fail"; },
     /* 예전 이름·숫자 기록: 옮길 것이 있는지, 가져오기, 다 옮겼다고 표시 */
     legacyPending:()=>!!(login&&login.g&&ls.get(LEGACY,null)),
@@ -73,10 +94,18 @@
       login={name,key}; ls.set(LOGIN,login); notify();
       return remote;
     },
-    async logout(){ const g=login&&login.g; login=null; ls.del(LOGIN); notify(); if(g){ try{ await init(); await firebase.auth().signOut(); await firebase.auth().signInAnonymously(); }catch(e){} } },
-    async pull(){ if(!login) return null; await init(); const r=docOf(); if(!r) return null; const s=await r.get(); if(!s.exists) return null; try{ return JSON.parse(s.data().data||"{}"); }catch(e){ return null; } },
-    push(mem,wait){ if(!login) return; clearTimeout(pushT);
-      pushT=setTimeout(async()=>{ try{ await init(); const r=docOf(); if(!r) return; await r.set({name:String(login.name||"").slice(0,40),data:JSON.stringify(mem),updatedAt:Date.now()},{merge:true}); lastSaved=new Date(); lastErr=null; notify(); }catch(e){ console.warn("sync",e); lastErr={at:new Date(),code:e&&e.code||""}; notify(); /* 30초 뒤 다시 */ clearTimeout(pushT); pushT=setTimeout(()=>window.SYNC.push(mem,0),30000); } },wait==null?1500:wait); },
+    /* 나가기 전에 아직 못 올린 기록을 먼저 올림. 못 올리면 false(앱이 알리고 나가지 않음) */
+    async logout(force){ if(!force){ try{ await window.SYNC.flush(); }catch(e){ return false; } if(pend) return false; }
+      const g=login&&login.g; login=null; ls.del(LOGIN); notify(); if(g){ try{ await init(); await firebase.auth().signOut(); await firebase.auth().signInAnonymously(); }catch(e){} } return true; },
+    async pull(){ if(!login) return null; await init(); const r=docOf(); if(!r) return null; const s=await r.get(); if(!s.exists) return null; const x=s.data();
+      /* 11-20 GPT 2차: 기록이 커지면(문서 한 개 1MiB 한도) users/{uid}/c/{0..n-1} 조각에 나눠 둠 */
+      if(x.n>0){ const P=await Promise.all([...Array(x.n).keys()].map(i=>r.collection("c").doc(String(i)).get())); partsN=x.n;
+        const t=P.map(p=>p.exists?String(p.data().s||""):null); if(t.includes(null)) throw new Error("parts-missing");
+        return JSON.parse(t.join("")); /* 조각이 어긋나면(다른 기기가 쓰는 중) 던져서 이번 합치기를 건너뜀 — 빈 것으로 덮지 않게 */ }
+      try{ return JSON.parse(x.data||"{}"); }catch(e){ return null; } },
+    push(mem,wait){ if(!login) return; pend=mem; clearTimeout(pushT); pushT=setTimeout(run,wait==null?1500:wait); },
+    /* 기다리는 저장을 지금 올림(로그아웃 직전 등) */
+    async flush(){ clearTimeout(pushT); if(pend) await run(true); },
     /* 관리자: 구글 계정으로 로그인 → admins/{uid} 문서가 있으면 관리자 */
     admin:{
       async state(){ await init(); const u=firebase.auth().currentUser; if(!u||u.isAnonymous) return {in:false};
@@ -88,7 +117,7 @@
       /* 나중에 구글 로그인으로 바꿀 때 쓰는 함수 */
       async loginGoogle(){ await init(); const pv=new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({prompt:"select_account"});
         try{ await firebase.auth().signInWithPopup(pv); }
-        catch(e){ if(/popup|operation-not-supported/.test(e.code||"")) return firebase.auth().signInWithRedirect(pv); throw e; } },
+        catch(e){ if(/popup-blocked|operation-not-supported/.test(e.code||"")) return firebase.auth().signInWithRedirect(pv); throw e; } },
       async logout(){ await init(); await firebase.auth().signOut(); await firebase.auth().signInAnonymously(); },
       async list(){ await init(); const q=await fs.collection("feedback").orderBy("at","desc").limit(300).get(); return q.docs.map(d=>({id:d.id,...d.data()})); },
       async remove(id){ await init(); await fs.doc(`feedback/${id}`).delete(); }
@@ -117,8 +146,8 @@
     /* 함께 읽기(이름 공개를 켠 사람만): together/{날}/p/{공개 번호} 에 별명·작은 사진·아멘한 성품·붙잡은 구절 */
     together:{
       async who(){ if(!login) return null; if(login.g) return login.uid; /* 구글: 문서 이름이 곧 내 계정 번호(남이 고치거나 지울 수 없게 규칙에서 확인) */ if(login.pub) return login.pub; const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("together|"+login.key)); login.pub=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("").slice(0,24); ls.set(LOGIN,login); return login.pub; },
-      async put(day,doc){ const w=await this.who(); if(!w) return false; await init(); await fs.doc(`together/${day}/p/${w}`).set(doc); return true; },
-      async del(day){ const w=await this.who(); if(!w) return; await init(); await fs.doc(`together/${day}/p/${w}`).delete(); },
+      async put(day,doc){ const w=await this.who(); if(!w) return false; await init(); const d=Object.assign({},doc); if(d.ph===undefined||d.ph==="") d.ph=null; /* 사진이 없을 때 undefined는 Firebase가 거절함 */ await fs.doc(`together/${day}/p/${w}`).set(d); return true; },
+      async del(day){ const w=await this.who(); if(!w) throw new Error("no-login"); await init(); /* 연결이 없으면 지우기 약속이 끝나지 않으므로 12초에 실패로 봄 */ await Promise.race([fs.doc(`together/${day}/p/${w}`).delete(),new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),12000))]); },
       async list(day){ await init(); const q=await fs.collection(`together/${day}/p`).limit(300).get(); return q.docs.map(d=>({who:d.id,...d.data()})); }
     },
     /* 소그룹 기록 넘겨주기(2026-11-20): 내용은 서버에 두고 링크에는 추측할 수 없는 번호만. 14일이 지나거나 받은 사람이 담으면 사라짐 */
@@ -138,5 +167,7 @@
       return {day:n(a),date:n(b),mine:!!(a.exists&&me&&(a.data().u||{})[me]),readers:c.exists?(c.data().readers||0):0}; }catch(e){ return null; } }
   };
   if(window.SYNC.available) init().catch(e=>console.warn("firebase",e));
-  if("serviceWorker" in navigator&&location.protocol==="https:") window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+  if("serviceWorker" in navigator&&location.protocol==="https:"){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+    /* 11-20 GPT 2차: 새 판을 받았으면 알림(쓰던 글을 끊지 않도록 바로 새로 고치지 않음) */
+    const had=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(!had) return; setTimeout(()=>{ try{ if(typeof window.toast==="function") window.toast("앱의 새 판을 받았습니다. 다음에 열 때 적용됩니다."); }catch(e){} },500); }); }
 })();
