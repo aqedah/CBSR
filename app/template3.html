@@ -3068,9 +3068,14 @@ function showPlace(n){
 /* 휴대폰 '뒤로 가기'로 열린 화면(본문 보기·스토리 QT·놀이·아래 창)만 닫고 페이지는 떠나지 않게 합니다 (v2) */
 const OVS=[]; let OVskip=0;
 try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }catch(e){}
-function ovOpen(f){ if(OVS.includes(f)) return; OVS.push(f); try{ history.pushState({cbsrOv:OVS.length},""); }catch(e){} }
-function ovDone(f){ const i=OVS.lastIndexOf(f); if(i<0) return; OVS.splice(i,1); OVskip++; try{ history.back(); }catch(e){ OVskip--; } }
-window.addEventListener("popstate",()=>{ if(OVskip>0){ OVskip--; return; } const f=OVS.pop(); if(f) f(true); });
+/* 11-20 목사님: 메뉴에서 [소그룹 인도자용 한 장]을 열고 ✕를 누르면 앱을 떠남 — 메뉴를 닫는 '뒤로'(늦게 끝남)가 새 화면의 기록을 지워 버려서.
+   닫는 '뒤로'가 아직 안 끝났으면 새 화면의 기록은 그것이 끝난 뒤에 넣음(메뉴에서 여는 모든 화면에 해당) */
+let OVpend=0, OVpT=0;
+const ovPush=()=>{ try{ history.pushState({cbsrOv:OVS.length},""); }catch(e){} };
+const ovFlush=()=>{ clearTimeout(OVpT); while(OVpend>0){ OVpend--; ovPush(); } };
+function ovOpen(f){ if(OVS.includes(f)) return; OVS.push(f); if(OVskip>0){ OVpend++; clearTimeout(OVpT); OVpT=setTimeout(()=>{ OVskip=0; ovFlush(); },600); return; } ovPush(); }
+function ovDone(f){ const i=OVS.lastIndexOf(f); if(i<0) return; OVS.splice(i,1); if(OVpend>0){ OVpend--; return; } OVskip++; try{ history.back(); }catch(e){ OVskip--; } }
+window.addEventListener("popstate",()=>{ if(OVskip>0){ OVskip--; if(!OVskip&&OVpend) ovFlush(); return; } const f=OVS.pop(); if(f) f(true); });
 function sheet(title,body,onClose){
   const root=document.getElementById("sheetRoot");
   root.innerHTML=`<div class="sheet-bg" id="sheetBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-head"><h3>${esc(title)}</h3><button class="iconbtn sheet-x" id="sheetX" aria-label="닫기">✕</button></div>${body}<div class="row sheet-foot"><button class="btn small" id="sheetClose">닫기</button></div></div></div>`;
