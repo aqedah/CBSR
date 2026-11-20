@@ -204,7 +204,7 @@ def _ldrd(Q):
     for n,v in Q.items():
         if not n.isdigit() or not isinstance(v,dict): continue
         g=v.get('guide') or {}; o=v.get('obs') or {}; v27=v.get('v27') or {}
-        if not (o.get('q') or v.get('apply')): continue
+        if not (o.get('q') or v.get('apply') or isinstance(v.get('ldr'),dict)): continue  # 11-21 인도자 원고만 있는 날도 싣기
         rep=''
         if v27.get('marks'):
             m=[x for x in v27['marks'] if x.get('rep')] or v27['marks']; rep=pl(m[0].get('text',''))
