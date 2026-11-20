@@ -829,7 +829,7 @@ function pageL27(p,qt){ const v=qt.v27, q='q'+qOf(p);
     :hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2"><div class="pic"><div class="im"><img src="img/g/${esc(qt.img.id)}.jpg" alt=""></div><div class="cap">${vs(qt.img.cap||'')}</div></div></div></div>`:box;
   const w=String(qt.guide.word||''), wi=w.indexOf(' — ');
   const word=w?`<p class="wd sans" data-f="word"><span class="wdl">말뜻</span>${wi>0?`<b>${esc(w.slice(0,wi))}</b> ${t27(w.slice(wi+3))}`:t27(w)}</p>`:'';
-  const marks=(v.marks||[]).map(m=>`<div class="mi${m.rep?' rep':''}"><div><span class="chip${m.rep?' rep':''}">${esc(m.tool)}</span>${m.rep?'<span class="star">대표</span>':''} ${t27(m.text)}</div></div>`).join('');
+  const marks=(v.marks||[]).map(m=>`<div class="mi${m.rep?' rep':''}"><div><span class="chip${m.rep?' rep':''}">${esc(m.tool)}</span> ${t27(m.text)}</div></div>`).join('');
   return `<div class="pg n27 ${q}">
 <div class="hd2 sans"><div class="dd"><b>${p.m}월 ${p.d}일</b><span>${wd27(p)} · ${dayNoLab(p)}</span><span>성경 읽기 약 ${p.min}분</span></div><div class="tb"><b>${esc(p.t)}</b><span data-f="sub">${esc(qt.sub||p.sub)}</span></div>${qrBox(p)}</div>
 <p class="sec sans"><span class="n">1</span>오늘의 흐름</p>
