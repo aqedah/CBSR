@@ -4768,7 +4768,8 @@ const MAPMETA={
  "베드로의 여정":{who:"베드로",mid:[["욥바",[44,9,40]],["가이사랴",[44,10,24]]],endBy:{"예루살렘":[44,11,2],"가이사랴":[44,10,24]},after:[44,11,18]},
  "바나바가 사울을 안디옥으로 데려옴":{who:"바나바",as:"man",with:[{n:"사울",as:"saul",from:"다소"}],mid:[["다소",[44,11,25]]],end:[44,11,26]},
  "부조를 들고 예루살렘에 다녀옴":{who:"바나바",as:"man",with:[{n:"사울",as:"saul"}],mid:[["예루살렘",[44,11,30]]],end:[44,12,25]},
- "1차 전도 여행":{who:"바울",with:[{n:"바나바",as:"man"}],mid:[["바보",[44,13,6]]],end:[44,13,14],after:[44,13,49]},
+ "1차 전도 여행":{who:"바울",with:[{n:"바나바",as:"man"},{n:"마가 요한",as:"youth",to:"버가",out:"go",goTo:"예루살렘",go:[[36.75, 30.75], [36.2, 31.4], [34.9, 32.0], [34.3, 33.0], [33.4, 34.2], [32.6, 34.75], [32.5, 34.89], [32.0, 35.05], [31.78, 35.23]]}],mid:[["바보",[44,13,6]],["버가",[44,13,13]]],end:[44,13,14],after:[44,13,49]}, /* 11/20: 요한이 버가에서 떠나 예루살렘으로(행 13:13). 길은 성경에 없어 추정 점선 */
+ "마가 요한이 예루살렘으로 돌아감":{who:"마가 요한",as:"youth",est:1,end:[44,13,13]},
  "1차 전도 여행 계속":{who:"바울",with:[{n:"바나바",as:"man"}],mid:[["루스드라#2",[44,14,22]]],end:[44,14,26],after:[44,14,27]},
  "예루살렘 회의로":{who:"바울",with:[{n:"바나바",as:"man"}],mid:[["사마리아",[44,15,3]]],end:[44,15,4],after:[44,15,11]},
  "바나바와 마가가 구브로로":{who:"바나바",as:"man",with:[{n:"마가",as:"youth"}],end:[44,15,39]},
@@ -4856,7 +4857,7 @@ function vSplit(r){ const S=window["SPEECH_"+(window.BIBLE_SRC||"krv")]||{}; con
   let n=na.filter(Boolean).join(" ").trim(); if((sp.length||gsp.length)&&core.join("").replace(/\s/g,"").length<16) n=""; /* '이르되' 같은 말 머리는 이름표가 대신함 */
   if(god&&GOD_RE.test(who)) who=""; /* 사람의 말풍선에 하나님 이름표가 붙지 않게 */
   return {sp:sp.join(" … "), segs, gsp:gsp.join(" … "), na:n, who:sp.length?who:"", god}; }
-if(/[?&]dbg=1/.test(location.search)) window.DBG=Object.assign(window.DBG||{},{vSplit:r=>vSplit(r), /* 점검용(2026-11-12): 가이드북 날 n의 경로 후보 */ dayRoutes:n=>{ for(let w=1;w<60;w++) for(let d=0;d<7;d++){ let k; try{ k=dayNo(w,d); }catch(e){ continue; } if(k===n){ const R=routesFor(w,d)||[], P=dayPlan(w,d); return {w,d,ch:P?P.ch:[],R:R.map(r=>({i:ROUTES_B.indexOf(r),n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}; } } return null; }, tour:(i,s)=>bmTour(typeof i==="string"?BM_TOURS.findIndex(t=>t.id===i):i,s), gbRoute:n=>{ const g=gbRoute(n); return g?{lab:g.lab,r:g.r?g.r.n:null,ti:g.ti,s:g.s,e:g.e}:null; }, allRoutes:()=>ROUTES_B.map((r,i)=>({i,n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}); /* 시험용 */
+if(/[?&]dbg=1/.test(location.search)) window.DBG=Object.assign(window.DBG||{},{vSplit:r=>vSplit(r), /* 점검용(2026-11-12): 가이드북 날 n의 경로 후보 */ dayRoutes:n=>{ for(let w=1;w<60;w++) for(let d=0;d<7;d++){ let k; try{ k=dayNo(w,d); }catch(e){ continue; } if(k===n){ const R=routesFor(w,d)||[], P=dayPlan(w,d); return {w,d,ch:P?P.ch:[],R:R.map(r=>({i:ROUTES_B.indexOf(r),n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}; } } return null; }, route:nm=>{ const i=ROUTES_B.findIndex(r=>r.n.startsWith(nm)); view.bmWho=bmWhoOf(ROUTES_B[i]); bmMapOpen("trip",{sel:i}); return i; }, tour:(i,s)=>bmTour(typeof i==="string"?BM_TOURS.findIndex(t=>t.id===i):i,s), gbRoute:n=>{ const g=gbRoute(n); return g?{lab:g.lab,r:g.r?g.r.n:null,ti:g.ti,s:g.s,e:g.e}:null; }, allRoutes:()=>ROUTES_B.map((r,i)=>({i,n:r.n,b:r.b,c:r.c,p:(r.p||[]).map(q=>q[0]).filter(Boolean)}))}); /* 시험용 */
 /* 말 앞뒤에 붙는 '이르되', '하고' 같은 말 머리·꼬리는 서술에서 뺍니다 */
 function vTrimIntro(t,afterSp,beforeSp){ t=t.trim(); if(afterSp) t=t.replace(/^(하[고니며매되여]|하니라|하더라|하시고|하시니|하시매|하시더라|하시니라|하였더라|하였느니라|하는지라|하거늘|하신대|한대|하였고|하였으나)(?=\s|$)\s*/,"");
   if(beforeSp) t=t.replace(/\s*\S*(이르되|이르시되|가로되|가라사대|말하되|말하기를|대답하되|대답하여|외치되|부르짖되|물어|물으시되|묻되|생각하되|하되)$/,m=>/^\s*\S*?(이르되|이르시되|가로되|가라사대|말하되|말하기를|대답하되|외치되|부르짖되|물으시되|묻되|생각하되|하되)$/.test(m)?"":m);
@@ -4967,7 +4968,7 @@ function mapActors(map,M,s,w,d){ if(typeof C!=="function") return; const still=!
   const stops=names.filter(Boolean).length, D=Math.min(16000,Math.max(6500,2600+stops*1000+(Mt.mid||[]).length*900));
   const lp=pp=>{ const P=pp.map(q=>map.latLngToLayerPoint(q)); let t=0; for(let i=1;i<P.length;i++) t+=P[i].distanceTo(P[i-1]); return t; }, tot=legs.filter(l=>l.t!=="jump").reduce((t,l)=>t+lp(l.p),0)||1;
   /* 길: 지나간 만큼 그림. 편지·문학적 여정·추정은 점선 */
-  if(M.rl&&!still){ const e=M.rl.getElement(); if(e){ e.style.animation="none"; e.style.opacity="0"; } } const dashed=!!(Mt.letter||Mt.lit);
+  if(M.rl&&!still){ const e=M.rl.getElement(); if(e){ e.style.animation="none"; e.style.opacity="0"; } } const dashed=!!(Mt.letter||Mt.lit||Mt.est); /* est: 성경이 길을 말하지 않아 추정한 길(11/20) */
   if(dashed&&M.ul){ const e=M.ul.getElement(); if(e) e.style.opacity=".45"; }
   const trail=L.polyline([[path[0]]],{color:MAPRT[mapStyleOf(w,d)]||"#e2603f",weight:dashed?4:5,dashArray:dashed?"3 9":null,lineCap:"round",lineJoin:"round",interactive:false}).addTo(map); const tparts=[[path[0]]];
   const setTrail=cur=>{ trail.setLatLngs(tparts.map((pp,i)=>i===tparts.length-1&&cur?pp.concat([cur]):pp)); };
@@ -4990,7 +4991,15 @@ function mapActors(map,M,s,w,d){ if(typeof C!=="function") return; const still=!
   const follow=(pt,ux,uy,moving)=>{ mainPt=pt; mainU=[ux,uy]; F.forEach(f=>{ const el=f.m.getElement(); if(!el||f.state!=="on") return; const hide=onSea&&!f.x.sea; el.style.display=hide?"none":"";
       const q=L.point(pt.x-ux*f.form[0]-uy*f.form[1],pt.y-uy*f.form[0]+ux*f.form[1]); f.m.setLatLng(map.layerPointToLatLng(q)); const c=fEl(f); if(c){ c.classList.toggle("walk",moving&&!hide); c.classList.toggle("flip",ux<-.05); } }); };
   const join=(f)=>{ f.state="on"; const el=f.m.getElement(); if(el){ el.style.display=""; } const c=fEl(f); if(c){ c.classList.add("popin"); } if(mainPt) follow(mainPt,mainU[0],mainU[1],false); if(f.x.bub&&mainPt) mvBub(map,map.layerPointToLatLng(mainPt),f.x.bub,true); };
-  const leave=(f)=>{ f.state="left"; const c=fEl(f); if(c) c.classList.remove("walk"); const out=f.x.out||"fade"; if(f.x.hold) return; setTimeout(()=>{ const c2=fEl(f); if(!c2) return; if(out==="vanish"){ c2.classList.add("vanish"); } else if(out==="fade"){ c2.style.transition="opacity 1.2s"; c2.style.opacity="0"; } },900); };
+  const leave=(f)=>{ f.state="left"; const c=fEl(f); if(c) c.classList.remove("walk"); const out=f.x.out||"fade"; if(f.x.hold) return;
+    /* 11/20 목사님(행 13:13 마가 요한): 동행이 일행을 떠나 따로 가는 길 — 갈색 점선(성경이 길을 말하지 않으면 추정)으로 걸어가고, 끝에 그곳 이름표 */
+    if(out==="go"&&f.x.go){ { const e0=f.m.getElement(); if(e0) e0.style.display=""; } /* 배 구간에서 숨겨진 채 떠나지 않게 */ const P=[f.m.getLatLng()].concat(f.x.go.map(q=>L.latLng(q[0],q[1]))), Dd=[0]; for(let i=1;i<P.length;i++) Dd.push(Dd[i-1]+P[i].distanceTo(P[i-1]));
+      const tot=Dd[Dd.length-1]||1, ms=still?0:Math.min(6000,Math.max(2800,tot/120)), ln=L.polyline([P[0]],{color:"#8a5a2b",weight:3,dashArray:"6 7",opacity:.9,lineCap:"round",interactive:false}).addTo(map);
+      const end=()=>{ ln.setLatLngs(P); f.m.setLatLng(P[P.length-1]); const c3=fEl(f); if(c3) c3.classList.remove("walk"); if(f.x.goTo) L.marker(P[P.length-1],{interactive:false,icon:L.divIcon({className:"",html:`<span class="spl est">${esc(f.x.goTo)}<small>추정 길</small></span>`,iconSize:[0,0],iconAnchor:[6,8]})}).addTo(map); };
+      if(!ms) return end(); const c2=fEl(f); if(c2) c2.classList.add("walk"); const t0=performance.now()+700;
+      const st=now=>{ if(!alive()) return; const k=Math.max(0,Math.min(1,(now-t0)/ms)), d=k*tot; let i=1; while(i<Dd.length-1&&Dd[i]<d) i++; const a=P[i-1], b=P[i], u=(d-Dd[i-1])/((Dd[i]-Dd[i-1])||1), h=L.latLng(a.lat+(b.lat-a.lat)*u,a.lng+(b.lng-a.lng)*u);
+        f.m.setLatLng(h); ln.setLatLngs(P.slice(0,i).concat([h])); const c4=fEl(f); if(c4) c4.classList.toggle("flip",b.lng<a.lng); if(k<1) requestAnimationFrame(st); else end(); };
+      requestAnimationFrame(st); return; } setTimeout(()=>{ const c2=fEl(f); if(!c2) return; if(out==="vanish"){ c2.classList.add("vanish"); } else if(out==="fade"){ c2.style.transition="opacity 1.2s"; c2.style.opacity="0"; } },900); };
   let arrived=-1, rn=name;
   const arrive=i=>{ if(i<=arrived) return; for(let k=arrived+1;k<=i;k++){ F.forEach(f=>{ if(f.state==="wait"&&f.fromI===k) join(f); else if(f.state==="left"&&f.backI===k){ f.state="on"; const c=fEl(f); if(c){ c.classList.remove("vanish"); c.style.opacity=""; c.classList.add("popin"); } if(mainPt) follow(mainPt,mainU[0],mainU[1],false); if(f.x.backBub&&mainPt) mvBub(map,map.layerPointToLatLng(mainPt),f.x.backBub,true); } else if(f.state==="on"&&f.toI===k) leave(f); });
       if(Mt.rename&&mvIdx(names,Mt.rename.at)===k&&main){ rn=Mt.rename.name; const t=main.getElement()&&main.getElement().querySelector(".nm"); if(t) t.textContent=rn; }
@@ -6172,7 +6181,7 @@ function bmPlayHere(r){ const map=BM_MAP; if(!map) return false; const fr=map.ge
   if(BM_PB&&BM_PB.map===map){ map.eachLayer(l=>{ if(!BM_PB.base.has(l)) try{ map.removeLayer(l); }catch(e){} }); }
   fr.querySelectorAll(".mvbub,.mvnar,.tvb,.mvemo").forEach(x=>x.remove());
   const base=new Set(); map.eachLayer(l=>base.add(l)); BM_PB={map,base};
-  const P=document.getElementById("bmOvP"), ph=P?P.offsetHeight:0; map.fitBounds(L.latLngBounds(r.p.map(q=>[q[1],q[2]])),{paddingTopLeft:[40,70],paddingBottomRight:[50,Math.min(ph,320)+30],maxZoom:11,animate:false});
+  const P=document.getElementById("bmOvP"), mr=fr.getBoundingClientRect(), pr=P?P.getBoundingClientRect():null, ph=pr?Math.max(0,Math.min(mr.bottom,pr.bottom)-Math.max(mr.top,pr.top)):0; /* 11/20: 설명판이 지도 아래에 따로 있을 때(휴대폰)는 지도를 가리지 않으므로 그만큼 비우지 않음 — 전에는 지도가 아프리카까지 멀어졌음 */ map.fitBounds(L.latLngBounds(r.p.map(q=>[q[1],q[2]])),{paddingTopLeft:[30,60],paddingBottomRight:[30,Math.min(ph,320)+30],maxZoom:11,animate:false});
   const M={route:r.p.map(q=>[q[0],q[1],q[2],0,0]),extra:[],name:r.n,b:r.b}; M.ul=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#fff",weight:10,opacity:.85,interactive:false}).addTo(map); M.rl=L.polyline(M.route.map(q=>[q[1],q[2]]),{color:"#e2603f",weight:5,interactive:false}).addTo(map);
   const D=bmRouteDay(r)||[1,0]; try{ mapActors(map,M,{h:""},D[0],D[1]); }catch(e){ console.warn(e); } return true; }
 function bmPlay(i){ const r=ROUTES_B[i]; if(!r) return; if(BM_OV&&bmPlayHere(r)) return; const el=document.createElement("div"); el.className="rgm"; el.innerHTML=`<div class="rgmtop"><b>${esc(rmBase(r.n))}</b><button class="gpx" aria-label="닫기">✕</button></div><div class="rgmmap" id="bmPlayMap" style="height:calc(100vh - 190px);height:calc(100dvh - 190px)"></div>`; document.body.appendChild(el); document.body.style.overflow="hidden";
