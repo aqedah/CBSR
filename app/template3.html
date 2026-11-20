@@ -4038,7 +4038,7 @@ function godMark(t){
   return ss.map((x,i)=>i===k?`<mark class="godhl">${esc(x.trim())}</mark>${/\s$/.test(x)?" ":""}`:esc(x)).join("");
 }
 /* 2026-10-29 첫 화면을 v2로 바꿈: v1을 쓰던 기기에서 처음 열면 한 번 알림 */
-const LINK_IN=/[?&](day|review|ldr|ldrin)=/.test(location.search); /* 처음 열 때의 주소로 판단(받은 뒤 주소에서 지워도) */
+const LINK_IN=/[?&](day|review|ldr|ldr26|ldrin)=/.test(location.search); /* 처음 열 때의 주소로 판단(받은 뒤 주소에서 지워도) */
 function switchNotice(){ try{ if(!window.CBSR_HADV1||false||localStorage.getItem("cbsr-switch-seen")) return; if(LINK_IN) return; /* 11-20: 넘겨주기·인도자 링크로 열 때 받는 창을 가리지 않게 */ localStorage.setItem("cbsr-switch-seen",todayStr()); }catch(e){ return; }
   const lin=window.SYNC&&SYNC.available&&SYNC.loggedIn&&SYNC.loggedIn();
   sheet("새 화면으로 바뀌었습니다",`<p>이야기통독이 새 화면으로 바뀌었습니다. 읽는 본문과 순서는 그대로입니다.</p><ul class="swl"><li><b>오늘</b>: 그날 이야기를 사진 카드로 따라가는 <b>스토리 QT</b>로 시작합니다.</li><li>맨 위 <b>동그라미</b>를 눌러 날짜를 옮깁니다. 맨 왼쪽 <b>나의 통독</b>에는 오늘 붙잡은 말씀이 모입니다.</li><li>아래 단추는 차례로 <b>오늘 · 본문 · 묵상 노트 · 도전 · 기록</b>입니다.</li></ul><p class="swrec"><b>기록 안내</b><br>${lin?"이름과 4자리 번호로 로그인하셨기 때문에 기록이 그대로 이어집니다.":"이름과 4자리 번호로 로그인해 쓰신 분은 기록이 그대로 이어집니다. 로그인 없이 쓰신 기록은 새 화면으로 옮겨지지 않았을 수 있습니다. 앞으로는 메뉴에서 로그인해 두시면 기기를 바꿔도 기록이 이어집니다."}</p><p class="lead">예전 화면은 메뉴 맨 아래 '이전 화면'에서 볼 수 있습니다.</p><button class="btn" id="swTour" style="width:100%;margin-top:6px">1분 둘러보기</button>`);
@@ -9252,6 +9252,8 @@ window.addEventListener("message",e=>{ try{ if(e.origin!==location.origin||!e.da
 /* 11-20: 넘겨받은 소그룹 기록 링크(?ldrin=) */
 { const lc=new URLSearchParams(location.search).get("ldrin"); if(lc) setTimeout(()=>whenBible(()=>ldrReceive(lc)),500); }
 /* 11-20: 가이드북 주일 지면의 QR(?ldr=날 번호) → 그날 소그룹 인도자용 한 장을 바로 엶 */
+/* 11-21: 체험판 가이드북 주일 QR(?ldr26=날) — 2026판 인도자 화면. 2027년에 열면 그냥 앱으로 */
+{ const l6=+(new URLSearchParams(location.search).get("ldr26")||0); if(l6>=1&&l6<=365&&!Y27){ try{ const [w,d]=dayWD(l6); view.w=w; view.d=d; }catch(e){} view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
 { const ln=+(new URLSearchParams(location.search).get("ldr")||0); if(ln>=1&&ln<=365){ view.w=Math.floor((ln-1)/7)+1; view.d=(ln-1)%7; view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){ const sr=document.getElementById("sheetRoot"); if(sr&&sr.innerHTML){ const cb=document.getElementById("sheetClose"); if(cb) cb.click(); else sr.innerHTML=""; return; } /* 3차 R3-12: Esc도 닫기 단추와 같은 길로(멈춤 복원) */ if(OVS.length){ try{ history.back(); }catch(x){} return; } closeMenu();}});

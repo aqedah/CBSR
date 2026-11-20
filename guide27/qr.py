@@ -9,3 +9,4 @@ for n in range(1,366):
     out[n]=format(int(bits,2),'0%dx'%(len(bits)//4))
 print(len(out),list(out)[:5])
 json.dump(out,open('qr27.json','w'))
+# 11-21: 체험판(2026) 주일 QR은 ?ldr26=날 (317–365일 가운데 주일). guide.html의 QR26에 같은 방식으로 넣었습니다.
