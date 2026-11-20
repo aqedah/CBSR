@@ -3418,13 +3418,16 @@ function readAid(p,w,d,key,tl,G){ const g=GUIDE[key]||{}, where=whereOf(p);
 const secIn=x=>(x||"").replace(/^\s*<section[^>]*>/,"").replace(/<\/section>\s*$/,"").replace(/<span class="label">[^<]*<\/span>/,"");
 /* 11-13 목사님 "읽은 뒤와 더 알아보기가 겹친다": 지도·성경 전체로는 ③ 한 곳에만. [더 알아보기]에는 줄거리·인물·곳·말·퀴즈만 */
 function afterRead(w,d,A){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||{}, L=Object.keys(P); let h="";
-  if(L.length) h+=`<div class="aidsec"><b class="aidk">눈여겨볼 것</b>${L.map(t=>`<p class="aidtool">${toolChip(t)}<span>${esc(P[t])}</span></p>`).join("")}</div>`;
+  /* 11-20 목사님: 가이드북처럼 설명 속 성구(20:28, 시 74:2…)를 누르면 그 말씀이 떠서 보임 */
+  const dp=dayPlan(w,d), rf=t=>{ try{ return tbkRefs(esc(t),dp); }catch(e){ return esc(t); } };
+  if(L.length) h+=`<div class="aidsec"><b class="aidk">눈여겨볼 것</b>${L.map(t=>`<p class="aidtool">${toolChip(t)}<span>${rf(P[t])}</span></p>`).join("")}</div>`;
   { let R=[]; try{ R=routesFor(w,d).filter(r=>r.p.filter(q=>q[0]).length>=2); }catch(e){} const box=A&&BIBLE&&[...A.places.values()].some(p=>PLACE.has(p.name))||R.length?secIn(renderMapBox(A)):"";
-    if(GD&&GD.m||box) h+=`<div class="aidsec"><b class="aidk">지도</b>${GD&&GD.m?`<p>${esc(GD.m)}</p>`:""}${GD&&GD.m&&R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}${box}</div>`; }
-  { const ch=christMini(w,d,!!(GD&&GD.c)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${esc(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
+    if(GD&&GD.m||box) h+=`<div class="aidsec"><b class="aidk">지도</b>${GD&&GD.m?`<p>${rf(GD.m)}</p>`:""}${GD&&GD.m&&R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}${box}</div>`; }
+  { const ch=christMini(w,d,!!(GD&&GD.c)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${rf(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
     else if(ch.trim()) h+=`<div class="aidsec"><b class="aidk">성경 전체로</b>${ch}</div>`; }
   if(!GD&&A){ const kw=renderKeyWords(A,w,d); if(kw) h+=`<div class="aidsec"><b class="aidk">읽기 도구</b>${kw}</div>`; } /* 가이드북 원고가 없는 날만(있는 날은 읽기 도구·성경 전체로와 겹침) */
   return h; }
+document.addEventListener("click",e=>{ const r=e.target.closest&&e.target.closest("#rd3 .tbkref"); if(!r) return; e.preventDefault(); const [b,c,v,v2]=r.dataset.ref.split("-").map(Number); tbkPeek(b,c,v,v2||v); });
 function prepHelp(p,w,key){
   const g=GUIDE[key], where=whereOf(p);
   const rows=[];
@@ -8253,7 +8256,8 @@ function tbkRefs(html,p){ if(!TBK_ABRE){ const A=PLAN.abbr.map((a,i)=>[a,i+1]).s
   let last=0; return html.replace(TBK_ABRE.re,(m0,pre,ab,c,v,v2)=>{ c=+c; v=+v; v2=v2?+v2:v; let b=ab?TBK_ABRE.m[ab]:last;
     /* 11-12: 그 책에 없는 장이면 물려받지 않음(없는 장으로 가는 링크 막기) */
     if(b&&c>BOOK_CH[b-1]){ if(ab) return m0; b=0; }
-    if(!b){ const C=[...new Set(p.ch.filter(x=>x[1]===c).map(x=>x[0]))]; if(C.length===1) b=C[0]; }
+    /* 11-20: 책 이름 없는 주소는 오늘 읽는 범위에 그 장이 있으면 오늘 책이 먼저("사 6:9 … 28:28"의 28:28은 행 28:28). 없을 때만 앞 주소의 책을 이어받음 */
+    if(!ab){ const C=[...new Set(p.ch.filter(x=>x[1]===c).map(x=>x[0]))]; if(C.length===1) b=C[0]; }
     if(!b) return m0; last=b; const inDay=p.ch.some(x=>x[0]===b&&x[1]===c);
     return `${pre}<button class="tbkref" data-ref="${b}-${c}-${v}-${v2}${inDay?"":"-x"}">${m0.slice(pre.length)}</button>`; }); }
 function tbkT(t,p){ return tbkRefs(esc(String(t||"")).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"),p); }
