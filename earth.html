@@ -86,6 +86,8 @@ const STORIES={
    {n:"벧엘",c:[35.22,31.93],z:11,v:"거기서 벧엘 동쪽 산으로 옮겨 장막을 치니 서쪽은 벧엘이요 동쪽은 아이라 그가 그 곳에서 여호와께 제단을 쌓고 여호와의 이름을 부르더니",r:"창 12:8"},
    {n:"애굽",c:[30.9,28.6],z:7.4,v:"그 땅에 기근이 들었으므로 아브람이 애굽에 거류하려고 그리로 내려갔으니 이는 그 땅에 기근이 심하였음이라",r:"창 12:10"}]}
 };
+/* Esri 위성사진 열쇠(ArcGIS Location Platform, 공개용·Basemaps 권한만, 결제 수단 없음 → 무료 한도 넘으면 그달만 멈추고 아래 센티넬-2가 대신 보임) */
+const ESRI_KEY="AAPTaUqt1XIMnMStRcL1mBHpKMw..2Gs-y_vTrVxMvf8M0LJMc3dxaWsiCTd6XfbfpC2mm_-jZv-5Rn3oC12tUMZPV-h24hdYepP18btpoV5NQsVgcHdnoDKweEk-4axC17FusPahec591QOe8jgZDbu8lqOyvvEDuo1okCssWfTVNlzj-iQq9xmdFpyJkWVwxJ4geRi2fMyf6S1I-noYUvh45Fsl1c_koh1pqw1CJjz6tzbD-3o3OsOVSr6y-55sbAaEWxEzBiOCjT-6AT1_6DsUMdSL", ESRI_URL=(z,y,x)=>`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${ESRI_KEY}`;
 const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* 11-21 1단계 다듬기: 화면 선명도는 2배까지만(3배 화면에서 너무 무거워짐), 타일 보관 넉넉히, 사진 바뀜은 빠르게 */
 const map=new maplibregl.Map({container:"map",center:[38,24],zoom:1.25,pitch:0,bearing:0,maxPitch:75,attributionControl:{compact:true},pixelRatio:Math.min(devicePixelRatio||1,2),maxTileCacheSize:600,fadeDuration:120,
@@ -95,8 +97,8 @@ const map=new maplibregl.Map({container:"map",center:[38,24],zoom:1.25,pitch:0,b
   sources:{
    bm:{type:"raster",tiles:["https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg"],tileSize:256,maxzoom:8,attribution:"NASA Blue Marble"},
    s2:{type:"raster",tiles:["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"],tileSize:256,maxzoom:15,attribution:'<a href="https://s2maps.eu" target="_blank">Sentinel-2 cloudless</a> by EOX IT Services GmbH (Copernicus Sentinel data 2016)'},
-   /* 가까이: Esri 위성사진(시험용, 출시 땐 무료 계정 열쇠로) */
-   esri:{type:"raster",tiles:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],tileSize:256,maxzoom:17,attribution:"Esri, Maxar, Earthstar Geographics"},
+   /* 가까이: Esri 위성사진(목사님 계정 열쇠) */
+   esri:{type:"raster",tiles:[ESRI_URL("{z}","{y}","{x}")],tileSize:256,maxzoom:17,attribution:"Powered by Esri · Esri, Maxar, Earthstar Geographics"},
    dem:{type:"raster-dem",tiles:["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],tileSize:256,encoding:"terrarium",maxzoom:13,attribution:"AWS Terrain Tiles"}},
   layers:[
    /* 11-21 목사님 화면(애굽 검푸른 네모 구멍): 위층 사진이 아직 안 왔거나 막히면 바탕색이 드러났음 → 아래층 사진을 밑에 남겨 둠(블루마블은 지방 높이까지, 센티넬-2는 마을 높이까지). 바탕색도 땅·바다 중간색으로 */
@@ -112,7 +114,7 @@ let TER=false; function terr(){ const on=map.getZoom()>4.2; if(on!==TER){ TER=on
 map.on("zoomend",terr);
 /* 다음에 갈 곳의 사진과 높이를 미리 받아 둠(도착했을 때 깨진 사진이 덜 보이게) */
 function lon2x(l,z){ return Math.floor((l+180)/360*2**z); } function lat2y(a,z){ const r=a*Math.PI/180; return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**z); }
-const PRE=new Set(); function prefetch(c,z){ const zz=Math.round(z); [[zz,"esri"],[zz-1,"esri"],[Math.min(zz,10),"s2"],[Math.min(zz-1,12),"dem"]].forEach(([q,k])=>{ if(q<1) return; const x0=lon2x(c[0],q), y0=lat2y(c[1],q); for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=1;dy++){ const x=x0+dx, y=y0+dy, u=k==="esri"?`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${q}/${y}/${x}`:k==="s2"?`https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/${q}/${y}/${x}.jpg`:`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${q}/${x}/${y}.png`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
+const PRE=new Set(); function prefetch(c,z){ const zz=Math.round(z); [[zz,"esri"],[zz-1,"esri"],[Math.min(zz,10),"s2"],[Math.min(zz-1,12),"dem"]].forEach(([q,k])=>{ if(q<1) return; const x0=lon2x(c[0],q), y0=lat2y(c[1],q); for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=1;dy++){ const x=x0+dx, y=y0+dy, u=k==="esri"?ESRI_URL(q,y,x):k==="s2"?`https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/${q}/${y}/${x}.jpg`:`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${q}/${x}/${y}.png`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
 map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
 let spin=true, cur=null, step=-1, pins=[], busy=false;
 function rotate(){ if(!spin||RM) return; const c=map.getCenter(); c.lng-=0.06; map.easeTo({center:c,duration:60,easing:t=>t}); }
