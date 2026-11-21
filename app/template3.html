@@ -713,6 +713,12 @@ html.story-on .bnav,html.story-on .totop{display:none!important}
 /* 11-17 목사님: 한 이야기 안의 카드는 책장 넘기듯(정육면체는 날짜 고리에서 다른 날로 갈 때만) — 왼쪽 가장자리가 책등.
    앞으로: 지금 장이 왼쪽으로 넘어가며 그늘지고, 밑에 있던 다음 장이 드러남. 뒤로: 앞 장이 왼쪽에서 넘어와 덮음 */
 #storyRoot{perspective:1600px;overflow:hidden;touch-action:pan-y}
+#storyRoot .snavw{display:none}
+@media (min-width:900px) and (min-aspect-ratio:1/1){ /* 11-21 넓은 화면: 양옆 흐린 그림 + 큰 ‹ › */
+  #storyRoot::before{content:"";position:absolute;inset:-40px;background:var(--sbg,none) center/cover no-repeat;filter:blur(36px) brightness(.42) saturate(1.1);z-index:0;transition:background-image .4s}
+  #storyRoot .snavw{display:grid;place-items:center;position:absolute;top:50%;transform:translateY(-50%);z-index:30;width:56px;height:56px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(20,16,12,.45);color:#f6efe4;font:400 32px/1 var(--f-ui);cursor:pointer;backdrop-filter:blur(4px)}
+  #storyRoot .snavw:hover{background:rgba(20,16,12,.7)} #storyRoot .snavw:disabled{opacity:.25;cursor:default}
+  #storyRoot .snavw.l{left:calc(50% - 260px - 84px)} #storyRoot .snavw.r{right:calc(50% - 260px - 84px)} }
 #storyRoot .sfr.sfw,#storyRoot .sfr.sbk{backface-visibility:hidden;transform-origin:left center}
 #storyRoot .sfr .sturn{position:absolute;inset:0;pointer-events:none;opacity:0;z-index:50;background:linear-gradient(90deg,rgba(0,0,0,.0) 0%,rgba(0,0,0,.18) 60%,rgba(0,0,0,.42) 100%)}
 #storyRoot .sfr.snew.sfw{filter:brightness(.62);transition:filter .55s ease}
@@ -4424,7 +4430,8 @@ const SN_LAB={obs:"본문 관찰",god:"하나님은",my:"나의 생각거리",en
 const SG_BG={narrative:["#3a2c1f","#15110d"],law:["#4a3418","#1a1209"],poetry:["#3a2c46","#17111d"],wisdom:["#353b1d","#15170b"],prophecy:["#4a2620","#1b0d0a"],letter:["#1f2f47","#0c1320"],apocalypse:["#2c2340","#100c18"]};
 const rlab2=r=>r?`${PLAN.abbr[r[0]-1]} ${r[1]}:${r[2]}${r[3]?"–"+r[3]:""}`:"";
 const S_KDUR={cover:7000,full:9000,split:9000,quote:10000,echo:10500,table:12000,line:7500};
-function sAutoOff(){ try{ return localStorage.getItem("cbsr-sauto")==="0"; }catch(e){ return false; } }
+/* 11-21: 넓은 화면·마우스(PC)에서 처음엔 자동 넘김 끔(본문과 견주며 읽는 사람이 많음). 한 번 고르면 그 선택을 따름 */
+function sAutoOff(){ try{ const v=localStorage.getItem("cbsr-sauto"); if(v==null) return !!(window.matchMedia&&matchMedia("(min-width:1000px) and (pointer:fine)").matches); return v==="0"; }catch(e){ return false; } }
 function sDur(s){ if(((s.b||[]).filter(x=>x&&x.q).length+(s.big?1:0))>=2) return 0;
   /* 읽는 사람이 넘기는 카드 더함(2026-11-02): 긴 인용(한 구절 60자 넘음)·나의 생각거리 */
   { if(s.k==="my") return 0; const QL=[...(s.b||[]).filter(x=>x&&x.q).map(x=>String(x.q[0]||"")),String(s.big||"")]; if(QL.some(t=>t.replace(/\s+/g,"").length>60)) return 0; } if(s.qt||s.k==="table"||s.k==="echo"||s.k==="map"||s.k==="fin"||s.k==="next"||s.k==="ask") return 0; const n=sTxt(s).length; return 1000+Math.min(13000,Math.max(S_KDUR[s.k]||8000,3500+n*45)); }
@@ -5390,6 +5397,9 @@ function storySwipe(r){ if(r._sw) return; r._sw=1; let x0=null,y0=0,t0=0,mode=0,
 function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return; storySwipe(r);
   if(!SV.mode&&!s.qt){ const k=keyOf(w,d); mem.sp ||= {}; const o=mem.sp[k]||{}; mem.sp[k]={i:SV.i,n:S.length,m:Math.max(o.m||0,SV.i)}; try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
   const quick=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches, dur=quick||sAutoOff()?0:sDur(s), auto=dur>0, kind=sKind(s), p=dayPlan(w,d); let ph=s.ph;
+  /* 11-21 넓은 화면: 양옆에 지금 장면 그림을 흐리게 깔고, 마우스로 넘길 ‹ › 단추(휴대폰에선 CSS로 숨김) */
+  try{ r.style.setProperty("--sbg",ph&&ph.u?`url("${String(ph.u).replace(/"/g,"%22")}")`:"none"); if(!r.querySelector(".snavw")){ r.insertAdjacentHTML("beforeend",`<button class="snavw l" aria-label="앞 장면">‹</button><button class="snavw r" aria-label="다음 장면">›</button>`); r.querySelector(".snavw.l").onclick=e=>{ e.stopPropagation(); storyGo(SV.i-1); }; r.querySelector(".snavw.r").onclick=e=>{ e.stopPropagation(); storyGo(SV.i+1); }; }
+    r.querySelector(".snavw.l").disabled=SV.i<=0; }catch(e){}
   if(s.k==="next"){ const N=nextWD(w,d); if(N){ const S2=storySlides(N[0],N[1]); ph=S2[0]&&S2[0].ph; } }
   const [c1,c2]=SG_BG[GENRE_OF(p.ch[0][0])]||SG_BG.narrative;
   r.className="story-root"; r.style.setProperty("--sg1",c1); r.style.setProperty("--sg2",c2);
@@ -9270,6 +9280,9 @@ window.addEventListener("message",e=>{ try{ if(e.origin!==location.origin||!e.da
 { const l6=+(new URLSearchParams(location.search).get("ldr26")||0); if(l6>=1&&l6<=365&&!Y27){ try{ const [w,d]=dayWD(l6); view.w=w; view.d=d; }catch(e){} view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
 { const ln=+(new URLSearchParams(location.search).get("ldr")||0); if(ln>=1&&ln<=365){ view.w=Math.floor((ln-1)/7)+1; view.d=(ln-1)%7; view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
+/* 11-21: 스토리를 자판으로 — ← → 장면, 띄어쓰기 멈춤/이어 보기(글 쓰는 칸에서는 움직이지 않음) */
+document.addEventListener("keydown",e=>{ const r=document.getElementById("storyRoot"); if(!r||e.altKey||e.ctrlKey||e.metaKey) return; const t=e.target; if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return; const sr=document.getElementById("sheetRoot"); if(sr&&sr.innerHTML) return;
+  if(e.key==="ArrowRight"){ e.preventDefault(); storyGo(SV.i+1); } else if(e.key==="ArrowLeft"){ e.preventDefault(); storyGo(SV.i-1); } else if(e.key===" "){ const b=document.getElementById("sPause"); if(b){ e.preventDefault(); b.click(); } } });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){ const sr=document.getElementById("sheetRoot"); if(sr&&sr.innerHTML){ const cb=document.getElementById("sheetClose"); if(cb) cb.click(); else sr.innerHTML=""; return; } /* 3차 R3-12: Esc도 닫기 단추와 같은 길로(멈춤 복원) */ if(OVS.length){ try{ history.back(); }catch(x){} return; } closeMenu();}});
 try{ if(hasPre()&&dayDiff(cellOf(1,0).dt,today0())===0) view.pre=true; }catch(e){}
 studyTabSync(); applySize(); render(); loadBible();
