@@ -54,5 +54,8 @@ H={
 365:(606,'해보다 더 밝은 저 천국','새 하늘과 새 땅(21:1–4)'),
 }
 Q=os.path.join(R,'..','app','site_src','trial26_qt.json'); J=json.load(open(Q))
-for n,(no,t,why) in H.items(): J['qt'][str(n)]['hymn']={'no':no,'t':t,'why':why}
+LINE={355:'주 안에 있는 나에게 딴 근심 있으랴'}  # 목사님이 주신 소절(인도자 화면에서 씀)
+for n,(no,t,why) in H.items():
+    J['qt'][str(n)]['hymn']={'no':no,'t':t,'why':why}
+    if n in LINE: J['qt'][str(n)]['hymn']['line']=LINE[n]
 json.dump(J,open(Q,'w'),ensure_ascii=False,indent=1); print('찬송',len(H))
