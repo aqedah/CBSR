@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>성경의 땅 · 이야기통독</title>
+<!-- 2026-11-21 목사님: 구글어스처럼 지구에서 성경의 땅으로 빨려 들어가는 지도(시험 페이지). 앱에 넣기 전 보기용 -->
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#e9c38a;--ink:#f7f1e6;--sub:#d8ccbb;--glass:rgba(14,12,10,.58);--line:rgba(255,255,255,.16)}
+html,body{margin:0;height:100%;background:#03050b;color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+#space{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 60%,#0c1430 0%,#050814 45%,#010204 100%)}
+#space::before,#space::after{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 80px,#cfe0ff,transparent),radial-gradient(1.5px 1.5px at 200px 150px,#fff,transparent),radial-gradient(1px 1px at 300px 40px,#fff,transparent),radial-gradient(1px 1px at 380px 210px,#ffeacc,transparent),radial-gradient(1px 1px at 60px 260px,#fff,transparent),radial-gradient(1.2px 1.2px at 250px 300px,#dfe8ff,transparent);background-size:420px 340px;opacity:.75}
+#space::after{background-size:610px 520px;opacity:.45;transform:rotate(17deg) scale(1.3)}
+#map{position:fixed;inset:0}
+.maplibregl-ctrl-attrib{background:rgba(0,0,0,.35)!important;color:#ddd;font-size:10px}.maplibregl-ctrl-attrib a{color:#eee}
+.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom,0px))}
+/* 처음 화면 */
+#intro{position:fixed;left:0;right:0;bottom:0;padding:0 max(20px,env(safe-area-inset-left)) calc(28px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-right));text-align:center;background:linear-gradient(transparent,rgba(0,0,0,.65) 55%);transition:opacity .8s,transform .8s;z-index:5}
+#intro.off{opacity:0;transform:translateY(30px);pointer-events:none}
+#intro small{display:block;letter-spacing:.32em;color:var(--gold);font-size:12px;margin-bottom:10px}
+#intro h1{font:700 clamp(34px,7vw,64px)/1.15 "Noto Serif KR",serif;margin:0 0 10px;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+#intro p{margin:0 0 22px;color:var(--sub);font-size:15px}
+.go{border:0;border-radius:999px;padding:14px 34px;font:700 16px "Noto Sans KR";background:var(--gold);color:#22170d;cursor:pointer;box-shadow:0 8px 30px rgba(233,195,138,.35)}
+/* 위 */
+#top{position:fixed;top:calc(12px + env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));display:flex;align-items:center;gap:8px;z-index:6;opacity:0;transition:opacity .6s;pointer-events:none}
+#top.on{opacity:1;pointer-events:auto}
+.gl{background:var(--glass);border:1px solid var(--line);color:var(--ink);border-radius:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#top button{height:42px;min-width:42px;padding:0 12px;font:600 14px "Noto Sans KR";cursor:pointer}
+#top .ttl{flex:1;text-align:center;font:600 14px "Noto Sans KR";color:var(--sub);text-shadow:0 1px 6px #000}
+/* 아래 카드 */
+#card{position:fixed;z-index:6;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:calc(14px + env(safe-area-inset-bottom));padding:16px 16px 14px;opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s;pointer-events:none}
+#card.on{opacity:1;transform:none;pointer-events:auto}
+@media (min-width:900px){ #card{left:28px;right:auto;width:440px;bottom:28px} }
+#card .k{font-size:12px;color:var(--gold);letter-spacing:.08em;font-weight:700}
+#card h2{font:700 22px/1.35 "Noto Serif KR";margin:4px 0 6px}
+#card .v{font:16px/1.75 "Noto Serif KR";color:var(--ink);margin:0 0 4px}
+#card .r{font-size:12.5px;color:var(--sub);margin:0 0 12px}
+#card .row{display:flex;gap:8px;flex-wrap:wrap}
+#card .row button{flex:1;min-width:110px;height:44px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--ink);font:700 14px "Noto Sans KR";cursor:pointer}
+#card .row button.p{background:var(--gold);color:#22170d;border-color:var(--gold)}
+.dots{display:flex;gap:4px;margin:0 0 10px}.dots i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.2)}.dots i.on{background:var(--gold)}
+/* 지명 표시 */
+.pin{display:flex;align-items:center;gap:6px;transform:translateY(-2px);pointer-events:none;opacity:0;transition:opacity .8s}
+.pin.on{opacity:1}
+.pin i{width:10px;height:10px;border-radius:50%;background:#ffd79a;box-shadow:0 0 0 3px rgba(255,215,154,.25),0 0 16px 4px rgba(255,190,110,.7)}
+.pin b{font:700 13px "Noto Sans KR";color:#fff;text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.8);white-space:nowrap}
+.pin.big i{width:14px;height:14px;background:#fff3dc;box-shadow:0 0 0 5px rgba(255,215,154,.3),0 0 26px 8px rgba(255,190,110,.85)}
+.pin.big b{font-size:16px}
+.pin.sm b{opacity:0;transition:opacity .5s}.pin.sm.seen b{opacity:1} /* 멀리서는 작은 곳 이름을 숨겨 겹치지 않게, 지나가면 보임 */
+@media (max-width:899px){ .maplibregl-ctrl-bottom-right{display:none} #top .ttl{font-size:12.5px} }
+@media (prefers-reduced-motion:reduce){ #intro,#card,#top{transition:none} }
+</style>
+</head>
+<body>
+<div id="space"></div>
+<div id="map" aria-label="성경의 땅 지구 지도"></div>
+<div id="intro">
+  <small>이야기통독 · 성경의 땅</small>
+  <h1>오늘, 바울은<br>예루살렘으로 올라갑니다</h1>
+  <p>11월 21일 · 사도행전 21–24장</p>
+  <button class="go" id="enter">들어가기</button>
+</div>
+<div id="top"><button class="gl" id="earth" aria-label="지구로 돌아가기">◐ 지구</button><span class="ttl" id="ttl">사도행전 21장 · 바울의 마지막 예루살렘 길</span><button class="gl" id="other">아브라함의 길</button></div>
+<div id="card" class="gl"></div>
+<script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+<script>
+/* 위성사진: 멀리서는 NASA 블루마블(퍼블릭 도메인), 가까이는 Sentinel-2 cloudless 2016(EOX, CC BY 4.0). 높이: AWS Terrain Tiles(SRTM 등) */
+const STORIES={
+ paul:{title:"사도행전 21장 · 바울의 마지막 예루살렘 길",name:"바울의 마지막 예루살렘 길",color:"#ffcf7a",
+  stops:[
+   {n:"밀레도",c:[27.28,37.53],z:8.2,v:"우리가 그들을 작별하고 배를 타고 바로 고스로 가서 이튿날 로도에 이르러 거기서부터 바다라로 가서",r:"행 21:1"},
+   {n:"고스",c:[27.29,36.89],z:8.6},
+   {n:"로도",c:[28.22,36.43],z:8.4},
+   {n:"바다라",c:[29.31,36.26],z:8.6},
+   {n:"두로",c:[35.2,33.27],z:9.2,v:"구브로를 바라보고 이를 왼편에 두고 수리아로 항해하여 두로에서 상륙하니 거기서 배의 짐을 풀려 함이러라",r:"행 21:3"},
+   {n:"돌레마이",c:[35.08,32.92],z:9.6,v:"두로를 떠나 항해를 다 마치고 돌레마이에 이르러 형제들에게 안부를 묻고 그들과 함께 하루를 있다가",r:"행 21:7"},
+   {n:"가이사랴",c:[34.89,32.5],z:9.8,v:"이튿날 떠나 가이사랴에 이르러 일곱 집사 중 하나인 전도자 빌립의 집에 들어가서 머무르니라",r:"행 21:8"},
+   {n:"예루살렘",c:[35.23,31.78],z:10,v:"예루살렘에 이르니 형제들이 우리를 기꺼이 영접하거늘",r:"행 21:17"}]},
+ abram:{title:"창세기 11–12장 · 아브람의 길",name:"아브람의 길",color:"#9fe0ff",
+  stops:[
+   {n:"우르",c:[46.1,30.96],z:8.5,v:"데라가 그 아들 아브람과 하란의 아들인 그의 손자 롯과 그의 며느리 아브람의 아내 사래를 데리고 갈대아인의 우르를 떠나 가나안 땅으로 가고자 하더니 하란에 이르러 거기 거류하였으며",r:"창 11:31"},
+   {n:"하란",c:[39.03,36.86],z:8.8,v:"아브람이 그의 아내 사래와 조카 롯과 하란에서 모은 모든 소유와 얻은 사람들을 이끌고 가나안 땅으로 가려고 떠나서 마침내 가나안 땅에 들어갔더라",r:"창 12:5"},
+   {n:"세겜",c:[35.28,32.21],z:10.5,v:"아브람이 그 땅을 지나 세겜 땅 모레 상수리나무에 이르니 그 때에 가나안 사람이 그 땅에 거주하였더라",r:"창 12:6"},
+   {n:"벧엘",c:[35.22,31.93],z:10.8,v:"거기서 벧엘 동쪽 산으로 옮겨 장막을 치니 서쪽은 벧엘이요 동쪽은 아이라 그가 그 곳에서 여호와께 제단을 쌓고 여호와의 이름을 부르더니",r:"창 12:8"},
+   {n:"애굽",c:[30.9,28.6],z:7.4,v:"그 땅에 기근이 들었으므로 아브람이 애굽에 거류하려고 그리로 내려갔으니 이는 그 땅에 기근이 심하였음이라",r:"창 12:10"}]}
+};
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const map=new maplibregl.Map({container:"map",center:[38,24],zoom:1.25,pitch:0,bearing:0,maxPitch:75,attributionControl:{compact:true},
+ style:{version:8,projection:{type:"globe"},
+  sky:{"sky-color":"#0b1a3a","sky-horizon-blend":0.5,"horizon-color":"#6aa0ff","horizon-fog-blend":0.6,"fog-color":"#9bbcff","fog-ground-blend":0.3,"atmosphere-blend":["interpolate",["linear"],["zoom"],0,1,5,1,8,0]},
+  sources:{
+   bm:{type:"raster",tiles:["https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg"],tileSize:256,maxzoom:8,attribution:"NASA Blue Marble"},
+   s2:{type:"raster",tiles:["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"],tileSize:256,maxzoom:15,attribution:'<a href="https://s2maps.eu" target="_blank">Sentinel-2 cloudless</a> by EOX IT Services GmbH (Copernicus Sentinel data 2016)'},
+   dem:{type:"raster-dem",tiles:["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],tileSize:256,encoding:"terrarium",maxzoom:13,attribution:"AWS Terrain Tiles"}},
+  layers:[
+   {id:"bg",type:"background",paint:{"background-color":"#0a1830"}},
+   {id:"bm",type:"raster",source:"bm",paint:{"raster-opacity":["interpolate",["linear"],["zoom"],4.5,1,6,0],"raster-fade-duration":300}},
+   {id:"s2",type:"raster",source:"s2",minzoom:4,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],4.5,0,6,1],"raster-saturation":0.08,"raster-contrast":0.08}},
+   {id:"shade",type:"hillshade",source:"dem",minzoom:5,paint:{"hillshade-exaggeration":0.25,"hillshade-shadow-color":"#2a1e10","hillshade-highlight-color":"#fff8ea","hillshade-accent-color":"#3b2a18"}}]}});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
+let spin=true, cur=null, step=-1, pins=[], busy=false;
+function rotate(){ if(!spin||RM) return; const c=map.getCenter(); c.lng-=0.06; map.easeTo({center:c,duration:60,easing:t=>t}); }
+map.on("load",()=>{ map.on("moveend",()=>{ if(spin) rotate(); }); rotate();
+  map.addSource("route",{type:"geojson",data:{type:"FeatureCollection",features:[]},lineMetrics:true});
+  map.addLayer({id:"route-glow",type:"line",source:"route",paint:{"line-color":"#ffd08a","line-width":12,"line-blur":10,"line-opacity":.55},layout:{"line-cap":"round","line-join":"round"}});
+  map.addLayer({id:"route",type:"line",source:"route",paint:{"line-color":"#fff2d6","line-width":3},layout:{"line-cap":"round","line-join":"round"}}); });
+["mousedown","touchstart","wheel"].forEach(e=>map.on(e,()=>{ if(spin&&document.getElementById("intro").classList.contains("off")) spin=false; }));
+const $=id=>document.getElementById(id);
+function clearPins(){ pins.forEach(m=>m.remove()); pins=[]; }
+function addPins(S){ clearPins(); S.stops.forEach((s,i)=>{ const el=document.createElement("div"); el.className="pin"+(s.v?" big":" sm"); el.innerHTML=`<i></i><b>${s.n}</b>`; const m=new maplibregl.Marker({element:el,anchor:"left",offset:[-6,0]}).setLngLat(s.c).addTo(map); pins.push(m); setTimeout(()=>el.classList.add("on"),300+i*180); }); }
+function lineTo(S,k,anim){ const pts=S.stops.slice(0,k+1).map(s=>s.c); const src=map.getSource("route"); if(!src) return;
+  if(!anim||RM||k===0){ src.setData({type:"Feature",geometry:{type:"LineString",coordinates:pts.length>1?pts:[pts[0],pts[0]]}}); return; }
+  const a=pts[pts.length-2], b=pts[pts.length-1], base=pts.slice(0,-1); let t0=null; const dur=2600;
+  const f=ts=>{ t0=t0||ts; const t=Math.min(1,(ts-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; src.setData({type:"Feature",geometry:{type:"LineString",coordinates:[...base,[a[0]+(b[0]-a[0])*e,a[1]+(b[1]-a[1])*e]]}}); if(t<1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+function bear(a,b){ const y=Math.sin((b[0]-a[0])*Math.PI/180)*Math.cos(b[1]*Math.PI/180), x=Math.cos(a[1]*Math.PI/180)*Math.sin(b[1]*Math.PI/180)-Math.sin(a[1]*Math.PI/180)*Math.cos(b[1]*Math.PI/180)*Math.cos((b[0]-a[0])*Math.PI/180); return Math.atan2(y,x)*180/Math.PI; }
+function overview(S,first){ step=-1; cur=S; $("ttl").textContent=innerWidth<600?S.name:S.title; $("other").textContent=S===STORIES.paul?"아브라함의 길":"바울의 길"; addPins(S); const src=map.getSource("route"); if(src) src.setData({type:"FeatureCollection",features:[]});
+  const b=new maplibregl.LngLatBounds(); S.stops.forEach(s=>b.extend(s.c));
+  const pad=innerWidth>=900?{top:100,bottom:120,left:500,right:130}:{top:110,bottom:280,left:50,right:70};
+  map.fitBounds(b,{padding:pad,pitch:48,bearing:-12,duration:RM?0:(first?7500:4200),curve:1.6,essential:true});
+  card(`<div class="k">오늘 본문의 길</div><h2>${S.name}</h2><p class="r">${S.stops.map(s=>s.n).join(" → ")}</p><div class="row"><button class="p" id="follow">▶ 따라가기</button></div>`);
+  $("follow").onclick=()=>go(0); }
+function go(i){ const S=cur; if(i>=S.stops.length){ overview(S); return; } step=i; const s=S.stops[i], nx=S.stops[i+1]||S.stops[i-1];
+  lineTo(S,i,true); pins.forEach((m,k)=>m.getElement().classList.toggle("seen",k<=i)); const br=nx?bear(i<S.stops.length-1?s.c:nx.c, i<S.stops.length-1?nx.c:s.c):0;
+  map.flyTo({center:s.c,zoom:s.z,pitch:62,bearing:br*0.35,duration:RM?0:5200,curve:1.5,essential:true,padding:innerWidth>=900?{left:420}:{bottom:240}});
+  card(`<div class="dots">${S.stops.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}</div><div class="k">${i+1} / ${S.stops.length}</div><h2>${s.n}</h2>${s.v?`<p class="v">${s.v}</p><p class="r">${s.r} · 개역개정</p>`:`<p class="r">지나간 곳</p>`}<div class="row"><button id="prev">‹ 앞</button><button class="p" id="next">${i===S.stops.length-1?"처음 화면으로":"다음 ›"}</button></div>`);
+  $("prev").onclick=()=>go(Math.max(0,i-1)); $("next").onclick=()=>go(i+1); }
+function card(h){ const c=$("card"); c.innerHTML=h; c.classList.add("on"); }
+$("enter").onclick=()=>{ spin=false; $("intro").classList.add("off"); $("top").classList.add("on"); map.setTerrain({source:"dem",exaggeration:1.6}); overview(STORIES.paul,true); };
+$("earth").onclick=()=>{ $("card").classList.remove("on"); clearPins(); const src=map.getSource("route"); if(src) src.setData({type:"FeatureCollection",features:[]}); map.flyTo({center:[38,24],zoom:1.25,pitch:0,bearing:0,duration:RM?0:6000,essential:true}); setTimeout(()=>{ card(`<div class="k">지구</div><h2>어디로 가 볼까요?</h2><div class="row"><button class="p" id="g1">바울의 길</button><button id="g2">아브라함의 길</button></div>`); $("g1").onclick=()=>overview(STORIES.paul,true); $("g2").onclick=()=>overview(STORIES.abram,true); },RM?0:5200); };
+$("other").onclick=()=>overview(cur===STORIES.paul?STORIES.abram:STORIES.paul,true);
+addEventListener("keydown",e=>{ if(!cur) return; if(e.key==="ArrowRight") go(step+1); if(e.key==="ArrowLeft"&&step>0) go(step-1); if(e.key==="Escape") $("earth").click(); });
+</script>
+</body>
+</html>
