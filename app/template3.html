@@ -6565,7 +6565,11 @@ function earthData(w,d){ const p=dayPlan(w,d);
   const wars=BM_WAR.map(w=>({n:w.n,d:w.d,tours:w.tour||[],routes:w.r||[]}));
   const places=GAZ.places.map(g=>({n:g[0],lat:g[1],lng:g[2],k:(typeof pdKind==="function"?pdKind(g[0]):"")||"",z:g[3]==="r"?7.5:g[3]==="m"?10:9.6})).sort((a,b)=>a.n.localeCompare(b.n,"ko"));
   return {p,tours,todayTours,todayPlaces:pl,groups,routes,eras,wars,places}; }
-function earthOpen(o){ o=o||{}; if(!earthOK()){ EARTH_FAIL=true; toast("이 기기에서는 3D 지구 지도를 그릴 수 없어 지금 지도로 엽니다."); bmOpen(o.seg||"day"); return; }
+function earthOpen(o){ o=o||{};
+  /* 5단계 안전장치(11-21): 인터넷이 끊겼으면 위성사진을 받을 수 없으니 지금 지도(보관해 둔 지형)로. 휴대폰에서 '데이터 절약'을 켰으면 위성사진 대신 지금 지도로 */
+  if(navigator.onLine===false){ toast("인터넷이 연결되지 않아 지금 지도로 엽니다."); bmOpen(o.seg||"day"); return; }
+  const cn=navigator.connection; if(cn&&(cn.saveData||/(^|-)2g$/.test(cn.effectiveType||""))){ toast("데이터 절약 중이라 위성 지도 대신 지금 지도로 엽니다."); bmOpen(o.seg||"day"); return; }
+  if(!earthOK()){ EARTH_FAIL=true; toast("이 기기에서는 3D 지구 지도를 그릴 수 없어 지금 지도로 엽니다."); bmOpen(o.seg||"day"); return; }
   toast("지구 지도를 불러오는 중입니다");
   whenBible(()=>earthLoad().then(()=>{ const w=view.w, d=view.d, D=earthData(w,d), dt=dateOf(w,d);
     const ok=CBSR_EARTH.open({esriKey:EARTH_KEY,tours:D.tours,todayTours:D.todayTours,todayPlaces:D.todayPlaces,groups:D.groups,routes:D.routes,eras:D.eras,wars:D.wars,places:D.places,
