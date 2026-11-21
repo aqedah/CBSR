@@ -2106,6 +2106,8 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 /* 스토리 모음 */
 .libov{position:fixed;inset:0;z-index:9500;background:var(--paper);overflow-y:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
 .libov>*{max-width:720px;margin-left:auto;margin-right:auto}
+/* 11-21 목사님(넓은 화면): 스토리 모음을 넓혀 한 줄에 5–6장(카드 최소 190px로 제목이 읽히게). 휴대폰·태블릿 세로는 그대로 */
+@media (min-width:1000px){ .libov>*,html .libov .libtop{max-width:1180px} .libov .libgrid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px} }
 .libtop{display:flex;align-items:center;gap:6px;margin-bottom:12px}
 .libx{border:0;background:none;color:var(--ink);font-size:28px;line-height:1;width:40px;height:40px;cursor:pointer}
 .libtop b{font:700 20px var(--f-disp,serif)}
