@@ -74,31 +74,44 @@ const STORIES={
    {n:"고스",c:[27.29,36.89],z:8.6},
    {n:"로도",c:[28.22,36.43],z:8.4},
    {n:"바다라",c:[29.31,36.26],z:8.6},
-   {n:"두로",c:[35.2,33.27],z:9.2,v:"구브로를 바라보고 이를 왼편에 두고 수리아로 항해하여 두로에서 상륙하니 거기서 배의 짐을 풀려 함이러라",r:"행 21:3"},
-   {n:"돌레마이",c:[35.08,32.92],z:9.6,v:"두로를 떠나 항해를 다 마치고 돌레마이에 이르러 형제들에게 안부를 묻고 그들과 함께 하루를 있다가",r:"행 21:7"},
-   {n:"가이사랴",c:[34.89,32.5],z:9.8,v:"이튿날 떠나 가이사랴에 이르러 일곱 집사 중 하나인 전도자 빌립의 집에 들어가서 머무르니라",r:"행 21:8"},
-   {n:"예루살렘",c:[35.23,31.78],z:10,v:"예루살렘에 이르니 형제들이 우리를 기꺼이 영접하거늘",r:"행 21:17"}]},
+   {n:"두로",c:[35.2,33.27],z:10.6,v:"구브로를 바라보고 이를 왼편에 두고 수리아로 항해하여 두로에서 상륙하니 거기서 배의 짐을 풀려 함이러라",r:"행 21:3"},
+   {n:"돌레마이",c:[35.08,32.92],z:10.6,v:"두로를 떠나 항해를 다 마치고 돌레마이에 이르러 형제들에게 안부를 묻고 그들과 함께 하루를 있다가",r:"행 21:7"},
+   {n:"가이사랴",c:[34.89,32.5],z:11,v:"이튿날 떠나 가이사랴에 이르러 일곱 집사 중 하나인 전도자 빌립의 집에 들어가서 머무르니라",r:"행 21:8"},
+   {n:"예루살렘",c:[35.23,31.78],z:11.2,v:"예루살렘에 이르니 형제들이 우리를 기꺼이 영접하거늘",r:"행 21:17"}]},
  abram:{title:"창세기 11–12장 · 아브람의 길",name:"아브람의 길",color:"#9fe0ff",
   stops:[
    {n:"우르",c:[46.1,30.96],z:8.5,v:"데라가 그 아들 아브람과 하란의 아들인 그의 손자 롯과 그의 며느리 아브람의 아내 사래를 데리고 갈대아인의 우르를 떠나 가나안 땅으로 가고자 하더니 하란에 이르러 거기 거류하였으며",r:"창 11:31"},
    {n:"하란",c:[39.03,36.86],z:8.8,v:"아브람이 그의 아내 사래와 조카 롯과 하란에서 모은 모든 소유와 얻은 사람들을 이끌고 가나안 땅으로 가려고 떠나서 마침내 가나안 땅에 들어갔더라",r:"창 12:5"},
-   {n:"세겜",c:[35.28,32.21],z:10.5,v:"아브람이 그 땅을 지나 세겜 땅 모레 상수리나무에 이르니 그 때에 가나안 사람이 그 땅에 거주하였더라",r:"창 12:6"},
-   {n:"벧엘",c:[35.22,31.93],z:10.8,v:"거기서 벧엘 동쪽 산으로 옮겨 장막을 치니 서쪽은 벧엘이요 동쪽은 아이라 그가 그 곳에서 여호와께 제단을 쌓고 여호와의 이름을 부르더니",r:"창 12:8"},
+   {n:"세겜",c:[35.28,32.21],z:10.8,v:"아브람이 그 땅을 지나 세겜 땅 모레 상수리나무에 이르니 그 때에 가나안 사람이 그 땅에 거주하였더라",r:"창 12:6"},
+   {n:"벧엘",c:[35.22,31.93],z:11,v:"거기서 벧엘 동쪽 산으로 옮겨 장막을 치니 서쪽은 벧엘이요 동쪽은 아이라 그가 그 곳에서 여호와께 제단을 쌓고 여호와의 이름을 부르더니",r:"창 12:8"},
    {n:"애굽",c:[30.9,28.6],z:7.4,v:"그 땅에 기근이 들었으므로 아브람이 애굽에 거류하려고 그리로 내려갔으니 이는 그 땅에 기근이 심하였음이라",r:"창 12:10"}]}
 };
 const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const map=new maplibregl.Map({container:"map",center:[38,24],zoom:1.25,pitch:0,bearing:0,maxPitch:75,attributionControl:{compact:true},
+/* 11-21 1단계 다듬기: 화면 선명도는 2배까지만(3배 화면에서 너무 무거워짐), 타일 보관 넉넉히, 사진 바뀜은 빠르게 */
+const map=new maplibregl.Map({container:"map",center:[38,24],zoom:1.25,pitch:0,bearing:0,maxPitch:75,attributionControl:{compact:true},pixelRatio:Math.min(devicePixelRatio||1,2),maxTileCacheSize:600,fadeDuration:120,
  style:{version:8,projection:{type:"globe"},
-  sky:{"sky-color":"#0b1a3a","sky-horizon-blend":0.5,"horizon-color":"#6aa0ff","horizon-fog-blend":0.6,"fog-color":"#9bbcff","fog-ground-blend":0.3,"atmosphere-blend":["interpolate",["linear"],["zoom"],0,1,5,1,8,0]},
+  /* 하늘·대기: 우주에선 푸른 대기 띠, 땅 가까이에선 먼 곳에 옅은 안개(구글어스처럼 깊이감, 먼 곳 낮은 해상도 사진도 가림) */
+  sky:{"sky-color":"#0b1a3a","sky-horizon-blend":0.5,"horizon-color":"#a9c4ea","horizon-fog-blend":0.7,"fog-color":"#c8d5e6","fog-ground-blend":["interpolate",["linear"],["zoom"],5,0.15,9,0.55,12,0.7],"atmosphere-blend":["interpolate",["linear"],["zoom"],0,1,5,1,8,0]},
   sources:{
    bm:{type:"raster",tiles:["https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg"],tileSize:256,maxzoom:8,attribution:"NASA Blue Marble"},
    s2:{type:"raster",tiles:["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"],tileSize:256,maxzoom:15,attribution:'<a href="https://s2maps.eu" target="_blank">Sentinel-2 cloudless</a> by EOX IT Services GmbH (Copernicus Sentinel data 2016)'},
+   /* 가까이: Esri 위성사진(시험용, 출시 땐 무료 계정 열쇠로) */
+   esri:{type:"raster",tiles:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],tileSize:256,maxzoom:17,attribution:"Esri, Maxar, Earthstar Geographics"},
    dem:{type:"raster-dem",tiles:["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],tileSize:256,encoding:"terrarium",maxzoom:13,attribution:"AWS Terrain Tiles"}},
   layers:[
    {id:"bg",type:"background",paint:{"background-color":"#0a1830"}},
-   {id:"bm",type:"raster",source:"bm",paint:{"raster-opacity":["interpolate",["linear"],["zoom"],4.5,1,6,0],"raster-fade-duration":300}},
-   {id:"s2",type:"raster",source:"s2",minzoom:4,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],4.5,0,6,1],"raster-saturation":0.08,"raster-contrast":0.08}},
-   {id:"shade",type:"hillshade",source:"dem",minzoom:5,paint:{"hillshade-exaggeration":0.25,"hillshade-shadow-color":"#2a1e10","hillshade-highlight-color":"#fff8ea","hillshade-accent-color":"#3b2a18"}}]}});
+   /* 높이별로 그 높이에 필요한 층만 그림: 우주~나라(블루마블) → 지방(센티넬-2) → 마을(Esri). 겹치는 구간만 서서히 바뀜 */
+   {id:"bm",type:"raster",source:"bm",maxzoom:6.2,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],4.6,1,6,0]}},
+   {id:"s2",type:"raster",source:"s2",minzoom:4.5,maxzoom:10.2,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],4.6,0,6,1],"raster-saturation":0.06,"raster-contrast":0.06}},
+   {id:"esri",type:"raster",source:"esri",minzoom:8.4,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],8.5,0,10,1],"raster-contrast":0.05}},
+   /* 산 그림자: 멀리선 옅게, 가까울수록 진하게(산등성이·골짜기가 보이게) */
+   {id:"shade",type:"hillshade",source:"dem",minzoom:5.5,paint:{"hillshade-exaggeration":["interpolate",["linear"],["zoom"],6,0.12,8,0.35,10,0.5,12,0.6],"hillshade-shadow-color":"rgba(30,18,6,.75)","hillshade-highlight-color":"rgba(255,248,232,.35)","hillshade-accent-color":"rgba(40,26,12,.6)","hillshade-illumination-direction":315}}]}});
+/* 땅 솟음: 우주에서 볼 땐 끄고(가볍게), 나라 높이부터 켬 */
+let TER=false; function terr(){ const on=map.getZoom()>4.2; if(on!==TER){ TER=on; map.setTerrain(on?{source:"dem",exaggeration:1.7}:null); } }
+map.on("zoomend",terr);
+/* 다음에 갈 곳의 사진과 높이를 미리 받아 둠(도착했을 때 깨진 사진이 덜 보이게) */
+function lon2x(l,z){ return Math.floor((l+180)/360*2**z); } function lat2y(a,z){ const r=a*Math.PI/180; return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**z); }
+const PRE=new Set(); function prefetch(c,z){ const zz=Math.round(z); [[zz,"esri"],[zz-1,"esri"],[Math.min(zz,10),"s2"],[Math.min(zz-1,12),"dem"]].forEach(([q,k])=>{ if(q<1) return; const x0=lon2x(c[0],q), y0=lat2y(c[1],q); for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=1;dy++){ const x=x0+dx, y=y0+dy, u=k==="esri"?`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${q}/${y}/${x}`:k==="s2"?`https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/${q}/${y}/${x}.jpg`:`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${q}/${x}/${y}.png`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
 map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-right");
 let spin=true, cur=null, step=-1, pins=[], busy=false;
 function rotate(){ if(!spin||RM) return; const c=map.getCenter(); c.lng-=0.06; map.easeTo({center:c,duration:60,easing:t=>t}); }
@@ -123,11 +136,12 @@ function overview(S,first){ step=-1; cur=S; $("ttl").textContent=innerWidth<600?
   $("follow").onclick=()=>go(0); }
 function go(i){ const S=cur; if(i>=S.stops.length){ overview(S); return; } step=i; const s=S.stops[i], nx=S.stops[i+1]||S.stops[i-1];
   lineTo(S,i,true); pins.forEach((m,k)=>m.getElement().classList.toggle("seen",k<=i)); const br=nx?bear(i<S.stops.length-1?s.c:nx.c, i<S.stops.length-1?nx.c:s.c):0;
-  map.flyTo({center:s.c,zoom:s.z,pitch:62,bearing:br*0.35,duration:RM?0:5200,curve:1.5,essential:true,padding:innerWidth>=900?{left:420}:{bottom:240}});
+  map.flyTo({center:s.c,zoom:s.z,pitch:s.z>=10?56:60,bearing:br*0.35,duration:RM?0:4300,curve:1.42,essential:true,padding:innerWidth>=900?{left:420}:{bottom:240}});
+  const n2=S.stops[i+1]; if(n2) setTimeout(()=>prefetch(n2.c,n2.z),1200); /* 다음 곳 미리 받기 */
   card(`<div class="dots">${S.stops.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}</div><div class="k">${i+1} / ${S.stops.length}</div><h2>${s.n}</h2>${s.v?`<p class="v">${s.v}</p><p class="r">${s.r} · 개역개정</p>`:`<p class="r">지나간 곳</p>`}<div class="row"><button id="prev">‹ 앞</button><button class="p" id="next">${i===S.stops.length-1?"처음 화면으로":"다음 ›"}</button></div>`);
   $("prev").onclick=()=>go(Math.max(0,i-1)); $("next").onclick=()=>go(i+1); }
 function card(h){ const c=$("card"); c.innerHTML=h; c.classList.add("on"); }
-$("enter").onclick=()=>{ spin=false; $("intro").classList.add("off"); $("top").classList.add("on"); map.setTerrain({source:"dem",exaggeration:1.6}); overview(STORIES.paul,true); };
+$("enter").onclick=()=>{ spin=false; $("intro").classList.add("off"); $("top").classList.add("on"); overview(STORIES.paul,true); STORIES.paul.stops.slice(0,2).forEach(s=>prefetch(s.c,s.z)); };
 $("earth").onclick=()=>{ $("card").classList.remove("on"); clearPins(); const src=map.getSource("route"); if(src) src.setData({type:"FeatureCollection",features:[]}); map.flyTo({center:[38,24],zoom:1.25,pitch:0,bearing:0,duration:RM?0:6000,essential:true}); setTimeout(()=>{ card(`<div class="k">지구</div><h2>어디로 가 볼까요?</h2><div class="row"><button class="p" id="g1">바울의 길</button><button id="g2">아브라함의 길</button></div>`); $("g1").onclick=()=>overview(STORIES.paul,true); $("g2").onclick=()=>overview(STORIES.abram,true); },RM?0:5200); };
 $("other").onclick=()=>overview(cur===STORIES.paul?STORIES.abram:STORIES.paul,true);
 addEventListener("keydown",e=>{ if(!cur) return; if(e.key==="ArrowRight") go(step+1); if(e.key==="ArrowLeft"&&step>0) go(step-1); if(e.key==="Escape") $("earth").click(); });
