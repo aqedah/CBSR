@@ -690,7 +690,8 @@ html.v2 .chap+.chap{margin-top:40px}html.v2 .chap h3{font-size:21px;font-weight:
 
 #storyRoot{position:fixed;inset:0;z-index:9500;touch-action:manipulation;background:#0d0b09;color:#f6efe4;animation:siIn .2s ease;--sgold:#e2b874;--ssub:#d9cdbb;--sred:#ff5b45;--sline:rgba(255,255,255,.18);--sser:"Noto Serif KR","Gowun Batang",serif}
 #storyRoot .sfr{position:absolute;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:linear-gradient(165deg,var(--sg1,#3a2c1f),var(--sg2,#15110d))}
-html.story-on .bnav,html.story-on .totop{display:none!important}
+html.story-on .bnav,html.story-on .totop,html.lib-on .totop{display:none!important}
+@media (max-width:1023.98px),(max-height:559.98px){ html.lib-on .bnav{display:none!important} } /* 11-21: 스토리 모음 — 휴대폰은 아래 탭을 가리고, 넓은 화면은 왼쪽 탭 줄을 그대로 */
 .sbars2{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;right:10px;display:flex;gap:3px;z-index:30}
 .sbars2 span{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden}.sbars2 span i{display:block;height:100%;width:0;background:#fff}
 .sbars2 span.done i{width:100%}.sbars2 span.run i{animation:sfill linear forwards}
@@ -2112,8 +2113,6 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 /* 스토리 모음 */
 .libov{position:fixed;inset:0;z-index:9500;background:var(--paper);overflow-y:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
 .libov>*{max-width:720px;margin-left:auto;margin-right:auto}
-/* 11-21 목사님(넓은 화면): 스토리 모음을 넓혀 한 줄에 5–6장(카드 최소 190px로 제목이 읽히게). 휴대폰·태블릿 세로는 그대로 */
-@media (min-width:1000px){ .libov>*,html .libov .libtop{max-width:1180px} .libov .libgrid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px} }
 .libtop{display:flex;align-items:center;gap:6px;margin-bottom:12px}
 .libx{border:0;background:none;color:var(--ink);font-size:28px;line-height:1;width:40px;height:40px;cursor:pointer}
 .libtop b{font:700 20px var(--f-disp,serif)}
@@ -2438,6 +2437,8 @@ body.tbkfull .tbkgrip{display:none}
   /* 11-16 목사님: 탭마다 날짜 자리가 달랐음 — 오늘 탭과 같은 자리(왼쪽 메뉴 바로 옆, 위에서 같은 높이)로 */
   html.v2:not([data-tab="today"]) body:not(.tbksplit) header.top{position:fixed!important;left:var(--rail)!important;right:0!important;width:auto!important;max-width:none!important;margin:0!important;top:0!important;height:58px;padding:18px 32px 0 48px!important;box-sizing:border-box;background:var(--paper)!important;z-index:30}
   html.v2:not([data-tab="today"]) body:not(.tbksplit) .wrap{padding-top:58px}
+  /* 11-21 목사님: 스토리 모음이 왼쪽 탭 줄을 덮고, 제목줄 높이·자리가 성경 지도(기록의 하위 화면)와 달랐음 → 탭 줄은 보이게, 제목줄은 같은 자리에 */
+  html.v2 .libov{left:var(--rail);padding-top:var(--libpt,58px)}
   html.v2:not([data-tab="today"]) body.tbksplit header.top{position:fixed!important;left:var(--rail)!important;right:var(--tbkw)!important;width:auto!important;max-width:none!important;margin:0!important;top:0!important;height:58px;padding:18px 32px 0 48px!important;box-sizing:border-box;background:var(--paper)!important;z-index:30}
   html.v2:not([data-tab="today"]) body.tbksplit .wrap{padding-top:58px}
   html.v2 .hlbar{left:calc(var(--rail) + (100vw - var(--rail))/2);bottom:calc(20px + env(safe-area-inset-bottom,0px))}
@@ -9083,8 +9084,9 @@ document.addEventListener("click",e=>{ const c=e.target.closest&&e.target.closes
 /* ===== 스토리 모음(목사님 2026-11-02): 맨 위 지도 단추 왼쪽. 지난 스토리를 날짜순으로 몰아 보고 찾기 ===== */
 document.addEventListener("click",e=>{ const c=e.target.closest&&e.target.closest("#rgLib"); if(c) libOpen(); });
 function libDays(){ const L=[], tN=dayNo(here.w,here.d); for(let w=1;w<=PLAN.plan.length;w++) for(let d=0;d<nd(w);d++){  const p=dayPlan(w,d); if(!p) continue; const n=dayNo(w,d); if(n>tN) continue; L.push({w,d,n,p,key:keyOf(w,d)}); } return L.reverse(); }
-function libOpen(){ if(document.getElementById("libOv")) return; const el=document.createElement("div"); el.id="libOv"; el.className="libov"; document.body.appendChild(el); document.documentElement.classList.add("story-on"); ovOpen(libClose); view.libQ=view.libQ||""; view.libN=24; libDraw(); }
-function libClose(pop){ if(pop!==true) ovDone(libClose); document.getElementById("libOv")?.remove(); document.documentElement.classList.remove("story-on"); }
+function libOpen(){ if(document.getElementById("libOv")) return; const el=document.createElement("div"); el.id="libOv"; el.className="libov"; document.body.appendChild(el); document.documentElement.classList.add("lib-on"); ovOpen(libClose); view.libQ=view.libQ||""; view.libN=24; libDraw(); }
+document.addEventListener("click",e=>{ if(e.target.closest&&e.target.closest(".bnav .tab")&&document.getElementById("libOv")) libClose(); },true); /* 11-21: 넓은 화면에서 모음이 열린 채 왼쪽 탭을 누르면 모음을 닫고 그 탭으로 */
+function libClose(pop){ if(pop!==true) ovDone(libClose); document.getElementById("libOv")?.remove(); document.documentElement.classList.remove("lib-on"); }
 function libDraw(){ const el=document.getElementById("libOv"); if(!el) return; const q=(view.libQ||"").trim(), ALL=libDays();
   /* 11-21 GPT 제안 검토: 책 단추가 처음 8권만 보이던 것 → 스토리가 있는 책을 모두, 성경 순서로. 8권이 넘으면 고르기 상자로 */
   const bset=[...new Set(ALL.map(x=>x.p.ch[0][0]))].sort((a,b)=>a-b), books=bset.map(b=>PLAN.full[b-1]), many=books.length>8;
