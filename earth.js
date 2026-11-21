@@ -191,7 +191,7 @@ function onClick(e){ const t=e.target.closest("button"); if(!t||!root.contains(t
   if(t.classList.contains("eearth")){ toEarth(); return; }
   if(t.classList.contains("ex")){ close(); return; }
   if(t.classList.contains("ego")){ enter(); return; } }
-function enter(){ spinOn=false; $(".eintro").classList.add("off"); setTimeout(perfWatch,1500); if(O.startTour) { push(home); tour(O.startTour,O.startFrom||0); } else home(); }
+function enter(){ spinOn=false; $(".eintro").classList.add("off"); setTimeout(perfWatch,1500); if(O.startTour) { push(()=>home(true)); tour(O.startTour,O.startFrom||0); } else if(O.startRoute!=null){ push(()=>home(true)); route(O.startRoute); } else home(); }
 function toEarth(){ clearPins(); noWalker(); setLine("eroute",null); setLine("efull",null); fold(true); M.flyTo({center:[38,24],zoom:1.3,pitch:0,bearing:0,duration:RM()?0:5500,essential:true}); }
 function key(e){ if(!root) return; const tg=e.target; if(tg&&/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)) return;
   /* Esc는 앱이 처리(뒤로 가기와 같은 길) */ if(cur&&step>=0&&e.key==="ArrowRight") follow(step+1); else if(cur&&step>0&&e.key==="ArrowLeft") follow(step-1); }
