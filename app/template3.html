@@ -6557,12 +6557,17 @@ function earthData(w,d){ const p=dayPlan(w,d);
   const has=r=>p&&r&&p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]);
   const todayTours=p?(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>{ const si=t.steps.findIndex(s=>has(s.r)||has(s.pre)); return si<0?null:{id:t.id,n:t.n,from:si,note:`${si+1}번째 장면 “${t.steps[si].t}”부터 따라가기`}; }).filter(Boolean):[];
   const pl=(p&&bmDayPl(keyOf(w,d))||[]).map(n=>{ const g=PLACE.get(n); return g?{n,lat:g[1],lng:g[2]}:null; }).filter(Boolean);
-  const groups=BM_WHO.map(g=>({n:g.n,tours:(g.tour||[])}));
-  return {p,tours,todayTours,todayPlaces:pl,groups}; }
+  /* 작은 경로 237(ROUTES_B)·주인공/시대/전쟁 묶음·지명 사전(GAZ) — 모두 지금 지도와 같은 자료 */
+  const routes=ROUTES_B.map(r=>({n:rmBase(r.n),p:r.p,ref:`${PLAN.full[r.b-1]} ${r.c[0]}${r.c[1]&&r.c[1]!==r.c[0]?"–"+r.c[1]:""}장`}));
+  const WG=bmWhoGroups(), groups=BM_WHO.map(g=>({n:g.n,tours:(g.tour||[]),routes:WG[g.k]||[]}));
+  const eras=BM_ERA9.map(e=>({n:e.n,y:e.y,d:e.d,tours:e.tour||[],routes:ROUTES_B.map((r,i)=>bmEra9(r.b,r.c[0])===e.k?i:-1).filter(i=>i>=0)}));
+  const wars=BM_WAR.map(w=>({n:w.n,d:w.d,tours:w.tour||[],routes:w.r||[]}));
+  const places=GAZ.places.map(g=>({n:g[0],lat:g[1],lng:g[2],k:(typeof pdKind==="function"?pdKind(g[0]):"")||"",z:g[3]==="r"?7.5:g[3]==="m"?10:9.6})).sort((a,b)=>a.n.localeCompare(b.n,"ko"));
+  return {p,tours,todayTours,todayPlaces:pl,groups,routes,eras,wars,places}; }
 function earthOpen(o){ o=o||{}; if(!earthOK()){ toast("이 기기에서는 3D 지구 지도를 그릴 수 없어 지금 지도로 엽니다."); bmOpen(o.seg||"day"); return; }
   toast("지구 지도를 불러오는 중입니다");
   whenBible(()=>earthLoad().then(()=>{ const w=view.w, d=view.d, D=earthData(w,d), dt=dateOf(w,d);
-    const ok=CBSR_EARTH.open({esriKey:EARTH_KEY,tours:D.tours,todayTours:D.todayTours,todayPlaces:D.todayPlaces,groups:D.groups,
+    const ok=CBSR_EARTH.open({esriKey:EARTH_KEY,tours:D.tours,todayTours:D.todayTours,todayPlaces:D.todayPlaces,groups:D.groups,routes:D.routes,eras:D.eras,wars:D.wars,places:D.places,
       heading:D.p?(D.todayTours[0]?`오늘, ${D.todayTours[0].n}의 한 장면으로`:"오늘 본문의 땅으로"):"성경의 땅으로",
       sub:D.p?`${dt.getMonth()+1}월 ${dt.getDate()}일 · ${D.p.label}`:"", kicker:D.p?D.p.label:"성경 지도", title:"성경 지도",
       startTour:o.tour, startFrom:o.from||0, skipIntro:!!o.tour,
