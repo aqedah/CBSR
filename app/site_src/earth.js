@@ -180,7 +180,7 @@ function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; noWalk
   addPins(r.p.filter(p=>p[0]).map((p,k,a)=>({n:p[0],lat:p[1],lng:p[2],big:k===0||k===a.length-1})));
   const b=new maplibregl.LngLatBounds(); c.forEach(x=>b.extend(x)); let bb=c.length>1?bear(c[0],c[c.length-1]):0; if(bb>90) bb-=180; if(bb<-90) bb+=180;
   const P=wide()?{top:90,bottom:70,left:60,right:420}:{top:80,bottom:Math.round(innerHeight*0.5),left:30,right:30};
-  const cam=M.cameraForBounds(b,{padding:P,bearing:bb,maxZoom:11}); if(cam) M.flyTo({center:cam.center,zoom:cam.zoom-0.3,bearing:bb,pitch:55,duration:RM()?0:3200,curve:1.42,essential:true});
+  const cam=fitCam(b,{padding:P,bearing:bb,maxZoom:11}); if(cam) M.flyTo({center:cam.center,zoom:cam.zoom-0.3,bearing:bb,pitch:55,duration:RM()?0:3200,curve:1.42,essential:true});
   const fig=r.sea?"boat":"man"; walker(fig,c[0]); setTimeout(()=>animLine([],c,null,pt=>walker(fig,pt)),RM()?0:1200);
   panel(r.n,`<p class="ed">${esc(r.ref||"")}</p><p class="ed">${esc(r.p.map(p=>p[0]).filter(Boolean).join(" → "))}</p><div class="eelev"></div><button class="ebig" data-route="${i}">↻ 다시 걸어 보기</button>`,{card:true});
   if(O.elev) O.elev(i).then(E=>{ const box=$(".eelev"); if(!box||!E||!E.e||E.e.length<2) return; box.innerHTML=elevSVG(E); }); }
@@ -198,6 +198,8 @@ function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t
   const b=new maplibregl.LngLatBounds(); all.forEach(c=>b.extend(c)); M.fitBounds(b,{padding:pad(),pitch:48,bearing:-12,duration:RM()?0:4200,curve:1.5,essential:true});
   panel(t.n,`<p class="ed">${esc(t.d||t.sub||"")}</p><button class="ebig" data-follow="${from||0}">▶ ${from?`${from+1}번째 장면부터 `:""}따라가기 · ${t.steps.length}장면</button>`+t.steps.map((s,k)=>`<button class="erow" data-follow="${k}"><span class="ic">${k+1}</span><span><b>${esc(s.t)}</b><small>${esc(s.ref||s.s||"")}</small></span></button>`).join(""));
   const e0=tourAll(t)[0]; if(e0) prefetch(e0,(t.steps[0]&&t.steps[0].z)||8); }
+/* 11-21: 휴대폰에서 짧은 길은 "맞출 수 없다"며 오류가 나 다음 장면으로 안 넘어가던 문제 → 실패하면 여백을 줄여 다시, 그래도 안 되면 null(도착지로 날아감) */
+function fitCam(b,o){ for(const sc of [1,.5,0]){ try{ const P=o.padding, q=Object.assign({},o,{padding:{top:P.top*sc,bottom:P.bottom*sc,left:P.left*sc,right:P.right*sc}}); const c=M.cameraForBounds(b,q); if(c&&c.center) return c; }catch(e){} } return null; }
 function follow(k){ const t=cur; if(!t) return; if(k>=t.steps.length){ tour(t.id); return; } step=k; const s=t.steps[k];
   const base=[]; if(t.start) base.push([t.start[2],t.start[1]]); t.steps.slice(0,k).forEach(x=>(x.p||[]).forEach(p=>base.push([p[2],p[1]])));
   const sp=(s.p||[]).map(p=>[p[2],p[1]]); const here=base.length?base[base.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
@@ -209,7 +211,7 @@ function follow(k){ const t=cur; if(!t) return; if(k>=t.steps.length){ tour(t.id
   /* 이번 길이 화면 세로로 놓이게 지도를 돌림(가는 쪽이 위). 남쪽으로 갈 땐 반대편에서 봄(지도가 뒤집히지 않게 ±90° 안). 그리고 오른쪽 칸을 뺀 화면 한가운데 */
   const z=s.z||8, mz=Math.min(11.5,z+1.5); let bb=seg.length>1?br:M.getBearing(); if(bb>90) bb-=180; if(bb<-90) bb+=180;
   const P=wide()?{top:90,bottom:70,left:60,right:420}:{top:80,bottom:Math.round(innerHeight*0.5),left:30,right:30};
-  const cam=seg.length>1?M.cameraForBounds(b,{padding:P,bearing:bb,maxZoom:mz}):null;
+  const cam=seg.length>1?fitCam(b,{padding:P,bearing:bb,maxZoom:mz}):null;
   if(cam) M.flyTo({center:cam.center,zoom:Math.min(cam.zoom-0.35,mz),bearing:bb,pitch:58,duration:RM()?0:3400,curve:1.42,essential:true});
   else M.flyTo({center:end,zoom:z,pitch:58,bearing:bb,duration:RM()?0:3400,curve:1.42,essential:true,padding:P});
   const nx=t.steps[k+1]; if(nx&&nx.p&&nx.p.length){ const e=nx.p[nx.p.length-1]; setTimeout(()=>prefetch([e[2],e[1]],nx.z||8),1500); }
