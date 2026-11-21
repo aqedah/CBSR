@@ -71,6 +71,22 @@ const CSS=`
 #eov .epas sup{color:#e9c38a;font:700 10px "Noto Sans KR";margin-right:2px}#eov .epas .on{background:rgba(233,195,138,.22);border-radius:3px}
 #eov .elink{border:0;background:none;color:#e9c38a;font:700 13px "Noto Sans KR";padding:2px 0 8px;cursor:pointer}
 #eov .eelev{margin:4px 0 10px}#eov .eelev svg{width:100%;height:auto;display:block}#eov .eelev small{color:#cfc3b1;font-size:12px}
+@media (max-width:899px){
+ #eov .epan{max-height:40vh}
+ #eov .ephd{padding:7px 10px 4px}#eov .ephd b{font-size:14px}#eov .ephd button{height:30px;min-width:30px}
+ #eov .epb{padding:2px 10px 10px}
+ #eov .ecard .dots{margin:0 0 5px}
+ #eov .ecard .k{font-size:11px}
+ #eov .ecard h2{font-size:16px;margin:1px 0 3px}
+ #eov .ecard .n{font-size:12.5px;line-height:1.5;margin:0 0 5px}
+ #eov .ecard .v{font-size:13.5px;line-height:1.6}
+ #eov .ecard .r{font-size:11px;margin:0 0 6px}
+ #eov .elink{font-size:12px;padding:0 0 6px}
+ #eov .epas{font-size:13.5px;line-height:1.65;padding:8px 10px}
+ #eov .ecard .row button{height:38px;font-size:13px}
+ #eov .erow{padding:8px 10px}#eov .erow b{font-size:13.5px}#eov .erow small{font-size:12px}
+ #eov .ed{font-size:12.5px}#eov .ebig{height:40px;font-size:14px}
+}
 @media (max-width:899px){ #eov .maplibregl-ctrl-bottom-left .maplibregl-ctrl-group{display:none} }
 @media (prefers-reduced-motion:reduce){ #eov .eintro,#eov .epan{transition:none} }`;
 
