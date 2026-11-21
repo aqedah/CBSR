@@ -6553,7 +6553,7 @@ function earthLoad(){ if(window.CBSR_EARTH&&window.maplibregl) return Promise.re
 function earthOK(){ try{ const c=document.createElement("canvas"); return !!(c.getContext("webgl2")||c.getContext("webgl")); }catch(e){ return false; } }
 function earthVerse(r){ try{ if(!r||!BIBLE) return ""; return BIBLE[r[0]-1][r[1]-1][r[2]-1]||""; }catch(e){ return ""; } }
 function earthData(w,d){ const p=dayPlan(w,d);
-  const tours=(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>({id:t.id,n:t.n,sub:t.sub,d:t.d,start:t.start,steps:t.steps.map(s=>({t:s.t,s:s.s,n:s.n,mood:s.mood,p:s.p||[],z:s.z,verse:earthVerse(s.r),ref:s.r?`${PLAN.abbr[s.r[0]-1]} ${s.r[1]}:${s.r[2]}`:""}))})); /* 머무는 장면(stay)은 길이 없음 → 지구 지도는 그 자리에 머묾 */
+  const tours=(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>({id:t.id,n:t.n,sub:t.sub,d:t.d,start:t.start,as_:t.as_,steps:t.steps.map(s=>({t:s.t,s:s.s,n:s.n,mood:s.mood,p:s.p||[],z:s.z,as_:s.as_,sea:!!s.sea,verse:earthVerse(s.r),ref:s.r?`${PLAN.abbr[s.r[0]-1]} ${s.r[1]}:${s.r[2]}`:""}))})); /* 머무는 장면(stay)은 길이 없음 → 지구 지도는 그 자리에 머묾 */
   const has=r=>p&&r&&p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]);
   const todayTours=p?(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>{ const si=t.steps.findIndex(s=>has(s.r)||has(s.pre)); return si<0?null:{id:t.id,n:t.n,from:si,note:`${si+1}번째 장면 “${t.steps[si].t}”부터 따라가기`}; }).filter(Boolean):[];
   const pl=(p&&bmDayPl(keyOf(w,d))||[]).map(n=>{ const g=PLACE.get(n); return g?{n,lat:g[1],lng:g[2]}:null; }).filter(Boolean);
@@ -6566,6 +6566,7 @@ function earthOpen(o){ o=o||{}; if(!earthOK()){ toast("이 기기에서는 3D �
       heading:D.p?(D.todayTours[0]?`오늘, ${D.todayTours[0].n}의 한 장면으로`:"오늘 본문의 땅으로"):"성경의 땅으로",
       sub:D.p?`${dt.getMonth()+1}월 ${dt.getDate()}일 · ${D.p.label}`:"", kicker:D.p?D.p.label:"성경 지도", title:"성경 지도",
       startTour:o.tour, startFrom:o.from||0, skipIntro:!!o.tour,
+      figure:id=>`<div class="chm ${id}${id==="boat"?" sail":""}" style="--w:${id==="boat"?54:46}px"><div class="fig">${id==="boat"?BOAT({}):C(id)}</div></div>`, /* 앱의 여정 지도와 같은 도트 인물·배 */
       onClose:()=>{ ovDone(earthClose); }, onFail:()=>{ toast("지구 지도를 열지 못해 지금 지도로 엽니다."); bmOpen("day"); }});
     if(ok) ovOpen(earthClose); }).catch(()=>{ toast("지구 지도를 받지 못했습니다. 인터넷 연결을 확인해 주세요. 지금 지도로 엽니다."); bmOpen("day"); })); }
 function earthClose(pop){ if(window.CBSR_EARTH&&CBSR_EARTH.isOpen()) CBSR_EARTH.close(true); if(pop!==true) ovDone(earthClose); }
