@@ -841,7 +841,7 @@ function pageR(p,qt,hw){ return qt&&qt.v27?pageR27(p,qt,hw):pageR0(p,qt,hw) }
 const TK27={'동그라미':'<span class="o">동그라미</span>','형광펜':'<span class="hy">형광펜</span>','물결 밑줄':'<span class="w">물결 밑줄</span>','빗금 형광펜':'<span class="ht">빗금 형광펜</span>','네모':'<span class="bx">네모</span>','괄호':'<b>[괄호]</b>'};
 function t27(t){ let h=mark(md(t)); h=h.replace(/\{번호 ([^}]*)\}/g,(m,a)=>a.trim().split(/\s+/).map(x=>`<span class="bn">${x}</span>`).join('')).replace(/\{([^}]+)\}/g,(m,a)=>TK27[a]||m);
   return h.replace(/〈/g,'<span class="abl">〈</span>').replace(/〉/g,'<span class="abr">〉</span>') }
-function wd27(p){ return ['일','월','화','수','목','금','토'][new Date(ED.trial?2026:2027,p.m-1,p.d).getDay()]+'요일' }
+function wd27(p){ const k=new Date(ED.trial?2026:2027,p.m-1,p.d).getDay(); return k===0?'주일':['일','월','화','수','목','금','토'][k]+'요일' } /* 11-21 목사님: 일요일은 '주일' */
 function pageL27(p,qt){ const v=qt.v27, q='q'+qOf(p);
   const hasMap=qt.map&&qt.map.emph, hasPic=!hasMap&&qt.img&&qt.img.id;
   const box=`<div class="box lk" data-f="l27">${(v.looks||[]).map(x=>`<div class="i">${x.ck?'<span class="ck">✓</span>':''}<span class="chip">${esc(x.tool)}</span>${t27(x.text)}</div>`).join('')}</div>`;
