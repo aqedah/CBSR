@@ -6542,6 +6542,33 @@ async function ldrReceive(code){ try{ const u=new URL(location.href); u.searchPa
   const b=document.getElementById("ldrTake"); if(b) b.onclick=()=>{ /* 11-21: 먼저 내 기록에 저장하고, 저장이 된 것을 확인한 뒤 링크를 닫음 */ if(!had){ const keep=mem.ldrIn; mem.ldrIn=[...(mem.ldrIn||[]),{y:P.y||LDR_Y(),day:+P.day,date:String(P.date||""),lab:String(P.lab||""),from:String(P.from||"인도자").slice(0,30),grp:String(P.grp||"").slice(0,20),to:P.to==="p"?"p":"b",items:P.items.slice(0,40).map(m=>({n:String(m.n||"").slice(0,30),p:String(m.p||"").slice(0,300),r:String(m.r||"").slice(0,300)})),memo:String(P.memo||"").slice(0,600),note:String(P.note||"").slice(0,300),at:+P.at||Date.now(),got:Date.now()}]; if(save()===false){ mem.ldrIn=keep; toast("이 기기에 저장하지 못했습니다. 저장 공간을 확인하고 다시 눌러 주세요. 링크는 그대로 남아 있습니다."); return; } }
     if(srv) SYNC.handoff.del(code);
     const cb=document.getElementById("sheetClose"); if(cb) cb.click(); const nd=Math.min(365,(+P.day||1)+(P.to==="p"?0:7)); try{ const [w,d]=dayWD(nd); setTimeout(()=>leaderOpen(w,d,{exact:true,mode:P.to==="p"?"rec":"run"}),80); }catch(e){} if(!had) toast("받은 기록에 담았습니다."); }; }
+/* 성경 지구(11-21 목사님: 구글어스식 지도, 출시 전 완성). 지구 지도 본체는 earth.js(필요할 때만 불러옴).
+   여기서는 지금 자료를 그대로 읽어 넘겨줌: 큰 여정 BM_TOURS(장면마다 성구는 BIBLE에서 그대로), 주인공 묶음 BM_WHO, 오늘 나오는 곳(bmDayPl·PLACE). 원본 자료와 지금 지도는 그대로 둠 */
+const EARTH_KEY="AAPTaUqt1XIMnMStRcL1mBHpKMw..2Gs-y_vTrVxMvf8M0LJMc3dxaWsiCTd6XfbfpC2mm_-jZv-5Rn3oC12tUMZPV-h24hdYepP18btpoV5NQsVgcHdnoDKweEk-4axC17FusPahec591QOe8jgZDbu8lqOyvvEDuo1okCssWfTVNlzj-iQq9xmdFpyJkWVwxJ4geRi2fMyf6S1I-noYUvh45Fsl1c_koh1pqw1CJjz6tzbD-3o3OsOVSr6y-55sbAaEWxEzBiOCjT-6AT1_6DsUMdSL";
+let EARTH_LD=null;
+function earthLoad(){ if(window.CBSR_EARTH&&window.maplibregl) return Promise.resolve(); if(EARTH_LD) return EARTH_LD;
+  const js=u=>new Promise((ok,no)=>{ const s=document.createElement("script"); s.src=u; s.onload=ok; s.onerror=no; document.head.appendChild(s); });
+  if(!document.getElementById("mlcss")){ const l=document.createElement("link"); l.id="mlcss"; l.rel="stylesheet"; l.href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css"; document.head.appendChild(l); }
+  return EARTH_LD=(window.maplibregl?Promise.resolve():js("https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js")).then(()=>js("earth.js")).catch(e=>{ EARTH_LD=null; throw e; }); }
+function earthOK(){ try{ const c=document.createElement("canvas"); return !!(c.getContext("webgl2")||c.getContext("webgl")); }catch(e){ return false; } }
+function earthVerse(r){ try{ if(!r||!BIBLE) return ""; return BIBLE[r[0]-1][r[1]-1][r[2]-1]||""; }catch(e){ return ""; } }
+function earthData(w,d){ const p=dayPlan(w,d);
+  const tours=(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>({id:t.id,n:t.n,sub:t.sub,d:t.d,start:t.start,steps:t.steps.map(s=>({t:s.t,s:s.s,n:s.n,mood:s.mood,p:s.p||[],z:s.z,verse:earthVerse(s.r),ref:s.r?`${PLAN.abbr[s.r[0]-1]} ${s.r[1]}:${s.r[2]}`:""}))})); /* 머무는 장면(stay)은 길이 없음 → 지구 지도는 그 자리에 머묾 */
+  const has=r=>p&&r&&p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]);
+  const todayTours=p?(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>{ const si=t.steps.findIndex(s=>has(s.r)||has(s.pre)); return si<0?null:{id:t.id,n:t.n,from:si,note:`${si+1}번째 장면 “${t.steps[si].t}”부터 따라가기`}; }).filter(Boolean):[];
+  const pl=(p&&bmDayPl(keyOf(w,d))||[]).map(n=>{ const g=PLACE.get(n); return g?{n,lat:g[1],lng:g[2]}:null; }).filter(Boolean);
+  const groups=BM_WHO.map(g=>({n:g.n,tours:(g.tour||[])}));
+  return {p,tours,todayTours,todayPlaces:pl,groups}; }
+function earthOpen(o){ o=o||{}; if(!earthOK()){ toast("이 기기에서는 3D 지구 지도를 그릴 수 없어 지금 지도로 엽니다."); bmOpen(o.seg||"day"); return; }
+  toast("지구 지도를 불러오는 중입니다");
+  whenBible(()=>earthLoad().then(()=>{ const w=view.w, d=view.d, D=earthData(w,d), dt=dateOf(w,d);
+    const ok=CBSR_EARTH.open({esriKey:EARTH_KEY,tours:D.tours,todayTours:D.todayTours,todayPlaces:D.todayPlaces,groups:D.groups,
+      heading:D.p?(D.todayTours[0]?`오늘, ${D.todayTours[0].n}의 한 장면으로`:"오늘 본문의 땅으로"):"성경의 땅으로",
+      sub:D.p?`${dt.getMonth()+1}월 ${dt.getDate()}일 · ${D.p.label}`:"", kicker:D.p?D.p.label:"성경 지도", title:"성경 지도",
+      startTour:o.tour, startFrom:o.from||0, skipIntro:!!o.tour,
+      onClose:()=>{ ovDone(earthClose); }, onFail:()=>{ toast("지구 지도를 열지 못해 지금 지도로 엽니다."); bmOpen("day"); }});
+    if(ok) ovOpen(earthClose); }).catch(()=>{ toast("지구 지도를 받지 못했습니다. 인터넷 연결을 확인해 주세요. 지금 지도로 엽니다."); bmOpen("day"); })); }
+function earthClose(pop){ if(window.CBSR_EARTH&&CBSR_EARTH.isOpen()) CBSR_EARTH.close(true); if(pop!==true) ovDone(earthClose); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.
    데이터: ux/big_tours.py → BM_TOURS. 단계(step): t 제목, s 때·곳, n 설명, p 지점들(배면 sea), land0/then 배 앞뒤의 뭍길, pre 움직이기 전 말씀, r 도착 말씀, z 확대, fx part|jordan, storm, stay(머묾), dash(방황), who/as_ 주인공 바뀜, add 동행 합류 ===== */
@@ -9280,6 +9307,8 @@ window.addEventListener("message",e=>{ try{ if(e.origin!==location.origin||!e.da
 /* 11-20: 가이드북 주일 지면의 QR(?ldr=날 번호) → 그날 소그룹 인도자용 한 장을 바로 엶 */
 /* 11-21: 체험판 가이드북 주일 QR(?ldr26=날) — 2026판 인도자 화면. 2027년에 열면 그냥 앱으로 */
 { const l6=+(new URLSearchParams(location.search).get("ldr26")||0); if(l6>=1&&l6<=365&&!Y27){ try{ const [w,d]=dayWD(l6); view.w=w; view.d=d; }catch(e){} view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
+/* 시험 입구(11-21): ?earth=1 이면 성경 지구를 바로 엶. 앱의 지도 단추 연결은 다음 단계 */
+if(new URLSearchParams(location.search).get("earth")) setTimeout(()=>earthOpen(),600);
 { const ln=+(new URLSearchParams(location.search).get("ldr")||0); if(ln>=1&&ln<=365){ view.w=Math.floor((ln-1)/7)+1; view.d=(ln-1)%7; view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
 /* 11-21: 스토리를 자판으로 — ← → 장면, 띄어쓰기 멈춤/이어 보기(글 쓰는 칸에서는 움직이지 않음) */
