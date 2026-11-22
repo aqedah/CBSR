@@ -2352,6 +2352,22 @@ html.v2 body .qtdone .mine b{color:var(--hn-ink);font-size:12.5px;margin-bottom:
 html.v2 body .qtdone .qtd-reward{background:var(--paper);border-radius:14px;padding:14px;text-align:center;display:grid;gap:10px}
 html.v2 body .qtdone .qtd-msg{font-size:14px;color:var(--muted)}
 html.v2 body .mynotes{display:grid;gap:10px;margin-top:8px}
+/* 11-22 태블릿·PC 내 노트: 왼쪽 목록(짧게) · 오른쪽 고른 노트 */
+.ntview{display:none}
+@media (min-width:1100px) and (min-height:560px){
+  html.v2[data-tab="record"] .wrap:has(.ntsplit){max-width:1120px;margin-left:calc(var(--rail) + max(24px,(100vw - var(--rail) - 1120px)/2));margin-right:max(24px,(100vw - var(--rail) - 1120px)/2)}
+  .ntsplit{display:grid;grid-template-columns:340px minmax(0,1fr);gap:22px;align-items:start;margin-top:8px}
+  html.v2 body .ntsplit .mynotes{margin-top:0;max-height:calc(100vh - 200px);overflow:auto;padding-right:4px}
+  html.v2 body .ntsplit .mynote p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  html.v2 body .ntsplit .mynote p:nth-of-type(n+2){display:none}
+  html.v2 body .ntsplit .mynote.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .ntview{display:block;position:sticky;top:72px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;max-height:calc(100vh - 200px);overflow:auto}
+  .ntvk{margin:0;font-size:12.5px;color:var(--muted)}.ntvh{margin:4px 0 12px;font:700 22px var(--f-disp,serif);color:var(--ink)}
+  .ntvkv{margin:0 0 14px;padding:12px 14px;border-radius:12px;background:var(--note-bg,#fbf3e4);border:1px solid var(--note-bd,#ecdcc0)}.ntvkv q{display:block;quotes:none;font:16.5px/1.75 "Noto Serif KR",serif}.ntvkv cite{display:block;font-style:normal;font-weight:700;font-size:12px;color:var(--hn-ink);margin-top:4px}
+  .ntvf{padding:10px 0;border-top:1px solid var(--line)}.ntvf b{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}.ntvf p{margin:0;font-size:15.5px;line-height:1.7;white-space:pre-wrap}
+  .ntvbtn{margin-top:14px}.ntvbtn .btn{width:100%;padding:13px}
+}
+
 html.v2 body .mynote{display:block;width:100%;text-align:left;border:0;background:var(--hn-bg);border-left:3px solid var(--hn-bar);border-radius:0 14px 14px 0;padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer}
 html.v2 body .mynote small{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 html.v2 body .mynote q{display:block;quotes:none;font-family:"Noto Serif KR",serif;font-size:16.5px;line-height:1.7}
@@ -2885,6 +2901,16 @@ function tdResume(w,d){ const here=keyOf(w,d), x=noteAll().find(x=>!x.q.done&&x.
   return `<button class="tdresume" data-resume="${x.k}"><span><small>쓰다 만 노트</small><b>${esc(fmt(dateOf(x.w,x.d),{month:"long",day:"numeric"}))} · ${esc(x.p.label)}</b></span><em>이어 쓰기 ›</em></button>`; }
 function noteCard(x,full){ const {q,p,kv}=x, F=NT_F.filter(([f])=>String(q[f]||"").trim()), sh=full?F:F.slice(0,1);
   return `<button class="mynote${q.done?"":" draft"}" data-myn="${x.k}"><small>${esc(fmt(dateOf(x.w,x.d),{month:"long",day:"numeric"}))} · ${esc(p.label)}${q.done?"":`<span class="ntdr">쓰는 중</span>`}${q.ink?`<span class="ntdr ntink">손글씨</span>`:""}</small>${kv?`<q>${esc(kv.t)}</q><cite>${esc(PLAN.abbr[kv.v[0]-1])} ${kv.v[1]}:${kv.v[2]}</cite>`:""}${sh.map(([f,l])=>`<p>${full?`<b>${l}</b>`:""}${esc(q[f])}</p>`).join("")}</button>`; }
+/* 11-22 목사님(태블릿 UI): 넓은 화면의 내 노트 = 왼쪽 목록 · 오른쪽 고른 노트. 목록을 누르면 읽기만(읽는 날짜가 바뀌지 않음), '이어 쓰기'를 눌러야 그날로 감. 좁으면 지금처럼 누르면 그날로 */
+function ntViewHTML(){ const L=noteAll(); const x=L.find(y=>y.k===view.ntSel)||L[0]; if(!x) return ""; view.ntSel=x.k; const {q,p,kv}=x, F=NT_F.filter(([f])=>String(q[f]||"").trim());
+  return `<p class="ntvk">${esc(fmt(dateOf(x.w,x.d),{month:"long",day:"numeric",weekday:"short"}))}${q.done?"":` · <span class="ntdr">쓰는 중</span>`}${q.ink?` · <span class="ntdr ntink">손글씨</span>`:""}</p><h3 class="ntvh">${esc(p.label)}</h3>
+   ${kv?`<div class="ntvkv"><q>${esc(kv.t)}</q><cite>${esc(PLAN.abbr[kv.v[0]-1])} ${kv.v[1]}:${kv.v[2]}</cite></div>`:""}
+   ${F.map(([f,l])=>`<div class="ntvf"><b>${l}</b><p>${esc(q[f])}</p></div>`).join("")||`<p class="lnempty">${q.ink?"손글씨로 쓴 묵상입니다.":"아직 적은 글이 없습니다."}</p>`}
+   <div class="ntvbtn"><button class="btn" data-ntgo="${x.k}">${q.ink?"가이드북에서 보기":q.done?"이 날 묵상 노트 열기":"이어 쓰기"}</button></div>`; }
+function ntWide(){ const v=document.getElementById("ntView"); return !!(v&&v.getBoundingClientRect().width>0); }
+function ntMark(){ document.querySelectorAll("#ntRes [data-myn]").forEach(b=>b.classList.toggle("on",ntWide()&&b.dataset.myn===view.ntSel)); }
+document.addEventListener("click",e=>{ const g=e.target.closest&&e.target.closest("#ntView [data-ntgo]"); if(g){ noteGo(g.dataset.ntgo); return; }
+  const b=e.target.closest&&e.target.closest("#ntRes [data-myn]"); if(!b||!ntWide()) return; e.preventDefault(); e.stopPropagation(); view.ntSel=b.dataset.myn; const v=document.getElementById("ntView"); if(v) v.innerHTML=ntViewHTML(); ntMark(); },true);
 function noteFind(t){ t=(t||"").trim(); const L=noteAll(), R=t?L.filter(x=>x.p.label.includes(t)||(x.kv&&x.kv.t.includes(t))||NT_F.some(([f])=>String(x.q[f]||"").includes(t))):L;
   return R.length?R.map(x=>noteCard(x,true)).join(""):`<p class="lnempty">${t?`'${esc(t)}'이(가) 들어간 노트가 없습니다.`:"묵상 노트에 적은 글이 여기에 모입니다."}</p>`; }
 function lnDetailHTML(){ const L=lnAll(), sg=view.lnSeg||"new";
@@ -6129,7 +6155,7 @@ function lastReadBook(){ /* 일정에서 가장 앞선 읽은 날의 책(뒤늦�
 const recRow=(go,t,sub)=>`<button class="rrow" data-recgo="${go}"><span><b>${t}</b><small>${sub}</small></span><i aria-hidden="true">›</i></button>`;
 function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.tab==="record"&&!view.bmFrom.recD), head=t=>`<div class="rdh"><button class="rdback" id="recBack" aria-label="${back?"보던 곳으로 돌아가기":"기록으로 돌아가기"}">${"‹"}</button><h2>${t}</h2></div>`;
   if(D==="lines") return head("메모")+lnDetailHTML();
-  if(D==="notes") return head("내 노트")+`<section class="sec rsec lnwrap"><input class="lnq" id="ntQ" type="search" placeholder="낱말로 찾기" value="${esc(view.ntQ||"")}" aria-label="내 노트 찾기"><div class="mynotes" id="ntRes">${noteFind(view.ntQ||"")}</div></section>`;
+  if(D==="notes") return head("내 노트")+`<section class="sec rsec lnwrap"><input class="lnq" id="ntQ" type="search" placeholder="낱말로 찾기" value="${esc(view.ntQ||"")}" aria-label="내 노트 찾기"><div class="ntsplit"><div class="mynotes" id="ntRes">${noteFind(view.ntQ||"")}</div><aside class="ntview" id="ntView" aria-live="polite">${ntViewHTML()}</aside></div></section>`;
   /* 통독표(목사님 2026-11-03): 달마다 날짜 · 본문 · 읽음. 지금 달만 펼치고 나머지는 접음. 줄을 누르면 그날 본문으로 */
   if(D==="plan"&&true){ const t=today0(); if(view.pcStart){ PCM=view.pcStart; view.pcStart=null; } else if(!PCM) PCM=`${t.getFullYear()}-${t.getMonth()}`; return head("통독표")+`<section class="sec rsec">${pcSearchHTML()}<div id="pcBox" class="pcbox">${pcHTML()}</div><p class="lead rnote">${esc(PI.name)} 일정입니다. 날짜를 누르면 그날 본문으로 갑니다.</p></section>`; }
   if(D==="plan"){ const t0=today0(), M=new Map();
@@ -8766,7 +8792,7 @@ function render(){
     const rm=m.querySelector(".rmore"); if(rm) rm.ontoggle=()=>{ view.rMore=rm.open; }; }
   if(view.tab==="record"){ const ct=document.getElementById("ryCalT"); if(ct) ct.onclick=()=>{ view.recMon=!view.recMon; const y=scrollY; render(); scrollTo({top:y}); }; const sb=document.getElementById("rySB"); if(sb){ const cu=sb.querySelector(".rysg.cur")||[...sb.querySelectorAll(".rysg.dk")].pop(); if(cu) sb.scrollLeft=Math.max(0,cu.offsetLeft-(sb.clientWidth-cu.offsetWidth)/2); } }
   if(view.tab==="record"){ pcBind(m,(w,d)=>{ const f=view.bmFrom, t=(f&&f.tab!=="record"?f.tab:"read"); /* 주일은 오늘 탭의 주일 화면으로 */ view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }); m.querySelectorAll("[data-plgo]").forEach(b=>b.onclick=()=>{ const [w,d]=b.dataset.plgo.split("-").map(Number); view.recD=null; rgGoDay(w,d,"read"); }); const cm=m.querySelector(".rplm[open] .rpl.me"); if(cm) setTimeout(()=>cm.scrollIntoView({block:"center"}),60); }
-  if(view.tab==="record"){ const nq=m.querySelector("#ntQ"); if(nq) nq.oninput=()=>{ view.ntQ=nq.value; const r=m.querySelector("#ntRes"); if(r){ r.innerHTML=noteFind(nq.value); r.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b)); } }; }
+  if(view.tab==="record"){ const nq=m.querySelector("#ntQ"); if(nq) nq.oninput=()=>{ view.ntQ=nq.value; const r=m.querySelector("#ntRes"); if(r){ r.innerHTML=noteFind(nq.value); r.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b)); ntMark(); } }; setTimeout(ntMark,0); }
   const myGo=b=>noteGo(b.dataset.myn);
   if(view.tab==="record") m.querySelectorAll("[data-myn]").forEach(b=>b.onclick=()=>myGo(b));
   if(view.tab==="record"){ m.querySelectorAll("[data-recgo]").forEach(b=>b.onclick=()=>{ if(b.dataset.seg) view.recSeg=b.dataset.seg; recGo(b.dataset.recgo); }); m.querySelectorAll("[data-rinfo]").forEach(b=>b.onclick=()=>recInfo(b.dataset.rinfo));
