@@ -1,6 +1,6 @@
 /* 성경 지구(2026-11-21 목사님: 구글어스처럼 지구에서 성경의 땅으로). 앱이 필요할 때만 불러오는 별도 파일.
    자료는 앱이 넘겨줌(큰 여정 BM_TOURS·작은 경로 ROUTES_B·지명 GAZ·주인공 묶음 BM_WHO를 그대로 읽어 바꾼 것) → 원본 자료와 지금 지도(Leaflet)는 그대로.
-   위성사진: 멀리 NASA 블루마블(퍼블릭 도메인) · 지방 Sentinel-2 cloudless 2016(EOX, CC BY 4.0) · 마을 Esri World Imagery(목사님 계정 열쇠). 높이: AWS Terrain Tiles */
+   위성사진: 멀리 NASA 블루마블(퍼블릭 도메인) · 가까이 Esri World Imagery(목사님 계정 열쇠). 높이: AWS Terrain Tiles */
 (function(){
 "use strict";
 const CSS=`
@@ -93,7 +93,7 @@ const CSS=`
 let M=null, O=null, root=null, pins=[], spinOn=false, TER=false, cur=null, step=-1, stack=[], W=null, WID="", CW=[];
 const RM=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* 11-21 목사님(카메라가 느림): 처음 선명도 휴대폰 1.5배·PC 2배까지 → 들어간 뒤 그리는 속도를 재서 느리면 1배로 */
-const PR0=()=>Math.min(devicePixelRatio||1,innerWidth<900?1.5:2);
+const TOUCH=matchMedia("(pointer:coarse)").matches; const PR0=()=>Math.min(devicePixelRatio||1,(TOUCH||innerWidth<900)?1.5:2); /* 11-22: 태블릿 큰 화면을 2배로 그리면 버벅이며 깜빡임 → 손가락 기기는 1.5배까지 */
 function perfWatch(){ let n=0, t0=performance.now(); const f=()=>{ if(!M) return; n++; const dt=performance.now()-t0; if(dt<4000) requestAnimationFrame(f); else { const fps=n*1000/dt; if(fps<28&&M.getPixelRatio()>1) M.setPixelRatio(1); } }; requestAnimationFrame(f); }
 const wide=()=>innerWidth>=900;
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -103,24 +103,34 @@ function style(key){
   const ESRI=(z,y,x)=>`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${key}`;
   return {version:8,projection:{type:"globe"},
    sky:{"sky-color":"#0b1a3a","sky-horizon-blend":0.5,"horizon-color":"#a9c4ea","horizon-fog-blend":0.7,"fog-color":"#c8d5e6","fog-ground-blend":0.4,"atmosphere-blend":["interpolate",["linear"],["zoom"],0,1,5,1,8,0]},
+   /* 11-22 목사님(휴대폰·태블릿 깜빡임): 사진 세 종류(블루마블·Sentinel-2·Esri)의 색이 서로 달라, 날아가는 동안 덜 온 조각 자리에 다른 색 사진이 비쳐 번쩍였음.
+      → 지구 전체를 볼 때만 블루마블, 그 밖은 모두 Esri 한 가지(색이 같은 6~11배율). Esri는 12배율부터 다른 위성(어둡고 푸르스름)으로 바뀌므로
+        여정이 쓰는 거리(11.5배율까지)에서는 11배율 사진을 늘려 쓰고, 손으로 더 다가갈 때만 12배율 이상을 색을 맞춰 겹침.
+        6배율 사진을 늘 맨 아래 깔아 둬서(같은 색) 새 조각이 오기 전에도 빈자리·회색이 보이지 않음. */
    sources:{
-    bm:{type:"raster",tiles:["https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg"],tileSize:256,maxzoom:8,attribution:"NASA Blue Marble"},
-    s2:{type:"raster",tiles:["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"],tileSize:256,maxzoom:15,attribution:'<a href="https://s2maps.eu" target="_blank">Sentinel-2 cloudless</a> by EOX (Copernicus Sentinel data 2016)'},
-    esri:{type:"raster",tiles:[ESRI("{z}","{y}","{x}")],tileSize:256,maxzoom:17,attribution:"Powered by Esri · Esri, Maxar, Earthstar Geographics"},
-    dem:{type:"raster-dem",tiles:["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],tileSize:256,encoding:"terrarium",maxzoom:13,attribution:"AWS Terrain Tiles"}},
+    bm:{type:"raster",tiles:["https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg"],tileSize:256,maxzoom:6,attribution:"NASA Blue Marble"},
+    e6:{type:"raster",tiles:[ESRI("{z}","{y}","{x}")],tileSize:256,maxzoom:6},
+    e11:{type:"raster",tiles:[ESRI("{z}","{y}","{x}")],tileSize:256,maxzoom:11,attribution:"Powered by Esri · Esri, Maxar, Earthstar Geographics"},
+    esri:{type:"raster",tiles:[ESRI("{z}","{y}","{x}")],tileSize:256,minzoom:12,maxzoom:17},
+    dem:{type:"raster-dem",tiles:["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],tileSize:256,encoding:"terrarium",maxzoom:12,attribution:"AWS Terrain Tiles"}},
    layers:[
-    {id:"bg",type:"background",paint:{"background-color":"#4a5560"}},
-    {id:"bm",type:"raster",source:"bm",maxzoom:9.5,paint:{"raster-fade-duration":0}},
-    {id:"s2",type:"raster",source:"s2",minzoom:4.5,maxzoom:14,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],4.6,0,6,1],"raster-saturation":0.02,"raster-contrast":0.1,"raster-brightness-max":0.84}},
-    {id:"esri",type:"raster",source:"esri",minzoom:8.4,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],8.5,0,10,1],"raster-contrast":0.04}},
-    {id:"shade",type:"hillshade",source:"dem",minzoom:5.5,paint:{"hillshade-exaggeration":["interpolate",["linear"],["zoom"],6,0.12,8,0.35,10,0.5,12,0.6],"hillshade-shadow-color":"rgba(30,18,6,.75)","hillshade-highlight-color":"rgba(255,248,232,.12)","hillshade-accent-color":"rgba(40,26,12,.6)","hillshade-illumination-direction":315}}]};
+    {id:"bg",type:"background",paint:{"background-color":"#9a8462"}},
+    {id:"bm",type:"raster",source:"bm",maxzoom:5,paint:{"raster-fade-duration":0,"raster-brightness-min":0.08,"raster-saturation":-0.05}},
+    {id:"e6",type:"raster",source:"e6",minzoom:3,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],3,0,4.2,1],"raster-fade-duration":0}},
+    {id:"e11",type:"raster",source:"e11",minzoom:5.5,paint:{"raster-fade-duration":200}},
+    {id:"esri",type:"raster",source:"esri",minzoom:11.8,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],11.8,0,12.6,1],"raster-hue-rotate":-16,"raster-saturation":0.35,"raster-brightness-min":0.1,"raster-contrast":-0.05}},
+    {id:"shade",type:"hillshade",source:"dem",minzoom:5.5,paint:{"hillshade-exaggeration":["interpolate",["linear"],["zoom"],5.5,0.12,7.5,0.42],"hillshade-shadow-color":"rgba(30,18,6,.75)","hillshade-highlight-color":"rgba(255,248,232,.12)","hillshade-accent-color":"rgba(40,26,12,.6)","hillshade-illumination-direction":315}}]};
 }
 function terr(){ if(!M) return; const on=M.getZoom()>4.2; if(on!==TER){ TER=on; M.setTerrain(on?{source:"dem",exaggeration:1.7}:null); } }
 function spin(){ if(!spinOn||RM()||!M) return; const c=M.getCenter(); c.lng-=0.06; M.easeTo({center:c,duration:60,easing:t=>t}); }
 /* 미리 받기 */
 const PRE=new Set();
 function lx(l,z){ return Math.floor((l+180)/360*2**z); } function ly(a,z){ const r=a*Math.PI/180; return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**z); }
-function prefetch(c,z){ const zz=Math.round(z); [[zz,"e"],[zz-1,"e"],[Math.min(zz,10),"s"],[Math.min(zz-1,12),"d"]].forEach(([q,k])=>{ if(q<1) return; const x0=lx(c[0],q), y0=ly(c[1],q); for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=1;dy++){ const x=x0+dx, y=y0+dy; const u=k==="e"?`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${q}/${y}/${x}?token=${O.esriKey}`:k==="s"?`https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/${q}/${y}/${x}.jpg`:`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${q}/${x}/${y}.png`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
+function prefetch(c,z){ const zz=Math.round(z); [[Math.min(zz,11),"e"],[Math.min(zz-1,10),"e"],[Math.min(zz-1,12),"d"]].forEach(([q,k])=>{ if(q<1) return; const x0=lx(c[0],q), y0=ly(c[1],q); for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=1;dy++){ const x=x0+dx, y=y0+dy; const u=k==="e"?`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${q}/${y}/${x}?token=${O.esriKey}`:k==="s"?`https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/${q}/${y}/${x}.jpg`:`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${q}/${x}/${y}.png`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
+/* 11-22: 가까운 곳으로 옮길 때 멀어졌다 다가오면(flyTo) 지나는 배율마다 새 사진 조각을 받느라 깜빡임 → 화면 2.5개 거리 안이면 같은 높이로 미끄러지듯(easeTo) */
+function move(o){ if(RM()) return M.jumpTo(o); const c=M.getCenter(), t=maplibregl.LngLat.convert(o.center), z=Math.min(o.zoom!=null?o.zoom:M.getZoom(),M.getZoom()), dpp=360/(512*2**z),
+  px=Math.hypot((t.lng-c.lng)*Math.cos(t.lat*Math.PI/180),t.lat-c.lat)/dpp, q=Object.assign({},o); delete q.curve;
+  if(px<2.5*Math.max(innerWidth,innerHeight)) M.easeTo(Object.assign(q,{duration:Math.min(o.duration||2600,2800),essential:true})); else M.flyTo(Object.assign(q,{curve:1.25,essential:true})); }
 function bear(a,b){ const R=Math.PI/180, y=Math.sin((b[0]-a[0])*R)*Math.cos(b[1]*R), x=Math.cos(a[1]*R)*Math.sin(b[1]*R)-Math.sin(a[1]*R)*Math.cos(b[1]*R)*Math.cos((b[0]-a[0])*R); return Math.atan2(y,x)/R; }
 function pad(){ return wide()?{top:80,bottom:60,left:60,right:400}:{top:80,bottom:Math.round(innerHeight*0.48),left:30,right:30}; }
 
@@ -180,17 +190,17 @@ function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; noWalk
   addPins(r.p.filter(p=>p[0]).map((p,k,a)=>({n:p[0],lat:p[1],lng:p[2],big:k===0||k===a.length-1})));
   const b=new maplibregl.LngLatBounds(); c.forEach(x=>b.extend(x)); let bb=c.length>1?bear(c[0],c[c.length-1]):0; if(bb>90) bb-=180; if(bb<-90) bb+=180;
   const P=wide()?{top:90,bottom:70,left:60,right:420}:{top:80,bottom:Math.round(innerHeight*0.5),left:30,right:30};
-  const cam=fitCam(b,{padding:P,bearing:bb,maxZoom:11}); if(cam) M.flyTo({center:cam.center,zoom:cam.zoom-0.3,bearing:bb,pitch:55,duration:RM()?0:3200,curve:1.42,essential:true});
+  const cam=fitCam(b,{padding:P,bearing:bb,maxZoom:11}); if(cam) move({center:cam.center,zoom:cam.zoom-0.3,bearing:bb,pitch:55,duration:RM()?0:3200,curve:1.42,essential:true});
   const fig=r.sea?"boat":"man"; walker(fig,c[0]); setTimeout(()=>animLine([],c,null,pt=>walker(fig,pt)),RM()?0:1200);
-  panel(r.n,`<p class="ed">${esc(r.ref||"")}</p><p class="ed">${esc(r.p.map(p=>p[0]).filter(Boolean).join(" → "))}</p><div class="eelev"></div><button class="ebig" data-route="${i}">↻ 다시 걸어 보기</button>`,{card:true});
-  if(O.elev) O.elev(i).then(E=>{ const box=$(".eelev"); if(!box||!E||!E.e||E.e.length<2) return; box.innerHTML=elevSVG(E); }); }
+  panel(r.n,`<p class="ed">${esc(r.ref||"")}</p><p class="ed">${esc(r.p.map(p=>p[0]).filter(Boolean).join(" → "))}</p><button class="ebig" data-route="${i}">↻ 다시 걸어 보기</button>`,{card:true});
+}
 /* 높낮이 그래프(길을 따라 잰 땅 높이). 바다 아래(사해 등)도 그대로 */
 function elevSVG(E){ const e=E.e, W=320, H=96, top=14, bot=20, mn=Math.min(0,...e), mx=Math.max(...e), sp=Math.max(50,mx-mn);
   const X=i=>i/(e.length-1)*W, Y=v=>top+(1-(v-mn)/sp)*(H-top-bot); const d=e.map((v,i)=>`${i?"L":"M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join("");
   const im=e.indexOf(mx), sea=mn<0?`<line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" stroke="#7fb3d5" stroke-dasharray="3 3" stroke-width="1"/>`:"";
   let lastX=-99; const marks=(E.m||[]).filter(([n,f])=>{ const x=f*W; if(x-lastX<34) return false; lastX=x; return true; }).map(([n,f])=>`<line x1="${(f*W).toFixed(1)}" x2="${(f*W).toFixed(1)}" y1="${H-bot}" y2="${H-bot+4}" stroke="#cfc3b1"/><text x="${Math.min(W-2,Math.max(2,f*W)).toFixed(1)}" y="${H-4}" fill="#cfc3b1" font-size="9.5" text-anchor="${f<.08?"start":f>.92?"end":"middle"}">${esc(n)}</text>`).join("");
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="길의 높낮이"><path d="${d} L${W} ${H-bot} L0 ${H-bot} Z" fill="rgba(233,195,138,.22)"/><path d="${d}" fill="none" stroke="#e9c38a" stroke-width="1.8"/>${sea}<circle cx="${X(im)}" cy="${Y(mx)}" r="3" fill="#fff"/><text x="${Math.min(W-4,Math.max(4,X(im)))}" y="${Y(mx)-5}" fill="#fff" font-size="10" text-anchor="middle">${Math.round(mx)}m</text>${marks}</svg><small>길이 약 ${E.km}km · 가장 높은 곳 ${Math.round(mx)}m${mn<0?` · 가장 낮은 곳 해수면 아래 ${Math.round(-mn)}m`:""}</small>`; }
-function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n,lat:p.lat,lng:p.lng,big:true}]); M.flyTo({center:[p.lng,p.lat],zoom:p.z||10.5,pitch:55,bearing:M.getBearing(),duration:RM()?0:3200,curve:1.42,essential:true,padding:wide()?{right:390}:{bottom:Math.round(innerHeight*0.48)}}); if(!wide()) fold(true); }
+function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n,lat:p.lat,lng:p.lng,big:true}]); move({center:[p.lng,p.lat],zoom:p.z||10.5,pitch:55,bearing:M.getBearing(),duration:RM()?0:3200,curve:1.42,essential:true,padding:wide()?{right:390}:{bottom:Math.round(innerHeight*0.48)}}); if(!wide()) fold(true); }
 function tourAll(t){ const c=[t.start?[t.start[2],t.start[1]]:null]; t.steps.forEach(s=>(s.p||[]).forEach(p=>c.push([p[2],p[1]]))); return c.filter(Boolean); }
 function tourPlaces(t){ const L=[]; if(t.start&&t.start[0]) L.push({n:t.start[0],lat:t.start[1],lng:t.start[2],big:true}); t.steps.forEach(s=>{ const e=(s.p||[])[(s.p||[]).length-1]; if(e&&e[0]&&!L.some(x=>x.n===e[0])) L.push({n:e[0],lat:e[1],lng:e[2],sm:true}); }); return L; }
 function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; const all=tourAll(t);
@@ -212,8 +222,8 @@ function follow(k){ const t=cur; if(!t) return; if(k>=t.steps.length){ tour(t.id
   const z=s.z||8, mz=Math.min(11.5,z+1.5); let bb=seg.length>1?br:M.getBearing(); if(bb>90) bb-=180; if(bb<-90) bb+=180;
   const P=wide()?{top:90,bottom:70,left:60,right:420}:{top:80,bottom:Math.round(innerHeight*0.5),left:30,right:30};
   const cam=seg.length>1?fitCam(b,{padding:P,bearing:bb,maxZoom:mz}):null;
-  if(cam) M.flyTo({center:cam.center,zoom:Math.min(cam.zoom-0.35,mz),bearing:bb,pitch:58,duration:RM()?0:3400,curve:1.42,essential:true});
-  else M.flyTo({center:end,zoom:z,pitch:58,bearing:bb,duration:RM()?0:3400,curve:1.42,essential:true,padding:P});
+  if(cam) move({center:cam.center,zoom:Math.min(cam.zoom-0.35,mz),bearing:bb,pitch:58,duration:RM()?0:3400,curve:1.42,essential:true});
+  else move({center:end,zoom:z,pitch:58,bearing:bb,duration:RM()?0:3400,curve:1.42,essential:true,padding:P});
   const nx=t.steps[k+1]; if(nx&&nx.p&&nx.p.length){ const e=nx.p[nx.p.length-1]; setTimeout(()=>prefetch([e[2],e[1]],nx.z||8),1500); }
   panel(t.n,`<div class="dots">${t.steps.map((_,i)=>`<i class="${i<=k?"on":""}"></i>`).join("")}</div><div class="k">${k+1} / ${t.steps.length}${s.mood?` · ${esc(s.mood)}`:""}</div><h2>${esc(s.t)}</h2><p class="n">${esc(s.n||"")}</p>${s.verse?`<p class="v">${esc(s.verse)}</p><p class="r">${esc(s.ref||"")}</p>`:s.ref?`<p class="r">${esc(s.ref)}</p>`:""}${s.r&&O.passage?`<button class="elink" data-pas="1">본문 앞뒤 더 보기 ›</button><div class="epas" hidden></div>`:""}<div class="row"><button data-follow="${Math.max(0,k-1)}"${k?"":" disabled"}>‹ 앞</button><button class="p" data-follow="${k+1}">${k===t.steps.length-1?"여정 처음으로":"다음 ›"}</button></div>`,{card:true}); }
 
@@ -233,7 +243,9 @@ function onClick(e){ const t=e.target.closest("button"); if(!t||!root.contains(t
   if(t.classList.contains("eearth")){ toEarth(); return; }
   if(t.classList.contains("ex")){ close(); return; }
   if(t.classList.contains("ego")){ enter(); return; } }
-function enter(){ spinOn=false; $(".eintro").classList.add("off"); setTimeout(perfWatch,1500); if(O.startTour) { push(()=>home(true)); tour(O.startTour,O.startFrom||0); } else if(O.startRoute!=null){ push(()=>home(true)); route(O.startRoute); } else home(); }
+/* 11-22: 맨 아래 깔리는 6배율 사진을 성경 땅 전체(이탈리아~메소보다미아, 약 65장)만큼 들어갈 때 미리 받아 둠 */
+function preBase(){ [[5,16,20,11,13],[6,32,41,23,27]].forEach(([z,x0,x1,y0,y1])=>{ for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++){ const u=`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${O.esriKey}`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
+function enter(){ spinOn=false; preBase(); $(".eintro").classList.add("off"); setTimeout(perfWatch,1500); if(O.startTour) { push(()=>home(true)); tour(O.startTour,O.startFrom||0); } else if(O.startRoute!=null){ push(()=>home(true)); route(O.startRoute); } else home(); }
 function toEarth(){ clearPins(); noWalker(); setLine("eroute",null); setLine("efull",null); fold(true); M.flyTo({center:[38,24],zoom:1.3,pitch:0,bearing:0,duration:RM()?0:5500,essential:true}); }
 function key(e){ if(!root) return; const tg=e.target; if(tg&&/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)) return;
   /* Esc는 앱이 처리(뒤로 가기와 같은 길) */ if(cur&&step>=0&&e.key==="ArrowRight") follow(step+1); else if(cur&&step>0&&e.key==="ArrowLeft") follow(step-1); }
@@ -260,5 +272,5 @@ function open(opts){ if(root) close(true); O=opts||{}; stack=[]; cur=null; step=
   M.on("error",e=>{ if(O.onTileError) O.onTileError(e); });
   return true; }
 function close(silent){ removeEventListener("keydown",key); try{ clearPins(); noWalker(); M&&M.remove(); }catch(e){} M=null; if(root){ root.remove(); root=null; } spinOn=false; TER=false; const f=O&&O.onClose; O=null; if(!silent&&f) f(); }
-window.CBSR_EARTH={open,close,isOpen:()=>!!root};
+window.CBSR_EARTH={open,close,isOpen:()=>!!root,_map:()=>M};
 })();
