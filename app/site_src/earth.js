@@ -140,22 +140,33 @@ function declutter(){ if(!pins.length) return; const R2=[]; const L=pins.map((m,
   L.forEach(({el})=>{ el.classList.remove("hid"); const b=el.querySelector("b"); if(!b) return; if(el.classList.contains("sm")&&!el.classList.contains("seen")) return; const r=b.getBoundingClientRect(); if(!r.width) return;
     if(R2.some(q=>r.left<q.right+4&&r.right>q.left-4&&r.top<q.bottom+2&&r.bottom>q.top-2)) el.classList.add("hid"); else R2.push(r); }); }
 function addPins(list){ clearPins(); list.forEach((p,i)=>{ const el=document.createElement("div"); el.className="epin"+(p.big?" big":p.sm?" sm":""); el.innerHTML=`<i></i><b>${esc(p.n)}</b>`; pins.push(new maplibregl.Marker({element:el,anchor:"left",offset:[-6,0]}).setLngLat([p.lng,p.lat]).addTo(M)); setTimeout(()=>el.classList.add("on"),200+Math.min(i,20)*90); }); }
-function setLine(id,coords){ const s=M&&M.getSource(id); if(s) s.setData(coords&&coords.length>1?{type:"Feature",geometry:{type:"LineString",coordinates:coords}}:{type:"FeatureCollection",features:[]}); }
+function setLine(id,coords){ const s=M&&M.getSource(id); if(!s) return; /* 11-22: 장면이 다른 곳에서 새로 시작하면(from) 끊긴 여러 토막으로 그림 */
+  if(coords&&coords.length&&Array.isArray(coords[0][0])){ const L=coords.filter(c=>c&&c.length>1); s.setData(L.length?{type:"Feature",geometry:{type:"MultiLineString",coordinates:L}}:{type:"FeatureCollection",features:[]}); return; }
+  s.setData(coords&&coords.length>1?{type:"Feature",geometry:{type:"LineString",coordinates:coords}}:{type:"FeatureCollection",features:[]}); }
 /* 11-21 목사님: 위성지도 위로 캐릭터·배. 장면의 주인공(as_)이 길을 따라 걷고, 바다 장면(sea)은 배 */
-function walker(id,at,name){ if(!O.figure||!at||!M) return; if(!W||WID!==id){ if(W) W.remove(); const el=document.createElement("div"); el.className="ewalk"; el.innerHTML=O.figure(id)+(name?`<span class="enm">${esc(name)}</span>`:""); W=new maplibregl.Marker({element:el,anchor:"top-left"}).setLngLat(at).addTo(M); WID=id; } else W.setLngLat(at); CW.forEach(m=>m.setLngLat(at)); }
+function walker(id,at,name){ if(!O.figure||!at||!M) return; if(W&&WID===id&&(W._nm||"")!==(name||"")){ W.remove(); W=null; } /* 11-22: 같은 그림이라도 이름이 바뀌면(스룹바벨→느헤미야) 새로 */ if(!W||WID!==id){ if(W) W.remove(); const el=document.createElement("div"); el.className="ewalk"; el.innerHTML=O.figure(id)+(name?`<span class="enm">${esc(name)}</span>`:""); W=new maplibregl.Marker({element:el,anchor:"top-left"}).setLngLat(at).addTo(M); W._nm=name||""; WID=id; } else W.setLngLat(at); CW.forEach(m=>m.setLngLat(at)); }
 /* 동행: 주인공 뒤로 조금씩 비켜 서서 같이 움직임(바다에서는 배에 탄 것으로 보고 숨김) */
 function crew(list,at){ CW.forEach(m=>m.remove()); CW=[]; if(!O.figure||!at) return; list.slice(0,4).forEach(([nm,as],j)=>{ const el=document.createElement("div"); el.className="ewalk co"; el.innerHTML=O.figure(as||"man")+`<span class="enm">${esc(nm)}</span>`; CW.push(new maplibregl.Marker({element:el,anchor:"top-left",offset:[-(j+1)*30,6+(j%2)*6]}).setLngLat(at).addTo(M)); }); }
 function mood(txt){ if(!W||!txt) return; const el=W.getElement(); el.querySelector(".emood")?.remove(); const b=document.createElement("span"); b.className="emood"; b.textContent=txt; el.appendChild(b); setTimeout(()=>b.remove(),3300); }
-function noWalker(){ if(W){ W.remove(); W=null; WID=""; } CW.forEach(m=>m.remove()); CW=[]; }
+/* 일행에서 떨어져 따로 가는 사람(룻 1:14 오르바 등): 그 사람만 자기 길로 걸어가다 사라짐 */
+let SW=null; function sideWalk(sd,at){ if(SW){ SW.remove(); SW=null; } if(!O.figure) return; const pts=[at,...sd.p.map(p=>[p[2],p[1]])], el=document.createElement("div"); el.className="ewalk co";
+  el.innerHTML=O.figure(sd.as_||"man")+`<span class="enm">${esc(sd.n||"")}</span>`; SW=new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat(at).addTo(M); const mk=SW;
+  if(RM()){ mk.setLngLat(pts[pts.length-1]); return; } let t0=null; const dur=3200, f=ts=>{ if(SW!==mk) return; t0=t0||ts; const u=Math.min(1,(ts-t0)/dur), x=u*(pts.length-1), i=Math.min(pts.length-2,Math.floor(x)), r=x-i;
+    mk.setLngLat([pts[i][0]+(pts[i+1][0]-pts[i][0])*r,pts[i][1]+(pts[i+1][1]-pts[i][1])*r]); el.style.opacity=u>.8?String((1-u)/.2):"1"; if(u<1) requestAnimationFrame(f); else { mk.remove(); if(SW===mk) SW=null; } }; setTimeout(()=>requestAnimationFrame(f),900); }
+function noWalker(){ if(SW){ SW.remove(); SW=null; }  if(W){ W.remove(); W=null; WID=""; } CW.forEach(m=>m.remove()); CW=[]; }
 /* 장면 k에서의 주인공·동행: 처음 동행(wth)에서 장면마다 합류(add)·이탈(drop) — 이탈은 그 장면이 끝난 뒤(dropAt:start면 처음부터) */
 function cast(t,k){ let lead=t.as_||"man", nm=t.who||"", co=(t.wth||[]).map(x=>[x[0],x[1]]);
-  for(let i=0;i<=k;i++){ const s=t.steps[i]; if(s.as_) lead=s.as_; if(s.who) nm=s.who; if(s.add&&s.add[0]&&!co.some(x=>x[0]===s.add[0])) co.push([s.add[0],s.add[1]]); if(s.drop&&(i<k||s.dropAt==="start")) co=co.filter(x=>x[0]!==s.drop); }
+  for(let i=0;i<=k;i++){ const s=t.steps[i]; if(s.as_) lead=s.as_; if(s.who) nm=s.who; /* 11-22: add·drop은 한 사람일 수도, 여러 사람일 수도 있음(룻 1장: 오르바와 룻이 함께, 말론과 기룐이 함께) */
+    if(s.add){ (Array.isArray(s.add[0])?s.add:[s.add]).forEach(a=>{ if(a&&a[0]&&!co.some(x=>x[0]===a[0])) co.push([a[0],a[1]]); }); }
+    if(s.drop&&(i<k||s.dropAt==="start")){ const D=Array.isArray(s.drop)?s.drop:[s.drop]; co=co.filter(x=>!D.includes(x[0])); } }
   return {lead,nm,co}; }
-function animLine(base,seg,done,onPt){ if(RM()||seg.length<2){ setLine("eroute",[...base,...seg.slice(1)]); onPt&&onPt(seg[seg.length-1]); done&&done(); return; }
+function animLine(base,seg,done,onPt){ const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
+  const draw=pts=>same?[...head,last.concat(pts.slice(1))]:[...segs,pts];
+  if(RM()||seg.length<2){ setLine("eroute",draw(seg)); onPt&&onPt(seg[seg.length-1]); done&&done(); return; }
   let L=0; const d=[0]; for(let i=1;i<seg.length;i++){ L+=Math.hypot(seg[i][0]-seg[i-1][0],seg[i][1]-seg[i-1][1]); d.push(L); }
   let t0=null; const dur=Math.min(4200,1400+L*260);
   const f=ts=>{ t0=t0||ts; const t=Math.min(1,(ts-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, at=e*L; const pts=[seg[0]]; for(let i=1;i<seg.length;i++){ if(d[i]<=at) pts.push(seg[i]); else { const k=(at-d[i-1])/(d[i]-d[i-1]||1); pts.push([seg[i-1][0]+(seg[i][0]-seg[i-1][0])*k,seg[i-1][1]+(seg[i][1]-seg[i-1][1])*k]); break; } }
-    setLine("eroute",[...base,...pts.slice(base.length?1:0)]); onPt&&onPt(pts[pts.length-1]); if(t<1) requestAnimationFrame(f); else done&&done(); }; requestAnimationFrame(f); }
+    setLine("eroute",draw(pts)); onPt&&onPt(pts[pts.length-1]); if(t<1) requestAnimationFrame(f); else done&&done(); }; requestAnimationFrame(f); }
 
 /* 칸 내용 */
 function fold(on){ const p=$(".epan"); p.classList.toggle("fold",on); root.classList.toggle("pfold",on&&wide()); }
@@ -191,6 +202,7 @@ function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; noWalk
   const b=new maplibregl.LngLatBounds(); c.forEach(x=>b.extend(x)); let bb=c.length>1?bear(c[0],c[c.length-1]):0; if(bb>90) bb-=180; if(bb<-90) bb+=180;
   const P=wide()?{top:90,bottom:70,left:60,right:420}:{top:80,bottom:Math.round(innerHeight*0.5),left:30,right:30};
   const cam=fitCam(b,{padding:P,bearing:bb,maxZoom:11}); if(cam) move({center:cam.center,zoom:cam.zoom-0.3,bearing:bb,pitch:55,duration:RM()?0:3200,curve:1.42,essential:true});
+  try{ M.setPaintProperty("eroute","line-dasharray",r.est?[2,1.6]:[1,0]); }catch(e){} /* 성경이 길을 말하지 않는 추정 길은 점선 */
   const fig=r.sea?"boat":"man"; walker(fig,c[0]); setTimeout(()=>animLine([],c,null,pt=>walker(fig,pt)),RM()?0:1200);
   panel(r.n,`<p class="ed">${esc(r.ref||"")}</p><p class="ed">${esc(r.p.map(p=>p[0]).filter(Boolean).join(" → "))}</p><button class="ebig" data-route="${i}">↻ 다시 걸어 보기</button>`,{card:true});
 }
@@ -201,19 +213,22 @@ function elevSVG(E){ const e=E.e, W=320, H=96, top=14, bot=20, mn=Math.min(0,...
   let lastX=-99; const marks=(E.m||[]).filter(([n,f])=>{ const x=f*W; if(x-lastX<34) return false; lastX=x; return true; }).map(([n,f])=>`<line x1="${(f*W).toFixed(1)}" x2="${(f*W).toFixed(1)}" y1="${H-bot}" y2="${H-bot+4}" stroke="#cfc3b1"/><text x="${Math.min(W-2,Math.max(2,f*W)).toFixed(1)}" y="${H-4}" fill="#cfc3b1" font-size="9.5" text-anchor="${f<.08?"start":f>.92?"end":"middle"}">${esc(n)}</text>`).join("");
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="길의 높낮이"><path d="${d} L${W} ${H-bot} L0 ${H-bot} Z" fill="rgba(233,195,138,.22)"/><path d="${d}" fill="none" stroke="#e9c38a" stroke-width="1.8"/>${sea}<circle cx="${X(im)}" cy="${Y(mx)}" r="3" fill="#fff"/><text x="${Math.min(W-4,Math.max(4,X(im)))}" y="${Y(mx)-5}" fill="#fff" font-size="10" text-anchor="middle">${Math.round(mx)}m</text>${marks}</svg><small>길이 약 ${E.km}km · 가장 높은 곳 ${Math.round(mx)}m${mn<0?` · 가장 낮은 곳 해수면 아래 ${Math.round(-mn)}m`:""}</small>`; }
 function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n,lat:p.lat,lng:p.lng,big:true}]); move({center:[p.lng,p.lat],zoom:p.z||10.5,pitch:55,bearing:M.getBearing(),duration:RM()?0:3200,curve:1.42,essential:true,padding:wide()?{right:390}:{bottom:Math.round(innerHeight*0.48)}}); if(!wide()) fold(true); }
+function tourSegs(t){ const S=[]; let c=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.forEach(s=>{ if(s.from){ if(c.length) S.push(c); c=[[s.from[2],s.from[1]]]; } (s.p||[]).forEach(p=>c.push([p[2],p[1]])); }); if(c.length) S.push(c); return S; }
 function tourAll(t){ const c=[t.start?[t.start[2],t.start[1]]:null]; t.steps.forEach(s=>(s.p||[]).forEach(p=>c.push([p[2],p[1]]))); return c.filter(Boolean); }
-function tourPlaces(t){ const L=[]; if(t.start&&t.start[0]) L.push({n:t.start[0],lat:t.start[1],lng:t.start[2],big:true}); t.steps.forEach(s=>{ const e=(s.p||[])[(s.p||[]).length-1]; if(e&&e[0]&&!L.some(x=>x.n===e[0])) L.push({n:e[0],lat:e[1],lng:e[2],sm:true}); }); return L; }
+function tourPlaces(t){ const L=[]; if(t.start&&t.start[0]) L.push({n:t.start[0],lat:t.start[1],lng:t.start[2],big:true}); t.steps.forEach(s=>{ if(s.from&&s.from[0]&&!L.some(x=>x.n===s.from[0])) L.push({n:s.from[0],lat:s.from[1],lng:s.from[2],sm:true}); const e=(s.p||[])[(s.p||[]).length-1]; if(e&&e[0]&&!L.some(x=>x.n===e[0])) L.push({n:e[0],lat:e[1],lng:e[2],sm:true}); }); return L; }
 function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; const all=tourAll(t);
-  addPins(tourPlaces(t)); setLine("eroute",null); setLine("efull",all); noWalker(); const c0=cast(t,0); walker(c0.lead,all[0],c0.nm); crew(c0.co,all[0]);
+  addPins(tourPlaces(t)); setLine("eroute",null); setLine("efull",tourSegs(t)); noWalker(); const c0=cast(t,0); walker(c0.lead,all[0],c0.nm); crew(c0.co,all[0]);
   const b=new maplibregl.LngLatBounds(); all.forEach(c=>b.extend(c)); M.fitBounds(b,{padding:pad(),pitch:48,bearing:-12,duration:RM()?0:4200,curve:1.5,essential:true});
   panel(t.n,`<p class="ed">${esc(t.d||t.sub||"")}</p><button class="ebig" data-follow="${from||0}">▶ ${from?`${from+1}번째 장면부터 `:""}따라가기 · ${t.steps.length}장면</button>`+t.steps.map((s,k)=>`<button class="erow" data-follow="${k}"><span class="ic">${k+1}</span><span><b>${esc(s.t)}</b><small>${esc(s.ref||s.s||"")}</small></span></button>`).join(""));
   const e0=tourAll(t)[0]; if(e0) prefetch(e0,(t.steps[0]&&t.steps[0].z)||8); }
 /* 11-21: 휴대폰에서 짧은 길은 "맞출 수 없다"며 오류가 나 다음 장면으로 안 넘어가던 문제 → 실패하면 여백을 줄여 다시, 그래도 안 되면 null(도착지로 날아감) */
 function fitCam(b,o){ for(const sc of [1,.5,0]){ try{ const P=o.padding, q=Object.assign({},o,{padding:{top:P.top*sc,bottom:P.bottom*sc,left:P.left*sc,right:P.right*sc}}); const c=M.cameraForBounds(b,q); if(c&&c.center) return c; }catch(e){} } return null; }
-function follow(k){ const t=cur; if(!t) return; if(k>=t.steps.length){ tour(t.id); return; } step=k; const s=t.steps[k];
-  const base=[]; if(t.start) base.push([t.start[2],t.start[1]]); t.steps.slice(0,k).forEach(x=>(x.p||[]).forEach(p=>base.push([p[2],p[1]])));
-  const sp=(s.p||[]).map(p=>[p[2],p[1]]); const here=base.length?base[base.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
-  setLine("eroute",base.length>1?base:null); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:cs.co,here); setTimeout(()=>mood(s.mood),RM()?0:600); animLine(base,seg,null,pt=>walker(fig,pt,s.sea?"":cs.nm));
+function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute","line-dasharray",[1,0]); }catch(e){} if(k>=t.steps.length){ tour(t.id); return; } step=k; const s=t.steps[k];
+  /* 11-22 목사님("에스라가 예루살렘에서 페르시아로 이동하는 장면은 왜?"): 장면에 from(다른 곳에서 새 인물로 시작)이 있으면 앞 장면 끝에서 걸어가지 않고 그곳에서 시작 */
+  const base=[]; let c0=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.slice(0,k).forEach(x=>{ if(x.from){ if(c0.length) base.push(c0); c0=[[x.from[2],x.from[1]]]; } (x.p||[]).forEach(p=>c0.push([p[2],p[1]])); });
+  if(s.from){ if(c0.length) base.push(c0); c0=[[s.from[2],s.from[1]]]; } if(c0.length) base.push(c0);
+  const sp=(s.p||[]).map(p=>[p[2],p[1]]), lastSeg=base[base.length-1]||[]; const here=lastSeg.length?lastSeg[lastSeg.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
+  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:cs.co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); if(s.side&&s.side.p&&s.side.p.length) sideWalk(s.side,here); animLine(base,seg,null,pt=>walker(fig,pt,s.sea?"":cs.nm));
   pins.forEach((m,i)=>m.getElement().classList.toggle("seen",i<=k+1));
   const end=seg[seg.length-1], pv=seg[Math.max(0,seg.length-2)], br=bear(pv,end);
   const b=new maplibregl.LngLatBounds(); seg.forEach(c=>b.extend(c));

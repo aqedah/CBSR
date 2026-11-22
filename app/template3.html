@@ -4712,7 +4712,7 @@ const MAPMETA={
  "므낫세가 바벨론에 끌려갔다 돌아옴":{who:"므낫세",as:"king",with:[{n:"",as:"soldier",to:"바벨론",out:"fade"},{n:"",as:"soldier",to:"바벨론",out:"fade"}],group:"앗수르 군대"},
  "느고가 므깃도를 지나 갈그미스로":{who:"느고",as:"king",kind:"군대",group:"애굽 군대"},
  "레바논 백향목을 욥바로":{who:"백향목",as:"man",with:[{n:"",as:"man"},{n:"",as:"youth"}],group:"시돈·두로 사람들"},
- "느헤미야가 바벨론 왕에게 갔다 돌아옴":{who:"느헤미야",as:"man"},
+ "느헤미야가 왕에게 갔다 돌아옴":{who:"느헤미야",as:"man",est:1,end:[16,13,6]}, /* 11-22 목사님: 느 13:6은 "바벨론 왕 아닥사스다"(바사 왕)라고만 하고 어느 성인지 말하지 않음 → 바벨론 성이 아니라 느헤미야가 섬기던 수산 궁(1:1)을 추정으로 */
  "우리야가 애굽으로 도망했다 끌려옴":{who:"우리야",as:"man",with:[{n:"엘라단",as:"soldier",from:"애굽"}],group:""},
  "예레미야가 라마에서 풀려나 미스바로":{who:"예레미야",as:"elder"},
  "순례자 팔십 명이 미스바로 옴":{who:"순례자들",as:"man",kind:"무리",group:"수염을 깎고 옷을 찢은 팔십 명"},
@@ -6554,12 +6554,12 @@ let EARTH_FAIL=false; const earthPref=()=>!EARTH_FAIL&&earthOK(); /* 한 번 실
 function earthOK(){ try{ const c=document.createElement("canvas"); return !!(c.getContext("webgl2")||c.getContext("webgl")); }catch(e){ return false; } }
 function earthVerse(r){ try{ if(!r||!BIBLE) return ""; return BIBLE[r[0]-1][r[1]-1][r[2]-1]||""; }catch(e){ return ""; } }
 function earthData(w,d){ const p=dayPlan(w,d);
-  const tours=(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>({id:t.id,n:t.n,sub:t.sub,d:t.d,start:t.start,as_:t.as_,who:t.who,wth:t.wth||[],steps:t.steps.map(s=>({t:s.t,s:s.s,n:s.n,mood:s.mood,p:s.p||[],z:s.z,as_:s.as_,who:s.who,add:s.add,drop:s.drop,dropAt:s.dropAt,sea:!!s.sea,r:s.r,verse:earthVerse(s.r),ref:s.r?`${PLAN.abbr[s.r[0]-1]} ${s.r[1]}:${s.r[2]}`:""}))})); /* 머무는 장면(stay)은 길이 없음 → 지구 지도는 그 자리에 머묾 */
+  const tours=(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>({id:t.id,n:t.n,sub:t.sub,d:t.d,start:t.start,as_:t.as_,who:t.who,wth:t.wth||[],steps:t.steps.map(s=>({t:s.t,s:s.s,n:s.n,mood:s.mood,p:s.p||[],z:s.z,as_:s.as_,who:s.who,add:s.add,drop:s.drop,dropAt:s.dropAt,from:s.from,side:s.side,sea:!!s.sea,r:s.r,verse:earthVerse(s.r),ref:s.r?`${PLAN.abbr[s.r[0]-1]} ${s.r[1]}:${s.r[2]}`:""}))})); /* 머무는 장면(stay)은 길이 없음 → 지구 지도는 그 자리에 머묾 */
   const has=r=>p&&r&&p.ch.some(x=>x[0]===r[0]&&x[1]===r[1]);
   const todayTours=p?(typeof BM_TOURS!=="undefined"?BM_TOURS:[]).map(t=>{ const si=t.steps.findIndex(s=>has(s.r)||has(s.pre)); return si<0?null:{id:t.id,n:t.n,from:si,note:`${si+1}번째 장면 “${t.steps[si].t}”부터 따라가기`}; }).filter(Boolean):[];
   const pl=(p&&bmDayPl(keyOf(w,d))||[]).map(n=>{ const g=PLACE.get(n); return g?{n,lat:g[1],lng:g[2]}:null; }).filter(Boolean);
   /* 작은 경로 237(ROUTES_B)·주인공/시대/전쟁 묶음·지명 사전(GAZ) — 모두 지금 지도와 같은 자료 */
-  const routes=ROUTES_B.map(r=>({n:rmBase(r.n),p:r.p,ref:`${PLAN.full[r.b-1]} ${r.c[0]}${r.c[1]&&r.c[1]!==r.c[0]?"–"+r.c[1]:""}장`}));
+  const routes=ROUTES_B.map(r=>({n:rmBase(r.n),p:r.p,est:!!((routeMeta(rmBase(r.n),r.b)||{}).est||(routeMeta(rmBase(r.n),r.b)||{}).lit||r.p.some(q=>q[3])),ref:`${PLAN.full[r.b-1]} ${r.c[0]}${r.c[1]&&r.c[1]!==r.c[0]?"–"+r.c[1]:""}장`}));
   const WG=bmWhoGroups(), groups=BM_WHO.map(g=>({n:g.n,tours:(g.tour||[]),routes:WG[g.k]||[]}));
   const eras=BM_ERA9.map(e=>({n:e.n,y:e.y,d:e.d,tours:e.tour||[],routes:ROUTES_B.map((r,i)=>bmEra9(r.b,r.c[0])===e.k?i:-1).filter(i=>i>=0)}));
   const wars=BM_WAR.map(w=>({n:w.n,d:w.d,tours:w.tour||[],routes:w.r||[]}));
