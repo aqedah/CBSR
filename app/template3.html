@@ -1249,6 +1249,24 @@ html:has(body>.ldr),body:has(>.ldr){overflow:hidden!important;overscroll-behavio
 .ldrnav button{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;font-size:14.5px;font-weight:700}
 .ldrnav .nx{flex:1;background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .ldrnav .help{color:var(--gold);border-color:var(--gold)}
+/* 11-22 태블릿 모임 진행: 오른쪽 순서·도움 칸(좁으면 숨음) */
+.ldrside{display:none}
+@media (min-width:1100px) and (min-height:560px){
+  .ldrgrid{display:grid;grid-template-columns:minmax(0,720px) 320px;gap:28px;justify-content:center;align-items:start;padding:0 18px}
+  .ldrgrid>.ldrin{margin:0;padding-left:0;padding-right:0;min-width:0}
+  .ldrside{display:block;position:sticky;top:0;padding:16px 0 28px;max-height:100%}
+  .ldrside .lh3{margin:0 0 6px}
+  .ldrside .lordl button{padding:10px 4px;font-size:14.5px}
+  .lsidehelp{margin:14px 0 0;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:10px 12px}
+  .lsidehelp summary{font-weight:700;color:var(--gold);cursor:pointer}
+  .lsidehelp dl{margin:8px 0 0;font-size:14px;line-height:1.6}.lsidehelp dt{font-weight:700;margin-top:8px}.lsidehelp dd{margin:2px 0 0;color:var(--ink)}
+  .lsiderec{margin:12px 0 0;width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px;font-weight:700}
+  .ldr:has(.ldrgrid) .ldrnav{padding-left:max(14px,calc((100% - 1068px)/2));padding-right:max(14px,calc((100% - 1068px)/2 + 348px))}
+  .ldr .ldrtop{padding-left:max(12px,calc((100% - 1068px)/2));padding-right:max(12px,calc((100% - 1068px)/2))} /* 세 칸(준비·진행·기록) 모두 제목줄·왼쪽 선을 같게 */
+  .ldr .ldrbody>.ldrin{max-width:1104px;padding-right:366px}
+  .ldr:has(.ldrgrid) .ldrnav .help,.ldr:has(.ldrgrid) .lord{display:none}
+}
+
 .ldrnav button:disabled{opacity:.4;cursor:default}
 .ldr .ldone{text-align:center;padding:30px 8px}
 .ldr .ldone .ck{width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;margin:0 auto 12px;font-size:28px}
@@ -6549,12 +6567,17 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     catch(e){ if(e&&e.name==="AbortError") return; try{ await navigator.clipboard.writeText(txt); how="복사했습니다. 메시지에 붙여 넣어 보내 주세요"; }catch(x){ how=""; } }
     sh.querySelector("#lsent").innerHTML=`<div class="lrecv"><p class="rh">${how?esc(how):"아래 글을 길게 눌러 복사해 보내 주세요"} · ${to==="b"?"대신 인도할 목원":"담당 교역자"}</p><ul>${items.map(m=>`<li>${esc(m.n)}: ${m.p?"다짐 "+esc(m.p):""}${m.p&&m.r?", ":""}${m.r?"기도제목 "+esc(m.r):""}</li>`).join("")}${memo?`<li>모임 메모: ${esc(memo)}</li>`:""}</ul>${note?`<p>${esc(note)}</p>`:""}<p>${to==="b"?"받은 사람이 링크를 열면, 그 사람의 다음 주일 진행 화면에 이 기록이 보입니다.":"교역자가 링크를 열면 교역자 계정의 받은 기록에 남습니다."}</p>${how?"":`<textarea rows="5" readonly style="margin-top:8px">${esc(txt)}</textarea>`}</div>`; }
 
+  /* 11-22 목사님(태블릿 UI): 넓은 화면의 모임 진행 = 왼쪽 지금 질문·말씀 · 오른쪽 모임 순서와 '막힐 때'(아래 창이 질문을 덮지 않게). 좁으면 CSS로 숨고 지금처럼 아래 창 */
+  function side(){ const s=M.S[ui.i]||{}, pre=ui.mode==="prep", cu=k=>!pre&&k===ui.i;
+    return `<aside class="ldrside" aria-label="모임 순서와 도움"><p class="lh3">모임 순서${pre?` <small class="lsm">누르면 그 순서부터 진행</small>`:""}</p><ol class="lordl">${M.S.map((x,k)=>`<li><button data-ljump="${k}"${cu(k)?' aria-current="step"':""}><span>${k+1}</span>${esc(x.sh||x.t)}${cu(k)?"<small>지금</small>":""}</button></li>`).join("")}</ol>
+      <details class="lsidehelp"${s.fol&&!pre?" open":""}><summary>막힐 때</summary><dl>${s.fol?`<dt>이 순서에서 한 번 더 물을 때</dt><dd>${esc(s.fol)}</dd>`:""}${LDR_HELP.map(x=>`<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl></details>
+      <button class="lsiderec" data-lgo="rec">기록 열기</button></aside>`; }
   function draw(keep){ const sy=keep?(($(".ldrbody")||{}).scrollTop||0):0; load(); const S=M.S, [w2,d2]=dayWD(n); let wd=""; try{ wd=fmt(dateOf(w2,d2),{weekday:"long"}); }catch(e){}
     const pv=n-7>=1&&phDayOk(...dayWD(n-7)), nxk=n+7<=365&&phDayOk(...dayWD(n+7));
     el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><div class="ldrti"><b>${esc(M.lab)}</b><small>소그룹 인도자</small></div><span aria-hidden="true"></span></div>
       <div class="ldrwk"><button data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹</button><span>${esc(M.md)} ${esc(wd)}</span><button data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›</button></div>
       <div class="ldrtabs" role="tablist">${[["prep","모임 전 준비"],["run","모임 진행"],["rec","기록"]].map(([k,t])=>`<button role="tab" data-ltab="${k}" aria-selected="${ui.mode===k}">${t}</button>`).join("")}</div></div>
-      <div class="ldrbody"><div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div></div>
+      <div class="ldrbody">${(ui.mode==="run"&&!ui.done)||ui.mode==="prep"?`<div class="ldrgrid"><div class="ldrin">${ui.mode==="prep"?prep():run()}</div>${side()}</div>`:`<div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div>`}</div>
       ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 앞</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
     shOff&&(shOff(),0);
     { const b=$(".ldrbody"); if(b) b.scrollTop=keep?sy:0; } keepUI(); }
