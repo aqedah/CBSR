@@ -115,8 +115,8 @@ function style(key){
     dem:{type:"raster-dem",tiles:["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],tileSize:256,encoding:"terrarium",maxzoom:12,attribution:"AWS Terrain Tiles"}},
    layers:[
     {id:"bg",type:"background",paint:{"background-color":"#9a8462"}},
-    {id:"bm",type:"raster",source:"bm",maxzoom:5,paint:{"raster-fade-duration":0,"raster-brightness-min":0.08,"raster-saturation":-0.05}},
-    {id:"e6",type:"raster",source:"e6",minzoom:3,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],3,0,4.2,1],"raster-fade-duration":0}},
+    {id:"bm",type:"raster",source:"bm",maxzoom:3.2,paint:{"raster-fade-duration":0,"raster-brightness-min":0.08,"raster-saturation":-0.05}},
+    {id:"e6",type:"raster",source:"e6",minzoom:2,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],2.2,0,3,1],"raster-fade-duration":0}},
     {id:"e11",type:"raster",source:"e11",minzoom:5.5,paint:{"raster-fade-duration":200}},
     {id:"esri",type:"raster",source:"esri",minzoom:11.8,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],11.8,0,12.6,1],"raster-hue-rotate":-16,"raster-saturation":0.35,"raster-brightness-min":0.1,"raster-contrast":-0.05}},
     {id:"shade",type:"hillshade",source:"dem",minzoom:5.5,paint:{"hillshade-exaggeration":["interpolate",["linear"],["zoom"],5.5,0.12,7.5,0.42],"hillshade-shadow-color":"rgba(30,18,6,.75)","hillshade-highlight-color":"rgba(255,248,232,.12)","hillshade-accent-color":"rgba(40,26,12,.6)","hillshade-illumination-direction":315}}]};
@@ -275,7 +275,7 @@ function onClick(e){ const t=e.target.closest("button"); if(!t||!root.contains(t
   if(t.classList.contains("ex")){ close(); return; }
   if(t.classList.contains("ego")){ enter(); return; } }
 /* 11-22: 맨 아래 깔리는 6배율 사진을 성경 땅 전체(이탈리아~메소보다미아, 약 65장)만큼 들어갈 때 미리 받아 둠 */
-function preBase(){ [[5,16,20,11,13],[6,32,41,23,27]].forEach(([z,x0,x1,y0,y1])=>{ for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++){ const u=`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${O.esriKey}`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
+function preBase(){ [[3,4,5,2,3],[4,8,10,5,6],[5,16,20,11,13],[6,32,41,23,27]].forEach(([z,x0,x1,y0,y1])=>{ for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++){ const u=`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${O.esriKey}`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
 function enter(){ spinOn=false; preBase(); $(".eintro").classList.add("off"); setTimeout(perfWatch,1500); if(O.startTour) { push(()=>home(true)); tour(O.startTour,O.startFrom||0); } else if(O.startRoute!=null){ push(()=>home(true)); route(O.startRoute); } else home(); }
 function toEarth(){ clearPins(); noWalker(); setLine("eroute",null); setLine("efull",null); fold(true); M.flyTo({center:[38,24],zoom:1.3,pitch:0,bearing:0,duration:RM()?0:5500,essential:true}); }
 function key(e){ if(!root) return; const tg=e.target; if(tg&&/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)) return;
