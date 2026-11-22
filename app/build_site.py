@@ -195,6 +195,8 @@ _GQT26={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).g
 for _n,_v in _TQ.items():  # 11-20 체험판도 새 틀로 바꾸는 날부터 성품 물음을 가이드북과 같게
     if _n.isdigit() and isinstance(_v,dict) and _v.get('v27') and (_v['v27'].get('god') or ['',''])[1]: _GQT26[int(_n)]['god']=' '.join(_v['v27']['god'])
 data+='const GQT26='+J(_GQT26)+';\n'
+# 11-22 목사님: 주일 공과(파이디온 공과 순서, 본문 범위는 목사님) — 365 통독과 따로 보는 주일 본문. 원고는 site_src/sunday_qt.json
+data+='const SUNQ='+J(json.load(open('site_src/sunday_qt.json')))+';\n'
 
 # 11-20 소그룹 인도자(목사님 시안 승인): 날마다 인도자 화면이 쓰는 가이드북 칸 + 주일 인도자 전용 칸(qt.ldr)
 def _ldrd(Q):
