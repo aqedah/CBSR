@@ -71,7 +71,8 @@ const CSS=`
 #eov .epas sup{color:#e9c38a;font:700 10px "Noto Sans KR";margin-right:2px}#eov .epas .on{background:rgba(233,195,138,.22);border-radius:3px}
 #eov .elink{border:0;background:none;color:#e9c38a;font:700 13px "Noto Sans KR";padding:2px 0 8px;cursor:pointer}
 #eov .eelev{margin:4px 0 10px}#eov .eelev svg{width:100%;height:auto;display:block}#eov .eelev small{color:#cfc3b1;font-size:12px}
-@media (max-width:899px){
+/* 11-22: 글자·단추 줄이기는 휴대폰(599px 이하)만. 세로 태블릿(600–899px)은 정보판이 아래에 있어도 글자는 PC 크기 */
+@media (max-width:599px){
  #eov .epan{max-height:40vh}
  #eov .ephd{padding:7px 10px 4px}#eov .ephd b{font-size:14px}#eov .ephd button{height:30px;min-width:30px}
  #eov .epb{padding:2px 10px 10px}
@@ -195,6 +196,8 @@ function animLine(base,seg,done,onPt){ const segs=Array.isArray(base[0]&&base[0]
 
 /* 칸 내용 */
 function fold(on){ const p=$(".epan"); p.classList.toggle("fold",on); root.classList.toggle("pfold",on&&wide()); }
+/* 11-22: 화면을 돌리면(세로↔가로) 접힌 정보판의 '☰ 목록' 단추 표시를 다시 맞춤 — 세로에서 접고 가로로 돌리면 정보판이 옆으로 숨는데 단추가 없어 다시 열 수 없었음 */
+addEventListener("resize",()=>{ if(!root) return; const p=root.querySelector(".epan"); root.classList.toggle("pfold",!!(p&&p.classList.contains("fold"))&&wide()); });
 function panel(title,html,opt){ opt=opt||{}; const p=$(".epan"); p.classList.add("on"); fold(false); $(".ephd b").textContent=title; $(".epb").innerHTML=html; $(".epb").scrollTop=0; $(".epback").hidden=!stack.length; p.classList.toggle("ecard",!!opt.card); }
 function push(fn){ stack.push(fn); }
 let TAB="today", LASTLIST=null;
