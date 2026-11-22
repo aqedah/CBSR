@@ -1249,6 +1249,32 @@ html:has(body>.ldr),body:has(>.ldr){overflow:hidden!important;overscroll-behavio
 .ldrnav button{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;font-size:14.5px;font-weight:700}
 .ldrnav .nx{flex:1;background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .ldrnav .help{color:var(--gold);border-color:var(--gold)}
+/* 11-22 목사님("인도자 화면은 급하게 추가된 느낌, 통일성이 없다"): 앱의 다른 화면과 같은 부품·같은 모양으로 다시 입힘 */
+.ldr .ldrtop{border-bottom:0;padding-bottom:6px}
+html .ldr .lbar2{position:static;max-width:none;margin:0 0 8px;padding:0;background:none;display:flex;align-items:center;gap:6px}
+.ldr .lbar2 .libx{width:40px;height:40px;border:0;background:none;font-size:22px;border-radius:10px;margin-left:-8px}
+.ldr .lbar2>b{font:700 20px var(--f-disp,serif);color:var(--ink)}
+.ldr .lwk2{margin-left:auto;display:flex;align-items:center;gap:4px}
+.ldr .lwk2 button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:15px;line-height:1}
+.ldr .lwk2 button:disabled{opacity:.3;cursor:default}.ldr .lwk2>span{font:600 13.5px var(--f-ui);color:var(--muted);min-width:8.5em;text-align:center;font-variant-numeric:tabular-nums}
+.ldr .ldrseg{margin:0}
+.ldr .lhd{margin:2px 0 14px}.ldr .lhd .lk{display:block;font:700 12.5px var(--f-ui);color:var(--gold)}.ldr .lhd h2{margin:2px 0 0;font:700 24px/1.3 var(--f-disp,serif);color:var(--ink)}
+.ldr .lcard{background:var(--card);border-radius:18px;padding:16px 16px 12px;box-shadow:0 1px 0 var(--line),0 6px 20px rgba(0,0,0,.04)}
+.ldr .ldots{margin:0 0 14px;gap:4px}.ldr .ldots i{height:7px;border-radius:4px}
+.ldr .lstt{font:700 23px/1.35 var(--f-disp,serif)}
+.ldr .lsay{border-left:3px solid var(--accent);border-radius:14px;background:var(--paper);padding:12px 14px 12px 16px}
+.ldr .lfol{border-radius:14px}
+.ldr details{border-radius:14px;background:var(--card)}
+.ldr .lbig{border-radius:14px;padding:15px;font-size:16px}
+.ldr .lrow2 button{border-radius:14px;padding:13px}
+.ldr .lrecgo{border-radius:14px}
+.ldr .lctr{border-radius:14px;padding:12px 14px}
+.ldrnav{border-top:0;background:linear-gradient(transparent,var(--paper) 35%);padding-top:12px}
+.ldrnav button{border-radius:14px;padding:15px 16px;font-size:15px}
+.ldrnav .nx{font-size:16px}
+.tbkhd .tbkldrb{border:1px solid var(--accent)!important;color:var(--accent)!important;border-radius:999px!important;padding:4px 12px!important;font-weight:700!important}
+@media (min-width:1024px) and (min-height:560px){ html.v2 .ldr{left:var(--rail)} } /* 왼쪽 메뉴는 보이게 — 다른 탭을 누르면 인도 화면이 닫힘 */
+
 /* 11-22 태블릿 모임 진행: 오른쪽 순서·도움 칸(좁으면 숨음) */
 .ldrside{display:none}
 @media (min-width:1100px) and (min-height:560px){
@@ -6506,13 +6532,13 @@ function ldrUnits(p,paras,scenes,custom){ const bk=p.ch&&p.ch[0]?PLAN.abbr[p.ch[
   if(!custom&&sc.length&&sc.every(x=>x.a||!/^\d/.test(x.r))) return sc.map(x=>({ref:/^\d/.test(x.r)?`${bk} ${x.r}`:x.r,name:x.name}));
   return paras.map(x=>{ const m=String(x).match(/(\d+):(\d+)/); const c=m?+m[1]:0, v=m?+m[2]:0; const f=sc.find(y=>inA(y.a,c,v)); return {ref:x,name:f?f.name:""}; }); }
 
-function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt||{};
+function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt||{}; try{ localStorage.setItem("cbsr-ldr-used","1"); }catch(e){}
   let n=opt.exact?dayNo(w,d):ldrSun(dayNo(w,d)), M=null, R=null;
   let ui={mode:"prep",i:0,done:false,st:false}; try{ const u=JSON.parse(localStorage.getItem("cbsr-ldr-ui")||"null"); if(u&&u.n===n&&u.y===LDR_Y()){ ui=Object.assign(ui,u); if(u.st==null) ui.st=ui.i>0||ui.mode==="run"; } }catch(e){}
   if(opt.mode) ui.mode=opt.mode;
   const el=document.createElement("div"); el.className="ldr"; el.setAttribute("role","dialog"); el.setAttribute("aria-label","소그룹 인도자"); document.body.appendChild(el);
   let shOff=null;
-  const close=pop=>{ if(shOff) shOff(true); if(pop!==true) ovDone(close); el.remove(); }; ovOpen(close);
+  const close=pop=>{ if(shOff) shOff(true); if(pop!==true) ovDone(close); el.remove(); window.__ldrClose=null; }; ovOpen(close); window.__ldrClose=close;
   const keepUI=()=>{ try{ localStorage.setItem("cbsr-ldr-ui",JSON.stringify({n,y:LDR_Y(),mode:ui.mode,i:ui.i,done:ui.done,st:ui.st,rd:ui.rd||null})); }catch(e){} };
   const seed=()=>{ const P=ldrRec(n-7); return P&&P.mem&&P.mem.length?P.mem.map(m=>({n:m.n,ok:!!m.ok,p:"",r:""})):[{n:"",ok:false,p:"",r:""},{n:"",ok:false,p:"",r:""}]; };
   const load=()=>{ M=ldrModel(n); const r=ldrRec(n); R=r?JSON.parse(JSON.stringify(r)):{mem:seed(),memo:"",chk:{}}; R.mem=Array.isArray(R.mem)?R.mem:[]; R.chk=R.chk||{}; ui.i=Math.max(0,Math.min(M.S.length-1,+ui.i||0)); };
@@ -6534,8 +6560,9 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
   function readList(edit){ const U=M.units||[]; if(!U.length) return ""; ui.rd=ui.rd||{as:{},ok:{}}; const as=ui.rd.as||{}, ok=ui.rd.ok||{}; const now=U.findIndex((x,k)=>!ok[k]);
     return `<ol class="lread">${U.map((x,k)=>edit?`<li><span class="rn">${k+1}</span><span class="rt"><b>${esc(x.ref)}</b>${x.name?`<small>${esc(x.name)}</small>`:""}</span><input type="text" data-las="${k}" value="${esc(as[k]||"")}" placeholder="읽을 사람" aria-label="${k+1}단락 읽을 사람"></li>`
       :`<li data-lrd="${k}" class="${ok[k]?"done":k===now?"now":""}" role="button" aria-pressed="${!!ok[k]}"><span class="rn">${ok[k]?"✓":k+1}</span><span class="rt"><b>${esc(x.ref)}</b>${x.name?`<small>${esc(x.name)}</small>`:""}</span>${as[k]?`<span class="rw">${esc(as[k])}</span>`:""}</li>`).join("")}</ol>`; }
+  const dayHd=()=>`<div class="lhd"><span class="lk">${esc(M.md)} 소그룹 모임</span><h2>${esc(M.lab)}</h2></div>`;
   function prep(){ const p=M.p;
-    return `${M.ctr?`<p class="lh3">오늘의 중심</p><p class="lctr">${esc(M.ctr)}</p>`:""}
+    return `${dayHd()}${M.ctr?`<p class="lh3">오늘의 중심</p><p class="lctr">${esc(M.ctr)}</p>`:""}
     <p class="lh3">준비할 것</p><ul class="lchk">${[["c1",`${M.lab} 읽기`],["c2",`가이드북 ${M.md} 묵상 써 오기`],["c4","시작 기도를 부탁할 사람 정하기"],["c5","지난주 다짐과 기도제목 다시 보기"]].map(([id,t])=>`<li><input type="checkbox" id="lck_${id}" data-lck="${id}" ${R.chk[id]?"checked":""}><label for="lck_${id}">${esc(t)}</label></li>`).join("")}</ul>
     ${M.flow?`<details><summary>오늘의 흐름</summary>${M.flow}</details>`:""}
     ${M.L.mark&&M.L.mark.length?`<details><summary>미리 표시할 구절</summary><div class="lvl">${M.L.mark.map(ldrVB).join("")}</div></details>`:""}
@@ -6584,7 +6611,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     ${s.more||""}${s.inrec?`<div class="linrec"><p class="lh3">나누는 대로 바로 적습니다</p><p class="lsm" style="margin:0 0 8px">기록 동의를 받은 사람의 다짐과 기도제목만 저장됩니다. 마무리 기도 때 이 목록을 보며 기도합니다.</p><p class="lsaved" aria-live="polite">${svTxt()}</p>${memRows()}</div>`:""}${s.nx?`<div class="lnx"><small>다음 순서로 넘어가는 말</small>${esc(s.nx)}</div>`:""}`; }
 
   function rec(){ const I=ldrIns(n), lin=!LDRPRE&&window.SYNC&&SYNC.loggedIn&&SYNC.loggedIn(), live=ui.st&&!ui.done, cur=M.S[ui.i]||M.S[0], all=(mem.ldrIn||[]).filter(x=>(x.y||LDR_Y())===LDR_Y()).slice().reverse();
-    return `${live?`<p class="lctx">${esc(cur.sh||cur.t)} 나눔 중 기록 · ${ui.i+1}/${M.S.length}</p>`:""}${I.length?`<div class="linbox"><b>받은 기록 ${I.length}</b> · ${I.map(x=>`${esc(x.from)}이(가) ${esc(x.date||"")} 모임 기록을 넘겨주었습니다`).join(", ")}. 진행 화면 "한 주의 삶과 말씀 나누기"에 보입니다.</div>`:""}
+    return `${dayHd()}${live?`<p class="lctx">${esc(cur.sh||cur.t)} 나눔 중 기록 · ${ui.i+1}/${M.S.length}</p>`:""}${I.length?`<div class="linbox"><b>받은 기록 ${I.length}</b> · ${I.map(x=>`${esc(x.from)}이(가) ${esc(x.date||"")} 모임 기록을 넘겨주었습니다`).join(", ")}. 진행 화면 "한 주의 삶과 말씀 나누기"에 보입니다.</div>`:""}
     <p class="lh3">${esc(M.md)} 다짐과 기도제목</p>
     <p class="lsm" style="margin:0 0 8px">기록 동의를 받은 사람만 적습니다. ${LDRPRE?"지금 적는 것은 이 기기의 2027 준비 칸에 남았다가, 1월 1일부터 앱 기록으로 이어집니다.":lin?"이 기록은 내 계정에만 남습니다.":"이 기록은 이 기기에만 남습니다. 메뉴에서 로그인하면 내 계정에 남아 다른 기기에서도 볼 수 있습니다."}</p>
     <p class="lsaved" aria-live="polite">${svTxt()}</p>
@@ -6627,11 +6654,11 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
       <button class="lsiderec" data-lgo="rec">기록 열기</button></aside>`; }
   function draw(keep){ const sy=keep?(($(".ldrbody")||{}).scrollTop||0):0; load(); const S=M.S, [w2,d2]=dayWD(n); let wd=""; try{ wd=fmt(dateOf(w2,d2),{weekday:"long"}); }catch(e){}
     const pv=n-7>=1&&phDayOk(...dayWD(n-7)), nxk=n+7<=365&&phDayOk(...dayWD(n+7));
-    el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><div class="ldrti"><b>${esc(M.lab)}</b><small>소그룹 인도자</small></div><span aria-hidden="true"></span></div>
-      <div class="ldrwk"><button data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹</button><span>${esc(M.md)} ${esc(wd)}</span><button data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›</button></div>
-      <div class="ldrtabs" role="tablist">${[["prep","모임 전 준비"],["run","모임 진행"],["rec","기록"]].map(([k,t])=>`<button role="tab" data-ltab="${k}" aria-selected="${ui.mode===k}">${t}</button>`).join("")}</div></div>
-      <div class="ldrbody">${ui.mode==="run"||ui.mode==="prep"?`<div class="ldrgrid"><div class="ldrin">${ui.mode==="prep"?prep():run()}</div>${side()}</div>`:`<div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div>`}</div>
-      ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 앞</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
+    /* 11-22 목사님("급하게 추가된 느낌, 통일성이 없다"): 앱의 다른 화면과 같은 부품으로 — 제목줄(‹ 소그룹 인도)은 스토리 모음·주일 공과와 같은 꼴, 칸 바꾸기는 내 노트와 같은 둥근 칸, 날짜 머리는 묵상 카드와 같은 꼴 */
+    el.innerHTML=`<div class="ldrtop"><div class="libtop lbar2"><button class="libx" data-lx aria-label="닫기">‹</button><b>소그룹 인도</b><span class="lwk2"><button data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹</button><span>${esc(M.md)} ${esc(wd)}</span><button data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›</button></span></div>
+      <div class="lnseg ldrseg" role="tablist">${[["prep","모임 전 준비"],["run","모임 진행"],["rec","기록"]].map(([k,t])=>`<button role="tab" data-ltab="${k}" aria-selected="${ui.mode===k}">${t}</button>`).join("")}</div></div>
+      <div class="ldrbody">${ui.mode==="run"||ui.mode==="prep"?`<div class="ldrgrid"><div class="ldrin">${ui.mode==="prep"?prep():ui.done?run():`<div class="lcard">${run()}</div>`}</div>${side()}</div>`:`<div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div>`}</div>
+      ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 이전</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
     shOff&&(shOff(),0);
     { const b=$(".ldrbody"); if(b) b.scrollTop=keep?sy:0; } keepUI(); }
 
@@ -7837,7 +7864,7 @@ function renderGuideV2(){ const rj=false, sd=parseD(mem.start);
   const row=(pg,t,v)=>`<button class="mrow" data-mgo="${pg}"><span>${t}</span><em>${v||""}</em><i aria-hidden="true">›</i></button>`;
   const pg=(id,t,body)=>`<section class="mpage" data-pg="${id}" hidden><button class="mback" data-mback="1">‹ 메뉴</button><h3 class="mpt">${t}</h3>${body}</section>`;
   const top=`<div class="mtop">
-    <p class="mgh">통독</p><div class="mgrp">${row("tr","성경 번역",esc(TR_INFO[TR].name))}${SUN().length?`<button class="mrow" data-sun=""><span>주일 공과</span><em>${(()=>{ const N=sunNext(); return N?esc(sunDl(N.date)+" · "+N.no):""; })()}</em><i aria-hidden="true">›</i></button>`:""}${Y27?"":row("start","시작일",esc(fmt(sd,{month:"long",day:"numeric"})))}${row("view","읽기 설정",RD_OPT().para?"문단 나누기":"")}</div>
+    <p class="mgh">통독</p><div class="mgrp">${row("tr","성경 번역",esc(TR_INFO[TR].name))}<button class="mrow" id="leaderGo"><span>소그룹 인도</span><em>${(()=>{ try{ const [w,d]=dayWD(ldrSun(dayNo(view.w,view.d))); return esc(fmt(dateOf(w,d),{month:"long",day:"numeric"})+" 모임"); }catch(e){ return ""; } })()}</em><i aria-hidden="true">›</i></button>${SUN().length?`<button class="mrow" data-sun=""><span>주일 공과</span><em>${(()=>{ const N=sunNext(); return N?esc(sunDl(N.date)+" · "+N.no):""; })()}</em><i aria-hidden="true">›</i></button>`:""}${Y27?"":row("start","시작일",esc(fmt(sd,{month:"long",day:"numeric"})))}${row("view","읽기 설정",RD_OPT().para?"문단 나누기":"")}</div>
     <p class="mgh">화면</p><div class="mgrp"><div class="mrow mseg"><span>화면 밝기</span><div class="seg" role="radiogroup">${[["auto","기기"],["light","주간"],["dark","야간"]].map(([k,n])=>`<button role="radio" aria-checked="${THEME()===k}" data-theme-set="${k}">${n}</button>`).join("")}</div></div>${innerWidth>=700?`<div class="mrow mseg mstack"><span>보기 방식<small style="display:block;font-size:11.5px;color:var(--muted);font-weight:400">가이드북이 있는 날, 본문 화면에 보일 내용</small></span><div class="seg" role="radiogroup">${[["both","함께"],["text","본문만"],["guide","가이드북만"]].map(([k,n])=>`<button role="radio" aria-checked="${tbkPref()===k}" data-view-set="${k}">${n}</button>`).join("")}</div></div>`:""}</div>
     <p class="mgh">도움말</p><div class="mgrp"><button class="mrow" id="tourAgain"><span>둘러보기</span><i aria-hidden="true">›</i></button>${row("howto","쓰는 방법","")}${row("install","홈 화면에 추가","")}</div>
     <p class="mgh">바로 가기</p><div class="mbans">
@@ -7987,7 +8014,7 @@ function renderTodayV3(w,d,p,o){ const {key,q,read,ph,dt,live,kv,g,S}=o, N=today
   else if(!futLock(w,d)) sec=`<button class="td4b2" id="tdStory0"><b>스토리</b><small>카드 ${n}장</small></button>`;
   h+=`<div class="td4btns"><button class="td4b1" id="tdHero"><b>${N.e?"다음: ":""}${esc(N.t)}</b><small>${esc(N.s)}</small></button>${read&&!q.done&&S.length?`<button class="td4b2" id="tdStory"><b>이야기로 다시 보기</b><small>${N.sMid?N.sMid+"장째부터":"카드 "+S.length+"장"}</small></button>`:q.done&&S.length?`<button class="td4b2" id="tdStory"><b>스토리 다시 보기</b><small>카드 ${S.length}장</small></button>`:""}</div>`; /* 11-16 목사님: 마친 날(지난 요일)에도 본문 다시 보기 옆에 스토리 다시 보기 */ /* 11/3 목사님: 단추는 하나만. 11-13: 읽은 뒤 스토리는 그 아래 작은 글 단추(묵상이 먼저) */
   /* 11-19 목사님: 단추(본문·스토리 다시 보기)는 자리를 못 박고, 나머지 카드는 한 묶음(td4sec)으로 — 넓은 화면에서는 가운데 칸으로 */
-  const sec2=(q.done&&kv?`<div class="td4wc">${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}<button class="wcmk" data-wcmk="${w}-${d}">말씀 카드 만들어 보내기</button></div>`:"")+tdResume(w,d)+tdSun(dt)+tdTrip(w,d);
+  const sec2=(q.done&&kv?`<div class="td4wc">${wordCard(w,d,q,kv,wordCardPh(w,d,q),true)}<button class="wcmk" data-wcmk="${w}-${d}">말씀 카드 만들어 보내기</button></div>`:"")+tdResume(w,d)+tdSun(dt)+tdLdr(w,d,dt)+tdTrip(w,d);
   h+=(sec2?`<div class="td4sec">${sec2}</div>`:"")+`</div></section>`;
   return h; }
 /* 그림 위쪽 밝기를 재서 머리줄 아이콘 색을 고름(11/3) */
@@ -8909,7 +8936,7 @@ function tbkDraw(D0){ TBK.editing=null; TBK_PG.length=0; TBK_PG.push(...(tbkShow
   const D=TBK.useOld&&TBK.oldQt&&TBK.oldFor===D0.key?{...D0,qt:TBK.oldQt}:D0;
   const sc0=pane.querySelector(".tbksc"); if(sc0&&TBK.drawn){ TBK.sy[TBK.drawn]=sc0.scrollTop; tbkSySave(); } const keepY=TBK.sy[lay]||0;
   const pv=typeof NOWOFF!=="undefined"&&NOWOFF&&new Date()<new Date("2027-01-01T00:00:00");
-  pane.innerHTML=`<div class="tbkhd">${!document.body.classList.contains("tbksplit")?`<button class="tbkx" id="tbkClose">‹ 본문</button>${tbkWide()&&tbkPref()==="both"?`<span class="tbknote" title="보기 방식은 함께지만 이 화면 폭에서는 두 칸이 모두 읽기 좋은 크기가 되지 않습니다">지금은 한 칸씩</span>`:""}`:`<button class="tbkx" id="tbkView">보기: 함께 ▾</button>`}${sp||TBK_PG.length===1?`<span class="tbkspt">${TBK_PG.length===1?"묵상 · ":""}${esc(D.p.label)}${TBK.zoom>1.02?` · ${Math.round(TBK.zoom*100)}%`:""}</span>`:`<div class="tbkseg"><button data-tbkp="a" class="on">읽기 안내</button><button data-tbkp="m">묵상·해설</button></div>`}${tbkWide()?`<button class="tbkx tbkmore" id="tbkVMore" aria-label="보기 설정" aria-expanded="false">보기 ▾</button>`:""}<div class="tbkopts">${tbkWide()&&!document.body.classList.contains("tbksplit")&&tbkFits()?`<button class="tbkx" data-vset="both">본문과 함께 보기</button>`:""}${tbkWide()?`<button class="tbkx" id="tbkLdr" title="이 주 주일 소그룹 인도자 화면">인도자용 가이드</button>`:""}<button class="tbkx" id="tbkShowA">${TBK_PG.length>1?"읽기 안내 숨기기":"읽기 안내 보기"}</button>${TBK_PG.length>1?`<button class="tbkx tbkone" id="tbkOne">${sp?"한 쪽씩 보기":"두 쪽 나란히 보기"}</button>`:""}${pv?`<a class="tbkyr" href="?now=0" title="미리 보기 끄기">${ED} 미리 보기 · 끄기</a>`:""}</div></div>
+  pane.innerHTML=`<div class="tbkhd">${!document.body.classList.contains("tbksplit")?`<button class="tbkx" id="tbkClose">‹ 본문</button>${tbkWide()&&tbkPref()==="both"?`<span class="tbknote" title="보기 방식은 함께지만 이 화면 폭에서는 두 칸이 모두 읽기 좋은 크기가 되지 않습니다">지금은 한 칸씩</span>`:""}`:`<button class="tbkx" id="tbkView">보기: 함께 ▾</button>`}${sp||TBK_PG.length===1?`<span class="tbkspt">${TBK_PG.length===1?"묵상 · ":""}${esc(D.p.label)}${TBK.zoom>1.02?` · ${Math.round(TBK.zoom*100)}%`:""}</span>`:`<div class="tbkseg"><button data-tbkp="a" class="on">읽기 안내</button><button data-tbkp="m">묵상·해설</button></div>`}${tbkWide()?`<button class="tbkx tbkmore" id="tbkVMore" aria-label="보기 설정" aria-expanded="false">보기 ▾</button>`:""}<div class="tbkopts">${tbkWide()&&!document.body.classList.contains("tbksplit")&&tbkFits()?`<button class="tbkx" data-vset="both">본문과 함께 보기</button>`:""}${tbkWide()?`<button class="tbkx tbkldrb" id="tbkLdr" title="이 주 주일 소그룹 인도 화면">소그룹 인도 ›</button>`:""}<button class="tbkx" id="tbkShowA">${TBK_PG.length>1?"읽기 안내 숨기기":"읽기 안내 보기"}</button>${TBK_PG.length>1?`<button class="tbkx tbkone" id="tbkOne">${sp?"한 쪽씩 보기":"두 쪽 나란히 보기"}</button>`:""}${pv?`<a class="tbkyr" href="?now=0" title="미리 보기 끄기">${ED} 미리 보기 · 끄기</a>`:""}</div></div>
   <div class="tbksc"><div class="tbkpages${sp?" spread":""}">${TBK_PG.map(g=>`<div class="tbkwrap" data-pg="${g}"><div class="tbkpage${TBK.book?" book":""}">${TBK.book?`<iframe class="tbkbook" src="${Y27?"guide.html":"trial26.html"}?embed=1&amp;no=${D.n}&amp;side=${g==="a"?"L":"R"}&amp;ao=${(()=>{ const q=mem.qt[D.key]||{}; return q.ao||q.done?1:0; })()}" title="가이드북 ${g==="a"?"왼쪽":"오른쪽"} 쪽" scrolling="no" tabindex="-1"></iframe>`:g==="a"?tbkPageA(D):tbkPageM(D)}</div><canvas class="tbkink" data-pg="${g}"></canvas></div>`).join("")}</div></div>
   <div class="tbktools"><button data-tt="pen" title="펜으로 쓰기" aria-label="펜"><svg viewBox="0 0 24 24">${TBK_IC.pen}</svg><span class="tl">펜</span></button><span class="tbkcols">${TBK_COL.map((c,i)=>`<button class="sw" data-tc="${c}" style="--c:${c}" title="${["검정","파랑","빨강"][i]}" aria-label="${["검정","파랑","빨강"][i]}"><i></i></button>`).join("")}</span><i class="sep"></i><button data-tt="hl" title="형광펜"><svg viewBox="0 0 24 24">${TBK_IC.hl}</svg><span class="tl">형광펜</span></button><button data-tt="er" title="지우개"><svg viewBox="0 0 24 24">${TBK_IC.er}</svg><span class="tl">지우개</span></button><button data-tt="tx" class="tbktxb" title="자판으로 글자 쓰기" aria-label="글자로 쓰기"><b class="tbkga">가</b><span class="tl">글자</span></button><button data-tt="box" title="쪽 아무 데나 글상자 넣기" aria-label="글상자"><svg viewBox="0 0 24 24">${TBK_IC.box}</svg><span class="tl">글상자</span></button><i class="sep"></i><button id="tbkUn" title="되돌리기"><svg viewBox="0 0 24 24">${TBK_IC.un}</svg><span class="tl">되돌리기</span></button><button id="tbkRe" title="다시"><svg viewBox="0 0 24 24">${TBK_IC.re}</svg><span class="tl">다시</span></button><button id="tbkFg" title="손가락으로 쓰기" class="${TBK.finger?"on":""}"><svg viewBox="0 0 24 24">${TBK_IC.fg}</svg><span class="tl">손가락</span></button><button id="tbkMore" title="사진·백업"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg><span class="tl">더보기</span></button><span class="tbkst" id="tbkSt"></span></div>`;
   TBK.drawn=lay;
@@ -9282,6 +9309,12 @@ const sunFor=dt=>SUN().find(x=>x.date===ymdOf(dt))||null;
 const sunNext=()=>{ const t=ymdOf(today0()); return SUN().find(x=>x.date>=t)||null; };
 const sunDt=s=>{ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
 const sunDl=s=>{ const d=sunDt(s); return `${d.getMonth()+1}월 ${d.getDate()}일`; };
+/* 11-22 목사님(인도자 진입이 어렵다): 소그룹을 한 번이라도 인도해 본 사람에게는 토요일(내일 모임 준비)·주일(오늘 모임)에 오늘 탭 카드 */
+function tdLdr(w,d,dt){ const g=dt.getDay(); if(g!==0&&g!==6) return ""; let used=false; try{ used=localStorage.getItem("cbsr-ldr-used")==="1"; }catch(e){} if(!used&&!(mem.ldr&&Object.keys(mem.ldr).length)) return "";
+  let n=0, lab=""; try{ n=ldrSun(dayNo(w,d)); const [w2,d2]=dayWD(n); lab=(dayPlan(w2,d2)||{}).label||""; }catch(e){ return ""; }
+  return `<button class="tdtrip tdsun tdldr" data-ldrgo="${n}"><i class="sunic" aria-hidden="true">인도</i><span><small>소그룹 인도 · ${g===0?"오늘 모임":"내일 모임 준비"}</small><b>${esc(lab)}</b></span><em>${g===0?"모임 진행":"준비하기"} ›</em></button>`; }
+document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("[data-ldrgo]"); if(!b) return; const n=+b.dataset.ldrgo; try{ const [w,d]=dayWD(n); leaderOpen(w,d,{exact:true}); }catch(x){} });
+document.addEventListener("click",e=>{ if(e.target.closest&&e.target.closest(".bnav .tab")&&window.__ldrClose) window.__ldrClose(); },true);
 function tdSun(dt){ if(dt.getDay()!==0) return ""; const L=sunFor(dt); if(!L) return "";
   return `<button class="tdtrip tdsun" data-sun="${L.date}"><i class="sunic" aria-hidden="true">공과</i><span><small>주일 공과 · ${esc(L.no)}</small><b>${esc(L.title)}</b></span><em>${esc(L.ref)} ›</em></button>`; }
 const SV2={date:null,fromList:false};
