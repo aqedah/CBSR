@@ -2185,6 +2185,20 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .qtstp{display:flex;align-items:center;gap:10px;margin:0 0 14px}.qtprev{border:0;background:transparent;padding:4px;display:grid;color:var(--ink);cursor:pointer}.qtprev[disabled]{opacity:.25}.qtprev svg{width:22px;height:22px}
 .qtbars{flex:1;display:flex;gap:4px}.qtbars i{flex:1;height:4px;border-radius:2px;background:var(--line)}.qtbars i.on{background:var(--accent)}.qtstp b{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .qtnext{position:sticky;z-index:5;padding:12px 0 14px;background:linear-gradient(transparent,var(--paper) 35%)}.qtnext:empty{display:none}.qtnext .btn{width:100%;padding:15px;font-size:16px}
+
+/* 11-22 태블릿·PC 묵상: 왼쪽 오늘 본문 · 오른쪽 지금 단계. 좁으면 본문 칸이 숨음(CSS만으로 바꿔 회전해도 쓰던 글 그대로) */
+.qtbib{display:none}
+@media (min-width:1100px) and (min-height:560px){
+  html.v2[data-tab="qt"] body.qtsp .wrap{max-width:1200px;margin-left:calc(var(--rail) + max(24px,(100vw - var(--rail) - 1200px)/2));margin-right:max(24px,(100vw - var(--rail) - 1200px)/2)}
+  .qtsplit{display:grid;grid-template-columns:minmax(380px,45fr) minmax(440px,55fr);gap:22px;align-items:start}
+  .qtsplit>.qtcard{margin-top:14px;min-width:0}
+  .qtbib{display:block;position:sticky;top:72px;margin-top:14px;max-height:calc(100vh - 88px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 20px 18px;overscroll-behavior:contain}
+  .qbhd{position:sticky;top:0;z-index:1;background:var(--card);padding:14px 0 8px;font:700 13px var(--f-ui);color:var(--accent);border-bottom:1px solid var(--line);margin-bottom:6px}
+  .qbch{margin:14px 0 6px;font:700 15px var(--f-ui);color:var(--ink)}
+  .qbvt{margin:0;font-family:var(--f-text);font-size:calc(var(--bible-size,17px) - 1px);line-height:1.85;color:var(--ink)}
+  .qbv sup{font:700 10.5px var(--f-ui);color:var(--accent);margin-right:2px}
+  .qbv.on{background:rgba(233,195,138,.42);border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+}
 html.v2 .vtext,html.v2 .vtext .para,html.v2 .eye p,html.v2 .qcard p{word-break:keep-all;overflow-wrap:anywhere}
 .lnov{position:fixed;inset:0;z-index:9700;display:flex;flex-direction:column;justify-content:flex-end}.lnbg{position:absolute;inset:0;background:rgba(10,16,13,.35)}
 .lnp{position:relative;background:var(--card);border-radius:20px 20px 0 0;padding:14px max(18px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:grid;gap:10px;max-width:640px;width:100%;margin:0 auto;box-shadow:0 -8px 30px rgba(0,0,0,.15)}
@@ -2941,7 +2955,26 @@ function christHelp(w,d){ const det=DETAIL[w+"-"+(d+1)], key=keyOf(w,d), PVK=PVQ
   const s=PVK?(det&&det.christ?christSecV2(w,d,det.christ,det.ck==="quote"?"인용":CHRIST_K[christKey(w,d)],det):""):christSecV2(w,d,det&&det.christ?det.christ:(DAYC[key]||(WEEKS[w-1]||{}).christ||""),CHRIST_K[christKey(w,d)],det);
   return s.replace('<div class="stage"><b>3</b><span>성경 전체로</span></div>','<span class="label">성경 전체로 · 참고</span>'); }
 /* 묵상 노트 한 장씩(v2, 목사님 2026-11-02): 본문 관찰 · 하나님의 성품 · 붙잡을 한 구절 · 기도를 한 장에 하나, 아래 '다음' 하나 */
-function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done){ qtDoneLook(m); return; }
+/* 11-22 목사님(태블릿 UI, GPT 제안 검토 후 진행): 넓은 화면의 묵상 탭 = 왼쪽 오늘 본문 · 오른쪽 지금 묵상 단계(한 단계씩 그대로).
+   배치는 CSS로만 바꿈(좁으면 왼쪽 칸이 숨음) → 회전해도 쓰던 글·단계가 그대로. 단계가 바뀌면 그 단계가 가리키는 절로 왼쪽이 넘어가 옅게 칠함.
+   왼쪽이 보일 때는 '본문 열기'를 눌러도 다른 화면으로 가지 않고 왼쪽 본문의 그 절로 감. */
+function qbVisible(){ const b=document.getElementById("qtBib"); return !!(b&&b.offsetParent&&b.getBoundingClientRect().width>0); }
+function qbBuild(){ const m=document.getElementById("main"), card=m&&m.querySelector(".qtcard:not(.qtdonec)"); if(!card||!BIBLE) return null; let sp=card.closest(".qtsplit"); if(sp) return sp.querySelector("#qtBib");
+  const p=dayPlan(view.w,view.d); if(!p||!p.ch||!p.ch.length) return null;
+  let h=`<div class="qbhd">오늘 본문 · ${esc(p.label)}</div>`; let pb=0;
+  p.ch.forEach(([b,c])=>{ const X=BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!X) return; h+=`<h3 class="qbch">${b!==pb?esc(PLAN.full[b-1])+" ":""}${c}${b===19?"편":"장"}</h3><p class="qbvt">`+X.map((t,i)=>`<span class="qbv" id="qb-${b}-${c}-${i+1}"><sup>${i+1}</sup>${esc(t)}</span>`).join(" ")+`</p>`; pb=b; });
+  document.body.classList.add("qtsp"); sp=document.createElement("div"); sp.className="qtsplit"; card.before(sp); const bib=document.createElement("aside"); bib.id="qtBib"; bib.className="qtbib"; bib.setAttribute("aria-label","오늘 본문"); bib.innerHTML=h; sp.append(bib,card); return bib; }
+function qbGo(b,c,v,e,smooth){ const bib=document.getElementById("qtBib"); if(!bib) return false; bib.querySelectorAll(".qbv.on").forEach(x=>x.classList.remove("on"));
+  const t=document.getElementById(`qb-${b}-${c}-${v}`); if(!t) return false; for(let i=v;i<=(e||v);i++){ const x=document.getElementById(`qb-${b}-${c}-${i}`); if(x) x.classList.add("on"); }
+  bib.scrollTo({top:Math.max(0,t.offsetTop-bib.clientHeight*0.28),behavior:smooth&&!matchMedia("(prefers-reduced-motion: reduce)").matches?"smooth":"auto"}); return true; }
+function qbSync(g){ const bib=qbBuild(); if(!bib) return; const ref=(g||[]).map(x=>x.querySelector("[data-chv]")).find(Boolean);
+  if(ref){ const [b,c,v,e]=ref.dataset.chv.split("-").map(Number); qbGo(b,c,v,e,false); return; }
+  if((g||[]).some(x=>x.querySelector("#scopeRead"))){ const R=sceneOf(view.w,view.d); if(R&&R[0]) qbGo(R[0][0],R[0][1],R[0][2],R[0][3],false); return; }
+  bib.querySelectorAll(".qbv.on").forEach(x=>x.classList.remove("on")); }
+document.addEventListener("click",e=>{ if(view.tab!=="qt"||!qbVisible()) return; const t=e.target.closest&&e.target.closest("#main [data-chv],#main #scopeRead"); if(!t||t.closest("#qtBib")) return;
+  let ok=false; if(t.dataset.chv){ const [b,c,v,x]=t.dataset.chv.split("-").map(Number); ok=qbGo(b,c,v,x,true); } else { const R=sceneOf(view.w,view.d); if(R&&R[0]) ok=qbGo(R[0][0],R[0][1],R[0][2],R[0][3],true); }
+  if(ok){ e.preventDefault(); e.stopPropagation(); } },true);
+function qtSteps(m){ document.body.classList.remove("qtsp"); const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done){ qtDoneLook(m); return; }
   if(!view.qsUrl){ view.qsUrl=1; try{ const n=+new URLSearchParams(location.search).get("qs"); if(n>0){ view.qtStepK=key; view.qtStep=n-1; } }catch(e){} }
   const secs=[...m.querySelectorAll("section.sec")].filter(x=>!x.classList.contains("qthd")); const G=[];
   secs.forEach(x=>{ const lab=x.querySelector(":scope>.label"); const start=x.querySelector(":scope>.stage")||(lab&&/기도/.test(lab.textContent)); if(start||!G.length) G.push([x]); else G[G.length-1].push(x); });
@@ -2957,7 +2990,7 @@ function qtSteps(m){ const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.don
   { const card=document.createElement("div"); card.className="daycard qtcard"; top.before(card); card.append(top,...secs); } /* 11/3: 본문 탭처럼 흰 상자 하나에 */
   const bar=top.querySelector(".qtstp"), img=top.querySelector(".qph img");
   const nx=document.createElement("div"); nx.className="qtnext"; (G[N-1][G[N-1].length-1]).after(nx);
-  const show=()=>{ const i=view.qtStep; if(!mem.qst||mem.qst.k!==key||mem.qst.i!==i){ mem.qst={k:key,i}; save(); } G.forEach((g,j)=>g.forEach(x=>x.style.display=j===i?"":"none"));
+  const show=()=>{ const i=view.qtStep; if(!mem.qst||mem.qst.k!==key||mem.qst.i!==i){ mem.qst={k:key,i}; save(); } G.forEach((g,j)=>g.forEach(x=>x.style.display=j===i?"":"none")); qbSync(G[i]);
     bar.innerHTML=`<button class="qtprev" aria-label="앞 장"${i?"":" disabled"}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="qtbars">${G.map((_,j)=>`<i class="${j<=i?"on":""}"></i>`).join("")}</span><b>${i+1} / ${N}</b>`;
     nx.innerHTML=(i>0?`<button class="btn ghost qtpb" aria-label="이전 · ${esc(TT[i-1].trim())}">‹ 이전</button>`:"")+(i<N-1?`<button class="btn qtnb">다음 · ${esc(TT[i+1].trim())}</button>`:""); /* 11-15 목사님: 아래에도 이전 */ const bn=document.querySelector(".bnav"); nx.style.bottom=(bn&&bn.offsetWidth>bn.offsetHeight?bn.offsetHeight:0)+"px"; /* 11-12: 태블릿 왼쪽 세로 메뉴의 높이를 아래 여백으로 쓰지 않음 */
     bar.querySelector(".qtprev").onclick=()=>{ if(view.qtStep>0){ view.qtStep--; show(); scrollTo({top:0}); } };
