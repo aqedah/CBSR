@@ -1562,6 +1562,22 @@ html.v2 .gfrec b{margin-top:30px}html.v2 .gfpre{margin:10px 0 2px;padding:0 0 0 
 html.v2 .gmore{margin:16px 0 -4px;font-size:13px;font-weight:700;color:var(--muted)}
 .gplay .gpref{display:block;width:100%;margin-top:10px;border:1px solid rgba(226,184,116,.5);background:rgba(226,184,116,.12);color:#f3e2bf;border-radius:12px;padding:10px 12px;font:600 14px var(--f-ui);text-align:left;cursor:pointer}.gplay .gpref small{display:block;font-size:12px;color:#e2b874;margin-bottom:3px}.gplay .gpref b{color:#fff}
 .gplay .gpspots{width:100%;max-width:520px}
+/* 11-22 목사님(태블릿 UI): 도전 놀이판이 넓은 화면에서도 휴대폰 폭(520·560px)으로 가운데에 떠 뒤 화면이 보이던 것 → 화면 전체를 덮고 내용은 760px 가운데.
+   '본문에서 찾기'는 1100px 이상에서 왼쪽 질문 · 오른쪽 본문(본문을 고르는 동안 질문이 계속 보임). 다른 탭의 안내 말풍선은 숨김 */
+html:has(.gplay) .coach,html:has(.gbov) .coach,html:has(.mys) .coach{display:none!important}
+@media (min-width:900px){
+  .gplay,.gbov,.mys{max-width:none}
+  .gplay>*,.gbov>*{width:100%;max-width:760px;margin-left:auto;margin-right:auto;box-sizing:border-box}
+  .gplay .gpspots{max-width:none}
+}
+@media (min-width:1100px) and (min-height:560px){
+  .gplay:has(.glv)>*{max-width:1100px}
+  .gplay .gpbody:has(>.glv){display:grid;grid-template-columns:340px minmax(0,1fr);gap:24px;align-items:start}
+  .gplay .gpbody:has(>.glv)>:first-child{margin-top:0}
+  .gplay .gpbody>.glhead{position:sticky;top:0}
+  .gplay .gpbody:has(>.glv)>:not(.glhead):not(.glv){grid-column:1/-1}
+}
+
 .linkbtn{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px;justify-self:start}
 .uid{font-family:ui-monospace,monospace;font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;word-break:break-all;margin:0}
 .readcnt{margin:0;font-size:13.5px;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:7px 11px}
