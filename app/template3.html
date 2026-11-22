@@ -6621,8 +6621,8 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     sh.querySelector("#lsent").innerHTML=`<div class="lrecv"><p class="rh">${how?esc(how):"아래 글을 길게 눌러 복사해 보내 주세요"} · ${to==="b"?"대신 인도할 목원":"담당 교역자"}</p><ul>${items.map(m=>`<li>${esc(m.n)}: ${m.p?"다짐 "+esc(m.p):""}${m.p&&m.r?", ":""}${m.r?"기도제목 "+esc(m.r):""}</li>`).join("")}${memo?`<li>모임 메모: ${esc(memo)}</li>`:""}</ul>${note?`<p>${esc(note)}</p>`:""}<p>${to==="b"?"받은 사람이 링크를 열면, 그 사람의 다음 주일 진행 화면에 이 기록이 보입니다.":"교역자가 링크를 열면 교역자 계정의 받은 기록에 남습니다."}</p>${how?"":`<textarea rows="5" readonly style="margin-top:8px">${esc(txt)}</textarea>`}</div>`; }
 
   /* 11-22 목사님(태블릿 UI): 넓은 화면의 모임 진행 = 왼쪽 지금 질문·말씀 · 오른쪽 모임 순서와 '막힐 때'(아래 창이 질문을 덮지 않게). 좁으면 CSS로 숨고 지금처럼 아래 창 */
-  function side(){ const s=M.S[ui.i]||{}, pre=ui.mode==="prep", cu=k=>!pre&&k===ui.i;
-    return `<aside class="ldrside" aria-label="모임 순서와 도움"><p class="lh3">모임 순서${pre?` <small class="lsm">누르면 그 순서부터 진행</small>`:""}</p><ol class="lordl">${M.S.map((x,k)=>`<li><button data-ljump="${k}"${cu(k)?' aria-current="step"':""}><span>${k+1}</span>${esc(x.sh||x.t)}${cu(k)?"<small>지금</small>":""}</button></li>`).join("")}</ol>
+  function side(){ const s=M.S[ui.i]||{}, pre=ui.mode==="prep", fin=ui.mode==="run"&&ui.done, cu=k=>!pre&&!fin&&k===ui.i;
+    return `<aside class="ldrside" aria-label="모임 순서와 도움"><p class="lh3">모임 순서${pre?` <small class="lsm">누르면 그 순서부터 진행</small>`:""}</p><ol class="lordl">${M.S.map((x,k)=>`<li><button data-ljump="${k}"${cu(k)?' aria-current="step"':""}><span>${fin?"✓":k+1}</span>${esc(x.sh||x.t)}${cu(k)?"<small>지금</small>":""}</button></li>`).join("")}</ol>
       <details class="lsidehelp"${s.fol&&!pre?" open":""}><summary>막힐 때</summary><dl>${s.fol?`<dt>이 순서에서 한 번 더 물을 때</dt><dd>${esc(s.fol)}</dd>`:""}${LDR_HELP.map(x=>`<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl></details>
       <button class="lsiderec" data-lgo="rec">기록 열기</button></aside>`; }
   function draw(keep){ const sy=keep?(($(".ldrbody")||{}).scrollTop||0):0; load(); const S=M.S, [w2,d2]=dayWD(n); let wd=""; try{ wd=fmt(dateOf(w2,d2),{weekday:"long"}); }catch(e){}
@@ -6630,7 +6630,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     el.innerHTML=`<div class="ldrtop"><div class="ldrbar"><button data-lx aria-label="닫기">✕</button><div class="ldrti"><b>${esc(M.lab)}</b><small>소그룹 인도자</small></div><span aria-hidden="true"></span></div>
       <div class="ldrwk"><button data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹</button><span>${esc(M.md)} ${esc(wd)}</span><button data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›</button></div>
       <div class="ldrtabs" role="tablist">${[["prep","모임 전 준비"],["run","모임 진행"],["rec","기록"]].map(([k,t])=>`<button role="tab" data-ltab="${k}" aria-selected="${ui.mode===k}">${t}</button>`).join("")}</div></div>
-      <div class="ldrbody">${(ui.mode==="run"&&!ui.done)||ui.mode==="prep"?`<div class="ldrgrid"><div class="ldrin">${ui.mode==="prep"?prep():run()}</div>${side()}</div>`:`<div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div>`}</div>
+      <div class="ldrbody">${ui.mode==="run"||ui.mode==="prep"?`<div class="ldrgrid"><div class="ldrin">${ui.mode==="prep"?prep():run()}</div>${side()}</div>`:`<div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div>`}</div>
       ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 앞</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
     shOff&&(shOff(),0);
     { const b=$(".ldrbody"); if(b) b.scrollTop=keep?sy:0; } keepUI(); }
