@@ -1680,6 +1680,17 @@ body.wcmon{overflow:hidden}
 .wcsh{display:grid;gap:8px}.wcshim{display:flex;justify-content:center;background:#1c1712;border-radius:12px;min-height:200px;overflow:hidden}.wcshim img{display:block;max-width:100%;max-height:56vh;object-fit:contain}.wcshdel{height:40px;border:0;background:none;color:var(--bad,#A63A31);font-weight:600;font-size:14px;text-decoration:underline;text-underline-offset:3px}
 .wcmtop .wckp.kept{color:#c9b99f;border-color:rgba(255,255,255,.12)}
 .wcmtop .wckp.dirty{background:#E2B874;color:#2a1d0c;border-color:#E2B874}
+
+/* 11-22 목사님(태블릿 UI): 넓은 가로 화면의 말씀 카드 = 왼쪽 큰 미리보기 · 오른쪽 그림·도구·저장(도구를 펴도 그림이 작아지지 않음). 카드 비율은 그대로 */
+@media (min-width:1000px) and (min-height:560px) and (orientation:landscape){
+  .wcm{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:54px auto auto auto auto minmax(0,1fr);column-gap:28px;align-content:stretch}
+  .wcm>.wcmtop{grid-column:1/-1;grid-row:1}
+  .wcm>.wcstage{grid-column:1;grid-row:2/-1;min-height:0}
+  .wcm>.wcthumbs{grid-column:2;grid-row:2;margin-top:8px}
+  .wcm>.wctabs{grid-column:2;grid-row:3;flex-wrap:wrap;overflow:visible}
+  .wcm>.wcopts{grid-column:2;grid-row:4}
+  .wcm>.wcact,.wcm>.wcact2{grid-column:2;grid-row:5;margin-top:10px}
+}
 .wcmtop .wckp{height:38px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3ece0;font-weight:700;font-size:14.5px;margin-left:auto}.wcmtop .wcdel+.wckp{margin-left:4px}.wcmtop .wckp+.wced{margin-left:6px}
 .wcmtop .wcdel{margin-left:auto;height:38px;padding:0 12px;border:0;background:none;color:#d9cdbb;font-size:13.5px;text-decoration:underline;text-underline-offset:3px}.ralk{margin-bottom:12px}.ralk b{font-weight:700;opacity:.6;margin-left:2px}
 .wcmtop .wccx{margin-left:auto;height:38px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3ece0;font-weight:700;font-size:14.5px}
