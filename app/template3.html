@@ -2257,6 +2257,30 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .qtbars{flex:1;display:flex;gap:4px}.qtbars i{flex:1;height:4px;border-radius:2px;background:var(--line)}.qtbars i.on{background:var(--accent)}.qtstp b{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .qtnext{position:sticky;z-index:5;padding:12px 0 14px;background:linear-gradient(transparent,var(--paper) 35%)}.qtnext:empty{display:none}.qtnext .btn{width:100%;padding:15px;font-size:16px}
 
+/* 11-22 태블릿 '묵상 마친 뒤': 왼쪽 본문/해설 · 오른쪽 말씀 → 내 기록 → 아래 띠 */
+.qtdmark,.qtdmore{display:none}
+@media (min-width:1100px) and (min-height:560px){
+  .qbtabs{display:flex;gap:6px;padding:12px 0 10px}
+  .qbtabs button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font:700 12.5px var(--f-ui);color:var(--muted);cursor:pointer}
+  .qbtabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink,#fff)}
+  .qbnote{font-size:15px;line-height:1.75;padding:4px 0 8px}.qbnote .qcard{border:0;padding:0;margin:0 0 14px;background:none}.qbnote .qcard .k{display:block;font:700 12.5px var(--f-ui);color:var(--accent);margin-bottom:4px}.qbnote .lead{color:var(--muted);font-size:13.5px}
+  .qtdmain{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-content:start;margin-top:14px}
+  .qtdmain>*,.qtdmain .qtdone>*{grid-column:1/-1}
+  .qtdmain>.qtdonec,.qtdmain>.qtdonec>#qtDoneSec,.qtdmain #qtDoneCard{display:contents}
+  .qtdmain .qth3{grid-column:1/-1;order:0;background:var(--card);border-radius:18px 18px 0 0;padding:16px 16px 0;margin:0}
+  .qtdmain .qtdmark{display:inline-block;margin:2px 0 0;font:700 12.5px var(--f-ui);color:var(--accent)}
+  .qtdmain .qtd-seal,.qtdmain .qtd-title,.qtdmain .qtdone>.mine,.qtdmain>.qtfoldk,.qtdmain .qtd-msg{display:none!important}
+  .qtdmain .qtdone>.keyv{order:1;margin:-12px 0 0;border-radius:0 0 18px 18px!important;background:var(--card)!important;padding:4px 16px 18px!important}
+  .qtdmain .qtdone>.keyv small{display:block;font:700 12.5px var(--f-ui);color:var(--gold);margin-bottom:4px}
+  .qtdmain>details.qtfold{order:2;margin:0!important}
+  .qtdmain .qtdone>.qtd-reward{order:3;grid-column:1;display:flex!important;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:8px 14px;text-align:left!important;margin:6px 0 0;padding:12px 14px!important;border-top:0}
+  .qtdmain .qtd-reward .qtd-stats{gap:14px}.qtdmain .qtd-reward .qtd-stats b{font-size:17px}.qtdmain .qtd-reward .qtd-stats span{font-size:11.5px}
+  .qtdmain .qtd-reward .stamps{gap:4px;justify-content:flex-start}.qtdmain .qtd-reward .stamp{width:24px;height:24px;font-size:11px}.qtdmain .qtd-reward .lead{font-size:11.5px!important;margin:2px 0 0!important}
+  .qtdmain .qtdone>.nextup{order:3;grid-column:2;margin:6px 0 0;padding:12px 14px;align-content:center}
+  .qtdmain .nextup>p:not(.nucd){display:none}.qtdmain .nextup .nucd{margin:2px 0 0;font-size:13px}.qtdmain .nextup .nucd b{font-size:16px}
+  .qtdmain .qtdone>.row{order:4;justify-content:flex-end!important;margin:2px 0 0}
+  .qtdmain #qtDone{display:none}.qtdmain .qtdmore{display:inline-flex}
+}
 /* 11-22 태블릿·PC 묵상: 왼쪽 오늘 본문 · 오른쪽 지금 단계. 좁으면 본문 칸이 숨음(CSS만으로 바꿔 회전해도 쓰던 글 그대로) */
 .qtbib{display:none}
 @media (min-width:1100px) and (min-height:560px){
@@ -3061,7 +3085,7 @@ function qbBuild(){ const m=document.getElementById("main"), card=m&&m.querySele
   let h=`<div class="qbhd">오늘 본문 · ${esc(p.label)}</div>`; let pb=0;
   p.ch.forEach(([b,c])=>{ const X=BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!X) return; h+=`<h3 class="qbch">${b!==pb?esc(PLAN.full[b-1])+" ":""}${c}${b===19?"편":"장"}</h3><p class="qbvt">`+X.map((t,i)=>`<span class="qbv" id="qb-${b}-${c}-${i+1}"><sup>${i+1}</sup>${esc(t)}</span>`).join(" ")+`</p>`; pb=b; });
   document.body.classList.add("qtsp"); sp=document.createElement("div"); sp.className="qtsplit"; card.before(sp); const bib=document.createElement("aside"); bib.id="qtBib"; bib.className="qtbib"; bib.setAttribute("aria-label","오늘 본문"); bib.innerHTML=h; sp.append(bib,card); return bib; }
-function qbGo(b,c,v,e,smooth){ const bib=document.getElementById("qtBib"); if(!bib) return false; bib.querySelectorAll(".qbv.on").forEach(x=>x.classList.remove("on"));
+function qbGo(b,c,v,e,smooth){ const bib=document.getElementById("qtBib"); if(!bib) return false; const tb=bib.querySelector('[data-qbt="b"]'); if(tb&&tb.getAttribute("aria-selected")!=="true") tb.click(); bib.querySelectorAll(".qbv.on").forEach(x=>x.classList.remove("on"));
   const t=document.getElementById(`qb-${b}-${c}-${v}`); if(!t) return false; for(let i=v;i<=(e||v);i++){ const x=document.getElementById(`qb-${b}-${c}-${i}`); if(x) x.classList.add("on"); }
   bib.scrollTo({top:Math.max(0,t.offsetTop-bib.clientHeight*0.28),behavior:smooth&&!matchMedia("(prefers-reduced-motion: reduce)").matches?"smooth":"auto"}); return true; }
 function qbSync(g){ const bib=qbBuild(); if(!bib) return; const ref=(g||[]).map(x=>x.querySelector("[data-chv]")).find(Boolean);
@@ -3095,6 +3119,26 @@ function qtSteps(m){ document.body.classList.remove("qtsp"); const key=keyOf(vie
   show(); }
 /* 11/3 목사님: 마친 뒤의 묵상 탭이 "신문 읽는 것 같다" → 맨 위에 마친 결과(내가 남긴 말·붙잡은 말씀) 한 상자,
    그 아래 네 단계는 각각 접힌 상자로. 열면 그대로 고칠 수 있음 */
+/* 11-22 목사님(태블릿 '묵상 마친 뒤', GPT 설계 검토 후 진행): 쓸 때와 같은 자리 — 왼쪽 [본문 / 쓴 뒤 해설], 오른쪽 날짜·'묵상 마침' 표시 → 붙잡은 말씀 → 내가 쓴 네 단계(펼쳐서, 그 자리에서 고침) → 아래 띠(도장·연속, 다음 본문 한 줄과 남은 시간, 나의 기록, ⋯ 안에 완료 취소).
+   휴대폰·세로 태블릿은 지금 그대로(배치는 CSS로만 바뀌어 회전해도 같은 기록) */
+const QD_MQ=matchMedia("(min-width:1100px) and (min-height:560px)");
+function qbVersesHTML(p,kvId){ let h="", pb=0; (p.ch||[]).forEach(([b,c])=>{ const X=BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!X) return; h+=`<h3 class="qbch">${b!==pb?esc(PLAN.full[b-1])+" ":""}${c}${b===19?"편":"장"}</h3><p class="qbvt">`+X.map((t,i)=>{ const id=`${b}-${c}-${i+1}`; return `<span class="qbv${id===kvId?" on":""}" id="qb-${id}"><sup>${i+1}</sup>${esc(t)}</span>`; }).join(" ")+`</p>`; pb=b; }); return h; }
+function qdBuild(m,card,lab){ if(!card||!BIBLE||card.closest(".qtsplit")) return; const p=dayPlan(view.w,view.d); if(!p||!p.ch||!p.ch.length) return;
+  const q=mem.qt[keyOf(view.w,view.d)]||{}, kv=String(q.kv||"").replace(/:/g,"-"), after=m.querySelector("section.qtafter");
+  const folds=[]; let x=lab&&lab.nextElementSibling; while(x&&x.matches&&x.matches("details.qtfold")){ folds.push(x); x=x.nextElementSibling; }
+  const sp=document.createElement("div"); sp.className="qtsplit qtdsp"; card.before(sp);
+  const bib=document.createElement("aside"); bib.id="qtBib"; bib.className="qtbib"; bib.setAttribute("aria-label","오늘 본문과 해설");
+  let note=""; if(after){ const c=after.cloneNode(true); c.querySelectorAll("button,textarea,input").forEach(e=>e.remove()); c.querySelector(":scope>.label")?.remove(); note=c.innerHTML; }
+  bib.innerHTML=`<div class="qbhd qbtabs" role="tablist"><button role="tab" data-qbt="b" aria-selected="true">본문 · ${esc(p.label)}</button>${note?`<button role="tab" data-qbt="n" aria-selected="false">쓴 뒤 해설</button>`:""}</div><div class="qbpane" data-qbp="b">${qbVersesHTML(p,kv)}</div>${note?`<div class="qbpane qbnote" data-qbp="n" hidden>${note}</div>`:""}`;
+  const main=document.createElement("div"); main.className="qtdmain"; sp.append(bib,main); main.append(card); if(lab) main.append(lab); folds.forEach(f=>main.append(f));
+  document.body.classList.add("qtsp");
+  /* 작은 '묵상 마침' 표시 */ const qk=card.querySelector(".qth3 .qphin .qk"); if(qk&&!card.querySelector(".qtdmark")) qk.insertAdjacentHTML("afterend",`<span class="qtdmark">묵상 마침 ✓</span>`);
+  /* ⋯ 안에 완료 취소 */ const row=card.querySelector("#qtToRec")?.parentNode; if(row&&!row.querySelector(".qtdmore")){ const mb=document.createElement("button"); mb.className="btn ghost small qtdmore"; mb.textContent="⋯"; mb.setAttribute("aria-label","더 보기"); row.appendChild(mb);
+    mb.onclick=()=>{ sheet("묵상 노트",`<p class="lead">적은 글은 완료를 취소하지 않아도 오른쪽에서 바로 고칠 수 있습니다.</p><div class="row"><button class="btn ghost" id="qdUndo">완료 취소</button></div>`); const u=document.getElementById("qdUndo"); if(u) u.onclick=()=>{ document.getElementById("sheetClose")?.click(); document.getElementById("qtDone")?.click(); }; }; }
+  bib.querySelectorAll("[data-qbt]").forEach(b=>b.onclick=()=>{ bib.querySelectorAll("[data-qbt]").forEach(y=>y.setAttribute("aria-selected",y===b)); bib.querySelectorAll("[data-qbp]").forEach(y=>y.hidden=y.dataset.qbp!==b.dataset.qbt); bib.scrollTop=0; if(b.dataset.qbt==="b") qdKv(bib,kv); });
+  const openF=()=>{ folds.forEach(f=>f.open=QD_MQ.matches); if(QD_MQ.matches) setTimeout(()=>qdKv(bib,kv),60); }; openF(); QD_MQ.onchange=openF;
+  requestAnimationFrame(()=>qdKv(bib,kv)); setTimeout(()=>qdKv(bib,kv),300); }
+function qdKv(bib,kv){ const t=kv&&document.getElementById("qb-"+kv); if(t&&bib.getBoundingClientRect().width) bib.scrollTop=Math.max(0,t.offsetTop-bib.clientHeight*0.3); }
 function qtDoneLook(m){ const hd=m.querySelector("section.qthd"); if(!hd||m.querySelector(".qtcard")) return; const p=dayPlan(view.w,view.d);
   const dn=m.querySelector("#qtDoneSec"); const secs=[...m.querySelectorAll("section.sec")].filter(x=>x!==hd&&x!==dn); hd.style.display="none";
   const G=[]; secs.forEach(x=>{ const lab=x.querySelector(":scope>.label"); const start=x.querySelector(":scope>.stage")||(lab&&/기도/.test(lab.textContent)); if(start||!G.length) G.push([x]); else G[G.length-1].push(x); });
@@ -3106,7 +3150,7 @@ function qtDoneLook(m){ const hd=m.querySelector("section.qthd"); if(!hd||m.quer
   let last=lab; G.forEach((g,i)=>{ const st=g[0].querySelector(":scope>.stage span"), lb=g[0].querySelector(":scope>.label"); const t=((st||lb||{}).textContent||"").trim();
     const d=document.createElement("details"); d.className="daycard qtfold"; d.innerHTML=`<summary><b>${i+1}</b><span>${esc(t)}</span></summary>`;
     g.forEach(x=>{ x.classList.add("q3"); const s0=x.querySelector(":scope>.stage"); if(s0&&x===g[0]) s0.style.display="none"; else if(lb&&x===g[0]&&!st) lb.style.display="none"; d.append(x); });
-    last.after(d); last=d; }); }
+    last.after(d); last=d; }); qdBuild(m,card,lab); }
 function bookFinCheck(k){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return; mem.bookFin ||= {};
   for(const b of [...new Set(p.ch.map(x=>x[0]))]){ if(!mem.bookFin[b]&&bookDone(b)){ mem.bookFin[b]=todayStr(); save(); setTimeout(()=>bookCover(b),1400); return; } } }
 
