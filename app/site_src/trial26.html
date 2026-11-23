@@ -377,20 +377,21 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .pg:not(.n27) > .qr27{width:10mm;margin-top:-1.2mm} .pg:not(.n27) > .qr27 .qrs{width:10mm;height:10mm}
 .pg.n27 .hd2 .qr27{float:none;margin-left:auto;flex:none;align-self:center}
 /* 11-21 목사님 5-A안: 날짜 | 제목 | (주일)QR 세 칸을 14mm 높이로 맞추고, 아래 연한 정보 띠(읽기 시간 · 새찬송가)를 지면 폭 전체로 */
-.pg.n27 .hd2.hd5{display:block;margin:0 0 1mm;border:0;padding:0}
-.pg.n27 .hd5 .h5{display:grid;grid-template-columns:19mm minmax(0,1fr) auto;align-items:center;height:12mm;column-gap:3.6mm}
-.pg.n27 .hd5 .d5{height:100%;display:flex;align-items:center;gap:1.6mm;border-right:0.3mm solid var(--main)}
-.pg.n27 .hd5 .d5 b{font-size:23pt;font-weight:300;line-height:1;color:var(--main);letter-spacing:-1px}
-.pg.n27 .hd5 .d5 small{font-size:6.6pt;font-weight:500;line-height:1.35;color:#555}
-.pg.n27 .hd5 .t5 b{display:block;font-size:14.5pt;font-weight:700;line-height:1.15;letter-spacing:-0.3px}
-.pg.n27 .hd5 .t5 span{display:block;font-size:9pt;color:#555;line-height:1.3;margin-top:0.8mm}
-.pg.n27 .hd5 .qr27{float:none;width:13mm;height:12mm;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:4.8pt;line-height:1;color:#555}
-.pg.n27 .hd5 .qr27 .qrs,.pg.n27 .hd5 .qr27 svg{width:10mm;height:10mm;display:block}
-.pg.n27 .hd5 .qr27 span{margin-top:0.7mm;white-space:nowrap}
-.pg.n27 .hd5 .s5{display:flex;justify-content:space-between;align-items:center;margin-top:1.4mm;height:4.4mm;background:var(--mainL);padding:0 2.6mm;font-size:7.2pt;color:#444;border-bottom:0.5mm solid var(--main)}
-.pg.n27 .hd5 .s5 b{color:var(--main);font-weight:700}
-.pg.n27 .hd5 .hy27{cursor:pointer}
-.pg.n27 .hd2.hd5 + .sec{margin-top:1.4mm}
+.pg .hd2.hd5,.pg.n27 .hd2.hd5{display:block;margin:0 0 1mm;border:0;padding:0}
+.pg .hd5 .h5{display:grid;grid-template-columns:19mm minmax(0,1fr) auto;align-items:center;height:12mm;column-gap:3.6mm}
+.pg .hd5 .d5{height:100%;display:flex;flex-direction:column;justify-content:center;gap:0.9mm;border-right:0.3mm solid var(--main)}
+.pg .hd5 .d5 b{font-size:23pt;font-weight:300;line-height:1;color:var(--main);letter-spacing:-1px}
+.pg .hd5 .d5 b i{font-style:normal;font-size:12pt;font-weight:400;letter-spacing:0;margin-right:0.3mm;opacity:.75}
+.pg .hd5 .d5 small{font-size:6.6pt;font-weight:500;line-height:1;color:#555}
+.pg .hd5 .t5 b{display:block;font-size:14.5pt;font-weight:700;line-height:1.15;letter-spacing:-0.3px}
+.pg .hd5 .t5 span{display:block;font-size:9pt;color:#555;line-height:1.3;margin-top:0.8mm}
+.pg .hd5 .qr27{float:none;width:13mm;height:12mm;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:4.8pt;line-height:1;color:#555}
+.pg .hd5 .qr27 .qrs,.pg .hd5 .qr27 svg{width:10mm;height:10mm;display:block}
+.pg .hd5 .qr27 span{margin-top:0.7mm;white-space:nowrap}
+.pg .hd5 .s5{display:flex;justify-content:space-between;align-items:center;margin-top:1.4mm;height:4.4mm;background:var(--mainL);padding:0 2.6mm;font-size:7.2pt;color:#444;border-bottom:0.5mm solid var(--main)}
+.pg .hd5 .s5 b{color:var(--main);font-weight:700}
+.pg .hd5 .hy27{cursor:pointer}
+.pg .hd2.hd5 + .sec{margin-top:1.4mm}
 .pg.n27 .hd2 .tb{min-width:0}
 /* ── 11-20 책머리 새 틀: 도구 10–13쪽, 쓰는 법 다섯 걸음 ── */
 .howpgx .hsteps.s3,.howpgx .hsteps.s2{display:flex;gap:2.4mm}
@@ -794,9 +795,7 @@ function pageL0(p,qt){
   const sec2=qt.stx&&qt.stx.rows&&qt.stx.rows.length?box+stx:hasMap?`<div class="two"><div class="c1" data-f="pair">${box}</div><div class="c2" data-f="m_emph" data-m="${esc(JSON.stringify(qt.map)).replace(/"/g,'&quot;')}">${svgMap(qt.map,45)}</div></div>`:hasPic?`<div class="two"><div class="c1">${box}</div><div class="c2">${pic}</div></div>`:box;
   const whole=(qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:'');
   return `<div class="pg ${q}">
-${qrBox(p)}<p class="date sans">${p.m}월 ${p.d}일 · ${dayNoLab(p)} · 성경 읽기 약 ${p.min}분</p>
-<p class="title sans">${esc(p.t)}</p>
-<p class="sub" data-f="sub">${esc(qt.sub||p.sub)}</p>
+${hd5(p,qt)}
 <p class="sec sans"><span class="n">1</span>읽기 전</p>
 <p class="b" data-f="today"><b>오늘의 흐름</b>&nbsp; ${qt.guide.today?vs(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
 <p class="b" data-f="find"><b>오늘의 읽기 도구</b>&nbsp; ${findHtml(p,qt)}</p>
@@ -841,6 +840,7 @@ function pageR(p,qt,hw){ return qt&&qt.v27?pageR27(p,qt,hw):pageR0(p,qt,hw) }
 const TK27={'동그라미':'<span class="o">동그라미</span>','형광펜':'<span class="hy">형광펜</span>','물결 밑줄':'<span class="w">물결 밑줄</span>','빗금 형광펜':'<span class="ht">빗금 형광펜</span>','네모':'<span class="bx">네모</span>','괄호':'<b>[괄호]</b>'};
 function t27(t){ let h=mark(md(t)); h=h.replace(/\{번호 ([^}]*)\}/g,(m,a)=>a.trim().split(/\s+/).map(x=>`<span class="bn">${x}</span>`).join('')).replace(/\{([^}]+)\}/g,(m,a)=>TK27[a]||m);
   return h.replace(/〈/g,'<span class="abl">〈</span>').replace(/〉/g,'<span class="abr">〉</span>') }
+function hd5(p,qt){ return `<div class="hd2 hd5"><div class="h5"><div class="d5 sans"><b><i>${p.m}/</i>${p.d}</b><small>${wd27(p)}</small></div><div class="t5"><b>${esc(p.t)}</b><span class="sans" data-f="sub">${esc(qt.sub||p.sub)}</span></div>${qrBox(p)}</div><div class="s5 sans"><span>성경 읽기 약 <b>${p.min}분</b></span>${hyBox(qt)}</div></div>` } /* 11-23 목사님: 머리를 모든 날에, 날짜는 1/21(일자 강조) */
 function wd27(p){ const k=new Date(ED.trial?2026:2027,p.m-1,p.d).getDay(); return k===0?'주일':['일','월','화','수','목','금','토'][k]+'요일' } /* 11-21 목사님: 일요일은 '주일' */
 function pageL27(p,qt){ const v=qt.v27, q='q'+qOf(p);
   const hasMap=qt.map&&qt.map.emph, hasPic=!hasMap&&qt.img&&qt.img.id;
@@ -851,7 +851,7 @@ function pageL27(p,qt){ const v=qt.v27, q='q'+qOf(p);
   const word=w?`<p class="wd sans" data-f="word"><span class="wdl">말뜻</span>${wi>0?`<b>${esc(w.slice(0,wi))}</b> ${t27(w.slice(wi+3))}`:t27(w)}</p>`:'';
   const marks=(v.marks||[]).map(m=>`<div class="mi${m.rep?' rep':''}"><div><span class="chip${m.rep?' rep':''}">${esc(m.tool)}</span> ${t27(m.text)}</div></div>`).join('');
   return `<div class="pg n27 ${q}">
-<div class="hd2 hd5"><div class="h5"><div class="d5 sans"><b>${p.d}</b><small>${p.m}월<br>${wd27(p)}</small></div><div class="t5"><b>${esc(p.t)}</b><span class="sans" data-f="sub">${esc(qt.sub||p.sub)}</span></div>${qrBox(p)}</div><div class="s5 sans"><span>성경 읽기 약 <b>${p.min}분</b></span>${hyBox(qt)}</div></div>
+${hd5(p,qt)}
 <p class="sec sans"><span class="n">1</span>오늘의 흐름</p>
 <p class="b" data-f="today">${qt.guide.today?t27(qt.guide.today):'<span class="empty">아직 쓰지 않음</span>'}</p>
 ${word}
