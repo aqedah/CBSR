@@ -3493,7 +3493,8 @@ html.v2 body details.qtfold.qtj>summary::after{content:none}
 html.v2 body details.qtfold.qtj[open]>summary::after{content:"접기";grid-column:2;grid-row:1;font:600 13px var(--f-ui);color:var(--muted);justify-self:end}
 html.v2 body details.qtfold.qtj>section{padding:0 0 14px}
 @media (min-width:1100px) and (min-height:560px){
-  html.v2 body :is(.qtv4,details.qtj) .qph4{margin:0;border-radius:18px;height:176px}
+  html.v2 body :is(.qtv4,details.qtj) .qph4{margin:0;border-radius:18px;height:124px} /* 태블릿: 왼쪽에 본문이 있으니 머리는 낮게(GPT 감수 — 오른쪽 세로 공간) */
+  html.v2 body :is(.qtv4,details.qtj) .qph4 .qphin{bottom:12px}html.v2 body :is(.qtv4,details.qtj) .qring{width:46px;height:46px}
   html.v2 body details.qtfold.qtj[open]>summary::after{content:none}
   html.v2 body :is(.qtcard.qtv4,details.qtj) .qev{margin-left:0;margin-right:0;border-radius:14px!important;border:0!important}
 }
