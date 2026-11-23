@@ -2835,6 +2835,15 @@ html.v2 body details.qtfold.qtj>section{padding:0 0 14px}
   html.v2 body details.qtfold.qtj[open]>summary::after{content:none}
   html.v2 body :is(.qtcard.qtv4,details.qtj) .qev{margin-left:0;margin-right:0;border-radius:14px!important;border:0!important}
 }
+
+/* 11-23 목사님(태블릿 묵상 "좌우가 안 맞고 아래 단추 여백이 없다"): 두 칸을 머리줄 왼쪽 선(탭 줄 + 48px)에 맞추고, 두 칸 위끝을 같게, 아래 단추에 여백 */
+@media (min-width:1100px) and (min-height:560px){
+  html.v2[data-tab="qt"] body.qtsp .wrap{max-width:1240px!important;margin-left:calc(var(--rail) + 32px)!important;margin-right:16px!important;padding-left:0!important;padding-right:0!important}
+  html.v2 body .qtsplit{gap:28px}
+  html.v2 body .qtsplit>.qtbib{margin-top:12px;top:76px;max-height:calc(100vh - 104px);max-height:calc(100dvh - 104px)}
+  html.v2 body .qtsplit>.qtcard,html.v2 body .qtsplit>.qtcard.qtv4{margin-top:12px}
+  html.v2 body .qtsplit .qtnext{padding:22px 0 max(20px,env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(0,0,0,0),var(--paper) 28%)}
+}
 </style>
 
 <div class="wrap">
@@ -8003,7 +8012,7 @@ function showBook(b,ret){
   let h=`<p class="src">${T?`이 통독표에서 ${T}${unit} 가운데 ${G}${unit}을 읽었습니다.`:""}</p>`;
   if(I){ h+=`<div class="bkinfo"><b>어떤 책인가요</b><p>${esc(I.what)}</p><b>왜 중요한가요</b><p>${esc(I.why)}</p><b>읽을 때 눈여겨볼 것</b><p>${esc(I.look)}</p><b>그리스도와 이어지는 곳</b><p>${esc(I.christ)}</p></div>`;
     if(BIBLE&&I.key){ const [kb,kc,kv]=I.key; h+=`<div class="keyv"><small>대표 구절 · ${esc(PLAN.abbr[kb-1])} ${kc}:${kv}</small>${esc(BIBLE[kb-1][kc-1][kv-1])}</div>`; } }
-  if(first) h+=`<div class="row"><button class="btn small" data-jump="${first[0]}-${first[1]}">이 책을 읽는 날로 가기 · ${first[0]}주차 ${""}</button></div>`;
+  if(first) h+=`<div class="row" style="margin-top:16px"><button class="btn small" data-jump="${first[0]}-${first[1]}">이 책을 읽는 날로 가기 · ${first[0]}주차 ${""}</button></div>`;
   if(ret){ const {tot:T2,got:G2}=bookProgress(); if(T2[b]&&G2[b]>=T2[b]) h=`<div class="row"><button class="btn ghost small" data-bkcover="1">다 읽은 책 표지 보기 ✓</button></div>`+h; return h; }
   sheet(PLAN.full[b-1],h);
 }
