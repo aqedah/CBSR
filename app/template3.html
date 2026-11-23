@@ -4042,7 +4042,7 @@ function renderRead(){
   { /* 11-13: 늘 그려 두고 접기만(펼칠 때 다시 그리면 지도·가이드북 단추가 깜빡임) */
   
   // 5 퀴즈
-  if(!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
+  /* 11-23 목사님: 본문 탭 퀴즈는 뺌(퀴즈는 도전 탭에) */ if(false&&!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
   }
   if(sm2) h+=`<button class="foldbtn" data-fold="simpleMore">더 알아보기 접기 ▲</button></details>`;
   // 완료
