@@ -624,7 +624,7 @@ const VSRX=new RegExp('((?:(?<![가-힣])(?:'+BK+')\\s)?\\d{1,3}:'+VN+'(?:[\u201
 const mark=h=>String(h).replace(VSRX,'<span class="vs">$1</span>');
 const vs=s=>mark(esc(s));
 const mdv=s=>mark(md(s));
-const qOf=p=>ED.trial?Math.ceil(p.m/3):(p.no<=84?1:p.no<=153?2:p.no<=204?3:p.no<=278?4:5); /* 11-20 목사님: 권은 날짜가 아니라 책으로 — 1권 창–룻 · 2권 삼상–에 · 3권 욥–아 · 4권 사–말 · 5권 마–계 */
+const qOf=p=>ED.trial?Math.ceil(p.m/3):(p.no<=84?1:p.no<=154?2:p.no<=205?3:p.no<=279?4:5); /* 11-20 목사님: 권은 날짜가 아니라 책으로 — 1권 창–룻 · 2권 삼상–에 · 3권 욥–아 · 4권 사–말 · 5권 마–계 */
 
 /* ── 데이터 ── */
 function blank(){return {sub:'',guide:{today:'',find:'',word:''},obs:{q:'',look:[['',''],['',''],['','']],pair:[],christ:''},apply:'',note:'',pray:'',map:null}}
