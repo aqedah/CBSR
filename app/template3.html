@@ -2749,6 +2749,12 @@ html.v2[data-theme="dark"] .tbktools button{color:var(--ink)}html.v2[data-theme=
   html.v2 body.recsub .rdh.rdh{position:fixed!important;top:0!important;left:var(--rail)!important;right:0!important;height:64px;margin:0!important;padding:env(safe-area-inset-top,0px) 32px 0 33px!important;box-sizing:border-box;z-index:1300;max-width:none!important;display:flex;align-items:center}
   html.v2 body.recsub .rdh.rdh .rdback{width:40px;height:40px;margin:0}
 }
+
+/* 11-23 목사님: 본문 열기 — 장면마다 따로 누름(태블릿은 왼쪽 본문으로, 휴대폰은 그 장면만 창으로) */
+.qtscope{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:6px}
+.qtscl{font:700 13.5px var(--f-ui);color:var(--accent);margin-right:2px}
+.qsr{border:1px solid var(--line);background:var(--card);color:var(--accent);border-radius:999px;padding:7px 13px;font:700 13.5px var(--f-ui);cursor:pointer;min-height:36px}
+.qsr.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 /* ===== 11-23 목사님: 묵상 탭 새 모양(qtv4) — 상자를 걷고 세 층(물음 · 말씀 · 나의 글) ===== */
 html.v2{--pen:#24365A;--penl:#CCD4E2}
 @media (prefers-color-scheme:dark){html.v2:not([data-theme="light"]){--pen:#B4C6E8;--penl:#33405A}}
@@ -3285,10 +3291,10 @@ function qbGo(b,c,v,e,smooth){ const bib=document.getElementById("qtBib"); if(!b
   bib.scrollTo({top:Math.max(0,t.offsetTop-bib.clientHeight*0.28),behavior:smooth&&!matchMedia("(prefers-reduced-motion: reduce)").matches?"smooth":"auto"}); return true; }
 function qbSync(g){ const bib=qbBuild(); if(!bib) return; const ref=(g||[]).map(x=>x.querySelector("[data-chv]")).find(Boolean);
   if(ref){ const [b,c,v,e]=ref.dataset.chv.split("-").map(Number); qbGo(b,c,v,e,false); return; }
-  if((g||[]).some(x=>x.querySelector("#scopeRead"))){ const R=sceneOf(view.w,view.d); if(R&&R[0]) qbGo(R[0][0],R[0][1],R[0][2],R[0][3],false); return; }
+  if((g||[]).some(x=>x.querySelector("#scopeRead,[data-scr]"))){ const R=sceneOf(view.w,view.d); if(R&&R[0]) qbGo(R[0][0],R[0][1],R[0][2],R[0][3],false); return; }
   bib.querySelectorAll(".qbv.on").forEach(x=>x.classList.remove("on")); }
-document.addEventListener("click",e=>{ if(view.tab!=="qt"||!qbVisible()) return; const t=e.target.closest&&e.target.closest("#main [data-chv],#main #scopeRead,#main [data-look]"); if(!t||t.closest("#qtBib")) return;
-  let ok=false; if(t.dataset.look!=null){ /* 11-23 목사님: 태블릿 묵상에서 '다른 부분도 살펴보기'를 누르면 팝업 대신 왼쪽 본문에 표시 */ const E=EYE[keyOf(view.w,view.d)], l=E&&E.look[+t.dataset.look]; if(l&&l.r){ ok=qbGo(l.r[0],l.r[1],l.r[2],l.r[3]||l.r[2],true); if(ok){ document.querySelectorAll("#main [data-look].on").forEach(x=>x.classList.remove("on")); t.classList.add("on"); } } } else if(t.dataset.chv){ const [b,c,v,x]=t.dataset.chv.split("-").map(Number); ok=qbGo(b,c,v,x,true); } else { const R=sceneOf(view.w,view.d); if(R&&R[0]) ok=qbGo(R[0][0],R[0][1],R[0][2],R[0][3],true); }
+document.addEventListener("click",e=>{ if(view.tab!=="qt"||!qbVisible()) return; const t=e.target.closest&&e.target.closest("#main [data-chv],#main #scopeRead,#main [data-look],#main [data-scr]"); if(!t||t.closest("#qtBib")) return;
+  let ok=false; if(t.dataset.look!=null){ /* 11-23 목사님: 태블릿 묵상에서 '다른 부분도 살펴보기'를 누르면 팝업 대신 왼쪽 본문에 표시 */ const E=EYE[keyOf(view.w,view.d)], l=E&&E.look[+t.dataset.look]; if(l&&l.r){ ok=qbGo(l.r[0],l.r[1],l.r[2],l.r[3]||l.r[2],true); if(ok){ document.querySelectorAll("#main [data-look].on").forEach(x=>x.classList.remove("on")); t.classList.add("on"); } } } else if(t.dataset.scr!=null){ const R=sceneOf(view.w,view.d), r=R&&R[+t.dataset.scr]; if(r) ok=qbGo(r[0],r[1],r[2],r[3],true); if(ok){ document.querySelectorAll("#main [data-scr].on").forEach(x=>x.classList.remove("on")); t.classList.add("on"); } } else if(t.dataset.chv){ const [b,c,v,x]=t.dataset.chv.split("-").map(Number); ok=qbGo(b,c,v,x,true); } else { const R=sceneOf(view.w,view.d); if(R&&R[0]) ok=qbGo(R[0][0],R[0][1],R[0][2],R[0][3],true); }
   if(ok){ e.preventDefault(); e.stopPropagation(); } },true);
 function qtSteps(m){ document.body.classList.remove("qtsp"); const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done){ qtDoneLook(m); return; }
   if(!view.qsUrl){ view.qsUrl=1; try{ const n=+new URLSearchParams(location.search).get("qs"); if(n>0){ view.qtStepK=key; view.qtStep=n-1; } }catch(e){} }
@@ -4542,7 +4548,7 @@ function renderQT(){
   let h=V2Q?`<section class="sec qthd"><div class="qthl"><span class="label">묵상 노트 · ${dayName(w,d)}</span><button class="qthelp" id="qtHelp" aria-label="묵상 노트 안내">?</button></div><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">묵상 노트의 말씀은 개역개정입니다.</p>`:""}</section>`
     :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`}</section>`;
   // 1 본문 관찰
-  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${V2Q?(()=>{ const r=qtRefs(eye.q,w,d)[0]; return r?qEvi(r,"",3):""; })():""}${V2Q?(R?`<button class="qtlnk" id="scopeRead">본문 열기 · ${esc(sceneLabel(R))} ›</button>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
+  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye"><p>${esc(eye.q)}</p>${V2Q?(()=>{ const r=qtRefs(eye.q,w,d)[0]; return r?qEvi(r,"",3):""; })():""}${V2Q?(R?`<div class="qtscope"><span class="qtscl">본문 열기</span>${R.map((r,i)=>`<button class="qsr" data-scr="${i}">${esc(sceneLabel([r]))}</button>`).join("")}</div>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
   if(V2Q) h+=lnQtHTML(key);
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
@@ -9444,6 +9450,8 @@ function bind(){
   const m=document.getElementById("main");
   const sh=document.getElementById("shareDay"); if(sh) sh.onclick=()=>shareDay(view.w,view.d); const pbd=document.getElementById("placeBand"); if(pbd) pbd.onclick=()=>placeSheet(view.w,view.d); document.querySelectorAll("[data-thj]").forEach(x=>x.onclick=()=>{ const [a,c]=x.dataset.thj.split("-").map(Number); view.w=a; view.d=c; view.pre=false; view.revW=null; render(); scrollTo({top:0}); });
   bindToolChips(m);
+  document.querySelectorAll("#main [data-scr]").forEach(b=>b.onclick=()=>{ const R2=sceneOf(view.w,view.d), r=R2&&R2[+b.dataset.scr]; if(!r||!BIBLE) return; const [bb,c,s,e2]=r; /* 11-23 목사님: 본문 열기를 장면마다 따로 */
+    sheet("이 질문의 본문", `<h4 class="srh">${esc(PLAN.abbr[bb-1])} ${c}:${s}–${e2}</h4><p class="srtext">${Array.from({length:e2-s+1},(_,i)=>s+i).map(v=>`<sup>${v}</sup>${esc((BIBLE[bb-1][c-1]||[])[v-1]||"")}`).join(" ")}</p>`); });
   const sr=document.getElementById("scopeRead"); if(sr) sr.onclick=()=>{ const R2=sceneOf(view.w,view.d); if(!R2||!BIBLE) return;
     sheet("이 질문의 본문", `<p class="lead" style="margin:0 0 8px">질문에 답하는 데 필요한 장면을 이어서 읽습니다. 닫으면 적던 글은 그대로 있습니다.</p>`+R2.map(([b,c,s,e2])=>`<h4 class="srh">${esc(PLAN.abbr[b-1])} ${c}:${s}–${e2}</h4><p class="srtext">${Array.from({length:e2-s+1},(_,i)=>s+i).map(v=>`<sup>${v}</sup>${esc((BIBLE[b-1][c-1]||[])[v-1]||"")}`).join(" ")}</p>`).join("")); };
   ttsBtnSync(); const tb=document.getElementById("ttsBtn"); if(tb) tb.onclick=()=>{ if(TTS.on&&TTS.key===keyOf(view.w,view.d)){ ttsStop(); return; } if(!view.open){ view.open=true; render(); } ttsStart(); ttsBtnSync(); };
