@@ -2720,6 +2720,86 @@ html.v2 body .qtcard section.q3>.label{display:flex!important;align-items:center
 html.v2 body .rdt{display:block;font:600 14px var(--f-ui);color:var(--muted);margin:2px 0 6px}
 
 /* 11-20 새 틀: ① 읽기 전의 ② 표시 */ .aidmk{margin:.35em 0;line-height:1.6} .aidmk.rep{background:color-mix(in srgb,var(--accent,#2E7D4F) 9%,transparent);border-radius:6px;padding:.25em .45em;margin-left:-.45em;margin-right:-.45em} .aidmk .aidchip{margin-right:.35em;font-size:.82em;padding:.05em .5em;cursor:default} .aidrep{display:inline-block;font-size:.72em;background:#222;color:#fff;border-radius:3px;padding:0 .4em;margin-right:.2em;vertical-align:.1em}
+
+/* ===== 11-23 목사님: 묵상 탭 새 모양(qtv4) — 상자를 걷고 세 층(물음 · 말씀 · 나의 글) ===== */
+html.v2{--pen:#24365A;--penl:#CCD4E2}
+@media (prefers-color-scheme:dark){html.v2:not([data-theme="light"]){--pen:#B4C6E8;--penl:#33405A}}
+html.v2[data-theme="dark"]{--pen:#B4C6E8;--penl:#33405A}
+html.v2 body .qtcard.qtv4{background:none;border:0;box-shadow:none;padding:0;margin:4px 0 0;border-radius:0}
+html.v2 body :is(.qtv4,details.qtj) .qth3{margin:0 0 4px}
+html.v2 body :is(.qtv4,details.qtj) .qph4{aspect-ratio:auto;height:168px;border-radius:0;margin:0 -16px;background:#2a221a;overflow:hidden;display:block;padding:0;position:relative}
+html.v2 body :is(.qtv4,details.qtj) .qph4.noimg{height:auto;background:none;margin:0;overflow:visible}
+html.v2 body :is(.qtv4,details.qtj) .qph4>img{filter:brightness(.62) saturate(.9)}
+html.v2 body :is(.qtv4,details.qtj) .qph4::after{display:block;background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.04) 35%,rgba(10,7,4,.78))}
+html.v2 body :is(.qtv4,details.qtj) .qph4.noimg::after{display:none}
+html.v2 body :is(.qtv4,details.qtj) .qph4 .qphin{position:absolute;left:20px;right:20px;bottom:16px;display:flex;align-items:flex-end;gap:12px;color:#fff}
+html.v2 body :is(.qtv4,details.qtj) .qph4.noimg .qphin{position:static;color:var(--ink);padding:4px 52px 0 0}
+html.v2 body :is(.qtv4,details.qtj) .qpht{flex:1;min-width:0;display:grid;gap:1px;text-shadow:0 1px 6px rgba(0,0,0,.45)}
+html.v2 body :is(.qtv4,details.qtj) .qph4.noimg .qpht{text-shadow:none}
+html.v2 body :is(.qtv4,details.qtj) .qph4 .qk{color:#F2C97A}html.v2 body :is(.qtv4,details.qtj) .qph4.noimg .qk{color:var(--gold)}
+html.v2 body :is(.qtv4,details.qtj) .qph4 h2{color:inherit;font:800 24px/1.25 var(--f-disp);margin:0}
+html.v2 body :is(.qtv4,details.qtj) .qph4 .qphin small{color:inherit;opacity:.92}
+html.v2 body :is(.qtv4,details.qtj) .qring{flex:none;width:54px;height:54px;border-radius:50%;padding:2px;border:0;background:conic-gradient(#e2b874,#ff5b45,#e2b874);position:relative;cursor:pointer}
+html.v2 body :is(.qtv4,details.qtj) .qring img{width:100%;height:100%;border-radius:50%;border:2px solid #15110d;object-fit:cover;display:block}
+html.v2 body :is(.qtv4,details.qtj) .qring i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;color:#fff;font-size:15px;text-shadow:0 1px 6px #000}
+html.v2 body :is(.qtv4,details.qtj) .qph4 .qphbtn{position:absolute;top:12px;right:12px}
+html.v2 body :is(.qtv4,details.qtj) .qph4.noimg .qphbtn{top:4px;right:0}
+html.v2 body :is(.qtv4,details.qtj) .qtsn{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:4px;margin:14px 0 6px;padding:0;border:0}
+html.v2 body :is(.qtv4,details.qtj) .qsn{display:grid;justify-items:center;gap:6px;padding:0 0 6px;border:0;background:none;color:var(--muted);font:600 13px var(--f-ui);cursor:pointer;min-height:40px}
+html.v2 body :is(.qtv4,details.qtj) .qsn::before{content:"";width:100%;height:5px;border-radius:3px;background:var(--line)}
+html.v2 body :is(.qtv4,details.qtj) .qsn.ok{color:var(--accent)}html.v2 body :is(.qtv4,details.qtj) .qsn.ok::before{background:var(--accent)}
+html.v2 body :is(.qtv4,details.qtj) .qsn.cur{color:var(--ink);font-weight:700}html.v2 body :is(.qtv4,details.qtj) .qsn.cur::before{background:linear-gradient(90deg,var(--accent) 50%,var(--line) 50%)}
+html.v2 body :is(.qtv4,details.qtj) .q3{background:none;border:0;padding:0;box-shadow:none}
+html.v2 body :is(.qtv4,details.qtj) .q3 .stage{display:flex;align-items:baseline;gap:10px;margin:10px 0 12px}
+html.v2 body :is(.qtv4,details.qtj) .q3 .stage b{display:block;width:auto;height:auto;background:none;border-radius:0;color:var(--accent);font:900 34px/1 var(--f-disp)}
+html.v2 body :is(.qtv4,details.qtj) .q3 .stage span{font:700 15.5px var(--f-ui);color:var(--accent)}
+html.v2 body :is(.qtv4,details.qtj) .q3>.label{display:flex;align-items:baseline;gap:10px;margin:10px 0 12px;font:700 15.5px var(--f-ui);letter-spacing:0;color:var(--accent)}
+html.v2 body :is(.qtv4,details.qtj) .q3>.label .stn{display:block;width:auto;height:auto;background:none;color:var(--accent);font:900 34px/1 var(--f-disp);margin:0}
+html.v2 body :is(.qtv4,details.qtj) .eye{border:0!important;background:none!important;padding:0!important;border-radius:0!important;gap:12px}
+html.v2 body :is(.qtv4,details.qtj) .eye>p:first-child,html.v2 body :is(.qtv4,details.qtj) .oneline>label,html.v2 body :is(.qtv4,details.qtj) .oneline.godw>label{font:700 19.5px/1.62 var(--f-ui);color:var(--ink);letter-spacing:-.01em;word-break:keep-all;margin:0}
+html.v2 body :is(.qtv4,details.qtj) .oneline.prw>label{font-size:17px}
+html.v2 body :is(.qtcard.qtv4,details.qtj) .qev{background:var(--hi-soft)!important;border:0!important;border-top:1px solid color-mix(in srgb,var(--hi) 40%,transparent)!important;border-bottom:1px solid color-mix(in srgb,var(--hi) 40%,transparent)!important;border-radius:0!important;margin:14px -16px 0;padding:14px 16px 12px!important;display:grid;grid-template-columns:46px minmax(0,1fr);column-gap:10px;row-gap:4px}
+html.v2 body :is(.qtv4,details.qtj) .qev small{grid-column:1/-1;grid-row:1;color:var(--gold)}
+html.v2 body :is(.qtv4,details.qtj) .qev q{grid-column:2;grid-row:2;font:500 17px/1.85 "Noto Serif KR",serif;color:var(--ink)}
+html.v2 body :is(.qtv4,details.qtj) .qevf{display:contents}
+html.v2 body :is(.qtv4,details.qtj) .qevf b{grid-column:1;grid-row:2;font:700 12.5px/1.35 var(--f-ui);color:var(--gold);padding-top:5px;word-break:keep-all}
+html.v2 body :is(.qtv4,details.qtj) .qevf .lnk{grid-column:2;grid-row:3;justify-self:start;padding:4px 0;font-size:13.5px}
+html.v2 body :is(.qtv4,details.qtj) .qevs{margin-top:18px}html.v2 body :is(.qtv4,details.qtj) .qevs .qev+.qev{margin-top:0;border-top:0}
+html.v2 body :is(.qtv4,details.qtj) .qtlnk{font-size:14px}
+html.v2 body :is(.qtv4,details.qtj) .oneline{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+html.v2 body :is(.qtv4,details.qtj) .oneline>label{order:0}
+html.v2 body :is(.qtv4,details.qtj) .oneline::before{content:"나의 글";order:1;font:700 13px var(--f-ui);color:var(--pen);margin-top:8px}
+html.v2 body :is(.qtv4,details.qtj) .oneline.prw::before{content:"나의 기도"}
+html.v2 body :is(.qtcard.qtv4,details.qtj) .oneline textarea{order:2;border:0!important;border-radius:0!important;box-shadow:none;outline:0;background-color:transparent!important;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 33px,var(--penl) 33px,var(--penl) 34px)!important;background-attachment:local;font-family:"Gowun Batang",serif;font-size:19px;line-height:34px!important;color:var(--pen);padding:0 2px!important;min-height:103px;resize:none}
+html.v2 body :is(.qtv4,details.qtj) .oneline textarea::placeholder{color:color-mix(in srgb,var(--pen) 48%,transparent);opacity:1}
+html.v2 body :is(.qtv4,details.qtj) .oneline textarea:focus-visible{outline:2px dashed color-mix(in srgb,var(--pen) 55%,transparent);outline-offset:6px}
+html.v2 body :is(.qtcard.qtv4,details.qtj) .kvsel{background:linear-gradient(rgba(10,7,4,.5),rgba(10,7,4,.62)),var(--qcov,linear-gradient(#3a2c1f,#15110d)) center/cover!important;color:#fff!important;border-radius:18px!important;padding:18px 18px 16px!important}
+html.v2 body :is(.qtcard.qtv4,details.qtj) .kvsel small{color:#F2C97A!important}html.v2 body :is(.qtcard.qtv4,details.qtj) .kvsel q{color:#fff}
+html.v2 body :is(.qtv4,details.qtj) .prkv{background:var(--hi-soft);border-radius:14px;padding:12px 14px;color:var(--ink)}
+html.v2 body :is(.qtv4,details.qtj) .lookmore{margin-top:16px}
+html.v2 body :is(.qtv4,details.qtj) .qtdone>.mine{display:none}
+html.v2 body :is(.qtcard.qtv4,details.qtj) .qtdone .keyv{background:linear-gradient(rgba(10,7,4,.5),rgba(10,7,4,.62)),var(--qcov,linear-gradient(#3a2c1f,#15110d)) center/cover!important;color:#fff!important;border:0!important;border-radius:18px!important;padding:18px!important;font:700 17.5px/1.7 "Noto Serif KR",serif}
+html.v2 body :is(.qtcard.qtv4,details.qtj) .qtdone .keyv small{display:block;color:#F2C97A!important;font:700 12.5px var(--f-ui);margin-bottom:6px}
+html.v2 .qtfoldk{margin:20px 0 6px;font:700 13px var(--f-ui);color:var(--muted)}
+html.v2 body details.qtfold.qtj{background:none;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;margin:0!important;padding:0}
+html.v2 body details.qtfold.qtj>summary{display:grid;grid-template-columns:52px minmax(0,1fr);gap:0 12px;padding:14px 0;align-items:start;list-style:none;cursor:pointer;background:none;border:0}
+html.v2 body details.qtfold.qtj>summary::-webkit-details-marker{display:none}
+html.v2 body details.qtfold.qtj>summary::before{display:none}
+html.v2 body details.qtfold.qtj>summary>b{display:none}
+html.v2 body details.qtfold.qtj>summary>span{grid-column:1;grid-row:1;font:700 13.5px var(--f-ui);color:var(--accent);padding-top:3px}
+html.v2 body details.qtfold.qtj>summary>.qjp{grid-column:2;grid-row:1;min-width:0}
+html.v2 .qjq{margin:0 0 6px;font-size:13.5px;line-height:1.55;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+html.v2 .qja{margin:0;font:400 18px/1.7 "Gowun Batang",serif;color:var(--pen);white-space:pre-wrap;word-break:keep-all}
+html.v2 .qjn{margin:0;font-size:14px;color:var(--muted)}
+html.v2 body details.qtfold.qtj[open]>summary>.qjp{display:none}
+html.v2 body details.qtfold.qtj>summary::after{content:none}
+html.v2 body details.qtfold.qtj[open]>summary::after{content:"접기";grid-column:2;grid-row:1;font:600 13px var(--f-ui);color:var(--muted);justify-self:end}
+html.v2 body details.qtfold.qtj>section{padding:0 0 14px}
+@media (min-width:1100px) and (min-height:560px){
+  html.v2 body :is(.qtv4,details.qtj) .qph4{margin:0;border-radius:18px;height:176px}
+  html.v2 body details.qtfold.qtj[open]>summary::after{content:none}
+  html.v2 body :is(.qtcard.qtv4,details.qtj) .qev{margin-left:0;margin-right:0;border-radius:14px!important;border:0!important}
+}
 </style>
 
 <div class="wrap">
@@ -3192,15 +3272,15 @@ function qtSteps(m){ document.body.classList.remove("qtsp"); const key=keyOf(vie
   secs.forEach(x=>x.classList.add("q3")); const hd=m.querySelector("section.qthd"); if(hd) hd.style.display="none";
   G.forEach((g,j)=>{ if(g[0].querySelector(":scope>.stage")) return; const lb=g[0].querySelector(":scope>.label"); if(lb&&!lb.querySelector(".stn")) lb.insertAdjacentHTML("afterbegin",`<b class="stn">${j+1}</b>`); }); /* 11/3: 단계 이름에 모두 번호 */
   const top=document.createElement("section"); top.className="qth3";
-  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${dayChSub(p)}</div><div class="qphbtn"></div></div><div class="qtstp"></div>`;
+  top.innerHTML=qtHeadHTML(p,PS[0])+`<div class="qtstp qtsn"></div>`;
   (hd||G[0][0]).before(top); const pb=top.querySelector(".qphbtn"); ["qtHelp"].forEach(id=>{ const b=hd&&hd.querySelector("#"+id); if(b) pb.appendChild(b); }); /* 11/3: 스토리 단추는 뺌(스토리 모음에 있음) */
-  { const card=document.createElement("div"); card.className="daycard qtcard"; top.before(card); card.append(top,...secs); } /* 11/3: 본문 탭처럼 흰 상자 하나에 */
+  { const card=document.createElement("div"); card.className="daycard qtcard qtv4"; top.before(card); card.append(top,...secs); qtV4(card,PS[0]); } /* 11/3: 본문 탭처럼 흰 상자 하나에 → 11-23 목사님: 상자를 걷고 세 층(물음·말씀·나의 글)으로 */
   const bar=top.querySelector(".qtstp"), img=top.querySelector(".qph img");
   const nx=document.createElement("div"); nx.className="qtnext"; (G[N-1][G[N-1].length-1]).after(nx);
   const show=()=>{ const i=view.qtStep; if(!mem.qst||mem.qst.k!==key||mem.qst.i!==i){ mem.qst={k:key,i}; save(); } G.forEach((g,j)=>g.forEach(x=>x.style.display=j===i?"":"none")); qbSync(G[i]);
-    bar.innerHTML=`<button class="qtprev" aria-label="앞 장"${i?"":" disabled"}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="qtbars">${G.map((_,j)=>`<i class="${j<=i?"on":""}"></i>`).join("")}</span><b>${i+1} / ${N}</b>`;
+    bar.innerHTML=TT.map((t,j)=>`<button class="qsn${j<i?" ok":j===i?" cur":""}" data-qsn="${j}"${j===i?' aria-current="step"':""}>${esc(qtShort(t))}</button>`).join(""); /* 11-23: 막대·'1 / 5' 대신 단계 이름. 누르면 그 단계로 */
+    bar.querySelectorAll("[data-qsn]").forEach(x=>x.onclick=()=>{ view.qtStep=+x.dataset.qsn; show(); scrollTo({top:0}); });
     nx.innerHTML=(i>0?`<button class="btn ghost qtpb" aria-label="이전 · ${esc(TT[i-1].trim())}">‹ 이전</button>`:"")+(i<N-1?`<button class="btn qtnb">다음 · ${esc(TT[i+1].trim())}</button>`:""); /* 11-15 목사님: 아래에도 이전 */ const bn=document.querySelector(".bnav"); nx.style.bottom=(bn&&bn.offsetWidth>bn.offsetHeight?bn.offsetHeight:0)+"px"; /* 11-12: 태블릿 왼쪽 세로 메뉴의 높이를 아래 여백으로 쓰지 않음 */
-    bar.querySelector(".qtprev").onclick=()=>{ if(view.qtStep>0){ view.qtStep--; show(); scrollTo({top:0}); } };
     const b=nx.querySelector(".qtnb"); if(b) b.onclick=()=>{ view.qtStep++; show(); scrollTo({top:0}); }; const pb=nx.querySelector(".qtpb"); if(pb) pb.onclick=()=>{ if(view.qtStep>0){ view.qtStep--; show(); scrollTo({top:0}); } }; };
   show(); }
 /* 11/3 목사님: 마친 뒤의 묵상 탭이 "신문 읽는 것 같다" → 맨 위에 마친 결과(내가 남긴 말·붙잡은 말씀) 한 상자,
@@ -3208,6 +3288,15 @@ function qtSteps(m){ document.body.classList.remove("qtsp"); const key=keyOf(vie
 /* 11-22 목사님(태블릿 '묵상 마친 뒤', GPT 설계 검토 후 진행): 쓸 때와 같은 자리 — 왼쪽 [본문 / 쓴 뒤 해설], 오른쪽 날짜·'묵상 마침' 표시 → 붙잡은 말씀 → 내가 쓴 네 단계(펼쳐서, 그 자리에서 고침) → 아래 띠(도장·연속, 다음 본문 한 줄과 남은 시간, 나의 기록, ⋯ 안에 완료 취소).
    휴대폰·세로 태블릿은 지금 그대로(배치는 CSS로만 바뀌어 회전해도 같은 기록) */
 const QD_MQ=matchMedia("(min-width:1100px) and (min-height:560px)");
+/* ===== 11-23 목사님 "묵상 탭 층위가 밋밋하다" → 새 모양(qtv4): 그날 스토리 표지 머리 + 단계 이름 + 세 층(물음·말씀·나의 글) ===== */
+function qtShort(t){ t=String(t||""); if(/관찰/.test(t)) return "관찰"; if(/성품/.test(t)) return "성품"; if(/성경 전체/.test(t)) return "성경"; if(/적용/.test(t)) return "적용"; if(/쓴 뒤|해설/.test(t)) return "해설"; if(/기도/.test(t)) return "기도"; return t.trim().slice(0,4); }
+function qtHeadHTML(p,ph){ const u=ph&&ph.u?esc(ph.u):"";
+  return `<div class="qph qph4${u?"":" noimg"}">${u?`<img alt="" src="${u}" referrerpolicy="no-referrer">`:""}<div class="qphin">${u?`<button class="qring" data-qring="1" aria-label="오늘 스토리 다시 보기"><img alt="" src="${u}" referrerpolicy="no-referrer"><i>▶</i></button>`:""}<div class="qpht"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${dayChSub(p)}</div></div><div class="qphbtn"></div></div>`; }
+function qtV4(card,ph){ if(ph&&ph.u) card.style.setProperty("--qcov",`url("${String(ph.u).replace(/"/g,"%22")}")`);
+  const r=card.querySelector("[data-qring]"); if(r) r.onclick=e=>{ e.stopPropagation(); storyOpen(0); }; }
+function qtJPrev(g){ const T=[]; g.forEach(x=>x.querySelectorAll("textarea").forEach(a=>{ const v=String(a.value||"").trim(); if(v) T.push(v); }));
+  let Q=""; const q0=g[0].querySelector(".eye>p,.oneline>label"); if(q0) Q=q0.textContent.trim();
+  return `<div class="qjp">${Q?`<p class="qjq">${esc(Q)}</p>`:""}${T.length?`<p class="qja">${esc(T.join("\n"))}</p>`:`<p class="qjn">펼쳐서 읽기</p>`}</div>`; }
 function qbVersesHTML(p,kvId){ let h="", pb=0; (p.ch||[]).forEach(([b,c])=>{ const X=BIBLE[b-1]&&BIBLE[b-1][c-1]; if(!X) return; h+=`<h3 class="qbch">${b!==pb?esc(PLAN.full[b-1])+" ":""}${c}${b===19?"편":"장"}</h3><p class="qbvt">`+X.map((t,i)=>{ const id=`${b}-${c}-${i+1}`; return `<span class="qbv${id===kvId?" on":""}" id="qb-${id}"><sup>${i+1}</sup>${esc(t)}</span>`; }).join(" ")+`</p>`; pb=b; }); return h; }
 function qdBuild(m,card,lab){ if(!card||!BIBLE||card.closest(".qtsplit")) return; const p=dayPlan(view.w,view.d); if(!p||!p.ch||!p.ch.length) return;
   const q=mem.qt[keyOf(view.w,view.d)]||{}, kv=String(q.kv||"").replace(/:/g,"-"), after=m.querySelector("section.qtafter");
@@ -3228,13 +3317,14 @@ function qdKv(bib,kv){ const t=kv&&document.getElementById("qb-"+kv); if(t&&bib.
 function qtDoneLook(m){ const hd=m.querySelector("section.qthd"); if(!hd||m.querySelector(".qtcard")) return; const p=dayPlan(view.w,view.d);
   const dn=m.querySelector("#qtDoneSec"); const secs=[...m.querySelectorAll("section.sec")].filter(x=>x!==hd&&x!==dn); hd.style.display="none";
   const G=[]; secs.forEach(x=>{ const lab=x.querySelector(":scope>.label"); const start=x.querySelector(":scope>.stage")||(lab&&/기도/.test(lab.textContent)); if(start||!G.length) G.push([x]); else G[G.length-1].push(x); });
+  let PS0=null; try{ PS0=(storySlides(view.w,view.d).find(x=>x.ph)||{}).ph||null; }catch(e){}
   const top=document.createElement("section"); top.className="qth3";
-  top.innerHTML=`<div class="qph nophoto"><div class="qphin"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${dayChSub(p)}</div><div class="qphbtn"></div></div>`;
+  top.innerHTML=qtHeadHTML(p,PS0);
   const hb=hd.querySelector("#qtHelp"); if(hb) top.querySelector(".qphbtn").appendChild(hb);
-  const card=document.createElement("div"); card.className="daycard qtcard qtdonec"; hd.before(card); card.append(top); if(dn) card.append(dn);
-  const lab=document.createElement("p"); lab.className="qtfoldk"; lab.textContent="묵상 노트 다시 보기 · 눌러서 열고 고칠 수 있습니다"; card.after(lab);
+  const card=document.createElement("div"); card.className="daycard qtcard qtdonec qtv4"; hd.before(card); card.append(top); if(dn) card.append(dn); qtV4(card,PS0);
+  const lab=document.createElement("p"); lab.className="qtfoldk"; lab.textContent="오늘 내가 쓴 묵상 · 눌러서 고칠 수 있습니다"; card.after(lab);
   let last=lab; G.forEach((g,i)=>{ const st=g[0].querySelector(":scope>.stage span"), lb=g[0].querySelector(":scope>.label"); const t=((st||lb||{}).textContent||"").trim();
-    const d=document.createElement("details"); d.className="daycard qtfold"; d.innerHTML=`<summary><b>${i+1}</b><span>${esc(t)}</span></summary>`;
+    const d=document.createElement("details"); d.className="daycard qtfold qtj"; d.innerHTML=`<summary><b>${i+1}</b><span>${esc(qtShort(t))}</span>${qtJPrev(g)}</summary>`; /* 11-23: 일기 한 쪽 — 왼쪽 단계, 오른쪽 내가 쓴 글 */
     g.forEach(x=>{ x.classList.add("q3"); const s0=x.querySelector(":scope>.stage"); if(s0&&x===g[0]) s0.style.display="none"; else if(lb&&x===g[0]&&!st) lb.style.display="none"; d.append(x); });
     last.after(d); last=d; }); qdBuild(m,card,lab); }
 function bookFinCheck(k){ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return; mem.bookFin ||= {};
