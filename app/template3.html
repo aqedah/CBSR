@@ -837,6 +837,7 @@ html.lib-on .coach,html.story-on .coach{display:none!important} /* 11-22: 다른
 .smine{font:500 16px/1.6 var(--sser)!important;color:#fff!important;background:rgba(0,0,0,.35);border-left:3px solid var(--sgold);padding:10px 12px;border-radius:0 10px 10px 0;margin-top:16px!important}
 .smine small{display:block;font:400 11.5px var(--f-ui);color:var(--sgold);margin-top:4px}
 .sstat{font-size:13px!important;color:#bfb29f!important;margin-top:14px!important}
+.snoday{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;font-size:14.5px;color:var(--ssub);cursor:pointer;position:relative;z-index:6}.snoday input{width:20px;height:20px;accent-color:#e2b874;margin:0}
 .sfbtn{display:flex;gap:8px;margin-top:20px}.sfbtn .btn{flex:1;padding:13px 8px;background:var(--sgold);color:#1b130b;border:0;font-weight:700;border-radius:12px;font-size:15px}.sfbtn .btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid var(--sline)}
 .k-next .sph img{filter:blur(2px) brightness(.45) saturate(.7)}.k-next .sbox{text-align:center}
 .scount{font:700 clamp(42px,13vw,58px)/1 var(--f-ui);font-variant-numeric:tabular-nums;letter-spacing:.04em;color:#fff;margin:24px 0 8px;text-shadow:0 2px 14px rgba(0,0,0,.5)}
@@ -3089,8 +3090,8 @@ const objJ=t=>{ const ch=(t||"").trim().slice(-1), c=ch.charCodeAt(0)-0xAC00; re
 function finOpen(kind,w,d){  document.querySelector(".finov")?.remove();
   const k=keyOf(w,d), p=dayPlan(w,d), dt=dateOf(w,d), q=mem.qt[k]||{}, kv=kind==="note"?storyQT(w,d).kv:null, sp=(mem.sp||{})[k];
   const hasS=storySlides(w,d).length, sSeen=!!(sp&&sp.n&&sp.i>=sp.n-1);
-  const sAll=!!(sp&&sp.n&&(sp.m||sp.i||0)>=sp.n-1); /* 11-23 목사님: 묵상은 스토리부터 — 스토리를 아직 안 봤으면 첫 단추가 스토리를 띄우고, 닫으면 묵상 */
-  const go=kind==="read"&&!q.done?["note",hasS&&!sAll?"스토리 보고 묵상하기":"묵상 노트 쓰기"]:null, alt=kind==="read"&&!q.done&&hasS&&sAll; /* 11-15: 오늘 탭과 같게 — 스토리가 있으면 늘 아래에 */ /* 11-13 목사님 결정(GPT T06): 통독 뒤 첫 단추는 묵상, 스토리는 '이야기로 다시 보기'로 아래에 */
+  /* 11-23 목사님: 묵상은 스토리부터 — 오늘 다시 안 보기를 고르지 않았으면 첫 단추가 스토리를 띄우고, 닫으면 묵상 */
+  const sOff=!!(sp&&sp.off), go=kind==="read"&&!q.done?["note",hasS&&!sOff?"스토리 보고 묵상하기":"묵상 노트 쓰기"]:null, alt=kind==="read"&&!q.done&&hasS&&sOff; /* 11-15: 오늘 탭과 같게 — 스토리가 있으면 늘 아래에 */ /* 11-13 목사님 결정(GPT T06): 통독 뒤 첫 단추는 묵상, 스토리는 '이야기로 다시 보기'로 아래에 */
   const ttl=kind==="read"?`${esc(p.label)}${objJ(p.label)}<br>읽었습니다`:`오늘 묵상 노트를<br>마쳤습니다`;
   const el=document.createElement("div"); el.className="finov"; el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); el.setAttribute("aria-label",kind==="read"?"통독을 마쳤습니다":"묵상 노트를 마쳤습니다");
   el.innerHTML=`<button class="finx" data-fx aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -4733,7 +4734,7 @@ const isHere=(w,d)=>w===here.w&&d===here.d;
 function askQ(w,d){ const G=gqOf(w,d); if(G&&G.apply) return {q:G.apply}; const SK=storyDay(dayNo(w,d)); if(SK&&SK.kwq) return {q:SK.kwq.q,r:SK.kwq.r}; const K=(typeof KWQ!=="undefined"&&true)?KWQ[dayNo(w,d)]:null; if(K) return {q:K.q,r:K.r};
   const det=DETAIL[w+"-"+(d+1)]; if(det&&det.apply) return {q:det.apply}; const X=storyQT(w,d); return X.kv?{q:verseQuestion(X.kv),r:[X.kv.b,X.kv.c,X.kv.v]}:{q:APPLY_Q}; }
 function storyEndHTML(s,w,d){ const key=keyOf(w,d), q=qtOf(key);
-  if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}${`<p class="sasknote">오늘 이야기의 짜임을 살펴보았습니다. 이제 발견한 것을 나의 말로 정리하고 기도할 수 있습니다.</p><button class="tgrw" data-tgr="1" hidden></button>`}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">${"묵상 노트로 이어가기"}</button></div></div>`; }
+  if(s.k==="ask"){ const A=askQ(w,d); return `<div class="sbox sask"><span class="slab">나의 생각거리</span><div class="sqq">${smk(A.q)}</div>${A.r&&vtxt(A.r)?`<div class="sq2">${esc(vtxt(A.r))}<small>${esc(rlab(A.r))}</small></div>`:""}${`<p class="sasknote">오늘 이야기의 짜임을 살펴보았습니다. 이제 발견한 것을 나의 말로 정리하고 기도할 수 있습니다.</p><button class="tgrw" data-tgr="1" hidden></button>`}<div class="sfbtn"><button class="btn ghost" data-sgo0="1">처음부터</button><button class="btn" id="sToQT">${"묵상 노트로 이어가기"}</button></div>${SV.mode?"":`<label class="snoday"><input type="checkbox" id="sNoDay"${sOffDay(keyOf(w,d))?" checked":""}> 오늘 다시 안 보기</label>`}</div>`; }
   if(s.k==="fin"){ if(!q.done) return `<div class="sbox"><span class="slab">오늘의 말씀 카드</span><h2>QT를 마치면 오늘의 말씀 카드가 만들어집니다</h2><div class="sfbtn"><button class="btn" data-sgo="-1">‹ 돌아가서 마치기</button></div></div>`;
     const kv=storyQT(w,d).kv, dt=dateOf(w,d);
     return `<div class="sbox sfin"><span class="slab">오늘의 말씀 카드 · ${esc(fmt(dt,{month:"long",day:"numeric"}))}</span>${kv?`<div class="sbigq">${esc(kv.t)}</div><div class="sref">${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</div>`:`<h2>${esc(dayPlan(w,d).label)}</h2>`}${q.med?`<p class="smine">${esc(q.med)}<small>나의 한 줄</small></p>`:""}<button class="tgrw" data-tgr="1" hidden></button><p class="sstat">QT 한 날 ${qtDayCount()}일 · 연속 ${qtCalStreak()}일</p><div class="sfbtn"><button class="btn ghost" id="sShare">말씀 나누기</button><button class="btn" data-sgo="1">내일 본문 ›</button></div></div>`; }
@@ -5687,7 +5688,7 @@ function storySwipe(r){ if(r._sw) return; r._sw=1; let x0=null,y0=0,t0=0,mode=0,
     setTimeout(()=>{ SV.swiping=false; },60); };
   r.addEventListener("touchend",end); r.addEventListener("touchcancel",end); }
 function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return; storySwipe(r);
-  if(!SV.mode&&!s.qt){ const k=keyOf(w,d); mem.sp ||= {}; const o=mem.sp[k]||{}; mem.sp[k]={i:SV.i,n:S.length,m:Math.max(o.m||0,SV.i)}; try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
+  if(!SV.mode&&!s.qt){ const k=keyOf(w,d); mem.sp ||= {}; const o=mem.sp[k]||{}; mem.sp[k]={...o,i:SV.i,n:S.length,m:Math.max(o.m||0,SV.i)}; try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
   const quick=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches, dur=quick||sAutoOff()?0:sDur(s), auto=dur>0, kind=sKind(s), p=dayPlan(w,d); let ph=s.ph;
   /* 11-21 넓은 화면: 양옆에 지금 장면 그림을 흐리게 깔고, 마우스로 넘길 ‹ › 단추(휴대폰에선 CSS로 숨김) */
   try{ r.style.setProperty("--sbg",ph&&ph.u?`url("${String(ph.u).replace(/"/g,"%22")}")`:"none"); if(!r.querySelector(".snavw")){ r.insertAdjacentHTML("beforeend",`<button class="snavw l" aria-label="앞 장면">‹</button><button class="snavw r" aria-label="다음 장면">›</button>`); r.querySelector(".snavw.l").onclick=e=>{ e.stopPropagation(); storyGo(SV.i-1); }; r.querySelector(".snavw.r").onclick=e=>{ e.stopPropagation(); storyGo(SV.i+1); }; }
@@ -5743,6 +5744,7 @@ function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(k
   const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=sBookClose;
   r.querySelectorAll("[data-sgo]").forEach(b=>b.onclick=()=>{ if(Date.now()-(SV.shownAt||0)<450) return; storyGo(SV.i+(+b.dataset.sgo)); });
   const g0=r.querySelector("[data-sgo0]"); if(g0) g0.onclick=()=>storyGo(0);
+  const nd=r.querySelector("#sNoDay"); if(nd){ ["pointerdown","pointerup","click"].forEach(t=>nd.parentNode.addEventListener(t,e=>e.stopPropagation())); nd.onchange=()=>{ mem.sp ||= {}; const o=mem.sp[key]||{}; mem.sp[key]={...o,off:nd.checked?1:0,m:Math.max(o.m||0,o.i||0)}; save(); }; }
   const rvb=r.querySelector("[data-reveal]"); if(rvb) rvb.onclick=()=>{ const bx=rvb.closest(".sbox"); bx.querySelectorAll(".hide-hl,.hide-u").forEach(x=>x.classList.remove("hide-hl","hide-u")); bx.querySelectorAll(".rvhide").forEach(x=>x.classList.remove("rvhide")); rvb.remove(); };
   const tq=r.querySelector("#sToQT"); if(tq) tq.onclick=()=>{ SV.back=null; storyClose(); view.tab="qt"; view.qtDeep=true; render(); /* 닫을 때 브라우저가 예전 스크롤 자리(4번 적용 근처)로 되돌리던 문제(목사님 2026-11-01): 1번 본문 관찰부터 보이게 */ [0,80,250,500].forEach(t=>setTimeout(()=>scrollTo({top:0}),t)); };
   const tr2=r.querySelector("#sToRec"); if(tr2) tr2.onclick=()=>{ SV.back=null; storyClose(); view.tab="record"; render(); scrollTo({top:0}); };
@@ -5753,7 +5755,7 @@ function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(k
   if(!s.qt&&s.k!=="map"&&s.k!=="fin"&&s.k!=="next"&&s.k!=="ask"){ const st=r.querySelector("#sStage"); let t0=0,x0=0,y0=0,moved=false;
     st.onpointerdown=e=>{ t0=Date.now(); x0=e.clientX; y0=e.clientY; moved=false; SV.hold=setTimeout(()=>storyPause(true),220); };
     st.onpointermove=e=>{ if(Math.abs(e.clientX-x0)>12||Math.abs(e.clientY-y0)>12) moved=true; };
-    st.onpointerup=e=>{ clearTimeout(SV.hold); if(SV.swiping){ if(SV.paused) storyPause(false); return; } if(e.target.closest("button,a,summary")) return; const held=Date.now()-t0>=220; if(SV.paused){ storyPause(false); if(held) return; }
+    st.onpointerup=e=>{ clearTimeout(SV.hold); if(SV.swiping){ if(SV.paused) storyPause(false); return; } if(e.target.closest("button,a,summary,label,input")) return; const held=Date.now()-t0>=220; if(SV.paused){ storyPause(false); if(held) return; }
       const dx=e.clientX-x0; if(moved&&Math.abs(dx)>50){ storyGo(SV.i+(dx<0?1:-1)); return; } if(moved) return;
       const W=st.getBoundingClientRect(), go=()=>storyGo(SV.i+((e.clientX-W.left)<W.width*0.3?-1:1));
       if(!sAmOK(s)){ go(); return; }
@@ -9697,9 +9699,11 @@ window.addEventListener("message",e=>{ try{ if(e.origin!==location.origin||!e.da
 if(new URLSearchParams(location.search).get("earth")) setTimeout(()=>earthOpen(),600);
 { const ln=+(new URLSearchParams(location.search).get("ldr")||0); if(ln>=1&&ln<=365){ view.w=Math.floor((ln-1)/7)+1; view.d=(ln-1)%7; view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
 /* 11-23 목사님: 아래(왼쪽) 탭에서 '묵상'을 누르면 먼저 그날 스토리를 띄우고, 끝까지 보거나 ✕로 닫으면 묵상 본문이 나옴.
-   그날 스토리를 끝까지 봤거나 QT를 마쳤으면 바로 묵상으로 */
+   마지막 카드에서 '오늘 다시 안 보기'를 고른 날은 바로 묵상으로 */
+/* 11-23 목사님: 마지막 스토리 카드의 '오늘 다시 안 보기'를 고른 날만 묵상 탭에서 스토리를 건너뜀 */
+function sOffDay(k){ const P=(mem.sp||{})[k]; return !!(P&&P.off); }
 function qtStoryFirst(){ const {w,d}=view; if(view.tab!=="qt"||!BIBLE||view.pre||view.revW||document.getElementById("storyRoot")) return; try{ if(futLock(w,d)) return; }catch(e){ return; }
-  const k=keyOf(w,d), q=mem.qt[k]||{}, P=(mem.sp||{})[k]; if(q.done||(P&&(P.m||0)>=P.n-1)) return; storyOpen(null); }
+  const k=keyOf(w,d); if(sOffDay(k)) return; storyOpen(null); }
 document.querySelectorAll(".bnav .tab").forEach(t=>t.onclick=()=>{ const was=view.tab; switchTab(t.dataset.tab); if(t.dataset.tab==="qt"&&was!=="qt") qtStoryFirst(); });
 /* 11-21: 스토리를 자판으로 — ← → 장면, 띄어쓰기 멈춤/이어 보기(글 쓰는 칸에서는 움직이지 않음) */
 document.addEventListener("keydown",e=>{ const r=document.getElementById("storyRoot"); if(!r||e.altKey||e.ctrlKey||e.metaKey) return; const t=e.target; if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return; const sr=document.getElementById("sheetRoot"); if(sr&&sr.innerHTML) return;
