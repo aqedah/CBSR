@@ -37,7 +37,7 @@ const CSS=`
 #eov .etabs button{flex:1;border:0;background:none;color:#cfc3b1;border-radius:999px;padding:6px 0;font:600 13px "Noto Sans KR";cursor:pointer}
 #eov .etabs button.on{background:rgba(255,255,255,.18);color:#fff}
 #eov .eq{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;padding:10px 12px;font:15px "Noto Sans KR";margin:2px 0 8px}
-#eov .eunfold{display:none}#eov.pfold .eunfold{display:inline-flex;align-items:center}
+#eov .edress .fig{animation:edress 1.5s ease-out}@keyframes edress{0%{filter:brightness(2.2) drop-shadow(0 0 10px #fff3b0)}100%{filter:none}}#eov .eunfold{display:none}#eov.pfold .eunfold{display:inline-flex;align-items:center}
 .epin.hid b{opacity:0!important}
 #eov .egrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 #eov .egrid button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#f7f1e6;border-radius:11px;padding:10px 4px;font:600 13px "Noto Sans KR";cursor:pointer}
@@ -172,6 +172,9 @@ function setLine(id,coords){ const s=M&&M.getSource(id); if(!s) return; /* 11-22
 /* 11-21 목사님: 위성지도 위로 캐릭터·배. 장면의 주인공(as_)이 길을 따라 걷고, 바다 장면(sea)은 배 */
 function walker(id,at,name){ if(!O.figure||!at||!M) return; if(W&&WID===id&&(W._nm||"")!==(name||"")){ W.remove(); W=null; } /* 11-22: 같은 그림이라도 이름이 바뀌면(스룹바벨→느헤미야) 새로 */ if(!W||WID!==id){ if(W) W.remove(); const el=document.createElement("div"); el.className="ewalk"; el.innerHTML=O.figure(id)+(name?`<span class="enm">${esc(name)}</span>`:""); W=new maplibregl.Marker({element:el,anchor:"top-left"}).setLngLat(at).addTo(M); W._nm=name||""; WID=id; } else W.setLngLat(at); CW.forEach(m=>m.setLngLat(at)); }
 /* 동행: 주인공 뒤로 조금씩 비켜 서서 같이 움직임(바다에서는 배에 탄 것으로 보고 숨김) */
+/* 장면 끝 옷 바꿈: 반짝이며 그 사람의 그림만 바뀜 */
+function dressNow(D,cs,at,gone){ setTimeout(()=>{ if(!M) return; const co=cs.co.filter(x=>!(gone||[]).includes(x[0])).map(x=>{ const d=D.find(q=>q[0]===x[0]); return d?[x[0],d[1]]:x; }); crew(co,at);
+  CW.forEach((m,j)=>{ if(D.some(q=>q[0]===co[j][0])){ const e=m.getElement(); e.classList.add("edress"); setTimeout(()=>e.classList.remove("edress"),1600); } }); },RM()?0:1400); }
 function crew(list,at){ CW.forEach(m=>m.remove()); CW=[]; if(!O.figure||!at) return; list.slice(0,4).forEach(([nm,as],j)=>{ const el=document.createElement("div"); el.className="ewalk co"; el.innerHTML=O.figure(as||"man")+`<span class="enm">${esc(nm)}</span>`; CW.push(new maplibregl.Marker({element:el,anchor:"top-left",offset:[-(j+1)*30,6+(j%2)*6]}).setLngLat(at).addTo(M)); }); }
 function mood(txt){ if(!W||!txt) return; const el=W.getElement(); el.querySelector(".emood")?.remove(); const b=document.createElement("span"); b.className="emood"; b.textContent=txt; el.appendChild(b); setTimeout(()=>b.remove(),3300); }
 /* 일행에서 떨어져 따로 가는 사람(룻 1:14 오르바 등): 그 사람만 자기 길로 걸어가다 사라짐 */
@@ -184,7 +187,9 @@ function noWalker(){ if(SW){ SW.remove(); SW=null; }  if(W){ W.remove(); W=null;
 function cast(t,k){ let lead=t.as_||"man", nm=t.who||"", co=(t.wth||[]).map(x=>[x[0],x[1]]);
   for(let i=0;i<=k;i++){ const s=t.steps[i]; if(s.as_) lead=s.as_; if(s.who) nm=s.who; /* 11-22: add·drop은 한 사람일 수도, 여러 사람일 수도 있음(룻 1장: 오르바와 룻이 함께, 말론과 기룐이 함께) */
     if(s.add){ (Array.isArray(s.add[0])?s.add:[s.add]).forEach(a=>{ if(a&&a[0]&&!co.some(x=>x[0]===a[0])) co.push([a[0],a[1]]); }); }
-    if(s.drop&&(i<k||s.dropAt==="start")){ const D=Array.isArray(s.drop)?s.drop:[s.drop]; co=co.filter(x=>!D.includes(x[0])); } }
+    if(s.drop&&(i<k||s.dropAt==="start")){ const D=Array.isArray(s.drop)?s.drop:[s.drop]; co=co.filter(x=>!D.includes(x[0])); }
+    /* 11-23 목사님(민 20:28 엘르아살): 옷 바꿈 — dress0은 장면 처음, dress는 장면 끝(그 뒤 장면부터는 바뀐 옷) */
+    const dr=d=>(d||[]).forEach(([n,a])=>{ co=co.map(x=>x[0]===n?[x[0],a]:x); if(n===nm) lead=a; }); dr(s.dress0); if(i<k) dr(s.dress); }
   return {lead,nm,co}; }
 function animLine(base,seg,done,onPt){ const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
   const draw=pts=>same?[...head,last.concat(pts.slice(1))]:[...segs,pts];
@@ -254,7 +259,7 @@ function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute"
   const base=[]; let c0=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.slice(0,k).forEach(x=>{ if(x.from){ if(c0.length) base.push(c0); c0=[[x.from[2],x.from[1]]]; } (x.p||[]).forEach(p=>c0.push([p[2],p[1]])); });
   if(s.from){ if(c0.length) base.push(c0); c0=[[s.from[2],s.from[1]]]; } if(c0.length) base.push(c0);
   const sp=(s.p||[]).map(p=>[p[2],p[1]]), lastSeg=base[base.length-1]||[]; const here=lastSeg.length?lastSeg[lastSeg.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
-  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:cs.co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); const go=()=>{ if(cur!==t||step!==k) return; if(s.side&&s.side.p&&s.side.p.length) sideWalk(s.side,here); animLine(base,seg,null,pt=>walker(fig,pt,s.sea?"":cs.nm)); };
+  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:cs.co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); const go=()=>{ if(cur!==t||step!==k) return; if(s.side&&s.side.p&&s.side.p.length) sideWalk(s.side,here); animLine(base,seg,()=>{ if(s.dress&&cur===t&&step===k) dressNow(s.dress,cs,seg[seg.length-1],s.exit==="death"?[].concat(s.drop||[]):[]); },pt=>walker(fig,pt,s.sea?"":cs.nm)); };
   pins.forEach((m,i)=>m.getElement().classList.toggle("seen",i<=k+1));
   if(t._b==null) t._b=jbear(tourAll(t)); const z=s.z||8, mz=Math.min(11.5,z+1.5);
   showSeg(seg,t._b,mz,go);
