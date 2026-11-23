@@ -39,6 +39,10 @@ const CSS=`
 #eov .eq{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;padding:10px 12px;font:15px "Noto Sans KR";margin:2px 0 8px}
 #eov .edress .fig{animation:edress 1.5s ease-out}@keyframes edress{0%{filter:brightness(2.2) drop-shadow(0 0 10px #fff3b0)}100%{filter:none}}#eov .ebord[aria-pressed="true"]{background:#e8c48a;color:#2a1d0c}#eov .ebchip{position:absolute;z-index:4;top:calc(58px + env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));font:600 12px "Noto Sans KR";color:#f3ead9;background:rgba(20,14,8,.62);padding:4px 10px;border-radius:12px;pointer-events:none}
 #eov .ebl{font:700 13px/1.2 "Noto Sans KR";color:#fff;padding:2px 8px;border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,.45);white-space:nowrap;opacity:.88;pointer-events:none}#eov .ebl.sm{font-size:11px;opacity:.8}
+#eov .efxm{pointer-events:none}#eov .mvpart.long i{width:28px;left:-14px;border-radius:14px}#eov .mvpart.long.on i:first-child{transform:translateX(-36px)}#eov .mvpart.long.on i:last-child{transform:translateX(36px)}#eov .etent{font-size:22px;text-align:center;transform:translate(-50%,-60%);filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}#eov .etent small{display:block;font:700 10.5px "Noto Sans KR";color:#fff;text-shadow:0 1px 3px #000}
+#eov .egrp{position:absolute;left:46px;top:-4px;white-space:nowrap;font:700 11px "Noto Sans KR";color:#fff;background:rgba(70,52,30,.85);padding:2px 7px;border-radius:9px}
+#eov .eburn{font-size:26px;transform:translate(-50%,-70%);animation:eburn 1.1s ease-in-out infinite alternate}@keyframes eburn{from{transform:translate(-50%,-70%) scale(.85)}to{transform:translate(-50%,-80%) scale(1.15)}}
+#eov .mvquake canvas.maplibregl-canvas{animation:mvquake .11s linear infinite}
 #eov .eunfold{display:none}#eov.pfold .eunfold{display:inline-flex;align-items:center}
 .epin.hid b{opacity:0!important}
 #eov .egrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -193,11 +197,11 @@ function cast(t,k){ let lead=t.as_||"man", nm=t.who||"", co=(t.wth||[]).map(x=>[
     /* 11-23 목사님(민 20:28 엘르아살): 옷 바꿈 — dress0은 장면 처음, dress는 장면 끝(그 뒤 장면부터는 바뀐 옷) */
     const dr=d=>(d||[]).forEach(([n,a])=>{ co=co.map(x=>x[0]===n?[x[0],a]:x); if(n===nm) lead=a; }); dr(s.dress0); if(i<k) dr(s.dress); }
   return {lead,nm,co}; }
-function animLine(base,seg,done,onPt){ const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
+function animLine(base,seg,done,onPt,minMs){ const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
   const draw=pts=>same?[...head,last.concat(pts.slice(1))]:[...segs,pts];
   if(RM()||seg.length<2){ setLine("eroute",draw(seg)); onPt&&onPt(seg[seg.length-1]); done&&done(); return; }
   let L=0; const d=[0]; for(let i=1;i<seg.length;i++){ L+=Math.hypot(seg[i][0]-seg[i-1][0],seg[i][1]-seg[i-1][1]); d.push(L); }
-  let t0=null; const dur=Math.min(4200,1400+L*260);
+  let t0=null; const dur=Math.max(minMs||0,Math.min(4200,1400+L*260));
   const f=ts=>{ t0=t0||ts; const t=Math.min(1,(ts-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, at=e*L; const pts=[seg[0]]; for(let i=1;i<seg.length;i++){ if(d[i]<=at) pts.push(seg[i]); else { const k=(at-d[i-1])/(d[i]-d[i-1]||1); pts.push([seg[i-1][0]+(seg[i][0]-seg[i-1][0])*k,seg[i-1][1]+(seg[i][1]-seg[i-1][1])*k]); break; } }
     setLine("eroute",draw(pts)); onPt&&onPt(pts[pts.length-1]); if(t<1) requestAnimationFrame(f); else done&&done(); }; requestAnimationFrame(f); }
 
@@ -243,7 +247,7 @@ function bDraw(){ const btn=root&&root.querySelector(".ebord"); if(btn) btn.setA
     E.items.forEach(it=>{ const ll=it.l||[it.p.reduce((a,q)=>a+q[0],0)/it.p.length,it.p.reduce((a,q)=>a+q[1],0)/it.p.length], el=document.createElement("div"); el.className="ebl"+(it.k?" sm":""); el.style.background=it.c; el.textContent=it.n+(it.k?` (${it.k})`:"");
       BLAB.push(new maplibregl.Marker({element:el}).setLngLat(ll).addTo(M)); });
     BDRAWN=want; bChip(`나라 경계 · ${E.n} · 대략`); }); }
-function home(keepView){ stack=[]; cur=null; step=-1; { const tc=(O.todayCh||[])[0]; setEra(tc?eraOf(tc[0],tc[1]):null); } setLine("eroute",null); setLine("efull",null); noWalker();
+function home(keepView){ stack=[]; cur=null; step=-1; fxClear(); { const tc=(O.todayCh||[])[0]; setEra(tc?eraOf(tc[0],tc[1]):null); } setLine("eroute",null); setLine("efull",null); noWalker();
   const T=O.todayTours||[], pl=O.todayPlaces||[];
   let h=`<div class="etabs" role="tablist">${TABS.map(([k,n])=>`<button role="tab" data-etab="${k}" class="${TAB===k?"on":""}" aria-selected="${TAB===k}">${n}</button>`).join("")}</div>`;
   if(TAB==="who"){ h+=`<div class="egrid">${(O.groups||[]).map((g,i)=>`<button data-grp="${i}">${esc(g.n)}</button>`).join("")}</div>`; panel(O.title||"성경 지도",h); return; }
@@ -264,7 +268,7 @@ function group(i){ const g=O.groups[i]; listView(g.n,"",g.tours,g.routes,()=>gro
 function era(i){ const e=O.eras[i]; listView(e.n+(e.y?` · ${e.y}`:""),e.d,e.tours,e.routes,()=>era(i)); }
 function war(i){ const e=O.wars[i]; listView(e.n,e.d,e.tours,e.routes,()=>war(i)); }
 /* 작은 경로(지도로 보는 여정 237): 길을 그리며 사람이 걸어감 */
-function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; setEra(eraOf(r.b,r.c&&r.c[0])); noWalker(); const c=r.p.map(p=>[p[2],p[1]]); setLine("efull",null); setLine("eroute",null);
+function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; fxClear(); setEra(eraOf(r.b,r.c&&r.c[0])); noWalker(); const c=r.p.map(p=>[p[2],p[1]]); setLine("efull",null); setLine("eroute",null);
   addPins(r.p.filter(p=>p[0]).map((p,k,a)=>({n:p[0],lat:p[1],lng:p[2],big:k===0||k===a.length-1})));
   const bb=jbear(c);
   try{ M.setPaintProperty("eroute","line-dasharray",r.est?[2,1.6]:[1,0]); }catch(e){} /* 성경이 길을 말하지 않는 추정 길은 점선 */
@@ -281,19 +285,76 @@ function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n,lat:p.lat
 function tourSegs(t){ const S=[]; let c=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.forEach(s=>{ if(s.from){ if(c.length) S.push(c); c=[[s.from[2],s.from[1]]]; } (s.p||[]).forEach(p=>c.push([p[2],p[1]])); }); if(c.length) S.push(c); return S; }
 function tourAll(t){ const c=[t.start?[t.start[2],t.start[1]]:null]; t.steps.forEach(s=>(s.p||[]).forEach(p=>c.push([p[2],p[1]]))); return c.filter(Boolean); }
 function tourPlaces(t){ const L=[]; if(t.start&&t.start[0]) L.push({n:t.start[0],lat:t.start[1],lng:t.start[2],big:true}); t.steps.forEach(s=>{ if(s.from&&s.from[0]&&!L.some(x=>x.n===s.from[0])) L.push({n:s.from[0],lat:s.from[1],lng:s.from[2],sm:true}); const e=(s.p||[])[(s.p||[]).length-1]; if(e&&e[0]&&!L.some(x=>x.n===e[0])) L.push({n:e[0],lat:e[1],lng:e[2],sm:true}); }); return L; }
-function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; { const r0=(t.steps.find(x=>x.r)||{}).r; setEra(r0?eraOf(r0[0],r0[1]):null); } const all=tourAll(t);
+function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; fxClear(); { const r0=(t.steps.find(x=>x.r)||{}).r; setEra(r0?eraOf(r0[0],r0[1]):null); } const all=tourAll(t);
   addPins(tourPlaces(t)); setLine("eroute",null); setLine("efull",tourSegs(t)); noWalker(); const c0=cast(t,0); walker(c0.lead,all[0],c0.nm); crew(c0.co,all[0]);
   t._b=jbear(all); const b=new maplibregl.LngLatBounds(); all.forEach(c=>b.extend(c)); M.fitBounds(b,{padding:pad(),pitch:PITCH,bearing:t._b,duration:RM()?0:4200,curve:1.5,essential:true});
   panel(t.n,`<p class="ed">${esc(t.d||t.sub||"")}</p><button class="ebig" data-follow="${from||0}">▶ ${from?`${from+1}번째 장면부터 `:""}따라가기 · ${t.steps.length}장면</button>`+t.steps.map((s,k)=>`<button class="erow" data-follow="${k}"><span class="ic">${k+1}</span><span><b>${esc(s.t)}</b><small>${esc(s.ref||s.s||"")}</small></span></button>`).join(""));
   const e0=tourAll(t)[0]; if(e0) prefetch(e0,(t.steps[0]&&t.steps[0].z)||8); }
 /* 11-21: 휴대폰에서 짧은 길은 "맞출 수 없다"며 오류가 나 다음 장면으로 안 넘어가던 문제 → 실패하면 여백을 줄여 다시, 그래도 안 되면 null(도착지로 날아감) */
 function fitCam(b,o){ for(const sc of [1,.5,0]){ try{ const P=o.padding, q=Object.assign({},o,{padding:{top:P.top*sc,bottom:P.bottom*sc,left:P.left*sc,right:P.right*sc}}); const c=M.cameraForBounds(b,q); if(c&&c.center) return c; }catch(e){} } return null; }
+/* ── 장면 효과: 옛 여정 지도(Leaflet)의 효과를 지구 지도로 옮김(11-23 목사님). 모양(CSS)은 앱의 것을 그대로 씀 ── */
+const FXL=[]; let FXK=0, NIGHT=null;
+function fxClear(){ FXK++; FXL.forEach(m=>{ try{ m.remove(); }catch(e){} }); FXL.length=0; const c=M&&M.getContainer(); if(c){ c.classList.remove("mvburn","mvquake","mvstorm","mvnight","mvdark","mvsplash"); }
+  root&&root.querySelectorAll(".bmtgap,.mvcycle,.egrp").forEach(e=>e.remove()); }
+function fxNight(){ const c=M.getContainer(); if(!NIGHT||!c.contains(NIGHT)){ NIGHT=document.createElement("div"); NIGHT.className="bmtnight"; c.appendChild(NIGHT); } }
+function fxMk(ll,cls,html,z){ const o=document.createElement("div"); o.className="efxm"; o.style.zIndex=String(z||2); const i=document.createElement("div"); i.className=cls; i.innerHTML=html||""; o.appendChild(i);
+  const m=new maplibregl.Marker({element:o,anchor:"center"}).setLngLat(ll).addTo(M); FXL.push(m); m._in=i; return m; }
+function fxFig(ll,id,name){ const m=fxMk(ll,"ewalk co",O.figure(id)+(name?`<span class="enm">${esc(name)}</span>`:""),3); return m; }
+const fxWait=(ms,key)=>new Promise(r=>setTimeout(()=>r(key===FXK),RM()?0:ms));
+function fxEmo(m,e){ const el=m&&m.getElement&&m.getElement(); if(!el) return; const b=document.createElement("span"); b.className="emood"; b.textContent=e; el.appendChild(b); setTimeout(()=>b.remove(),1500); }
+function scr(ll){ return M.project(ll); } function unscr(x,y){ const q=M.unproject([x,y]); return [q.lng,q.lat]; }
+/* 무리 이름(grp)·사람 핀(pin)·장막(tent): 장면이 열릴 때 바로 */
+function fxStatic(t,k,here){ const s=t.steps[k]; let P=new Map(), T=new Map(); (t.tent||[]).forEach(q=>T.set(q[0],q));
+  for(let i=0;i<=k;i++){ const x=t.steps[i]; (x.pin||[]).forEach(q=>P.set(q[0],q)); (x.unpin||[]).forEach(n=>P.delete(n)); (x.tent||[]).forEach(q=>T.set(q[0],q)); (x.untent||[]).forEach(n=>T.delete(n)); }
+  P.forEach(([n,as,pl])=>{ if(pl) fxFig([pl[2],pl[1]],as||"man",n); });
+  T.forEach(([n,lat,lng])=>{ fxMk([lng,lat],"etent",`⛺<small>${esc(n)}</small>`,1); });
+  let g=""; for(let i=0;i<=k;i++){ if(t.steps[i].grp!=null) g=t.steps[i].grp; } if(g&&W){ const e=document.createElement("span"); e.className="egrp"; e.textContent="＋ "+g; W.getElement().appendChild(e); } }
+/* 홍해(출 14): 물이 갈라지고 → 건너고 → 애굽 군대가 따라오다 물이 덮음 */
+async function fxPart(seg,key,walkP){ const a=seg[0], b=seg[seg.length-1], mid=[(a[0]+b[0])/2,(a[1]+b[1])/2], A=scr(a), B=scr(b), rot=Math.atan2(B.y-A.y,B.x-A.x)*180/Math.PI-90, len=Math.hypot(B.x-A.x,B.y-A.y);
+  const m=fxMk(mid,"mvpart long","<i></i><i></i>",1); m._in.style.transform=`rotate(${rot}deg)`; m._in.style.setProperty("--pl",Math.round(Math.max(150,len*1.05))+"px"); requestAnimationFrame(()=>m._in.classList.add("on"));
+  if(W) fxEmo(W,"😮"); if(!(await fxWait(1700,key))) return; await walkP(4600);
+  if(key!==FXK) return; const sol=[0,1,2,3].map(()=>fxFig(a,"foe")); const t0=performance.now();
+  await new Promise(r=>{ const f=ts=>{ if(key!==FXK) return r(); const q=Math.min(1,(ts-t0)/1300); sol.forEach((x,j)=>{ const g=Math.max(0,q-j*.08)*.45; x.setLngLat([a[0]+(b[0]-a[0])*g,a[1]+(b[1]-a[1])*g]); }); q<1?requestAnimationFrame(f):r(); }; requestAnimationFrame(f); });
+  m._in.classList.add("off","close"); M.getContainer().classList.add("mvsplash"); sol.forEach(x=>x._in.style.cssText+=";transition:opacity 1.2s;opacity:0");
+  if(!(await fxWait(1300,key))) return; M.getContainer().classList.remove("mvsplash"); if(W) fxEmo(W,"🎉🙌"); }
+/* 요단(수 3:16): 위쪽 아담 성읍에서 물이 멈춰 쌓이고 아래는 마른 바닥 */
+async function fxJordan(key){ const m=fxMk([35.55,32.1],"mvjor","<i></i><b></b>",1); requestAnimationFrame(()=>m._in.classList.add("on")); setTimeout(()=>m._in.classList.add("off"),RM()?0:5200); if(W) fxEmo(W,"😮🙏"); return fxWait(1200,key); }
+/* 전쟁: 적군과 우리 편이 달려와 부딪히고 ⚔️💥, 진 쪽이 사라짐. w=["적 이름","lose"] */
+async function fxBattle(at,w,key){ const nm=Array.isArray(w)?w[0]:typeof w==="string"?w:"적군", lose=Array.isArray(w)&&w[1]==="lose", P0=scr(at), R=Math.random;
+  const mk=(dx,dy,id,n)=>{ const m=fxFig(unscr(P0.x+dx,P0.y+dy),id,n); m.getElement().querySelector(".chm")?.classList.add("walk"); return m; };
+  const E=Array.from({length:6},(_,k)=>({m:mk(150+R()*60,(k-2.5)*20,"soldier",k===0?nm:""),to:[24+R()*20,(k-2.5)*11]})), Aa=Array.from({length:4},(_,k)=>({m:mk(-110-R()*40,(k-1.5)*20,"soldier",""),to:[-22-R()*14,(k-1.5)*12]}));
+  E.forEach(e=>e.m.getElement().querySelector(".chm")?.classList.add("flip")); const all=[...E,...Aa]; all.forEach(x=>{ const q=scr(x.m.getLngLat()); x.f=[q.x-P0.x,q.y-P0.y]; });
+  let t0=performance.now(); await new Promise(r=>{ const f=ts=>{ if(key!==FXK) return r(); const k=Math.min(1,(ts-t0)/1500), e=k*k*(3-2*k); all.forEach(x=>x.m.setLngLat(unscr(P0.x+x.f[0]+(x.to[0]-x.f[0])*e,P0.y+x.f[1]+(x.to[1]-x.f[1])*e))); k<1?requestAnimationFrame(f):r(); }; requestAnimationFrame(f); });
+  t0=performance.now(); let nx=0; await new Promise(r=>{ const f=ts=>{ if(key!==FXK) return r(); all.forEach(x=>x.m.setLngLat(unscr(P0.x+x.to[0]+(R()-.5)*7,P0.y+x.to[1]+(R()-.5)*5))); if(ts>nx){ nx=ts+180; fxEmo(all[Math.floor(R()*all.length)].m,R()<.6?"⚔️":"💥"); } ts-t0<2400?requestAnimationFrame(f):r(); }; requestAnimationFrame(f); });
+  (lose?Aa:E).forEach(x=>{ x.m._in.style.cssText+=";transition:opacity 1s;opacity:0"; }); if(W) fxEmo(W,lose?"😢":"🙌"); return fxWait(800,key); }
+function fxBurn(at){ M.getContainer().classList.add("mvburn"); const P=scr(at); [[0,0],[18,-14],[-16,12],[22,16],[-20,-10]].forEach(([dx,dy],j)=>{ const m=fxMk(unscr(P.x+dx,P.y+dy),"eburn","🔥",2); m._in.style.animationDelay=(j*.15)+"s"; }); }
+function fxSun(at){ const P=scr(at); fxMk(unscr(P.x-70,P.y-90),"mvsky","☀️",2); fxMk(unscr(P.x+80,P.y-70),"mvsky moon","🌙",2); }
+function fxCycle(s){ const C=s.cycle||[1,1,1,1,1], N=["악을 행함","넘기심","부르짖음","구원자","평안"], d=document.createElement("div"); d.className="mvcycle";
+  d.innerHTML=`<b>${esc(s.cyc||"사사기의 틀")}</b><div class="mvcyr">${N.map((n,k)=>`<span class="${C[k]?"on":"off"}"><i>${C[k]?"●":"○"}</i>${n}</span>`).join("<em>→</em>")}</div>${C.includes(0)?`<small>이 이야기에 기록되지 않은 것: ${N.filter((n,k)=>!C[k]).join(" · ")}</small>`:"<small>다섯 요소가 모두 있음</small>"}`;
+  root.appendChild(d); requestAnimationFrame(()=>d.classList.add("on")); setTimeout(()=>{ d.classList.remove("on"); setTimeout(()=>d.remove(),700); },RM()?3000:6600); }
 function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute","line-dasharray",[1,0]); }catch(e){} if(k>=t.steps.length){ tour(t.id); return; } step=k; const s=t.steps[k]; if(s.r) setEra(eraOf(s.r[0],s.r[1]));
   /* 11-22 목사님("에스라가 예루살렘에서 페르시아로 이동하는 장면은 왜?"): 장면에 from(다른 곳에서 새 인물로 시작)이 있으면 앞 장면 끝에서 걸어가지 않고 그곳에서 시작 */
   const base=[]; let c0=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.slice(0,k).forEach(x=>{ if(x.from){ if(c0.length) base.push(c0); c0=[[x.from[2],x.from[1]]]; } (x.p||[]).forEach(p=>c0.push([p[2],p[1]])); });
   if(s.from){ if(c0.length) base.push(c0); c0=[[s.from[2],s.from[1]]]; } if(c0.length) base.push(c0);
   const sp=(s.p||[]).map(p=>[p[2],p[1]]), lastSeg=base[base.length-1]||[]; const here=lastSeg.length?lastSeg[lastSeg.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
-  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:cs.co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); const go=()=>{ if(cur!==t||step!==k) return; if(s.side&&s.side.p&&s.side.p.length) sideWalk(s.side,here); animLine(base,seg,()=>{ if(s.dress&&cur===t&&step===k) dressNow(s.dress,cs,seg[seg.length-1],s.exit==="death"?[].concat(s.drop||[]):[]); },pt=>walker(fig,pt,s.sea?"":cs.nm)); };
+  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:cs.co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); fxClear(); const key=FXK; fxStatic(t,k,here); if(s.cycle||s.fx==="cycle") fxCycle(s);
+  const go=async()=>{ if(cur!==t||step!==k||key!==FXK) return; const c=M.getContainer();
+    if(s.gap){ const g=document.createElement("div"); g.className="bmtgap"; g.textContent=s.gap; root.appendChild(g); setTimeout(()=>g.remove(),2700); if(!(await fxWait(2200,key))) return; }
+    if(s.side&&s.side.p&&s.side.p.length) sideWalk(s.side,here);
+    if(s.quake){ c.classList.add("mvquake"); setTimeout(()=>c.classList.remove("mvquake"),RM()?0:1500); }
+    if(s.storm) c.classList.add("mvstorm"); if(s.fx==="dark"){ fxNight(); c.classList.add("mvdark"); } if(s.fx==="light") fxMk(here,"mvflash","",4)._in.classList.add("on"); if(s.fx==="sun") fxSun(here);
+    if(s.fx==="fire"||s.fx==="spirit"||s.fx==="baptism") fxMk(here,"mvbeam"+(s.fx==="fire"||s.fx==="spirit"?" fire":""),"",3);
+    let pil=null; if(s.fx==="pillar"){ pil=fxMk(here,"mvpil","<i></i><b></b>",2); fxNight(); setTimeout(()=>{ if(key!==FXK) return; pil._in.classList.add("fire"); c.classList.add("mvnight"); },RM()?0:2600); }
+    const hist=[]; let CH=[]; if(s.chase){ const [cn,ca,cc]=s.chase; CH=Array.from({length:cc||3},(_,j)=>fxFig(here,ca||"soldier",j?"":cn)); CH.forEach(m=>m.getElement().querySelector(".chm")?.classList.add("walk")); }
+    const walkP=(mn)=>new Promise(res=>animLine(base,seg,()=>{ if(s.dress&&cur===t&&step===k) dressNow(s.dress,cs,seg[seg.length-1],s.exit==="death"?[].concat(s.drop||[]):[]); res(); },pt=>{ walker(fig,pt,s.sea?"":cs.nm); if(pil) pil.setLngLat(pt); hist.push(pt); CH.forEach((m,j)=>{ const q=hist[Math.max(0,hist.length-1-18-j*6)]; if(q) m.setLngLat(q); }); },mn));
+    if(s.fx==="jordan"&&seg.length>1){ if(!(await fxJordan(key))) return; }
+    if(s.war&&s.stay){ if(!(await fxBattle(here,s.war,key))) return; if(s.burn) fxBurn(here); }
+    else if(s.burn&&s.stay) fxBurn(here);
+    if(s.fx==="part"&&seg.length>1) await fxPart(seg,key,walkP); else await walkP();
+    if(key!==FXK) return; const end=seg[seg.length-1];
+    if(s.war&&!s.stay){ if(!(await fxBattle(end,s.war,key))) return; if(s.burn) fxBurn(end); }
+    if(s.storm) setTimeout(()=>c.classList.remove("mvstorm"),RM()?0:2500);
+    if(pil) setTimeout(()=>{ if(key!==FXK) return; c.classList.remove("mvnight"); pil._in.style.opacity="0"; },RM()?0:3500); };
   pins.forEach((m,i)=>m.getElement().classList.toggle("seen",i<=k+1));
   if(t._b==null) t._b=jbear(tourAll(t)); const z=s.z||8, mz=Math.min(11.5,z+1.5);
   showSeg(seg,t._b,mz,go);
@@ -345,6 +406,6 @@ function open(opts){ if(root) close(true); O=opts||{}; stack=[]; cur=null; step=
   ["mousedown","touchstart","wheel"].forEach(ev=>M.on(ev,()=>{ if(spinOn&&$(".eintro").classList.contains("off")) spinOn=false; }));
   M.on("error",e=>{ if(O.onTileError) O.onTileError(e); });
   return true; }
-function close(silent){ removeEventListener("keydown",key); try{ clearPins(); noWalker(); M&&M.remove(); }catch(e){} M=null; if(root){ root.remove(); root=null; } spinOn=false; TER=false; const f=O&&O.onClose; O=null; if(!silent&&f) f(); }
+function close(silent){ removeEventListener("keydown",key); try{ fxClear(); clearPins(); noWalker(); M&&M.remove(); }catch(e){} M=null; if(root){ root.remove(); root=null; } spinOn=false; TER=false; const f=O&&O.onClose; O=null; if(!silent&&f) f(); }
 window.CBSR_EARTH={open,close,isOpen:()=>!!root,_map:()=>M};
 })();
