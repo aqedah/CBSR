@@ -2257,6 +2257,10 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .qtbars{flex:1;display:flex;gap:4px}.qtbars i{flex:1;height:4px;border-radius:2px;background:var(--line)}.qtbars i.on{background:var(--accent)}.qtstp b{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .qtnext{position:sticky;z-index:5;padding:12px 0 14px;background:linear-gradient(transparent,var(--paper) 35%)}.qtnext:empty{display:none}.qtnext .btn{width:100%;padding:15px;font-size:16px}
 
+/* 11-23 목사님("하나님의 성품 질문이 지시문인지 설명문인지 모르겠다"): 성품·적용 물음도 본문 관찰 물음과 같은 크기·굵기 */
+html.v2 body .qtcard .oneline.godw>label,html.v2 body .qtcard .q3 .oneline.godw>label{display:block;font-family:"IBM Plex Sans KR",sans-serif;font-size:18px;font-weight:700;line-height:1.6;color:var(--ink);margin:4px 0 12px}
+@media (min-width:760px){ html.v2 body .qtcard .oneline.godw>label{font-size:19px} }
+html.v2 body .lookbtn.on{outline:2px solid var(--accent);outline-offset:1px}
 /* 11-22 태블릿 '묵상 마친 뒤': 왼쪽 본문/해설 · 오른쪽 말씀 → 내 기록 → 아래 띠 */
 .qtdmark,.qtdmore{display:none}
 @media (min-width:1100px) and (min-height:560px){
@@ -3092,8 +3096,8 @@ function qbSync(g){ const bib=qbBuild(); if(!bib) return; const ref=(g||[]).map(
   if(ref){ const [b,c,v,e]=ref.dataset.chv.split("-").map(Number); qbGo(b,c,v,e,false); return; }
   if((g||[]).some(x=>x.querySelector("#scopeRead"))){ const R=sceneOf(view.w,view.d); if(R&&R[0]) qbGo(R[0][0],R[0][1],R[0][2],R[0][3],false); return; }
   bib.querySelectorAll(".qbv.on").forEach(x=>x.classList.remove("on")); }
-document.addEventListener("click",e=>{ if(view.tab!=="qt"||!qbVisible()) return; const t=e.target.closest&&e.target.closest("#main [data-chv],#main #scopeRead"); if(!t||t.closest("#qtBib")) return;
-  let ok=false; if(t.dataset.chv){ const [b,c,v,x]=t.dataset.chv.split("-").map(Number); ok=qbGo(b,c,v,x,true); } else { const R=sceneOf(view.w,view.d); if(R&&R[0]) ok=qbGo(R[0][0],R[0][1],R[0][2],R[0][3],true); }
+document.addEventListener("click",e=>{ if(view.tab!=="qt"||!qbVisible()) return; const t=e.target.closest&&e.target.closest("#main [data-chv],#main #scopeRead,#main [data-look]"); if(!t||t.closest("#qtBib")) return;
+  let ok=false; if(t.dataset.look!=null){ /* 11-23 목사님: 태블릿 묵상에서 '다른 부분도 살펴보기'를 누르면 팝업 대신 왼쪽 본문에 표시 */ const E=EYE[keyOf(view.w,view.d)], l=E&&E.look[+t.dataset.look]; if(l&&l.r){ ok=qbGo(l.r[0],l.r[1],l.r[2],l.r[3]||l.r[2],true); if(ok){ document.querySelectorAll("#main [data-look].on").forEach(x=>x.classList.remove("on")); t.classList.add("on"); } } } else if(t.dataset.chv){ const [b,c,v,x]=t.dataset.chv.split("-").map(Number); ok=qbGo(b,c,v,x,true); } else { const R=sceneOf(view.w,view.d); if(R&&R[0]) ok=qbGo(R[0][0],R[0][1],R[0][2],R[0][3],true); }
   if(ok){ e.preventDefault(); e.stopPropagation(); } },true);
 function qtSteps(m){ document.body.classList.remove("qtsp"); const key=keyOf(view.w,view.d), q=mem.qt[key]||{}; if(q.done){ qtDoneLook(m); return; }
   if(!view.qsUrl){ view.qsUrl=1; try{ const n=+new URLSearchParams(location.search).get("qs"); if(n>0){ view.qtStepK=key; view.qtStep=n-1; } }catch(e){} }
