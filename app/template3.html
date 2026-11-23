@@ -2257,6 +2257,16 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .qtbars{flex:1;display:flex;gap:4px}.qtbars i{flex:1;height:4px;border-radius:2px;background:var(--line)}.qtbars i.on{background:var(--accent)}.qtstp b{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .qtnext{position:sticky;z-index:5;padding:12px 0 14px;background:linear-gradient(transparent,var(--paper) 35%)}.qtnext:empty{display:none}.qtnext .btn{width:100%;padding:15px;font-size:16px}
 
+/* 11-23 태블릿·PC 나 탭: 기록판(두 칸) — 프로필 · [나의 통독 | 이번 주] · [숫자 | 바로 가기] */
+@media (min-width:1100px) and (min-height:560px){
+  html.v2[data-tab="record"] .wrap:has(#main>.rygrid){max-width:1120px;margin-left:calc(var(--rail) + max(24px,(100vw - var(--rail) - 1120px)/2));margin-right:max(24px,(100vw - var(--rail) - 1120px)/2)}
+  html.v2[data-tab="record"] #main:has(>.rygrid){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px 20px;align-items:start}
+  html.v2[data-tab="record"] #main:has(>.rygrid)>*{grid-column:1/-1;margin:0!important}
+  html.v2[data-tab="record"] #main:has(>.rygrid)>.rybox:not(.rycal):not(.rymenu){grid-column:1}
+  html.v2[data-tab="record"] #main:has(>.rygrid)>.rycal{grid-column:2}
+  html.v2[data-tab="record"] #main:has(>.rygrid)>.rygrid{grid-column:1;grid-template-columns:repeat(2,minmax(0,1fr))}
+  html.v2[data-tab="record"] #main:has(>.rygrid)>.rymenu{grid-column:2}
+}
 /* 11-23 태블릿·PC 성경 책장: 왼쪽 책장·책 목록 · 오른쪽 고른 책 */
 .shview{display:none}
 @media (min-width:1100px) and (min-height:560px){
