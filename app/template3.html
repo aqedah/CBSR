@@ -3943,7 +3943,7 @@ function renderHead(){
   { const bl=document.getElementById("brandL"), hx=document.getElementById("hdx"); const isT=!view.pre&&!view.revW&&view.w===here.w&&view.d===here.d, MISS=missedDays();
     const REL=(()=>{ if(view.pre||view.revW) return null; const t0=today0(), dd=dayDiff(t0,dt); if(dd===0) return "오늘"; if(dd===-1) return "어제"; if(dd===1) return "내일"; const ws=x=>{ const y=new Date(x); y.setDate(y.getDate()-y.getDay()); return y; }, wd=Math.round(dayDiff(ws(t0),ws(dt))/7); return wd===0?"이번 주":wd===-1?"지난주":wd===1?"다음 주":wd<0?`${-wd}주 전`:`${wd}주 뒤`; })(); /* 11/3 목사님: 오늘/오늘로는 날짜 옆에, 지금 보는 날이 언제인지 말로 */
     if(bl) bl.innerHTML=`<button class="v2d" id="rgDate" aria-label="통독표 열기">${esc(fmt(dt,{month:"long",day:"numeric",weekday:"short"}))}<svg class="v2dv" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${REL?(REL==="오늘"?`<button class="rgrel now" id="rgCal" aria-label="오늘 · 통독표 열기">오늘</button>`:`<button class="rgrel" id="rgToday" aria-label="${esc(REL)} · 오늘로 가기"><span>${esc(REL)}</span><i>오늘로</i><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`):""}<small class="v2p">${view.revW?esc(PI.name):esc(Y27?PI.name:(dayNo(view.w,view.d)+"일째"))}</small><span id="planName" hidden></span>`;
-    if(hx) hx.innerHTML=`<button class="rgcal" id="rgLib" aria-label="스토리 모음"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg></button><button class="rgcal" id="rgMap" aria-label="성경 지도"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></button><button class="rgcal" id="rgShelf" aria-label="성경책장"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3.5" y="4" width="4.4" height="16" rx=".6"/><rect x="9.4" y="7" width="4.4" height="13" rx=".6"/><path d="M15.5 8.4l3.9-1 3 11.6-3.9 1z"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
+    if(hx) hx.innerHTML=`<button class="rgcal" id="rgLib" aria-label="스토리 모음"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg></button><button class="rgcal" id="rgMap" aria-label="성경 지도"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></button><button class="rgcal" id="rgShelf" aria-label="성경 서고"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3.5" y="4" width="4.4" height="16" rx=".6"/><rect x="9.4" y="7" width="4.4" height="13" rx=".6"/><path d="M15.5 8.4l3.9-1 3 11.6-3.9 1z"/></svg></button>`; } document.getElementById("planSrc").textContent=PI.src; const ts=document.getElementById("trSrc"); if(ts) ts.textContent=TR_INFO[TR].src;
   document.querySelectorAll(".bnav .tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===view.tab));
 }
 
@@ -7021,12 +7021,12 @@ function earthOpen(o){ o=o||{};
       onClose:()=>{ ovDone(earthClose); }, onFail:()=>{ EARTH_FAIL=true; toast("지구 지도를 열지 못해 지금 지도로 엽니다."); bmOpen("day"); }});
     if(ok) ovOpen(earthClose); }).catch(()=>{ EARTH_FAIL=true; toast("지구 지도를 받지 못했습니다. 인터넷 연결을 확인해 주세요. 지금 지도로 엽니다."); bmOpen("day"); })); }
 function earthClose(pop){ if(window.CBSR_EARTH&&CBSR_EARTH.isOpen()) CBSR_EARTH.close(true); if(pop!==true) ovDone(earthClose); }
-/* 성경책장(서고) — 11-24 목사님: 진입 경로를 넣고 앱에서 서고를 볼 수 있게. 들어가는 문은 맨 위 스토리 모음·지도 단추 옆.
+/* 성경 서고 — 11-24 목사님: 진입 경로를 넣고 앱에서 서고를 볼 수 있게. 이름은 '성경 서고'(책의 개론). '나' 탭의 '성경 책장'(읽은 분량)과는 기능이 달라 이름을 가름. 들어가는 문은 맨 위 스토리 모음·지도 단추 옆.
    서고는 세 부분(구약 · 신약 · 외경과 위경과 교부 문헌, 셋째는 지금 경고문만). 본체는 shelf.js(필요할 때만 불러옴), 원고는 shelf_66.json(성경책장 작업대의 원고), 그림은 img/shelf */
 let SHELF_LD=null;
 function shelfLoad(){ if(window.CBSR_SHELF) return Promise.resolve(); if(SHELF_LD) return SHELF_LD;
   return SHELF_LD=new Promise((ok,no)=>{ const s=document.createElement("script"); s.src="shelf.js"; s.onload=ok; s.onerror=no; document.head.appendChild(s); }).catch(e=>{ SHELF_LD=null; throw e; }); }
-function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); }}); if(ok) ovOpen(shelfClose); }).catch(()=>toast("성경책장을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.")); }
+function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); }}); if(ok) ovOpen(shelfClose); }).catch(()=>toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.")); }
 function shelfClose(pop){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()) CBSR_SHELF.close(true); if(pop!==true) ovDone(shelfClose); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.
@@ -9749,7 +9749,7 @@ const TOUR2=[
  {tab:"today",sel:"#rgDate",t:"날짜",d:"누르면 통독표가 열려 다른 날로 갈 수 있습니다. 지난 날은 스토리와 묵상까지, 내일부터는 본문만 열립니다."},
  {tab:"today",sel:"#rgLib",t:"스토리 모음",d:"본문을 읽은 날의 스토리를 다시 봅니다."},
  {tab:"today",sel:"#rgMap",t:"성경 지도",d:"오늘 이야기가 일어난 곳과 큰 여정을 지도에서 봅니다."},
- {tab:"today",sel:"#rgShelf",t:"성경책장",d:"책마다 저자와 배경, 구조를 살펴봅니다."},
+ {tab:"today",sel:"#rgShelf",t:"성경 서고",d:"책마다 저자와 배경, 구조를 살펴봅니다."},
  {tab:"read",sel:"#v2Aid",t:"① 읽기 전",d:"읽기 전에 오늘의 읽기 도구와 어려운 말뜻을 짧게 봅니다."},
  {tab:"read",sel:"#bible",t:"② 본문",d:"절을 누르면 형광펜 · 책갈피 · 말씀 카드가 나옵니다. 점선 밑줄 친 말을 누르면 뜻풀이가 나옵니다."},
  {tab:"read",sel:"#rd3",t:"③ 읽은 뒤",d:"눈여겨볼 것, 지도, 성경 전체로 이어 보기, 읽기 도구가 모여 있습니다."},
