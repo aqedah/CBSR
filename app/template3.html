@@ -3250,7 +3250,7 @@ function qtPrayMine(q,key){ const L=[]; if(q.obs) L.push(["본문에서 본 것"
 /* 묵상 노트 '성경 전체로'(v2, 2026-11-02 목사님 "비교만 있고 뜻 풀이가 없다"):
    ① 이어지는 방식(인용·약속·모형…)이 무엇인지 한 줄 ② 원고 글 ③ 글에 나온 다른 책 구절을 개역개정 그대로 + 그 장이 어떤 장인지 + 본문 열기
    ④ 원고에 뜻 풀이(cm)가 있으면 '무슨 뜻일까' ⑤ 생각 물음 하나 */
-const CK_EXP={"인용":"신약이 구약의 말씀을 그대로 가져와, 그 말씀이 예수님 안에서 이루어졌다고 말합니다.","약속":"구약에서 하나님이 하신 약속이 시간이 지나 이루어지는 자리입니다.","주제":"같은 주제가 성경의 다른 자리에서 되풀이되며 점점 또렷해집니다.","모형":"구약의 사람·사건·제도가 앞으로 오실 분을 미리 보여 주는 그림 역할을 합니다.","흐름":"오늘 본문이 창조에서 새 창조로 이어지는 성경 전체 이야기의 어디쯤인지 보여 줍니다.","신약":"오늘 구약 본문이 신약에서 어떻게 다시 읽히는지 함께 봅니다."};
+const CK_EXP={"인용":"신약이 구약의 말씀을 그대로 가져와, 그 말씀이 예수님 안에서 이루어졌다고 말합니다.","약속":"구약에서 하나님이 하신 약속이 시간이 지나 이루어지는 자리입니다.","주제":"같은 주제가 성경의 다른 자리에서 반복되며 점점 또렷해집니다.","모형":"구약의 사람·사건·제도가 앞으로 오실 분을 미리 보여 주는 그림 역할을 합니다.","성취":"앞에서 하신 약속과 예언이 그대로 이루어졌다고 성경이 밝히는 자리입니다.","흐름":"오늘 본문이 창조에서 새 창조로 이어지는 성경 전체 이야기의 어디쯤인지 보여 줍니다.","신약":"오늘 구약 본문이 신약에서 어떻게 다시 읽히는지 함께 봅니다."};
 function christRefs(t,w,d){ const p=dayPlan(w,d), own=new Set(p.ch.map(x=>x[0])), out=[], seen=new Set();
   String(t||"").replace(/([가-힣]{1,3})\s?(\d{1,3}):(\d{1,3})(?:[–-](\d{1,3}))?/g,(m,a,c,v,e)=>{ const b=PLAN.abbr.indexOf(a)+1; if(!b||own.has(b)) return m; const k=`${b}-${c}-${v}`; if(seen.has(k)) return m; seen.add(k);
     const C=(BIBLE[b-1]||[])[+c-1]; if(!C) return m; const z=Math.min(C.length,e?+e:+v), vs=[]; for(let i=+v;i<=z;i++) vs.push(C[i-1]); out.push({b,c:+c,v:+v,e:z,t:vs.join(" ")}); return m; });
@@ -3962,7 +3962,7 @@ function joinProgress(){ if(!mem.joinAt) return null; const j=dayDiff(parseD(mem
 
 /* ===== 초보자 안내 ===== */
 const trName=n=>(typeof TRMAP!=="undefined"&&TRMAP&&TRMAP.n[n])||n;
-const CK_L={"인용":"신약의 직접 인용","약속":"약속과 성취","주제":"반복되는 주제","모형":"모형과 성취","흐름":"성경 전체의 흐름","신약":"구약과 이어 읽기"};
+const CK_L={"인용":"신약의 직접 인용","약속":"약속과 성취","주제":"반복되는 주제","모형":"모형과 성취","성취":"약속과 예언의 성취","흐름":"성경 전체의 흐름","신약":"구약과 이어 읽기"};
 const MC_L={A:"본문이 직접 설명합니다",B:"보통 이렇게 풀이합니다",C:"정확한 뜻은 분명하지 않습니다"};
 function christKey(w,d){ const det=DETAIL[w+"-"+(d+1)];  return "y:"+w+"-"+d; }
 const GENEAL=new Set(["1-5","1-10","1-11","1-25","1-36","1-46","4-1","4-26","13-1","13-2","13-3","13-4","13-5","13-6","13-7","13-8","13-9","15-2","15-8","16-7","16-11","16-12","40-1","42-3"]);
@@ -4015,7 +4015,7 @@ function afterRead(w,d,A){ const GD=GBD()&&GBD()[dayNo(w,d)]||null, P=GD&&GD.p||
   if(L.length) h+=`<div class="aidsec"><b class="aidk">눈여겨볼 것</b>${L.map(t=>`<p class="aidtool">${toolChip(t)}<span>${rf(P[t])}</span></p>`).join("")}</div>`;
   { let R=[]; try{ R=routesFor(w,d).filter(r=>r.p.filter(q=>q[0]).length>=2); }catch(e){} const box=A&&BIBLE&&[...A.places.values()].some(p=>PLACE.has(p.name))||R.length?secIn(renderMapBox(A)):"";
     if(GD&&GD.m||box) h+=`<div class="aidsec"><b class="aidk">지도</b>${GD&&GD.m?`<p>${rf(GD.m)}</p>`:""}${GD&&GD.m&&R.length?`<button class="tbkroute" id="rdRoute">▶ 지도에서 길 따라가기 · ${esc(rmBase(R[0].n))}</button>`:""}${box}</div>`; }
-  { const ch=christMini(w,d,!!(GD&&GD.c)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${rf(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
+  { const ch=christMini(w,d,!!(GD&&GD.c)); if(GD&&GD.c){ const m=GD.c.match(/^(인용|약속|성취|주제|모형|흐름)\s+/); h+=`<div class="aidsec"><b class="aidk">성경 전체로</b><p>${m?`<span class="ckind">${m[1]}</span> `:""}${rf(m?GD.c.slice(m[0].length):GD.c)}</p>${ch.trim()?`<details class="rdmore"><summary>함께 읽을 말씀 보기</summary>${ch}</details>`:""}</div>`; }
     else if(ch.trim()) h+=`<div class="aidsec"><b class="aidk">성경 전체로</b>${ch}</div>`; }
   if(!GD&&A){ const kw=renderKeyWords(A,w,d); if(kw) h+=`<div class="aidsec"><b class="aidk">읽기 도구</b>${kw}</div>`; } /* 가이드북 원고가 없는 날만(있는 날은 읽기 도구·성경 전체로와 겹침) */
   return h; }
@@ -9175,7 +9175,7 @@ function tbkRefs(html,p){ if(!TBK_ABRE){ const A=PLAN.abbr.map((a,i)=>[a,i+1]).s
 function refP(ref){ const R=String(ref).split("-"), [b,c,v]=R.map(Number); let c2=c, v2=v; if(R[3]){ if(R[3].includes("_")) [c2,v2]=R[3].split("_").map(Number); else v2=+R[3]||v; } return {b,c,v,c2,v2,x:R[4]==="x"}; }
 function tbkT(t,p){ return tbkRefs(esc(String(t||"")).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"),p); }
 function tbkChip(t,p){ let r=String(t||"").trim(), out="", m; while((m=r.match(/^((?:\?!|“”|「」|if|[●◇◆○▲□◎⋯⇔↗∽♪∥¿≒☞×∞※☆]))\s*(수사적 질문|말씀 공식|언약 공식|\S+)\s+([\s\S]*)$/))){ out+=TOOLS[m[2]]?`<button class="tbkchip" data-tdef="${esc(m[2])}">${esc(m[1]+" "+m[2])}</button>`:`<span class="tbkchip">${esc(m[1]+" "+m[2])}</span>`; r=m[3]; }
-  if(!out&&(m=r.match(/^(인용|약속|주제|모형|흐름|신약)\s+([\s\S]*)$/))){ out=`<span class="tbkchip">${esc(m[1])}</span>`; r=m[2]; } return out+tbkT(r,p); }
+  if(!out&&(m=r.match(/^(인용|약속|성취|주제|모형|흐름|신약)\s+([\s\S]*)$/))){ out=`<span class="tbkchip">${esc(m[1])}</span>`; r=m[2]; } return out+tbkT(r,p); }
 function tbkPageA(D){ const {qt,p,n}=D, g=qt.guide||{}, o=qt.obs||{}, dt=dateOf(view.w,view.d);
   return `<p class="tbkdate">${dt.getMonth()+1}월 ${dt.getDate()}일 · ${n}일째</p><h2>${esc(p.label)}</h2><p class="tbksub">${esc(qt.sub||p.topic||"")}</p>
   <div class="tbksec"><i>1</i>읽기 전</div>
