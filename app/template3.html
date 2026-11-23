@@ -2257,6 +2257,27 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .qtbars{flex:1;display:flex;gap:4px}.qtbars i{flex:1;height:4px;border-radius:2px;background:var(--line)}.qtbars i.on{background:var(--accent)}.qtstp b{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .qtnext{position:sticky;z-index:5;padding:12px 0 14px;background:linear-gradient(transparent,var(--paper) 35%)}.qtnext:empty{display:none}.qtnext .btn{width:100%;padding:15px;font-size:16px}
 
+/* 11-23 태블릿·PC 성경 책장: 왼쪽 책장·책 목록 · 오른쪽 고른 책 */
+.shview{display:none}
+@media (min-width:1100px) and (min-height:560px){
+  html.v2[data-tab="record"] .wrap:has(.shsplit){max-width:1180px;margin-left:calc(var(--rail) + max(24px,(100vw - var(--rail) - 1180px)/2));margin-right:max(24px,(100vw - var(--rail) - 1180px)/2)}
+  html.v2[data-tab="record"] .wrap:has(.shsplit) .rtop,html.v2[data-tab="record"] .wrap:has(.shsplit) .libtop{max-width:none}
+  .shsplit{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start}
+  .shleft{min-width:0}
+  html.v2 .shleft .rbl{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}
+  .shview{display:block;position:sticky;top:72px;max-height:calc(100vh - 92px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+  .shvh{margin:0 0 6px;font:700 24px var(--f-disp,serif);color:var(--ink)}
+  .shview .bkinfo b{display:block;margin-top:12px;font-size:12.5px;color:var(--accent)}.shview .bkinfo p{margin:3px 0 0;font-size:15px;line-height:1.7}
+  .shview .keyv{margin-top:14px}
+  html.v2 body .rbli.on{outline:2px solid var(--accent);outline-offset:1px}
+}
+/* 11-23 태블릿·PC 도전 첫 화면: 왼쪽 오늘의 도전 · 오른쪽 언제든 하는 것(골든벨·외울 말씀 100) */
+@media (min-width:1100px) and (min-height:560px){
+  html.v2[data-tab="challenge"] .wrap:has(.gcard2){max-width:1180px;margin-left:calc(var(--rail) + max(24px,(100vw - var(--rail) - 1180px)/2));margin-right:max(24px,(100vw - var(--rail) - 1180px)/2)}
+  html.v2[data-tab="challenge"] #main:has(>.gcard2){display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);column-gap:22px;align-items:start}
+  html.v2[data-tab="challenge"] #main>.gcard2{grid-column:1;grid-row:1/span 9;margin-top:0}
+  html.v2[data-tab="challenge"] #main>:not(.gcard2){grid-column:2;margin-top:0;margin-bottom:16px}
+}
 /* 11-23 목사님("하나님의 성품 질문이 지시문인지 설명문인지 모르겠다"): 성품·적용 물음도 본문 관찰 물음과 같은 크기·굵기 */
 html.v2 body .qtcard .oneline.godw>label,html.v2 body .qtcard .q3 .oneline.godw>label{display:block;font-family:"IBM Plex Sans KR",sans-serif;font-size:18px;font-weight:700;line-height:1.6;color:var(--ink);margin:4px 0 12px}
 @media (min-width:760px){ html.v2 body .qtcard .oneline.godw>label{font-size:19px} }
@@ -6254,7 +6275,8 @@ function recDetail(D,secs,byLab,n,sch){ const back=view.bmFrom&&!(view.bmFrom.ta
   if(D==="road"){ const {tot,got}=bookProgress(); return head("통독의 길")+`<section class="sec rsec">${recRoad(n,null)}<div class="rstat"><div><b>${n.toLocaleString()}</b><span>읽은 장</span></div><div><b>${Object.keys(mem.done).length}</b><span>읽은 날</span></div><div><b>${readStreak()}일</b><span>이어 읽기</span></div></div><p class="lead rnote">읽은 장은 성경 1,189장 가운데 '오늘 통독 완료'를 누른 날의 본문 장 수입니다. 같은 날을 다시 눌러도 한 번만 셉니다.</p></section>`+recRow("shelf","성경 책장","책마다 읽은 장 보기"); }
   if(D==="shelf"){ const {tot,got}=bookProgress(), SH=recShelf();
     const grp=[["모세오경",1,5],["역사서",6,17],["시가서",18,22],["선지서",23,39],["복음서·사도행전",40,44],["서신서·계시록",45,66]];
-    return head("성경 책장")+`<section class="sec rsec">${SH.html}</section>`+grp.map(([g,a,z])=>`<section class="sec rsec"><div class="rhd"><b>${g}</b></div><div class="rbl">${Array.from({length:z-a+1},(_,i)=>{ const b=a+i, T=tot[b]||0, G=got[b]||0, full=T&&G>=T; return `<button class="rbli${full?" done":""}" ${full?`data-bkf="${b}"`:`data-book="${b}"`} aria-label="${esc(PLAN.full[b-1])} ${G}/${T}장"><b title="${esc(PLAN.full[b-1])}">${esc(({25:"애가",66:"계시록"})[b]||(PLAN.full[b-1].length>4?PLAN.abbr[b-1]:PLAN.full[b-1]))}</b><small>${T?(full?"✓ 다 읽음":`${G}/${T}`):"–"}</small><i style="height:${T?Math.round(G/T*100):0}%;background:${RB_COL(b)}"></i></button>`; }).join("")}</div></section>`).join(""); }
+    const fb=view.shelfB||(()=>{ const p=dayPlan(view.w,view.d); return p&&p.ch[0]?p.ch[0][0]:1; })();
+    return head("성경 책장")+`<div class="shsplit"><div class="shleft"><section class="sec rsec">${SH.html}</section>`+grp.map(([g,a,z])=>`<section class="sec rsec"><div class="rhd"><b>${g}</b></div><div class="rbl">${Array.from({length:z-a+1},(_,i)=>{ const b=a+i, T=tot[b]||0, G=got[b]||0, full=T&&G>=T; return `<button class="rbli${full?" done":""}" ${full?`data-bkf="${b}"`:`data-book="${b}"`} aria-label="${esc(PLAN.full[b-1])} ${G}/${T}장"><b title="${esc(PLAN.full[b-1])}">${esc(({25:"애가",66:"계시록"})[b]||(PLAN.full[b-1].length>4?PLAN.abbr[b-1]:PLAN.full[b-1]))}</b><small>${T?(full?"✓ 다 읽음":`${G}/${T}`):"–"}</small><i style="height:${T?Math.round(G/T*100):0}%;background:${RB_COL(b)}"></i></button>`; }).join("")}</div></section>`).join("")+`</div><aside class="shview" id="shelfView" aria-live="polite">${bookHTML(fb)}</aside></div>`; }
   if(D==="stones"){ const bs=byLab("모은 배지"); const B=bs?[...bs.querySelectorAll(".bdg")].map(b=>({on:b.classList.contains("on"),i:(b.querySelector("i")||{}).textContent||"",t:b.textContent.replace((b.querySelector("i")||{}).textContent||"","").trim()})):[];
     return head("에벤에셀 돌")+`<section class="sec rsec"><p class="lead rnote">지나온 길을 기념하는 돌입니다. 돌을 누르면 받는 방법이 나옵니다. “사무엘이 돌을 취하여 … 이르되 여호와께서 여기까지 우리를 도우셨다 하고”(삼상 7:12).</p><div class="rstg">${[...B.filter(b=>b.on),...B.filter(b=>!b.on)].map(b=>`<button class="rst${b.on?"":" off"}" data-bdg="${esc(b.t)}">${STONE(b.on,b.i)}<small>${esc(b.t)}</small></button>`).join("")}</div></section>`; }
   /* 11/5 목사님: 말씀 카드를 따로 떼어 냄 */
@@ -7781,7 +7803,12 @@ function openPhotoEditor(file){
   };
   img.src=url;
 }
-function showBook(b){
+/* 11-23 목사님(성경 책장 태블릿): 넓은 화면의 책장 = 왼쪽 책장·책 목록 · 오른쪽 고른 책 소개(누르면 창 대신 오른쪽이 바뀜) */
+function bookPane(b){ const v=document.getElementById("shelfView"); if(!v||!v.getBoundingClientRect().width) return false; v.innerHTML=bookHTML(b); v.scrollTop=0; document.querySelectorAll("#main .rbli").forEach(x=>x.classList.toggle("on",+(x.dataset.book||x.dataset.bkf)===b)); view.shelfB=b;
+  v.querySelectorAll("[data-jump]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.jump.split("-").map(Number); go(w,d); }); v.querySelector("[data-bkcover]")?.addEventListener("click",()=>bookCover(b)); return true; }
+document.addEventListener("click",e=>{ if(view.tab!=="record"||view.recD!=="shelf") return; const t=e.target.closest&&e.target.closest("#main .rbli"); if(!t) return; const b=+(t.dataset.book||t.dataset.bkf); if(b&&bookPane(b)){ e.preventDefault(); e.stopPropagation(); } },true);
+function bookHTML(b){ const r=showBook(b,true); return `<h3 class="shvh">${esc(PLAN.full[b-1])}</h3>${r}`; }
+function showBook(b,ret){
   const I=(typeof BOOKINFO!=="undefined")&&BOOKINFO[b]; const {tot,got}=bookProgress(); const T=tot[b]||0,G=got[b]||0;
   let first=null; for(let w=1;w<=NW&&!first;w++) for(let d=0;d<nd(w);d++) if(dayPlan(w,d)&&dayPlan(w,d).ch.some(c=>c[0]===b)){ first=[w,d]; break; }
   const unit=b===19?"편":"장";
@@ -7789,6 +7816,7 @@ function showBook(b){
   if(I){ h+=`<div class="bkinfo"><b>어떤 책인가요</b><p>${esc(I.what)}</p><b>왜 중요한가요</b><p>${esc(I.why)}</p><b>읽을 때 눈여겨볼 것</b><p>${esc(I.look)}</p><b>그리스도와 이어지는 곳</b><p>${esc(I.christ)}</p></div>`;
     if(BIBLE&&I.key){ const [kb,kc,kv]=I.key; h+=`<div class="keyv"><small>대표 구절 · ${esc(PLAN.abbr[kb-1])} ${kc}:${kv}</small>${esc(BIBLE[kb-1][kc-1][kv-1])}</div>`; } }
   if(first) h+=`<div class="row"><button class="btn small" data-jump="${first[0]}-${first[1]}">이 책을 읽는 날로 가기 · ${first[0]}주차 ${""}</button></div>`;
+  if(ret){ const {tot:T2,got:G2}=bookProgress(); if(T2[b]&&G2[b]>=T2[b]) h=`<div class="row"><button class="btn ghost small" data-bkcover="1">다 읽은 책 표지 보기 ✓</button></div>`+h; return h; }
   sheet(PLAN.full[b-1],h);
 }
 function bindProfile(m){
