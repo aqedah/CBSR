@@ -78,6 +78,17 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
       allow update: if false;
     }
+    // 체험판 점검표(2026-11-23, check.html): 누구나 한 번에 한 장씩 보낼 수 있고, 고치거나 남의 것을 읽을 수 없습니다. 관리자만 읽고 지웁니다.
+    match /trialcheck/{id} {
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['name', 'a', 'v', 'at'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 30
+        && request.resource.data.a is string && request.resource.data.a.size() < 60000
+        && request.resource.data.v is int
+        && request.resource.data.at == request.time;
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
     // 개발자 모드 글자 바꾸기표: 누구나 읽고, 관리자만 고칩니다.
     match /config/{id} {
       allow read: if signedIn();
