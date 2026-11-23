@@ -273,7 +273,21 @@ for tk in ('snb','shg'):
     open(f'{OUT}/bible_{tk}.js','w').write('window.BIBLE_TR=window.BIBLE_TR||{};BIBLE_TR.'+tk+'="'+open(f'bible_{tk}.b64').read()+'";\nwindow.SPEECH_'+tk+'='+open(f'speech/bible_{tk}.json').read()+';\n')
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
-for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','guide.html','guide_qt.json','trial26.html','trial26_qt.json','earth.html','earth.js','borders.json','check.html','shelf_edit.html']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
+for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','guide.html','guide_qt.json','trial26.html','trial26_qt.json','earth.html','earth.js','borders.json','check.html','shelf_edit.html','shelf.js']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
+# 성경책장(서고) 원고(2026-11-24): 작업대에서 올린 books/shelf_66.json이 있으면 그것을, 없으면 site_src의 원고를 앱에 실음. 대표 구절 본문은 여기서 개역개정을 붙임
+try:
+    _sp='books/shelf_66.json' if os.path.exists('books/shelf_66.json') else 'site_src/shelf_66.json'
+    _sd=json.load(open(_sp,encoding='utf-8'))
+    for _b in _sd.get('books',[]):
+        for _k in ('ask','status'): _b.pop(_k,None)
+        _m=re.match(r'^(\S+) (\d+):(\d+)(?:[–-](\d+))?$',(_b.get('verse') or '').strip())
+        try:
+            if _m and _m.group(1) in AB:
+                _C=_BB[AB.index(_m.group(1))][int(_m.group(2))-1]; _b['verseText']=' '.join(_C[_i-1] for _i in range(int(_m.group(3)),int(_m.group(4) or _m.group(3))+1))
+        except Exception: pass
+    open(OUT+'/shelf_66.json','w',encoding='utf-8').write(json.dumps(_sd,ensure_ascii=False,separators=(',',':')))
+except Exception as _e:
+    print('shelf_66.json:',_e); shutil.copy('site_src/shelf_66.json',OUT+'/shelf_66.json')
 # 스토리 작업실(2026-11-11): 원고를 붙여 카드로 나누고 앱(v2) 미리보기로 보고 GitHub(ux/story_in)에 저장 → 다음 빌드가 story_cards.json에 합침
 _PE=[{'id':p['id'],'memo':p.get('memo',''),'refs':p.get('refs',[]),'role':p.get('role','')} for p in (json.load(open('ux/photos.json')) if os.path.exists('ux/photos.json') else [])]
 _P26=[{'n':x['n'],'label':x['label'],'ch':x['ch'],'topic':x.get('topic','')} for x in P365]
