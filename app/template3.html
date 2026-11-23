@@ -2248,7 +2248,7 @@ html.v2 .td3sheet{margin:0;border-radius:0;padding:4px 2px 6px;background:none}
 .finw{width:100%;display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--gold) 14%,var(--card));border-radius:14px;padding:11px 14px;margin-top:12px;font-size:13.5px;text-align:left}.finw[hidden]{display:none}.finw>span:last-child{min-width:0}
 .fdots{display:flex;flex:none}.fdots i{width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid color-mix(in srgb,var(--gold) 14%,var(--card));margin-left:-6px}.fdots i:first-child{margin-left:0}.fdots i:nth-child(2){opacity:.6}.fdots i:nth-child(3){opacity:.35}
 .fcal{width:100%;background:var(--card);border-radius:16px;padding:14px 14px 12px;margin-top:12px;text-align:left}.fcal h3{margin:0 0 10px;font:700 13px var(--f-ui);font-weight:700;display:flex;justify-content:space-between}.fcal h3 span{font-weight:500;color:var(--muted)}
-.fcg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px 4px;justify-items:center}.fwd{font-size:11px;color:var(--muted);font-weight:600}
+.fcg{display:grid;grid-template-columns:repeat(7,1fr);gap:6px 4px;justify-items:center}.fwd{font-size:11px;color:var(--muted);font-weight:600}
 .fcg i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .fcg i.r{background:var(--accent-soft);color:var(--accent);font-weight:700}.fcg i.t{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--gold);color:var(--ink);font-weight:700}.fcg i.t.r{background:var(--accent);color:var(--card)}.finov.play .fcg i.t.r{animation:finPop .4s .55s both}.fcg i.f{opacity:.45}
 .fcal p{margin:10px 2px 0;font-size:13px}.fcal p b{color:var(--accent)}
@@ -3188,10 +3188,10 @@ function lnBind(m){ const on=r=>r.querySelectorAll("[data-lnk]").forEach(b=>b.on
 /* ===== 마친 순간(v2, 목사님 2026-11-02 · 2차 UI 샘플): 통독·묵상 노트를 마치면 한 화면으로. 최근 4주 달력은 읽은 날만 채우고 빠진 날은 드러내지 않음 ===== */
 const dsOf=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
 function finCal(){ const t0=today0(), mon=new Date(t0); mon.setDate(t0.getDate()-((t0.getDay()+6)%7)-21);
-  const end=new Date(mon); end.setDate(mon.getDate()+26); const M=new Map();
+  const end=new Date(mon); end.setDate(mon.getDate()+27); const M=new Map(); /* 11-23: 주일 포함 365일표 — 월–일 7칸 */
   for(let n=1;n<=READ_DAYS;n++){ const w=Math.floor((n-1)/7)+1, d=(n-1)%7; if((!dayPlan(w,d))) continue; const dt=dateOf(w,d); if(dt<mon||dt>end) continue; M.set(dsOf(dt),keyOf(w,d)); }
-  let c=["월","화","수","목","금","토"].map(x=>`<span class="fwd">${x}</span>`).join(""), n=0;
-  for(let i=0;i<4;i++) for(let j=0;j<6;j++){ const x=new Date(mon); x.setDate(mon.getDate()+i*7+j); const k=M.get(dsOf(x)), dd=dayDiff(t0,x), rd=!!(k&&mem.done[k]); if(rd) n++;
+  let c=["월","화","수","목","금","토","일"].map(x=>`<span class="fwd">${x}</span>`).join(""), n=0;
+  for(let i=0;i<4;i++) for(let j=0;j<7;j++){ const x=new Date(mon); x.setDate(mon.getDate()+i*7+j); const k=M.get(dsOf(x)), dd=dayDiff(t0,x), rd=!!(k&&mem.done[k]); if(rd) n++;
     c+=`<i class="${dd===0?"t"+(rd?" r":""):dd>0?"f":rd?"r":""}">${x.getDate()}</i>`; }
   const f=x=>`${x.getMonth()+1}월 ${x.getDate()}일`;
   return `<div class="fcal"><h3>최근 4주<span>${f(mon)} – ${f(end)}</span></h3><div class="fcg">${c}</div>${n?`<p>이 4주 동안 <b>${n}일</b> 말씀을 읽었습니다.</p>`:""}</div>`; }
@@ -6254,7 +6254,7 @@ function nextQ(mode){
     const rec=store[qz.key]||{tries:0};
     rec.tries=(rec.tries||0)+1; rec.last={s,t}; if(!rec.first) rec.first={s,t,at:todayStr()};
     if(!rec.best||s/t>rec.best.s/rec.best.t) rec.best={s,t};
-    store[qz.key]=rec; if(mode==="day"&&!mem.done[qz.key]){mem.done[qz.key]=todayStr(); touchDone(qz.key); view.justDone=true; if(window.SYNC&&SYNC.available) countDone(qz.key);} save();
+    store[qz.key]=rec; /* 11-23 GPT 출시 검토 P0: 퀴즈는 퀴즈 기록만. 통독 완료는 본문을 읽거나 들은 것으로만 셈(현행 원칙 6) */ save();
   }
 }
 
