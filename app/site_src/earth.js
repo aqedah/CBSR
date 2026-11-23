@@ -39,7 +39,7 @@ const CSS=`
 #eov .eq{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;padding:10px 12px;font:15px "Noto Sans KR";margin:2px 0 8px}
 #eov .edress .fig{animation:edress 1.5s ease-out}@keyframes edress{0%{filter:brightness(2.2) drop-shadow(0 0 10px #fff3b0)}100%{filter:none}}#eov .ebord[aria-pressed="true"]{background:#e8c48a;color:#2a1d0c}#eov .ebchip{position:absolute;z-index:4;top:calc(58px + env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));font:600 12px "Noto Sans KR";color:#f3ead9;background:rgba(20,14,8,.62);padding:4px 10px;border-radius:12px;pointer-events:none}
 #eov .ebl{font:700 13px/1.2 "Noto Sans KR";color:#fff;padding:2px 8px;border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,.45);white-space:nowrap;opacity:.88;pointer-events:none}#eov .ebl.sm{font-size:11px;opacity:.8}
-#eov .efxm{pointer-events:none}#eov .mvpart.long i{width:28px;left:-14px;border-radius:14px}#eov .mvpart.long.on i:first-child{transform:translateX(-36px)}#eov .mvpart.long.on i:last-child{transform:translateX(36px)}#eov .etent{font-size:22px;text-align:center;transform:translate(-50%,-60%);filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}#eov .etent small{display:block;font:700 10.5px "Noto Sans KR";color:#fff;text-shadow:0 1px 3px #000}
+#eov .efxm{pointer-events:none}.efx0{position:relative;width:0;height:0;pointer-events:none}.eparch{top:calc(env(safe-area-inset-top,0px) + 64px);z-index:30}@media (min-width:900px){.eparch{left:3%;right:auto;width:min(340px,calc(100% - 430px))}}#eov .mvpart.long i{width:28px;left:-14px;border-radius:14px}#eov .mvpart.long.on i:first-child{transform:translateX(-36px)}#eov .mvpart.long.on i:last-child{transform:translateX(36px)}#eov .etent{font-size:22px;text-align:center;transform:translate(-50%,-60%);filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}#eov .etent small{display:block;font:700 10.5px "Noto Sans KR";color:#fff;text-shadow:0 1px 3px #000}
 #eov .egrp{position:absolute;left:46px;top:-4px;white-space:nowrap;font:700 11px "Noto Sans KR";color:#fff;background:rgba(70,52,30,.85);padding:2px 7px;border-radius:9px}
 #eov .eburn{font-size:26px;transform:translate(-50%,-70%);animation:eburn 1.1s ease-in-out infinite alternate}@keyframes eburn{from{transform:translate(-50%,-70%) scale(.85)}to{transform:translate(-50%,-80%) scale(1.15)}}
 #eov .mvquake canvas.maplibregl-canvas{animation:mvquake .11s linear infinite}
@@ -179,16 +179,16 @@ function setLine(id,coords){ const s=M&&M.getSource(id); if(!s) return; /* 11-22
 function walker(id,at,name){ if(!O.figure||!at||!M) return; if(W&&WID===id&&(W._nm||"")!==(name||"")){ W.remove(); W=null; } /* 11-22: 같은 그림이라도 이름이 바뀌면(스룹바벨→느헤미야) 새로 */ if(!W||WID!==id){ if(W) W.remove(); const el=document.createElement("div"); el.className="ewalk"; el.innerHTML=O.figure(id)+(name?`<span class="enm">${esc(name)}</span>`:""); W=new maplibregl.Marker({element:el,anchor:"top-left"}).setLngLat(at).addTo(M); W._nm=name||""; WID=id; } else W.setLngLat(at); CW.forEach(m=>m.setLngLat(at)); }
 /* 동행: 주인공 뒤로 조금씩 비켜 서서 같이 움직임(바다에서는 배에 탄 것으로 보고 숨김) */
 /* 장면 끝 옷 바꿈: 반짝이며 그 사람의 그림만 바뀜 */
-function dressNow(D,cs,at,gone){ setTimeout(()=>{ if(!M) return; const co=cs.co.filter(x=>!(gone||[]).includes(x[0])).map(x=>{ const d=D.find(q=>q[0]===x[0]); return d?[x[0],d[1]]:x; }); crew(co,at);
+function dressNow(D,cs,at,gone,key){ setTimeout(()=>{ if(!M||(key!=null&&key!==FXK)) return; /* 장면을 넘기면 옛 장면의 동행을 다시 그리지 않음 */ const co=cs.co.filter(x=>!(gone||[]).includes(x[0])).map(x=>{ const d=D.find(q=>q[0]===x[0]); return d?[x[0],d[1]]:x; }); crew(co,at);
   CW.forEach((m,j)=>{ if(D.some(q=>q[0]===co[j][0])){ const e=m.getElement(); e.classList.add("edress"); setTimeout(()=>e.classList.remove("edress"),1600); } }); },RM()?0:1400); }
-function crew(list,at){ CW.forEach(m=>m.remove()); CW=[]; if(!O.figure||!at) return; list.slice(0,4).forEach(([nm,as],j)=>{ const el=document.createElement("div"); el.className="ewalk co"; el.innerHTML=O.figure(as||"man")+`<span class="enm">${esc(nm)}</span>`; CW.push(new maplibregl.Marker({element:el,anchor:"top-left",offset:[-(j+1)*30,6+(j%2)*6]}).setLngLat(at).addTo(M)); }); }
+function crew(list,at){ CW.forEach(m=>m.remove()); CW=[]; if(!O.figure||!at) return; list.slice(0,4).forEach(([nm,as],j)=>{ const el=document.createElement("div"); el.className="ewalk co"; el.innerHTML=O.figure(as||"man")+`<span class="enm">${esc(nm)}</span>`; const m=new maplibregl.Marker({element:el,anchor:"top-left",offset:[-(j+1)*30,6+(j%2)*6]}).setLngLat(at).addTo(M); m._n=nm; CW.push(m); }); }
 function mood(txt){ if(!W||!txt) return; const el=W.getElement(); el.querySelector(".emood")?.remove(); const b=document.createElement("span"); b.className="emood"; b.textContent=txt; el.appendChild(b); setTimeout(()=>b.remove(),3300); }
 /* 일행에서 떨어져 따로 가는 사람(룻 1:14 오르바 등): 그 사람만 자기 길로 걸어가다 사라짐 */
 let SW=null; function sideWalk(sd,at){ if(SW){ SW.remove(); SW=null; } if(!O.figure) return; const pts=[at,...sd.p.map(p=>[p[2],p[1]])], el=document.createElement("div"); el.className="ewalk co";
   el.innerHTML=O.figure(sd.as_||"man")+`<span class="enm">${esc(sd.n||"")}</span>`; SW=new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat(at).addTo(M); const mk=SW;
   if(RM()){ mk.setLngLat(pts[pts.length-1]); return; } let t0=null; const dur=3200, f=ts=>{ if(SW!==mk) return; t0=t0||ts; const u=Math.min(1,(ts-t0)/dur), x=u*(pts.length-1), i=Math.min(pts.length-2,Math.floor(x)), r=x-i;
     mk.setLngLat([pts[i][0]+(pts[i+1][0]-pts[i][0])*r,pts[i][1]+(pts[i+1][1]-pts[i][1])*r]); el.style.opacity=u>.8?String((1-u)/.2):"1"; if(u<1) requestAnimationFrame(f); else { mk.remove(); if(SW===mk) SW=null; } }; setTimeout(()=>requestAnimationFrame(f),900); }
-function noWalker(){ if(SW){ SW.remove(); SW=null; }  if(W){ W.remove(); W=null; WID=""; } CW.forEach(m=>m.remove()); CW=[]; }
+function noWalker(){ if(LD){ LD.remove(); LD=null; } if(SW){ SW.remove(); SW=null; }  if(W){ W.remove(); W=null; WID=""; } CW.forEach(m=>m.remove()); CW=[]; }
 /* 장면 k에서의 주인공·동행: 처음 동행(wth)에서 장면마다 합류(add)·이탈(drop) — 이탈은 그 장면이 끝난 뒤(dropAt:start면 처음부터) */
 function cast(t,k){ let lead=t.as_||"man", nm=t.who||"", co=(t.wth||[]).map(x=>[x[0],x[1]]);
   for(let i=0;i<=k;i++){ const s=t.steps[i]; if(s.as_) lead=s.as_; if(s.who) nm=s.who; /* 11-22: add·drop은 한 사람일 수도, 여러 사람일 수도 있음(룻 1장: 오르바와 룻이 함께, 말론과 기룐이 함께) */
@@ -197,11 +197,12 @@ function cast(t,k){ let lead=t.as_||"man", nm=t.who||"", co=(t.wth||[]).map(x=>[
     /* 11-23 목사님(민 20:28 엘르아살): 옷 바꿈 — dress0은 장면 처음, dress는 장면 끝(그 뒤 장면부터는 바뀐 옷) */
     const dr=d=>(d||[]).forEach(([n,a])=>{ co=co.map(x=>x[0]===n?[x[0],a]:x); if(n===nm) lead=a; }); dr(s.dress0); if(i<k) dr(s.dress); }
   return {lead,nm,co}; }
-function animLine(base,seg,done,onPt,minMs){ const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
-  const draw=pts=>same?[...head,last.concat(pts.slice(1))]:[...segs,pts];
+function animLine(base,seg,done,onPt,minMs,o){ o=o||{}; const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
+  const draw0=pts=>same?[...head,last.concat(pts.slice(1))]:[...segs,pts], DS=o.ds||[]; /* 11-24 dash: 성경이 길을 말하지 않는 장면의 길은 점선 층(eroutd)에 */
+  const draw=pts=>{ if(o.dash){ setLine("eroutd",[...DS,pts]); return segs; } setLine("eroutd",DS.length?DS:null); return draw0(pts); };
   if(RM()||seg.length<2){ setLine("eroute",draw(seg)); onPt&&onPt(seg[seg.length-1]); done&&done(); return; }
   let L=0; const d=[0]; for(let i=1;i<seg.length;i++){ L+=Math.hypot(seg[i][0]-seg[i-1][0],seg[i][1]-seg[i-1][1]); d.push(L); }
-  let t0=null; const dur=Math.max(minMs||0,Math.min(4200,1400+L*260));
+  let t0=null; const dur=Math.max(minMs||0,Math.min(4200,1400+L*260)*(o.mul||1)); /* slow: 마을마다 들르며 천천히(눅 8:1) */
   const f=ts=>{ t0=t0||ts; const t=Math.min(1,(ts-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, at=e*L; const pts=[seg[0]]; for(let i=1;i<seg.length;i++){ if(d[i]<=at) pts.push(seg[i]); else { const k=(at-d[i-1])/(d[i]-d[i-1]||1); pts.push([seg[i-1][0]+(seg[i][0]-seg[i-1][0])*k,seg[i-1][1]+(seg[i][1]-seg[i-1][1])*k]); break; } }
     setLine("eroute",draw(pts)); onPt&&onPt(pts[pts.length-1]); if(t<1) requestAnimationFrame(f); else done&&done(); }; requestAnimationFrame(f); }
 
@@ -247,7 +248,7 @@ function bDraw(){ const btn=root&&root.querySelector(".ebord"); if(btn) btn.setA
     E.items.forEach(it=>{ const ll=it.l||[it.p.reduce((a,q)=>a+q[0],0)/it.p.length,it.p.reduce((a,q)=>a+q[1],0)/it.p.length], el=document.createElement("div"); el.className="ebl"+(it.k?" sm":""); el.style.background=it.c; el.textContent=it.n+(it.k?` (${it.k})`:"");
       BLAB.push(new maplibregl.Marker({element:el}).setLngLat(ll).addTo(M)); });
     BDRAWN=want; bChip(`나라 경계 · ${E.n} · 대략`); }); }
-function home(keepView){ stack=[]; cur=null; step=-1; fxClear(); { const tc=(O.todayCh||[])[0]; setEra(tc?eraOf(tc[0],tc[1]):null); } setLine("eroute",null); setLine("efull",null); noWalker();
+function home(keepView){ stack=[]; cur=null; step=-1; fxClear(); tplSet(""); { const tc=(O.todayCh||[])[0]; setEra(tc?eraOf(tc[0],tc[1]):null); } setLine("eroute",null); setLine("efull",null); noWalker();
   const T=O.todayTours||[], pl=O.todayPlaces||[];
   let h=`<div class="etabs" role="tablist">${TABS.map(([k,n])=>`<button role="tab" data-etab="${k}" class="${TAB===k?"on":""}" aria-selected="${TAB===k}">${n}</button>`).join("")}</div>`;
   if(TAB==="who"){ h+=`<div class="egrid">${(O.groups||[]).map((g,i)=>`<button data-grp="${i}">${esc(g.n)}</button>`).join("")}</div>`; panel(O.title||"성경 지도",h); return; }
@@ -268,7 +269,7 @@ function group(i){ const g=O.groups[i]; listView(g.n,"",g.tours,g.routes,()=>gro
 function era(i){ const e=O.eras[i]; listView(e.n+(e.y?` · ${e.y}`:""),e.d,e.tours,e.routes,()=>era(i)); }
 function war(i){ const e=O.wars[i]; listView(e.n,e.d,e.tours,e.routes,()=>war(i)); }
 /* 작은 경로(지도로 보는 여정 237): 길을 그리며 사람이 걸어감 */
-function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; fxClear(); setEra(eraOf(r.b,r.c&&r.c[0])); noWalker(); const c=r.p.map(p=>[p[2],p[1]]); setLine("efull",null); setLine("eroute",null);
+function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; fxClear(); tplSet(""); setEra(eraOf(r.b,r.c&&r.c[0])); noWalker(); const c=r.p.map(p=>[p[2],p[1]]); setLine("efull",null); setLine("eroute",null);
   addPins(r.p.filter(p=>p[0]).map((p,k,a)=>({n:p[0],lat:p[1],lng:p[2],big:k===0||k===a.length-1})));
   const bb=jbear(c);
   try{ M.setPaintProperty("eroute","line-dasharray",r.est?[2,1.6]:[1,0]); }catch(e){} /* 성경이 길을 말하지 않는 추정 길은 점선 */
@@ -285,7 +286,7 @@ function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n,lat:p.lat
 function tourSegs(t){ const S=[]; let c=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.forEach(s=>{ if(s.from){ if(c.length) S.push(c); c=[[s.from[2],s.from[1]]]; } (s.p||[]).forEach(p=>c.push([p[2],p[1]])); }); if(c.length) S.push(c); return S; }
 function tourAll(t){ const c=[t.start?[t.start[2],t.start[1]]:null]; t.steps.forEach(s=>(s.p||[]).forEach(p=>c.push([p[2],p[1]]))); return c.filter(Boolean); }
 function tourPlaces(t){ const L=[]; if(t.start&&t.start[0]) L.push({n:t.start[0],lat:t.start[1],lng:t.start[2],big:true}); t.steps.forEach(s=>{ if(s.from&&s.from[0]&&!L.some(x=>x.n===s.from[0])) L.push({n:s.from[0],lat:s.from[1],lng:s.from[2],sm:true}); const e=(s.p||[])[(s.p||[]).length-1]; if(e&&e[0]&&!L.some(x=>x.n===e[0])) L.push({n:e[0],lat:e[1],lng:e[2],sm:true}); }); return L; }
-function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; fxClear(); { const r0=(t.steps.find(x=>x.r)||{}).r; setEra(r0?eraOf(r0[0],r0[1]):null); } const all=tourAll(t);
+function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; fxClear(); { const [tp,tn]=tplAt(t,0,true); tplSet(tp,tn); } { const r0=(t.steps.find(x=>x.r)||{}).r; setEra(r0?eraOf(r0[0],r0[1]):null); } const all=tourAll(t);
   addPins(tourPlaces(t)); setLine("eroute",null); setLine("efull",tourSegs(t)); noWalker(); const c0=cast(t,0); walker(c0.lead,all[0],c0.nm); crew(c0.co,all[0]);
   t._b=jbear(all); const b=new maplibregl.LngLatBounds(); all.forEach(c=>b.extend(c)); M.fitBounds(b,{padding:pad(),pitch:PITCH,bearing:t._b,duration:RM()?0:4200,curve:1.5,essential:true});
   panel(t.n,`<p class="ed">${esc(t.d||t.sub||"")}</p><button class="ebig" data-follow="${from||0}">▶ ${from?`${from+1}번째 장면부터 `:""}따라가기 · ${t.steps.length}장면</button>`+t.steps.map((s,k)=>`<button class="erow" data-follow="${k}"><span class="ic">${k+1}</span><span><b>${esc(s.t)}</b><small>${esc(s.ref||s.s||"")}</small></span></button>`).join(""));
@@ -295,7 +296,11 @@ function fitCam(b,o){ for(const sc of [1,.5,0]){ try{ const P=o.padding, q=Objec
 /* ── 장면 효과: 옛 여정 지도(Leaflet)의 효과를 지구 지도로 옮김(11-23 목사님). 모양(CSS)은 앱의 것을 그대로 씀 ── */
 const FXL=[]; let FXK=0, NIGHT=null;
 function fxClear(){ FXK++; FXL.forEach(m=>{ try{ m.remove(); }catch(e){} }); FXL.length=0; const c=M&&M.getContainer(); if(c){ c.classList.remove("mvburn","mvquake","mvstorm","mvnight","mvdark","mvsplash"); }
-  root&&root.querySelectorAll(".bmtgap,.mvcycle,.egrp").forEach(e=>e.remove()); }
+  root&&root.querySelectorAll(".bmtgap,.mvcycle,.egrp,.parch").forEach(e=>e.remove()); try{ M&&M.getSource("eroutd")&&setLine("eroutd",null); }catch(e){}
+  /* 앞 장면 효과가 남긴 인물 상태(오름·사라짐·엎드림·숨김)를 되돌림 */ [W,...CW].forEach(m=>{ if(!m) return; m.getElement().classList.remove("mvhide"); const h=chmOf(m); if(h){ h.classList.remove("rise","vanish","slow","dip","fall","stretch"); h.style.opacity=""; } }); }
+const chmOf=m=>m&&m.getElement&&m.getElement().querySelector(".chm");
+const tween=(ms,key,fn)=>new Promise(r=>{ if(RM()){ fn(1); return r(key===FXK); } const t0=performance.now(), f=ts=>{ if(key!==FXK) return r(false); const q=Math.min(1,(ts-t0)/ms); fn(q); q<1?requestAnimationFrame(f):r(true); }; requestAnimationFrame(f); });
+const fxSky=(ll,html,z)=>fxMk(ll,"efx0",html,z||5);
 function fxNight(){ const c=M.getContainer(); if(!NIGHT||!c.contains(NIGHT)){ NIGHT=document.createElement("div"); NIGHT.className="bmtnight"; c.appendChild(NIGHT); } }
 function fxMk(ll,cls,html,z){ const o=document.createElement("div"); o.className="efxm"; o.style.zIndex=String(z||2); const i=document.createElement("div"); i.className=cls; i.innerHTML=html||""; o.appendChild(i);
   const m=new maplibregl.Marker({element:o,anchor:"center"}).setLngLat(ll).addTo(M); FXL.push(m); m._in=i; return m; }
@@ -332,27 +337,112 @@ function fxSun(at){ const P=scr(at); fxMk(unscr(P.x-70,P.y-90),"mvsky","☀️",
 function fxCycle(s){ const C=s.cycle||[1,1,1,1,1], N=["악을 행함","넘기심","부르짖음","구원자","평안"], d=document.createElement("div"); d.className="mvcycle";
   d.innerHTML=`<b>${esc(s.cyc||"사사기의 틀")}</b><div class="mvcyr">${N.map((n,k)=>`<span class="${C[k]?"on":"off"}"><i>${C[k]?"●":"○"}</i>${n}</span>`).join("<em>→</em>")}</div>${C.includes(0)?`<small>이 이야기에 기록되지 않은 것: ${N.filter((n,k)=>!C[k]).join(" · ")}</small>`:"<small>다섯 요소가 모두 있음</small>"}`;
   root.appendChild(d); requestAnimationFrame(()=>d.classList.add("on")); setTimeout(()=>{ d.classList.remove("on"); setTimeout(()=>d.remove(),700); },RM()?3000:6600); }
+/* ── 2차(11-24): 포위·겉옷·승천·세례·로뎀·물고기·수레·양피지·성전·앞서가는 것·떠남 ── */
+let TPLM=null, LD=null; const TPL_LL=[35.2354,31.778], LMN={site:"성전 터",built:"성전",ruin:"무너진 성전",build:"다시 짓는 성전"};
+function tplAt(t,k,start){ let tp=t.tpl||"", n=""; for(let i=0;i<=k&&i<t.steps.length;i++){ const x=t.steps[i]; if(x.tpl&&!(start&&i===k&&x.burn)){ tp=x.tpl; n=x.tplN||""; } } return [tp,n]; }
+function tplSet(kind,nm){ const k2=kind?kind+"|"+(nm||""):""; if(TPLM&&TPLM._k===k2) return; if(TPLM){ const o=TPLM; o.getElement().querySelector(".lmk")?.classList.add("out"); setTimeout(()=>o.remove(),RM()?0:700); TPLM=null; }
+  if(!kind||!O.lm||!M) return; const el=document.createElement("div"); el.className="efx0"; el.style.zIndex="1"; el.innerHTML=O.lm(kind,nm||LMN[kind]||""); TPLM=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat(TPL_LL).addTo(M); TPLM._k=k2; }
+/* 언약궤·관처럼 무리 앞에서 가는 것(수 3:3, 창 50:13) */
+function leadSet(s,at){ if(!s.lead||!O.figure||s.sea){ if(LD){ LD.remove(); LD=null; } return; } const k2=s.lead.join("|"); if(!(LD&&LD._k===k2)){ if(LD) LD.remove(); const el=document.createElement("div"); el.className="ewalk co"; el.innerHTML=O.figure(s.lead[1])+`<span class="enm">${esc(s.lead[0])}</span>`; LD=new maplibregl.Marker({element:el,anchor:"top-left"}).setLngLat(at).addTo(M); LD._k=k2; }
+  LD.setLngLat(at); LD.setOffset([36,-2]); } /* 화면 칸(px)으로 비켜 둠 — 카메라가 옮겨 가도 곁에 있게 */
+function leadAhead(hist,pt){ if(!LD) return; LD.setLngLat(pt); if(hist.length<5) return; const a=scr(hist[hist.length-5]), b=scr(pt), dx=b.x-a.x, dy=b.y-a.y, L=Math.hypot(dx,dy); if(L>1.5) LD.setOffset([dx/L*36,dy/L*36-2]); }
+/* 떠남: 손 흔들고(👋) 사라짐 · 죽음은 손 흔들지 않고 천천히 · quiet는 조용히 */
+async function fxDrop(s,key){ const dead=s.exit==="death"; for(const n of [].concat(s.drop||[])){ const m=CW.find(x=>x._n===n); if(!m) continue;
+    if(!s.quiet&&!dead){ fxEmo(m,"👋"); if(!(await fxWait(700,key))) return false; } const h=chmOf(m); if(h){ h.classList.add("vanish"); if(dead) h.classList.add("slow"); } m.getElement().querySelector(".enm")?.style.setProperty("opacity","0");
+    if(!(await fxWait(dead?1500:900,key))) return false; m.remove(); const i=CW.indexOf(m); if(i>=0) CW.splice(i,1); } return true; }
+/* 포위(왕하 18, 25 · 렘 39): 북쪽 화면 밖에서 군대가 내려와 성을 에워쌈 → 불(burn이 있을 때만) */
+async function fxSiege(at,t,s,key,burned){ const P0=scr(at), n=14, R=Math.random, A=[];
+  for(let k=0;k<n;k++){ const th=k/n*Math.PI*2, fx=(R()-.5)*230, fy=-210-R()*90, tx=48*Math.sin(th), ty=38*Math.cos(th), m=fxFig(unscr(P0.x+fx,P0.y+fy),"foe",k?"":(t.siegeBy||"바벨론 군대")), h=chmOf(m); if(h){ h.classList.add("walk"); h.classList.toggle("flip",tx<fx); } A.push({m,fx,fy,tx,ty,d:R()*.25}); }
+  if(!(await tween(5200,key,q=>{ A.forEach(a=>{ const g=Math.max(0,Math.min(1,(q-a.d)/(1-a.d))), e=1-(1-g)*(1-g); a.m.setLngLat(unscr(P0.x+a.fx+(a.tx-a.fx)*e,P0.y+a.fy+(a.ty-a.fy)*e)); }); if(R()<.03) fxEmo(A[Math.floor(R()*n)].m,"⚔️"); }))) return false;
+  A.forEach(a=>chmOf(a.m)?.classList.remove("walk")); if(!(await fxWait(700,key))) return false; if(s.burn) burned(at); if(W) fxEmo(W,s.burn?"😭":"😨"); return fxWait(1500,key); }
+/* 겉옷으로 물을 치니 갈라짐(왕하 2:8, 14): 팔을 들고 → 요단 물길에서만 짧게 갈라짐 → 건넘 → 다시 흐름 */
+async function fxMantle(seg,key,walkP){ const h=chmOf(W); if(h) h.classList.add("stretch"); if(W) fxEmo(W,"🧥"); if(!(await fxWait(1100,key))) return;
+  let X=null; for(let i=1;i<seg.length&&!X;i++){ const a=seg[i-1], b=seg[i], u=a[0]-35.552, v=b[0]-35.552; if(u*v<=0&&a[0]!==b[0]){ const k=u/(u-v); X=[a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k]; } } /* 여리고 앞 요단 물길(경도 35.55쯤) */
+  const a=seg[0], b=seg[seg.length-1], A=scr(a), B=scr(b); X=X||[(a[0]+b[0])/2,(a[1]+b[1])/2];
+  const m=fxMk(X,"mvpart long","<i></i><i></i>",1); m._in.style.transform=`rotate(${Math.atan2(B.y-A.y,B.x-A.x)*180/Math.PI-90}deg)`; m._in.style.setProperty("--pl","70px"); requestAnimationFrame(()=>m._in.classList.add("on"));
+  [W,...CW].forEach(x=>x&&fxEmo(x,"😮")); if(!(await fxWait(1000,key))) return; if(h) h.classList.remove("stretch"); await walkP(3600); if(key!==FXK) return; m._in.classList.add("off","close"); }
+/* 승천: 엘리야(왕하 2:11) 불수레가 두 사람 사이를 지나 갈라놓고, 회오리바람으로 올라감 · 예수님(눅 24:51) 축복하실 때 하늘로 올려지심 */
+async function fxAscend(t,key){ if(!W) return true; const c0=W.getLngLat(), P0=scr(c0), at=(x,y)=>unscr(P0.x+x,P0.y+y), h=chmOf(W);
+  if(t.id!=="elijah"){ fxMk(c0,"mvbeam","",3); if(!(await fxWait(1100,key))) return false; if(h) h.classList.add("rise"); CW.forEach(m=>fxEmo(m,"😮")); if(!(await fxWait(2600,key))) return false; CW.forEach(m=>fxEmo(m,"🙏")); return fxWait(1600,key); } /* 구름(행 1:9)은 누가복음에 없어 넣지 않음 */
+  const off=m=>{ const o=m.getOffset(); return {x:o.x,y:o.y}; }, O0=CW.map(off), O1=CW.map((m,k)=>({x:20+k*12,y:2})), O2=CW.map((m,k)=>({x:30+k*14,y:66}));
+  CW.forEach(m=>chmOf(m)?.classList.add("walk")); if(!(await tween(1300,key,q=>CW.forEach((m,k)=>m.setOffset([O0[k].x+(O1[k].x-O0[k].x)*q,O0[k].y+(O1[k].y-O0[k].y)*q]))))) return false;
+  CW.forEach(m=>chmOf(m)?.classList.remove("walk")); if(!(await fxWait(700,key))) return false;
+  const MY=30, X0=-230, X1=320, CT=2600, ts=CT*(0-X0)/(X1-X0), RS=ts+500, RD=2400, END=Math.max(CT,RS+RD), ch=fxSky(at(X0,MY),O.px?O.px("firechariot",{s:2,dy:18}):"🔥",6); let wh=null, rose=false, cry=false;
+  if(!(await tween(END,key,q=>{ const tm=q*END;
+    if(tm<=CT){ const f=tm/CT; ch.setLngLat(at(X0+(X1-X0)*f,MY-Math.sin(f*Math.PI*3)*3)); ch._in.style.opacity=String(1-Math.max(0,(f-.72)/.28)); } else ch._in.style.opacity="0";
+    const g=Math.max(0,Math.min(1,(tm-(ts-250))/550)), g2=1-(1-g)*(1-g); if(g>0) CW.forEach((m,k)=>m.setOffset([O1[k].x+(O2[k].x-O1[k].x)*g2,O1[k].y+(O2[k].y-O1[k].y)*g2])); /* 불수레가 지나는 순간 밀려남 */
+    if(!wh&&tm>=ts-100){ wh=fxSky(c0,O.px?O.px("whirlwind",{s:5,dy:10,cls:"pxgrow"}):"🌪️",5); CW.forEach(m=>fxEmo(m,"😮")); }
+    if(!rose&&tm>=RS){ rose=true; if(h) h.classList.add("rise"); }
+    if(wh&&tm>=RS){ const f=Math.min(1,(tm-RS)/RD); wh.setLngLat(at(0,-f*f*200)); wh._in.style.opacity=String(1-Math.max(0,(f-.55)/.45)); if(!cry&&f>.6){ cry=true; CW.forEach(m=>fxEmo(m,"😭")); } } }))) return false;
+  if(!(await fxWait(900,key))) return false; const O3=CW.map(off); CW.forEach(m=>chmOf(m)?.classList.add("walk")); /* 엘리사가 엘리야가 섰던 자리로(왕하 2:13 겉옷을 주움) */
+  const ok=await tween(1100,key,q=>CW.forEach((m,k)=>m.setOffset([O3[k].x*(1-q),O3[k].y*(1-q)]))); CW.forEach(m=>chmOf(m)?.classList.remove("walk")); return ok; }
+/* 양피지 성벽 지도(느 2:12–15) */
+async function fxParch(key){ if(!O.parch) return true; const pa=document.createElement("div"); pa.className="parch eparch"; pa.innerHTML=O.parch(); root.appendChild(pa); requestAnimationFrame(()=>pa.classList.add("on")); fxNight(); const c=M.getContainer(); c.classList.add("mvnight");
+  const me=pa.querySelector(".pme"), X=pa.querySelector(".px");
+  const run=(id,ms)=>{ const p=pa.querySelector("#"+id), L0=p.getTotalLength(); p.style.strokeDasharray=L0; p.style.strokeDashoffset=L0; p.style.opacity=1; return tween(ms,key,k=>{ const q=p.getPointAtLength(L0*k); p.style.strokeDashoffset=L0*(1-k); me.setAttribute("cx",q.x); me.setAttribute("cy",q.y); }); };
+  if(!(await fxWait(1400,key))) return false; if(!(await run("pwRide",5200))) return false; if(X){ X.style.transition="opacity .6s"; X.setAttribute("opacity","1"); } me.classList.add("stop");
+  if(!(await fxWait(2400,key))) return false; me.classList.remove("stop"); me.classList.add("foot"); if(!(await run("pwWalk",2800))) return false; if(!(await run("pwBack",4200))) return false;
+  if(!(await fxWait(1500,key))) return false; pa.classList.remove("on"); c.classList.remove("mvnight"); setTimeout(()=>pa.remove(),900); return true; }
+/* 에디오피아 내시의 수레(행 8:27–39) */
+const cartMk=ll=>fxSky(ll,O.px?O.px("cart",{s:2,dy:14,cls:"pxflip"}):"🛞",4), cartRun=(C,on)=>{ const p=C&&C._in.querySelector(".pxs"); if(p) p.style.animationPlayState=on?"running":"paused"; };
+/* 도착한 뒤 그 자리에서 벌어지는 일 */
+const FXE={
+  light:async(s,key)=>{ const c=W.getLngLat(), h=chmOf(W), b=fxMk(c,"mvbeam","",3); fxMk(c,"mvflash","",4)._in.classList.add("on"); if(!(await fxWait(700,key))) return false; fxMk(c,"mvflash","",4)._in.classList.add("on"); if(h) h.classList.add("fall"); /* 행 9:3–4 땅에 엎드러짐 */
+    if(!(await fxWait(5100,key))) return false; b.remove(); if(h) h.classList.remove("fall"); fxEmo(W,"😶"); return fxWait(1200,key); },
+  fire:async(s,key)=>{ const c=W.getLngLat(); if(!(await fxWait(1800,key))) return false; const fall=fxSky(c,O.px?O.px("firefall",{s:3,dx:64,dy:-6,cls:"pxdrop"}):"",6); if(!(await fxWait(750,key))) return false; /* 왕상 18:38 */
+    fxMk(c,"mvflash","",4)._in.classList.add("on"); fxSky(c,O.px?O.px("altarfire",{s:2,dx:64,dy:8,cls:"pxgrow"}):"🔥",4); if(!(await fxWait(250,key))) return false; fall.remove(); if(!(await fxWait(5450,key))) return false; fxEmo(W,"🙇"); return fxWait(1000,key); },
+  baptism:async(s,key)=>{ const c=W.getLngLat(), h=chmOf(W); if(!(await fxWait(900,key))) return false; if(h) h.classList.add("dip"); const sp=fxSky(c,'<span class="mvprop">💧</span>',4); if(!(await fxWait(1500,key))) return false; if(h) h.classList.remove("dip"); sp.remove();
+    if(!(await fxWait(500,key))) return false; fxMk(c,"mvbeam","",3); const dv=fxSky(c,'<span class="mvdove">🕊️</span>',6); /* 성령이 비둘기 같이 내려오심(마 3:16) */
+    if(!(await tween(2600,key,f=>{ const q=1-(1-f)*(1-f); dv.setOffset([Math.sin(f*7)*12,-200+148*q]); }))) return false; return fxWait(3000,key); },
+  sleep:async(s,key)=>{ const c=W.getLngLat(), P=scr(c), at=(x,y)=>unscr(P.x+x,P.y+y), h=chmOf(W); if(h) h.classList.add("dip"); const zz=fxSky(c,`<span class="pxwrap pxzz" style="left:6px;top:-92px">${O.pxEmo?O.pxEmo("sleeps",3):"💤"}</span>`,6);
+    for(let k=0;k<2;k++){ if(!(await fxWait(2300,key))) return false; const an=fxSky(at(40,-36),'<span class="mvangel">👼</span>',6); if(!(await fxWait(900,key))) return false; if(h) h.classList.remove("dip"); /* 천사가 두 번 깨움(왕상 19:5, 7) */
+      const fd=fxSky(at(-30,6),'<span class="mvprop">🍞💧</span>',5); if(!(await fxWait(k?2600:3800,key))) return false; an._in.querySelector(".mvangel")?.classList.add("out"); fd.remove(); if(k===0&&h) h.classList.add("dip"); }
+    if(h) h.classList.remove("dip"); zz.remove(); return true; },
+  fish:async(s,key)=>{ const c=W.getLngLat(); [W,...CW].forEach(m=>m&&m.getElement().classList.add("mvhide")); fxSky(c,'<span class="mvfish">🐋<b>물고기 뱃속의 요나</b></span>',6); return fxWait(5200,key); }, /* 욘 1:17 */
+  meetcart:async(s,key)=>{ const c=W.getLngLat(), P=scr(c), at=(x,y)=>unscr(P.x+x,P.y+y), C=cartMk(at(240,-150)), h=chmOf(W); cartRun(C,true); /* 행 8:29–31 */
+    if(!(await tween(3000,key,f=>{ const q=1-(1-f)*(1-f); C.setLngLat(at(240-196*q,-150+146*q)); }))) return false; cartRun(C,false); if(!(await fxWait(1600,key))) return false;
+    if(h) h.classList.add("walk"); if(!(await tween(900,key,f=>W.setLngLat(at(44*f,-4*f))))) return false; if(h){ h.classList.remove("walk"); h.style.opacity="0"; } cartRun(C,true);
+    const ok=await tween(1200,key,f=>{ const q=at(44*(1-f),-4*(1-f)); W.setLngLat(q); C.setLngLat(q); }); cartRun(C,false); return ok; },
+  spirit:async(s,key)=>{ const c=W.getLngLat(), P=scr(c), at=(x,y)=>unscr(P.x+x,P.y+y), C=cartMk(at(-40,-4)), h=chmOf(W); cartRun(C,false); /* 행 8:38–39 */
+    if(!(await fxWait(900,key))) return false; if(h) h.classList.add("dip"); if(!(await fxWait(1600,key))) return false; if(h) h.classList.remove("dip"); if(!(await fxWait(1800,key))) return false;
+    if(h) h.classList.add("vanish","slow"); fxEmo(C,"😮"); if(!(await fxWait(1600,key))) return false; cartRun(C,true); fxEmo(C,"😊");
+    return tween(3400,key,f=>{ C.setLngLat(at(-40-240*f,-4+50*f)); C._in.style.opacity=String(1-Math.max(0,(f-.6)/.4)); }); } };
 function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute","line-dasharray",[1,0]); }catch(e){} if(k>=t.steps.length){ tour(t.id); return; } step=k; const s=t.steps[k]; if(s.r) setEra(eraOf(s.r[0],s.r[1]));
   /* 11-22 목사님("에스라가 예루살렘에서 페르시아로 이동하는 장면은 왜?"): 장면에 from(다른 곳에서 새 인물로 시작)이 있으면 앞 장면 끝에서 걸어가지 않고 그곳에서 시작 */
-  const base=[]; let c0=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.slice(0,k).forEach(x=>{ if(x.from){ if(c0.length) base.push(c0); c0=[[x.from[2],x.from[1]]]; } (x.p||[]).forEach(p=>c0.push([p[2],p[1]])); });
+  /* 11-24 dash: 성경이 길을 말하지 않는 장면(민 33 광야 38년 등)의 길은 점선 토막(DS)으로 따로 */
+  const base=[], DS=[]; let c0=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.slice(0,k).forEach(x=>{ if(x.from){ if(c0.length) base.push(c0); c0=[[x.from[2],x.from[1]]]; } const P=(x.p||[]).map(p=>[p[2],p[1]]);
+    if(x.dash&&P.length){ const a=c0.length?c0[c0.length-1]:P[0]; DS.push([a,...P]); if(c0.length) base.push(c0); c0=[P[P.length-1]]; } else P.forEach(p=>c0.push(p)); });
   if(s.from){ if(c0.length) base.push(c0); c0=[[s.from[2],s.from[1]]]; } if(c0.length) base.push(c0);
   const sp=(s.p||[]).map(p=>[p[2],p[1]]), lastSeg=base[base.length-1]||[]; const here=lastSeg.length?lastSeg[lastSeg.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
-  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:cs.co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); fxClear(); const key=FXK; fxStatic(t,k,here); if(s.cycle||s.fx==="cycle") fxCycle(s);
+  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; let co=cs.co.slice();
+  if(s.drop&&s.dropAt==="start"&&k>0){ const pv=cast(t,k-1).co; [].concat(s.drop).forEach(n=>{ const q=pv.find(x=>x[0]===n); if(q&&!co.some(x=>x[0]===n)) co.push(q); }); } /* 처음에 떠나는 사람도 장면이 열릴 때는 보이고, 손 흔들고 떠남 */
+  walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); fxClear(); const key=FXK; setLine("eroutd",DS.length?DS:null); fxStatic(t,k,here); if(s.cycle||s.fx==="cycle") fxCycle(s);
+  { const [tp,tn]=tplAt(t,k,true); tplSet(tp,tn); } leadSet(s,here);
+  const burned=at=>{ fxBurn(at); if(s.tpl) setTimeout(()=>{ if(key===FXK){ const [a,b]=tplAt(t,k,false); tplSet(a,b); } },RM()?0:1600); }; /* 성전이 불탐(왕하 25:9) → 무너진 성전 */
+  let CART=null; if(s.ride&&!s.sea){ CART=cartMk(here); const h=chmOf(W); if(h) h.style.opacity="0"; } /* 행 8:31 수레에 함께 탐 */
   const go=async()=>{ if(cur!==t||step!==k||key!==FXK) return; const c=M.getContainer();
     if(s.gap){ const g=document.createElement("div"); g.className="bmtgap"; g.textContent=s.gap; root.appendChild(g); setTimeout(()=>g.remove(),2700); if(!(await fxWait(2200,key))) return; }
+    if(s.drop&&s.dropAt==="start"){ if(!(await fxDrop(s,key))) return; }
     if(s.side&&s.side.p&&s.side.p.length) sideWalk(s.side,here);
     if(s.quake){ c.classList.add("mvquake"); setTimeout(()=>c.classList.remove("mvquake"),RM()?0:1500); }
-    if(s.storm) c.classList.add("mvstorm"); if(s.fx==="dark"){ fxNight(); c.classList.add("mvdark"); } if(s.fx==="light") fxMk(here,"mvflash","",4)._in.classList.add("on"); if(s.fx==="sun") fxSun(here);
-    if(s.fx==="fire"||s.fx==="spirit"||s.fx==="baptism") fxMk(here,"mvbeam"+(s.fx==="fire"||s.fx==="spirit"?" fire":""),"",3);
+    if(s.storm) c.classList.add("mvstorm"); if(s.fx==="dark"){ fxNight(); c.classList.add("mvdark"); } if(s.fx==="sun") fxSun(here);
     let pil=null; if(s.fx==="pillar"){ pil=fxMk(here,"mvpil","<i></i><b></b>",2); fxNight(); setTimeout(()=>{ if(key!==FXK) return; pil._in.classList.add("fire"); c.classList.add("mvnight"); },RM()?0:2600); }
     const hist=[]; let CH=[]; if(s.chase){ const [cn,ca,cc]=s.chase; CH=Array.from({length:cc||3},(_,j)=>fxFig(here,ca||"soldier",j?"":cn)); CH.forEach(m=>m.getElement().querySelector(".chm")?.classList.add("walk")); }
-    const walkP=(mn)=>new Promise(res=>animLine(base,seg,()=>{ if(s.dress&&cur===t&&step===k) dressNow(s.dress,cs,seg[seg.length-1],s.exit==="death"?[].concat(s.drop||[]):[]); res(); },pt=>{ walker(fig,pt,s.sea?"":cs.nm); if(pil) pil.setLngLat(pt); hist.push(pt); CH.forEach((m,j)=>{ const q=hist[Math.max(0,hist.length-1-18-j*6)]; if(q) m.setLngLat(q); }); },mn));
+    const walkP=(mn)=>new Promise(res=>{ cartRun(CART,true); animLine(base,seg,()=>{ cartRun(CART,false); res(); },pt=>{ walker(fig,pt,s.sea?"":cs.nm); if(pil) pil.setLngLat(pt); if(CART) CART.setLngLat(pt); hist.push(pt); leadAhead(hist,pt); CH.forEach((m,j)=>{ const q=hist[Math.max(0,hist.length-1-18-j*6)]; if(q) m.setLngLat(q); }); },mn,{mul:s.slow,dash:!!s.dash,ds:DS}); });
     if(s.fx==="jordan"&&seg.length>1){ if(!(await fxJordan(key))) return; }
-    if(s.war&&s.stay){ if(!(await fxBattle(here,s.war,key))) return; if(s.burn) fxBurn(here); }
-    else if(s.burn&&s.stay) fxBurn(here);
-    if(s.fx==="part"&&seg.length>1) await fxPart(seg,key,walkP); else await walkP();
+    if(s.fx==="siege"){ if(!(await fxSiege(here,t,s,key,burned))) return; }
+    else if(s.war&&s.stay){ if(!(await fxBattle(here,s.war,key))) return; if(s.burn) burned(here); }
+    else if(s.burn&&s.stay) burned(here);
+    if(s.fx==="ascend"){ if(!(await fxAscend(t,key))) return; }
+    if(s.fx==="parch"){ if(!(await fxParch(key))) return; }
+    if(s.fx==="part"&&seg.length>1) await fxPart(seg,key,walkP); else if(s.fx==="mantle"&&seg.length>1) await fxMantle(seg,key,walkP); else await walkP();
     if(key!==FXK) return; const end=seg[seg.length-1];
-    if(s.war&&!s.stay){ if(!(await fxBattle(end,s.war,key))) return; if(s.burn) fxBurn(end); }
+    if(s.war&&!s.stay){ if(!(await fxBattle(end,s.war,key))) return; if(s.burn) burned(end); }
+    if(FXE[s.fx]&&W){ if(!(await FXE[s.fx](s,key))) return; }
+    const dead=s.exit==="death"; /* 민 20:28: 옷을 벗겨 엘르아살에게 입히고 → 그 뒤에 아론이 죽음(본문 순서대로) */
+    if(s.dress&&dead){ dressNow(s.dress,cs,end,[],key); if(!(await fxWait(3200,key))) return; }
+    if(s.drop&&s.dropAt!=="start"){ if(!(await fxDrop(s,key))) return; }
+    if(s.dress&&!dead&&cur===t&&step===k) dressNow(s.dress,cs,end,[].concat(s.drop||[]),key);
     if(s.storm) setTimeout(()=>c.classList.remove("mvstorm"),RM()?0:2500);
     if(pil) setTimeout(()=>{ if(key!==FXK) return; c.classList.remove("mvnight"); pil._in.style.opacity="0"; },RM()?0:3500); };
   pins.forEach((m,i)=>m.getElement().classList.toggle("seen",i<=k+1));
@@ -381,7 +471,7 @@ function onClick(e){ const t=e.target.closest("button"); if(!t||!root.contains(t
 /* 11-22: 맨 아래 깔리는 6배율 사진을 성경 땅 전체(이탈리아~메소보다미아, 약 65장)만큼 들어갈 때 미리 받아 둠 */
 function preBase(){ [[3,4,5,2,3],[4,8,10,5,6],[5,16,20,11,13],[6,32,41,23,27]].forEach(([z,x0,x1,y0,y1])=>{ for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++){ const u=`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${O.esriKey}`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
 function enter(){ spinOn=false; preBase(); $(".eintro").classList.add("off"); setTimeout(perfWatch,1500); if(O.startTour) { push(()=>home(true)); tour(O.startTour,O.startFrom||0); } else if(O.startRoute!=null){ push(()=>home(true)); route(O.startRoute); } else home(); }
-function toEarth(){ clearPins(); noWalker(); setLine("eroute",null); setLine("efull",null); fold(true); M.flyTo({center:[38,24],zoom:1.3,pitch:0,bearing:0,duration:RM()?0:5500,essential:true}); }
+function toEarth(){ clearPins(); noWalker(); fxClear(); tplSet(""); setLine("eroute",null); setLine("efull",null); fold(true); M.flyTo({center:[38,24],zoom:1.3,pitch:0,bearing:0,duration:RM()?0:5500,essential:true}); }
 function key(e){ if(!root) return; const tg=e.target; if(tg&&/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)) return;
   /* Esc는 앱이 처리(뒤로 가기와 같은 길) */ if(cur&&step>=0&&e.key==="ArrowRight") follow(step+1); else if(cur&&step>0&&e.key==="ArrowLeft") follow(step-1); }
 
@@ -402,10 +492,11 @@ function open(opts){ if(root) close(true); O=opts||{}; stack=[]; cur=null; step=
     M.addLayer({id:"efull",type:"line",source:"efull",paint:{"line-color":"#fff2d6","line-width":2,"line-opacity":.35,"line-dasharray":[2,2]},layout:{"line-cap":"round","line-join":"round"}});
     M.addLayer({id:"eroute-glow",type:"line",source:"eroute",paint:{"line-color":"#ffd08a","line-width":12,"line-blur":10,"line-opacity":.55},layout:{"line-cap":"round","line-join":"round"}});
     M.addLayer({id:"eroute",type:"line",source:"eroute",paint:{"line-color":"#fff2d6","line-width":3},layout:{"line-cap":"round","line-join":"round"}});
+    M.addSource("eroutd",{type:"geojson",data:{type:"FeatureCollection",features:[]}}); M.addLayer({id:"eroutd",type:"line",source:"eroutd",paint:{"line-color":"#fff2d6","line-width":3,"line-dasharray":[2,1.6]},layout:{"line-join":"round"}});
     if(O.skipIntro) enter(); else { spinOn=true; M.on("moveend",()=>{ if(spinOn) spin(); }); spin(); } });
   ["mousedown","touchstart","wheel"].forEach(ev=>M.on(ev,()=>{ if(spinOn&&$(".eintro").classList.contains("off")) spinOn=false; }));
   M.on("error",e=>{ if(O.onTileError) O.onTileError(e); });
   return true; }
-function close(silent){ removeEventListener("keydown",key); try{ fxClear(); clearPins(); noWalker(); M&&M.remove(); }catch(e){} M=null; if(root){ root.remove(); root=null; } spinOn=false; TER=false; const f=O&&O.onClose; O=null; if(!silent&&f) f(); }
+function close(silent){ removeEventListener("keydown",key); try{ fxClear(); TPLM=null; clearPins(); noWalker(); M&&M.remove(); }catch(e){} M=null; if(root){ root.remove(); root=null; } spinOn=false; TER=false; const f=O&&O.onClose; O=null; if(!silent&&f) f(); }
 window.CBSR_EARTH={open,close,isOpen:()=>!!root,_map:()=>M};
 })();
