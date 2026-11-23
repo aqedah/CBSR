@@ -96,7 +96,7 @@ for i in range(0,len(P365),7):
 J=lambda o:json.dumps(o,ensure_ascii=False,separators=(',',':'))
 data+='const PLAN_INFO={y365:{name:"365 성경통독",short:"365일",src:"2026 365일 성경통독표",start:"2026-01-01"}};\n'
 import importlib.util as _iu3; _sp3=_iu3.spec_from_file_location('p27','ux/plan365v4_build.py'); _p27=_iu3.module_from_spec(_sp3); _sp3.loader.exec_module(_p27)
-data+='const P27='+J(_p27.build())+';\n'  # 2027 365일표 4판(목사님 확정 11-08; 313회는 일정표로만 — 11-10 앱 반영)
+data+='const P27='+J(_p27.build())+';\n'  # 2027 365일표 5판(11-24 목사님 확정, 4판 11-08). 313회는 일정표로만
 A365=json.load(open('s365b/all.json')); GD={};EY={};CQ={}
 for i,d in enumerate(P365):
     w,j=i//7+1,i%7; v=A365.get(str(d['n']))

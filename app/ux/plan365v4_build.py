@@ -5,7 +5,7 @@
 import json, os
 H = os.path.dirname(os.path.abspath(__file__)); R = os.path.dirname(H)
 def build():
-    P = json.load(open(f'{R}/plan365_2027v4.json'))
+    P = json.load(open(f'{R}/plan365_2027v5.json'))  # 11-24 5판(목사님 확정). 4판은 plan365_2027v4.json에 보관
     old = json.load(open(f'{R}/plan365_2027.json'))
     oldk = {tuple(map(tuple, d['ch'])): d['n'] for d in old}
     out = []
