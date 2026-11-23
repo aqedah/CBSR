@@ -37,7 +37,9 @@ const CSS=`
 #eov .etabs button{flex:1;border:0;background:none;color:#cfc3b1;border-radius:999px;padding:6px 0;font:600 13px "Noto Sans KR";cursor:pointer}
 #eov .etabs button.on{background:rgba(255,255,255,.18);color:#fff}
 #eov .eq{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;padding:10px 12px;font:15px "Noto Sans KR";margin:2px 0 8px}
-#eov .edress .fig{animation:edress 1.5s ease-out}@keyframes edress{0%{filter:brightness(2.2) drop-shadow(0 0 10px #fff3b0)}100%{filter:none}}#eov .eunfold{display:none}#eov.pfold .eunfold{display:inline-flex;align-items:center}
+#eov .edress .fig{animation:edress 1.5s ease-out}@keyframes edress{0%{filter:brightness(2.2) drop-shadow(0 0 10px #fff3b0)}100%{filter:none}}#eov .ebord[aria-pressed="true"]{background:#e8c48a;color:#2a1d0c}#eov .ebchip{position:absolute;z-index:4;top:calc(58px + env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));font:600 12px "Noto Sans KR";color:#f3ead9;background:rgba(20,14,8,.62);padding:4px 10px;border-radius:12px;pointer-events:none}
+#eov .ebl{font:700 13px/1.2 "Noto Sans KR";color:#fff;padding:2px 8px;border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,.45);white-space:nowrap;opacity:.88;pointer-events:none}#eov .ebl.sm{font-size:11px;opacity:.8}
+#eov .eunfold{display:none}#eov.pfold .eunfold{display:inline-flex;align-items:center}
 .epin.hid b{opacity:0!important}
 #eov .egrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 #eov .egrid button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#f7f1e6;border-radius:11px;padding:10px 4px;font:600 13px "Noto Sans KR";cursor:pointer}
@@ -209,7 +211,39 @@ let TAB="today", LASTLIST=null;
 const TABS=[["today","오늘"],["who","주인공"],["era","시대"],["war","전쟁"],["place","지명"]];
 function routeRows(idx){ return (idx||[]).map(i=>{ const r=O.routes[i]; return r?`<button class="erow" data-route="${i}"><span class="ic">〰</span><span><b>${esc(r.n)}</b><small>${esc(r.ref||"")}</small></span></button>`:""; }).join(""); }
 function tourRows(ids){ return (ids||[]).map(id=>O.tours.find(t=>t.id===id)).filter(Boolean).map(t=>`<button class="erow" data-tour="${esc(t.id)}"><span class="ic">▶</span><span><b>${esc(t.n)}</b><small>${esc(t.sub||"")} · ${t.steps.length}장면</small></span></button>`).join(""); }
-function home(keepView){ stack=[]; cur=null; step=-1; setLine("eroute",null); setLine("efull",null); noWalker();
+/* ── 나라 경계(11-23 목사님): 켜고 끄기, 시대는 보는 장면·경로·오늘 본문으로 자동. 경계는 번지게(정확한 선을 모르므로). 그 시대 자료가 없으면 그리지 않음 ── */
+function eraOf(b,c){ if(!b) return null; c=c||1;
+  if(b===1) return null; if(b<=6) return "exodus"; if(b===7||b===8) return "judges"; if(b===9) return c<=8?"judges":"saul"; if(b===10) return "united";
+  if(b===11) return c<=11?"united":"divided"; if(b===12) return c<=15?"divided":c<=23?"assyria":"babylon";
+  if(b===13) return c>=10?"united":null; if(b===14) return c<=9?"united":c<=27?"divided":c<=35?"assyria":"babylon";
+  if(b>=15&&b<=17) return "persia"; if(b>=18&&b<=22) return null; if(b===23) return c<=39?"assyria":"babylon"; if(b>=24&&b<=26) return "babylon"; if(b===27) return c<=5?"babylon":"persia";
+  if(b===28||b===30) return "divided"; if(b===32||b===33||b===34||b===36) return "assyria"; if(b===31||b===35) return "babylon"; if(b>=37&&b<=39) return "persia";
+  if(b>=40&&b<=43) return "jesus"; if(b>=44) return "rome"; return null; }
+let BON=false; try{ BON=localStorage.getItem("cbsr_bord")==="1"; }catch(e){} let BERA=null, BDRAWN=null, BDATA=null, BLAB=[];
+function bLoad(){ return BDATA||(BDATA=fetch("borders.json").then(r=>r.json()).catch(()=>({eras:[]}))); }
+let BCV=null, BPRO=false;
+function bProto(){ if(BPRO||!window.maplibregl||!maplibregl.addProtocol) return; BPRO=true;
+  maplibregl.addProtocol("bord",(params)=>new Promise((res)=>{ const m=params.url.match(/bord:\/\/[^/]+\/(\d+)\/(\d+)\/(\d+)/), t=document.createElement("canvas"); t.width=t.height=256;
+    if(m&&BCV){ const z=+m[1], x=+m[2], y=+m[3], n=2**z, lon=k=>k/n*360-180, R=Math.PI/180, Ym=k=>Math.PI*(1-2*k/n); /* 조각의 메르카토르 y */
+      const C=BCV, W=C.cv.width, H=C.cv.height, X=lo=>(lo-C.w)/(C.e-C.w)*W, YY=ym=>(C.Y0-ym)/(C.Y0-C.Y1)*H, sx=X(lon(x)), ex=X(lon(x+1)), sy=YY(Ym(y)), ey=YY(Ym(y+1));
+      if(ex>0&&sx<W&&ey>0&&sy<H) t.getContext("2d").drawImage(C.cv,sx,sy,ex-sx,ey-sy,0,0,256,256); }
+    t.toBlob(b=>b.arrayBuffer().then(buf=>res({data:buf})),"image/png"); })); }
+function setEra(id){ BERA=id||null; bDraw(); }
+function bClear(){ BLAB.forEach(m=>m.remove()); BLAB=[]; if(M&&M.getLayer("bord")) M.removeLayer("bord"); if(M&&M.getSource("bord")) M.removeSource("bord"); BDRAWN=null; }
+function bChip(t){ const c=root&&root.querySelector(".ebchip"); if(!c) return; c.textContent=t||""; c.hidden=!t; }
+function bDraw(){ const btn=root&&root.querySelector(".ebord"); if(btn) btn.setAttribute("aria-pressed",BON?"true":"false");
+  if(!BON){ bClear(); bChip(""); return; } if(!BERA){ bClear(); bChip("이 본문 시대의 나라 경계는 아직 없습니다"); return; } if(BDRAWN===BERA) return;
+  const want=BERA; bLoad().then(D=>{ if(!M||!BON||BERA!==want) return; const E=(D.eras||[]).find(e=>e.id===want); bClear(); if(!E){ bChip("이 본문 시대의 나라 경계는 아직 없습니다"); return; }
+    let w=180,e=-180,sN=-90,sS=90; E.items.forEach(it=>it.p.forEach(([lo,la])=>{ w=Math.min(w,lo); e=Math.max(e,lo); sS=Math.min(sS,la); sN=Math.max(sN,la); })); w-=1.2; e+=1.2; sS-=1.2; sN+=1.2;
+    const my=l=>Math.log(Math.tan(Math.PI/4+l*Math.PI/360)), Y0=my(sN), Y1=my(sS), W=Math.min(2048,Math.max(900,Math.round((e-w)*90))), H=Math.max(64,Math.round(W*(Y0-Y1)/((e-w)*Math.PI/180)));
+    const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const g=cv.getContext("2d"), kmpx=(e-w)*111*Math.cos((sN+sS)/2*Math.PI/180)/W, X=lo=>(lo-w)/(e-w)*W, Y=la=>(Y0-my(la))/(Y0-Y1)*H;
+    E.items.forEach(it=>{ g.filter=`blur(${Math.max(2,Math.round((it.k?Math.min(6,E.blur):E.blur)/kmpx))}px)`; g.globalAlpha=.5; g.fillStyle=it.c; g.beginPath(); it.p.forEach(([lo,la],i)=>i?g.lineTo(X(lo),Y(la)):g.moveTo(X(lo),Y(la))); g.closePath(); g.fill(); });
+    /* 땅 높이(3D)를 켠 지구에서는 그림 한 장(image) 층이 그려지지 않음 → 지도 조각(타일)처럼 잘라 주는 길(bord://)로 넣음 */
+    BCV={cv,w,e,Y0,Y1,my}; bProto(); M.addSource("bord",{type:"raster",tiles:[`bord://${want}/{z}/{x}/{y}`],tileSize:256,minzoom:2,maxzoom:12}); const before=["efull","eroute"].find(id=>M.getLayer(id)); M.addLayer({id:"bord",type:"raster",source:"bord",paint:{"raster-opacity":.95,"raster-fade-duration":0}},before);
+    E.items.forEach(it=>{ const ll=it.l||[it.p.reduce((a,q)=>a+q[0],0)/it.p.length,it.p.reduce((a,q)=>a+q[1],0)/it.p.length], el=document.createElement("div"); el.className="ebl"+(it.k?" sm":""); el.style.background=it.c; el.textContent=it.n+(it.k?` (${it.k})`:"");
+      BLAB.push(new maplibregl.Marker({element:el}).setLngLat(ll).addTo(M)); });
+    BDRAWN=want; bChip(`나라 경계 · ${E.n} · 대략`); }); }
+function home(keepView){ stack=[]; cur=null; step=-1; { const tc=(O.todayCh||[])[0]; setEra(tc?eraOf(tc[0],tc[1]):null); } setLine("eroute",null); setLine("efull",null); noWalker();
   const T=O.todayTours||[], pl=O.todayPlaces||[];
   let h=`<div class="etabs" role="tablist">${TABS.map(([k,n])=>`<button role="tab" data-etab="${k}" class="${TAB===k?"on":""}" aria-selected="${TAB===k}">${n}</button>`).join("")}</div>`;
   if(TAB==="who"){ h+=`<div class="egrid">${(O.groups||[]).map((g,i)=>`<button data-grp="${i}">${esc(g.n)}</button>`).join("")}</div>`; panel(O.title||"성경 지도",h); return; }
@@ -230,7 +264,7 @@ function group(i){ const g=O.groups[i]; listView(g.n,"",g.tours,g.routes,()=>gro
 function era(i){ const e=O.eras[i]; listView(e.n+(e.y?` · ${e.y}`:""),e.d,e.tours,e.routes,()=>era(i)); }
 function war(i){ const e=O.wars[i]; listView(e.n,e.d,e.tours,e.routes,()=>war(i)); }
 /* 작은 경로(지도로 보는 여정 237): 길을 그리며 사람이 걸어감 */
-function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; noWalker(); const c=r.p.map(p=>[p[2],p[1]]); setLine("efull",null); setLine("eroute",null);
+function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; setEra(eraOf(r.b,r.c&&r.c[0])); noWalker(); const c=r.p.map(p=>[p[2],p[1]]); setLine("efull",null); setLine("eroute",null);
   addPins(r.p.filter(p=>p[0]).map((p,k,a)=>({n:p[0],lat:p[1],lng:p[2],big:k===0||k===a.length-1})));
   const bb=jbear(c);
   try{ M.setPaintProperty("eroute","line-dasharray",r.est?[2,1.6]:[1,0]); }catch(e){} /* 성경이 길을 말하지 않는 추정 길은 점선 */
@@ -247,14 +281,14 @@ function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n,lat:p.lat
 function tourSegs(t){ const S=[]; let c=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.forEach(s=>{ if(s.from){ if(c.length) S.push(c); c=[[s.from[2],s.from[1]]]; } (s.p||[]).forEach(p=>c.push([p[2],p[1]])); }); if(c.length) S.push(c); return S; }
 function tourAll(t){ const c=[t.start?[t.start[2],t.start[1]]:null]; t.steps.forEach(s=>(s.p||[]).forEach(p=>c.push([p[2],p[1]]))); return c.filter(Boolean); }
 function tourPlaces(t){ const L=[]; if(t.start&&t.start[0]) L.push({n:t.start[0],lat:t.start[1],lng:t.start[2],big:true}); t.steps.forEach(s=>{ if(s.from&&s.from[0]&&!L.some(x=>x.n===s.from[0])) L.push({n:s.from[0],lat:s.from[1],lng:s.from[2],sm:true}); const e=(s.p||[])[(s.p||[]).length-1]; if(e&&e[0]&&!L.some(x=>x.n===e[0])) L.push({n:e[0],lat:e[1],lng:e[2],sm:true}); }); return L; }
-function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; const all=tourAll(t);
+function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; { const r0=(t.steps.find(x=>x.r)||{}).r; setEra(r0?eraOf(r0[0],r0[1]):null); } const all=tourAll(t);
   addPins(tourPlaces(t)); setLine("eroute",null); setLine("efull",tourSegs(t)); noWalker(); const c0=cast(t,0); walker(c0.lead,all[0],c0.nm); crew(c0.co,all[0]);
   t._b=jbear(all); const b=new maplibregl.LngLatBounds(); all.forEach(c=>b.extend(c)); M.fitBounds(b,{padding:pad(),pitch:PITCH,bearing:t._b,duration:RM()?0:4200,curve:1.5,essential:true});
   panel(t.n,`<p class="ed">${esc(t.d||t.sub||"")}</p><button class="ebig" data-follow="${from||0}">▶ ${from?`${from+1}번째 장면부터 `:""}따라가기 · ${t.steps.length}장면</button>`+t.steps.map((s,k)=>`<button class="erow" data-follow="${k}"><span class="ic">${k+1}</span><span><b>${esc(s.t)}</b><small>${esc(s.ref||s.s||"")}</small></span></button>`).join(""));
   const e0=tourAll(t)[0]; if(e0) prefetch(e0,(t.steps[0]&&t.steps[0].z)||8); }
 /* 11-21: 휴대폰에서 짧은 길은 "맞출 수 없다"며 오류가 나 다음 장면으로 안 넘어가던 문제 → 실패하면 여백을 줄여 다시, 그래도 안 되면 null(도착지로 날아감) */
 function fitCam(b,o){ for(const sc of [1,.5,0]){ try{ const P=o.padding, q=Object.assign({},o,{padding:{top:P.top*sc,bottom:P.bottom*sc,left:P.left*sc,right:P.right*sc}}); const c=M.cameraForBounds(b,q); if(c&&c.center) return c; }catch(e){} } return null; }
-function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute","line-dasharray",[1,0]); }catch(e){} if(k>=t.steps.length){ tour(t.id); return; } step=k; const s=t.steps[k];
+function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute","line-dasharray",[1,0]); }catch(e){} if(k>=t.steps.length){ tour(t.id); return; } step=k; const s=t.steps[k]; if(s.r) setEra(eraOf(s.r[0],s.r[1]));
   /* 11-22 목사님("에스라가 예루살렘에서 페르시아로 이동하는 장면은 왜?"): 장면에 from(다른 곳에서 새 인물로 시작)이 있으면 앞 장면 끝에서 걸어가지 않고 그곳에서 시작 */
   const base=[]; let c0=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.slice(0,k).forEach(x=>{ if(x.from){ if(c0.length) base.push(c0); c0=[[x.from[2],x.from[1]]]; } (x.p||[]).forEach(p=>c0.push([p[2],p[1]])); });
   if(s.from){ if(c0.length) base.push(c0); c0=[[s.from[2],s.from[1]]]; } if(c0.length) base.push(c0);
@@ -280,6 +314,7 @@ function onClick(e){ const t=e.target.closest("button"); if(!t||!root.contains(t
   if(t.dataset.place!=null){ place(+t.dataset.place); return; }
   if(t.dataset.pas){ const box=$(".epas"); if(!box) return; if(!box.hidden){ box.hidden=true; t.textContent="본문 앞뒤 더 보기 ›"; return; } const s=cur&&cur.steps[step]; const P=s&&O.passage(s.r); if(!P) return; box.innerHTML=P.L.map(([v,x])=>`<span class="${v===s.r[2]?"on":""}"><sup>${v}</sup>${esc(x)}</span> `).join("")+`<br><small style="color:#cfc3b1;font-family:'Noto Sans KR'">${esc(P.lab)}${P.tr?` · ${esc(P.tr)}`:""}</small>`; box.hidden=false; t.textContent="본문 접기"; return; }
   if(t.classList.contains("eearth")){ toEarth(); return; }
+  if(t.classList.contains("ebord")){ BON=!BON; try{ localStorage.setItem("cbsr_bord",BON?"1":"0"); }catch(e){} BDRAWN=null; bDraw(); return; }
   if(t.classList.contains("ex")){ close(); return; }
   if(t.classList.contains("ego")){ enter(); return; } }
 /* 11-22: 맨 아래 깔리는 6배율 사진을 성경 땅 전체(이탈리아~메소보다미아, 약 65장)만큼 들어갈 때 미리 받아 둠 */
@@ -293,7 +328,7 @@ function open(opts){ if(root) close(true); O=opts||{}; stack=[]; cur=null; step=
   if(!document.getElementById("eovcss")){ const s=document.createElement("style"); s.id="eovcss"; s.textContent=CSS; document.head.appendChild(s); }
   root=document.createElement("div"); root.id="eov"; root.setAttribute("role","dialog"); root.setAttribute("aria-label","성경 지구 지도");
   root.innerHTML=`<div class="estars"></div><div class="emap"></div>
-   <div class="etop"><button class="eg ex" aria-label="닫기">✕</button><span class="ettl">${esc(O.kicker||"")}</span><button class="eg eunfold" aria-label="목록 펼치기">☰ 목록</button><button class="eg eearth" aria-label="지구로">◐ 지구</button></div>
+   <div class="etop"><button class="eg ex" aria-label="닫기">✕</button><span class="ettl">${esc(O.kicker||"")}</span><button class="eg eunfold" aria-label="목록 펼치기">☰ 목록</button><button class="eg ebord" aria-pressed="false" aria-label="나라 경계 켜고 끄기">나라</button><button class="eg eearth" aria-label="지구로">◐ 지구</button></div><div class="ebchip" hidden></div>
    <div class="eintro${O.skipIntro?" off":""}"><small>이야기통독 · 성경의 땅</small><h1>${esc(O.heading||"성경의 땅으로")}</h1><p>${esc(O.sub||"")}</p><button class="ego">들어가기</button></div>
    <aside class="epan eg"><div class="ephd"><button class="epback" aria-label="뒤로" hidden>‹</button><b></b><button class="efold" aria-label="칸 접기">⌄</button></div><div class="epb"></div></aside>`;
   document.body.appendChild(root); root.addEventListener("click",onClick); addEventListener("keydown",key);
