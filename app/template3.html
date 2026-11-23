@@ -5660,7 +5660,7 @@ function mapBase(map,st,water){ const el=map.getContainer(); if(st!=="terrain"&&
   if(water!==false&&typeof WATER!=="undefined"){ WATER.lakes.forEach(l=>L.polygon(l,{className:"nlw",interactive:false}).addTo(map)); WATER.rivers.forEach(r=>L.polyline(r,{className:"nlr",interactive:false}).addTo(map)); } }
 const MAPRT={terrain:"#c0392b",cartoon:"#e2603f",water:"#c45a3c",natural:"#c0392b"};
 function storyMapInit(w,d,s){ const el=document.getElementById("smap"); if(!el||!window.L) return;
-  const M=storyMapPts(w,d,s); const map=L.map(el,{zoomControl:false,zoomSnap:.25,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,attributionControl:true}); SV.map=map; map.attributionControl.setPrefix(false);
+  const M=storyMapPts(w,d,s); const map=L.map(el,{zoomControl:false,zoomSnap:.25,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,attributionControl:true}); SV.map=map; map.attributionControl.setPrefix(false); /* 11-23 태블릿: 넓은 카드로 바뀐 뒤 크기를 다시 재서 빈 타일이 없게 */ [250,700,1400].forEach(t=>setTimeout(()=>{ if(SV.map===map) try{ map.invalidateSize(false); }catch(e){} },t));
   const MS=mapStyleOf(w,d), RT=MAPRT[MS]; mapBase(map,MS);
   /* 모여드는 길(예: 오순절에 여러 나라에서 예루살렘으로): 곳마다 목적지로 선을 긋습니다 */
   if(M.to){ const MX=routeMeta(s&&s.h,0)||{}; if(MX.kind!=="출신") M.extra.forEach(p=>{ const ll=[[p[1],p[2]],[M.to[1],M.to[2]]]; L.polyline(ll,{color:"#fff",weight:8,opacity:.85,interactive:false}).addTo(map); L.polyline(ll,{color:RT,weight:4,opacity:1,dashArray:"9 7",lineCap:"round",interactive:false}).addTo(map); }); M.route=[M.to]; }
@@ -5772,7 +5772,7 @@ function sPreview(i){ const S=curSlides(view.w,view.d), s=S[i]; if(!s) return nu
   el.innerHTML=(kind==="table"||kind==="qt"?`<div class="spaper"></div>`:"")+(showPh?`<div class="sph v${s.phv||0}${s.phBlur?" sblur":""}"><img alt="" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:"");
   return el; }
 /* 마지막 장에서 더 넘기면(또는 마지막 장에서 닫으면) 책을 덮듯 표지가 왼쪽에서 넘어와 닫힘 */
-function sBookClose(){ const r=document.getElementById("storyRoot"); if(!r||r.querySelector(".scover")||matchMedia("(prefers-reduced-motion: reduce)").matches){ storyClose(); return; }
+function sBookClose(){ const r=document.getElementById("storyRoot"); if(!r||r.querySelector(".scover")||SWIDE_MQ.matches||matchMedia("(prefers-reduced-motion: reduce)").matches){ storyClose(); return; }
   clearTimeout(SV.t); const p=dayPlan(view.w,view.d), cv=document.createElement("div"); cv.className="scover";
   cv.innerHTML=`<div class="scvin"><img alt="" src="icons/icon-192.png?v=3"><b>${esc(p.label)}</b><small>오늘 이야기를 덮습니다</small></div>`; r.appendChild(cv); sTurnFx();
   requestAnimationFrame(()=>requestAnimationFrame(()=>cv.classList.add("on"))); setTimeout(()=>storyClose(),1150); }
@@ -5788,7 +5788,7 @@ function storyMood(S){ const k=keyOf(view.w,view.d); if(SV.moodK===k) return SV.
 /* 11-16 목사님: 손가락으로 밀어도 넘어가게 — 11/17 책장으로: 왼쪽으로 밀면 지금 장이 책등(왼쪽 끝)을 축으로 들려 넘어가고, 오른쪽으로 밀면 살짝 밀려나며 앞 장이 넘어올 자리를 냄. 4분의 1 넘게(또는 빠르게) 밀고 놓으면 넘어감 */
 function storySwipe(r){ if(r._sw) return; r._sw=1; let x0=null,y0=0,t0=0,mode=0,fr=null,dir=0,p=0,pv=null;
   const skip=e=>e.target.closest("button,a,input,textarea,select,summary,.leaflet-container,.smap,.ped");
-  r.addEventListener("touchstart",e=>{ if(e.touches.length!==1||skip(e)){ x0=null; return; } x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now(); mode=0; p=0; fr=r.querySelector(".sfr:not(.sghost)"); },{passive:true});
+  r.addEventListener("touchstart",e=>{ if(e.touches.length!==1||skip(e)){ x0=null; return; } if(SWIDE_MQ.matches){ x0=null; const sx=e.touches[0].clientX, sy=e.touches[0].clientY; const mv=ev=>{ const t=ev.touches[0]; if(t&&Math.abs(t.clientX-sx)>12) SV.swiping=true; }; r.addEventListener("touchmove",mv,{passive:true}); const up=ev=>{ r.removeEventListener("touchend",up); r.removeEventListener("touchmove",mv); const t=ev.changedTouches&&ev.changedTouches[0]; if(!t) return; const dx=t.clientX-sx, dy=t.clientY-sy; if(!(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)){ setTimeout(()=>{ SV.swiping=false; },80); return; } { setTimeout(()=>{ SV.swiping=false; },80); const S=curSlides(view.w,view.d); if(dx<0&&SV.i===S.length-1&&!SV.mode) sBookClose(); else storyGo(SV.i+(dx<0?1:-1)); } }; r.addEventListener("touchend",up); return; } /* 11-23: 태블릿 가로는 밀면 바로 넘김(책장 넘김 없음) */ x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now(); mode=0; p=0; fr=r.querySelector(".sfr:not(.sghost)"); },{passive:true});
   r.addEventListener("touchmove",e=>{ if(x0==null||!fr) return; const dx=e.touches[0].clientX-x0, dy=e.touches[0].clientY-y0;
     if(!mode){ if(Math.abs(dx)<10&&Math.abs(dy)<10) return; mode=Math.abs(dx)>Math.abs(dy)*1.2?1:2;
       if(mode===1){ dir=dx<0?1:-1; const S=curSlides(view.w,view.d); clearTimeout(SV.hold); SV.swiping=true; if(SV.i+dir<0||SV.i+dir>=S.length) mode=3; fr.style.transition="none";
@@ -5806,7 +5806,7 @@ function storySwipe(r){ if(r._sw) return; r._sw=1; let x0=null,y0=0,t0=0,mode=0,
       f.style.transition="transform .25s ease-out, filter .25s ease-out"; f.style.transform=""; f.style.filter=""; const sh=f.querySelector(".sturn"); if(sh){ sh.style.transition="opacity .25s"; sh.style.opacity="0"; } setTimeout(()=>{ f.style.transition=""; f.style.transformOrigin=""; if(sh) sh.remove(); },270); if(SV.paused) storyPause(false); }
     setTimeout(()=>{ SV.swiping=false; },60); };
   r.addEventListener("touchend",end); r.addEventListener("touchcancel",end); }
-function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return; storySwipe(r);
+function storyShow(){ const DIR=SWIDE_MQ.matches?0:SV.dir; /* 11-23 목사님: 태블릿 가로 스토리는 책장 넘김 없이 */ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(SV.cd); const oldMap=SV.map; SV.map=null; const {w,d}=view, S=curSlides(w,d), s=S[SV.i], r=document.getElementById("storyRoot"); if(!r||!s) return; storySwipe(r);
   if(!SV.mode&&!s.qt){ const k=keyOf(w,d); mem.sp ||= {}; const o=mem.sp[k]||{}; mem.sp[k]={...o,i:SV.i,n:S.length,m:Math.max(o.m||0,SV.i)}; try{ localStorage.setItem(KEY,JSON.stringify(mem)); }catch(e){} }
   const quick=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches, dur=quick||sAutoOff()?0:sDur(s), auto=dur>0, kind=sKind(s), p=dayPlan(w,d); let ph=s.ph;
   /* 11-21 넓은 화면: 양옆에 지금 장면 그림을 흐리게 깔고, 마우스로 넘길 ‹ › 단추(휴대폰에선 CSS로 숨김) */
@@ -5818,9 +5818,9 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   r.querySelectorAll(".sfr.sghost").forEach(x=>x.remove());
   const old=r.querySelector(".sfr:not(.spv)"); let ghost=null, oldM=null, oldPid=null;
   if(old){ const oi=old.querySelector(".sph img"); if(oi){ oldPid=oi.dataset.pid; try{ oldM=getComputedStyle(oi).transform; }catch(e){} }
-    if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst","sfw","sbk","go"); if(SV.dir){ ghost.classList.add(SV.dir>0?"sfw":"sbk"); if(SV.dir>0&&!ghost.querySelector(".sturn")){ const sh=document.createElement("i"); sh.className="sturn"; ghost.appendChild(sh); } } ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); ghost.style.transition=""; } else old.remove(); }
+    if(!quick){ ghost=old; ghost.classList.add("sghost"); ghost.classList.remove("snew","in","sfirst","sfw","sbk","go"); if(DIR){ ghost.classList.add(DIR>0?"sfw":"sbk"); if(DIR>0&&!ghost.querySelector(".sturn")){ const sh=document.createElement("i"); sh.className="sturn"; ghost.appendChild(sh); } } ghost.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id")); ghost.style.transition=""; } else old.remove(); }
   const showPh=ph&&kind!=="table"&&kind!=="map", hint=!SV.hinted&&!s.qt&&kind!=="map";
-  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew"+(SV.dir>0?" sfw":SV.dir<0?" sbk":""):old?"":" sfirst"}${!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
+  const tmp=document.createElement("div"); tmp.innerHTML=`<div class="sfr k-${kind}${ghost?" snew"+(DIR>0?" sfw":DIR<0?" sbk":""):old?"":" sfirst"}${!showPh&&!["table","map","qt","next","fin"].includes(kind)&&storyMood(S)==="light"?" kpaper":""}">
    ${kind==="table"||kind==="qt"?`<div class="spaper"></div>`:""}
    ${showPh?`<div class="sph v${s.phv||0}${s.phBlur?" sblur":""}"><img alt="" data-pid="${esc(ph.id||ph.u)}" src="${esc(ph.u)}" style="object-position:${esc(phPos(ph.fx,s.phv))}" referrerpolicy="no-referrer"></div>`:""}
    ${kind==="split"?`<div class="sbase"></div>`:""}
@@ -5833,14 +5833,14 @@ function storyShow(){ SV.shownAt=Date.now(); clearTimeout(SV.t); clearInterval(S
   if(hint){ SV.hinted=true; }
   const nf=tmp.firstElementChild;
   /* 손가락으로 밀다 놓았으면: 새 면은 손가락이 멈춘 자리에서 이어 돌고, 남은 만큼만 짧게 */
-  const dp=SV.dragP||0; SV.dragP=0; if(ghost&&dp&&SV.dir){ const q=1-dp, t=(0.2+0.35*q).toFixed(2)+"s"; nf.style.transitionDuration=t; ghost.style.transitionDuration=t; if(SV.dir<0){ nf.style.transform=`rotateY(${(-105*q).toFixed(1)}deg)`; nf.style.filter="none"; } else { ghost.style.transform=`rotateY(${-105*dp}deg)`; } } /* 손가락으로 넘기다 놓았으면 멈춘 자리에서 이어서 */
-  if(sAmOK(s)) sAmUI(nf,s,w,d); r.appendChild(nf); if(s.k==="map") smtFill(nf,s); r.querySelectorAll(".spv").forEach(x=>x.remove()); if(ghost&&SV.dir) sTurnFx(); if(sAmOK(s)){ sFit(nf); setTimeout(()=>sFit(nf),400); } if(typeof tgFill==="function") tgFill(nf,w,d);
+  const dp=SV.dragP||0; SV.dragP=0; if(ghost&&dp&&DIR){ const q=1-dp, t=(0.2+0.35*q).toFixed(2)+"s"; nf.style.transitionDuration=t; ghost.style.transitionDuration=t; if(SV.dir<0){ nf.style.transform=`rotateY(${(-105*q).toFixed(1)}deg)`; nf.style.filter="none"; } else { ghost.style.transform=`rotateY(${-105*dp}deg)`; } } /* 손가락으로 넘기다 놓았으면 멈춘 자리에서 이어서 */
+  if(sAmOK(s)) sAmUI(nf,s,w,d); r.appendChild(nf); /* 11-23 목사님: 땅 높이는 쓰지 않기로 → smtFill 뺌 */ r.querySelectorAll(".spv").forEach(x=>x.remove()); if(ghost&&DIR) sTurnFx(); if(sAmOK(s)){ sFit(nf); setTimeout(()=>sFit(nf),400); } if(typeof tgFill==="function") tgFill(nf,w,d);
   const ni=nf.querySelector(".sph img");
   if(ni){ ni.onerror=()=>ni.remove();
     if(!quick&&kind!=="qt"){ const v=SKB[s.phv||0]||SKB[0], same=oldPid&&oldPid===ni.dataset.pid&&oldM&&oldM!=="none";
       try{ ni.animate([{transform:same?oldM:v[0]},{transform:v[1]}],{duration:same?14000:12000,easing:"ease-out",fill:"forwards"}); }catch(e){} } }
   if(ghost){ let gone=false; const fade=()=>{ if(gone) return; gone=true; nf.classList.add("in"); nf.style.transform=""; ghost.classList.add("go"); ghost.style.transform=""; ghost.style.filter=""; /* 책장: 넘어가는 장과 드러나는 장이 함께 움직임 */ setTimeout(()=>{ ghost.remove(); if(oldMap){ try{ oldMap.remove(); }catch(e){} } },800); };
-    if(!SV.dir) ghost.querySelectorAll(".sbox,.stapnote").forEach(x=>x.style.opacity="0"); /* 책장으로 넘길 때는 글도 종이와 함께 넘어감 */
+    if(!DIR) ghost.querySelectorAll(".sbox,.stapnote").forEach(x=>x.style.opacity="0"); /* 책장으로 넘길 때는 글도 종이와 함께 넘어감 */
     requestAnimationFrame(()=>{ if(ni&&!ni.complete){ (ni.decode?ni.decode():Promise.reject()).then(fade,()=>{ ni.onload=fade; }); setTimeout(fade,1200); } else requestAnimationFrame(fade); }); }
   else if(oldMap){ try{ oldMap.remove(); }catch(e){} }
   sPreload(S,SV.i);
