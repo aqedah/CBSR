@@ -19,6 +19,7 @@ header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:-.2px}
 header .sp{flex:1}
 header a.edlink{font-size:13px;font-weight:700;color:#fff;background:#b83232;border-radius:6px;padding:5px 10px;text-decoration:none;white-space:nowrap}
 header a.edlink.back{background:#2f6e45}
+header .wtabs{display:flex;gap:2px;background:#eee;border-radius:7px;padding:2px} header .wtabs a{font-size:12.5px;padding:3px 9px;border-radius:5px;color:#444;text-decoration:none;white-space:nowrap} header .wtabs a:hover{background:#fff}
 button,select,input[type=file]{font:inherit}
 button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 11px;cursor:pointer}
 button.pri{background:var(--acc);color:#fff;border-color:var(--acc)}
@@ -470,6 +471,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 <header>
   <h1 id="ttl">통독 가이드북 작업실</h1>
   <a id="lnkEd" class="edlink" href="trial26.html" title="2026년 11월 13일–12월 31일 체험판 — 테스터용">2026 체험판 샘플 ›</a>
+  <nav class="wtabs" title="같은 작업대의 다른 칸 — 11-24 목사님: 세라핌용·절기용 작업대"><a href="season.html?kind=sera">세라핌</a><a href="season.html?kind=season">절기</a><a href="check.html?admin" target="_blank" rel="noopener" title="종이 체험판 점검표 답 보기(관리자 비밀번호)">설문 결과 ↗</a></nav>
   <select id="selM"></select>
   <select id="selD"></select>
   <button id="btnPrev" title="앞날">‹</button><button id="btnNext" title="뒷날">›</button>

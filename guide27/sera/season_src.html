@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세라핌 · 절기 작업대</title>
+<!-- 2026-11-24 목사님: 통독표 작업대에 세라핌용·절기용 작업대를 더함. 한 회 = A4 한 장(앞뒤 4쪽). 원고는 season.json(공개), 기도제목은 이 기기에만 저장(공개 파일에 이름이 올라가지 않게). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Noto+Serif+KR:wght@300;400;700&display=swap">
+<style>
+/* ── 작업대 화면 ── */
+:root{--bg:#F6F5F2;--panel:#fff;--ink:#1a1a1a;--mute:#6b6b6b;--line:#dcdad5;--acc:#5B3E8A}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body.ws{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Noto Sans CJK KR",system-ui,sans-serif;font-size:14px;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header h1{font-size:16px;margin:0 6px 0 0}
+.tabs{display:flex;gap:2px;background:#eee;border-radius:8px;padding:2px}
+.tabs a{font-size:13px;padding:4px 10px;border-radius:6px;color:#444;text-decoration:none;white-space:nowrap}
+.tabs a.on{background:#fff;color:#000;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+header .sp{flex:1}
+button,select,input,textarea{font:inherit}
+button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 10px;cursor:pointer}
+button.pri{background:var(--acc);color:#fff;border-color:var(--acc)}
+select{border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:#fff;max-width:340px}
+#status{font-size:12px;color:var(--mute)}
+main{flex:1;display:flex;min-height:0}
+#form{width:470px;flex:none;overflow:auto;padding:12px 14px 60px;border-right:1px solid var(--line);background:var(--panel)}
+#prev{flex:1;overflow:auto;padding:14px;background:#e4e2dd}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 12px;padding:8px 10px 10px}
+legend{font-weight:700;font-size:13px;padding:0 4px;color:var(--acc)}
+label.f{display:block;margin:6px 0}
+label.f .k{display:block;font-size:12px;color:#333;margin-bottom:2px}
+label.f .k small{color:var(--mute);font-weight:400}
+input[type=text],input[type=number],input[type=date],textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:5px 7px;background:#fff}
+textarea{min-height:56px;resize:vertical;line-height:1.5}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.hint{font-size:11.5px;color:var(--mute);line-height:1.5;margin:2px 0 4px}
+.tok{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0}
+.tok button{font-size:11.5px;padding:1px 7px}
+.weeks{display:flex;flex-direction:column;gap:3px;margin:6px 0}
+.weeks button{text-align:left;font-size:12.5px;padding:4px 8px;display:flex;gap:8px}
+.weeks button b{min-width:52px}
+.weeks button.on{border-color:var(--acc);background:#f3effa}
+.empty{padding:40px;text-align:center;color:#666;font-size:14px;line-height:1.8}
+#warn{font-size:12px;line-height:1.5;margin:0 0 10px;padding:6px 9px;border-radius:6px;display:none}
+#warn.bad{display:block;background:#fdecec;color:#a11}
+#warn.ok{display:block;background:#eaf5ee;color:#25643c}
+dialog{border:1px solid var(--line);border-radius:10px;max-width:520px;width:92%}
+dialog h3{margin:0 0 8px}
+.pv .pg{margin:0 auto 14px;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.18)}
+#printroot{display:none}
+@media print{
+ body.ws>header,body.ws>main,dialog{display:none!important}
+ #printroot{display:block}
+ html,body{background:#fff;height:auto}
+ body.ws{display:block}
+}
+/* ── 보기(청년부 나눔용) ── */
+body.vw{background:#e9e9e9;margin:0}
+.bar{position:sticky;top:0;z-index:9;background:#222;color:#fff;font-family:"Noto Sans KR",sans-serif;padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bar button{font-size:13px;border:1px solid #666;background:#333;color:#fff;border-radius:6px;padding:4px 10px;line-height:1.3;text-align:left}
+.bar button small{display:block;font-size:10px;opacity:.7}
+.bar button.on{background:#fff;color:#222}
+.bar .pr{margin-left:auto;background:#5B3E8A;border-color:#5B3E8A;font-weight:700}
+.bar .tip{width:100%;font-size:12px;opacity:.8;margin-top:2px}
+body.vw .wk .pg{margin:14px auto;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.2)}
+.prow span:empty::before{content:"이름";color:#ccc}
+@media print{body.vw{background:#fff}.bar{display:none}body.vw .wk .pg{margin:0;box-shadow:none}[contenteditable]:focus{background:none}.prow span:empty::before{content:none}}
+@page{size:A4;margin:0}
+/* ── 한 장(A4 앞뒤 4쪽) — guide27/sera/build.py와 같은 모양 ── */
+.sheet{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#222;font-size:10.4pt;line-height:1.62;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet *{box-sizing:border-box;margin:0;padding:0}
+/*SHEETCSS*/
+</style>
+</head>
+<body>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const COLORS=[['대림절 · 사순절 보라','#5B3E8A','#EEE9F5'],['성탄절 · 성령강림 빨강','#9B2C2C','#F6E9E7'],['송구영신 · 부활절 금','#9A7419','#F6F0E0'],['평소 먹색','#3F3F3F','#EEEEEE'],['초록','#2E7D4F','#E6F2EA'],['파랑','#1F5FA8','#E6EEF8']];
+const WD='일월화수목금토';
+/* ── 글 꾸밈: **굵게** {형광펜} {동그라미} {물결 밑줄} {괄호} {네모} ── */
+function inl(s){ s=esc(s);
+  s=s.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  s=s.replace(/\{(형광펜[^}]*)\}/g,'<span class="hl">$1</span>').replace(/\{(동그라미[^}]*)\}/g,'<span class="ci">$1</span>').replace(/\{(물결 밑줄[^}]*)\}/g,'<span class="wv">$1</span>').replace(/\{(괄호[^}]*)\}/g,'<span class="br">[$1]</span>').replace(/\{(네모[^}]*)\}/g,'<span style="border:.35mm solid #222;padding:0 1mm">$1</span>');
+  return s; }
+const lines=(n,c='ln')=>Array.from({length:n},()=>`<div class="${c}"></div>`).join('');
+const L=s=>String(s||'').split('\n').map(x=>x.trim()).filter(Boolean);
+function dateOf(w){ const d=new Date((w.ymd||'2026-01-01')+'T00:00:00'); return {m:d.getMonth()+1,d:d.getDate(),wd:WD[d.getDay()],str:`${d.getMonth()+1}월 ${d.getDate()}일 (${WD[d.getDay()]})`}; }
+function tl(s){ const m=s.match(/^(★|✓)?\s*([^|]+?)\s*\|\s*(.*)$/); return m?{star:!!m[1],tool:m[2],text:m[3]}:{star:false,tool:'',text:s}; }
+/* ── 네 쪽 그리기 ── */
+function page1(w){ const D=dateOf(w);
+  const hd=`<div class="hd sans"><div class="dt"><b><i>${D.m}/</i>${D.d}</b><small>${D.wd}요일</small></div><div class="tt"><b>${esc(w.title)}</b><span>${esc(w.sub)}</span></div><div class="lb"><b>${esc(w.label)}</b>${esc(w.season||'')}</div></div>
+<div class="st sans"><span>성경 읽기 약 <b>${Math.max(1,Math.round((+w.vv||0)/7.5))}분</b></span><span></span></div>`;
+  const flow=String(w.flow||'').split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean).map(p=>`<p>${inl(p)}</p>`).join('');
+  const wds=L(w.words).map(x=>{const [a,...b]=x.split(/\s+—\s+|\s+-\s+/);return `<span><b>${inl(a)}</b> ${inl(b.join(' — '))}</span> `}).join('');
+  const scn=L(w.scenes).map(s=>`<span class="sans">${esc(s)}</span>`).join('');
+  const marks=L(w.marks).map(x=>{const k=tl(x);return `<div class="mk"><span class="chip sans">${esc(k.tool)}</span>${k.star?'<span class="rp sans">대표</span> ':''}${inl(k.text)}</div>`}).join('');
+  const looks=L(w.looks).map(x=>{const k=tl(x);return `<p><span class="ck">${k.star?'✓':''}</span><span class="chip sans">${esc(k.tool)}</span><span>${inl(k.text)}</span></p>`}).join('');
+  return `<section class="pg">${hd}
+<div class="sec flow"><div class="sh sans"><span class="n">1</span>오늘의 흐름</div>${flow}${wds?`<div class="wd sans"><span class="k">말뜻</span>${wds}</div>`:''}</div>
+<div class="sec"><div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">${scn}</div>${marks}</div>
+<div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div><div class="lk">${looks}</div></div>
+<div class="ft sans"><span>${esc(w.label)} · ${D.str}</span><span>1</span></div></section>`; }
+function qblocks(items,first){ return items.map((o,i)=>`<div class="op"><div class="bx sans">${i+1}</div><div>${first(o)}</div></div><div class="ans">${lines(12)}</div>`).join(''); }
+function page2(w){ const items=(w.obs||[]).filter(x=>String(x||'').trim());
+  return `<section class="pg"><div class="sh sans"><span class="n">4</span>본문 관찰</div>
+<div class="gd sans">${items.length>1?`${['','','두','세','네','다섯','여섯'][items.length]||items.length} 물음 가운데 <b>하나만 골라도 되고, 여러 개를 골라도 됩니다.</b> `:''}고른 물음 바로 아래 칸에 본문에서 찾은 답을 적습니다.</div>
+<div class="qs">${qblocks(items,o=>inl(o))}</div><div class="ft sans"><span>${esc(w.title)}</span><span>2</span></div></section>`; }
+function page3(w){ const items=(w.god||[]).filter(g=>String(g.q||'').trim()||String(g.v||'').trim());
+  return `<section class="pg"><div class="sh sans"><span class="n">5</span>하나님의 성품</div>
+<div class="gd sans">본문 관찰에서 고른 번호와 <b>같은 번호를 고르면 관찰이 성품으로 이어집니다.</b> 다른 번호를 골라도 되고, 여러 개를 골라도 됩니다.</div>
+<div class="qs">${qblocks(items,g=>`<div class="v">${inl(g.v)}</div>${inl(g.q)}`)}</div><div class="ft sans"><span>${esc(w.title)}</span><span>3</span></div></section>`; }
+function page4(w,edit,pray){ pray=pray||{};
+  const wh=L(w.whole).map(x=>{const p=x.split('|').map(s=>s.trim());return {lab:p[0],ref:p[1]||'',text:p.slice(2).join(' | ')}});
+  let n=7, whole='';
+  if(wh.length){ whole=`<div class="sec whole"><div class="sh sans"><span class="n">7</span>성경 전체로<small>${esc(w.whole_title||'오늘 본문이 성경의 다른 자리와 이어집니다')}</small></div>`+wh.map(x=>`<p><span class="chip sans">${esc(x.lab)}</span><span><b>${esc(x.ref)}</b>${inl(x.text)}</span></p>`).join('')+'</div>'; n=8; }
+  const ny=+w.youth||(wh.length?4:8), nc=+w.churchn||(wh.length?3:5), ce=edit?' contenteditable="true"':'';
+  const yv=L(pray.y), cv=L(pray.c);
+  const yrows=Array.from({length:ny},(_,i)=>{const [a,...b]=(yv[i]||'').split('|');return `<div class="prow sans"><span${ce} data-k="y${i}n">${esc((a||'').trim())}</span><i${ce} data-k="y${i}t">${esc(b.join('|').trim())}</i></div>`}).join('');
+  const crows=Array.from({length:nc},(_,i)=>`<div class="pln sans"${ce} data-k="c${i}">${esc(cv[i]||'')}</div>`).join('');
+  return `<section class="pg"><div class="sh sans"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div><div class="note">${inl(w.note)}</div>${whole}
+<div class="sec pr"><div class="sh sans"><span class="n">${n}</span>오늘의 기도</div>
+<h4 class="sans">청년부 지체 기도제목</h4>${yrows}<h4 class="sans">교회 기도제목</h4>${crows}</div><div class="ft sans"><span>${esc(w.title)}</span><span>4</span></div></section>`; }
+function sheet(w,edit,pray){ return `<div class="sheet wk" id="w${esc(w.key)}" style="--c:${w.color};--l:${w.light};--hl:#F3E6A0">${page1(w)}${page2(w)}${page3(w)}${page4(w,edit,pray)}</div>`; }
+/* 넘침 검사: 1·4쪽 꼬리말 위로 내용이 내려왔는지 */
+function overflow(root){ const out=[]; root.querySelectorAll('.pg').forEach((pg,i)=>{ if(i%4===1||i%4===2) return; const r=pg.getBoundingClientRect(), ft=pg.querySelector('.ft'); const lim=ft?ft.getBoundingClientRect().top-2:r.bottom; let mb=0; pg.querySelectorAll(':scope > *:not(.ft)').forEach(e=>{const b=e.getBoundingClientRect(); if(b.bottom>mb) mb=b.bottom}); const z=(r.width/pg.offsetWidth)||1; const mm=(mb-lim)/z*25.4/96; if(mm>0) out.push(`${i%4+1}쪽 ${mm.toFixed(1)}mm`); }); return out; }
+/* ── 기도제목: 이 기기에만 ── */
+const PK='cbsr_season_pray';
+const prayOf=(sid,key)=>(LS.get(PK,{})[sid+'/'+key])||{y:'',c:''};
+function setPray(sid,key,o){ const a=LS.get(PK,{}); a[sid+'/'+key]=o; LS.set(PK,a); }
+</script>
+
+<script>
+/* ══ 시작: 보기인지 작업대인지 ══ */
+const Q=new URLSearchParams(location.search);
+const DK='cbsr_season_draft';
+let DATA=null;
+async function loadData(){ let pub=null; try{ const r=await fetch('season.json',{cache:'no-store'}); if(r.ok) pub=await r.json(); }catch(e){}
+  const dr=LS.get(DK,null);
+  if(!pub) return dr||{sets:[]};
+  if(!dr) return pub;
+  /* 묶음마다 더 최근 것을 씀 */
+  const out={updated:pub.updated,sets:[]}; const ids=[...new Set([...pub.sets.map(s=>s.id),...dr.sets.map(s=>s.id)])];
+  for(const id of ids){ const a=pub.sets.find(s=>s.id===id), b=dr.sets.find(s=>s.id===id); out.sets.push(!a?b:!b?a:((b._u||0)>(a._u||0)?b:a)); }
+  return out; }
+
+/* ── 보기(청년부 나눔·기도제목 입력·인쇄): season.html?view=묶음 ── */
+async function viewer(sid){
+  document.body.className='vw';
+  const S=DATA.sets.find(s=>s.id===sid)||DATA.sets[0]; if(!S){document.body.textContent='묶음이 없습니다.';return}
+  const btns=S.weeks.map(w=>`<button data-w="${esc(w.key)}">${dateOf(w).m}월 ${dateOf(w).d}일<small>${esc(w.title)}</small></button>`).join('');
+  document.body.innerHTML=`<div class="bar"><b style="margin-right:6px">${esc(S.name)}</b>${btns}<button class="pr" onclick="print()">인쇄 / PDF 저장</button>
+<div class="tip">4쪽 오늘의 기도 칸을 눌러 기도제목을 입력하세요. 입력한 내용은 이 기기에만 저장됩니다. 인쇄할 때 용지는 A4, 여백 없음, 배경 그래픽 켜기로 하세요.</div></div>`+S.weeks.map(w=>sheet(w,true,prayOf(S.id,w.key))).join('');
+  const style=document.createElement('style'); style.textContent='.wk{display:none}.wk.on{display:block}'; document.head.appendChild(style);
+  document.querySelectorAll('.wk').forEach(wk=>{ const key=wk.id.slice(1); const fs=[...wk.querySelectorAll('[contenteditable]')];
+    const keep=()=>{ const y=[],c=[]; wk.querySelectorAll('.prow').forEach(r=>{const a=r.children[0].textContent.trim(),b=r.children[1].textContent.trim(); y.push(a||b?a+' | '+b:'')}); wk.querySelectorAll('.pln').forEach(r=>c.push(r.textContent.trim())); setPray(S.id,key,{y:y.join('\n'),c:c.join('\n')}); };
+    fs.forEach((f,i)=>{ f.addEventListener('input',keep); f.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();(fs[i+1]||f).focus()}}); f.addEventListener('paste',e=>{e.preventDefault();document.execCommand('insertText',false,(e.clipboardData.getData('text')||'').replace(/\s+/g,' '))}); }); });
+  const show=k=>{ document.querySelectorAll('.wk').forEach(w=>w.classList.toggle('on',w.id==='w'+k)); document.querySelectorAll('.bar button[data-w]').forEach(b=>b.classList.toggle('on',b.dataset.w===k)); Q.set('w',k); history.replaceState(null,'','?'+Q.toString()); };
+  document.querySelectorAll('.bar button[data-w]').forEach(b=>b.onclick=()=>show(b.dataset.w));
+  const today=new Date().toISOString().slice(0,10); const ks=S.weeks.map(w=>w.key);
+  show(ks.includes(Q.get('w'))?Q.get('w'):((S.weeks.find(w=>w.ymd>=today)||S.weeks[S.weeks.length-1]).key));
+  const fit=()=>{const z=Math.min(1,(innerWidth-8)/800);document.querySelectorAll('.wk').forEach(w=>w.style.zoom=z)}; addEventListener('resize',fit); fit();
+  addEventListener('beforeprint',()=>document.querySelectorAll('.wk').forEach(w=>w.style.zoom=1)); addEventListener('afterprint',fit);
+}
+</script>
+
+<script>
+/* ══ 작업대 ══ */
+let KIND=Q.get('kind')==='season'?'season':'sera', SID=null, WI=0, saveT=null;
+function sets(){ return DATA.sets.filter(s=>(s.kind||'sera')===KIND) }
+function curSet(){ return DATA.sets.find(s=>s.id===SID) }
+function curW(){ const s=curSet(); return s&&s.weeks[WI] }
+function persist(){ const s=curSet(); if(s) s._u=Date.now(); LS.set(DK,DATA); $('status').textContent='이 기기에 저장됨 · GitHub에는 아직'; }
+function blankWeek(prev){ const d=prev?new Date(prev.ymd+'T00:00:00'):new Date(); if(prev) d.setDate(d.getDate()+7); const ymd=d.toISOString().slice(0,10);
+  const c=prev?{color:prev.color,light:prev.light}:{color:COLORS[0][1],light:COLORS[0][2]};
+  return Object.assign({key:ymd.slice(5).replace('-',''),ymd,label:prev?prev.label:(KIND==='sera'?'세라핌 청년 기도회':''),season:'',title:'',sub:'',vv:0,flow:'',words:'',scenes:'',marks:'',looks:'',obs:['','','',''],god:[{v:'',q:''},{v:'',q:''},{v:'',q:''},{v:'',q:''}],note:'',whole_title:'',whole:'',youth:8,churchn:5},c); }
+
+function ws(){
+  document.body.className='ws';
+  document.body.insertAdjacentHTML('afterbegin',`<header>
+  <h1>작업대</h1>
+  <nav class="tabs"><a href="guide.html">2027 통독 가이드북</a><a href="trial26.html">2026 체험판</a><a href="season.html?kind=sera" class="${KIND==='sera'?'on':''}">세라핌</a><a href="season.html?kind=season" class="${KIND==='season'?'on':''}">절기</a></nav>
+  <select id="selSet"></select><button id="bNewSet" title="새 묶음">＋ 묶음</button>
+  <span class="sp"></span><span id="status"></span>
+  <button id="bCheck">인용 확인</button>
+  <button id="bView">나눔 화면 ↗</button>
+  <button id="bGit">GitHub</button>
+  <select id="selPrint"><option value="one">이 회</option><option value="all">묶음 전체</option></select><button id="bPrint" class="pri">인쇄 · PDF</button>
+  <a href="check.html?admin" target="_blank" rel="noopener" style="font-size:12px;color:var(--mute)">체험판 설문 결과 ↗</a>
+</header>
+<main><section id="form"></section><section id="prev" class="pv"></section></main>
+<div id="printroot"></div>
+<dialog id="dlgGit"><h3>GitHub에 저장</h3><p class="hint">원고(season.json)를 source 가지에 올립니다. 2~3분 뒤 앱 사이트에 반영됩니다. 기도제목은 올라가지 않습니다(이 기기에만 저장).</p>
+<label class="f"><span class="k">토큰(가이드북 작업실과 같이 씁니다)</span><input type="text" id="g_token" placeholder="github_pat_…"></label>
+<div class="row" style="margin-top:8px"><button id="gLoad">GitHub에서 불러오기</button><button id="gSave" class="pri">GitHub에 저장</button><button id="gClose">닫기</button></div><p id="gMsg" class="hint"></p></dialog>`);
+  $('selSet').onchange=()=>{SID=$('selSet').value;WI=0;drawAll()};
+  $('bNewSet').onclick=()=>{ const n=prompt(KIND==='sera'?'새 묶음 이름 (예: 세라핌 청년 기도회 · 2027 사순절)':'새 묶음 이름 (예: 2027 고난주간)'); if(!n) return; const id=(KIND==='sera'?'sera-':'season-')+Date.now().toString(36); DATA.sets.push({id,kind:KIND,name:n,note:'',weeks:[]}); SID=id; WI=0; persist(); drawAll(); };
+  $('bView').onclick=()=>{ if(saveT){clearTimeout(saveT);persist()} window.open('season.html?view='+encodeURIComponent(SID)+(curW()?'&w='+curW().key:''),'_blank') };
+  $('bPrint').onclick=doPrint; $('bCheck').onclick=checkQuotes;
+  wireGit();
+  const ss=sets(); SID=(ss.find(s=>s.id===Q.get('set'))||ss[0]||{}).id||null;
+  drawAll();
+}
+function drawAll(){ const ss=sets();
+  $('selSet').innerHTML=ss.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('')||'<option value="">묶음 없음</option>'; if(SID) $('selSet').value=SID;
+  drawForm(); drawPrev(); }
+const F=(id,lab,val,opt={})=>`<label class="f"><span class="k"><b>${lab}</b>${opt.small?` <small>${opt.small}</small>`:''}</span>${opt.area?`<textarea data-f="${id}" rows="${opt.rows||3}" placeholder="${esc(opt.ph||'')}">${esc(val)}</textarea>`:`<input type="${opt.type||'text'}" data-f="${id}" value="${esc(val)}" placeholder="${esc(opt.ph||'')}">`}</label>`;
+const TOK='<div class="tok">'+['{동그라미}','{형광펜}','{물결 밑줄}','{괄호}','{네모}','**굵게**'].map(t=>`<button type="button" data-t="${t}">${t}</button>`).join('')+'</div>';
+function drawForm(){ const s=curSet(), f=$('form');
+  if(!s){ f.innerHTML=`<div class="empty">${KIND==='sera'?'세라핌':'절기'} 묶음이 없습니다.<br>위의 ＋ 묶음으로 시작하세요.</div>`; return; }
+  const wl=s.weeks.map((w,i)=>{const D=dateOf(w);return `<button type="button" data-wi="${i}" class="${i===WI?'on':''}"><b>${D.m}/${D.d}</b><span>${esc(w.title||'(본문 없음)')}</span><span style="margin-left:auto;color:#888">${esc(w.season||'')}</span></button>`}).join('');
+  let h=`<fieldset><legend>묶음</legend>${F('s:name','이름',s.name)}${F('s:note','메모',s.note,{small:'절기 날짜, 주제 흐름 등'})}
+  <div class="weeks">${wl||'<div class="hint">아직 회가 없습니다.</div>'}</div>
+  <div class="row"><button type="button" id="bAddW">＋ 새 회</button><button type="button" id="bDupW"${s.weeks.length?'':' disabled'}>이 회 복제</button><button type="button" id="bUpW"${WI>0?'':' disabled'}>↑</button><button type="button" id="bDelW"${s.weeks.length?'':' disabled'}>삭제</button></div></fieldset>`;
+  const w=curW();
+  if(w){ const ci=COLORS.findIndex(c=>c[1]===w.color);
+    h+=`<div id="warn"></div>
+  <fieldset><legend>머리</legend><div class="row">${F('ymd','날짜',w.ymd,{type:'date'})}${F('vv','절 수',w.vv,{type:'number',small:'읽기 시간'})}</div>
+  <div class="row">${F('label','모임',w.label,{ph:'세라핌 청년 기도회'})}${F('season','절기 · 주제',w.season,{ph:'대림절 1 · 소망'})}</div>
+  <div class="row">${F('title','본문',w.title,{ph:'이사야 7–12장'})}${F('sub','소제목',w.sub,{ph:'흑암에 비치는 큰 빛'})}</div>
+  <label class="f"><span class="k"><b>색</b></span><select data-f="colorset">${COLORS.map((c,i)=>`<option value="${i}"${i===ci?' selected':''}>${c[0]}</option>`).join('')}${ci<0?'<option selected value="-1">지금 색 그대로</option>':''}</select></label></fieldset>
+  <fieldset><legend>1쪽 · 읽기 전과 읽으며</legend>${F('flow','① 오늘의 흐름',w.flow,{area:1,rows:5,small:'빈 줄로 문단을 나눕니다'})}
+  ${F('words','말뜻',w.words,{area:1,rows:3,small:'줄마다 「낱말 — 풀이」'})}
+  ${F('scenes','② 장면 단추',w.scenes,{area:1,rows:3,small:'줄마다 하나'})}
+  ${F('marks','② 성경 읽기 — 표시',w.marks,{area:1,rows:5,small:'줄마다 「★ 도구 | 문장」, ★ = 대표',ph:'★ ◆ 반복 | 네 번 반복되는 말은 무엇입니까? 9:12, 17에서 찾아 {형광펜}으로 칠하세요.'})}${TOK}
+  ${F('looks','③ 눈여겨볼 것',w.looks,{area:1,rows:6,small:'줄마다 「✓ 도구 | 문장」, ✓ = 표시 확인'})}</fieldset>
+  <fieldset><legend>2쪽 · ④ 본문 관찰</legend><div class="hint">물음 하나에 한 칸. 비우면 빠집니다. 같은 번호의 성품 물음과 짝이 맞게 씁니다.</div>${[0,1,2,3,4].map(i=>F('obs:'+i,(i+1)+'번',(w.obs||[])[i]||'',{area:1,rows:2})).join('')}</fieldset>
+  <fieldset><legend>3쪽 · ⑤ 하나님의 성품</legend>${[0,1,2,3,4].map(i=>{const g=(w.god||[])[i]||{};return F('gv:'+i,(i+1)+'번 인용',g.v||'',{ph:'"…"(11:11)'})+F('gq:'+i,(i+1)+'번 물음',g.q||'',{area:1,rows:2,ph:'… **남은 백성을 돌아오게 하시는 하나님의 긍휼**이 내게는 어떻게 다가옵니까?'})}).join('')}</fieldset>
+  <fieldset><legend>4쪽 · 해설과 성경 전체로</legend>${F('note','⑥ 해설',w.note,{area:1,rows:8,small:'"하나님은 ~분입니다."로 맺습니다'})}
+  ${F('whole_title','성경 전체로 — 머리글',w.whole_title,{ph:'오늘 본문이 성경의 다른 자리와 이어집니다'})}
+  ${F('whole','⑦ 성경 전체로',w.whole,{area:1,rows:6,small:'줄마다 「인용·약속·성취·주제·모형 | 참조 | 문장」, 비우면 빠집니다',ph:'성취 | 사 7:14 → 마 1:22–23 | …'})}
+  <div class="row">${F('youth','청년부 기도 줄 수',w.youth,{type:'number'})}${F('churchn','교회 기도 줄 수',w.churchn,{type:'number'})}</div></fieldset>
+  <fieldset><legend>기도제목 — 이 기기에만 저장</legend><div class="hint">공개 원고(season.json)에는 올라가지 않습니다. 나눔 화면에서도 칸을 눌러 바로 쓸 수 있습니다.</div>
+  <label class="f"><span class="k"><b>청년부 지체</b> <small>줄마다 「이름 | 기도제목」</small></span><textarea id="py" rows="4">${esc(prayOf(s.id,w.key).y)}</textarea></label>
+  <label class="f"><span class="k"><b>교회</b> <small>줄마다 하나</small></span><textarea id="pc" rows="3">${esc(prayOf(s.id,w.key).c)}</textarea></label></fieldset>`; }
+  f.innerHTML=h;
+  f.querySelectorAll('[data-wi]').forEach(b=>b.onclick=()=>{WI=+b.dataset.wi;drawForm();drawPrev()});
+  const A=$('bAddW'); if(A) A.onclick=()=>{ s.weeks.push(blankWeek(s.weeks[s.weeks.length-1])); WI=s.weeks.length-1; persist(); drawForm(); drawPrev(); };
+  const Dp=$('bDupW'); if(Dp) Dp.onclick=()=>{ const c=JSON.parse(JSON.stringify(curW())); const n=blankWeek(curW()); c.ymd=n.ymd; c.key=n.key; s.weeks.splice(WI+1,0,c); WI++; persist(); drawForm(); drawPrev(); };
+  const U=$('bUpW'); if(U) U.onclick=()=>{ const t=s.weeks[WI]; s.weeks[WI]=s.weeks[WI-1]; s.weeks[WI-1]=t; WI--; persist(); drawForm(); drawPrev(); };
+  const X=$('bDelW'); if(X) X.onclick=()=>{ if(!confirm('이 회를 지울까요? GitHub에 저장하기 전까지는 공개 원고에 남아 있습니다.')) return; s.weeks.splice(WI,1); WI=Math.max(0,WI-1); persist(); drawForm(); drawPrev(); };
+  f.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('input',()=>{ const k=el.dataset.f, v=el.value, w=curW();
+    if(k==='s:name'){ s.name=v; $('selSet').selectedOptions[0].textContent=v; }
+    else if(k==='s:note') s.note=v;
+    else if(k==='colorset'){ const c=COLORS[+v]; if(c){w.color=c[1];w.light=c[2]} }
+    else if(k.startsWith('obs:')){ w.obs=w.obs||[]; w.obs[+k.slice(4)]=v; }
+    else if(k.startsWith('gv:')||k.startsWith('gq:')){ w.god=w.god||[]; const i=+k.slice(3); w.god[i]=w.god[i]||{v:'',q:''}; w.god[i][k[1]==='v'?'v':'q']=v; }
+    else if(k==='ymd'){ w.ymd=v; w.key=v.slice(5).replace('-',''); }
+    else w[k]=(k==='vv'||k==='youth'||k==='churchn')?+v:v;
+    clearTimeout(saveT); saveT=setTimeout(()=>{persist();saveT=null},500); drawPrev(); }));
+  ['py','pc'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('input',()=>{ setPray(s.id,curW().key,{y:$('py').value,c:$('pc').value}); drawPrev(); }); });
+  let last=null; f.addEventListener('focusin',e=>{ if(e.target.tagName==='TEXTAREA') last=e.target; });
+  f.querySelectorAll('.tok button').forEach(b=>b.onclick=()=>{ const t=last; if(!t) return; const s0=t.selectionStart,e0=t.selectionEnd, tk=b.dataset.t; t.setRangeText(tk,s0,e0,'end'); t.focus(); t.dispatchEvent(new Event('input')); });
+}
+function drawPrev(){ const p=$('prev'), w=curW(), s=curSet();
+  if(!w){ p.innerHTML='<div class="empty">왼쪽에서 회를 고르거나 ＋ 새 회를 누르세요.</div>'; return; }
+  p.innerHTML=sheet(w,false,prayOf(s.id,w.key));
+  const z=Math.min(1,(p.clientWidth-30)/794); p.firstElementChild.style.zoom=z;
+  requestAnimationFrame(()=>{ const o=overflow(p), wn=$('warn'); if(!wn) return; wn.className=o.length?'bad':'ok'; wn.textContent=o.length?'넘칩니다: '+o.join(', ')+' — 줄이거나 기도 줄 수를 줄이세요.':'네 쪽에 맞습니다.'; });
+}
+window.addEventListener('resize',()=>{ if(document.body.className==='ws') drawPrev() });
+function doPrint(){ const s=curSet(); if(!s) return; const all=$('selPrint').value==='all'; const ws=all?s.weeks:[curW()].filter(Boolean);
+  $('printroot').innerHTML=ws.map(w=>sheet(w,false,prayOf(s.id,w.key))).join('');
+  const bad=[]; ws.forEach((w,i)=>{ const o=overflow($('printroot').children[i]); }); /* 화면에 없는 상태라 크기 검사는 미리보기에서 */
+  $('status').textContent=`${ws.length}회 · ${ws.length*4}쪽 — 용지 A4, 여백 없음, 배경 그래픽 켜기, 양면(긴 쪽 넘김)`;
+  (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(()=>print(),200)); }
+/* ── 인용 확인: 큰따옴표 속 말이 개역개정 어딘가에 그대로 있는지 ── */
+let BIB=null;
+async function bible(){ if(BIB) return BIB; if(!window.BIBLE_B64){ await new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='bible.js';sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)}); }
+  const bin=Uint8Array.from(atob(window.BIBLE_B64),c=>c.charCodeAt(0)); const B=JSON.parse(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
+  BIB=B.flat(2).join('').replace(/[\s,.?!·]/g,''); return BIB; }
+async function checkQuotes(){ const w=curW(); if(!w) return; $('status').textContent='개역개정을 불러오는 중…';
+  try{ const T=await bible(); const txt=JSON.stringify(w); const qs=[...txt.matchAll(/\\"([^"\\]+)\\"/g)].map(m=>m[1]);
+    const bad=qs.filter(q=>!q.split('…').every(p=>T.includes(p.replace(/[\s,.?!·]/g,''))));
+    const wn=$('warn'); wn.className=bad.length?'bad':'ok'; wn.innerHTML=bad.length?'개역개정에서 그대로 찾지 못한 따옴표 말 '+bad.length+'개 (이름 뜻풀이처럼 인용이 아닌 것은 그대로 두어도 됩니다):<br>'+bad.map(b=>'· '+esc(b)).join('<br>'):'따옴표 말 '+qs.length+'개가 모두 개역개정과 같습니다.'; $('status').textContent='인용 확인 끝';
+  }catch(e){ $('status').textContent='개역개정을 불러오지 못했습니다'; } }
+/* ── GitHub ── */
+function wireGit(){ const tk=()=>{try{return localStorage.getItem('cbsr_git_token')||(JSON.parse(localStorage.getItem('cbsr_guide_git')||'{}').token)||''}catch(e){return ''}};
+  const C={repo:'aqedah/CBSR',path:'app/site_src/season.json',branch:'source'};
+  const api=`https://api.github.com/repos/${C.repo}/contents/${C.path}`;
+  const b64=s=>btoa(unescape(encodeURIComponent(s))), unb64=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
+  const gm=(t,ok)=>{$('gMsg').textContent=t;$('gMsg').style.color=ok?'#2E7D4F':'#b00';$('status').textContent=t};
+  $('bGit').onclick=()=>{ $('g_token').value=tk(); $('gMsg').textContent=''; $('dlgGit').showModal(); }; $('gClose').onclick=()=>$('dlgGit').close();
+  const hdr=()=>{ const t=$('g_token').value.trim(); try{ if(t) localStorage.setItem('cbsr_git_token',t) }catch(e){} return {'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json'} };
+  $('gLoad').onclick=async()=>{ try{ const r=await fetch(api+'?ref='+C.branch,{headers:hdr()}); if(!r.ok) throw new Error(r.status); const j=await r.json(); DATA=JSON.parse(unb64(j.content)); LS.set(DK,DATA); const ss=sets(); if(!ss.find(s=>s.id===SID)) SID=(ss[0]||{}).id||null; WI=0; drawAll(); gm('GitHub에서 불러왔습니다.',true); }catch(e){ gm('불러오기 실패: '+e.message) } };
+  $('gSave').onclick=async()=>{ if(!$('g_token').value.trim()){ gm('토큰 칸이 비어 있습니다. 가이드북 작업실의 GitHub 창에 넣은 토큰과 같은 것을 씁니다.'); return; }
+    if(saveT){clearTimeout(saveT);persist();saveT=null}
+    gm('저장하는 중…',true); try{ let sha, remote=null; const r0=await fetch(api+'?ref='+C.branch,{headers:hdr()}); if(r0.ok){ const j0=await r0.json(); sha=j0.sha; try{ remote=JSON.parse(unb64(j0.content)) }catch(e){} }
+      /* 다른 기기에서 올린 묶음은 지우지 않고, 묶음마다 더 최근 것을 남김 */
+      if(remote&&remote.sets){ for(const rs of remote.sets){ const ls=DATA.sets.find(s=>s.id===rs.id); if(!ls) DATA.sets.push(rs); else if((rs._u||0)>(ls._u||0)&&!confirm(`「${rs.name}」은 GitHub 쪽이 더 최근에 고쳐졌습니다. 이 기기의 것으로 덮을까요?`)) Object.assign(ls,rs); } }
+      DATA.updated=new Date().toISOString().slice(0,10);
+      const body={message:'세라핌·절기 작업대 원고 '+new Date().toISOString().slice(0,16),content:b64(JSON.stringify(DATA,null,1)),branch:C.branch}; if(sha) body.sha=sha;
+      const r=await fetch(api,{method:'PUT',headers:{...hdr(),'Content-Type':'application/json'},body:JSON.stringify(body)}); if(!r.ok) throw new Error(r.status+' '+(await r.text()).slice(0,80));
+      LS.set(DK,DATA); drawAll(); gm('GitHub에 저장됨 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' — 2~3분 뒤 사이트에 반영됩니다.',true);
+    }catch(e){ gm('저장 실패: '+e.message) } };
+}
+(async()=>{ DATA=await loadData(); if(Q.get('view')!=null) viewer(Q.get('view')); else ws(); })();
+</script>
+</body>
+</html>

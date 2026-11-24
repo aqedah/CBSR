@@ -273,7 +273,7 @@ for tk in ('snb','shg'):
     open(f'{OUT}/bible_{tk}.js','w').write('window.BIBLE_TR=window.BIBLE_TR||{};BIBLE_TR.'+tk+'="'+open(f'bible_{tk}.b64').read()+'";\nwindow.SPEECH_'+tk+'='+open(f'speech/bible_{tk}.json').read()+';\n')
 
 h=lambda s:hashlib.sha1(s.encode()).hexdigest()[:8]
-for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','guide.html','guide_qt.json','trial26.html','trial26_qt.json','earth.html','earth.js','borders.json','check.html','sera.html','shelf_edit.html','shelf.js']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
+for f in ['sync.js','config.js','manifest.webmanifest','firestore.rules','og.png','guide.html','guide_qt.json','trial26.html','trial26_qt.json','earth.html','earth.js','borders.json','check.html','sera.html','season.html','season.json','shelf_edit.html','shelf.js']: shutil.copy('site_src/'+f,OUT+'/'+f)  # guide.html·guide_qt.json: 통독 가이드북 작업실(2026-11-09)
 # 성경책장(서고) 원고(2026-11-24): 작업대에서 올린 books/shelf_66.json이 있으면 그것을, 없으면 site_src의 원고를 앱에 실음. 대표 구절 본문은 여기서 개역개정을 붙임
 try:
     _sp='books/shelf_66.json' if os.path.exists('books/shelf_66.json') else 'site_src/shelf_66.json'
