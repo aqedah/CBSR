@@ -53,7 +53,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .zone b{font:700 23px/1.25 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.14em;margin-right:-.14em}
 #cbsrShelf .zone small{font-size:13.5px;font-weight:600;line-height:1.35}
 #cbsrShelf .zone.e b{font-size:11.5px;letter-spacing:0;margin:0;line-height:1.35;text-align:center}
-#cbsrShelf .zone.e span{padding:7px 12px;border-color:#120c08;box-shadow:0 2px 7px rgba(0,0,0,.7);background:radial-gradient(ellipse at 10% 16%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 48%),radial-gradient(ellipse at 92% 84%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 54%),radial-gradient(ellipse at 74% 6%,rgba(34,18,8,.8) 0,rgba(34,18,8,0) 42%),radial-gradient(ellipse at 16% 94%,rgba(34,18,8,.85) 0,rgba(34,18,8,0) 46%),radial-gradient(ellipse at 50% 50%,#7a6344 0,#57432c 100%);clip-path:polygon(3% 9%,13% 0,30% 6%,46% 1%,64% 7%,81% 0,96% 10%,100% 35%,95% 57%,100% 83%,89% 100%,70% 93%,52% 100%,34% 92%,16% 100%,2% 87%,6% 60%,0 36%)}
+#cbsrShelf .zone.e span{transform:translateX(-50%) scale(.6);transform-origin:50% 0;opacity:.92;padding:7px 12px;border-color:#120c08;box-shadow:0 2px 7px rgba(0,0,0,.7);background:radial-gradient(ellipse at 10% 16%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 48%),radial-gradient(ellipse at 92% 84%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 54%),radial-gradient(ellipse at 74% 6%,rgba(34,18,8,.8) 0,rgba(34,18,8,0) 42%),radial-gradient(ellipse at 16% 94%,rgba(34,18,8,.85) 0,rgba(34,18,8,0) 46%),radial-gradient(ellipse at 50% 50%,#7a6344 0,#57432c 100%);clip-path:polygon(3% 9%,13% 0,30% 6%,46% 1%,64% 7%,81% 0,96% 10%,100% 35%,95% 57%,100% 83%,89% 100%,70% 93%,52% 100%,34% 92%,16% 100%,2% 87%,6% 60%,0 36%)}
 #cbsrShelf .zone.e b{color:#1c110a;opacity:.5;filter:blur(1.35px);text-shadow:0 0 5px rgba(18,9,4,.9);letter-spacing:-.02em}
 #cbsrShelf .zone.e span:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 22% 36%,rgba(14,8,5,.8) 0,rgba(14,8,5,0) 30%),radial-gradient(ellipse at 72% 28%,rgba(14,8,5,.7) 0,rgba(14,8,5,0) 26%),radial-gradient(ellipse at 54% 78%,rgba(14,8,5,.8) 0,rgba(14,8,5,0) 32%),radial-gradient(ellipse at 90% 64%,rgba(22,11,5,.7) 0,rgba(22,11,5,0) 24%)}
 #cbsrShelf .zone:focus-visible span,#cbsrShelf .gl button:focus-visible,#cbsrShelf .sp:focus-visible{outline:3px solid #9b3324;outline-offset:2px}
@@ -156,6 +156,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .bv .fa{margin:0 0 10px;font:400 16.5px/1.6 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df}
 #cbsrShelf .bv .fa b{display:block;font:700 13.5px/1.5 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;color:#e6cf9a}
 #cbsrShelf .amb{pointer-events:none;position:absolute}
+#cbsrShelf .amb.end{left:95px;top:250px;width:200px;height:300px;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(16,10,6,.8) 0,rgba(16,10,6,.62) 38%,rgba(16,10,6,.3) 68%,rgba(16,10,6,0) 100%)}   /* 통로 끝의 어둠(촛불 빛무리보다 아래) */
 #cbsrShelf .fl{border-radius:50% 50% 46% 46%/74% 74% 26% 26%;background:radial-gradient(ellipse at 50% 74%,#fffdf0 0,#ffe89a 38%,#f9bd52 72%,rgba(238,150,50,0) 100%);box-shadow:0 0 5px 1.5px rgba(255,206,110,.75),0 0 0 .5px rgba(120,70,20,.35);transform-origin:50% 100%;animation:cbsrFlm 2s ease-in-out infinite}
 /* 대화(11-24 목사님): 사서의 말 · 나의 혼잣말 · 선택지. 대사 틀은 어디서나 하나(17:54) */
 #cbsrShelf .dg{position:absolute;inset:0;z-index:8;pointer-events:none}
@@ -344,8 +345,8 @@ function push(st){ var fn=function(pop){ var i=levels.indexOf(st); if(i<0) retur
 function back(){ var t=top(); if(busy) return; flush(); if(!t||t.t==="hall"||(t.t==="card"&&O.solo)){ api.close(); return; } t.fn(false); }
 function draw(from){ var t=top(); if(!t||!stage) return; if(t.t==="hall"||t.t==="sec"||t.t==="card"||t.t==="plan") drawHall(t); else if(t.t==="press") drawPress(t,from); else if(t.t==="book") drawBook(t); }
 /* ---- 서고와 구역 ---- */
-function lamps(){ var h="",i=0; ART.hall.lanterns.forEach(function(l){ var x=l[0],y=l[1],s=l[2],g=Math.round(s*1.9),w=Math.max(5,s*.115),fh=w*2.15;
-    h+='<div class="amb" style="left:'+(x-g/2)+'px;top:'+(y-g*.46).toFixed(1)+'px;width:'+g+'px;height:'+g+'px;border-radius:50%;background:radial-gradient(circle,rgba(255,232,170,.85) 0%,rgba(255,214,130,.34) 34%,rgba(255,200,110,0) 68%);mix-blend-mode:screen;animation:cbsrGlw '+(2.6+(i%4)*.37)+'s ease-in-out -'+(i*.7)+'s infinite"></div>'+
+function lamps(){ var h='<div class="amb end"></div>',i=0; ART.hall.lanterns.forEach(function(l){ var x=l[0],y=l[1],s=l[2],k=Math.min(1,Math.pow(s/200,1.25)),g=Math.round(Math.min(250,s*(1.3+.6*k))),w=Math.max(5,s*.115),fh=w*2.15;   /* 11-24 목사님: 눈높이 통로에서는 먼 촛불이 한가운데로 모여 빛이 겹침 → 멀수록 빛무리를 옅고 작게, 통로 끝은 어둡게 */
+    h+='<div class="amb" style="left:'+(x-g/2)+'px;top:'+(y-g*.46).toFixed(1)+'px;width:'+g+'px;height:'+g+'px;border-radius:50%;background:radial-gradient(circle,rgba(255,232,170,'+(.85*k).toFixed(2)+') 0%,rgba(255,214,130,'+(.34*k).toFixed(2)+') 34%,rgba(255,200,110,0) 68%);mix-blend-mode:screen;animation:cbsrGlw '+(2.6+(i%4)*.37)+'s ease-in-out -'+(i*.7)+'s infinite"></div>'+
        '<div class="amb fl" style="left:'+(x-w/2).toFixed(1)+'px;top:'+(y-fh*.56).toFixed(1)+'px;width:'+w.toFixed(1)+'px;height:'+fh.toFixed(1)+'px;animation-duration:'+(1.7+(i%5)*.23)+'s;animation-delay:-'+(i*.43)+'s"></div>'; i++; });
   return h; }
 function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
@@ -353,7 +354,7 @@ function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
     lamps()+'<div class="zn">'+
       '<button type="button" class="zone" data-s="ot" style="left:0;top:300px;width:150px;height:330px" aria-label="구약 서른아홉 권, 왼쪽 서가"><span class="tb" style="top:96px"><b>구약</b><small>서른아홉 권</small></span></button>'+
       '<button type="button" class="zone" data-s="nt" style="left:240px;top:300px;width:150px;height:330px" aria-label="신약 스물일곱 권, 오른쪽 서가"><span class="tb" style="top:96px"><b>신약</b><small>스물일곱 권</small></span></button>'+
-      '<button type="button" class="zone e" data-s="etc" style="left:150px;top:344px;width:90px;height:170px" aria-label="통로 끝의 그을린 서가. 외경, 위경, 교부 문헌"><span class="tb" style="top:0"><b>외경 · 위경<br>교부 문헌</b></span></button>'+
+      '<button type="button" class="zone e" data-s="etc" style="left:150px;top:344px;width:90px;height:170px" aria-label="통로 끝의 그을린 서가. 외경, 위경, 교부 문헌"><span class="tb" style="top:14px"><b>외경 · 위경<br>교부 문헌</b></span></button>'+
     '</div></div></div></div><div class="dimv"></div><div class="ui"></div></div>';
   el=stage.querySelector(".hallv"); el._fresh=true; return el; }
 function drawHall(t){ drawHall0(t); dgDraw(); }
