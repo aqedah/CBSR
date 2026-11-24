@@ -5,7 +5,7 @@
 (function(){
 "use strict";
 var ART=__ART__;
-var IMG="img/shelf/", VER="?v=6", W=390, H=846;   /* 그림을 바꾸면 VER를 올림(서비스 워커가 img/를 캐시에서 먼저 줌) */
+var IMG="img/shelf/", VER="?v=7", W=390, H=846;   /* 그림을 바꾸면 VER를 올림(서비스 워커가 img/를 캐시에서 먼저 줌) */
 var SEC={ot:{n:"구약",c:"서른아홉 권",g:["모세오경","역사서","시가서","선지서"]},nt:{n:"신약",c:"스물일곱 권",g:["복음서","사도행전","바울서신","일반서신","요한계시록"]}};
 var PRESS={"모세오경":"tor","역사서":"his","시가서":"poe","선지서":"pro","복음서":"gos","바울서신":"pau","일반서신":"gen"};
 var CNT=["","한 권","두 권","세 권","네 권","다섯 권","여섯 권","일곱 권","여덟 권","아홉 권","열 권","열한 권","열두 권","열세 권","열네 권","열다섯 권","열여섯 권","열일곱 권"];
@@ -184,18 +184,22 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .dg.np .dgs{height:150px}
 /* 말씀 카드(11-24 목사님): 사서가 카드를 패처럼 쥐고 내밈. 고르면 앱의 말씀 뽑기 화면으로 이어짐 */
 #cbsrShelf .cds{position:absolute;inset:0;pointer-events:none}
-#cbsrShelf .cds .cdp{position:absolute;left:-30px;bottom:96px;width:236px;height:auto}
-#cbsrShelf .cds .cdh{position:absolute;width:220px;height:260px;z-index:3}
+#cbsrShelf .cds .cdp{position:absolute;bottom:96px;height:auto;transform-origin:0 100%}
+#cbsrShelf .cds.from .cdp{transform:translate(var(--fx),var(--fy)) scale(var(--fs))}
+#cbsrShelf .cds.mv .cdp{transition:transform .8s cubic-bezier(.45,.05,.3,1)}
+#cbsrShelf .cds .cdh{position:absolute;width:160px;height:230px;z-index:3}
 #cbsrShelf .cdf{position:absolute;width:0;height:0;z-index:2}
-#cbsrShelf .cdk{position:absolute;left:-37px;top:-150px;width:74px;height:110px;padding:0;transform-origin:50% 136%;border-radius:8px;border:1.5px solid #cdb27a;background:linear-gradient(150deg,#5e3420,#331b10);color:#cdb27a;font-size:22px;line-height:1;box-shadow:0 2px 7px rgba(0,0,0,.65),inset 0 0 0 3px #40241a,inset 0 0 0 4px rgba(205,178,122,.5);pointer-events:auto;transition:transform .17s ease,opacity .4s}
+#cbsrShelf .cds.from .cdf,#cbsrShelf .cds.from .cdh{opacity:0}
+#cbsrShelf .cds.mv .cdf,#cbsrShelf .cds.mv .cdh{transition:opacity .3s .64s}
+#cbsrShelf .cdk{position:absolute;left:-40px;top:-160px;width:80px;height:118px;padding:0;transform-origin:50% 135.6%;border-radius:8px;border:1.5px solid #cdb27a;background:linear-gradient(150deg,#5e3420,#331b10);color:#cdb27a;font-size:23px;line-height:1;box-shadow:0 2px 7px rgba(0,0,0,.65),inset 0 0 0 3px #40241a,inset 0 0 0 4px rgba(205,178,122,.5);pointer-events:auto;transition:transform .17s ease,opacity .4s}
 #cbsrShelf .cdf.stk .cdk{transform:translate(var(--sx,0),var(--sy,0)) rotate(var(--sr,0deg))}
 #cbsrShelf .cdf.open .cdk{transform:rotate(var(--a));transition:transform .45s cubic-bezier(.3,1.2,.5,1),opacity .4s}
 #cbsrShelf .cdf.open.now .cdk{transition:none}
 #cbsrShelf .cdf.open .cdk:active{transform:rotate(var(--a)) translateY(-10px)}
-#cbsrShelf .cdf .cdk.pick{transform:translateY(-58px) rotate(0deg) scale(1.2);z-index:9;transition:transform .6s cubic-bezier(.3,1.2,.5,1);box-shadow:0 0 0 2px #e2b24a,0 6px 22px rgba(226,178,74,.5)}
+#cbsrShelf .cdf .cdk.pick{transform:translateY(-10px) rotate(0deg) scale(1.25);z-index:9;transition:transform .6s cubic-bezier(.3,1.2,.5,1);box-shadow:0 0 0 2px #e2b24a,0 6px 22px rgba(226,178,74,.5)}
 #cbsrShelf .cdf .cdk.away{opacity:.18}
 #cbsrShelf .cdk:focus-visible{outline:3px solid #f6e7c1;outline-offset:2px}
-#cbsrShelf .cdmix{position:absolute;right:12px;bottom:128px;width:152px;height:42px;padding:0 10px;background:rgba(24,16,10,.94);border:1px solid #d9b56a;color:#f6e7c1;font:700 14.5px/1 "Gowun Batang","Noto Serif KR",serif;box-shadow:0 4px 12px rgba(0,0,0,.5);pointer-events:auto;z-index:4}
+#cbsrShelf .cdmix{position:absolute;right:12px;top:10px;height:36px;padding:0 12px;font-size:15px;font-weight:700;z-index:5}
 #cbsrShelf .cdmix:disabled{opacity:.45}
 /* 내 말로 적어 두기(11-24 목사님: 사서가 묻지 않음. 적고 싶은 사람만 적음) */
 #cbsrShelf .bv .cd0{margin:0 0 14px;font:400 15px/1.6 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;color:#e6cf9a}
@@ -218,7 +222,7 @@ html.shelf-on .coach{display:none!important}
 @keyframes cbsrBye{to{opacity:0;transform:translateY(8px)}}
 @keyframes cbsrStamp{0%{opacity:0;transform:scale(2.4) rotate(8deg)}60%{opacity:1;transform:scale(.92) rotate(-10deg)}100%{opacity:1;transform:scale(1) rotate(-8deg)}}
 @keyframes cbsrRay{0%,100%{opacity:.4}50%{opacity:.9}}
-@media (prefers-reduced-motion:reduce){#cbsrShelf .amb,#cbsrShelf .bv .bg,#cbsrShelf .fade{animation:none!important}#cbsrShelf .hl,#cbsrShelf .gl,#cbsrShelf .dimv,#cbsrShelf .wk{transition:none!important;animation:none!important}#cbsrShelf .zin,#cbsrShelf .wn.late,#cbsrShelf .mono.late,#cbsrShelf .mono i,#cbsrShelf .dg,#cbsrShelf .dg .dgb i,#cbsrShelf .sp.hi,#cbsrShelf .cdk,#cbsrShelf .cdl button.stp i{animation:none!important}}
+@media (prefers-reduced-motion:reduce){#cbsrShelf .amb,#cbsrShelf .bv .bg,#cbsrShelf .fade{animation:none!important}#cbsrShelf .hl,#cbsrShelf .gl,#cbsrShelf .dimv,#cbsrShelf .wk{transition:none!important;animation:none!important}#cbsrShelf .zin,#cbsrShelf .wn.late,#cbsrShelf .mono.late,#cbsrShelf .mono i,#cbsrShelf .dg,#cbsrShelf .dg .dgb i,#cbsrShelf .sp.hi,#cbsrShelf .cdk,#cbsrShelf .cds .cdp,#cbsrShelf .cdl button.stp i{animation:none!important}}
 `;
 var HS=H;
 /* 무대는 너비 390에 맞추고, 높이는 화면 비율대로(HS). 가로가 넓은 화면은 높이 600을 채우고 양옆은 흐린 서고 */
@@ -252,9 +256,10 @@ function helloDg(how){ var n=nick(); return {who:"l",t:how==="back"?"…더 찾�
 function hello(how){ var t=levels[0]; if(!t) return; if(!qaVal("_s","met")) qaSet("_s","met","1"); t.dg=helloDg(how); draw(); }
 function greet(){ var t=levels[0]; if(qaVal("_s","met")){ hello(); return; } t.dg={who:"me",t:"오래된 서고다. 촛불 몇 개만 켜져 있다.",tap:"hello1",esc:"hello1"}; draw(); }
 function bookDg(b){ return {who:"l",t:esc(b.name)+", "+b.chapters+"장입니다.",ch:[{t:"펼쳐 본다",a:"gopen"},{t:"도로 꽂는다",a:"put"}],esc:"put"}; }
-function cardHtml(t){ var px=262, py=HS-262, i, h='<button type="button" class="bk" data-a="back">'+CL+(O.solo?"닫기":"서고")+'</button><div class="ttl"><b class="tb">말씀 카드</b></div><div class="cds"><img class="cdp" src="'+IMG+'libr_c.webp'+VER+'" alt="두건을 쓴 사서가 카드 일곱 장을 부채꼴로 쥐고 내민다"><div class="cdf stk" style="left:'+px+'px;top:'+py+'px">';
-  for(i=0;i<7;i++) h+='<button type="button" class="cdk" data-a="pick" data-i="'+i+'" style="--a:'+((i-3)*11)+'deg" aria-label="'+(i+1)+'번째 카드"><span>✝</span></button>';
-  return h+'</div><img class="cdh" src="'+IMG+'libr_h.webp'+VER+'" alt="" style="left:'+(px-140)+'px;top:'+(py-100)+'px"><button type="button" class="cdmix" data-a="mix">섞어 달라고 한다</button></div>'; }
+function cardHtml(t){ var wp=Math.round(Math.min(300,(HS-152)*.6304)), lf=Math.round((W-wp)/2), px=195, py=HS-160, i;   /* 목사님 11-24: 사서가 화면 가운데로 오고, 카드 패는 그 앞에 */
+  var h='<button type="button" class="bk" data-a="back">'+CL+(O.solo?"닫기":"서고")+'</button><div class="ttl"><b class="tb">말씀 카드</b></div><button type="button" class="cdmix tb" data-a="mix">다시 섞기</button><div class="cds" style="--fx:'+(-6-lf)+'px;--fy:8px;--fs:'+(164/wp).toFixed(4)+'"><img class="cdp" src="'+IMG+'libr_c.webp'+VER+'" alt="두건을 쓴 사서가 가운데 서서 카드 일곱 장을 부채꼴로 쥐고 앞으로 내민다" style="left:'+lf+'px;width:'+wp+'px"><div class="cdf stk" style="left:'+px+'px;top:'+py+'px">';
+  for(i=0;i<7;i++) h+='<button type="button" class="cdk" data-a="pick" data-i="'+i+'" style="--a:'+((i-3)*13)+'deg" aria-label="'+(i+1)+'번째 카드"><span>✝</span></button>';
+  return h+'</div><img class="cdh" src="'+IMG+'libr_h.webp'+VER+'" alt="" style="left:'+(px-80)+'px;top:'+(py-90)+'px"></div>'; }
 function cardSay(t,x){ t.dg={who:"l",np:1,t:x}; if(top()===t) dgDraw(); }
 function cardMix(t,again){ var f=stage&&stage.querySelector(".cdf"); if(!f) return; var cs=[].slice.call(f.querySelectorAll(".cdk")), mb=stage.querySelector(".cdmix"), n=0, N=again?6:3, r=function(a){ return ((Math.random()*2-1)*a).toFixed(0); }, rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
   var done=function(){ busy=false; t.ready=true; if(mb) mb.disabled=false; if(root&&top()===t) cardSay(t,"…한 장 고르십시오."); };
@@ -296,7 +301,11 @@ function drawHall(t){ drawHall0(t); dgDraw(); }
 function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec"&&!(t.s==="etc"&&t.step!=="in"))?" "+t.s:"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+((t.t==="hall"&&!t.dg)?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
   if(!fresh&&moved){ wk.classList.remove("go"); void wk.offsetWidth; wk.classList.add("go"); } /* 걸어서 그 앞으로(돌아올 때도) */
   hl.className="hl"+cls; dim.className="dimv"+(t.t==="sec"?" on":"");
-  if(t.t==="card"){ dim.className="dimv on now"; ui.innerHTML=cardHtml(t); if(t.ready){ ui.querySelector(".cdf").className="cdf open now"; } else { var tm=t.mix; t.mix=false; cardMix(t,tm); } return; }
+  if(t.t==="card"){ dim.className="dimv on now"; ui.innerHTML=cardHtml(t); if(t.ready){ ui.querySelector(".cdf").className="cdf open now"; return; }
+    var tm=t.mix, cs0=ui.querySelector(".cds"), go=function(){ if(root&&top()===t&&!t.ready) cardMix(t,tm); }, rm0=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; t.mix=false;
+    if(t.seen||O.scene==="card"||rm0){ t.seen=1; go(); return; }                                 /* 배너에서 바로 왔거나 다시 그릴 때는 옮겨 오는 움직임 없이 */
+    t.seen=1; busy=true; t.dg={who:"l",np:1,t:"…말씀 카드를 드리겠습니다."}; cs0.classList.add("from"); void cs0.offsetWidth; requestAnimationFrame(function(){ cs0.classList.add("mv"); cs0.classList.remove("from"); }); /* 말하던 자리(왼쪽 아래)에서 가운데로 */
+    setTimeout(function(){ busy=false; go(); },900); return; }
   if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>');
     return; }
   if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
