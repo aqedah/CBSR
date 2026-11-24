@@ -3390,27 +3390,29 @@ const VDB_CTX={"4-6-24-26":"시내 광야에서 행진을 준비하던 때, 하�
 const vdbRef=s=>{ const a=s.split("-").map(Number); return [a[0],a[1],a[2],a[3]||a[2]]; };
 const yvGet=y=>{ const m=(mem.yv||{})[y]; if(m) return m; try{ return (JSON.parse(localStorage.getItem("cbsr-yv")||"{}"))[y]; }catch(e){ return null; } };
 function yvSet(y,v){ mem.yv ||= {}; mem.yv[y]=v; save(); try{ const o=JSON.parse(localStorage.getItem("cbsr-yv")||"{}"); o[y]=v; localStorage.setItem("cbsr-yv",JSON.stringify(o)); }catch(e){} }
-const yvOpenNow=()=>NOW().getMonth()===0;
-function yvBanner(){ const y=NOW().getFullYear(), v=yvGet(y);
-  if(v){ const r=vdbRef(v.r); return `<button class="sbnr yv done" data-yv="1"><span class="sbk">${y}년 나의 말씀 · ${esc(v.c)}</span><b>“${esc(vRange(r).slice(0,46))}${vRange(r).length>46?"…":""}”</b><small>${esc(thLab(r))} · 다시 보기</small></button>`; }
-  if(!yvOpenNow()) return "";
-  return `<button class="sbnr yv" data-yv="1"><span class="sbk">새해 말씀 뽑기</span><b>${y}년, 나에게 주시는 말씀 한 구절</b><small>카드를 하나 골라 뒤집어 보세요 ›</small></button>`; }
+const yvOpenNow=()=>{ const m=NOW().getMonth(); return m===11||m===0; }; /* 11-24 목사님: 말씀 카드를 받는 기간은 12월–1월 두 달. 오늘 탭 배너와 서고가 같은 기준 */
+const yvYear=()=>{ const n=NOW(); return n.getMonth()===11?n.getFullYear()+1:n.getFullYear(); }; /* 12월에 뽑는 말씀은 새해(다음 해)의 말씀으로 남김 */
+function yvBanner(drawOnly){ const cy=NOW().getFullYear(), ty=yvYear(), vc=yvGet(cy), vt=yvGet(ty);
+  const done=(y,v)=>{ const r=vdbRef(v.r); return `<button class="sbnr yv done" data-yv="${y}"><span class="sbk">${y}년 나의 말씀 · ${esc(v.c)}</span><b>“${esc(vRange(r).slice(0,46))}${vRange(r).length>46?"…":""}”</b><small>${esc(thLab(r))} · 다시 보기</small></button>`; };
+  const draw=`<button class="sbnr yv" data-yv="${ty}"><span class="sbk">새해 말씀 뽑기</span><b>${ty}년, 나에게 주시는 말씀 한 구절</b><small>카드를 하나 골라 뒤집어 보세요 ›</small></button>`;
+  if(drawOnly) return (yvOpenNow()&&!vt)?draw:"";
+  let h=""; if(vc) h+=done(cy,vc); if(ty!==cy&&vt) h+=done(ty,vt); if(yvOpenNow()&&!vt) h+=draw; return h; }
 /* 11-24 목사님: 말씀 카드는 서고의 사서가 패처럼 쥐고 내밉니다. 오늘·기록 탭의 배너와 서고의 '말씀 카드를 받는다'가 같은 곳으로 갑니다.
    올해 뽑은 말씀이 있으면 그 말씀을 먼저 보여 줍니다. ret: 서고에서 왔으면 닫을 때 서고로 돌아갑니다 */
-function yvPick(){ const y=NOW().getFullYear(), ok=VDB.filter(x=>vRange(vdbRef(x[1]))); if(!ok.length) return null; const p=ok[Math.floor(Math.random()*ok.length)], v={r:p[1],c:p[0],at:todayStr()}; yvSet(y,v); return v; }
-function yvOpen(){ const had=yvGet(NOW().getFullYear()); if(had) yvReveal(had,false); else yvDeck(false,false); }
+function yvPick(){ const y=yvYear(), ok=VDB.filter(x=>vRange(vdbRef(x[1]))); if(!ok.length) return null; const p=ok[Math.floor(Math.random()*ok.length)], v={r:p[1],c:p[0],at:todayStr()}; yvSet(y,v); return v; }
+function yvOpen(yy){ const y=yy||yvYear(), had=yvGet(y); if(had) yvReveal(had,false,y); else if(yvOpenNow()) yvDeck(false,false); }
 function yvDeck(mix,ret){ shelfOpen({scene:"card",solo:!ret,mix:!!mix,fail:()=>yvDeckOld(ret)}); }
-function yvReveal(v,ret){ const y=NOW().getFullYear(), el=document.createElement("div"); el.className="yvov"; document.body.appendChild(el);
+function yvReveal(v,ret,yy){ const y=yy||yvYear(), el=document.createElement("div"); el.className="yvov"; document.body.appendChild(el);
   const close=()=>{ if(ret){ shelfOpen({back:true,fail:()=>{}}); setTimeout(()=>el.remove(),250); } else el.remove(); };
   const r=vdbRef(v.r), t=vRange(r);
-    el.innerHTML=`<div class="yvbox"><button class="bkx" aria-label="닫기">✕</button><p class="yvk">${y}년 나의 말씀 · ${esc(v.c)}</p><div class="yvcard flip"><q>${esc(t)}</q><span>${esc(thLab(r))}</span></div>${VDB_CTX[v.r]?`<div class="yvctx"><b>어떤 상황에서 나온 말씀인가요</b><p>${esc(VDB_CTX[v.r])}</p><button class="linkbtn" id="yvCtx">앞뒤 본문 보기</button></div>`:""}<p class="yvsub">${esc(VDB_CAT[v.c]||"")}</p><div class="yvbtns"><button class="btn ghost" id="yvShare">말씀 나누기</button><button class="btn" id="yvOk">마음에 담기</button></div>${yvOpenNow()?`<button class="yvagain" id="yvAgain">다시 뽑기</button>`:""}<p class="yvnote">기록 탭에서 한 해 동안 다시 볼 수 있습니다.</p></div>`;
+    el.innerHTML=`<div class="yvbox"><button class="bkx" aria-label="닫기">✕</button><p class="yvk">${y}년 나의 말씀 · ${esc(v.c)}</p><div class="yvcard flip"><q>${esc(t)}</q><span>${esc(thLab(r))}</span></div>${VDB_CTX[v.r]?`<div class="yvctx"><b>어떤 상황에서 나온 말씀인가요</b><p>${esc(VDB_CTX[v.r])}</p><button class="linkbtn" id="yvCtx">앞뒤 본문 보기</button></div>`:""}<p class="yvsub">${esc(VDB_CAT[v.c]||"")}</p><div class="yvbtns"><button class="btn ghost" id="yvShare">말씀 나누기</button><button class="btn" id="yvOk">마음에 담기</button></div>${(yvOpenNow()&&y===yvYear())?`<button class="yvagain" id="yvAgain">다시 뽑기</button>`:""}<p class="yvnote">기록 탭에서 한 해 동안 다시 볼 수 있습니다.</p></div>`;
     el.querySelector(".bkx").onclick=close; el.querySelector("#yvOk").onclick=()=>{ render(); close(); };
     el.querySelector("#yvCtx")?.addEventListener("click",()=>sVerseSheet(`${r[0]}-${r[1]}-${r[2]}-${r[3]}`,()=>{}));
     /* 다시 뽑기(목사님 2026-10-31, 11-24): 묻지 않고 바로. 사서가 다시 섞어서 내밉니다. 새로 뽑으면 앞의 말씀 대신 남습니다 */
     { const ag=el.querySelector("#yvAgain"); if(ag) ag.onclick=()=>{ yvDeck(true,ret); setTimeout(()=>el.remove(),250); }; } /* 기간 밖에는 다시 뽑기 단추가 없음 */
     el.querySelector("#yvShare").onclick=async()=>{ const txt=`${y}년 나의 말씀\n\n${t}\n(${thLab(r)})\n\n— ${PI.name}`; try{ if(navigator.share){ await navigator.share({text:txt}); return; } }catch(e){ if(e&&e.name==="AbortError") return; } try{ await navigator.clipboard.writeText(txt); toast("복사했습니다."); }catch(e){} }; }
 /* 서고를 불러오지 못할 때만 쓰는 예전 화면(10-31: 내가 섞어서 펼치고 고름) */
-function yvDeckOld(ret){ const y=NOW().getFullYear(), el=document.createElement("div"); el.className="yvov"; document.body.appendChild(el); const close=()=>el.remove();
+function yvDeckOld(ret){ const y=yvYear(), el=document.createElement("div"); el.className="yvov"; document.body.appendChild(el); const close=()=>el.remove();
   const N=7; let ready=false, busy=false;
     el.innerHTML=`<div class="yvbox"><button class="bkx" aria-label="닫기">✕</button><p class="yvk">${y}년 새해 말씀 뽑기</p><h2 id="yvH">기도하는 마음으로<br>카드를 섞어 보세요</h2><div class="yvfan stk" id="yvFan">${Array.from({length:N},(_,i)=>`<button class="yvc" data-i="${i}" style="--i:${i}" aria-label="${i+1}번째 카드"><span>✝</span></button>`).join("")}</div><button class="btn yvmix" id="yvMix">🔀 카드 섞기</button><p class="yvnote">원하는 만큼 섞은 뒤, 펼쳐진 카드에서 한 장을 고르세요.</p></div>`;
     el.querySelector(".bkx").onclick=close; const fan=el.querySelector("#yvFan"), cs=[...fan.querySelectorAll(".yvc")], mixB=el.querySelector("#yvMix"), rnd=a=>(Math.random()*2-1)*a;
@@ -3443,7 +3445,7 @@ function yrOpen(){ const S=yrStats(yrYear()), Y=S.Y, mx=Math.max(1,...S.mon);
    S.am.length?`<p class="yrk">내가 아멘한 하나님</p>${S.am.map(([t,n],i)=>`<p class="yram${i===0?" top":""}">${esc(t)} <small>${n}번</small></p>`).join("")}<p class="yrs dim">올해 말씀 속에서 가장 자주 만난 하나님의 모습입니다.</p>`:"",
    S.kv.length?`<p class="yrk">올해 붙잡은 말씀 · ${S.kv.length}구절</p>${S.kv.slice(-3).map(v=>`<div class="yrkv"><q>${esc(vtxt(v))}</q><small>${esc(PLAN.abbr[v[0]-1])} ${v[1]}:${v[2]}</small></div>`).join("")}`:"",
    rxL?`<p class="yrk">이야기를 읽으며 남긴 반응</p><div class="yrrx">${rxL}</div>${S.rx["🤔"]?`<p class="yrs dim">'왜일까요?'를 ${S.rx["🤔"]}번 눌렀습니다. 질문은 말씀을 더 깊이 읽게 합니다.</p>`:""}`:"",
-   `<p class="yrk">${Y+1}년</p><h2>한 해 동안<br>수고하셨습니다</h2><p class="yrs">새해에도 날마다 한 걸음씩,<br>말씀의 이야기를 함께 걷겠습니다.</p>${Y+1>=2027?`<p class="yrs dim">1월 1일에는 새해 말씀 뽑기가 열립니다.</p>`:""}`
+   `<p class="yrk">${Y+1}년</p><h2>한 해 동안<br>수고하셨습니다</h2><p class="yrs">새해에도 날마다 한 걸음씩,<br>말씀의 이야기를 함께 걷겠습니다.</p>${Y+1>=2027?`<p class="yrs dim">새해 말씀 뽑기는 1월 말까지 열려 있습니다.</p>`:""}`
   ].filter(Boolean);
   const el=document.createElement("div"); el.className="yrov"; document.body.appendChild(el); let i=0;
   const show=()=>{ el.innerHTML=`<div class="yrbars">${P.map((_,j)=>`<i class="${j<=i?"on":""}"></i>`).join("")}</div><button class="bkx" aria-label="닫기">✕</button><div class="yrpg">${P[i]}</div><button class="yrnav l" aria-label="앞"></button><button class="yrnav r" aria-label="다음"></button>${i===P.length-1?`<button class="yrdone">닫기</button>`:""}`;
@@ -3559,10 +3561,10 @@ function ssHide(s){ try{ const o=JSON.parse(localStorage.getItem("cbsr-ss-hide")
 function seasonBanner(){ const L=seasonsNow().filter(s=>!ssHidden(s)).slice(0,2); return L.map(s=>`<div class="sbnr ss" style="--sc:${s.c}"><button class="ssgo" data-ss="${s.k}"><span class="sbk">교회력 · ${esc(s.t)}</span><b>${esc(s.line)}</b><small>이 절기 알아보기 ›</small></button><button class="ssx" data-ssx="${s.k}" aria-label="이 절기 동안 숨기기">✕</button></div>`).join(""); }
 function seasonSheet(k){ const S=SEASON[k]; if(!S) return; const s=seasonsNow().find(x=>x.k===k), md=x=>`${x.getMonth()+1}월 ${x.getDate()}일`;
   sheet(S.t,`<p class="ssline" style="--sc:${S.c}">${esc(S.line)}</p>${s?`<p class="lead">${/^(kbu|harvest1|kbm|reform|harvest2)$/.test(k)?`${s.a.getFullYear()}년 ${md(s.a)}(주일)`:`올해: ${md(s.a)}${s.b-s.a>0?` – ${md(s.b)}`:""}`}${S.col?` · 절기 색 ${esc(S.col)}`:""}</p>`:""}<h4>어떤 절기인가요</h4><p>${esc(S.what)}</p><h4>이렇게 지내 보세요</h4><ul class="tgul">${S.how.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><h4>함께 읽을 말씀</h4>${S.r.map(x=>{ const r=vdbRef(x), t=vRange(r); return t?`<div class="yrkv lt"><q>${esc(t)}</q><small>${esc(thLab(r))}</small></div>`:""; }).join("")}${k==="kbm"?kbmHTML():""}`); if(k==="kbm") kbmMapInit(); }
-function bindBanners(root){ root.querySelectorAll("[data-yv]").forEach(b=>b.onclick=()=>yvOpen()); root.querySelectorAll("[data-yr]").forEach(b=>b.onclick=()=>yrOpen());
+function bindBanners(root){ root.querySelectorAll("[data-yv]").forEach(b=>b.onclick=()=>yvOpen(+b.dataset.yv||0)); root.querySelectorAll("[data-yr]").forEach(b=>b.onclick=()=>yrOpen());
   root.querySelectorAll("[data-ss]").forEach(b=>b.onclick=()=>seasonSheet(b.dataset.ss)); root.querySelectorAll("[data-ssx]").forEach(b=>b.onclick=()=>{ const s=seasonsNow().find(x=>x.k===b.dataset.ssx); if(s) ssHide(s); b.closest(".sbnr").remove(); }); }
 function topBanners(tab){ if(!BIBLE) return ""; let h="";
-  if(tab==="today"){ h+=seasonBanner(); const y=NOW().getFullYear(); if(yvOpenNow()&&!yvGet(y)) h+=yvBanner(); }
+  if(tab==="today"){ h+=seasonBanner(); h+=yvBanner(true); }
   else { h+=yrBanner(); h+=yvBanner(); h+=seasonBanner(); }
   return h?`<div class="sbnrs">${h}</div>`:""; }
 function dayTitle(w,d){ const p=dayPlan(w,d), key=keyOf(w,d), ok=t=>t&&t!==p.label&&!/^\S+ \d+([–-]\d+)?(장|편)?$/.test(t); if(ok(p.topic)) return p.topic; const RD=false; if(RD&&ok(RD.title)) return RD.title;
@@ -6455,8 +6457,7 @@ function recMine(){ const L=Object.entries(WCS).filter(([id,r])=>r&&!r.del&&r.b)
    책장·돌·월별 앨범·날짜별 기록·교회·설정은 한 줄 진입점 → 상세 화면(view.recD). 데이터·저장 구조는 그대로 */
 function recBack(){ if(!view.recD) return; if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); }
 /* 성경 지도를 다른 탭에서 열었으면(위쪽 지도 단추·오늘의 여정·지도 도전) 닫을 때 그 자리로 돌아감 */
-function bmReturn(){ const f=view.bmFrom; if(!f) return false; view.bmFrom=null; view.recD=f.recD; view.tab=f.tab; render();
-  if(f.shelf){ const cv=document.createElement("div"); cv.style.cssText="position:fixed;inset:0;z-index:98990;background:#17100b"; document.body.appendChild(cv); setTimeout(()=>{ shelfOpen({back:true,fail:()=>{}}); setTimeout(()=>cv.remove(),400); },90); } /* 11-24: 사서에게 받은 통독표는 ‹ 로 사서 앞에 돌아감(뒤로 가기 기록이 정리된 뒤에 엶) */ const y=f.y||0; [60,250,500].forEach(t=>setTimeout(()=>{ if(Math.abs(window.scrollY-y)>40) window.scrollTo({top:y}); },t)); return true; }
+function bmReturn(){ const f=view.bmFrom; if(!f) return false; view.bmFrom=null; view.recD=f.recD; view.tab=f.tab; render(); const y=f.y||0; [60,250,500].forEach(t=>setTimeout(()=>{ if(Math.abs(window.scrollY-y)>40) window.scrollTo({top:y}); },t)); return true; }
 const recBackOv=fromPop=>{ if(fromPop===true){ if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); } };
 function recGo(d){ view.recD=d; ovOpen(recBackOv); render(); window.scrollTo({top:0}); }
 function recCards(){ return Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q.kv).map(([k,q])=>{ const [w,d]=k.split("-").map(Number); if(!dayPlan(w,d)) return null; const v=String(q.kv).split(":").map(Number); if(v.length!==3) return null; const t=vtxt(v); if(!t) return null; return {k,w,d,q,v,t,dt:dateOf(w,d),at:String(q.doneAt||"")}; }).filter(Boolean).sort((a,b)=>b.at.localeCompare(a.at)||b.dt-a.dt); }
@@ -7034,13 +7035,13 @@ let SHELF_LD=null;
 function shelfLoad(){ if(window.CBSR_SHELF) return Promise.resolve(); if(SHELF_LD) return SHELF_LD;
   return SHELF_LD=new Promise((ok,no)=>{ const s=document.createElement("script"); s.src="shelf.js"; s.onload=ok; s.onerror=no; document.head.appendChild(s); }).catch(e=>{ SHELF_LD=null; throw e; }); }
 function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,scene:o.scene,solo:o.solo,mix:o.mix,back:o.back,
-        plan:()=>{ if(!(view.tab==="record"&&view.recD==="plan")){ openWeekPicker(); if(view.bmFrom) view.bmFrom.shelf=true; } shelfLeave(); }, /* 11-24 목사님: 사서에게 받는 통독표 = 날짜를 누르면 나오는 통독표 */
-        card:yvOpenNow()?{had:()=>!!yvGet(NOW().getFullYear()),show:()=>{ yvReveal(yvGet(NOW().getFullYear()),true); shelfLeave(); },pick:()=>yvPick(),reveal:(v,ret)=>{ yvReveal(v,ret); shelfLeave(); }}:null, /* 11-24 목사님: 말씀 카드는 정해진 기간(yvOpenNow, 1월)에만 받음. 오늘 탭 배너와 서고가 같음 */
+        plan:{get:M=>pcData(M),go:(w,d)=>{ const t=view.tab!=="record"?view.tab:"read"; shelfLeave(true); view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }}, /* 11-24 목사님: 사서에게 받는 통독표 = 날짜를 누르면 나오는 통독표(같은 자료 pcData). 서고 안에서 서고의 모습으로 보여 줌 */
+        card:yvOpenNow()?{had:()=>!!yvGet(yvYear()),show:()=>{ yvReveal(yvGet(yvYear()),true); shelfLeave(); },pick:()=>yvPick(),reveal:(v,ret)=>{ yvReveal(v,ret); shelfLeave(); }}:null, /* 11-24 목사님: 말씀 카드는 정해진 기간(yvOpenNow, 12월–1월)에만 받음. 오늘 탭 배너와 서고가 같음 */
         today:(()=>{ try{ const tp=posOfToday(), P=dayPlan(tp.w,tp.d); return (P&&P.ch&&P.ch[0]&&P.ch[0][0])||0; }catch(e){ return 0; } })(),nick:(()=>{ try{ return (SYNC.google&&SYNC.google()&&PROF.nick)||""; }catch(e){ return ""; } })(),push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); },
     /* 사서의 다섯 물음에 적은 답: mem.shq[책][물음]={v:글,t:적은 때}. 다른 기록처럼 기기에 저장하고 클라우드와 맞춤 */
     store:{get:()=>mem.shq||{},set:(id,f,v)=>{ mem.shq=mem.shq||{}; mem.shq[id]=mem.shq[id]||{}; mem.shq[id][f]={v:String(v).slice(0,400),t:Date.now()}; save(); }}}); if(ok) ovOpen(shelfClose); }).catch(()=>{ if(o.fail) o.fail(); else toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요."); }); }
-function shelfLeave(){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()){ CBSR_SHELF.close(true); ovDone(shelfClose); } }
-function shelfClose(pop){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()) CBSR_SHELF.close(true); if(pop!==true) ovDone(shelfClose); }
+function shelfLeave(anim){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()){ CBSR_SHELF.close(true,!!anim); ovDone(shelfClose); } }
+function shelfClose(pop){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()) CBSR_SHELF.close(true,pop===true); /* 휴대폰 뒤로 가기로 나갈 때도 나가는 움직임 */ if(pop!==true) ovDone(shelfClose); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.
    데이터: ux/big_tours.py → BM_TOURS. 단계(step): t 제목, s 때·곳, n 설명, p 지점들(배면 sea), land0/then 배 앞뒤의 뭍길, pre 움직이기 전 말씀, r 도착 말씀, z 확대, fx part|jordan, storm, stay(머묾), dash(방황), who/as_ 주인공 바뀜, add 동행 합류 ===== */
@@ -9690,15 +9691,20 @@ function pcDays(){ const t0=today0(), M=new Map();
     M.set(`${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`,{w,d,p,dt,st:done?"on":dd===0?"me":dd<0?"miss":"fut",me:dd===0}); }
   return M; }
 function pcShort(p){ const C=(p&&p.ch)||[]; if(!C.length) return ""; const a=C[0], z=C[C.length-1], A=PLAN.abbr[a[0]-1]; return a[0]===z[0]?(a[1]===z[1]?`${A}${a[1]}`:`${A}${a[1]}–${z[1]}`):`${A}${a[1]}…`; }
-function pcHTML(){ const D=pcDays(), keys=[...D.values()]; if(!keys.length) return `<p class="lead">통독표가 없습니다.</p>`;
+/* 11-24 목사님: 사서에게 받는 통독표와 날짜를 눌러 나오는 통독표가 같도록, 달력 자료를 여기 한곳에서 만듭니다 */
+function pcData(M){ const D=pcDays(), keys=[...D.values()]; if(!keys.length) return null;
   const months=[...new Set(keys.map(x=>`${x.dt.getFullYear()}-${x.dt.getMonth()}`))], t0=today0(), nowK=`${t0.getFullYear()}-${t0.getMonth()}`;
-  if(!PCM||!months.includes(PCM)) PCM=months.includes(nowK)?nowK:(view&&view.w?(()=>{ const dt=dateOf(view.w,view.d||0); return `${dt.getFullYear()}-${dt.getMonth()}`; })():months[0]); if(!months.includes(PCM)) PCM=months[0];
-  const [Y,Mo]=PCM.split("-").map(Number), mi=months.indexOf(PCM), first=new Date(Y,Mo,1), nd=new Date(Y,Mo+1,0).getDate(); let cells="", n=0, r=0;
-  for(let i=0;i<first.getDay();i++) cells+=`<span class="pcc pce"></span>`;
-  for(let dd=1;dd<=nd;dd++){ const x=D.get(`${Y}-${Mo}-${dd}`); if(!x){ cells+=`<span class="pcc pcn"><b>${dd}</b></span>`; continue; } { n++; if(x.st==="on") r++; }
-    const lab=pcShort(x.p), full=(x.p.label+(x.p.topic?` · ${x.p.topic}`:""));
-    cells+=`<button class="pcc ${x.st}${""}${x.me?" today":""}" data-pcgo="${x.w}-${x.d}" aria-label="${Mo+1}월 ${dd}일 ${esc(full)}${x.st==="on"?", 읽음":x.st==="miss"?", 안 읽음":x.me?", 오늘":""}"><b>${dd}</b><small>${esc(lab)}</small></button>`; }
-  { const used=first.getDay()+nd; for(let i=used;i<42;i++) cells+=`<span class="pcc pce"></span>`; } /* 11/3: 어느 달이든 6줄 — 달을 넘겨도 높이가 같게 */
+  if(!M||!months.includes(M)) M=months.includes(nowK)?nowK:(view&&view.w?(()=>{ const dt=dateOf(view.w,view.d||0); return `${dt.getFullYear()}-${dt.getMonth()}`; })():months[0]); if(!months.includes(M)) M=months[0];
+  const [Y,Mo]=M.split("-").map(Number), mi=months.indexOf(M), first=new Date(Y,Mo,1), nd=new Date(Y,Mo+1,0).getDate(), days=[]; let n=0, r=0;
+  for(let dd=1;dd<=nd;dd++){ const x=D.get(`${Y}-${Mo}-${dd}`); if(!x){ days.push(null); continue; } { n++; if(x.st==="on") r++; }
+    days.push({w:x.w,d:x.d,st:x.st,me:x.me,lab:pcShort(x.p),full:(x.p.label+(x.p.topic?` · ${x.p.topic}`:""))}); }
+  return {M,Y,Mo,mi,months,lead:first.getDay(),nd,days,n,r,nowK,hasNow:months.includes(nowK)}; }
+function pcHTML(){ const P=pcData(PCM); if(!P) return `<p class="lead">통독표가 없습니다.</p>`; PCM=P.M;
+  const {Y,Mo,mi,months,nd,n,r,nowK}=P; let cells="";
+  for(let i=0;i<P.lead;i++) cells+=`<span class="pcc pce"></span>`;
+  for(let dd=1;dd<=nd;dd++){ const x=P.days[dd-1]; if(!x){ cells+=`<span class="pcc pcn"><b>${dd}</b></span>`; continue; }
+    cells+=`<button class="pcc ${x.st}${""}${x.me?" today":""}" data-pcgo="${x.w}-${x.d}" aria-label="${Mo+1}월 ${dd}일 ${esc(x.full)}${x.st==="on"?", 읽음":x.st==="miss"?", 안 읽음":x.me?", 오늘":""}"><b>${dd}</b><small>${esc(x.lab)}</small></button>`; }
+  { const used=P.lead+nd; for(let i=used;i<42;i++) cells+=`<span class="pcc pce"></span>`; } /* 11/3: 어느 달이든 6줄 — 달을 넘겨도 높이가 같게 */
   return `<div class="pchd"><button class="pcnav" data-pcm="${mi-1}"${mi>0?"":" disabled"} aria-label="이전 달">‹</button><b>${Y}년 ${Mo+1}월</b><span>${r}/${n}일 읽음</span><button class="pcnav" data-pcm="${mi+1}"${mi<months.length-1?"":" disabled"} aria-label="다음 달">›</button></div>
     <div class="pcw">${["주일","월","화","수","목","금","토"].map(t=>`<span>${t}</span>`).join("")}</div><div class="pcg">${cells}</div>
     <p class="pclg"><i class="on"></i>읽음 <i class="me"></i>오늘 <i class="miss"></i>안 읽은 지난 날${PCM!==nowK&&months.includes(nowK)?` <button class="pcnow" data-pcnow="1">이번 달 ›</button>`:""}</p>`; }
