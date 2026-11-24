@@ -71,6 +71,11 @@ SVG = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
 
 <rect x="100" y="90" width="100" height="80" fill="url(#hoodsh)"/>
 <rect x="130" y="90" width="70" height="130" fill="url(#sidesh)"/>
+<!-- 얼룩과 검버섯(11-24 목사님): 과하지 않게. 화상 자국인지 그늘인지 애매하게 -->
+<path d="M172 116C180 123 185 137 185.500 152C186 166 182 178 175 186C171 179 169.500 169 170.500 158C171.500 146 168 131 172 116Z" fill="#7a4628" opacity=".3" filter="url(#b2)"/>
+<path d="M176 132C180 138 181 148 179 157C176 152 174.500 142 176 132Z" fill="#55301c" opacity=".3" filter="url(#b2)"/>
+<path d="M170 168q4 3 3 9q-4 -2 -3 -9z" fill="#6a3a22" opacity=".28"/>
+<g fill="#5c3a20"><ellipse cx="178.500" cy="127" rx="3.300" ry="2.300" transform="rotate(-24 178.500 127)" opacity=".5"/><ellipse cx="181" cy="161" rx="2.600" ry="3.300" transform="rotate(12 181 161)" opacity=".5"/><circle cx="176" cy="172.500" r="1.700" opacity=".48"/><circle cx="183.500" cy="148" r="1.400" opacity=".44"/><circle cx="172.500" cy="140" r="1.100" opacity=".4"/><ellipse cx="123" cy="118.500" rx="2.700" ry="1.900" transform="rotate(18 123 118.500)" opacity=".42"/><circle cx="119.500" cy="152" r="1.700" opacity=".42"/><circle cx="127" cy="165" r="1.500" opacity=".4"/><ellipse cx="124" cy="141" rx="2" ry="1.400" opacity=".32"/><circle cx="160" cy="112.500" r="1.500" opacity=".4"/><circle cx="139" cy="121" r="1.100" opacity=".36"/></g>
 <path d="M128 119Q150 114 172 119M132 126Q150 122 168 126" stroke="#8a6238" stroke-width=".6" fill="none" opacity=".7"/>
 </g>
 <path d="M114 124C110 150 114 180 126 196" fill="none" stroke="#1a110b" stroke-width="1"/>

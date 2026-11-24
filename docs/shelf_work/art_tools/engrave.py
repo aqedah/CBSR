@@ -126,16 +126,20 @@ EPALS = {
 }
 
 
-def hall(name='hall_e', seed=7, nine=False, night=False, flames=True):
+def hall(name='hall_e', seed=7, nine=False, night=False, flames=True, fp=False):
+    # fp: 2026-11-24 목사님 — 위에서 내려다보는 그림 대신 1인칭(눈높이)으로 통로에 서서 본 서고
     rnd = random.Random(seed)
-    sc = Scene(9.5, -8.0, 33, 900)
-    pl = Plate(tone=0.7, cls=1)
-    HW, Z0, Z1, WH, CHT = 2.45, -6.0, 12.4, 7.4, 3.1
+    sc = Scene(1.55, -2.6, 0, 500, cy_css=470) if fp else Scene(9.5, -8.0, 33, 900)
+    pl = Plate(tone=0.7 if not fp else 0.3, cls=1)
+    HW, Z0, Z1, WH, CHT = 2.45, (-2.2 if fp else -6.0), 12.4, 7.4, 3.1
+    NEAR = sc.cam[2] + 0.25
 
     def fog(zc):
         return min(max((zc - 10.0) / 17.0, 0.0), 1.0) * 0.6
 
     def q(pts, tone=0.9, cls=0, wash=None, lw=0.7, erase=True):
+        if fp and min(p[2] for p in pts) < NEAR:
+            return
         pp = [sc.P(*p) for p in pts]
         f = fog(sum(p[2] for p in pp) / len(pp))
         if wash:
@@ -143,6 +147,8 @@ def hall(name='hall_e', seed=7, nine=False, night=False, flames=True):
         pl.poly([(p[0] / K, p[1] / K) for p in pp], tone=tone + (1 - tone) * f, cls=cls, wash=wash, lw=lw * (1 - 0.5 * f) if lw else 0, erase=erase)
 
     def ln(pts, lw=0.5):
+        if fp and min(p[2] for p in pts) < NEAR:
+            return
         pp = [sc.P(*p) for p in pts]
         f = fog(sum(p[2] for p in pp) / len(pp))
         pl.stroke([(p[0] / K, p[1] / K) for p in pp], lw=lw * (1 - 0.5 * f))
@@ -176,6 +182,11 @@ def hall(name='hall_e', seed=7, nine=False, night=False, flames=True):
                     hh = 0.9 * rnd.uniform(0.6, 0.92)
                     q([(x, y0, zz), (x, y0, zz + wd), (x, y0 + hh, zz + wd), (x, y0 + hh, zz)], tone=rnd.uniform(0.5, 0.8), cls=6, wash=rnd.choice(EPALS['mix']), lw=0.4)
                     zz += wd + 0.012
+    if fp:   # 천장과 들보(눈높이에서는 위가 보임)
+        q([(-HW, WH, Z0), (HW, WH, Z0), (HW, WH, Z1), (-HW, WH, Z1)], tone=0.42, cls=2, wash=(150, 132, 110), lw=0)
+        for bz in np.arange(Z1 - 0.6, Z0 + 0.5, -1.5):
+            q([(-HW, WH - 0.42, bz), (HW, WH - 0.42, bz), (HW, WH, bz), (-HW, WH, bz)], tone=0.3, cls=1, wash=WOOD_D, lw=0.7)
+            q([(-HW, WH - 0.42, bz), (HW, WH - 0.42, bz), (HW, WH - 0.42, bz + 0.3), (-HW, WH - 0.42, bz + 0.3)], tone=0.2, cls=5, wash=WOOD_D, lw=0.5)
     # end wall with a tall lattice window
     q([(-HW, 0, Z1), (HW, 0, Z1), (HW, WH, Z1), (-HW, WH, Z1)], tone=0.74, cls=1, wash=(214, 204, 184), lw=0.8)
     for jy, yy_ in enumerate(np.arange(0.6, WH, 0.6)):

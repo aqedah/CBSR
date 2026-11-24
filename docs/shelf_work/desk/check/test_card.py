@@ -60,7 +60,7 @@ try:
             # 올해 받은 말씀이 있을 때
             pg.evaluate('window.__had=1; window.shelfOpen({back:true})'); pg.wait_for_timeout(700)
             pg.click('#cbsrShelf .dg .dgc button:nth-child(4)'); pg.wait_for_timeout(500)
-            chk('받은 말씀이 있으면: 여기 있습니다', '이미 받으신 말씀이 있습니다' in (txt('#cbsrShelf .dg .dgb') or '')); pg.wait_for_timeout(1300)
+            chk('받은 말씀이 있으면: 여기 있습니다', '이미 받으신 2027년 말씀이 있습니다' in (txt('#cbsrShelf .dg .dgb') or '')); pg.wait_for_timeout(1300)
             chk('받은 말씀을 보여 주도록 넘김', pg.evaluate('window.__log[3]') == 'show' and pg.locator('#cbsrShelf').count() == 0)
             cx.close()
         b.close()

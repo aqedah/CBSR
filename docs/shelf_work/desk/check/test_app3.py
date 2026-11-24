@@ -49,7 +49,7 @@ try:
         pg.click('#cbsrShelf .dgc button:nth-child(3)'); pg.wait_for_timeout(2200); pg.click('#cbsrShelf .bk'); pg.wait_for_timeout(700)
         chk('‹ 서고 → 사서 앞', has('#cbsrShelf .dg') and '더 찾는 것이 있습니까' in (T('#cbsrShelf .dg .dgb') or ''))
         pg.click('#cbsrShelf .dgc button:nth-child(2)'); pg.wait_for_timeout(500)
-        pg.mouse.click(206, 520); pg.wait_for_timeout(700)
+        pg.mouse.click(206, 740); pg.wait_for_timeout(700)
         chk('둘러볼 때 빈 곳을 눌러도 닫히지 않음', has('#cbsrShelf .lbc'))
         pg.click('#cbsrShelf .bk'); pg.wait_for_timeout(200)
         chk('닫기 → 나가는 움직임', has('#cbsrShelf.bye')); pg.screenshot(path=S + 'app4_bye.png'); pg.wait_for_timeout(800)

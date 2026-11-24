@@ -10,3 +10,5 @@
 - `desk/check/test_dlg.py`(대화·안내·적어 두기), `test_card.py`(통독표·말씀 카드), `test_app2.py`·`test_app3.py`(실제 빌드)가 지금 쓰는 시험입니다. `test_qa.py`·`test_etc.py`는 옛 화면(다섯 물음, 경고장 단추) 것입니다.
 - `art_tools/` — 서고 그림을 그리는 도구(`engrave.py`가 서고 전경과 서가, `mkpress.py`가 서가 일곱 장).
 - `sian/` — 처음 시안 네 가지.
+
+- 2026-11-24 저녁: 통로를 눈높이에서 본 그림으로 바꿨습니다(`art_tools/engrave.py`의 `hall(…, fp=True)`). 사서 그림은 얼룩과 검버섯을 넣은 `libr9`(`mk_libr.py`), 카드를 드는 그림은 `libr9c`(`mk_libr_c.py`)입니다. 만드는 순서와 정한 것은 `docs/CBSR_성경서고_결정기록_4_1인칭통로와_대사틀_2026-11-24.md`에 있습니다. 화면을 죽 찍는 스크립트는 `desk/check/shoot_walk.py`입니다.
