@@ -195,7 +195,7 @@ function a5four(out,w,pray){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w
     sh.innerHTML=[i,i+1].map(k=>`<section class="p5 p4${k%2?' r':''}" style="${st}"><div class="bx5${k===0?' b1':''}">${P[k]}</div><span class="pn sans">${k+1}</span><span class="rn sans">${esc(J.run)}</span></section>`).join(''); out.appendChild(sh); }
   out.querySelectorAll('.p5').forEach((p,i)=>{ const b=p.firstElementChild; if(b.scrollHeight>b.clientHeight+1) bad.push(String(i+1)); });
   return bad; }
-const FMT={get fmt(){return LS.get('cbsr_season_fmt','a4')}, set fmt(v){LS.set('cbsr_season_fmt',v)}, get start(){return +LS.get('cbsr_season_a5start',2)||2}, set start(v){LS.set('cbsr_season_a5start',v)}};
+const FMT={get fmt(){return LS.get('cbsr_season_fmt2','a5x2')}, set fmt(v){LS.set('cbsr_season_fmt2',v)}, get start(){return +LS.get('cbsr_season_a5start',2)||2}, set start(v){LS.set('cbsr_season_a5start',v)}};
 /* 넘침 검사: 1·4쪽 꼬리말 위로 내용이 내려왔는지 */
 function overflow(root){ const out=[]; root.querySelectorAll('.pg').forEach((pg,i)=>{ if(i%4===1||i%4===2) return; const r=pg.getBoundingClientRect(), ft=pg.querySelector('.ft'); const lim=ft?ft.getBoundingClientRect().top-2:r.bottom; let mb=0; pg.querySelectorAll(':scope > *:not(.ft)').forEach(e=>{const b=e.getBoundingClientRect(); if(b.bottom>mb) mb=b.bottom}); const z=(r.width/pg.offsetWidth)||1; const mm=(mb-lim)/z*25.4/96; if(mm>0) out.push(`${i%4+1}쪽 ${mm.toFixed(1)}mm`); }); return out; }
 /* ── 기도제목: 이 기기에만 ── */
@@ -215,7 +215,10 @@ async function loadData(){ let pub=null; try{ const r=await fetch('season.json',
   if(!dr) return pub;
   /* 묶음마다 더 최근 것을 씀 */
   const out={updated:pub.updated,sets:[]}; const ids=[...new Set([...pub.sets.map(s=>s.id),...dr.sets.map(s=>s.id)])];
-  for(const id of ids){ const a=pub.sets.find(s=>s.id===id), b=dr.sets.find(s=>s.id===id); out.sets.push(!a?b:!b?a:((b._u||0)>(a._u||0)?b:a)); }
+  for(const id of ids){ const a=pub.sets.find(s=>s.id===id), b=dr.sets.find(s=>s.id===id); const win=!a?b:!b?a:((b._u||0)>(a._u||0)?b:a);
+    /* 이 기기 원고가 이겨도, 공개 원고에 새로 생긴 칸(지도 등)은 채워 넣음 */
+    if(a&&b&&win===b) for(const w of b.weeks){ const pw=a.weeks.find(x=>x.key===w.key); if(pw) for(const k in pw) if(!(k in w)) w[k]=pw[k]; }
+    out.sets.push(win); }
   return out; }
 
 /* ── 보기(청년부 나눔·기도제목 입력·인쇄): season.html?view=묶음 ── */
