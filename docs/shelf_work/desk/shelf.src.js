@@ -1,0 +1,309 @@
+/* 성경 서고 — 2026-11-24 목사님: 진입 경로를 넣고 앱에서 서고를 볼 수 있게.
+   서고는 세 부분(구약 · 신약 · 외경과 위경과 교부 문헌). 구약과 신약은 그 안에서 서가로 나누어 들어감. 셋째 부분은 지금은 경고문만.
+   서고 → (구약|신약) 서가 고르기 → 서가(책등) → 책 펼침 → 책(표지 · 대표 구절 · 배경 · 목적 · 구조 · 하나님 · 연결 · 읽기 · 맺음)
+   원고는 shelf_66.json(성경책장 작업대의 내보내기 꼴). 그림은 img/shelf/. 앱에서는 필요할 때만 불러옴(template3.html의 shelfOpen). */
+(function(){
+"use strict";
+var ART=__ART__;
+var IMG="img/shelf/", VER="?v=4", W=390, H=846;   /* 그림을 바꾸면 VER를 올림(서비스 워커가 img/를 캐시에서 먼저 줌) */
+var SEC={ot:{n:"구약",c:"서른아홉 권",g:["모세오경","역사서","시가서","선지서"]},nt:{n:"신약",c:"스물일곱 권",g:["복음서","사도행전","바울서신","일반서신","요한계시록"]}};
+var PRESS={"모세오경":"tor","역사서":"his","시가서":"poe","선지서":"pro","복음서":"gos","바울서신":"pau","일반서신":"gen"};
+var CNT=["","한 권","두 권","세 권","네 권","다섯 권","여섯 권","일곱 권","여덟 권","아홉 권","열 권","열한 권","열두 권","열세 권","열네 권","열다섯 권","열여섯 권","열일곱 권"];
+/* 셋째 부분(외경 · 위경 · 교부 문헌): 어둡고, 이름패는 불에 그을려 잘 읽히지 않음. 누르면 경고장부터(11-24 목사님의 글). 책은 아직 없음 */
+var WARN={t:"경고",a:"이 서고의 책은 성경이 아닙니다.",q:"정말로 열람하시겠습니까?",e:"아직 들여놓은 책이 없는 것 같다."};   /* e: 주인공(1인칭)의 혼잣말 */
+var root=null,stage=null,O={},DATA=null,LOAD=null,levels=[],busy=false;
+var CL='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>', CR='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var CSS=`
+#cbsrShelf{position:fixed;inset:0;z-index:99000;overscroll-behavior:contain;background:#17100b;overflow:hidden;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:#33231a}
+#cbsrShelf:before{content:"";position:absolute;inset:-40px;background:url(img/shelf/hall.webp${VER}) center/cover;filter:blur(16px) brightness(.4)}
+#cbsrShelf *{box-sizing:border-box}
+html.shelf-on .coach{display:none!important}
+#cbsrShelf:focus{outline:none}
+#cbsrShelf .st{position:absolute;left:50%;top:0;width:390px;height:846px;transform-origin:50% 0;overflow:hidden;background:#2a1d14;word-break:keep-all}
+#cbsrShelf .sf{font-family:"Gowun Batang","Noto Serif KR",serif}
+#cbsrShelf button{font:inherit;color:inherit;cursor:pointer;border-radius:0;margin:0;-webkit-appearance:none;appearance:none}
+#cbsrShelf .ch{display:block;flex:none}
+#cbsrShelf .scn{position:absolute;left:0;top:0;width:390px;height:846px;transform-origin:50% 0}
+#cbsrShelf .bdp{position:absolute;inset:-24px;background:url(img/shelf/hall.webp${VER}) 50% 40%/cover;filter:blur(7px) brightness(.5)}
+#cbsrShelf .lay{position:absolute;inset:0}
+#cbsrShelf .wk{position:absolute;inset:0}
+#cbsrShelf .wk.go{animation:cbsrWalk 1.5s ease-in-out 1}
+#cbsrShelf .hl{position:absolute;inset:0;transition:transform 1.5s cubic-bezier(.45,.05,.25,1),transform-origin 1.5s cubic-bezier(.45,.05,.25,1);transform-origin:50% 60%}
+#cbsrShelf .hl img,#cbsrShelf .full{position:absolute;left:0;top:0;width:390px;height:846px;display:block}
+#cbsrShelf .hl.ot{transform:scale(1.95);transform-origin:2% 62%}
+#cbsrShelf .hl.nt{transform:scale(1.95);transform-origin:98% 62%}
+#cbsrShelf .hl.etc{transform:scale(2.3);transform-origin:50% 26%}
+#cbsrShelf .dimv{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,17,11,.5),rgba(26,17,11,.72));opacity:0;transition:opacity .6s;pointer-events:none}
+#cbsrShelf .dimv.on{opacity:1;transition:opacity .6s .85s}
+#cbsrShelf .hallv.lv .wk{animation:none;transition:transform .43s ease-in;transform:scale(1.28)}
+#cbsrShelf .hallv.lv .ui{transition:opacity .25s;opacity:0}
+#cbsrShelf .zin{animation:cbsrZin .5s ease-out both}
+#cbsrShelf .tb{background:#f1e6c8;border:1px solid #33231a;box-shadow:inset 0 0 0 2px #f1e6c8,inset 0 0 0 3px rgba(51,35,26,.5),0 2px 5px rgba(40,26,16,.35);color:#33231a}
+#cbsrShelf .bk{position:absolute;left:12px;top:10px;height:36px;padding:0 12px 0 6px;display:flex;align-items:center;gap:2px;background:#f1e6c8;border:1px solid #33231a;box-shadow:0 2px 5px rgba(40,26,16,.35);font-size:15px;font-weight:700;z-index:5}
+#cbsrShelf .ttl{position:absolute;left:0;right:0;top:10px;display:flex;justify-content:center;pointer-events:none;z-index:4}
+#cbsrShelf .ttl b{padding:5px 20px;font:700 19px/1.3 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.12em}
+#cbsrShelf .cnt{position:absolute;right:14px;top:17px;font-size:15px;font-weight:700;z-index:4;color:#33231a;background:#f1e6c8;border:1px solid #33231a;padding:1px 8px}
+#cbsrShelf .zn{position:absolute;inset:0;transition:opacity .45s}
+#cbsrShelf .zn.off{opacity:0;pointer-events:none;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+#cbsrShelf .zone{position:absolute;padding:0;border:0;background:transparent}
+#cbsrShelf .zone span{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;padding:8px 16px 7px}
+#cbsrShelf .zone b{font:700 23px/1.25 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.14em;margin-right:-.14em}
+#cbsrShelf .zone small{font-size:13.5px;font-weight:600;line-height:1.35}
+#cbsrShelf .zone.e b{font-size:14px;letter-spacing:.02em;margin:0;line-height:1.4;text-align:center}
+#cbsrShelf .zone.e span{padding:7px 12px;border-color:#120c08;box-shadow:0 2px 7px rgba(0,0,0,.7);background:radial-gradient(ellipse at 10% 16%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 48%),radial-gradient(ellipse at 92% 84%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 54%),radial-gradient(ellipse at 74% 6%,rgba(34,18,8,.8) 0,rgba(34,18,8,0) 42%),radial-gradient(ellipse at 16% 94%,rgba(34,18,8,.85) 0,rgba(34,18,8,0) 46%),radial-gradient(ellipse at 50% 50%,#7a6344 0,#57432c 100%);clip-path:polygon(3% 9%,13% 0,30% 6%,46% 1%,64% 7%,81% 0,96% 10%,100% 35%,95% 57%,100% 83%,89% 100%,70% 93%,52% 100%,34% 92%,16% 100%,2% 87%,6% 60%,0 36%)}
+#cbsrShelf .zone.e b{color:#1c110a;opacity:.6;filter:blur(.75px);text-shadow:0 0 3px rgba(18,9,4,.85)}
+#cbsrShelf .zone:focus-visible span,#cbsrShelf .gl button:focus-visible,#cbsrShelf .sp:focus-visible{outline:3px solid #9b3324;outline-offset:2px}
+#cbsrShelf .gl{position:absolute;left:44px;right:44px;top:120px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(10px);transition:opacity .5s 1.1s,transform .5s 1.1s}
+#cbsrShelf .gl.now{transition:none}
+#cbsrShelf .dimv.now{transition:opacity .3s}
+#cbsrShelf .wn.late,#cbsrShelf .mono.late{animation-delay:1.05s}
+#cbsrShelf .mono{position:absolute;left:14px;right:14px;bottom:18px;min-height:76px;padding:16px 40px 16px 20px;text-align:left;background:rgba(14,10,7,.86);border:1px solid rgba(230,207,154,.42);box-shadow:0 4px 18px rgba(0,0,0,.6);color:#f1e6c8;font:400 18.5px/1.65 "Gowun Batang","Noto Serif KR",serif;z-index:4}
+#cbsrShelf .mono i{position:absolute;right:16px;bottom:14px;width:0;height:0;border:6px solid transparent;border-top:8px solid #e2b24a;border-bottom:0;animation:cbsrNx 1.2s ease-in-out infinite}
+#cbsrShelf .gl.on{opacity:1;transform:none}
+#cbsrShelf .gl button{display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;min-height:64px;padding:14px 20px;text-align:left}
+#cbsrShelf .gl b{font:700 22px/1.3 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.06em}
+#cbsrShelf .gl small{font-size:15px;font-weight:600}
+#cbsrShelf .hint{position:absolute;left:24px;right:24px;bottom:26px;margin:0;text-align:center;font-size:14.5px;line-height:1.5;color:#f6e7c1;text-shadow:0 1px 4px rgba(0,0,0,.85);pointer-events:none}
+#cbsrShelf .wn{position:absolute;left:28px;right:28px;top:210px;padding:24px 22px 20px;text-align:center}
+#cbsrShelf .wn h2{margin:0 0 12px;font:700 20px/1.4 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.04em}
+#cbsrShelf .wn p{margin:0 0 10px;font:400 17px/1.75 "Gowun Batang","Noto Serif KR",serif;text-align:left}
+#cbsrShelf .wn h2{color:#9b3324;letter-spacing:.5em;margin-right:-.5em;padding-bottom:10px;border-bottom:3px double #9b3324}
+#cbsrShelf .wn p.w1{font-weight:700;text-align:center;font-size:18.5px;margin-top:16px}
+#cbsrShelf .wn p.w2{text-align:center;font-size:18.5px}
+#cbsrShelf .wn .wb{display:flex;gap:10px;justify-content:center;margin-top:16px}
+#cbsrShelf .wn .wb button{margin:0;flex:1}
+#cbsrShelf .wn .wb button.in{background:transparent;color:#33231a;border:1px solid #33231a;font-weight:600}
+#cbsrShelf .wn p.e{font-family:inherit;font-size:15px;color:#6a5646;text-align:center;margin-top:14px}
+#cbsrShelf .wn button{margin-top:6px;min-width:120px;height:46px;background:#33231a;color:#f6e7c1;border:0;font-weight:700;font-size:16px}
+#cbsrShelf .sp{position:absolute;padding:0;border:0;background:transparent;border-radius:26px 26px 0 0/6px 6px 0 0}
+#cbsrShelf .sp span{position:absolute;display:flex;align-items:center;justify-content:center}
+#cbsrShelf .sp i{font-style:normal;writing-mode:vertical-rl;text-orientation:upright;white-space:nowrap;font:700 16px/1.15 "Gowun Batang","Noto Serif KR",serif;letter-spacing:1px;color:#33231a}
+#cbsrShelf .sp:active{box-shadow:0 0 0 2px #9b3324,0 0 12px 2px rgba(155,51,36,.45)}
+#cbsrShelf .veil{position:absolute;inset:0;background:rgba(34,23,16,.8);opacity:0;pointer-events:none}
+#cbsrShelf .op{position:absolute;left:0;top:150px;width:390px;height:420px;perspective:1100px;pointer-events:none}
+#cbsrShelf .ob{position:absolute;left:105px;top:60px;width:180px;height:250px;transform-style:preserve-3d}
+#cbsrShelf .ob .bd{position:absolute;left:-5px;top:-5px;width:190px;height:260px;background:#4e1c13;border-radius:4px 9px 9px 4px;box-shadow:0 22px 44px rgba(0,0,0,.65)}
+#cbsrShelf .ob .pg{position:absolute;inset:0;background:linear-gradient(to right,#d9c594 0%,#f3e6c4 10%,#f7edd4 100%);border-radius:2px 6px 6px 2px;box-shadow:3px 0 0 #e2d2a4,6px 1px 0 #cdb985}
+#cbsrShelf .ob .pg:after{content:"";position:absolute;left:26px;top:58px;right:20px;bottom:30px;background:repeating-linear-gradient(to bottom,rgba(90,60,30,0) 0,rgba(90,60,30,0) 13px,rgba(90,60,30,.24) 13px,rgba(90,60,30,.24) 14px)}
+#cbsrShelf .ob .cv{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d}
+#cbsrShelf .ob .cf,#cbsrShelf .ob .cb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+#cbsrShelf .ob .cf{background:linear-gradient(135deg,#96412a 0%,#732c1d 55%,#5a2016 100%);border-radius:3px 8px 8px 3px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25),inset 12px 0 14px rgba(0,0,0,.35)}
+#cbsrShelf .ob .cf div{position:absolute;left:14px;top:14px;right:12px;bottom:14px;border:1.5px solid #d9b56a;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
+#cbsrShelf .ob .cf u{width:9px;height:9px;background:#d9b56a;transform:rotate(45deg)}
+#cbsrShelf .ob .cf b{font:700 21px/1.3 "Gowun Batang","Noto Serif KR",serif;color:#ecc97a;letter-spacing:.04em;padding:0 6px}
+#cbsrShelf .ob .cf small{font:400 13px/1.3 "Gowun Batang","Noto Serif KR",serif;color:rgba(236,201,122,.8);letter-spacing:.1em}
+#cbsrShelf .ob .cb{transform:rotateY(180deg);background:linear-gradient(to left,#cdb784 0%,#ecdcb2 12%,#f3e6c4 100%);border-radius:6px 2px 2px 6px}
+#cbsrShelf .blm{position:absolute;left:275px;top:325px;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle,#fff3d6 0%,#ffe6b0 55%,rgba(255,214,140,0) 100%);transform:scale(0);opacity:0;pointer-events:none}
+#cbsrShelf .bv{position:absolute;inset:0;background:#0c0908;color:#f6ecd2}
+#cbsrShelf .bv .bg{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;animation:cbsrKb 28s ease-in-out infinite alternate}
+#cbsrShelf .bv .sh{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(12,9,8,.55) 0%,rgba(12,9,8,0) 11%,rgba(12,9,8,0) 30%,rgba(12,9,8,.66) 46%,rgba(12,9,8,.92) 62%,rgba(12,9,8,.98) 100%)}
+#cbsrShelf .bv .sh.c{background:linear-gradient(to bottom,rgba(12,9,8,.5) 0%,rgba(12,9,8,0) 9%,rgba(12,9,8,0) 40%,rgba(12,9,8,.62) 52%,rgba(12,9,8,.9) 66%,rgba(12,9,8,.98) 100%)}
+#cbsrShelf .bv .bb{position:absolute;left:6px;top:4px;height:48px;padding:0 10px;display:flex;align-items:center;gap:4px;font-size:16px;color:#f6e7c1;background:transparent;border:0;text-shadow:0 1px 4px rgba(0,0,0,.6);z-index:6}
+#cbsrShelf .bv .bn{position:absolute;right:16px;top:17px;font:700 16px/1.4 "Gowun Batang","Noto Serif KR",serif;color:#f6e7c1;text-shadow:0 1px 4px rgba(0,0,0,.6);z-index:5}
+#cbsrShelf .bv .pr{position:absolute;left:20px;right:20px;top:58px;display:flex;gap:4px;z-index:5}
+#cbsrShelf .bv .pr i{flex:1;height:3px;border-radius:2px;background:rgba(246,231,193,.3)}
+#cbsrShelf .bv .pr i.on{background:#e2b24a}
+#cbsrShelf .bv .tap{position:absolute;top:70px;bottom:74px;width:50%;border:0;background:transparent;z-index:3}
+#cbsrShelf .bv .tap.l{left:0}#cbsrShelf .bv .tap.r{right:0}
+#cbsrShelf .bv main{position:absolute;left:24px;right:24px;bottom:84px;z-index:4;pointer-events:none}
+#cbsrShelf .bv .k{margin:0 0 8px;font-size:15px;line-height:1.4;letter-spacing:.04em;color:#e6cf9a}
+#cbsrShelf .bv h1{margin:0;font:700 40px/1.25 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+#cbsrShelf .bv .rule{width:44px;height:2px;margin:12px 0;background:#d9b56a}
+#cbsrShelf .bv .t{margin:0 0 10px;font:400 20px/1.72 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+#cbsrShelf .bv .t.m{font-size:18px;line-height:1.7}#cbsrShelf .bv .t.s{font-size:16.5px;line-height:1.66}
+#cbsrShelf .bv .rf{display:block;margin:2px 0 12px;font-size:15px;font-weight:600;color:#e6cf9a}
+#cbsrShelf .bv .fn{margin:10px 0 0;font-size:14.5px;line-height:1.6;color:#b9ab8f}
+#cbsrShelf .bv .vq{margin:12px 0 0;padding-left:12px;border-left:2px solid #d9b56a;font-size:15px;line-height:1.5;color:#cdbb93}
+#cbsrShelf .bv dl{margin:14px 0 0;display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:3px;border-top:1px solid rgba(255,240,200,.22);padding-top:10px;font-size:15px;line-height:1.5}
+#cbsrShelf .bv dt{color:#cdbb93}#cbsrShelf .bv dd{margin:0;color:#f6ecd2}
+#cbsrShelf .bv ol{margin:8px 0 0;padding:0;list-style:none;font-size:15.5px;line-height:1.5}
+#cbsrShelf .bv ol li{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:5px 0;border-top:1px solid rgba(255,240,200,.16)}
+#cbsrShelf .bv ol li span{color:#e6cf9a;font-weight:600;font-size:14.5px}
+#cbsrShelf .bv .th{margin:6px 0 0;font-size:15px;color:#cdbb93}
+#cbsrShelf .bv .qs{margin:0;padding:0;list-style:none}
+#cbsrShelf .bv .qs li{margin:0 0 12px;font:400 19px/1.6 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df}
+#cbsrShelf .bv .nv{position:absolute;left:14px;right:14px;bottom:18px;height:48px;display:flex;justify-content:space-between;align-items:center;z-index:6}
+#cbsrShelf .bv .nv button{min-width:96px;height:48px;padding:0 12px;background:transparent;border:0;font-size:16px;font-weight:600;color:#f6e7c1;display:flex;align-items:center;gap:4px}
+#cbsrShelf .bv .nv button:disabled{opacity:.3}
+#cbsrShelf .bv .nv button.go{background:#e2b24a;color:#2a1d14;border-radius:2px;justify-content:center;padding:0 18px}
+#cbsrShelf .bv .nv button.mid{min-width:0;font-size:14px;font-weight:400;color:#cdbb93;padding:0 8px}
+#cbsrShelf .lib{position:absolute;left:10px;right:10px;bottom:12px;display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;z-index:4}
+#cbsrShelf .lib.tmp{pointer-events:none;animation:cbsrBye .6s ease 3.6s forwards}
+#cbsrShelf .lib span{flex:none;display:block;width:46px;height:46px}
+#cbsrShelf .lib svg{display:block}
+#cbsrShelf .lib p{margin:0;font:400 15.5px/1.5 "Gowun Batang","Noto Serif KR",serif;color:#33231a}
+#cbsrShelf .lib b{display:block;font:700 12.5px/1.3 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;letter-spacing:.2em;color:#9b3324}
+#cbsrShelf .sl{position:absolute;width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#cf5a40,#8f2a1c);box-shadow:0 1px 3px rgba(0,0,0,.55);pointer-events:none}
+#cbsrShelf .bv main.qa{top:84px;bottom:auto;pointer-events:auto}
+#cbsrShelf .bv .sh.q{background:linear-gradient(to bottom,rgba(12,9,8,.74),rgba(12,9,8,.92))}
+#cbsrShelf .bv .qq{margin:0 0 12px;font:700 22px/1.45 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df}
+#cbsrShelf .bv textarea{display:block;width:100%;height:132px;margin:0;padding:12px 14px;border:1px solid #d9b56a;border-radius:0;background:rgba(246,236,210,.97);color:#2a1d14;font:400 17px/1.6 "Gowun Batang","Noto Serif KR",serif;resize:none;outline:none;-webkit-appearance:none;appearance:none}
+#cbsrShelf .bv textarea:focus{box-shadow:0 0 0 2px #e2b24a}
+#cbsrShelf .bv .qb{display:flex;gap:10px;margin-top:12px}
+#cbsrShelf .bv .qb button{height:48px;padding:0 14px;font-size:15.5px;font-weight:700;border:1px solid #d9b56a;background:transparent;color:#f6e7c1}
+#cbsrShelf .bv .qb button.ans{flex:1;background:#e2b24a;color:#2a1d14;border-color:#e2b24a}
+#cbsrShelf .seals{display:flex;justify-content:space-between;margin-top:20px}
+#cbsrShelf .seals i{font-style:normal;width:56px;height:56px;display:flex;align-items:center;justify-content:center;border:1.5px dashed rgba(230,207,154,.5);border-radius:50%;font:700 13px/1 "Gowun Batang","Noto Serif KR",serif;color:rgba(230,207,154,.6)}
+#cbsrShelf .seals i.on{border:2px solid #b5402c;background:radial-gradient(circle at 35% 30%,#cf5a40,#8f2a1c);color:#f8e6c8;box-shadow:inset 0 0 0 3px rgba(0,0,0,.14),0 2px 5px rgba(0,0,0,.5);transform:rotate(-8deg)}
+#cbsrShelf .seals i.cur{outline:2px solid #e2b24a;outline-offset:3px}
+#cbsrShelf .seals i.st{animation:cbsrStamp .6s cubic-bezier(.3,1.3,.5,1) both}
+#cbsrShelf .bv .fh{margin:0 0 14px;font:700 24px/1.35 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df}
+#cbsrShelf .bv .fa{margin:0 0 10px;font:400 16.5px/1.6 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df}
+#cbsrShelf .bv .fa b{display:block;font:700 13.5px/1.5 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;color:#e6cf9a}
+#cbsrShelf .amb{pointer-events:none;position:absolute}
+#cbsrShelf .fl{border-radius:50% 50% 46% 46%/74% 74% 26% 26%;background:radial-gradient(ellipse at 50% 74%,#fffdf0 0,#ffe89a 38%,#f9bd52 72%,rgba(238,150,50,0) 100%);box-shadow:0 0 5px 1.5px rgba(255,206,110,.75),0 0 0 .5px rgba(120,70,20,.35);transform-origin:50% 100%;animation:cbsrFlm 2s ease-in-out infinite}
+#cbsrShelf .fade{animation:cbsrIn .45s ease both}
+@keyframes cbsrIn{from{opacity:0}to{opacity:1}}
+@keyframes cbsrZin{from{opacity:0;transform:scale(1.07)}to{opacity:1;transform:none}}
+@keyframes cbsrWalk{0%,100%{transform:translateY(0)}12%{transform:translateY(-5px)}25%{transform:translateY(0)}37%{transform:translateY(-5px)}50%{transform:translateY(0)}62%{transform:translateY(-4px)}75%{transform:translateY(0)}87%{transform:translateY(-3px)}}
+@keyframes cbsrKb{from{transform:scale(1)}to{transform:scale(1.08) translate(-1.2%,-1%)}}
+@keyframes cbsrGlw{0%,100%{opacity:.55;transform:scale(1)}23%{opacity:.95;transform:scale(1.05)}41%{opacity:.7;transform:scale(.98)}64%{opacity:1;transform:scale(1.04)}82%{opacity:.62;transform:scale(1)}}
+@keyframes cbsrFlm{0%,100%{transform:rotate(-4deg) scale(1,1)}14%{transform:rotate(5deg) scale(.9,1.1)}29%{transform:rotate(-7deg) scale(1.05,.93)}43%{transform:rotate(3deg) scale(.86,1.16)}57%{transform:rotate(8deg) scale(1,.96)}71%{transform:rotate(-3deg) scale(.92,1.12)}86%{transform:rotate(6deg) scale(1.04,.98)}}
+@keyframes cbsrNx{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+@keyframes cbsrBye{to{opacity:0;transform:translateY(8px)}}
+@keyframes cbsrStamp{0%{opacity:0;transform:scale(2.4) rotate(8deg)}60%{opacity:1;transform:scale(.92) rotate(-10deg)}100%{opacity:1;transform:scale(1) rotate(-8deg)}}
+@keyframes cbsrRay{0%,100%{opacity:.4}50%{opacity:.9}}
+@media (prefers-reduced-motion:reduce){#cbsrShelf .amb,#cbsrShelf .bv .bg,#cbsrShelf .fade{animation:none!important}#cbsrShelf .hl,#cbsrShelf .gl,#cbsrShelf .dimv,#cbsrShelf .wk{transition:none!important;animation:none!important}#cbsrShelf .zin,#cbsrShelf .wn.late,#cbsrShelf .mono.late,#cbsrShelf .mono i{animation:none!important}}
+`;
+var HS=H;
+/* 무대는 너비 390에 맞추고, 높이는 화면 비율대로(HS). 가로가 넓은 화면은 높이 600을 채우고 양옆은 흐린 서고 */
+function fit(){ if(!stage) return; var vw=innerWidth,vh=innerHeight,s=vw/W,hs=vh/s; if(hs<600){ hs=600; s=vh/600; } HS=Math.round(hs); stage.style.height=HS+"px"; stage.style.transform="translateX(-50%) scale("+s+")"; }
+function typing(){ var a=document.activeElement; return !!(a&&root&&root.contains(a)&&a.tagName==="TEXTAREA"); }
+function scn(){ return HS<=H?"transform:translateY("+(-(H-HS)*.3).toFixed(1)+"px)":"transform:scale("+(HS/H).toFixed(4)+")"; }
+var lastHS=0; function onRs(){ if(!root||typing()) return; fit(); if(busy||Math.abs(HS-lastHS)<3) return; lastHS=HS; flush(); draw(); }
+function load(){ if(DATA) return Promise.resolve(DATA); if(LOAD) return LOAD;
+  return LOAD=fetch("shelf_66.json").then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }).then(function(d){ var by={},gs={}; (d.books||[]).forEach(function(b){ by[b.id]=b; (gs[b.group]=gs[b.group]||[]).push(b); }); DATA={by:by,gs:gs}; return DATA; }).catch(function(e){ LOAD=null; throw e; }); }
+function say(t){ if(O.toast) O.toast(t); }
+/* ---- 사서(11-24 목사님: 사서 시스템을 되살림) — 길잡이 말, 그리고 책마다 다섯 물음과 인장 ---- */
+var LIBR='<svg viewBox="0 0 48 48" width="46" height="46" aria-hidden="true"><defs><clipPath id="cbsrLc"><circle cx="24" cy="24" r="22.4"/></clipPath></defs><circle cx="24" cy="24" r="23" fill="#e9dab4" stroke="#33231a" stroke-width="1.2"/><g clip-path="url(#cbsrLc)"><path d="M7.5 46c.5-9 5-13.500 10.500-15C14.500 28 13 23.500 13.500 19 14.300 11.500 19 7 24 7s9.700 4.500 10.500 12c.5 4.500-1 9-4.500 12 5.500 1.500 10 6 10.500 15z" fill="#7b5a3c" stroke="#33231a" stroke-width="1.100" stroke-linejoin="round"/><ellipse cx="24" cy="20" rx="5.600" ry="6.600" fill="#ecd3aa" stroke="#33231a" stroke-width=".8"/><path d="M19.300 23.500c.8 4.500 2.400 7 4.700 7s3.900-2.500 4.700-7c-1.400 1-3 1.500-4.700 1.500s-3.300-.5-4.700-1.500z" fill="#f4ecd8" stroke="#33231a" stroke-width=".7" stroke-linejoin="round"/><circle cx="21.700" cy="19.600" r="1.900" fill="#fff8e6" fill-opacity=".5" stroke="#33231a" stroke-width=".7"/><circle cx="26.300" cy="19.600" r="1.900" fill="#fff8e6" fill-opacity=".5" stroke="#33231a" stroke-width=".7"/><path d="M23.600 19.600h.8" stroke="#33231a" stroke-width=".7"/><circle cx="21.700" cy="19.700" r=".55" fill="#33231a"/><circle cx="26.300" cy="19.700" r=".55" fill="#33231a"/><rect x="16.500" y="35.500" width="15" height="9" rx=".8" fill="#96412a" stroke="#33231a" stroke-width=".9"/><path d="M24 35.500v9M18.500 38h3.500M26 38h3.500" stroke="#e2b24a" stroke-width=".8"/><path d="M12.500 44l2.500-8M35.500 44l-2.500-8M15 30l-2 4M33 30l2 4" stroke="#33231a" stroke-width=".55" opacity=".55"/></g></svg>';
+function libr(t,tmp){ return '<div class="lib tb'+(tmp?" tmp":"")+'" role="status"><span>'+LIBR+'</span><p><b>사서</b>'+t+'</p></div>'; }   /* tmp: 서가에서는 책을 가리지 않게 잠깐 말하고 물러남 */
+var QS=[{f:"who",s:"누가",q:"누가 누구에게 썼습니까?",pg:"cover"},{f:"when",s:"언제",q:"어느 시기의 책입니까?",pg:"cover"},{f:"why",s:"왜",q:"왜 썼습니까?",pg:"why"},{f:"parts",s:"구조",q:"어떤 흐름으로 짜여 있습니까?",pg:"parts"},{f:"god",s:"하나님",q:"이 책에서 하나님은 어떤 분이십니까?",pg:"god"}], ORD=["첫째","둘째","셋째","넷째","다섯째"];
+function qaAll(){ try{ if(O.store&&O.store.get) return O.store.get()||{}; return JSON.parse(localStorage.getItem("cbsr_shelf_qa")||"{}"); }catch(e){ return {}; } }
+function qaGet(id){ return qaAll()[id]||{}; }
+function qaVal(id,f){ var x=qaGet(id)[f]; return x&&x.v?x.v:""; }
+function qaSet(id,f,v){ try{ if(O.store&&O.store.set){ O.store.set(id,f,v); return; } var a=qaAll(); a[id]=a[id]||{}; a[id][f]={v:v,t:Date.now()}; localStorage.setItem("cbsr_shelf_qa",JSON.stringify(a)); }catch(e){} }
+function qaCount(id){ var g=qaGet(id),n=0; QS.forEach(function(q){ if(g[q.f]&&g[q.f].v) n++; }); return n; }
+function qaDone(){ var a=qaAll(),n=0,k; for(k in a) if(qaCount(k)===5) n++; return n; }
+function sealRow(id,cur){ var g=qaGet(id); return '<div class="seals" role="img" aria-label="인장 '+qaCount(id)+' / 5">'+QS.map(function(q,i){ return '<i class="'+((g[q.f]&&g[q.f].v)?"on":"")+(i===cur?" cur":"")+'">'+q.s+'</i>'; }).join("")+'</div>'; }
+function flush(){ var ta=root&&root.querySelector("#cbsrQa"), t=top(); if(!ta||!t||t.t!=="book") return; var v=ta.value.trim(); if(v&&v!==qaVal(t.id,ta.dataset.f)) qaSet(t.id,ta.dataset.f,v); }
+function stamp(t){ drawBook(t); var el=stage.querySelector(".seals i.cur"); if(el) el.classList.add("st"); var p=t.p; setTimeout(function(){ if(root&&top()===t&&t.p===p) turn(1); },1000); }
+function hallLine(){ var n=qaDone(); return "어서 오십시오. 왼쪽은 구약, 오른쪽은 신약입니다."+(n?" 다섯 인장을 모은 책은 "+(CNT[n]||n+"권")+"입니다.":""); }
+/* ---- 단계: 서고 → 구역(구약·신약·그 밖) → 서가 → 책. 뒤로는 한 단계씩(화면의 ‹와 휴대폰의 뒤로 가기가 같은 일) ---- */
+function top(){ return levels[levels.length-1]; }
+function push(st){ var fn=function(pop){ var i=levels.indexOf(st); if(i<0) return; levels.length=i; if(pop!==true&&O.done) O.done(fn); draw(st); }; st.fn=fn; levels.push(st); if(O.push) O.push(fn); draw(); }
+function back(){ var t=top(); if(busy) return; flush(); if(!t||t.t==="hall"){ api.close(); return; } t.fn(false); }
+function draw(from){ var t=top(); if(!t||!stage) return; if(t.t==="hall"||t.t==="sec") drawHall(t); else if(t.t==="press") drawPress(t,from); else if(t.t==="book") drawBook(t); }
+/* ---- 서고와 구역 ---- */
+function lamps(){ var h="",i=0; ART.hall.lanterns.forEach(function(l){ var x=l[0],y=l[1],s=l[2],g=Math.round(s*1.9),w=Math.max(5,s*.115),fh=w*2.15;
+    h+='<div class="amb" style="left:'+(x-g/2)+'px;top:'+(y-g*.46).toFixed(1)+'px;width:'+g+'px;height:'+g+'px;border-radius:50%;background:radial-gradient(circle,rgba(255,232,170,.85) 0%,rgba(255,214,130,.34) 34%,rgba(255,200,110,0) 68%);mix-blend-mode:screen;animation:cbsrGlw '+(2.6+(i%4)*.37)+'s ease-in-out -'+(i*.7)+'s infinite"></div>'+
+       '<div class="amb fl" style="left:'+(x-w/2).toFixed(1)+'px;top:'+(y-fh*.56).toFixed(1)+'px;width:'+w.toFixed(1)+'px;height:'+fh.toFixed(1)+'px;animation-duration:'+(1.7+(i%5)*.23)+'s;animation-delay:-'+(i*.43)+'s"></div>'; i++; });
+  return h; }
+function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
+  stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl"><img src="'+IMG+'hall.webp'+VER+'" alt="옛 판화처럼 그린 긴 서고. 촛불이 밝힌 돌바닥 양옆으로 서가가 늘어서 있고, 덧문을 닫은 창 아래 맨 끝은 어둡다">'+
+    lamps()+'<div class="zn">'+
+      '<button type="button" class="zone" data-s="ot" style="left:0;top:230px;width:168px;height:480px" aria-label="구약 서른아홉 권"><span class="tb" style="top:150px"><b>구약</b><small>서른아홉 권</small></span></button>'+
+      '<button type="button" class="zone" data-s="nt" style="left:222px;top:230px;width:168px;height:480px" aria-label="신약 스물일곱 권"><span class="tb" style="top:150px"><b>신약</b><small>스물일곱 권</small></span></button>'+
+      '<button type="button" class="zone e" data-s="etc" style="left:140px;top:128px;width:110px;height:196px" aria-label="외경, 위경, 교부 문헌"><span class="tb" style="top:6px"><b>외경 · 위경<br>교부 문헌</b></span></button>'+
+    '</div></div></div></div><div class="dimv"></div><div class="ui"></div></div>';
+  el=stage.querySelector(".hallv"); el._fresh=true; return el; }
+function drawHall(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec"&&!(t.s==="etc"&&t.step!=="in"))?" "+t.s:"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+(t.t==="hall"?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
+  if(!fresh&&moved){ wk.classList.remove("go"); void wk.offsetWidth; wk.classList.add("go"); } /* 걸어서 그 앞으로(돌아올 때도) */
+  hl.className="hl"+cls; dim.className="dimv"+(t.t==="sec"?" on":"");
+  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+libr(hallLine());
+    return; }
+  if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
+    if(t.step!=="in") ui.innerHTML=bkb+'<div class="wn tb fade" role="alertdialog" aria-label="경고"><h2>'+WARN.t+'</h2><p class="w1">'+WARN.a+'</p><p class="w2">'+WARN.q+'</p><div class="wb"><button type="button" data-a="back">돌아가기</button><button type="button" class="in" data-a="enter">열람하기</button></div></div>';
+    else ui.innerHTML=bkb+'<button type="button" class="mono fade'+(fresh?"":" late")+'" data-a="back" aria-label="'+WARN.e+' 눌러서 돌아가기">'+WARN.e+'<i></i></button>';
+    if(t.step!=="in") dim.className="dimv on now";
+    return; }
+  var S=SEC[t.s], h='<button type="button" class="bk" data-a="back">'+CL+'서고</button><div class="ttl"><b class="tb">'+S.n+'</b></div><span class="cnt">'+S.c+'</span><div class="gl">';
+  var N={"모세오경":5,"역사서":12,"시가서":5,"선지서":17,"복음서":4,"사도행전":1,"바울서신":13,"일반서신":8,"요한계시록":1};
+  S.g.forEach(function(g){ h+='<button type="button" class="tb" data-g="'+g+'"><b>'+g+'</b><small>'+CNT[N[g]]+'</small></button>'; });
+  ui.innerHTML=h+'</div>'+libr(S.n+" "+S.c+"입니다. 서가를 고르십시오."); var gl=ui.querySelector(".gl"); if(fresh){ gl.classList.add("now"); gl.classList.add("on"); return; }
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ gl.classList.add("on"); }); }); }
+/* ---- 서가 ---- */
+function drawPress(t,from){ var key=PRESS[t.g], L=ART.labels[key], sw=(key==="pro"?48:56), S=SEC[t.s];
+  var k=(HS-50)/802, ty=50-44*k; /* 서가는 너비를 꽉 채우고 높이만 화면에 맞춤(양옆 빈 띠 없음). 글자는 눌리지 않게 되돌림 */
+  var h='<div class="lay zin"><div class="bdp"></div><div class="scn pr" style="transform:translateY('+ty.toFixed(1)+'px) scale(1,'+k.toFixed(4)+')"><img class="full" src="'+IMG+'press_'+key+'.webp'+VER+'" alt="'+esc(t.g)+' 서가">';
+  var books=(DATA&&DATA.gs[t.g])||[];
+  books.forEach(function(b){ var a=L[b.name]; if(!a) return; var two=b.name.length>5, nm=two?esc(b.name.slice(0,b.name.length-2))+"<br>"+esc(b.name.slice(-2)):esc(b.name);
+    h+='<button type="button" class="sp" data-b="'+b.id+'" aria-label="'+esc(b.name)+' 펼치기" style="left:'+a[0]+'px;top:'+a[1]+'px;width:'+sw+'px;height:'+a[2]+'px"><span style="left:'+a[3]+'px;top:26px;width:'+a[4]+'px;height:'+a[5]+'px"><i style="font-size:'+(16*Math.min(1,k)).toFixed(1)+'px;transform:scaleY('+(1/k).toFixed(4)+')">'+nm+'</i></span></button>'+(qaCount(b.id)===5?'<i class="sl" style="left:'+(a[0]+sw/2-7.5)+'px;top:'+(a[1]+a[2]-34)+'px;transform:scaleY('+(1/k).toFixed(4)+')"></i>':''); });
+  stage.innerHTML=h+'</div><button type="button" class="bk" data-a="back">'+CL+S.n+'</button><div class="ttl"><b class="tb">'+esc(t.g)+'</b></div><span class="cnt">'+CNT[Object.keys(L).length]+'</span>'+libr(esc(t.g)+" 서가입니다. "+CNT[Object.keys(L).length]+"이 꽂혀 있습니다. 책을 고르면 펼쳐 드립니다.",1)+'</div>'; }
+/* ---- 책 펼침(한 번, 2초쯤) ---- */
+function openBook(id,rect){ var b=DATA&&DATA.by[id]; if(!b||busy) return; var st={t:"book",id:id,p:0};
+  var rm=matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(rm||!rect||!stage.animate){ push(st); return; }
+  busy=true; var lay=document.createElement("div"); lay.className="lay"; lay.style.zIndex=20;
+  lay.innerHTML='<div class="veil"></div><div class="op"><div class="ob"><div class="bd"></div><div class="pg"></div><div class="cv"><div class="cf"><div><u></u><b>'+esc(b.name)+'</b><small>'+esc(b.group)+'</small></div></div><div class="cb"></div></div></div></div><div class="blm"></div>';
+  stage.appendChild(lay); var ob=lay.querySelector(".ob"), cv=lay.querySelector(".cv"), veil=lay.querySelector(".veil"), blm=lay.querySelector(".blm");
+  var cy=Math.round(HS*.42); lay.querySelector(".op").style.top=(cy-185)+"px"; blm.style.top=(cy-10)+"px";
+  var dx=(rect.x+rect.w/2)-195, dy=(rect.y+rect.h/2)-cy, sc=Math.max(.26,rect.h/250), D=1900, E="cubic-bezier(.4,0,.2,1)";
+  veil.animate([{opacity:0},{opacity:1,offset:.3},{opacity:1}],{duration:D,fill:"forwards"});
+  ob.animate([{transform:"translate("+dx+"px,"+dy+"px) scale("+sc+")",opacity:0},{transform:"translate("+dx+"px,"+dy+"px) scale("+sc+")",opacity:1,offset:.06},{transform:"translate(0,0) scale(1)",opacity:1,offset:.36},{transform:"translate(0,0) scale(1)",opacity:1,offset:.42},{transform:"translate(90px,0) scale(1)",opacity:1,offset:.72},{transform:"translate(90px,0) scale(1)",opacity:1,offset:.8},{transform:"translate(90px,0) scale(1.35)",opacity:0}],{duration:D,easing:E,fill:"forwards"});
+  cv.animate([{transform:"rotateY(0deg)"},{transform:"rotateY(0deg)",offset:.42},{transform:"rotateY(-166deg)",offset:.72},{transform:"rotateY(-166deg)"}],{duration:D,easing:E,fill:"forwards"});
+  var a=blm.animate([{transform:"scale(0)",opacity:0},{transform:"scale(0)",opacity:0,offset:.72},{transform:"scale(6)",opacity:.85,offset:.82},{transform:"scale(90)",opacity:1}],{duration:D,easing:"ease-in",fill:"forwards"});
+  var done=function(){ if(!busy) return; busy=false; push(st); }; a.onfinish=done; setTimeout(done,D+250); }
+/* ---- 책 ---- */
+function pages(b){ var P=[],bg=(b.background||[]).filter(function(x){return x&&x.text;}),i;
+  P.push({k:"cover"}); if(b.verseText) P.push({k:"verse"});
+  for(i=0;i<bg.length;i+=2) P.push({k:"bg",a:bg.slice(i,i+2),n:Math.floor(i/2)+1,last:i+2>=bg.length});
+  if(!bg.length&&b.footnote) P.push({k:"bg",a:[],n:1,last:true});
+  if(b.purpose) P.push({k:"why"}); if(b.flow||(b.structure||[]).length) P.push({k:"parts"}); if(b.god) P.push({k:"god"});
+  if(b.connection) P.push({k:"link"}); if(b.reading) P.push({k:"read"}); QS.forEach(function(q,i){ P.push({k:"q",i:i}); }); P.push({k:"fin"}); return P; }
+function sz(s){ var n=(s||"").length; return n>190?" s":n>120?" m":""; }
+function drawBook(t){ var b=DATA.by[t.id], P=pages(b); t.n=P.length; t.p=Math.max(0,Math.min(t.p,P.length-1)); var pg=P[t.p], ot=(SEC.ot.g.indexOf(b.group)>=0), m="", bgs=Math.ceil((b.background||[]).length/2)||1;
+  var cover=(pg.k==="cover"||pg.k==="verse"), qa=(pg.k==="q"||pg.k==="fin"); if(pg.k==="q") t.ret=null;
+  if(pg.k==="cover"){ m='<p class="k">'+(ot?"구약":"신약")+" · "+esc(b.group)+" · "+b.chapters+'장</p><h1>'+esc(b.name)+'</h1><div class="rule"></div><p class="t m">'+esc(b.line)+'</p>'+(b.verse?'<p class="vq">'+esc(b.verse)+(b.mem100?" · 꼭 외울 말씀 100":"")+'</p>':"")+
+      '<dl><dt>저자</dt><dd>'+esc(b.author)+'</dd><dt>수신자</dt><dd>'+esc(b.audience)+'</dd>'+(b.time?'<dt>시기</dt><dd>'+esc(b.time)+'</dd>':"")+'<dt>갈래</dt><dd>'+esc(b.genre)+'</dd></dl>'; }
+  else if(pg.k==="verse"){ m='<p class="k">대표 구절</p><p class="t'+sz(b.verseText)+'">'+esc(b.verseText)+'</p><span class="rf">'+esc(b.verse)+" · 개역개정"+(b.mem100?" · 꼭 외울 말씀 100":"")+'</span>'; }
+  else if(pg.k==="bg"){ var all=pg.a.map(function(x){return x.text;}).join(""); m='<p class="k">배경'+(bgs>1?" "+pg.n+" / "+bgs:"")+'</p>'+pg.a.map(function(x){ return '<p class="t'+sz(all)+'" style="margin-bottom:0">'+esc(x.text)+'</p><span class="rf">'+esc(x.ref||"")+'</span>'; }).join("")+(pg.last&&b.footnote?'<p class="fn">* '+esc(b.footnote)+'</p>':""); }
+  else if(pg.k==="why"){ m='<p class="k">목적 · 왜 썼습니까</p><p class="t'+sz(b.purpose)+'">'+esc(b.purpose)+'</p>'; }
+  else if(pg.k==="parts"){ var S=b.structure||[]; m='<p class="k">구조 · 어떻게 흘러갑니까</p><p class="t s">'+esc(b.flow)+'</p><ol>'+S.map(function(x){ return '<li><span>'+esc(x.range)+'</span>'+esc(x.title)+'</li>'; }).join("")+'</ol>'; }
+  else if(pg.k==="god"){ m='<p class="k">하나님은 어떤 분이십니까</p><p class="t'+sz(b.god)+'">'+esc(b.god)+'</p>'+((b.themes||[]).length?'<p class="th">'+esc(b.themes.join(" · "))+'</p>':""); }
+  else if(pg.k==="link"){ m='<p class="k">연결 · 성경 전체에서</p><p class="t'+sz(b.connection)+'">'+esc(b.connection)+'</p>'; }
+  else if(pg.k==="read"){ m='<p class="k">읽기 · 이렇게 읽어 보세요</p><p class="t'+sz(b.reading)+'">'+esc(b.reading)+'</p>'; }
+  else if(pg.k==="q"){ var Q=QS[pg.i], val=qaVal(b.id,Q.f);
+    m='<p class="k">사서의 '+ORD[pg.i]+' 물음</p><p class="qq">'+Q.q+'</p><textarea id="cbsrQa" data-f="'+Q.f+'" maxlength="400" placeholder="내 말로 적어 보십시오." aria-label="'+Q.q+'">'+esc(val)+'</textarea><div class="qb"><button type="button" data-a="see" data-pg="'+Q.pg+'">책에서 다시 보기</button><button type="button" class="ans" data-a="ans">'+(val?"고쳐 적기":"답하기")+'</button></div>'+sealRow(b.id,pg.i); }
+  else { var nq=qaCount(b.id);
+    if(nq===5) m='<p class="k">다섯 인장을 모았습니다</p><h2 class="fh">내가 설명하는 '+esc(b.name)+'</h2>'+QS.map(function(q){ return '<p class="fa"><b>'+q.s+'</b>'+esc(qaVal(b.id,q.f))+'</p>'; }).join("")+sealRow(b.id,-1);
+    else m='<p class="k">사서의 다섯 물음</p><p class="qq">인장 '+nq+' / 5</p><p class="t m">다섯 물음에 내 말로 답하면 이 책을 설명할 수 있습니다.</p>'+sealRow(b.id,-1)+'<div class="qb"><button type="button" class="ans" data-a="goq">남은 물음으로</button></div>'; }
+  var pr=""; for(var i=0;i<P.length;i++) pr+='<i'+(i<=t.p?' class="on"':"")+'></i>';
+  var last=t.p===P.length-1, bkLab=(PRESS[b.group]?"서가":(ot?"구약":"신약"));
+  stage.innerHTML='<div class="lay bv"><img class="bg" src="'+IMG+(cover?"bg_road":"bg_lamp")+'.webp'+VER+'" alt=""><div class="sh'+(cover?" c":qa?" q":"")+'"></div><button type="button" class="bb" data-a="back">'+CL+''+bkLab+'</button>'+(pg.k==="cover"?"":'<span class="bn">'+esc(b.name)+'</span>')+
+    '<div class="pr" role="img" aria-label="'+(t.p+1)+" / "+P.length+'">'+pr+'</div>'+(qa?"":'<button type="button" class="tap l" data-a="prev" aria-label="앞 장" tabindex="-1"></button><button type="button" class="tap r" data-a="next" aria-label="다음 장" tabindex="-1"></button>')+'<main class="fade'+(qa?" qa":"")+'" aria-live="polite">'+m+'</main>'+
+    '<div class="nv"><button type="button" data-a="prev"'+(t.p?"":" disabled")+'>'+CL+'앞 장</button><button type="button" class="mid" data-a="back" aria-label="'+bkLab+'로 돌아가기">'+(t.p+1)+" / "+P.length+' · 닫기</button>'+((t.ret!=null&&!qa)?'<button type="button" class="go" data-a="ret">물음으로</button>':last?'<button type="button" class="go" data-a="back">'+bkLab+'로</button>':'<button type="button" data-a="next">다음'+CR+'</button>')+'</div></div>';
+  var mn=stage.querySelector("main"), sh=stage.querySelector(".sh"), lim=HS-84-80, f=1, i; if(!mn||!sh) return;
+  for(i=0;i<4&&mn.offsetHeight*f>lim;i++){ f=Math.max(.66,f*Math.sqrt(lim/(mn.offsetHeight*f))*.985); mn.style.transformOrigin=qa?"0 0":"0 100%"; mn.style.transform="scale("+f.toFixed(3)+")"; mn.style.width=(342/f).toFixed(1)+"px"; mn.style.right="auto"; }
+  var vis=mn.offsetHeight*f; if(!qa&&vis>HS*.5) sh.style.background="linear-gradient(to bottom,rgba(12,9,8,.6) 0%,rgba(12,9,8,.86) "+Math.max(8,Math.round((HS-84-vis-60)/HS*100))+"%,rgba(12,9,8,.97) 100%)"; }
+function turn(d){ var t=top(); if(!t||t.t!=="book") return; flush(); var p=t.p+d; if(p<0||p>=t.n) return; t.p=p; drawBook(t); }
+/* ---- 눌림 ---- */
+function approach(cb){ var v=stage.querySelector(".hallv"), rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(!v||rm){ cb(); return; } busy=true; v.classList.add("lv"); setTimeout(function(){ busy=false; if(root) cb(); },440); }
+function onClick(e){ if(busy||!root) return; var el=e.target.closest("[data-a],[data-s],[data-g],[data-b]");
+  if(!el||!root.contains(el)){ var t0=top(); if(!t0||t0.t==="book"||e.target.closest(".ttl,.cnt,.wn,.gl,.bk,.lib")) return; /* 11-24 목사님: 빈 곳(배경)을 눌러도 나올 수 있게 */
+    if(t0.t==="press"){ var im=stage.querySelector(".scn.pr img"); if(im){ var rr=im.getBoundingClientRect(), fx=(e.clientX-rr.left)/rr.width*W, fy=(e.clientY-rr.top)/rr.height*H; if(fx>24&&fx<366&&fy>84&&fy<790) return; } }
+    back(); return; }
+  var d=el.dataset;
+  if(d.a==="back"){ back(); return; } if(d.a==="next"){ turn(1); return; } if(d.a==="prev"){ turn(-1); return; }
+  if(d.a==="ans"){ var ta=root.querySelector("#cbsrQa"), tb=top(); if(!ta||!tb||tb.t!=="book") return; var av=ta.value.trim(); if(!av){ say("한 줄이라도 적어 보십시오."); ta.focus(); return; } qaSet(tb.id,ta.dataset.f,av); ta.blur(); stamp(tb); return; }
+  if(d.a==="see"||d.a==="goq"||d.a==="ret"){ var tc=top(); if(!tc||tc.t!=="book") return; flush(); var Pz=pages(DATA.by[tc.id]), gz=qaGet(tc.id), iz;
+    if(d.a==="ret"){ if(tc.ret!=null){ tc.p=tc.ret; tc.ret=null; drawBook(tc); } return; }
+    for(iz=0;iz<Pz.length;iz++){ if(d.a==="see"?Pz[iz].k===d.pg:(Pz[iz].k==="q"&&!(gz[QS[Pz[iz].i].f]&&gz[QS[Pz[iz].i].f].v))){ if(d.a==="see") tc.ret=tc.p; tc.p=iz; drawBook(tc); break; } } return; }
+  if(d.a==="enter"){ var te=top(); if(te&&te.t==="sec"&&te.s==="etc"){ te.step="in"; drawHall(te); } return; }
+  if(d.s){ push({t:"sec",s:d.s}); return; }
+  if(d.g){ var s=top().s, g=d.g; load().then(function(D){ if(!PRESS[g]){ var one=(D.gs[g]||[])[0]; if(one) approach(function(){ push({t:"book",id:one.id,p:0,s:s}); }); return; } approach(function(){ push({t:"press",g:g,s:s}); }); }).catch(function(){ say("책장 원고를 받지 못했습니다. 인터넷 연결을 확인해 주세요."); }); return; }
+  if(d.b){ var r=el.getBoundingClientRect(), q=stage.getBoundingClientRect(), k=q.width/W; openBook(d.b,{x:(r.left-q.left)/k,y:(r.top-q.top)/k,w:r.width/k,h:r.height/k}); } }
+function onKey(e){ if(!root) return; if(typing()){ if(e.key==="Escape") document.activeElement.blur(); return; } if(e.key==="Escape"){ e.preventDefault(); back(); } else if(e.key==="ArrowRight") turn(1); else if(e.key==="ArrowLeft") turn(-1); }
+var sx=null; function onTs(e){ sx=(e.touches.length===1&&!(e.target.closest&&e.target.closest("textarea")))?e.touches[0].clientX:null; } function onTe(e){ if(sx==null) return; var dx=e.changedTouches[0].clientX-sx; sx=null; if(Math.abs(dx)>56) turn(dx<0?1:-1); }
+var api={ isOpen:function(){ return !!root; },
+  open:function(o){ if(root) return true; O=o||{}; levels=[]; busy=false;
+    if(!document.getElementById("cbsrShelfCss")){ var st=document.createElement("style"); st.id="cbsrShelfCss"; st.textContent=CSS; document.head.appendChild(st); }
+    root=document.createElement("div"); root.id="cbsrShelf"; root.setAttribute("role","dialog"); root.setAttribute("aria-modal","true"); root.setAttribute("aria-label","성경 서고"); root.innerHTML='<div class="st"></div>';
+    document.body.appendChild(root); stage=root.firstChild; fit(); lastHS=HS; addEventListener("resize",onRs); root.addEventListener("click",onClick); document.addEventListener("keydown",onKey); root.addEventListener("touchstart",onTs,{passive:true}); root.addEventListener("touchend",onTe,{passive:true}); root.addEventListener("touchmove",function(e){ if(e.target.closest&&e.target.closest("textarea")) return; e.preventDefault(); },{passive:false}); root.addEventListener("focusout",function(){ setTimeout(function(){ if(root&&!typing()) onRs(); },350); });
+    document.documentElement.classList.add("shelf-on"); levels.push({t:"hall"}); draw(); load().then(function(){ if(O.book&&DATA.by[O.book]) push({t:"book",id:O.book,p:0,s:(SEC.ot.g.indexOf(DATA.by[O.book].group)>=0?"ot":"nt")}); }).catch(function(){});
+    root.tabIndex=-1; try{ root.focus({preventScroll:true}); }catch(e){}
+    return true; },
+  close:function(silent){ if(!root) return; flush(); var deep=levels.slice(1); levels=[]; removeEventListener("resize",onRs); document.removeEventListener("keydown",onKey); root.remove(); root=null; stage=null; busy=false; document.documentElement.classList.remove("shelf-on");
+    if(O.done) deep.reverse().forEach(function(st){ if(st.fn) O.done(st.fn); });
+    if(!silent&&O.onClose) O.onClose(); } };
+window.CBSR_SHELF=api;
+})();

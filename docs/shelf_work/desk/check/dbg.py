@@ -1,0 +1,18 @@
+from playwright.sync_api import sync_playwright
+with sync_playwright() as p:
+    b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])
+    cx=b.new_context(viewport={'width':412,'height':699},has_touch=True,service_workers='block')
+    pg=cx.new_page(); errs=[]; pg.on('pageerror',lambda e: errs.append(str(e)[:200]))
+    pg.goto('http://127.0.0.1:8766/index.html?shelf=1',wait_until='domcontentloaded'); pg.wait_for_timeout(4500)
+    pg.click('.zone[data-s="nt"]'); pg.wait_for_timeout(2200); pg.click('.gl button[data-g="사도행전"]'); pg.wait_for_timeout(1200)
+    while not pg.locator('#cbsrQa').count(): pg.click('#cbsrShelf .nv button[data-a="next"]'); pg.wait_for_timeout(90)
+    pg.fill('#cbsrQa','누가가 데오빌로에게 썼습니다.'); pg.click('#cbsrShelf .qb .ans'); pg.wait_for_timeout(1500)
+    print(pg.evaluate("(()=>{const o=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i),v=localStorage.getItem(k)||'';o.push(k+':'+v.length+(v.includes('shq')?' [shq]':'')+(v.includes('데오빌로')?' [답]':''))}return o})()"))
+    print(pg.evaluate("(()=>{try{localStorage.setItem('zz','1');return 'len '+localStorage.length+' own '+window.__ownSwitch+' key '+(localStorage.getItem('rjnote:y365')||'').length}catch(e){return 'ERR '+e}})()"))
+    pg.wait_for_timeout(1500); print(pg.evaluate("Object.keys(localStorage).join(',')"))
+    print('저장된 기록:',pg.evaluate("JSON.stringify(JSON.parse(localStorage.getItem('rjnote:y365')).shq)"))
+    pg.reload(wait_until='domcontentloaded'); pg.wait_for_timeout(4500); pg.click('.zone[data-s="nt"]'); pg.wait_for_timeout(2200); pg.click('.gl button[data-g="사도행전"]'); pg.wait_for_timeout(1200)
+    while not pg.locator('#cbsrQa').count(): pg.click('#cbsrShelf .nv button[data-a="next"]'); pg.wait_for_timeout(90)
+    print('다시 열었을 때 남은 답:',pg.input_value('#cbsrQa'))
+    print('seal on?',pg.locator('.seals i.on').count(), errs)
+    b.close()

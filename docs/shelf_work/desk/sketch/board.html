@@ -1,0 +1,98 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#17110c;font-family:"Noto Serif CJK KR","Noto Serif KR","Gowun Batang",serif;color:#eadfc6;width:880px;padding:26px 24px 30px}
+h1{font-size:25px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px}
+.sub{font-size:14.500px;color:#b9a988;margin-bottom:20px;line-height:1.5}
+.grid{display:grid;grid-template-columns:390px 390px;gap:30px 52px}
+.cap{font-size:16.500px;font-weight:700;margin-bottom:3px;color:#f0e5cb}
+.cap b{display:inline-block;width:25px;height:25px;line-height:24px;text-align:center;border-radius:50%;background:#b68d3c;color:#17110c;font-size:14.500px;margin-right:7px;font-family:sans-serif}
+.cap2{font-size:13.500px;color:#b9a988;margin:0 0 8px 32px;line-height:1.45;min-height:39px}
+.fr{position:relative;width:390px;height:690px;overflow:hidden;border-radius:14px;background:#0b0705;border:1px solid #3a2c1e}
+.bg{position:absolute;left:0;top:0;width:390px;height:846px;background:url(hall.webp) 0 0/390px 846px;transform-origin:50% 20%}
+.dim{position:absolute;inset:0;background:#070403}
+.grad{position:absolute;left:0;right:0;bottom:0;height:400px;background:linear-gradient(to top,rgba(7,4,3,.96) 0,rgba(7,4,3,.82) 34%,rgba(7,4,3,0) 100%)}
+.por{position:absolute;left:-8px;bottom:104px;width:176px}
+.box{position:absolute;left:12px;right:12px;bottom:14px;min-height:112px;border-radius:10px;padding:22px 16px 14px;background:linear-gradient(#ead9b2,#dcc79b);color:#2b1c11;font-size:17.500px;line-height:1.62;letter-spacing:-.3px;box-shadow:0 0 0 1px #6f5433,0 0 0 4px rgba(20,12,7,.75),0 8px 20px rgba(0,0,0,.6)}
+.box .nm{position:absolute;left:14px;top:-15px;height:29px;line-height:28px;padding:0 15px;border-radius:5px;background:#2b1c11;color:#e9cf8f;font-size:14.500px;font-weight:700;letter-spacing:2px;box-shadow:0 0 0 1px #b68d3c}
+.box .nx{position:absolute;right:13px;bottom:8px;font-size:12px;color:#7d6442;font-family:sans-serif}
+.box.me{background:rgba(14,9,6,.86);color:#eadfc6;box-shadow:0 0 0 1px #4a3a28;font-style:normal;padding-top:18px;min-height:92px}
+.box.me .nm{background:#eadfc6;color:#2b1c11;box-shadow:none;letter-spacing:0}
+.ch{position:absolute;right:14px;bottom:150px;width:214px;display:flex;flex-direction:column;gap:10px}
+.ch.wide{left:14px;width:auto}
+.ch div{height:50px;line-height:48px;border-radius:9px;padding:0 14px;background:rgba(24,15,9,.93);border:1px solid #b68d3c;color:#f3e3b8;font-size:16.500px;letter-spacing:-.3px;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+.ch div:before{content:"▸";color:#d9ad55;margin-right:8px;font-family:sans-serif}
+.ch div.pick{background:#b68d3c;color:#1b110a;font-weight:700}.ch div.pick:before{color:#1b110a}
+.zone{position:absolute;padding:8px 13px;border-radius:5px;background:#e3d2aa;color:#2b1c11;font-size:16px;font-weight:700;box-shadow:0 0 0 1px #6f5433,0 4px 10px rgba(0,0,0,.6)}
+.zone small{display:block;font-size:11.500px;font-weight:400;color:#6b5234}
+.zone.e{background:#2a1e15;color:#6e5a41;filter:blur(.6px);font-size:12.500px;box-shadow:0 0 0 1px #17100a}
+.med{position:absolute;right:12px;top:12px;width:58px;height:58px;border-radius:50%;overflow:hidden;background:#0b0705 url(libr4.png) -35px -42px/128px auto no-repeat;box-shadow:0 0 0 2px #b68d3c,0 4px 10px rgba(0,0,0,.6)}
+.medt{position:absolute;right:8px;top:74px;font-size:11.500px;color:#d8c69c;width:66px;text-align:center;font-family:sans-serif}
+.top{position:absolute;left:12px;top:14px;font-size:14px;color:#d8c69c;font-family:sans-serif}
+.warn{position:absolute;left:36px;right:36px;top:112px;padding:20px 18px 18px;border-radius:6px;background:#d9c59a;color:#2b1c11;text-align:center;box-shadow:0 0 0 1px #6f5433,0 0 0 5px rgba(20,12,7,.7),0 10px 26px rgba(0,0,0,.7);transform:rotate(-1.2deg)}
+.warn h3{font-size:21px;letter-spacing:8px;color:#7b1d12;margin-bottom:9px}.warn p{font-size:15.500px;line-height:1.6}
+.page{position:absolute;left:14px;right:14px;top:44px;height:352px;border-radius:6px;background:linear-gradient(#efe2bf,#e3d1a6);color:#2b1c11;padding:22px 20px;box-shadow:0 0 0 1px #6f5433,0 10px 24px rgba(0,0,0,.6)}
+.page h3{font-size:22px;margin-bottom:3px}.page .k{font-size:12.500px;color:#7d6442;letter-spacing:2px;margin-bottom:10px;font-family:sans-serif}.page p{font-size:15px;line-height:1.72}
+.seal{position:absolute;left:0;right:0;top:408px;display:flex;justify-content:center;gap:9px}
+.seal i{width:42px;height:42px;border-radius:50%;border:1.500px dashed #8b744f;color:#8b744f;font-style:normal;font-size:11.500px;line-height:40px;text-align:center;font-family:sans-serif}
+.seal i.on{border:2px solid #a3301f;color:#f3dcc0;background:#8c2416}
+.press{position:absolute;left:0;top:-120px;width:390px;height:846px;background:url(press_pau.webp) 0 0/390px 846px}
+.note{margin-top:24px;font-size:14px;color:#b9a988;line-height:1.6}
+</style></head><body>
+<h1>성경 서고 · 장면 스케치</h1>
+<div class="sub">사서가 말을 걸고, 나는 선택지로 답합니다. 대사는 모두 초안입니다. 그림은 지금 앱의 서고 그림 위에 얹어 본 것입니다.</div>
+<div class="grid">
+
+<div><div class="cap"><b>1</b>들어섬 — 나의 혼잣말</div><div class="cap2">처음 들어올 때만 나옵니다. 화면을 누르면 다음 말로 넘어갑니다.</div>
+<div class="fr"><div class="bg" style="transform:translateY(-40px)"></div><div class="grad"></div>
+<div class="box me"><span class="nm">나</span>오래된 서고다. 촛불 몇 개만 켜져 있다.<span class="nx">누르면 다음 ▾</span></div></div></div>
+
+<div><div class="cap"><b>2</b>사서가 말을 건다 — 두 선택지</div><div class="cap2">사서는 말수가 적습니다. 한두 문장만 하고 기다립니다.</div>
+<div class="fr"><div class="bg" style="transform:translateY(-40px)"></div><div class="dim" style="opacity:.25"></div><div class="grad"></div>
+<img class="por" src="libr4.png">
+<div class="ch"><div class="pick">안내를 받아 이동한다</div><div>자유롭게 둘러본다</div></div>
+<div class="box"><span class="nm">사서</span>…어서 오십시오.<br>찾는 책이 있습니까?</div></div></div>
+
+<div><div class="cap"><b>3</b>안내를 받아 이동한다</div><div class="cap2">오늘 읽는 책 앞까지 사서가 데려갑니다. 걸어가는 움직임은 지금 것을 씁니다.</div>
+<div class="fr"><div class="press"></div><div class="dim" style="opacity:.3"></div><div class="grad"></div>
+<img class="por" src="libr4.png">
+<div class="ch"><div class="pick">펼쳐 본다</div><div>도로 꽂는다</div></div>
+<div class="box"><span class="nm">사서</span>오늘 읽으실 책입니다.<br>로마서, 열여섯 장입니다.</div></div></div>
+
+<div><div class="cap"><b>4</b>자유롭게 둘러본다</div><div class="cap2">지금 화면과 같습니다. 사서는 구석에서 기다리고, 누르면 다시 말을 겁니다.</div>
+<div class="fr"><div class="bg" style="transform:translateY(-40px)"></div><div class="dim" style="opacity:.12"></div>
+<div class="zone e" style="left:140px;top:92px">외경 · 위경 · 교부 문헌</div>
+<div class="zone" style="left:26px;top:330px">구약<small>서른아홉 권</small></div><div class="zone" style="right:26px;top:330px">신약<small>스물일곱 권</small></div>
+<div class="med"></div><div class="medt">사서 부르기</div>
+<div class="grad" style="height:230px"></div>
+<div class="box me"><span class="nm">나</span>양쪽으로 서가가 늘어서 있다. 맨 끝은 불에 그을렸다.</div></div></div>
+
+<div><div class="cap"><b>5</b>그을린 끝 — 사서가 막아선다</div><div class="cap2">여기서만 사서가 먼저 나섭니다. 까맣게 탄 열쇠는 이 사람이 쥐고 있습니다.</div>
+<div class="fr"><div class="bg" style="transform:translateY(-40px) scale(2.3);transform-origin:50% 16%"></div><div class="dim" style="opacity:.62"></div><div class="grad"></div>
+<div class="warn"><h3>경고</h3><p>이 서고의 책은 성경이 아닙니다.<br>정말로 열람하시겠습니까?</p></div>
+<img class="por" src="libr4.png">
+<div class="ch"><div>돌아간다</div><div>열람한다</div></div>
+<div class="box"><span class="nm">사서</span>…그쪽은, 성경이 아닙니다.</div></div></div>
+
+<div><div class="cap"><b>6</b>열람한다 — 나의 혼잣말</div><div class="cap2">오늘 고친 것입니다. 사서는 따라오지 않습니다.</div>
+<div class="fr"><div class="bg" style="transform:translateY(-40px) scale(3.1);transform-origin:50% 15%"></div><div class="dim" style="opacity:.8"></div><div class="grad"></div>
+<div class="box me"><span class="nm">나</span>아직 들여놓은 책이 없는 것 같다.<span class="nx">누르면 돌아감 ▾</span></div></div></div>
+
+<div><div class="cap"><b>7</b>책을 읽고 — 사서의 다섯 물음</div><div class="cap2">지금 있는 다섯 물음과 인장을 대화 틀로 옮깁니다.</div>
+<div class="fr"><div class="dim" style="background:#120c08"></div>
+<div class="top">‹ 로마서 · 9 / 14</div>
+<div class="page" style="height:300px"><div class="k">왜 썼습니까</div><h3>로마서</h3><p style="margin-top:8px;color:#5b4630">(책의 '목적' 쪽이 여기 펼쳐져 있습니다. 읽고 나서 내 말로 답합니다.)</p></div>
+<div class="seal" style="top:360px"><i class="on">누가</i><i class="on">언제</i><i>왜</i><i>구조</i><i>하나님</i></div>
+<div class="grad" style="height:230px"></div>
+<div class="med" style="left:16px;right:auto;top:auto;bottom:146px;width:76px;height:76px;background-position:-46px -56px;background-size:168px auto"></div>
+<div class="ch" style="bottom:150px;width:250px"><div class="pick">내 말로 답한다</div><div>책에서 다시 찾아본다</div></div>
+<div class="box"><span class="nm">사서</span>셋째 물음입니다.<br>이 편지를 왜 썼습니까?</div></div></div>
+
+<div><div class="cap"><b>8</b>다시 왔을 때 · 나갈 때</div><div class="cap2">둘째 방문부터는 한 줄과 선택지만 나옵니다. 길게 붙잡지 않습니다.</div>
+<div class="fr"><div class="bg" style="transform:translateY(-40px)"></div><div class="dim" style="opacity:.25"></div><div class="grad"></div>
+<img class="por" src="libr4.png">
+<div class="ch"><div class="pick">이어서 본다</div><div>오늘 읽는 책으로</div><div>둘러본다</div></div>
+<div class="box"><span class="nm">사서</span>…다시 오셨군요.<br>로마서에 인장 둘이 남아 있습니다.</div></div></div>
+
+</div>
+<div class="note">※ 사서 그림과 대사는 방향을 보시라고 그린 초안입니다. 정해 주시면 다듬어서 앱에 넣습니다.</div>
+</body></html>
