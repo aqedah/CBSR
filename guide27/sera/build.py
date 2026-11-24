@@ -33,6 +33,11 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#222;font-size:
 .sh .n{width:6.4mm;height:6.4mm;border-radius:50%;background:var(--c);color:#fff;font-size:9.5pt;display:inline-flex;align-items:center;justify-content:center}
 .sh small{margin-left:auto;font-size:8pt;font-weight:400;color:#777}
 .flow p{margin-bottom:1.6mm}
+.fm{display:grid;grid-template-columns:1fr 72mm;gap:4mm;align-items:start}
+.map{border:.3mm solid #bbb;border-radius:1mm;overflow:hidden}
+.fm .wd span{white-space:normal}
+.map img,.map svg{display:block;width:100%}
+.mcap{font-size:7.6pt;color:#555;line-height:1.4;padding:1mm 1.6mm;background:#fff;border-top:.3mm solid #ddd}
 .wd{margin-top:2mm;border-left:1mm solid var(--c);background:var(--l);padding:1.6mm 3mm;font-size:9pt;line-height:1.55}
 .wd .k{font-weight:700;color:var(--c);margin-right:2mm}
 .wd span{margin-right:3.4mm;white-space:nowrap}
@@ -87,8 +92,15 @@ def page1(w):
     marks = ''.join(f'<div class="mk{" rep" if k.get("rep") else ""}"><span class="chip sans">{k["tool"]}</span>{"<span class=\"rp sans\">대표</span> " if k.get("rep") else ""}{inl(k["text"])}</div>' for k in w['marks'])
     looks = ''.join(f'<p><span class="ck">{"✓" if l["ck"] else ""}</span><span class="chip sans">{l["tool"]}</span><span>{inl(l["text"])}</span></p>' for l in w['looks'])
     scn = ''.join(f'<span class="sans">{s}</span>' for s in w['scenes'])
+    wdb = f'<div class="wd sans"><span class="k">말뜻</span>{wds}</div>'
+    mp = w.get('map')
+    if mp:
+        svg = open(os.path.join(H, mp)).read()
+        flowmap = f'<div class="fm"><div>{flow}{wdb}</div><div class="map">{svg}<div class="mcap sans">{inl(w.get("mapcap",""))}</div></div></div>'
+    else:
+        flowmap = flow + wdb
     return f'''<section class="pg">{hd}
-<div class="sec flow"><div class="sh sans"><span class="n">1</span>오늘의 흐름</div>{flow}<div class="wd sans"><span class="k">말뜻</span>{wds}</div></div>
+<div class="sec flow"><div class="sh sans"><span class="n">1</span>오늘의 흐름</div>{flowmap}</div>
 <div class="sec"><div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">{scn}</div>{marks}</div>
 <div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div><div class="lk">{looks}</div></div>
 <div class="ft sans"><span>{w['label']} · {w['date']}</span><span>1</span></div></section>'''

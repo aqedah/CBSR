@@ -35,6 +35,9 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .wd{border-left:.8mm solid var(--c);background:var(--l);padding:1.2mm 2.4mm;font-size:8.6pt;line-height:1.5;margin-top:1mm}
 .wd .k{font-weight:700;color:var(--c);margin-right:1.6mm}
 .wd div{margin:.3mm 0}
+.map{flex-shrink:0;border:.3mm solid #bbb;border-radius:1mm;overflow:hidden;margin:1mm 0 1.6mm}
+.map img,.map svg{display:block;width:100%}
+.mcap{font-size:7.4pt;color:#555;line-height:1.4;padding:.8mm 1.6mm;border-top:.3mm solid #ddd}
 .scn{display:flex;flex-wrap:wrap;gap:1.2mm;margin-bottom:2mm}
 .scn span{font-size:7.6pt;border:.3mm solid var(--c);color:var(--c);border-radius:1mm;padding:.2mm 1.6mm}
 .mk{margin-bottom:2mm;text-align:justify}
@@ -73,8 +76,12 @@ def blocks(w):
 <div class="st sans">성경 읽기 약 <b>{round(w['vv']/7.5)}분</b></div>''')
     A.append('<div class="sh sans"><span class="n">1</span>오늘의 흐름</div>')
     for p in w['flow']: A.append(f'<div class="blk"><p>{inl(p)}</p></div>')
+    if w.get('map'):
+        svg = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), w['map'])).read()
+        A.append(f'<div class="map">{svg}<div class="mcap sans">{inl(w.get("mapcap",""))}</div></div>')
     A.append('<div class="wd sans"><span class="k">말뜻</span>' + ''.join(f'<div><b>{inl(a)}</b> {inl(b)}</div>' for a, b in w['words']) + '</div>')
-    A.append('<div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">' + ''.join(f'<span class="sans">{s}</span>' for s in w['scenes']) + '</div>')
+    A.append('<div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div>')
+    A.append('<div class="scn">' + ''.join(f'<span class="sans">{s}</span>' for s in w['scenes']) + '</div>')
     for k in w['marks']: A.append(f'<div class="mk"><span class="chip">{k["tool"]}</span>{"<span class=rp>대표</span>" if k.get("rep") else ""}{inl(k["text"])}</div>')
     A.append('<div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div>')
     for l in w['looks']: A.append(f'<div class="lk"><span class="ck">{"✓" if l["ck"] else ""}</span><span><span class="chip">{l["tool"]}</span>{inl(l["text"])}</span></div>')
@@ -108,7 +115,8 @@ JS = r'''
     p.innerHTML=`<div class="bx5"></div><span class="pn sans">${pn}</span><span class="rn sans">${run}</span>`; out.appendChild(p); pn++; return p.firstElementChild; };
   const flow=(w,html,run,even)=>{ let box=mk(w,run); const n0=out.children.length;
     for(const h of html){ const t=document.createElement('template'); t.innerHTML=h; const el=t.content.firstElementChild; box.appendChild(el);
-      if(box.scrollHeight>box.clientHeight+1){ box.removeChild(el); box=mk(w,run); box.appendChild(el); if(el.classList.contains('sh')||el.classList.contains('note')) el.style.marginTop='0'; } }
+      if(box.scrollHeight>box.clientHeight+1 && box.children.length>1){ box.removeChild(el); const carry=[]; while(box.children.length>1 && /\b(sh|scn)\b/.test(box.lastElementChild.className)) carry.unshift(box.removeChild(box.lastElementChild));
+        box=mk(w,run); carry.forEach(c=>box.appendChild(c)); box.appendChild(el); const f0=box.firstElementChild; if(f0.classList.contains('sh')||f0.classList.contains('note')) f0.style.marginTop='0'; } }
     if(even && (out.children.length-n0+1)%2){ const b=mk(w,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } };
   const fixed=(w,pages,run)=>{ for(const h of pages){ const b=mk(w,run); b.innerHTML=h; } };
   for(const w of src){ const J=JSON.parse(w.dataset.j); const run=J.run;

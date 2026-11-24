@@ -1,4 +1,6 @@
 W = dict(
+ map='map1124.svg',
+ mapcap='**첫 선교여행**(13–14장) 실선은 가는 길, 점선은 돌아오는 길입니다.',
  key='1124', color='#3F3F3F', light='#EEEEEE',
  date='11월 24일 (화)', label='세라핌 청년 기도회', season='',
  title='사도행전 12:25–14:28', sub='하나님이 열어 주신 믿음의 문', vv=81,
