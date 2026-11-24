@@ -145,6 +145,13 @@ body.vw .wk .pg{margin:14px auto;background:#fff;box-shadow:0 1px 6px rgba(0,0,0
 .sheet .ans .ln{height:8.4mm}
 .sheet .gd{font-size:8.8pt;color:#444;background:#f4f4f4;border-radius:1mm;padding:1.6mm 3mm;margin-bottom:.6mm}
 .sheet .gd b{color:var(--c)}
+.sheet .cp{font-size:9pt;color:#555}.cp b{color:var(--c)}
+.sheet .cpl{margin-bottom:1.6mm}.cpl .ln{border-bottom:.25mm dashed #aaa;height:8.4mm}
+.sheet .gq{margin-top:.6mm}
+.sheet .ap{display:grid;grid-template-columns:auto 1fr;gap:0 2.4mm;padding:2.4mm 0 1mm;border-top:.3mm solid #ccc;margin-top:1mm}
+.sheet .apl{font-size:8.4pt;font-weight:700;color:#fff;background:var(--c);border-radius:1mm;padding:.4mm 1.8mm;align-self:start;margin-top:.8mm}
+.sheet .ap .fu{margin-top:.8mm;color:#333}
+.sheet .pr{margin-top:auto}
 .sheet .whole p{display:grid;grid-template-columns:auto 1fr;gap:0 2mm;font-size:9.3pt;line-height:1.6;margin-bottom:1.6mm;text-align:justify}
 .sheet .whole p .chip{margin-top:.8mm;align-self:start;justify-self:start}
 .sheet .whole p b{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif;font-size:8.6pt;color:var(--c);margin-right:1.4mm}
@@ -181,9 +188,6 @@ body.vw .wk .pg{margin:14px auto;background:#fff;box-shadow:0 1px 6px rgba(0,0,0
 .a5w .mcap{font-size:7.4pt;color:#555;line-height:1.4;padding:.8mm 1.6mm;border-top:.3mm solid #ddd}
 .a5w .mf{float:right;width:44mm;margin:.6mm 0 1mm 3mm}
 .a5w .mf .mcap{font-size:6.8pt;padding:.5mm 1mm}
-.a5w .p4 .pr4{margin-top:auto;padding-top:1mm;flex:none}
-.a5w .p4 .pr4 h4{font-size:8.6pt;margin:1.6mm 0 .4mm;color:var(--c)}
-.a5w .p4 .pr4 .pln{height:7.2mm;line-height:7.2mm;font-size:9pt;padding:0 1.4mm;overflow:hidden;white-space:nowrap}
 .a5w .p4 .op{padding:1.2mm 0 .4mm}
 .a5w .p4 .bx5{display:flex;flex-direction:column}
 .a5w .p4 .sh{margin:1.9mm 0 1mm}
@@ -218,6 +222,17 @@ body.vw .wk .pg{margin:14px auto;background:#fff;box-shadow:0 1px 6px rgba(0,0,0
 .a5w .wh{display:grid;grid-template-columns:auto 1fr;gap:0 1.6mm;margin-bottom:1.6mm;text-align:justify}
 .a5w .wh .chip{margin-top:.6mm;align-self:start;justify-self:start}
 .a5w .wh b{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif;font-size:8.4pt;color:var(--c);margin-right:1.2mm}
+.a5w .pr4{margin-top:auto;padding-top:1mm;flex:none}
+.a5w .pr4 h4{font-size:8.6pt;margin:1.2mm 0 .2mm;color:var(--c)}
+.a5w .pr4 .pln{height:6.6mm;line-height:6.6mm;font-size:9pt;padding:0 1.4mm;overflow:hidden;white-space:nowrap}
+.a5w .shw .n{display:none}
+.a5w .cp{font-size:8.6pt;color:#555;margin:.4mm 0 0}
+.a5w .cp b{color:var(--c)}
+.a5w .cpl{margin-bottom:1.4mm}.cpl .ln{border-bottom:.22mm dashed #aaa}
+.a5w .gq{margin-top:.4mm}
+.a5w .ap{display:grid;grid-template-columns:auto 1fr;gap:0 2mm;padding:2mm 0 .4mm;border-top:.3mm solid #ccc;margin-top:1mm}
+.a5w .apl{font-size:8pt;font-weight:700;color:#fff;background:var(--c);border-radius:.8mm;padding:.3mm 1.6mm;align-self:start;margin-top:.6mm}
+.a5w .ap .fu{margin-top:.6mm;color:#333}
 .a5w .pr{flex:1 1 auto;min-height:62mm;display:flex;flex-direction:column;overflow:hidden}
 .a5w .pr h4{font-size:8.6pt;margin:2mm 0 .6mm;color:var(--c)}
 .a5w .pr .ya{flex:3 1 0;min-height:0;overflow:hidden}.pr .ca{flex:2 1 0;min-height:0;overflow:hidden}
@@ -261,26 +276,41 @@ function page1(w){ const D=dateOf(w);
 <div class="sec"><div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">${scn}</div>${marks}</div>
 <div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div><div class="lk">${looks}</div></div>
 <div class="ft sans"><span>${esc(w.label)} · ${D.str}</span><span>1</span></div></section>`; }
-function qblocks(items,first){ return items.map((o,i)=>`<div class="op"><div class="bx sans">${i+1}</div><div>${first(o)}</div></div><div class="ans">${lines(12)}</div>`).join(''); }
-function page2(w){ const items=(w.obs||[]).filter(x=>String(x||'').trim());
-  return `<section class="pg"><div class="sh sans"><span class="n">4</span>본문 관찰</div>
-<div class="gd sans">${items.length>1?`${['','','두','세','네','다섯','여섯'][items.length]||items.length} 물음 가운데 <b>하나만 골라도 되고, 여러 개를 골라도 됩니다.</b> `:''}고른 물음 바로 아래 칸에 본문에서 찾은 답을 적습니다.</div>
-<div class="qs">${qblocks(items,o=>inl(o))}</div><div class="ft sans"><span>${esc(w.title)}</span><span>2</span></div></section>`; }
-function page3(w){ const items=(w.god||[]).filter(g=>String(g.q||'').trim()||String(g.v||'').trim());
-  return `<section class="pg"><div class="sh sans"><span class="n">5</span>하나님의 성품</div>
-<div class="gd sans">본문 관찰에서 고른 번호와 <b>같은 번호를 고르면 관찰이 성품으로 이어집니다.</b> 다른 번호를 골라도 되고, 여러 개를 골라도 됩니다.</div>
-<div class="qs">${qblocks(items,g=>`<div class="v">${inl(g.v)}</div>${inl(g.q)}`)}</div><div class="ft sans"><span>${esc(w.title)}</span><span>3</span></div></section>`; }
+/* 관찰 가/나, 성품 가/나(가는 말씀을 옮겨 적음), 적용 — 2027 가이드북 두 갈래와 같은 쓰임(11-24 목사님) */
+const OG='<b>가와 나 가운데 하나를 골라</b> 바로 아래 칸에 적습니다. 시간이 남으면 다른 하나도 적어 봅니다.';
+const GG='본문 관찰에서 <b>고른 쪽과 같은 쪽을 고르면</b> 관찰이 성품으로 이어집니다. 성품을 적은 뒤 적용으로 넘어갑니다.';
+const josa=r=>/[2459]\s*$/.test(String(r))?'를':'을';
+const obsOf=w=>(w.obs||[]).filter(x=>String(x||'').trim()).slice(0,2);
+const godOf=w=>(w.god||[]).filter(g=>g&&(String(g.q||'').trim()||String(g.v||'').trim()||String(g.copy||'').trim())).slice(0,2);
+const gBody=(g,nc)=>String(g.copy||'').trim()?`<div class="cp sans"><b>${esc(g.copy)}</b>${josa(g.copy)} 성경에서 찾아 옮겨 적어 보세요.</div><div class="cpl">${'<div class="ln"></div>'.repeat(nc)}</div><div class="gq">${inl(g.q)}</div>`:`<div class="v">${inl(g.v)}</div>${inl(g.q)}`;
+const opB=(lab,body,n)=>`<div class="op"><div class="bx sans">${lab}</div><div>${body}</div></div><div class="ans">${'<div class="ln"></div>'.repeat(n)}</div>`;
+const apB=(w,n)=>{ const a=w.apply||{}; return String(a.lead||'').trim()?`<div class="ap"><div class="apl sans">적용</div><div>${inl(a.lead)}${String(a.fu||'').trim()?`<div class="fu">→ ${inl(a.fu)}</div>`:''}</div></div><div class="ans">${'<div class="ln"></div>'.repeat(n)}</div>`:''; };
+function page2(w){
+  return `<section class="pg"><div class="sh sans"><span class="n">4</span>본문 관찰</div><div class="gd sans">${OG}</div>
+<div class="qs">${obsOf(w).map((q,i)=>opB('가나'[i],inl(q),12)).join('')}</div><div class="ft sans"><span>${esc(w.title)}</span><span>2</span></div></section>`; }
+function page3(w){
+  return `<section class="pg"><div class="sh sans"><span class="n">5</span>하나님의 성품</div><div class="gd sans">${GG}</div>
+<div class="qs">${godOf(w).map((g,i)=>opB('가나'[i],gBody(g,2),12)).join('')}${apB(w,12)}</div><div class="ft sans"><span>${esc(w.title)}</span><span>3</span></div></section>`; }
+const wholeOf=w=>L(w.whole).map(x=>{const p=x.split('|').map(s=>s.trim());return {lab:p[0],ref:p[1]||'',text:p.slice(2).join(' | ')}});
 function page4(w,edit,pray){ pray=pray||{};
-  const wh=L(w.whole).map(x=>{const p=x.split('|').map(s=>s.trim());return {lab:p[0],ref:p[1]||'',text:p.slice(2).join(' | ')}});
-  let n=7, whole='';
-  if(wh.length){ whole=`<div class="sec whole"><div class="sh sans"><span class="n">7</span>성경 전체로<small>${esc(w.whole_title||'오늘 본문이 성경의 다른 자리와 이어집니다')}</small></div>`+wh.map(x=>`<p><span class="chip sans">${esc(x.lab)}</span><span><b>${esc(x.ref)}</b>${inl(x.text)}</span></p>`).join('')+'</div>'; n=8; }
-  const ny=+w.youth||(wh.length?4:8), nc=+w.churchn||(wh.length?3:5), ce=edit?' contenteditable="true"':'';
-  const yv=L(pray.y), cv=L(pray.c);
-  const yrows=Array.from({length:ny},(_,i)=>{const [a,...b]=(yv[i]||'').split('|');return `<div class="prow sans"><span${ce} data-k="y${i}n">${esc((a||'').trim())}</span><i${ce} data-k="y${i}t">${esc(b.join('|').trim())}</i></div>`}).join('');
-  const crows=Array.from({length:nc},(_,i)=>`<div class="pln sans"${ce} data-k="c${i}">${esc(cv[i]||'')}</div>`).join('');
+  const wh=wholeOf(w), ce=edit?' contenteditable="true"':'';
+  /* 성경 전체로는 큰 번호를 달지 않습니다. 오늘의 기도가 7번(11-24 목사님) */
+  const whole=wh.length?`<div class="sec whole"><div class="sh sans">성경 전체로<small>${esc(w.whole_title||'오늘 본문이 성경의 다른 자리와 이어집니다')}</small></div>`+wh.map(x=>`<p><span class="chip sans">${esc(x.lab)}</span><span><b>${esc(x.ref)}</b>${inl(x.text)}</span></p>`).join('')+'</div>':'';
+  const yv=L(pray.y).map(x=>x.replace(/\s*\|\s*/,' ').trim()), cv=L(pray.c);
+  const yrows=Array.from({length:5},(_,i)=>`<div class="pln sans"${ce} data-k="y${i}">${esc(yv[i]||'')}</div>`).join('');
+  const crows=Array.from({length:3},(_,i)=>`<div class="pln sans"${ce} data-k="c${i}">${esc(cv[i]||'')}</div>`).join('');
   return `<section class="pg"><div class="sh sans"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div><div class="note">${inl(w.note)}</div>${whole}
-<div class="sec pr"><div class="sh sans"><span class="n">${n}</span>오늘의 기도</div>
-<h4 class="sans">청년부 지체 기도제목</h4>${yrows}<h4 class="sans">교회 기도제목</h4>${crows}</div><div class="ft sans"><span>${esc(w.title)}</span><span>4</span></div></section>`; }
+<div class="sec pr"><div class="sh sans"><span class="n">7</span>오늘의 기도</div>
+<h4 class="sans">청년부 기도제목</h4>${yrows}<h4 class="sans">교회 기도제목</h4>${crows}</div><div class="ft sans"><span>${esc(w.title)}</span><span>4</span></div></section>`; }
+const prayer4=pray=>{ const yv=L(pray&&pray.y).map(x=>x.replace(/\s*\|\s*/,' ').trim()), cv=L(pray&&pray.c);
+  return `<div class="pr4"><div class="sh sans"><span class="n">7</span>오늘의 기도</div><h4 class="sans">청년부 기도제목</h4>`+Array.from({length:5},(_,i)=>`<div class="pln sans">${esc(yv[i]||'')}</div>`).join('')+'<h4 class="sans">교회 기도제목</h4>'+Array.from({length:3},(_,i)=>`<div class="pln sans">${esc(cv[i]||'')}</div>`).join('')+'</div>'; };
+/* split: 8쪽용(관찰 2쪽, 성품 2쪽), 아니면 4쪽용(관찰 1쪽, 성품과 적용 1쪽) */
+function qparts(w,nans,ncopy,split){
+  const sh=(n,t,more)=>`<div class="sh sans" style="margin-top:0"><span class="n">${n}</span>${t}${more?'<small>이어서</small>':''}</div>`;
+  const ob=obsOf(w).map((q,i)=>opB('가나'[i],inl(q),nans)), gb=godOf(w).map((g,i)=>opB('가나'[i],gBody(g,ncopy),nans)), ap=apB(w,nans);
+  const o0=sh(4,'본문 관찰',0)+`<div class="gd sans">${OG}</div>`, g0=sh(5,'하나님의 성품',0)+`<div class="gd sans">${GG}</div>`;
+  if(split) return {O:[o0+(ob[0]||''), sh(4,'본문 관찰',1)+ob.slice(1).join('')], G:[g0+(gb[0]||''), sh(5,'하나님의 성품',1)+gb.slice(1).join('')+ap]};
+  return {O:[o0+ob.join('')], G:[g0+gb.join('')+ap]}; }
 function sheet(w,edit,pray){ return `<div class="sheet wk" id="w${esc(w.key)}" style="--c:${w.color};--l:${w.light};--hl:#F3E6A0">${page1(w)}${page2(w)}${page3(w)}${page4(w,edit,pray)}</div>`; }
 /* ── 가이드북 A5: 한 회 8쪽(읽기 2 · 관찰 2 · 성품 2 · 해설과 기도 2), 첫쪽이 짝수(왼쪽)면 관찰과 성품이 마주 봅니다 ── */
 function a5parts(w,pray){ pray=pray||{}; const D=dateOf(w), A=[], Dn=[];
@@ -295,18 +325,10 @@ function a5parts(w,pray){ pray=pray||{}; const D=dateOf(w), A=[], Dn=[];
   L(w.looks).forEach(x=>{const k=tl(x);A.push(`<div class="lk"><span class="ck">${k.star?'✓':''}</span><span><span class="chip">${esc(k.tool)}</span>${inl(k.text)}</span></div>`)});
   Dn.push('<div class="sh sans" style="margin-top:0"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div>');
   Dn.push(`<div class="note">${inl(w.note)}</div>`);
-  const wh=L(w.whole).map(x=>{const p=x.split('|').map(s=>s.trim());return {lab:p[0],ref:p[1]||'',text:p.slice(2).join(' | ')}}); let n=7;
-  if(wh.length){ Dn.push(`<div class="sh sans"><span class="n">7</span>성경 전체로<small>${esc(w.whole_title||'')}</small></div>`); wh.forEach(x=>Dn.push(`<div class="wh"><span class="chip">${esc(x.lab)}</span><span><b>${esc(x.ref)}</b>${inl(x.text)}</span></div>`)); n=8; }
-  const yv=L(pray.y), cv=L(pray.c);
-  Dn.push(`<div class="pr"><div class="sh sans"><span class="n">${n}</span>오늘의 기도</div><h4 class="sans">청년부 지체 기도제목</h4><div class="ya">`+Array.from({length:14},(_,i)=>{const [a,...b]=(yv[i]||'').split('|');return `<div class="prow sans"><span>${esc((a||'').trim())}</span><i>${esc(b.join('|').trim())}</i></div>`}).join('')+'</div><h4 class="sans">교회 기도제목</h4><div class="ca">'+Array.from({length:10},(_,i)=>`<div class="pln sans">${esc(cv[i]||'')}</div>`).join('')+'</div></div>');
-  const qpage=(no,title,guide,items,first,i0)=>{ let h=`<div class="sh sans" style="margin-top:0"><span class="n">${no}</span>${title}${i0?'<small>이어서</small>':''}</div>`; if(!i0) h+=`<div class="gd sans">${guide}</div>`;
-    items.forEach((o,i)=>{ h+=`<div class="op"><div class="bx sans">${i0+i+1}</div><div>${first(o)}</div></div><div class="ans">`+'<div class="ln"></div>'.repeat(14)+'</div>'; }); return h; };
-  const ob=(w.obs||[]).filter(x=>String(x||'').trim()), gd=(w.god||[]).filter(g=>String(g.q||'').trim()||String(g.v||'').trim());
-  const cnt=k=>['','','두','세','네','다섯','여섯'][k]||k;
-  const og=(ob.length>1?`${cnt(ob.length)} 물음 가운데 <b>하나만 골라도 되고, 여러 개를 골라도 됩니다.</b> `:'')+'고른 물음 바로 아래 칸에 답을 적습니다.';
-  const gg='본문 관찰에서 고른 번호와 <b>같은 번호를 고르면 관찰이 성품으로 이어집니다.</b> 다른 번호를 골라도 됩니다.';
-  const two=(arr,f)=>{const o=[];for(let i=0;i<arr.length;i+=2)o.push(f(arr.slice(i,i+2),i));return o};
-  const O=two(ob,(a,i)=>qpage('4','본문 관찰',og,a,o=>inl(o),i)), G=two(gd,(a,i)=>qpage('5','하나님의 성품',gg,a,g=>`<div class="v">${inl(g.v)}</div>${inl(g.q)}`,i));
+  const wh=wholeOf(w);
+  if(wh.length){ Dn.push(`<div class="sh sans shw">성경 전체로<small>${esc(w.whole_title||'')}</small></div>`); wh.forEach(x=>Dn.push(`<div class="wh"><span class="chip">${esc(x.lab)}</span><span><b>${esc(x.ref)}</b>${inl(x.text)}</span></div>`)); }
+  Dn.push(prayer4(pray));
+  const {O,G}=qparts(w,14,3,true);
   return {A,O,G,D:Dn,run:`${w.season||w.label||''} · ${w.title||''}`}; }
 /* out(.a5w) 안에 쪽을 흘려 넣습니다. 화면에 그려진 상태여야 높이를 잴 수 있습니다. */
 function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
@@ -316,7 +338,7 @@ function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
     for(const h of html){ const t=document.createElement('template'); t.innerHTML=h; const el=t.content.firstElementChild; box.appendChild(el);
       if(box.scrollHeight>box.clientHeight+1 && box.children.length>1){ box.removeChild(el); const carry=[]; while(box.children.length>1 && /\b(sh|scn)\b/.test(box.lastElementChild.className)) carry.unshift(box.removeChild(box.lastElementChild));
         box=mk(st,run); carry.forEach(c=>box.appendChild(c)); box.appendChild(el); const f0=box.firstElementChild; if(f0.classList.contains('sh')||f0.classList.contains('note')) f0.style.marginTop='0'; } }
-    if((out.querySelectorAll('.p5').length-n0)%2){ const pr=box.querySelector(':scope > .pr'); if(pr && box.children.length>1){ box.removeChild(pr); const b=mk(st,run); b.appendChild(pr); pr.firstElementChild.style.marginTop='0'; } else { const b=mk(st,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } } };
+    if((out.querySelectorAll('.p5').length-n0)%2){ const pr=box.querySelector(':scope > .pr4'); if(pr && box.children.length>1){ box.removeChild(pr); const b=mk(st,run); b.appendChild(pr); pr.firstElementChild.style.marginTop='0'; } else { const b=mk(st,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } } };
   const fixed=(st,pages,run)=>pages.forEach(h=>{ mk(st,run).innerHTML=h; });
   for(const w of weeks){ const J=a5parts(w,prayFn(w)), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`;
     flow(st,J.A,J.run); fixed(st,J.O,J.run); fixed(st,J.G,J.run); flow(st,J.D,J.run); }
@@ -326,10 +348,7 @@ function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
 function a5four(out,w,pray){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`;
   let p1=J.A.filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x)); const mb=mapBlock(w);
   if(mb){ const i=p1.findIndex(x=>x.includes('오늘의 흐름')); p1.splice(i+1,0,mb.replace('class="map"','class="map mf"')); }
-  const qp=pages=>{ let h=pages[0]?pages[0].split('<div class="op">')[0]:''; pages.forEach(pg=>pg.split('<div class="op">').slice(1).forEach(x=>{ h+='<div class="op">'+x.split('<div class="sh')[0].replace('<div class="ln"></div>'.repeat(14),'<div class="ln"></div>'.repeat(8)); })); return h; };
-  const dn=J.D.slice(0,-1), no=(J.D[J.D.length-1].match(/<span class="n">(\d)<\/span>오늘의 기도/)||[0,7])[1], yv=L(pray&&pray.y).map(x=>x.replace(/\s*\|\s*/,' ').trim()), cv=L(pray&&pray.c);
-  const pr4=`<div class="pr4"><div class="sh sans"><span class="n">${no}</span>오늘의 기도</div><h4 class="sans">청년부 기도제목</h4>`+Array.from({length:5},(_,i)=>`<div class="pln sans">${esc(yv[i]||'')}</div>`).join('')+'<h4 class="sans">교회 기도제목</h4>'+Array.from({length:3},(_,i)=>`<div class="pln sans">${esc(cv[i]||'')}</div>`).join('')+'</div>';
-  const P=[p1.join(''),qp(J.O),qp(J.G),dn.join('')+pr4], bad=[];
+  const Q4=qparts(w,8,2,false), P=[p1.join(''),Q4.O[0],Q4.G[0],J.D.join('')], bad=[];
   for(let i=0;i<4;i+=2){ const sh=document.createElement('div'); sh.className='x2';
     sh.innerHTML=[i,i+1].map(k=>`<section class="p5 p4${k%2?' r':''}" style="${st}"><div class="bx5${k===0?' b1':''}">${P[k]}</div><span class="pn sans">${k+1}</span><span class="rn sans">${esc(J.run)}</span></section>`).join(''); out.appendChild(sh); }
   const ps=out.querySelectorAll('.p5'), f=fit4(ps[0],ps[3]);
@@ -337,9 +356,9 @@ function a5four(out,w,pray){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w
   bad.fit=f; return bad; }
 /* A5 4쪽 맞춤 (11-24 목사님)
    1쪽: 남는 자리를 쪽 아래에 몰지 않고 나눔(칸 머리 앞 → 항목 사이).
-   4쪽: 해설과 성경 전체로가 넘치면 해설 장평을, 다음에 성경 전체로 장평을 줄이고(0.9까지), 그래도 넘치면 성경 전체로를 뒤에서부터 덜어 기도 칸을 지킴. */
+   4쪽: 해설과 성경 전체로가 넘치면 위아래 행간을 줄이고(1.28까지, 장평은 줄이지 않음), 그래도 넘치면 성경 전체로를 뒤에서부터 덜어 기도 칸을 지킴. */
 function fit4(p1, p4){
-  const MM=96/25.4, out={dropped:0, scale:1, wscale:1};
+  const MM=96/25.4, out={dropped:0, lh:0};
   if(p1){ const bx=p1.querySelector('.bx5');
     const slack=()=>{ const t=bx.getBoundingClientRect().top; let mb=0; [...bx.children].forEach(e=>{const r=e.getBoundingClientRect(); if(r.bottom>mb) mb=r.bottom}); return (bx.clientHeight-(mb-t))/MM - 1.5; };
     const bump=(els,cap,prop)=>{ els=els.filter(Boolean); if(!els.length) return; const sl=slack(); if(sl<=0) return; const add=Math.min(sl/els.length,cap); els.forEach(g=>{ g.style[prop]=(parseFloat(getComputedStyle(g)[prop])/MM+add)+'mm'; }); };
@@ -350,12 +369,11 @@ function fit4(p1, p4){
     if(bx.lastElementChild) bx.lastElementChild.style.marginBottom='0';
   }
   if(p4){ const bx=p4.querySelector('.bx5'); const over=()=>bx.scrollHeight>bx.clientHeight+1; const note=bx.querySelector('.note');
-    const sq=(els,k)=>els.forEach(e=>{ e.style.transformOrigin='left top'; e.style.transform=`scaleX(${k})`; e.style.width=(100/k)+'%'; });
-    for(const k of [0.96,0.93,0.9]){ if(!over()||!note) break; sq([note],k); out.scale=k; }
-    const whs=[...bx.querySelectorAll(':scope > .wh')];
-    for(const k of [0.96,0.93,0.9]){ if(!over()||!whs.length) break; sq(whs,k); out.wscale=k; }
+    const whs=[...bx.querySelectorAll(':scope > .wh')], tx=[note,...whs].filter(Boolean);
+    for(const k of [1.5,1.44,1.38,1.32,1.28]){ if(!over()) break; tx.forEach(e=>{ e.style.lineHeight=String(k); }); whs.forEach(e=>{ e.style.marginBottom='1mm'; }); out.lh=k; }
     let wh=[...bx.querySelectorAll(':scope > .wh')];
     while(over()&&wh.length>1){ wh.pop().remove(); out.dropped++; }
+    if(out.dropped){ let prev=out.lh; for(const k of [1.38,1.44,1.5,1.6]){ if(k<=prev) continue; tx.forEach(e=>{ e.style.lineHeight=String(k); }); if(over()){ tx.forEach(e=>{ e.style.lineHeight=String(prev); }); break; } prev=k; out.lh=k; } }
   }
   return out; }
 
@@ -394,7 +412,7 @@ async function viewer(sid){
 <div class="tip">4쪽 오늘의 기도 칸을 눌러 기도제목을 입력하세요. 입력한 내용은 이 기기에만 저장됩니다. 인쇄할 때 용지는 A4, 여백 없음, 배경 그래픽 켜기로 하세요.</div></div>`+S.weeks.map(w=>sheet(w,true,prayOf(S.id,w.key))).join('');
   const style=document.createElement('style'); style.textContent='.wk{display:none}.wk.on{display:block}'; document.head.appendChild(style);
   document.querySelectorAll('.wk').forEach(wk=>{ const key=wk.id.slice(1); const fs=[...wk.querySelectorAll('[contenteditable]')];
-    const keep=()=>{ const y=[],c=[]; wk.querySelectorAll('.prow').forEach(r=>{const a=r.children[0].textContent.trim(),b=r.children[1].textContent.trim(); y.push(a||b?a+' | '+b:'')}); wk.querySelectorAll('.pln').forEach(r=>c.push(r.textContent.trim())); setPray(S.id,key,{y:y.join('\n'),c:c.join('\n')}); };
+    const keep=()=>{ const y=[],c=[]; wk.querySelectorAll('.pln[data-k^="y"]').forEach(r=>y.push(r.textContent.trim())); wk.querySelectorAll('.pln[data-k^="c"]').forEach(r=>c.push(r.textContent.trim())); setPray(S.id,key,{y:y.join('\n'),c:c.join('\n')}); };
     fs.forEach((f,i)=>{ f.addEventListener('input',keep); f.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();(fs[i+1]||f).focus()}}); f.addEventListener('paste',e=>{e.preventDefault();document.execCommand('insertText',false,(e.clipboardData.getData('text')||'').replace(/\s+/g,' '))}); }); });
   const show=k=>{ document.querySelectorAll('.wk').forEach(w=>w.classList.toggle('on',w.id==='w'+k)); document.querySelectorAll('.bar button[data-w]').forEach(b=>b.classList.toggle('on',b.dataset.w===k)); Q.set('w',k); history.replaceState(null,'','?'+Q.toString()); };
   document.querySelectorAll('.bar button[data-w]').forEach(b=>b.onclick=()=>show(b.dataset.w));
@@ -414,7 +432,7 @@ function curW(){ const s=curSet(); return s&&s.weeks[WI] }
 function persist(){ const s=curSet(); if(s) s._u=Date.now(); LS.set(DK,DATA); $('status').textContent='이 기기에 저장됨 · GitHub에는 아직'; }
 function blankWeek(prev){ const d=prev?new Date(prev.ymd+'T00:00:00'):new Date(); if(prev) d.setDate(d.getDate()+7); const ymd=d.toISOString().slice(0,10);
   const c=prev?{color:prev.color,light:prev.light}:{color:COLORS[0][1],light:COLORS[0][2]};
-  return Object.assign({key:ymd.slice(5).replace('-',''),ymd,label:prev?prev.label:(KIND==='sera'?'세라핌 청년 기도회':''),season:'',title:'',sub:'',vv:0,flow:'',words:'',scenes:'',marks:'',looks:'',obs:['','','',''],god:[{v:'',q:''},{v:'',q:''},{v:'',q:''},{v:'',q:''}],note:'',whole_title:'',whole:'',youth:8,churchn:5},c); }
+  return Object.assign({key:ymd.slice(5).replace('-',''),ymd,label:prev?prev.label:(KIND==='sera'?'세라핌 청년 기도회':''),season:'',title:'',sub:'',vv:0,flow:'',words:'',scenes:'',marks:'',looks:'',obs:['',''],god:[{copy:'',q:''},{v:'',q:''}],apply:{lead:'',fu:''},note:'',whole_title:'',whole:''},c); }
 
 function ws(){
   document.body.className='ws';
@@ -470,14 +488,15 @@ function drawForm(){ const s=curSet(), f=$('form');
   ${F('scenes','② 장면 단추',w.scenes,{area:1,rows:3,small:'줄마다 하나'})}
   ${F('marks','② 성경 읽기 — 표시',w.marks,{area:1,rows:5,small:'줄마다 「★ 도구 | 문장」, ★ = 대표',ph:'★ ◆ 반복 | 네 번 반복되는 말은 무엇입니까? 9:12, 17에서 찾아 {형광펜}으로 칠하세요.'})}${TOK}
   ${F('looks','③ 눈여겨볼 것',w.looks,{area:1,rows:6,small:'줄마다 「✓ 도구 | 문장」, ✓ = 표시 확인'})}</fieldset>
-  <fieldset><legend>2쪽 · ④ 본문 관찰</legend><div class="hint">물음 하나에 한 칸. 비우면 빠집니다. 같은 번호의 성품 물음과 짝이 맞게 씁니다.</div>${[0,1,2,3,4].map(i=>F('obs:'+i,(i+1)+'번',(w.obs||[])[i]||'',{area:1,rows:2})).join('')}</fieldset>
-  <fieldset><legend>3쪽 · ⑤ 하나님의 성품</legend>${[0,1,2,3,4].map(i=>{const g=(w.god||[])[i]||{};return F('gv:'+i,(i+1)+'번 인용',g.v||'',{ph:'"…"(11:11)'})+F('gq:'+i,(i+1)+'번 물음',g.q||'',{area:1,rows:2,ph:'… **남은 백성을 돌아오게 하시는 하나님의 긍휼**이 내게는 어떻게 다가옵니까?'})}).join('')}</fieldset>
+  <fieldset><legend>2쪽 · ④ 본문 관찰</legend><div class="hint">가와 나 두 물음. 가부터 쓰고, 시간이 남으면 나도 씁니다(2027 가이드북 두 갈래와 같은 쓰임). 가는 성품 가와, 나는 성품 나와 짝이 맞게 씁니다.</div>${[0,1].map(i=>F('obs:'+i,'가나'[i],(w.obs||[])[i]||'',{area:1,rows:2})).join('')}</fieldset>
+  <fieldset><legend>3쪽 · ⑤ 하나님의 성품과 적용</legend><div class="hint">말씀 칸에 장절만 쓰면 「장절을 성경에서 찾아 옮겨 적어 보세요」와 쓸 줄이 나옵니다. 인용을 쓰면 인용이 그대로 찍힙니다. 물음은 본문의 사실 → 하나님의 성품(**굵게**) → 내게 묻는 말 차례로, 끝말이 매번 같지 않게 씁니다.</div>${[0,1].map(i=>{const g=(w.god||[])[i]||{};return `<div class="row">${F('gc:'+i,'가나'[i]+' 옮겨 적을 장절',g.copy||'',{ph:'13:47'})}${F('gv:'+i,'가나'[i]+' 인용(장절을 안 쓸 때)',g.v||'',{ph:'"…"(14:23)'})}</div>`+F('gq:'+i,'가나'[i]+' 물음',g.q||'',{area:1,rows:3,ph:'사실 → **하나님의 성품** → 나에게 묻는 말'})}).join('')}
+  ${F('al','적용 — 이끄는 말과 물음',(w.apply||{}).lead||'',{area:1,rows:3,small:'본문의 사실 다음에 **굵은 물음**',ph:'사도들은 일을 마치고 떠나며 금식 기도로 교회를 주께 맡겼습니다(14:23). **내가 주께 맡겨야 할 일은 무엇입니까?**'})}
+  ${F('af','적용 — 이어 묻기(→)',(w.apply||{}).fu||'',{ph:'그 일을 위해 이번 주에 어떻게 기도하겠습니까?'})}</fieldset>
   <fieldset><legend>4쪽 · 해설과 성경 전체로</legend>${F('note','⑥ 해설',w.note,{area:1,rows:8,small:'"하나님은 ~분입니다."로 맺습니다'})}
   ${F('whole_title','성경 전체로 — 머리글',w.whole_title,{ph:'오늘 본문이 성경의 다른 자리와 이어집니다'})}
-  ${F('whole','⑦ 성경 전체로',w.whole,{area:1,rows:6,small:'줄마다 「인용·약속·성취·주제·모형 | 참조 | 문장」, 비우면 빠집니다',ph:'성취 | 사 7:14 → 마 1:22–23 | …'})}
-  <div class="row">${F('youth','청년부 기도 줄 수',w.youth,{type:'number'})}${F('churchn','교회 기도 줄 수',w.churchn,{type:'number'})}</div></fieldset>
+  ${F('whole','성경 전체로',w.whole,{area:1,rows:6,small:'줄마다 「인용·약속·성취·주제·모형 | 참조 | 문장」, 번호 없이 찍힙니다. A5 4쪽에서 넘치면 행간을 줄이고, 그래도 넘치면 뒤에서부터 빠지니 중요한 것을 앞에 둡니다',ph:'성취 | 사 7:14 → 마 1:22–23 | …'})}</fieldset>
   <fieldset><legend>기도제목 — 이 기기에만 저장</legend><div class="hint">공개 원고(season.json)에는 올라가지 않습니다. 나눔 화면에서도 칸을 눌러 바로 쓸 수 있습니다.</div>
-  <label class="f"><span class="k"><b>청년부 지체</b> <small>줄마다 「이름 | 기도제목」</small></span><textarea id="py" rows="4">${esc(prayOf(s.id,w.key).y)}</textarea></label>
+  <label class="f"><span class="k"><b>청년부</b> <small>줄마다 하나, 다섯 줄까지</small></span><textarea id="py" rows="4">${esc(prayOf(s.id,w.key).y)}</textarea></label>
   <label class="f"><span class="k"><b>교회</b> <small>줄마다 하나</small></span><textarea id="pc" rows="3">${esc(prayOf(s.id,w.key).c)}</textarea></label></fieldset>`; }
   f.innerHTML=h;
   f.querySelectorAll('[data-wi]').forEach(b=>b.onclick=()=>{WI=+b.dataset.wi;drawForm();drawPrev()});
@@ -490,7 +509,8 @@ function drawForm(){ const s=curSet(), f=$('form');
     else if(k==='s:note') s.note=v;
     else if(k==='colorset'){ const c=COLORS[+v]; if(c){w.color=c[1];w.light=c[2]} }
     else if(k.startsWith('obs:')){ w.obs=w.obs||[]; w.obs[+k.slice(4)]=v; }
-    else if(k.startsWith('gv:')||k.startsWith('gq:')){ w.god=w.god||[]; const i=+k.slice(3); w.god[i]=w.god[i]||{v:'',q:''}; w.god[i][k[1]==='v'?'v':'q']=v; }
+    else if(/^g[cvq]:/.test(k)){ w.god=w.god||[]; const i=+k.slice(3); w.god[i]=w.god[i]||{q:''}; w.god[i][({c:'copy',v:'v',q:'q'})[k[1]]]=v; }
+    else if(k==='al'||k==='af'){ w.apply=w.apply||{lead:'',fu:''}; w.apply[k==='al'?'lead':'fu']=v; }
     else if(k==='ymd'){ w.ymd=v; w.key=v.slice(5).replace('-',''); }
     else w[k]=(k==='vv'||k==='youth'||k==='churchn')?+v:v;
     clearTimeout(saveT); saveT=setTimeout(()=>{persist();saveT=null},500); drawPrev(); }));
@@ -510,7 +530,7 @@ function drawPrev(){ const p=$('prev'), w=curW(), s=curSet();
     return; }
   p.innerHTML=sheet(w,false,prayOf(s.id,w.key));
   const z=Math.min(1,(p.clientWidth-30)/794); p.firstElementChild.style.zoom=z;
-  requestAnimationFrame(()=>{ const o=overflow(p), wn=$('warn'); if(!wn) return; wn.className=o.length?'bad':'ok'; wn.textContent=o.length?'넘칩니다: '+o.join(', ')+' — 줄이거나 기도 줄 수를 줄이세요.':'네 쪽에 맞습니다.'; });
+  requestAnimationFrame(()=>{ const o=overflow(p), wn=$('warn'); if(!wn) return; wn.className=o.length?'bad':'ok'; wn.textContent=o.length?'넘칩니다: '+o.join(', ')+' — 글을 줄이세요.':'네 쪽에 맞습니다.'; });
 }
 window.addEventListener('resize',()=>{ if(document.body.className==='ws') drawPrev() });
 function doPrint(){ const s=curSet(); if(!s) return; const all=$('selPrint').value==='all'; const ws=all?s.weeks:[curW()].filter(Boolean);

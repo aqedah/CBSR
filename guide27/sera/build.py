@@ -77,6 +77,13 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#222;font-size:
 .ans .ln{height:8.4mm}
 .gd{font-size:8.8pt;color:#444;background:#f4f4f4;border-radius:1mm;padding:1.6mm 3mm;margin-bottom:.6mm}
 .gd b{color:var(--c)}
+.cp{font-size:9pt;color:#555}.cp b{color:var(--c)}
+.cpl{margin-bottom:1.6mm}.cpl .ln{border-bottom:.25mm dashed #aaa;height:8.4mm}
+.gq{margin-top:.6mm}
+.ap{display:grid;grid-template-columns:auto 1fr;gap:0 2.4mm;padding:2.4mm 0 1mm;border-top:.3mm solid #ccc;margin-top:1mm}
+.apl{font-size:8.4pt;font-weight:700;color:#fff;background:var(--c);border-radius:1mm;padding:.4mm 1.8mm;align-self:start;margin-top:.8mm}
+.ap .fu{margin-top:.8mm;color:#333}
+.pr{margin-top:auto}
 .whole p{display:grid;grid-template-columns:auto 1fr;gap:0 2mm;font-size:9.3pt;line-height:1.6;margin-bottom:1.6mm;text-align:justify}
 .whole p .chip{margin-top:.8mm;align-self:start;justify-self:start}
 .whole p b{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif;font-size:8.6pt;color:var(--c);margin-right:1.4mm}
@@ -104,37 +111,38 @@ def page1(w):
 <div class="sec"><div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">{scn}</div>{marks}</div>
 <div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div><div class="lk">{looks}</div></div>
 <div class="ft sans"><span>{w['label']} · {w['date']}</span><span>1</span></div></section>'''
-def qblocks(items, first):
-    out=''
-    for i,o in enumerate(items):
-        out+=f'<div class="op"><div class="bx sans">{i+1}</div><div>{first(o)}</div></div><div class="ans">{lines(12)}</div>'
-    return out
+def josa(ref): return '를' if ref.strip()[-1] in '2459' else '을'
+def op(lab, body, n=12): return f'<div class="op"><div class="bx sans">{lab}</div><div>{body}</div></div><div class="ans">{lines(n)}</div>'
 def page2(w):
-    ops = qblocks(w['obs'], lambda o: inl(o['q']))
-    return f'''<section class="pg"><div class="sh sans"><span class="n">4</span>본문 관찰</div>
-<div class="gd sans">네 물음 가운데 <b>하나만 골라도 되고, 여러 개를 골라도 됩니다.</b> 고른 물음 바로 아래 칸에 본문에서 찾은 답을 적습니다.</div>
-<div class="qs">{ops}</div><div class="ft sans"><span>{w['title']}</span><span>2</span></div></section>'''
+    ops = ''.join(op(l, inl(q)) for l, q in zip('가나', w['obs']))
+    return f"""<section class="pg"><div class="sh sans"><span class="n">4</span>본문 관찰</div>
+<div class="gd sans"><b>가와 나 가운데 하나를 골라</b> 바로 아래 칸에 적습니다. 시간이 남으면 다른 하나도 적어 봅니다.</div>
+<div class="qs">{ops}</div><div class="ft sans"><span>{w['title']}</span><span>2</span></div></section>"""
+def gbody(g):
+    if g.get('copy'):
+        return f'<div class="cp sans"><b>{g["copy"]}</b>{josa(g["copy"])} 성경에서 찾아 옮겨 적어 보세요.</div><div class="cpl">{lines(2)}</div><div class="gq">{inl(g["q"])}</div>'
+    return f'<div class="v">{inl(g["v"])}</div>{inl(g["q"])}'
 def page3(w):
-    ops = qblocks(w['god'], lambda g: f'<div class="v">{inl(g["v"])}</div>{inl(g["q"])}')
-    return f'''<section class="pg"><div class="sh sans"><span class="n">5</span>하나님의 성품</div>
-<div class="gd sans">본문 관찰에서 고른 번호와 <b>같은 번호를 고르면 관찰이 성품으로 이어집니다.</b> 다른 번호를 골라도 되고, 여러 개를 골라도 됩니다.</div>
-<div class="qs">{ops}</div><div class="ft sans"><span>{w['title']}</span><span>3</span></div></section>'''
+    ops = ''.join(op(l, gbody(g)) for l, g in zip('가나', w['god']))
+    a = w.get('apply')
+    ap = f'<div class="ap"><div class="apl sans">적용</div><div>{inl(a["lead"])}<div class="fu">→ {inl(a["fu"])}</div></div></div><div class="ans">{lines(12)}</div>' if a else ''
+    return f"""<section class="pg"><div class="sh sans"><span class="n">5</span>하나님의 성품</div>
+<div class="gd sans">본문 관찰에서 <b>고른 쪽과 같은 쪽을 고르면</b> 관찰이 성품으로 이어집니다. 성품을 적은 뒤 적용으로 넘어갑니다.</div>
+<div class="qs">{ops}{ap}</div><div class="ft sans"><span>{w['title']}</span><span>3</span></div></section>"""
 def page4(w, edit=False):
     note = inl(w['note'])
     ce = ' contenteditable="true"' if edit else ''
-    wh = w.get('whole'); n = 7
-    whole = ''
+    wh = w.get('whole'); whole = ''
     if wh:
-        whole = f'<div class="sec whole"><div class="sh sans"><span class="n">7</span>성경 전체로<small>{w.get("whole_title","오늘 본문이 성경의 다른 자리와 이어집니다")}</small></div>' + ''.join(f'<p><span class="chip sans">{x["lab"]}</span><span><b>{x["ref"]}</b>{inl(x["text"])}</span></p>' for x in wh) + '</div>'
-        n = 8
-    ny = w.get('youth', 4 if wh else 8); nc = w.get('churchn', 3 if wh else 5)
-    yrows = ''.join(f'<div class="prow sans"><span{ce} data-k="y{i}n"></span><i{ce} data-k="y{i}t"></i></div>' for i in range(ny))
-    crows = ''.join(f'<div class="pln sans"{ce} data-k="c{i}"></div>' for i in range(nc))
-    return f'''<section class="pg"><div class="sh sans"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div><div class="note">{note}</div>{whole}
-<div class="sec pr"><div class="sh sans"><span class="n">{n}</span>오늘의 기도</div>
-<h4 class="sans">청년부 지체 기도제목</h4>{yrows}
+        # 성경 전체로는 큰 번호를 달지 않습니다(11-24 목사님). 오늘의 기도가 7번.
+        whole = f'<div class="sec whole"><div class="sh sans">성경 전체로<small>{w.get("whole_title","오늘 본문이 성경의 다른 자리와 이어집니다")}</small></div>' + ''.join(f'<p><span class="chip sans">{x["lab"]}</span><span><b>{x["ref"]}</b>{inl(x["text"])}</span></p>' for x in wh) + '</div>'
+    yrows = ''.join(f'<div class="pln sans"{ce} data-k="y{i}"></div>' for i in range(5))
+    crows = ''.join(f'<div class="pln sans"{ce} data-k="c{i}"></div>' for i in range(3))
+    return f"""<section class="pg"><div class="sh sans"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div><div class="note">{note}</div>{whole}
+<div class="sec pr"><div class="sh sans"><span class="n">7</span>오늘의 기도</div>
+<h4 class="sans">청년부 기도제목</h4>{yrows}
 <h4 class="sans">교회 기도제목</h4>{crows}
-</div><div class="ft sans"><span>{w['title']}</span><span>4</span></div></section>'''
+</div><div class="ft sans"><span>{w['title']}</span><span>4</span></div></section>"""
 def doc(ws):
     body = ''
     for w in ws:

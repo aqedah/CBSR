@@ -40,9 +40,6 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .mcap{font-size:7.4pt;color:#555;line-height:1.4;padding:.8mm 1.6mm;border-top:.3mm solid #ddd}
 .mf{float:right;width:44mm;margin:.6mm 0 1mm 3mm}
 .mf .mcap{font-size:6.8pt;padding:.5mm 1mm}
-.p4 .pr4{margin-top:auto;padding-top:1mm;flex:none}
-.p4 .pr4 h4{font-size:8.6pt;margin:1.6mm 0 .4mm;color:var(--c)}
-.p4 .pr4 .pln{height:7.2mm;line-height:7.2mm;font-size:9pt;padding:0 1.4mm;overflow:hidden;white-space:nowrap}
 .p4 .op{padding:1.2mm 0 .4mm}
 .p4 .bx5{display:flex;flex-direction:column}
 .p4 .sh{margin:1.9mm 0 1mm}
@@ -77,6 +74,17 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .wh{display:grid;grid-template-columns:auto 1fr;gap:0 1.6mm;margin-bottom:1.6mm;text-align:justify}
 .wh .chip{margin-top:.6mm;align-self:start;justify-self:start}
 .wh b{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif;font-size:8.4pt;color:var(--c);margin-right:1.2mm}
+.pr4{margin-top:auto;padding-top:1mm;flex:none}
+.pr4 h4{font-size:8.6pt;margin:1.2mm 0 .2mm;color:var(--c)}
+.pr4 .pln{height:6.6mm;line-height:6.6mm;font-size:9pt;padding:0 1.4mm;overflow:hidden;white-space:nowrap}
+.shw .n{display:none}
+.cp{font-size:8.6pt;color:#555;margin:.4mm 0 0}
+.cp b{color:var(--c)}
+.cpl{margin-bottom:1.4mm}.cpl .ln{border-bottom:.22mm dashed #aaa}
+.gq{margin-top:.4mm}
+.ap{display:grid;grid-template-columns:auto 1fr;gap:0 2mm;padding:2mm 0 .4mm;border-top:.3mm solid #ccc;margin-top:1mm}
+.apl{font-size:8pt;font-weight:700;color:#fff;background:var(--c);border-radius:.8mm;padding:.3mm 1.6mm;align-self:start;margin-top:.6mm}
+.ap .fu{margin-top:.6mm;color:#333}
 .pr{flex:1 1 auto;min-height:62mm;display:flex;flex-direction:column;overflow:hidden}
 .pr h4{font-size:8.6pt;margin:2mm 0 .6mm;color:var(--c)}
 .pr .ya{flex:3 1 0;min-height:0;overflow:hidden}.pr .ca{flex:2 1 0;min-height:0;overflow:hidden}
@@ -105,28 +113,41 @@ def blocks(w):
     D = []
     D.append('<div class="sh sans" style="margin-top:0"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div>')
     D.append(f'<div class="note">{inl(w["note"])}</div>')
-    n = 7
     if w.get('whole'):
-        D.append(f'<div class="sh sans"><span class="n">7</span>성경 전체로<small>{w.get("whole_title","")}</small></div>')
+        # 성경 전체로는 큰 번호를 달지 않습니다(11-24 목사님). 오늘의 기도가 7번.
+        D.append(f'<div class="sh sans shw">성경 전체로<small>{w.get("whole_title","")}</small></div>')
         for x in w['whole']: D.append(f'<div class="wh"><span class="chip">{x["lab"]}</span><span><b>{x["ref"]}</b>{inl(x["text"])}</span></div>')
-        n = 8
-    ny = w.get('youth', 4 if w.get('whole') else 6); nc = w.get('churchn', 3 if w.get('whole') else 4)
-    D.append(f'<div class="pr"><div class="sh sans"><span class="n">{n}</span>오늘의 기도</div><h4 class="sans">청년부 지체 기도제목</h4><div class="ya">' + '<div class="prow"><span></span><i></i></div>' * 14 + '</div><h4 class="sans">교회 기도제목</h4><div class="ca">' + '<div class="pln"></div>' * 10 + '</div></div>')
-    def qpage(title, guide, items, first, i0):
-        h = f'<div class="sh sans" style="margin-top:0"><span class="n">{title[0]}</span>{title[1]}{"<small>이어서</small>" if i0 else ""}</div>'
-        if not i0: h += f'<div class="gd sans">{guide}</div>'
-        for i, o in enumerate(items):
-            h += f'<div class="op"><div class="bx sans">{i0+i+1}</div><div>{first(o)}</div></div><div class="ans">' + '<div class="ln"></div>' * 14 + '</div>'
-        return h
-    og = '네 물음 가운데 <b>하나만 골라도 되고, 여러 개를 골라도 됩니다.</b> 고른 물음 바로 아래 칸에 답을 적습니다.'
-    gg = '본문 관찰에서 고른 번호와 <b>같은 번호를 고르면 관찰이 성품으로 이어집니다.</b> 다른 번호를 골라도 됩니다.'
-    O = [qpage(('4', '본문 관찰'), og, w['obs'][0:2], lambda o: inl(o['q']), 0), qpage(('4', '본문 관찰'), og, w['obs'][2:4], lambda o: inl(o['q']), 2)]
-    G = [qpage(('5', '하나님의 성품'), gg, w['god'][0:2], lambda g: f'<div class="v">{inl(g["v"])}</div>{inl(g["q"])}', 0),
-         qpage(('5', '하나님의 성품'), gg, w['god'][2:4], lambda g: f'<div class="v">{inl(g["v"])}</div>{inl(g["q"])}', 2)]
+    D.append(prayer())
+    O, G = qparts(w, 14, 3, split=True)
     return A, O, G, D
 
+def prayer():
+    return ('<div class="pr4"><div class="sh sans"><span class="n">7</span>오늘의 기도</div><h4 class="sans">청년부 기도제목</h4>'
+            + '<div class="pln"></div>' * 5 + '<h4 class="sans">교회 기도제목</h4>' + '<div class="pln"></div>' * 3 + '</div>')
+
+def josa(ref): return '를' if ref.strip()[-1] in '2459' else '을'
+OG = '<b>가와 나 가운데 하나를 골라</b> 바로 아래 칸에 적습니다. 시간이 남으면 다른 하나도 적어 봅니다.'
+GG = '본문 관찰에서 <b>고른 쪽과 같은 쪽을 고르면</b> 관찰이 성품으로 이어집니다. 성품을 적은 뒤 적용으로 넘어갑니다.'
+def qparts(w, nans, ncopy, split):
+    """관찰 가/나, 성품 가/나, 적용. split=True면 8쪽용(관찰 2쪽, 성품 2쪽), 아니면 4쪽용(관찰 1쪽, 성품과 적용 1쪽)."""
+    L = lambda n: '<div class="ln"></div>' * n
+    sh = lambda n, t, more: f'<div class="sh sans" style="margin-top:0"><span class="n">{n}</span>{t}{"<small>이어서</small>" if more else ""}</div>'
+    op = lambda lab, body: f'<div class="op"><div class="bx sans">{lab}</div><div>{body}</div></div><div class="ans">{L(nans)}</div>'
+    def gbody(g):
+        if g.get('copy'):
+            return f'<div class="cp sans"><b>{g["copy"]}</b>{josa(g["copy"])} 성경에서 찾아 옮겨 적어 보세요.</div><div class="cpl">{L(ncopy)}</div><div class="gq">{inl(g["q"])}</div>'
+        return f'<div class="v">{inl(g["v"])}</div>{inl(g["q"])}'
+    ob = [op(l, inl(q)) for l, q in zip('가나', w['obs'])]
+    gb = [op(l, gbody(g)) for l, g in zip('가나', w['god'])]
+    a = w.get('apply')
+    ap = (f'<div class="ap"><div class="apl sans">적용</div><div>{inl(a["lead"])}<div class="fu">→ {inl(a["fu"])}</div></div></div><div class="ans">{L(nans)}</div>') if a else ''
+    o0, g0 = sh(4, '본문 관찰', 0) + f'<div class="gd sans">{OG}</div>', sh(5, '하나님의 성품', 0) + f'<div class="gd sans">{GG}</div>'
+    if split:
+        return [o0 + ob[0], sh(4, '본문 관찰', 1) + ''.join(ob[1:])], [g0 + gb[0], sh(5, '하나님의 성품', 1) + ''.join(gb[1:]) + ap]
+    return [o0 + ''.join(ob)], [g0 + ''.join(gb) + ap]
+
 def four(w):
-    """한 회 A5 4쪽: ①②③ 한 쪽, ④ 한 쪽, ⑤ 한 쪽, ⑥⑦(⑧) 한 쪽. 말뜻은 뺍니다(11-24 목사님)."""
+    """한 회 A5 4쪽: ①②③ 한 쪽, ④ 한 쪽, ⑤와 적용 한 쪽, ⑥(성경 전체로)⑦ 한 쪽. 말뜻은 뺍니다(11-24 목사님)."""
     A, O, G, D = blocks(w)
     p1 = [x for x in A if 'class="wd' not in x and 'class="map' not in x]
     if w.get('map'):
@@ -134,18 +155,8 @@ def four(w):
         mp = f'<div class="map mf">{svg}<div class="mcap sans">{inl(w.get("mapcap",""))}</div></div>'
         i = next(k for k, x in enumerate(p1) if '오늘의 흐름' in x)
         p1.insert(i + 1, mp)
-    def qp(full, guide):
-        h = full[0].split('<div class="op">')[0]
-        ops = []
-        for part in full:
-            for x in part.split('<div class="op">')[1:]:
-                x = x.split('<div class="sh')[0]
-                ops.append('<div class="op">' + x.replace('<div class="ln"></div>' * 14, '<div class="ln"></div>' * 8))
-        return h + ''.join(ops)
-    og, gb = qp(O, ''), qp(G, '')
-    n = re.search(r'<span class="n">(\d)</span>오늘의 기도', D[-1]).group(1)
-    pr4 = f'<div class="pr4"><div class="sh sans"><span class="n">{n}</span>오늘의 기도</div><h4 class="sans">청년부 기도제목</h4>' + '<div class="pln"></div>' * 5 + '<h4 class="sans">교회 기도제목</h4>' + '<div class="pln"></div>' * 3 + '</div>'
-    return [''.join(p1), og, gb, ''.join(D[:-1]) + pr4]
+    O4, G4 = qparts(w, 8, 2, split=False)
+    return [''.join(p1), O4[0], G4[0], ''.join(D)]
 
 JS = r'''
 (start)=>{
@@ -156,7 +167,7 @@ JS = r'''
     for(const h of html){ const t=document.createElement('template'); t.innerHTML=h; const el=t.content.firstElementChild; box.appendChild(el);
       if(box.scrollHeight>box.clientHeight+1 && box.children.length>1){ box.removeChild(el); const carry=[]; while(box.children.length>1 && /\b(sh|scn)\b/.test(box.lastElementChild.className)) carry.unshift(box.removeChild(box.lastElementChild));
         box=mk(w,run); carry.forEach(c=>box.appendChild(c)); box.appendChild(el); const f0=box.firstElementChild; if(f0.classList.contains('sh')||f0.classList.contains('note')) f0.style.marginTop='0'; } }
-    if(even && (out.children.length-n0+1)%2){ const pr=box.querySelector(':scope > .pr'); if(pr && box.children.length>1){ box.removeChild(pr); const b=mk(w,run); b.appendChild(pr); pr.firstElementChild.style.marginTop='0'; } else { const b=mk(w,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } } };
+    if(even && (out.children.length-n0+1)%2){ const pr=box.querySelector(':scope > .pr4'); if(pr && box.children.length>1){ box.removeChild(pr); const b=mk(w,run); b.appendChild(pr); pr.firstElementChild.style.marginTop='0'; } else { const b=mk(w,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } } };
   const fixed=(w,pages,run)=>{ for(const h of pages){ const b=mk(w,run); b.innerHTML=h; } };
   for(const w of src){ const J=JSON.parse(w.dataset.j); const run=J.run;
     flow(w,J.A,run,true); fixed(w,J.O,run); fixed(w,J.G,run); flow(w,J.D,run,true); }
