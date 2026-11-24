@@ -22,7 +22,7 @@ S = dict(
  pray='오늘 마음에 남은 말씀과 내 응답을 하나님께 말씀드립니다.',
 )
 CSS3 = '''
-.kp{border:.4mm solid var(--c);border-radius:1.4mm;padding:2mm 3mm 1mm;margin-top:2.4mm;background:#fff}
+.kp{margin-top:2.4mm}
 .kp .kh{font-size:8.6pt;font-weight:700;color:var(--c);display:flex;justify-content:space-between}
 .kp .kh small{font-weight:400;color:#777}
 .kp .kq{margin:.6mm 0 .4mm}
@@ -31,16 +31,20 @@ CSS3 = '''
 .ref{display:inline-block;font-size:8pt;font-weight:700;color:var(--c);border:.3mm solid var(--c);border-radius:.8mm;padding:0 1.4mm;margin-right:1.6mm}
 .oq{margin:1mm 0 .6mm;text-align:justify}.oh{font-size:8.4pt;color:#666;margin-bottom:.4mm}
 .gf{font-size:9pt;color:#444;margin:.8mm 0 .4mm;text-align:justify}
-.gs{background:var(--l);border-left:1mm solid var(--c);padding:1.4mm 2.6mm;margin:.8mm 0 1mm;font-weight:700}
+.gs{background:var(--l);border-left:1mm solid var(--c);padding:1.4mm 2.6mm;margin:.8mm 0 1mm}
 .sub{display:flex;align-items:center;gap:1.6mm;margin:2.6mm 0 .6mm;font-size:9.4pt;font-weight:700;color:var(--c);border-top:.3mm solid #ccc;padding-top:1.8mm}
 .sub i{font-style:normal;font-size:7.6pt;color:#fff;background:var(--c);border-radius:.8mm;padding:.2mm 1.4mm}
 .lab4{display:flex;align-items:center;gap:1.8mm;font-size:10pt;font-weight:700;margin:3.4mm 0 .8mm;color:#222}
 .lab4 b{display:inline-flex;width:4.6mm;height:4.6mm;border:.35mm solid var(--c);color:var(--c);border-radius:.8mm;align-items:center;justify-content:center;font-size:8pt}
 .lab4 small{font-weight:400;font-size:7.8pt;color:#777;margin-left:auto}
-.p4 .ans{flex:none}
+.p4 .ans{flex:none;border-bottom:0}
+.p4 .ln{border-bottom:.22mm dotted #888;height:7.2mm}
+.ln.lbl{position:relative}.ln.lbl span{position:absolute;left:0;bottom:.6mm;font-size:7pt;color:#999}
+.kp .ln.lbl{padding-left:0}
 .p4 .pr4{margin-top:8mm}
 .p4 .lab4{margin-top:4.4mm}
 '''
+def lab0(t, sm=''): return f'<div class="lab4 sans">{t}{"<small>"+sm+"</small>" if sm else ""}</div>'
 def pages():
     A, O, G, D = a5.blocks(W)
     i3 = next(k for k, x in enumerate(A) if '눈여겨볼 것' in x)
@@ -48,18 +52,18 @@ def pages():
     svg = open(os.path.join(H, W['map'])).read()
     i = next(k for k, x in enumerate(p1) if '오늘의 흐름' in x)
     p1.insert(i + 1, f'<div class="map mf">{svg}<div class="mcap sans">{inl(W["mapcap"])}</div></div>')
-    p1.append(f'<div class="kp"><div class="kh sans">읽고 나서 바로 · 마음에 남은 말씀<small>③을 읽기 전에 씁니다</small></div><div class="kq">{S["keep"]}</div>'
-              f'<div class="kl sans">장절과 말씀</div>{L(2)}<div class="kl sans">마음에 남은 이유</div>{L(2)}</div>')
+    lnl = lambda t, n: ''.join(f'<div class="ln lbl"><span class="sans">{t if k == 0 else ""}</span></div>' for k in range(n))
+    p1.append(f'<div class="kp">{lab0("마음에 남은 말씀", "읽고 나서 바로 적습니다")}{lnl("말씀 · 장절", 2)}{lnl("이유", 2)}</div>')
     lab = lambda n, t, sm='': f'<div class="lab4 sans"><b>{n}</b>{t}{"<small>"+sm+"</small>" if sm else ""}</div>'
     p2 = ''.join(A[i3:]) + (f'<div class="sh sans"><span class="n">4</span>나의 묵상</div>' + lab(1, '본문 관찰', '오늘 본문을 더 살펴보는 한 길') +
           f'<div class="oq"><span class="ref sans">{S["obs_ref"]}</span>{inl(S["obs"])}</div><div class="oh sans">{S["obs_hint"]}</div><div class="ans">{L(4)}</div>')
-    p3 = (f'<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>' + lab(2, '하나님의 성품', '본문이 보여 주는 하나님 앞에서 지금의 나') +
-          f'<div class="gf"><span class="ref sans">{S["god_ref"]}</span>{inl(S["god_fact"])}</div><div class="gs">{inl(S["god"])}</div><div class="oq">{inl(S["god_q"])}</div><div class="ans">{L(4)}</div>'
+    p3 = (f'<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>' + lab(2, '하나님의 성품') +
+          f'<div class="gf"><span class="ref sans">{S["god_ref"]}</span>{inl(S["god_fact"])}</div><div class="gs">{inl(S["god"])}</div><div class="oq"><b>{inl(S["god_q"])}</b></div><div class="ans">{L(4)}</div>'
           + lab(3, '적용') + f'<div class="oq">{inl(S["ap_lead"])}</div><div class="oq">→ {inl(S["ap_fu"])}</div><div class="ans">{L(3)}</div>'
           + lab(4, '나의 기도') + f'<div class="oh sans">{S["pray"]}</div><div class="ans">{L(3)}</div>')
     pr = ('<div class="pr4"><div class="sh sans"><span class="n">6</span>함께 드리는 기도</div><h4 class="sans">청년부 기도제목</h4>' + '<div class="pln"></div>' * 5
           + '<h4 class="sans">교회 기도제목</h4>' + '<div class="pln"></div>' * 3 + '</div>')
-    D = [D[0].replace('<span class="n">6</span>해설', '<span class="n">5</span>쓴 뒤에 읽기 · 해설')] + D[1:]
+    D = [re.sub(r'<small>.*?</small>', '', D[0].replace('<span class="n">6</span>해설', '<span class="n">5</span>쓴 뒤에 읽기 · 해설'))] + D[1:]
     p4 = ''.join(D[:-1]) + pr
     return [''.join(p1), p2, p3, p4]
 async def main(out):
