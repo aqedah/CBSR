@@ -10,7 +10,7 @@ var SEC={ot:{n:"구약",c:"서른아홉 권",g:["모세오경","역사서","시�
 var PRESS={"모세오경":"tor","역사서":"his","시가서":"poe","선지서":"pro","복음서":"gos","바울서신":"pau","일반서신":"gen"};
 var CNT=["","한 권","두 권","세 권","네 권","다섯 권","여섯 권","일곱 권","여덟 권","아홉 권","열 권","열한 권","열두 권","열세 권","열네 권","열다섯 권","열여섯 권","열일곱 권"];
 /* 셋째 부분(외경 · 위경 · 교부 문헌): 어둡고, 이름패는 불에 그을려 잘 읽히지 않음. 누르면 경고장부터(11-24 목사님의 글). 책은 아직 없음 */
-var WARN={t:"경고",a:"이 서고의 책은 성경이 아닙니다.",q:"정말로 열람하시겠습니까?",e:"아직 들여놓은 책이 없습니다."};
+var WARN={t:"경고",a:"이 서고의 책은 성경이 아닙니다.",q:"정말로 열람하시겠습니까?",e:"아직 들여놓은 책이 없는 것 같다."};   /* e: 주인공(1인칭)의 혼잣말 */
 var root=null,stage=null,O={},DATA=null,LOAD=null,levels=[],busy=false;
 var CL='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>', CR='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
@@ -44,6 +44,8 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .ttl{position:absolute;left:0;right:0;top:10px;display:flex;justify-content:center;pointer-events:none;z-index:4}
 #cbsrShelf .ttl b{padding:5px 20px;font:700 19px/1.3 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.12em}
 #cbsrShelf .cnt{position:absolute;right:14px;top:17px;font-size:15px;font-weight:700;z-index:4;color:#33231a;background:#f1e6c8;border:1px solid #33231a;padding:1px 8px}
+#cbsrShelf .zn{position:absolute;inset:0;transition:opacity .45s}
+#cbsrShelf .zn.off{opacity:0;pointer-events:none;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
 #cbsrShelf .zone{position:absolute;padding:0;border:0;background:transparent}
 #cbsrShelf .zone span{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;padding:8px 16px 7px}
 #cbsrShelf .zone b{font:700 23px/1.25 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.14em;margin-right:-.14em}
@@ -55,7 +57,9 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .gl{position:absolute;left:44px;right:44px;top:120px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(10px);transition:opacity .5s 1.1s,transform .5s 1.1s}
 #cbsrShelf .gl.now{transition:none}
 #cbsrShelf .dimv.now{transition:opacity .3s}
-#cbsrShelf .wn.late{animation-delay:1.05s}
+#cbsrShelf .wn.late,#cbsrShelf .mono.late{animation-delay:1.05s}
+#cbsrShelf .mono{position:absolute;left:14px;right:14px;bottom:18px;min-height:76px;padding:16px 40px 16px 20px;text-align:left;background:rgba(14,10,7,.86);border:1px solid rgba(230,207,154,.42);box-shadow:0 4px 18px rgba(0,0,0,.6);color:#f1e6c8;font:400 18.5px/1.65 "Gowun Batang","Noto Serif KR",serif;z-index:4}
+#cbsrShelf .mono i{position:absolute;right:16px;bottom:14px;width:0;height:0;border:6px solid transparent;border-top:8px solid #e2b24a;border-bottom:0;animation:cbsrNx 1.2s ease-in-out infinite}
 #cbsrShelf .gl.on{opacity:1;transform:none}
 #cbsrShelf .gl button{display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;min-height:64px;padding:14px 20px;text-align:left}
 #cbsrShelf .gl b{font:700 22px/1.3 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.06em}
@@ -156,10 +160,11 @@ html.shelf-on .coach{display:none!important}
 @keyframes cbsrKb{from{transform:scale(1)}to{transform:scale(1.08) translate(-1.2%,-1%)}}
 @keyframes cbsrGlw{0%,100%{opacity:.55;transform:scale(1)}23%{opacity:.95;transform:scale(1.05)}41%{opacity:.7;transform:scale(.98)}64%{opacity:1;transform:scale(1.04)}82%{opacity:.62;transform:scale(1)}}
 @keyframes cbsrFlm{0%,100%{transform:rotate(-4deg) scale(1,1)}14%{transform:rotate(5deg) scale(.9,1.1)}29%{transform:rotate(-7deg) scale(1.05,.93)}43%{transform:rotate(3deg) scale(.86,1.16)}57%{transform:rotate(8deg) scale(1,.96)}71%{transform:rotate(-3deg) scale(.92,1.12)}86%{transform:rotate(6deg) scale(1.04,.98)}}
+@keyframes cbsrNx{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 @keyframes cbsrBye{to{opacity:0;transform:translateY(8px)}}
 @keyframes cbsrStamp{0%{opacity:0;transform:scale(2.4) rotate(8deg)}60%{opacity:1;transform:scale(.92) rotate(-10deg)}100%{opacity:1;transform:scale(1) rotate(-8deg)}}
 @keyframes cbsrRay{0%,100%{opacity:.4}50%{opacity:.9}}
-@media (prefers-reduced-motion:reduce){#cbsrShelf .amb,#cbsrShelf .bv .bg,#cbsrShelf .fade{animation:none!important}#cbsrShelf .hl,#cbsrShelf .gl,#cbsrShelf .dimv,#cbsrShelf .wk{transition:none!important;animation:none!important}#cbsrShelf .zin,#cbsrShelf .wn.late{animation:none!important}}
+@media (prefers-reduced-motion:reduce){#cbsrShelf .amb,#cbsrShelf .bv .bg,#cbsrShelf .fade{animation:none!important}#cbsrShelf .hl,#cbsrShelf .gl,#cbsrShelf .dimv,#cbsrShelf .wk{transition:none!important;animation:none!important}#cbsrShelf .zin,#cbsrShelf .wn.late,#cbsrShelf .mono.late,#cbsrShelf .mono i{animation:none!important}}
 `;
 var HS=H;
 /* 무대는 너비 390에 맞추고, 높이는 화면 비율대로(HS). 가로가 넓은 화면은 높이 600을 채우고 양옆은 흐린 서고 */
@@ -196,18 +201,20 @@ function lamps(){ var h="",i=0; ART.hall.lanterns.forEach(function(l){ var x=l[0
   return h; }
 function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
   stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl"><img src="'+IMG+'hall.webp'+VER+'" alt="옛 판화처럼 그린 긴 서고. 촛불이 밝힌 돌바닥 양옆으로 서가가 늘어서 있고, 덧문을 닫은 창 아래 맨 끝은 어둡다">'+
-    lamps()+'</div></div><div class="zn"></div></div><div class="dimv"></div><div class="ui"></div></div>';
+    lamps()+'<div class="zn">'+
+      '<button type="button" class="zone" data-s="ot" style="left:0;top:230px;width:168px;height:480px" aria-label="구약 서른아홉 권"><span class="tb" style="top:150px"><b>구약</b><small>서른아홉 권</small></span></button>'+
+      '<button type="button" class="zone" data-s="nt" style="left:222px;top:230px;width:168px;height:480px" aria-label="신약 스물일곱 권"><span class="tb" style="top:150px"><b>신약</b><small>스물일곱 권</small></span></button>'+
+      '<button type="button" class="zone e" data-s="etc" style="left:140px;top:128px;width:110px;height:196px" aria-label="외경, 위경, 교부 문헌"><span class="tb" style="top:6px"><b>외경 · 위경<br>교부 문헌</b></span></button>'+
+    '</div></div></div></div><div class="dimv"></div><div class="ui"></div></div>';
   el=stage.querySelector(".hallv"); el._fresh=true; return el; }
-function drawHall(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec"&&!(t.s==="etc"&&t.step!=="in"))?" "+t.s:"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.innerHTML="";
+function drawHall(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec"&&!(t.s==="etc"&&t.step!=="in"))?" "+t.s:"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+(t.t==="hall"?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
   if(!fresh&&moved){ wk.classList.remove("go"); void wk.offsetWidth; wk.classList.add("go"); } /* 걸어서 그 앞으로(돌아올 때도) */
   hl.className="hl"+cls; dim.className="dimv"+(t.t==="sec"?" on":"");
   if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+libr(hallLine());
-    zn.innerHTML='<button type="button" class="zone" data-s="ot" style="left:0;top:230px;width:168px;height:480px" aria-label="구약 서른아홉 권"><span class="tb" style="top:150px"><b>구약</b><small>서른아홉 권</small></span></button>'+
-      '<button type="button" class="zone" data-s="nt" style="left:222px;top:230px;width:168px;height:480px" aria-label="신약 스물일곱 권"><span class="tb" style="top:150px"><b>신약</b><small>스물일곱 권</small></span></button>'+
-      '<button type="button" class="zone e" data-s="etc" style="left:140px;top:128px;width:110px;height:196px" aria-label="외경, 위경, 교부 문헌"><span class="tb" style="top:6px"><b>외경 · 위경<br>교부 문헌</b></span></button>'; return; }
+    return; }
   if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
     if(t.step!=="in") ui.innerHTML=bkb+'<div class="wn tb fade" role="alertdialog" aria-label="경고"><h2>'+WARN.t+'</h2><p class="w1">'+WARN.a+'</p><p class="w2">'+WARN.q+'</p><div class="wb"><button type="button" data-a="back">돌아가기</button><button type="button" class="in" data-a="enter">열람하기</button></div></div>';
-    else ui.innerHTML=bkb+'<div class="wn tb fade'+(fresh?"":" late")+'" role="alertdialog" aria-label="'+WARN.e+'"><p class="w1" style="margin-top:4px">'+WARN.e+'</p><div class="wb"><button type="button" data-a="back">서고로</button></div></div>';
+    else ui.innerHTML=bkb+'<button type="button" class="mono fade'+(fresh?"":" late")+'" data-a="back" aria-label="'+WARN.e+' 눌러서 돌아가기">'+WARN.e+'<i></i></button>';
     if(t.step!=="in") dim.className="dimv on now";
     return; }
   var S=SEC[t.s], h='<button type="button" class="bk" data-a="back">'+CL+'서고</button><div class="ttl"><b class="tb">'+S.n+'</b></div><span class="cnt">'+S.c+'</span><div class="gl">';
