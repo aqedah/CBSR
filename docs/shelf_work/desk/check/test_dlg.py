@@ -20,6 +20,8 @@ try:
             chk('혼잣말 동안 팻말 숨김', pg.evaluate('document.querySelector("#cbsrShelf .zn").classList.contains("off")'))
             pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
             chk('사서 첫마디', '어서 오십시오' in (txt('#cbsrShelf .dg .dgb') or '') and '님' not in (txt('#cbsrShelf .dg .dgb') or ''))
+            r = pg.evaluate('(()=>{const pts=[[.5,.3],[.5,.5],[.2,.4],[.8,.6],[.12,.9]].map(p=>document.elementFromPoint(innerWidth*p[0],innerHeight*p[1])),ev=new MouseEvent("contextmenu",{bubbles:true,cancelable:true});(pts[0]||document.body).dispatchEvent(ev);return [pts.filter(e=>e&&e.tagName==="IMG").length,ev.defaultPrevented,[...document.querySelectorAll("#cbsrShelf img")].filter(i=>getComputedStyle(i).pointerEvents!=="none").length]})()')
+            chk('길게 눌러도 이미지 메뉴가 뜨지 않음(그림이 누르는 대상이 아님) %s' % r, r[0] == 0 and r[1] is True and r[2] == 0)
             r = pg.evaluate('(()=>{const b=document.querySelector("#cbsrShelf .dg .sf").getBoundingClientRect(),c=document.querySelector("#cbsrShelf .dg .dgc").getBoundingClientRect(),m=document.querySelector("#cbsrShelf .dgb .dgf").getBoundingClientRect();return [b.top+b.height*.53,c.top,Math.abs((b.left+b.right)/2-innerWidth/2),m.width,m.height]})()')
             chk('인사: 마주 선 사서의 얼굴이 선택지 위에 보이고 가운데 %s' % [round(x) for x in r], r[0] <= r[1] and r[2] < 2 and abs(r[3]-r[4]) < 1)
             chk('선택지 넷', pg.locator('#cbsrShelf .dg .dgc button').count() == 4); shot('2_hello')

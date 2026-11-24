@@ -15,7 +15,10 @@ var root=null,stage=null,O={},DATA=null,LOAD=null,levels=[],busy=false;
 var CL='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>', CR='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
 var CSS=`
-#cbsrShelf{position:fixed;inset:0;z-index:99000;overscroll-behavior:contain;background:#17100b;overflow:hidden;overflow:clip;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:#33231a}
+#cbsrShelf{position:fixed;inset:0;z-index:99000;overscroll-behavior:contain;background:#17100b;overflow:hidden;overflow:clip;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:#33231a}
+#cbsrShelf img{-webkit-touch-callout:none;-webkit-user-drag:none;pointer-events:none}   /* 11-25 목사님: 그림을 길게 누르면 브라우저의 '이미지 다운로드' 메뉴가 뜸 → 그림은 누르는 대상이 되지 않게 하고, 길게 눌러도 메뉴와 글자 선택이 뜨지 않게 함 */
+#cbsrShelf textarea,#cbsrShelf input,#cbsrShelf .bv{-webkit-user-select:text;user-select:text}   /* 적는 칸과 책 본문은 골라서 복사할 수 있게 둠 */
+#cbsrShelf .bv button{-webkit-user-select:none;user-select:none}
 #cbsrShelf:before{content:"";position:absolute;inset:-40px;background:url(img/shelf/hall.webp${VER}) center/cover;filter:blur(16px) brightness(.4)}
 #cbsrShelf *{box-sizing:border-box}
 html.shelf-on .coach{display:none!important}
@@ -472,6 +475,9 @@ function drawBook(t){ var b=DATA.by[t.id], P=pages(b); t.n=P.length; t.p=Math.ma
 function turn(d){ var t=top(); if(!t||t.t!=="book") return; flush(); if(t.q!=null){ t.q=null; drawBook(t); return; } var p=t.p+d; if(p<0||p>=t.n) return; t.p=p; t.from=null; drawBook(t); }
 /* ---- 눌림 ---- */
 function approach(cb){ var v=stage.querySelector(".hallv"), rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(!v||rm){ cb(); return; } busy=true; v.classList.add("lv"); setTimeout(function(){ busy=false; if(root) cb(); },440); }
+function onCtx(e){ var g=e.target, n=(g&&g.tagName)||"";                                         /* 길게 누르기·오른쪽 단추 메뉴와 그림 끌기를 막음. 적는 칸과 책 본문의 글은 그대로 */
+  if(e.type==="contextmenu"&&(n==="TEXTAREA"||n==="INPUT"||(g.closest&&g.closest(".bv")&&n!=="IMG"&&!g.closest("button")))) return;
+  if(e.type==="dragstart"&&n!=="IMG") return; e.preventDefault(); }
 function act(a){ var t=top(); if(!t) return false;
   if(a==="fw"||a==="bw"){ if(t.t==="hall"&&!t.dg) hallStep(a==="fw"?1:-1); return true; }          /* 걸음 단추·키보드·통로 가운데를 누름 */
   if(a==="tl"||a==="tr"){ if(t.t==="hall"&&!t.dg&&!busy) secGo(a==="tl"?"ot":"nt"); return true; }                                              /* 대화의 선택지와 말상자 */
@@ -534,7 +540,7 @@ var api={ isOpen:function(){ return !!root; },
   open:function(o){ if(root) return true; O=o||{}; levels=[]; busy=false; try{ var ae=document.activeElement; O.opener=(ae&&ae!==document.body)?ae:(O.from||null); }catch(er){}
     if(!document.getElementById("cbsrShelfCss")){ var st=document.createElement("style"); st.id="cbsrShelfCss"; st.textContent=CSS; document.head.appendChild(st); }
     root=document.createElement("div"); root.id="cbsrShelf"; root.setAttribute("role","dialog"); root.setAttribute("aria-modal","true"); root.setAttribute("aria-label","성경 서고"); root.innerHTML='<div class="st"></div>';
-    document.body.appendChild(root); stage=root.firstChild; fit(); lastHS=HS; addEventListener("resize",onRs); root.addEventListener("click",onClick); document.addEventListener("keydown",onKey,true); document.addEventListener("visibilitychange",onHide); addEventListener("pagehide",flush); root.addEventListener("touchstart",onTs,{passive:true}); root.addEventListener("touchend",onTe,{passive:true}); root.addEventListener("touchmove",function(e){ if(e.target.closest&&e.target.closest("textarea")) return; e.preventDefault(); },{passive:false}); [root,stage].forEach(function(sc){ sc.addEventListener("scroll",function(){ if(sc.scrollTop||sc.scrollLeft){ sc.scrollTop=0; sc.scrollLeft=0; } }); }); /* 낮은 화면(태블릿)에서 아래로 걸친 단추를 누르면 서고가 위로 밀려 위쪽 단추가 잘리던 것을 막음 */ root.addEventListener("focusout",function(){ setTimeout(function(){ if(root&&!typing()) onRs(); },350); });
+    document.body.appendChild(root); stage=root.firstChild; fit(); lastHS=HS; addEventListener("resize",onRs); root.addEventListener("click",onClick); root.addEventListener("contextmenu",onCtx); root.addEventListener("dragstart",onCtx); document.addEventListener("keydown",onKey,true); document.addEventListener("visibilitychange",onHide); addEventListener("pagehide",flush); root.addEventListener("touchstart",onTs,{passive:true}); root.addEventListener("touchend",onTe,{passive:true}); root.addEventListener("touchmove",function(e){ if(e.target.closest&&e.target.closest("textarea")) return; e.preventDefault(); },{passive:false}); [root,stage].forEach(function(sc){ sc.addEventListener("scroll",function(){ if(sc.scrollTop||sc.scrollLeft){ sc.scrollTop=0; sc.scrollLeft=0; } }); }); /* 낮은 화면(태블릿)에서 아래로 걸친 단추를 누르면 서고가 위로 밀려 위쪽 단추가 잘리던 것을 막음 */ root.addEventListener("focusout",function(){ setTimeout(function(){ if(root&&!typing()) onRs(); },350); });
     document.documentElement.classList.add("shelf-on"); levels.push({t:"hall"}); if(O.scene==="card"&&O.card){ levels[0].dg=helloDg("back"); draw(); push({t:"card",mix:!!O.mix}); } else if(O.back){ hello("back"); } else if(O.book) draw(); else greet(); load().then(function(){ if(O.book&&DATA.by[O.book]) push({t:"book",id:O.book,p:0,s:(SEC.ot.g.indexOf(DATA.by[O.book].group)>=0?"ot":"nt")}); }).catch(function(){});
     root.tabIndex=-1; try{ root.focus({preventScroll:true}); }catch(e){}
     return true; },
