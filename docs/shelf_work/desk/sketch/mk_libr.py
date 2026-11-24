@@ -27,17 +27,13 @@ def brow(cx, side):
 def eye(cx, side, shut=0.0):
     s = side
     o = []
-    o.append('<ellipse cx="%.1f" cy="149" rx="12" ry="6" fill="#1b100a" opacity="%.2f" filter="url(#b3)"/>' % (cx, 0.5 if s > 0 else 0.26))
-    top = 144.2 + shut * 1.6
-    o.append('<path d="M%.1f 151.5Q%.1f %.1f %.1f 151.5Q%.1f %.1f %.1f 151.5Z" fill="#150c07"/>' % (cx - 9.5, cx, top, cx + 9.5, cx, top + 4.4 - shut, cx - 9.5))
-    o.append('<path d="M%.1f 151.5Q%.1f %.1f %.1f 151.5" stroke="#150c07" stroke-width="1.3" fill="none" stroke-linecap="round"/>' % (cx - 10, cx, top - 0.4, cx + 10))
-    if shut < 0.2:
-        o.append('<circle cx="%.1f" cy="%.1f" r=".9" fill="#ffe7b0"/>' % (cx - 2.2, top + 3.0))
-    o.append('<path d="M%.1f 147Q%.1f %.1f %.1f 147.5" stroke="#3b2717" stroke-width=".7" fill="none"/>' % (cx - 11, cx, top - 5, cx + 11.5))
-    o.append('<path d="M%.1f 156.5Q%.1f 160 %.1f 156" stroke="#3b2717" stroke-width=".7" fill="none"/>' % (cx - 8, cx, cx + 8))
-    ox = cx + s * 10.5
-    for dy, ex in ((-4, -3.0), (0, 0.6), (4, 4.2)):
-        o.append('<path d="M%.1f %.1fq%.1f %.1f %.1f %.1f" stroke="#3b2717" stroke-width=".6" fill="none"/>' % (ox, 151.5 + dy * 0.25, s * 3, dy * 0.45, s * 7, ex))
+    o.append('<ellipse cx="%.1f" cy="150.5" rx="11" ry="5" fill="#8a5a34" opacity=".14" filter="url(#b3)"/>' % cx)
+    o.append('<path d="M%.1f 153Q%.1f 144.2 %.1f 153" stroke="#2a180e" stroke-width="2" fill="none" stroke-linecap="round"/>' % (cx - 8.6, cx, cx + 8.6))
+    o.append('<path d="M%.1f 147.5Q%.1f 141.5 %.1f 148" stroke="#9a7246" stroke-width=".6" fill="none"/>' % (cx - 10, cx, cx + 10.5))
+    o.append('<path d="M%.1f 157Q%.1f 160 %.1f 157" stroke="#9a7246" stroke-width=".7" fill="none"/>' % (cx - 7, cx, cx + 7))
+    ox = cx + s * 10
+    for dy, ex in ((-3.4, -3.2), (0.4, 0.2), (4.0, 3.6)):
+        o.append('<path d="M%.1f %.1fq%.1f %.1f %.1f %.1f" stroke="#7a5532" stroke-width=".65" fill="none" stroke-linecap="round"/>' % (ox, 152.5 + dy * 0.3, s * 3, dy * 0.4, s * 6.5, ex))
     return ''.join(o)
 SVG = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
 <defs>
@@ -45,8 +41,8 @@ SVG = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
 <filter id="b3" x="-40%%" y="-40%%" width="180%%" height="180%%"><feGaussianBlur stdDeviation="3.2"/></filter>
 <filter id="b6" x="-50%%" y="-50%%" width="200%%" height="200%%"><feGaussianBlur stdDeviation="7"/></filter>
 <radialGradient id="glow" gradientUnits="userSpaceOnUse" cx="66" cy="286" r="230"><stop offset="0" stop-color="#ffd58a" stop-opacity=".95"/><stop offset=".25" stop-color="#ffbe68" stop-opacity=".5"/><stop offset=".6" stop-color="#ff9f45" stop-opacity=".14"/><stop offset="1" stop-color="#ff9f45" stop-opacity="0"/></radialGradient>
-<linearGradient id="hoodsh" gradientUnits="userSpaceOnUse" x1="150" y1="92" x2="150" y2="166"><stop offset="0" stop-color="#0d0705" stop-opacity=".96"/><stop offset=".5" stop-color="#0d0705" stop-opacity=".6"/><stop offset="1" stop-color="#0d0705" stop-opacity="0"/></linearGradient>
-<linearGradient id="sidesh" gradientUnits="userSpaceOnUse" x1="138" y1="150" x2="192" y2="140"><stop offset="0" stop-color="#0d0705" stop-opacity="0"/><stop offset=".55" stop-color="#0d0705" stop-opacity=".5"/><stop offset="1" stop-color="#0d0705" stop-opacity=".9"/></linearGradient>
+<linearGradient id="hoodsh" gradientUnits="userSpaceOnUse" x1="150" y1="92" x2="150" y2="166"><stop offset="0" stop-color="#3a2415" stop-opacity=".5"/><stop offset=".45" stop-color="#3a2415" stop-opacity=".16"/><stop offset="1" stop-color="#0d0705" stop-opacity="0"/></linearGradient>
+<linearGradient id="sidesh" gradientUnits="userSpaceOnUse" x1="138" y1="150" x2="192" y2="140"><stop offset="0" stop-color="#0d0705" stop-opacity="0"/><stop offset=".55" stop-color="#3a2415" stop-opacity=".1"/><stop offset="1" stop-color="#3a2415" stop-opacity=".3"/></linearGradient>
 <linearGradient id="beardsh" gradientUnits="userSpaceOnUse" x1="120" y1="230" x2="196" y2="214"><stop offset="0" stop-color="#2a1b10" stop-opacity="0"/><stop offset=".6" stop-color="#2a1b10" stop-opacity=".34"/><stop offset="1" stop-color="#2a1b10" stop-opacity=".72"/></linearGradient>
 <clipPath id="cface"><path d="M114 124C110 150 114 180 126 196C136 206 164 206 174 196C186 180 190 150 186 124C182 98 118 98 114 124Z"/></clipPath>
 <clipPath id="cbeard"><path id="pbeard" d="M111 150C104 176 102 206 110 236C118 270 136 304 150 334C164 304 182 270 190 236C198 206 196 176 189 150C186 172 178 186 166 190C160 186 155 185 150 185C145 185 140 186 134 190C122 186 114 172 111 150Z"/></clipPath>
@@ -62,37 +58,32 @@ SVG = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
 <g clip-path="url(#ccloak)"><path d="M62 264C40 290 26 330 22 380L70 380C70 330 78 290 96 250Z" fill="#6b4a2c" opacity=".55" filter="url(#b6)"/></g>
 <!-- 두건 -->
 <path d="M52 264C38 170 70 40 150 20C230 40 262 170 248 264L214 238L86 238Z" fill="#33251a" stroke="#120b07" stroke-width="1.6" stroke-linejoin="round"/>
-<path d="M86 238C74 170 90 78 150 62C210 78 226 170 214 238Z" fill="#0b0604"/>
+<path d="M86 238C74 170 90 78 150 62C210 78 226 170 214 238Z" fill="#3d2b1d"/><path d="M96 232C86 172 100 92 150 78C200 92 214 172 204 232Z" fill="#5a4129" opacity=".7" filter="url(#b6)"/>
 <g clip-path="url(#chood)" fill="none" stroke="#120b07" stroke-width="1" opacity=".7">
 <path d="M66 250C54 170 80 62 150 40M234 250C246 170 220 62 150 40M76 244C66 170 86 70 150 52M224 244C234 170 214 70 150 52"/>
 </g>
 <g clip-path="url(#chood)"><path d="M52 264C38 170 70 40 150 20L150 62C90 78 74 170 86 238Z" fill="#8a633c" opacity=".5" filter="url(#b6)"/>
 <path d="M150 20C230 40 262 170 248 264L214 238C226 170 210 78 150 62Z" fill="#080403" opacity=".55" filter="url(#b6)"/></g>
 <!-- 얼굴 -->
-<path d="M114 124C110 150 114 180 126 196C136 206 164 206 174 196C186 180 190 150 186 124C182 98 118 98 114 124Z" fill="#cfa97a"/>
+<path d="M114 124C110 150 114 180 126 196C136 206 164 206 174 196C186 180 190 150 186 124C182 98 118 98 114 124Z" fill="#e6c89c"/>
 <g clip-path="url(#cface)">
-<ellipse cx="122" cy="172" rx="16" ry="20" fill="#f1d3a0" opacity=".85" filter="url(#b6)"/>
-<ellipse cx="146" cy="170" rx="8" ry="14" fill="#f1d3a0" opacity=".5" filter="url(#b3)"/>
+<ellipse cx="124" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".34" filter="url(#b3)"/><ellipse cx="176" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".3" filter="url(#b3)"/>
+
 <rect x="100" y="90" width="100" height="80" fill="url(#hoodsh)"/>
 <rect x="130" y="90" width="70" height="130" fill="url(#sidesh)"/>
-<path d="M124 118Q150 111 176 118M127 125Q150 119 173 125M132 131Q150 127 168 131" stroke="#2a1a10" stroke-width=".7" fill="none" opacity=".8"/>
+<path d="M128 119Q150 114 172 119M132 126Q150 122 168 126" stroke="#8a6238" stroke-width=".6" fill="none" opacity=".7"/>
 </g>
 <path d="M114 124C110 150 114 180 126 196" fill="none" stroke="#1a110b" stroke-width="1"/>
 %(eyeL)s%(eyeR)s
-%(browL)s%(browR)s
-<!-- 흉터 -->
-<path d="M177 110C175 122 173 131 171 139M168.500 157C167 166 166 173 166 181" fill="none" stroke="#e0bd90" stroke-width="1.5" stroke-linecap="round" opacity=".75"/>
-<path d="M177 110C175 122 173 131 171 139M168.500 157C167 166 166 173 166 181" fill="none" stroke="#3a1d12" stroke-width=".5" stroke-linecap="round" transform="translate(1.2 0)"/>
+<g transform="translate(0 -3)">%(browL)s%(browR)s</g>
 <!-- 코 -->
-<path d="M147 142C146 156 143 168 141 176C140 181 144 185 150 185.500C156 185 160 181 159 176C157 168 154 156 153 142Z" fill="#c9a274"/>
-<path d="M153 142C155 156 158 168 159.500 176C160 181 156 185 150 185.500" fill="none" stroke="#1f140d" stroke-width="1" stroke-linecap="round"/>
-<path d="M141 176C140 181 144 185 150 185.500" fill="none" stroke="#1f140d" stroke-width=".8" stroke-linecap="round"/>
-<path d="M141 176q-4.500 -1 -5.500 3.500q1 4 6 3M159.500 176q4.500 -1 5.500 3.500q-1 4 -6 3" fill="none" stroke="#1f140d" stroke-width=".8" stroke-linecap="round"/>
-<path d="M155 150C157 162 160 172 160 178" stroke="#1b100a" stroke-width="4" opacity=".28" fill="none" filter="url(#b2)"/>
-<path d="M147.500 150l-2 22" stroke="#f6dfb4" stroke-width="1.3" opacity=".7" stroke-linecap="round"/>
+<path d="M147.500 147C147 158 144.500 167 143 172.500C142 178.500 145.500 183 150 183C154.500 183 158 178.500 157 172.500C155.500 167 153 158 152.500 147Z" fill="#dcbb8e"/>
+<path d="M143 172.500C142 178.500 145.500 183 150 183C154.500 183 158 178.500 157 172.500" fill="none" stroke="#3a2416" stroke-width=".95" stroke-linecap="round"/>
+<path d="M143 173.500q-3.800 0 -4.200 3.600q1 3 4.600 2.400M157 173.500q3.800 0 4.200 3.600q-1 3 -4.600 2.400" fill="none" stroke="#3a2416" stroke-width=".8" stroke-linecap="round"/>
+<ellipse cx="148.500" cy="175.500" rx="2.600" ry="2.100" fill="#fff2d6" opacity=".75"/>
 <!-- 볼 주름 -->
-<path d="M134 181Q127 190 126 200M166 181Q173 190 174 200" stroke="#2a1a10" stroke-width=".8" fill="none"/>
-<path d="M118 160q4 6 3 14M182 160q-4 6 -3 14" stroke="#2a1a10" stroke-width=".6" fill="none" opacity=".7"/>
+<path d="M135 180Q128 187 127 196M165 180Q172 187 173 196" stroke="#7a5532" stroke-width=".8" fill="none"/>
+
 <!-- 수염 -->
 <path d="M111 150C104 176 102 206 110 236C118 270 136 304 150 334C164 304 182 270 190 236C198 206 196 176 189 150C186 172 178 186 166 190C160 186 155 185 150 185C145 185 140 186 134 190C122 186 114 172 111 150Z" fill="#ebe2cd" stroke="#120b07" stroke-width="1.2" stroke-linejoin="round"/>
 <g clip-path="url(#cbeard)">
@@ -100,11 +91,10 @@ SVG = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
 <path d="M104 240C116 280 134 310 150 334L150 250Z" fill="#ffe2a8" opacity=".55" filter="url(#b6)"/>
 %(strands)s
 </g>
-<!-- 콧수염 -->
-<path d="M144.500 203.500Q150 207.500 155.500 203.500" stroke="#3a1d12" stroke-width="1.100" fill="none" stroke-linecap="round"/>
-<path d="M150 188.500C144 186 136 188 130 195C125 201 122 211 123 224C128 214 135 206 143 203C146 202 148 202 150 202C152 202 154 202 157 203C165 206 172 214 177 224C178 211 175 201 170 195C164 188 156 186 150 188.500Z" fill="#f5eedc" stroke="#120b07" stroke-width="1" stroke-linejoin="round"/>
-<path d="M150 190v11M145 191Q136 196 128 212M155 191Q164 196 172 212M148 194Q141 198 134 207M152 194Q159 198 166 207" stroke="#6f5d43" stroke-width=".6" fill="none"/>
-<path d="M150 202C152 202 154 202 157 203C165 206 172 214 177 224C178 211 175 201 170 195C164 188 156 186 150 188.500Z" fill="#2a1b10" opacity=".24"/>
+<!-- 콧수염과 웃는 입 -->
+<path d="M142 204.500Q150 212.500 158 204.500" fill="#b8563f" stroke="#4a2114" stroke-width="1" stroke-linejoin="round"/>
+<path d="M150 188.500C145 186 138 187 133 191.500C129.500 195 127 199.500 126 205C131 202.500 136 201 140.500 200.500C144.500 200.200 147.500 201 150 203C152.500 201 155.500 200.200 159.500 200.500C164 201 169 202.500 174 205C173 199.500 170.500 195 167 191.500C162 187 155 186 150 188.500Z" fill="#f7f1e0" stroke="#5a4630" stroke-width=".8" stroke-linejoin="round"/>
+<path d="M150 190.500v11M145.500 191Q139 194 132 200M154.500 191Q161 194 168 200M148 194Q143 196.500 138 199.500M152 194Q157 196.500 162 199.500" stroke="#8a7a5c" stroke-width=".5" fill="none"/>
 <!-- 열쇠 꾸러미: 소매 끝에서 늘어짐 -->
 <circle cx="222" cy="322" r="14" fill="none" stroke="#1a110b" stroke-width="4.200"/><circle cx="222" cy="322" r="14" fill="none" stroke="#8d6b34" stroke-width="2.400"/>
 <g stroke-linecap="round" fill="none">

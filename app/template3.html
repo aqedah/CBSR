@@ -7028,7 +7028,7 @@ function earthClose(pop){ if(window.CBSR_EARTH&&CBSR_EARTH.isOpen()) CBSR_EARTH.
 let SHELF_LD=null;
 function shelfLoad(){ if(window.CBSR_SHELF) return Promise.resolve(); if(SHELF_LD) return SHELF_LD;
   return SHELF_LD=new Promise((ok,no)=>{ const s=document.createElement("script"); s.src="shelf.js"; s.onload=ok; s.onerror=no; document.head.appendChild(s); }).catch(e=>{ SHELF_LD=null; throw e; }); }
-function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); },
+function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,today:(()=>{ try{ const tp=posOfToday(), P=dayPlan(tp.w,tp.d); return (P&&P.ch&&P.ch[0]&&P.ch[0][0])||0; }catch(e){ return 0; } })(),nick:(()=>{ try{ return (SYNC.google&&SYNC.google()&&PROF.nick)||""; }catch(e){ return ""; } })(),push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); },
     /* 사서의 다섯 물음에 적은 답: mem.shq[책][물음]={v:글,t:적은 때}. 다른 기록처럼 기기에 저장하고 클라우드와 맞춤 */
     store:{get:()=>mem.shq||{},set:(id,f,v)=>{ mem.shq=mem.shq||{}; mem.shq[id]=mem.shq[id]||{}; mem.shq[id][f]={v:String(v).slice(0,400),t:Date.now()}; save(); }}}); if(ok) ovOpen(shelfClose); }).catch(()=>toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.")); }
 function shelfClose(pop){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()) CBSR_SHELF.close(true); if(pop!==true) ovDone(shelfClose); }

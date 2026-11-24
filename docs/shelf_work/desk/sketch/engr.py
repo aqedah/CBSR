@@ -23,6 +23,8 @@ k = W / 232.0
 fx, fy = (66.5 - 34) * k, (284 - 12) * k        # 불꽃 자리
 d = np.sqrt((xx - fx) ** 2 + ((yy - fy) * 0.9) ** 2) / (W * 0.95)
 L = np.clip(1.0 / (1 + 5.5 * d * d), 0, 1)
+fcx, fcy = (150 - 34) * k, (166 - 12) * k
+L = np.maximum(L, 0.80 * np.exp(-(((xx - fcx) / (W * 0.30)) ** 2 + ((yy - fcy) / (W * 0.46)) ** 2)))
 rs = np.random.RandomState(3)
 def lo(n):
     g = Image.fromarray((rs.rand(H // n + 2, W // n + 2) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)
@@ -46,7 +48,7 @@ wash = np.asarray(Image.fromarray((rgb * 255).astype(np.uint8)).filter(ImageFilt
 col = paper[None, None, :] * (0.34 + 0.66 * np.clip(wash * 1.5, 0, 1)) * (0.95 + 0.1 * lo(30))[..., None]
 INK = np.array((34, 22, 14), np.float32) / 255.0
 out = col * (1 - ink[..., None]) + INK[None, None, :] * ink[..., None]
-night = np.array((0.30, 0.24, 0.20), np.float32)[None, None, :] + np.array((1.02, 0.86, 0.60), np.float32)[None, None, :] * L[..., None]
+night = np.array((0.36, 0.30, 0.25), np.float32)[None, None, :] + np.array((0.98, 0.88, 0.70), np.float32)[None, None, :] * L[..., None]
 out = out * np.clip(night, 0, 1.25)
 out = out + flame[..., None] * (np.array((1.0, 0.93, 0.70), np.float32) - out)
 glow = np.clip(1 - np.sqrt((xx - fx) ** 2 + (yy - fy) ** 2) / (W * 0.20), 0, 1) ** 2
