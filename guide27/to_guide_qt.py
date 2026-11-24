@@ -15,7 +15,7 @@ def tok(s):
 def plain(s): return re.sub(r'<[^>]+>','',s)
 j=json.load(open(GQ)); q=j['qt']; now=int(time.time()*1000)
 for D in json.load(open(B)):
-    n=str(D['no']); x=q[n]
+    n=str(D['no']); x=q.setdefault(n,{})
     if 'sub' in D: x['sub']=D['sub']
     g=x.setdefault('guide',{})
     if 'today' in D: g['today']=D['today']
@@ -42,6 +42,7 @@ for D in json.load(open(B)):
     x['v27']={'scenes':D['scenes'],'marks':[{'tool':m['tool'],'rep':bool(m['rep']),'text':tok(m['text'])} for m in D['marks']],
               'looks':[{'ck':bool(l['ck']),'tool':l['tool'],'text':tok(l['text'])} for l in D['looks']],
               'god':[tok(D['god'][0]),tok(D['god'][1])]}
+    if D.get('q2'): x['v27']['obs2']=tok(D['q2']); x['v27']['god2']=[tok(D['god2'][0]),tok(D['god2'][1])]  # 11-24: 범위가 넓은 날의 둘째 갈래
     x['u']=now
 j['updated']=time.strftime('%Y-%m-%dT%H:%M:%S')
 json.dump(j,open(GQ,'w'),ensure_ascii=False,indent=1)
