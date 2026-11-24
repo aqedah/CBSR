@@ -38,6 +38,8 @@ CSS3 = '''
 .lab4 b{display:inline-flex;width:4.6mm;height:4.6mm;border:.35mm solid var(--c);color:var(--c);border-radius:.8mm;align-items:center;justify-content:center;font-size:8pt}
 .lab4 small{font-weight:400;font-size:7.8pt;color:#777;margin-left:auto}
 .p4 .ans{flex:none}
+.p4 .pr4{margin-top:8mm}
+.p4 .lab4{margin-top:4.4mm}
 '''
 def pages():
     A, O, G, D = a5.blocks(W)
@@ -66,7 +68,7 @@ async def main(out):
     doc = f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{a5.CSS}{a5_4p.CSS2}{CSS3}</style></head><body><div class="x2">{pg[0]}{pg[1]}</div><div class="x2">{pg[2]}{pg[3]}</div></body></html>'
     async with async_playwright() as p:
         b = await p.chromium.launch(); g = await b.new_page(); await g.set_content(doc); await g.wait_for_timeout(400)
-        await g.evaluate('()=>{' + open(os.path.join(H, 'fit4.js')).read() + '; const x=document.querySelectorAll(".x2"); fit4(x[0].querySelector(".p5"), x[1].querySelectorAll(".p5")[1]); }')
+        await g.evaluate('()=>{' + open(os.path.join(H, 'fit4.js')).read() + '; const x=document.querySelectorAll(".x2"); fit4(x[0].querySelector(".p5"), x[1].querySelectorAll(".p5")[1]); fit4(x[0].querySelectorAll(".p5")[1], null); }')
         bad = await g.evaluate('''()=>[...document.querySelectorAll('.p5')].map((p,i)=>{const b=p.firstElementChild;return [i+1, Math.round((b.scrollHeight-b.clientHeight)*25.4/96)]}).filter(x=>x[1]>0)''')
         print('넘침:', bad or '없음')
         await g.pdf(path=out, width='297mm', height='210mm', print_background=True)
