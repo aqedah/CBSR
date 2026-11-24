@@ -6133,6 +6133,8 @@ function mergeMem(a,b){
   /* 책갈피: 나중에 꽂은 쪽. 읽던 자리: 이 기기에 없을 때만 */
   if(b.bm&&(!a.bm||(b.bm.at||0)>(a.bm.at||0))) o.bm=b.bm;
   if(!a.last&&b.last) o.last=b.last;
+  /* 성경 서고, 사서의 다섯 물음(2026-11-24): 책마다 물음마다 나중에 적은 쪽 */
+  if(a.shq||b.shq){ o.shq={}; for(const k of new Set([...Object.keys(a.shq||{}),...Object.keys(b.shq||{})])){ const x=(a.shq||{})[k]||{}, y=(b.shq||{})[k]||{}; o.shq[k]={}; for(const f of new Set([...Object.keys(x),...Object.keys(y)])){ const p=x[f], q=y[f]; o.shq[k][f]=(!q||(p&&(p.t||0)>=(q.t||0)))?p:q; } } }
   return o;
 }
 function churchCounts(){
@@ -7026,7 +7028,9 @@ function earthClose(pop){ if(window.CBSR_EARTH&&CBSR_EARTH.isOpen()) CBSR_EARTH.
 let SHELF_LD=null;
 function shelfLoad(){ if(window.CBSR_SHELF) return Promise.resolve(); if(SHELF_LD) return SHELF_LD;
   return SHELF_LD=new Promise((ok,no)=>{ const s=document.createElement("script"); s.src="shelf.js"; s.onload=ok; s.onerror=no; document.head.appendChild(s); }).catch(e=>{ SHELF_LD=null; throw e; }); }
-function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); }}); if(ok) ovOpen(shelfClose); }).catch(()=>toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.")); }
+function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); },
+    /* 사서의 다섯 물음에 적은 답: mem.shq[책][물음]={v:글,t:적은 때}. 다른 기록처럼 기기에 저장하고 클라우드와 맞춤 */
+    store:{get:()=>mem.shq||{},set:(id,f,v)=>{ mem.shq=mem.shq||{}; mem.shq[id]=mem.shq[id]||{}; mem.shq[id][f]={v:String(v).slice(0,400),t:Date.now()}; save(); }}}); if(ok) ovOpen(shelfClose); }).catch(()=>toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.")); }
 function shelfClose(pop){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()) CBSR_SHELF.close(true); if(pop!==true) ovDone(shelfClose); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.
