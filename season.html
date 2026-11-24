@@ -52,6 +52,8 @@ dialog h3{margin:0 0 8px}
 .a5prev{display:grid;grid-template-columns:148mm 148mm;gap:0;justify-content:center;row-gap:14px}
 .a5prev .p5{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.18)}
 .a5prev .gap{width:148mm;height:210mm}
+.a5w .x2{display:flex;width:297mm;height:210mm;page-break-after:always;overflow:hidden}
+.a5w .x2 .p5{page-break-after:auto;flex:none}
 .fmt{display:flex;gap:6px;align-items:center;font-size:12px}
 .fmt input{width:46px}
 @media print{
@@ -292,7 +294,7 @@ function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
     for(const h of html){ const t=document.createElement('template'); t.innerHTML=h; const el=t.content.firstElementChild; box.appendChild(el);
       if(box.scrollHeight>box.clientHeight+1 && box.children.length>1){ box.removeChild(el); const carry=[]; while(box.children.length>1 && /\b(sh|scn)\b/.test(box.lastElementChild.className)) carry.unshift(box.removeChild(box.lastElementChild));
         box=mk(st,run); carry.forEach(c=>box.appendChild(c)); box.appendChild(el); const f0=box.firstElementChild; if(f0.classList.contains('sh')||f0.classList.contains('note')) f0.style.marginTop='0'; } }
-    if((out.querySelectorAll('.p5').length-n0)%2){ const b=mk(st,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } };
+    if((out.querySelectorAll('.p5').length-n0)%2){ const pr=box.querySelector(':scope > .pr'); if(pr && box.children.length>1){ box.removeChild(pr); const b=mk(st,run); b.appendChild(pr); pr.firstElementChild.style.marginTop='0'; } else { const b=mk(st,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } } };
   const fixed=(st,pages,run)=>pages.forEach(h=>{ mk(st,run).innerHTML=h; });
   for(const w of weeks){ const J=a5parts(w,prayFn(w)), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`;
     flow(st,J.A,J.run); fixed(st,J.O,J.run); fixed(st,J.G,J.run); flow(st,J.D,J.run); }
@@ -362,7 +364,7 @@ function ws(){
   <button id="bCheck">인용 확인</button>
   <button id="bView">나눔 화면 ↗</button>
   <button id="bGit">GitHub</button>
-  <span class="fmt"><select id="selFmt" title="판형"><option value="a4">A4 한 장(4쪽)</option><option value="a5">A5 가이드북(8쪽)</option></select><label id="a5s" title="A5 첫 쪽 번호(짝수 = 왼쪽 쪽)">첫 쪽 <input type="number" id="a5start" min="1" step="1"></label></span>
+  <span class="fmt"><select id="selFmt" title="판형"><option value="a4">A4 한 장(4쪽)</option><option value="a5">A5 가이드북(8쪽)</option><option value="a5x2">A5 두 쪽씩 A4 가로(양면 2장)</option></select><label id="a5s" title="A5 첫 쪽 번호(짝수 = 왼쪽 쪽)">첫 쪽 <input type="number" id="a5start" min="1" step="1"></label></span>
   <select id="selPrint"><option value="one">이 회</option><option value="all">묶음 전체</option></select><button id="bPrint" class="pri">인쇄 · PDF</button>
   <a href="check.html?admin" target="_blank" rel="noopener" style="font-size:12px;color:var(--mute)">체험판 설문 결과 ↗</a>
 </header>
@@ -436,9 +438,9 @@ function drawForm(){ const s=curSet(), f=$('form');
 }
 function drawPrev(){ const p=$('prev'), w=curW(), s=curSet();
   if(!w){ p.innerHTML='<div class="empty">왼쪽에서 회를 고르거나 ＋ 새 회를 누르세요.</div>'; return; }
-  if(FMT.fmt==='a5'){ const st=FMT.start; p.innerHTML=`<div class="a5w a5prev">${st%2?'<div class="gap"></div>':''}</div>`; const box=p.firstElementChild;
+  if(FMT.fmt.startsWith('a5')){ const st=FMT.fmt==='a5x2'?1:FMT.start; p.innerHTML=`<div class="a5w a5prev">${st%2?'<div class="gap"></div>':''}</div>`; const box=p.firstElementChild;
     const r=a5flow(box,[w],st,x=>prayOf(s.id,x.key)); const z=Math.min(1,(p.clientWidth-30)/(2*559)); box.style.zoom=z;
-    const wn=$('warn'); if(wn){ const msg=[]; if(r.bad.length) msg.push('넘치는 쪽: '+r.bad.join(', ')); if(st%2) msg.push('첫 쪽이 홀수라 관찰과 성품이 마주 보지 않습니다'); wn.className=msg.length?'bad':'ok'; wn.textContent=msg.length?msg.join(' · '):`가이드북 A5 ${r.pages}쪽, 글자 크기는 가이드북 본문과 같습니다. 관찰과 성품이 펼침면으로 마주 봅니다.`; }
+    const wn=$('warn'); if(wn){ const msg=[]; if(r.bad.length) msg.push('넘치는 쪽: '+r.bad.join(', ')); if(st%2&&FMT.fmt==='a5') msg.push('첫 쪽이 홀수라 관찰과 성품이 마주 보지 않습니다'); wn.className=msg.length?'bad':'ok'; wn.textContent=msg.length?msg.join(' · '):`가이드북 A5 ${r.pages}쪽, 글자 크기는 가이드북 본문과 같습니다. 관찰과 성품이 펼침면으로 마주 봅니다.`; }
     return; }
   p.innerHTML=sheet(w,false,prayOf(s.id,w.key));
   const z=Math.min(1,(p.clientWidth-30)/794); p.firstElementChild.style.zoom=z;
@@ -446,6 +448,13 @@ function drawPrev(){ const p=$('prev'), w=curW(), s=curSet();
 }
 window.addEventListener('resize',()=>{ if(document.body.className==='ws') drawPrev() });
 function doPrint(){ const s=curSet(); if(!s) return; const all=$('selPrint').value==='all'; const ws=all?s.weeks:[curW()].filter(Boolean);
+  if(FMT.fmt==='a5x2'){ $('printroot').innerHTML='<div class="a5w"></div>'; const root=$('printroot').firstElementChild; let n=0, bad=[];
+    ws.forEach(w=>{ const tmp=document.createElement('div'); root.appendChild(tmp); const r=a5flow(tmp,[w],1,x=>prayOf(s.id,x.key)); bad=bad.concat(r.bad);
+      const ps=[...tmp.children]; while(ps.length%4) { const g=document.createElement('section'); g.className='p5'; ps.push(g); }
+      for(let i=0;i<ps.length;i+=2){ const sh=document.createElement('div'); sh.className='x2'; sh.append(ps[i],ps[i+1]); root.insertBefore(sh,tmp); n++; } tmp.remove(); });
+    $('pgsz').textContent='@page{size:297mm 210mm;margin:0}'; addEventListener('afterprint',()=>{$('pgsz').textContent='@page{size:A4;margin:0}'},{once:true});
+    $('status').textContent=`${ws.length}회 · A4 가로 ${n}면(${n/2}장)${bad.length?' · 넘치는 쪽 '+bad.join(', '):''} — 용지 A4 가로, 여백 없음, 배경 그래픽 켜기, 양면은 짧은 쪽으로 넘기기`;
+    (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(()=>print(),200)); return; }
   if(FMT.fmt==='a5'){ $('printroot').innerHTML='<div class="a5w"></div>'; const r=a5flow($('printroot').firstElementChild,ws,FMT.start,x=>prayOf(s.id,x.key));
     $('pgsz').textContent='@page{size:148mm 210mm;margin:0}'; addEventListener('afterprint',()=>{$('pgsz').textContent='@page{size:A4;margin:0}'},{once:true});
     $('status').textContent=`${ws.length}회 · A5 ${r.pages}쪽${r.bad.length?' · 넘치는 쪽 '+r.bad.join(', '):''} — 용지 크기 A5(148×210mm), 여백 없음, 배경 그래픽 켜기`;
