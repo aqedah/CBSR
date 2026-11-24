@@ -3395,17 +3395,23 @@ function yvBanner(){ const y=NOW().getFullYear(), v=yvGet(y);
   if(v){ const r=vdbRef(v.r); return `<button class="sbnr yv done" data-yv="1"><span class="sbk">${y}년 나의 말씀 · ${esc(v.c)}</span><b>“${esc(vRange(r).slice(0,46))}${vRange(r).length>46?"…":""}”</b><small>${esc(thLab(r))} · 다시 보기</small></button>`; }
   if(!yvOpenNow()) return "";
   return `<button class="sbnr yv" data-yv="1"><span class="sbk">새해 말씀 뽑기</span><b>${y}년, 나에게 주시는 말씀 한 구절</b><small>카드를 하나 골라 뒤집어 보세요 ›</small></button>`; }
-function yvOpen(){ const y=NOW().getFullYear(), had=yvGet(y);
-  const el=document.createElement("div"); el.className="yvov"; document.body.appendChild(el); const close=()=>el.remove();
-  const reveal=v=>{ const r=vdbRef(v.r), t=vRange(r);
+/* 11-24 목사님: 말씀 카드는 서고의 사서가 패처럼 쥐고 내밉니다. 오늘·기록 탭의 배너와 서고의 '말씀 카드를 받는다'가 같은 곳으로 갑니다.
+   올해 뽑은 말씀이 있으면 그 말씀을 먼저 보여 줍니다. ret: 서고에서 왔으면 닫을 때 서고로 돌아갑니다 */
+function yvPick(){ const y=NOW().getFullYear(), ok=VDB.filter(x=>vRange(vdbRef(x[1]))); if(!ok.length) return null; const p=ok[Math.floor(Math.random()*ok.length)], v={r:p[1],c:p[0],at:todayStr()}; yvSet(y,v); return v; }
+function yvOpen(){ const had=yvGet(NOW().getFullYear()); if(had) yvReveal(had,false); else yvDeck(false,false); }
+function yvDeck(mix,ret){ shelfOpen({scene:"card",solo:!ret,mix:!!mix,fail:()=>yvDeckOld(ret)}); }
+function yvReveal(v,ret){ const y=NOW().getFullYear(), el=document.createElement("div"); el.className="yvov"; document.body.appendChild(el);
+  const close=()=>{ if(ret){ shelfOpen({back:true,fail:()=>{}}); setTimeout(()=>el.remove(),250); } else el.remove(); };
+  const r=vdbRef(v.r), t=vRange(r);
     el.innerHTML=`<div class="yvbox"><button class="bkx" aria-label="닫기">✕</button><p class="yvk">${y}년 나의 말씀 · ${esc(v.c)}</p><div class="yvcard flip"><q>${esc(t)}</q><span>${esc(thLab(r))}</span></div>${VDB_CTX[v.r]?`<div class="yvctx"><b>어떤 상황에서 나온 말씀인가요</b><p>${esc(VDB_CTX[v.r])}</p><button class="linkbtn" id="yvCtx">앞뒤 본문 보기</button></div>`:""}<p class="yvsub">${esc(VDB_CAT[v.c]||"")}</p><div class="yvbtns"><button class="btn ghost" id="yvShare">말씀 나누기</button><button class="btn" id="yvOk">마음에 담기</button></div><button class="yvagain" id="yvAgain">다시 뽑기</button><p class="yvnote">기록 탭에서 한 해 동안 다시 볼 수 있습니다.</p></div>`;
-    el.querySelector(".bkx").onclick=close; el.querySelector("#yvOk").onclick=()=>{ close(); render(); };
+    el.querySelector(".bkx").onclick=close; el.querySelector("#yvOk").onclick=()=>{ render(); close(); };
     el.querySelector("#yvCtx")?.addEventListener("click",()=>sVerseSheet(`${r[0]}-${r[1]}-${r[2]}-${r[3]}`,()=>{}));
-    /* 다시 뽑기(목사님 2026-10-31): 묻지 않고 바로 섞는 화면으로. 새로 뽑으면 앞의 말씀 대신 남습니다 */
-    el.querySelector("#yvAgain").onclick=()=>deck();
-    el.querySelector("#yvShare").onclick=async()=>{ const txt=`${y}년 나의 말씀\n\n${t}\n(${thLab(r)})\n\n— ${PI.name}`; try{ if(navigator.share){ await navigator.share({text:txt}); return; } }catch(e){ if(e&&e.name==="AbortError") return; } try{ await navigator.clipboard.writeText(txt); toast("복사했습니다."); }catch(e){} }; };
-  /* 섞고 고르기(목사님 2026-10-31): 앱이 내민 카드를 고르는 느낌이 아니라, 내가 섞어서 펼치고 고르도록 */
-  const deck=()=>{ const N=7; let ready=false, busy=false;
+    /* 다시 뽑기(목사님 2026-10-31, 11-24): 묻지 않고 바로. 사서가 다시 섞어서 내밉니다. 새로 뽑으면 앞의 말씀 대신 남습니다 */
+    el.querySelector("#yvAgain").onclick=()=>{ yvDeck(true,ret); setTimeout(()=>el.remove(),250); };
+    el.querySelector("#yvShare").onclick=async()=>{ const txt=`${y}년 나의 말씀\n\n${t}\n(${thLab(r)})\n\n— ${PI.name}`; try{ if(navigator.share){ await navigator.share({text:txt}); return; } }catch(e){ if(e&&e.name==="AbortError") return; } try{ await navigator.clipboard.writeText(txt); toast("복사했습니다."); }catch(e){} }; }
+/* 서고를 불러오지 못할 때만 쓰는 예전 화면(10-31: 내가 섞어서 펼치고 고름) */
+function yvDeckOld(ret){ const y=NOW().getFullYear(), el=document.createElement("div"); el.className="yvov"; document.body.appendChild(el); const close=()=>el.remove();
+  const N=7; let ready=false, busy=false;
     el.innerHTML=`<div class="yvbox"><button class="bkx" aria-label="닫기">✕</button><p class="yvk">${y}년 새해 말씀 뽑기</p><h2 id="yvH">기도하는 마음으로<br>카드를 섞어 보세요</h2><div class="yvfan stk" id="yvFan">${Array.from({length:N},(_,i)=>`<button class="yvc" data-i="${i}" style="--i:${i}" aria-label="${i+1}번째 카드"><span>✝</span></button>`).join("")}</div><button class="btn yvmix" id="yvMix">🔀 카드 섞기</button><p class="yvnote">원하는 만큼 섞은 뒤, 펼쳐진 카드에서 한 장을 고르세요.</p></div>`;
     el.querySelector(".bkx").onclick=close; const fan=el.querySelector("#yvFan"), cs=[...fan.querySelectorAll(".yvc")], mixB=el.querySelector("#yvMix"), rnd=a=>(Math.random()*2-1)*a;
     const mix=async()=>{ if(busy) return; busy=true; ready=false; mixB.disabled=true; fan.classList.add("stk"); fan.classList.remove("open"); try{ navigator.vibrate&&navigator.vibrate(12); }catch(e){}
@@ -3413,10 +3419,8 @@ function yvOpen(){ const y=NOW().getFullYear(), had=yvGet(y);
       cs.forEach((c,i)=>{ c.style.setProperty("--sx",(i-3)*2+"px"); c.style.setProperty("--sy",-i*2+"px"); c.style.setProperty("--sr",rnd(4).toFixed(0)+"deg"); c.style.zIndex=""; }); await mvWait(320);
       fan.classList.remove("stk"); fan.classList.add("open"); await mvWait(450); busy=false; ready=true; mixB.disabled=false; mixB.textContent="🔀 다시 섞기"; el.querySelector("#yvH").innerHTML="마음에 닿는<br>카드 한 장을 고르세요"; };
     mixB.onclick=mix; fan.addEventListener("click",()=>{ if(!ready&&!busy) mix(); });
-    cs.forEach(b=>b.onclick=e=>{ if(!ready||busy) return; e.stopPropagation(); busy=true; const ok=VDB.filter(x=>vRange(vdbRef(x[1]))); const p=ok[Math.floor(Math.random()*ok.length)]; const v={r:p[1],c:p[0],at:todayStr()};
-      yvSet(y,v); b.classList.add("pick"); cs.forEach(x=>{ if(x!==b) x.classList.add("away"); }); mixB.style.visibility="hidden"; try{ navigator.vibrate&&navigator.vibrate(20); }catch(e){} setTimeout(()=>reveal(v),750); }); };
-  if(had){ reveal(had); return; }
-  deck(); }
+    cs.forEach(b=>b.onclick=e=>{ if(!ready||busy) return; e.stopPropagation(); busy=true; const v=yvPick(); if(!v){ busy=false; return; }
+      b.classList.add("pick"); cs.forEach(x=>{ if(x!==b) x.classList.add("away"); }); mixB.style.visibility="hidden"; try{ navigator.vibrate&&navigator.vibrate(20); }catch(e){} setTimeout(()=>{ close(); yvReveal(v,ret); },750); }); }
 
 /* ===== 한 해 결산(12월 31일부터 1월 10일까지 기록 탭 배너) ===== */
 const yrOpenNow=()=>{ const n=NOW(), m=n.getMonth(), d=n.getDate(); return (m===11&&d===31)||(m===0&&d<=10); };
@@ -6451,7 +6455,8 @@ function recMine(){ const L=Object.entries(WCS).filter(([id,r])=>r&&!r.del&&r.b)
    책장·돌·월별 앨범·날짜별 기록·교회·설정은 한 줄 진입점 → 상세 화면(view.recD). 데이터·저장 구조는 그대로 */
 function recBack(){ if(!view.recD) return; if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); }
 /* 성경 지도를 다른 탭에서 열었으면(위쪽 지도 단추·오늘의 여정·지도 도전) 닫을 때 그 자리로 돌아감 */
-function bmReturn(){ const f=view.bmFrom; if(!f) return false; view.bmFrom=null; view.recD=f.recD; view.tab=f.tab; render(); const y=f.y||0; [60,250,500].forEach(t=>setTimeout(()=>{ if(Math.abs(window.scrollY-y)>40) window.scrollTo({top:y}); },t)); return true; }
+function bmReturn(){ const f=view.bmFrom; if(!f) return false; view.bmFrom=null; view.recD=f.recD; view.tab=f.tab; render();
+  if(f.shelf){ const cv=document.createElement("div"); cv.style.cssText="position:fixed;inset:0;z-index:98990;background:#17100b"; document.body.appendChild(cv); setTimeout(()=>{ shelfOpen({back:true,fail:()=>{}}); setTimeout(()=>cv.remove(),400); },90); } /* 11-24: 사서에게 받은 통독표는 ‹ 로 사서 앞에 돌아감(뒤로 가기 기록이 정리된 뒤에 엶) */ const y=f.y||0; [60,250,500].forEach(t=>setTimeout(()=>{ if(Math.abs(window.scrollY-y)>40) window.scrollTo({top:y}); },t)); return true; }
 const recBackOv=fromPop=>{ if(fromPop===true){ if(bmReturn()) return; view.recD=null; render(); window.scrollTo({top:0}); } };
 function recGo(d){ view.recD=d; ovOpen(recBackOv); render(); window.scrollTo({top:0}); }
 function recCards(){ return Object.entries(mem.qt).filter(([k,q])=>q&&q.done&&q.kv).map(([k,q])=>{ const [w,d]=k.split("-").map(Number); if(!dayPlan(w,d)) return null; const v=String(q.kv).split(":").map(Number); if(v.length!==3) return null; const t=vtxt(v); if(!t) return null; return {k,w,d,q,v,t,dt:dateOf(w,d),at:String(q.doneAt||"")}; }).filter(Boolean).sort((a,b)=>b.at.localeCompare(a.at)||b.dt-a.dt); }
@@ -7028,9 +7033,13 @@ function earthClose(pop){ if(window.CBSR_EARTH&&CBSR_EARTH.isOpen()) CBSR_EARTH.
 let SHELF_LD=null;
 function shelfLoad(){ if(window.CBSR_SHELF) return Promise.resolve(); if(SHELF_LD) return SHELF_LD;
   return SHELF_LD=new Promise((ok,no)=>{ const s=document.createElement("script"); s.src="shelf.js"; s.onload=ok; s.onerror=no; document.head.appendChild(s); }).catch(e=>{ SHELF_LD=null; throw e; }); }
-function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,today:(()=>{ try{ const tp=posOfToday(), P=dayPlan(tp.w,tp.d); return (P&&P.ch&&P.ch[0]&&P.ch[0][0])||0; }catch(e){ return 0; } })(),nick:(()=>{ try{ return (SYNC.google&&SYNC.google()&&PROF.nick)||""; }catch(e){ return ""; } })(),push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); },
+function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,scene:o.scene,solo:o.solo,mix:o.mix,back:o.back,
+        plan:()=>{ if(!(view.tab==="record"&&view.recD==="plan")){ openWeekPicker(); if(view.bmFrom) view.bmFrom.shelf=true; } shelfLeave(); }, /* 11-24 목사님: 사서에게 받는 통독표 = 날짜를 누르면 나오는 통독표 */
+        card:{had:()=>!!yvGet(NOW().getFullYear()),show:()=>{ yvReveal(yvGet(NOW().getFullYear()),true); shelfLeave(); },pick:()=>yvPick(),reveal:(v,ret)=>{ yvReveal(v,ret); shelfLeave(); }},
+        today:(()=>{ try{ const tp=posOfToday(), P=dayPlan(tp.w,tp.d); return (P&&P.ch&&P.ch[0]&&P.ch[0][0])||0; }catch(e){ return 0; } })(),nick:(()=>{ try{ return (SYNC.google&&SYNC.google()&&PROF.nick)||""; }catch(e){ return ""; } })(),push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); },
     /* 사서의 다섯 물음에 적은 답: mem.shq[책][물음]={v:글,t:적은 때}. 다른 기록처럼 기기에 저장하고 클라우드와 맞춤 */
-    store:{get:()=>mem.shq||{},set:(id,f,v)=>{ mem.shq=mem.shq||{}; mem.shq[id]=mem.shq[id]||{}; mem.shq[id][f]={v:String(v).slice(0,400),t:Date.now()}; save(); }}}); if(ok) ovOpen(shelfClose); }).catch(()=>toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.")); }
+    store:{get:()=>mem.shq||{},set:(id,f,v)=>{ mem.shq=mem.shq||{}; mem.shq[id]=mem.shq[id]||{}; mem.shq[id][f]={v:String(v).slice(0,400),t:Date.now()}; save(); }}}); if(ok) ovOpen(shelfClose); }).catch(()=>{ if(o.fail) o.fail(); else toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요."); }); }
+function shelfLeave(){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()){ CBSR_SHELF.close(true); ovDone(shelfClose); } }
 function shelfClose(pop){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()) CBSR_SHELF.close(true); if(pop!==true) ovDone(shelfClose); }
 function bmOpenRoute(r){ const i=ROUTES_B.indexOf(r); if(i<0) return; bmOpen("trip",{era:bmEra(r.b,r.c[0]),sel:i}); }
 /* ===== 큰 여정 따라가기(목사님 2026-10-30): 출애굽 40년·엘리야·바울의 여행처럼 긴 여정을 단계마다 카메라가 따라가며 보여 줌.

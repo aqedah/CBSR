@@ -20,7 +20,7 @@ try:
             chk('혼잣말 동안 팻말 숨김', pg.evaluate('document.querySelector("#cbsrShelf .zn").classList.contains("off")'))
             pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
             chk('사서 첫마디', '어서 오십시오' in (txt('#cbsrShelf .dg .dgb') or '') and '님' not in (txt('#cbsrShelf .dg .dgb') or ''))
-            chk('선택지 둘', pg.locator('#cbsrShelf .dg .dgc button').count() == 2); shot('2_hello')
+            chk('선택지 넷', pg.locator('#cbsrShelf .dg .dgc button').count() == 4); shot('2_hello')
             # 겹침 확인: 선택지와 말상자
             r = pg.evaluate('(()=>{const a=document.querySelector("#cbsrShelf .dgc").getBoundingClientRect(),b=document.querySelector("#cbsrShelf .dgb").getBoundingClientRect();return [a.bottom,b.top,a.left,a.right,innerWidth]})()')
             chk('선택지가 말상자 위에 있음', r[0] <= r[1] + 1)

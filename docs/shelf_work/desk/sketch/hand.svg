@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260">
+<defs><filter id="b4" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
+<clipPath id="csl"><path d="M0 214L0 260L104 260C128 222 152 188 172 158L112 112C78 152 38 192 0 214Z"/></clipPath></defs>
+<!-- 소매 -->
+<path d="M0 214L0 260L104 260C128 222 152 188 172 158L112 112C78 152 38 192 0 214Z" fill="#33251a" stroke="#120b07" stroke-width="1.6" stroke-linejoin="round"/>
+<g clip-path="url(#csl)"><path d="M0 214C38 192 78 152 112 112L140 134C104 170 60 214 20 240Z" fill="#6b4a2c" opacity=".5" filter="url(#b4)"/>
+<path d="M28 222C62 198 100 160 130 126M52 244C88 214 124 178 152 144M80 258C112 226 140 194 164 160" fill="none" stroke="#120b07" stroke-width="1" opacity=".7"/></g>
+<path d="M112 112C124 108 162 136 172 158C162 164 122 136 112 112Z" fill="#0b0604" stroke="#120b07" stroke-width="1.2" stroke-linejoin="round"/>
+<!-- 손등 -->
+<path d="M118 128C106 110 104 88 112 66L172 54C186 76 186 108 164 150Z" fill="#c9a274" stroke="#120b07" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M124 120C118 106 118 92 122 80M140 132C134 116 134 100 138 86" fill="none" stroke="#7a5532" stroke-width=".7" opacity=".8"/>
+<!-- 네 손가락: 카드 뒷면을 감싸 쥠 -->
+<g stroke="#120b07" stroke-width="1.2" stroke-linejoin="round" fill="#d2ac7e">
+<rect x="104" y="40" width="70" height="17" rx="8.5" transform="rotate(-10 139 48)"/>
+<rect x="100" y="56" width="78" height="17" rx="8.5" transform="rotate(-8 139 64)"/>
+<rect x="102" y="72" width="76" height="17" rx="8.5" transform="rotate(-6 140 80)"/>
+<rect x="108" y="88" width="64" height="16" rx="8" transform="rotate(-4 140 96)"/>
+</g>
+<g fill="none" stroke="#7a5532" stroke-width=".7" opacity=".85"><path d="M128 43l1 13M150 39l1 13M126 60l1 13M152 56l1 13M128 76l1 13M152 73l1 13M130 91l1 12M150 89l1 12"/></g>
+<path d="M106 46C100 60 100 84 110 100" fill="none" stroke="#f3dcb0" stroke-width="1.6" opacity=".55" stroke-linecap="round"/>
+</svg>

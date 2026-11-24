@@ -1,0 +1,73 @@
+# 실제 빌드: 사서에게 통독표·말씀 카드 받기, 오늘 탭 배너(1월)에서 말씀 뽑기
+import sys, subprocess, time, json
+from playwright.sync_api import sync_playwright
+srv = subprocess.Popen([sys.executable, '-m', 'http.server', '8766', '--bind', '127.0.0.1'], cwd='/tmp/cbsr_build_app/site', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1.2)
+errs = []; S = '/home/claude/shelf-desk/check/dlg/'; ok = []
+def chk(name, cond, extra=''):
+    ok.append((name, bool(cond))); print(('  통과 ' if cond else '  실패 ') + name, '·', extra)
+try:
+    with sync_playwright() as p:
+        b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
+        cx = b.new_context(viewport={'width': 412, 'height': 820}, device_scale_factor=2, has_touch=True, service_workers='block')
+        pg = cx.new_page()
+        pg.on('pageerror', lambda e: errs.append('PAGEERROR ' + str(e)[:200]))
+        pg.on('console', lambda m: errs.append('CONSOLE ' + m.text[:160]) if m.type == 'error' and 'net::' not in m.text and 'Failed to load resource' not in m.text else None)
+        T = lambda sel: pg.evaluate('(s)=>{const e=document.querySelector(s);return e?e.innerText.replace(/\\n/g," / "):null}', sel)
+        has = lambda sel: pg.locator(sel).count() > 0
+        mem = lambda: json.loads(pg.evaluate("localStorage.getItem('rjnote:y365')||'{}'"))
+        tab = lambda: pg.evaluate("(document.querySelector('.bnav .on,.bnav [aria-current],.bnav .sel')||{}).innerText||''").strip()
+        pg.goto('http://127.0.0.1:8766/index.html', wait_until='domcontentloaded'); pg.wait_for_timeout(3500)
+        tab0 = tab()
+        pg.evaluate("document.querySelector('#rgShelf').click()"); pg.wait_for_timeout(1800)
+        if has('#cbsrShelf .dg.me'): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+        chk('서고 인사에 선택지 넷', pg.locator('#cbsrShelf .dgc button').count() == 4, T('#cbsrShelf .dgc'))
+        pg.click('#cbsrShelf .dgc button:nth-child(3)'); pg.wait_for_timeout(1900)
+        chk('통독표가 열리고 서고는 닫힘', not has('#cbsrShelf') and has('#pcBox') and has('#recBack'), (T('.rdh') or '')[:30])
+        pg.screenshot(path=S + 'app3_plan.png')
+        pg.click('#recBack'); pg.wait_for_timeout(1500)
+        chk('‹ → 사서 앞으로 돌아옴', has('#cbsrShelf') and '더 찾는 것이 있습니까' in (T('#cbsrShelf .dg .dgb') or ''), T('#cbsrShelf .dg .dgb'))
+        pg.go_back(); pg.wait_for_timeout(800)
+        chk('뒤로 한 번 → 서고 닫힘, 들어오기 전 탭', not has('#cbsrShelf') and has('#rgShelf') and not has('#pcBox') and tab() == tab0, tab0)
+        # 통독표에서 날짜 줄을 누르면 서고로 돌아오지 않음
+        pg.evaluate("document.querySelector('#rgShelf').click()"); pg.wait_for_timeout(1500)
+        pg.click('#cbsrShelf .dgc button:nth-child(3)'); pg.wait_for_timeout(1900)
+        row = pg.evaluate("(()=>{const e=document.querySelector('#pcBox [data-pcgo]');if(!e)return null;e.click();return e.dataset.pcgo})()"); pg.wait_for_timeout(1500)
+        chk('통독표의 줄을 누르면 그날 본문으로(서고 안 열림)', row and not has('#cbsrShelf') and not has('#pcBox'), str(row))
+        # 말씀 카드
+        pg.evaluate("document.querySelector('#rgShelf').click()"); pg.wait_for_timeout(1500)
+        pg.click('#cbsrShelf .dgc button:nth-child(4)'); pg.wait_for_timeout(2400)
+        chk('사서가 카드 일곱 장을 펼쳐 듦', pg.locator('#cbsrShelf .cdf.open .cdk').count() == 7, T('#cbsrShelf .dg .dgb')); pg.screenshot(path=S + 'app3_fan.png')
+        pg.locator('#cbsrShelf .cdk').nth(3).click(force=True); pg.wait_for_timeout(1500)
+        v1 = (mem().get('yv') or {})
+        chk('고르면 앱의 말씀 화면이 뜨고 서고는 닫힘', has('.yvov .yvcard') and not has('#cbsrShelf'), (T('.yvov .yvk') or '') + ' | ' + (T('.yvov .yvcard') or '')[:40]); pg.screenshot(path=S + 'app3_reveal.png')
+        chk('뽑은 말씀이 앱 기록에 남음', bool(v1), str(v1)[:70])
+        pg.click('#yvAgain'); pg.wait_for_timeout(3200)
+        chk('다시 뽑기 → 사서가 다시 섞어서 내밂', has('#cbsrShelf .cdf.open') and not has('.yvov'), T('#cbsrShelf .dg .dgb'))
+        pg.locator('#cbsrShelf .cdk').nth(5).click(force=True); pg.wait_for_timeout(1500)
+        chk('다시 고름 → 말씀 화면', has('.yvov .yvcard') and not has('#cbsrShelf'))
+        pg.click('#yvOk'); pg.wait_for_timeout(1000)
+        chk('마음에 담기 → 사서 앞으로', has('#cbsrShelf') and not has('.yvov') and '더 찾는 것이 있습니까' in (T('#cbsrShelf .dg .dgb') or ''))
+        pg.click('#cbsrShelf .dgc button:nth-child(4)'); pg.wait_for_timeout(1900)
+        chk('올해 받은 말씀이 있으면 그 말씀을 보여 줌', has('.yvov .yvcard') and not has('#cbsrShelf'))
+        pg.click('.yvov .bkx'); pg.wait_for_timeout(900)
+        chk('✕ → 사서 앞으로', has('#cbsrShelf') and not has('.yvov'))
+        pg.click('#cbsrShelf .bk'); pg.wait_for_timeout(600)
+        chk('닫기 → 앱', not has('#cbsrShelf') and has('#rgShelf'))
+        cx.close()
+        # 1월: 오늘 탭 배너에서
+        cx = b.new_context(viewport={'width': 412, 'height': 820}, device_scale_factor=2, has_touch=True, service_workers='block')
+        pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append('PAGEERROR ' + str(e)[:200]))
+        pg.add_init_script("(()=>{const D=Date,t0=new D(2027,0,2,9,0,0).getTime()-D.now();class F extends D{constructor(...a){ if(a.length) super(...a); else super(D.now()+t0);} static now(){return D.now()+t0;}} window.Date=F;})()")
+        pg.goto('http://127.0.0.1:8766/index.html', wait_until='domcontentloaded'); pg.wait_for_timeout(3500)
+        chk('1월: 오늘 탭에 새해 말씀 뽑기 배너', has('[data-yv]'), T('[data-yv]'))
+        if has('[data-yv]'):
+            pg.evaluate("document.querySelector('[data-yv]').click()"); pg.wait_for_timeout(3000)
+            chk('배너 → 서고의 사서가 카드를 내밂(닫기 단추)', has('#cbsrShelf .cdf.open') and '닫기' in (T('#cbsrShelf .bk') or ''), T('#cbsrShelf .dg .dgb')); pg.screenshot(path=S + 'app3_banner.png')
+            pg.locator('#cbsrShelf .cdk').nth(2).click(force=True); pg.wait_for_timeout(1500)
+            chk('고름 → 2027년 나의 말씀', has('.yvov .yvcard') and '2027' in (T('.yvov .yvk') or ''), T('.yvov .yvk'))
+            pg.click('#yvOk'); pg.wait_for_timeout(900)
+            chk('마음에 담기 → 오늘 탭으로(서고 아님)', not has('#cbsrShelf') and not has('.yvov'))
+        cx.close(); b.close()
+finally:
+    srv.terminate()
+print('오류:', errs[:6] or '없음'); bad = [n for n, c in ok if not c]; print('실패:', bad or '없음', '(%d가지)' % len(ok))

@@ -1,0 +1,54 @@
+# 통독표를 받는다 · 말씀 카드를 받는다 시험
+import sys, subprocess, time, os
+from playwright.sync_api import sync_playwright
+OUT = '/home/claude/shelf-desk/check/dlg'; os.makedirs(OUT, exist_ok=True)
+srv = subprocess.Popen([sys.executable, '-m', 'http.server', '8765'], cwd='/tmp/shelftest', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+errs = []; ok = []
+def chk(name, cond):
+    ok.append((name, bool(cond))); print(('  통과 ' if cond else '  실패 ') + name)
+try:
+    with sync_playwright() as p:
+        b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
+        for tag, vw, vh in (('phone', 390, 800), ('small', 360, 640), ('tablet', 820, 1180)):
+            cx = b.new_context(viewport={'width': vw, 'height': vh}, device_scale_factor=2 if tag != 'tablet' else 1, has_touch=True)
+            pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('response', lambda r: errs.append('404 ' + r.url) if r.status == 404 and 'favicon' not in r.url else None)
+            shot = lambda n: pg.screenshot(path='%s/%s_%s.png' % (OUT, tag, n))
+            txt = lambda sel: pg.evaluate('(s)=>{const e=document.querySelector(s);return e?e.innerText:null}', sel)
+            print(tag)
+            pg.goto('http://localhost:8765/index.html?today=45'); pg.click('#go'); pg.wait_for_timeout(900)
+            if pg.locator('#cbsrShelf .dg.me').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+            chk('선택지 넷', pg.locator('#cbsrShelf .dg .dgc button').count() == 4 and '통독표를 받는다' in txt('#cbsrShelf .dgc') and '말씀 카드를 받는다' in txt('#cbsrShelf .dgc'))
+            r = pg.evaluate('(()=>{const a=document.querySelector("#cbsrShelf .dgc").getBoundingClientRect(),b=document.querySelector("#cbsrShelf .dgb").getBoundingClientRect(),k=document.querySelector("#cbsrShelf .bk").getBoundingClientRect();return [a.top,k.bottom,a.bottom,b.top]})()')
+            chk('선택지가 위 단추와 말상자에 겹치지 않음', r[0] > r[1] + 4 and r[2] <= r[3] + 1); shot('c1_hello4')
+            pg.click('#cbsrShelf .dg .dgc button:nth-child(3)'); pg.wait_for_timeout(500)
+            chk('통독표: 사서의 말', '통독표입니다' in (txt('#cbsrShelf .dg .dgb') or '')); pg.wait_for_timeout(1300)
+            chk('통독표를 앱에 넘기고 서고가 닫힘', pg.evaluate('window.__log.join()') == 'plan' and pg.locator('#cbsrShelf').count() == 0 and pg.evaluate('window.__ovs()') == 0)
+            pg.evaluate('window.shelfOpen({back:true})'); pg.wait_for_timeout(700)
+            chk('돌아오면: 더 찾는 것이 있습니까', '더 찾는 것이 있습니까' in (txt('#cbsrShelf .dg .dgb') or '')); shot('c2_back')
+            pg.click('#cbsrShelf .dg .dgc button:nth-child(4)'); pg.wait_for_timeout(500); shot('c3_mixing'); pg.wait_for_timeout(1700)
+            chk('카드 장면: 일곱 장이 펼쳐지고 한 장 고르십시오', pg.locator('#cbsrShelf .cdf.open .cdk').count() == 7 and '한 장 고르십시오' in (txt('#cbsrShelf .dg .dgb') or '')); shot('c4_fan')
+            r = pg.evaluate('(()=>{const q=[...document.querySelectorAll("#cbsrShelf .cdk")].map(e=>e.getBoundingClientRect());const s=document.querySelector("#cbsrShelf .st").getBoundingClientRect();const t=document.querySelector("#cbsrShelf .ttl b").getBoundingClientRect();return [Math.min(...q.map(x=>x.left))-s.left,s.right-Math.max(...q.map(x=>x.right)),Math.min(...q.map(x=>x.top))-t.bottom]})()')
+            chk('부채가 화면 안에 있고 제목과 겹치지 않음 %s' % [round(x) for x in r], r[0] > 0 and r[1] > -2 and r[2] > 2)
+            pg.click('#cbsrShelf .cdmix'); pg.wait_for_timeout(300)
+            chk('섞어 달라고 한다: 다시 섞겠습니다', '다시 섞겠습니다' in (txt('#cbsrShelf .dg .dgb') or '')); pg.wait_for_timeout(2300)
+            chk('섞은 뒤 다시 펼침', pg.locator('#cbsrShelf .cdf.open .cdk').count() == 7)
+            chk('뒤로 단계 2(서고·카드)', pg.evaluate('window.__ovs()') == 2)
+            pg.locator('#cbsrShelf .cdk').nth(4).click(force=True); pg.wait_for_timeout(450); shot('c5_pick'); pg.wait_for_timeout(700)
+            chk('고른 카드를 앱에 넘김(서고로 돌아오는 표시)', pg.evaluate('window.__log.join()') == 'plan,reveal:43-3-16:true' and pg.locator('#cbsrShelf').count() == 0 and pg.evaluate('window.__ovs()') == 0)
+            # 배너에서 바로(혼자 열림)
+            pg.evaluate('window.shelfOpen({scene:"card",solo:true,mix:true})'); pg.wait_for_timeout(2600)
+            chk('배너에서 바로: 카드 장면, 닫기 단추', pg.locator('#cbsrShelf .cdf.open .cdk').count() == 7 and '닫기' in (txt('#cbsrShelf .bk') or '')); 
+            pg.locator('#cbsrShelf .cdk').nth(1).click(force=True); pg.wait_for_timeout(1200)
+            chk('배너에서 고름: 서고로 돌아오지 않는 표시', pg.evaluate('window.__log[2]') == 'reveal:43-3-16:false')
+            pg.evaluate('window.shelfOpen({scene:"card",solo:true})'); pg.wait_for_timeout(2000); pg.click('#cbsrShelf .bk'); pg.wait_for_timeout(600)
+            chk('배너에서 열고 닫기 → 서고 전체가 닫힘', pg.locator('#cbsrShelf').count() == 0 and pg.evaluate('window.__ovs()') == 0)
+            # 올해 받은 말씀이 있을 때
+            pg.evaluate('window.__had=1; window.shelfOpen({back:true})'); pg.wait_for_timeout(700)
+            pg.click('#cbsrShelf .dg .dgc button:nth-child(4)'); pg.wait_for_timeout(500)
+            chk('받은 말씀이 있으면: 여기 있습니다', '올해 받으신 말씀이 있습니다' in (txt('#cbsrShelf .dg .dgb') or '')); pg.wait_for_timeout(1300)
+            chk('받은 말씀을 보여 주도록 넘김', pg.evaluate('window.__log[3]') == 'show' and pg.locator('#cbsrShelf').count() == 0)
+            cx.close()
+        b.close()
+finally:
+    srv.terminate()
+print('오류:', errs or '없음'); bad = [n for n, c in ok if not c]; print('실패:', bad or '없음', '(%d가지)' % len(ok))
