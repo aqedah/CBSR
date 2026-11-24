@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
+<defs>
+<filter id="b2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2"/></filter>
+<filter id="b3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.2"/></filter>
+<filter id="b6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+<radialGradient id="glow" gradientUnits="userSpaceOnUse" cx="66" cy="286" r="230"><stop offset="0" stop-color="#ffd58a" stop-opacity=".95"/><stop offset=".25" stop-color="#ffbe68" stop-opacity=".5"/><stop offset=".6" stop-color="#ff9f45" stop-opacity=".14"/><stop offset="1" stop-color="#ff9f45" stop-opacity="0"/></radialGradient>
+<linearGradient id="hoodsh" gradientUnits="userSpaceOnUse" x1="150" y1="92" x2="150" y2="166"><stop offset="0" stop-color="#2a180e" stop-opacity=".66"/><stop offset=".45" stop-color="#2a180e" stop-opacity=".4"/><stop offset=".8" stop-color="#1c100a" stop-opacity=".24"/><stop offset="1" stop-color="#0d0705" stop-opacity="0"/></linearGradient>
+<linearGradient id="sidesh" gradientUnits="userSpaceOnUse" x1="138" y1="150" x2="192" y2="140"><stop offset="0" stop-color="#0d0705" stop-opacity="0"/><stop offset=".55" stop-color="#3a2415" stop-opacity=".1"/><stop offset="1" stop-color="#3a2415" stop-opacity=".3"/></linearGradient>
+<linearGradient id="beardsh" gradientUnits="userSpaceOnUse" x1="120" y1="230" x2="196" y2="214"><stop offset="0" stop-color="#2a1b10" stop-opacity="0"/><stop offset=".6" stop-color="#2a1b10" stop-opacity=".34"/><stop offset="1" stop-color="#2a1b10" stop-opacity=".72"/></linearGradient>
+<clipPath id="cface"><path d="M114 124C110 150 114 180 126 196C136 206 164 206 174 196C186 180 190 150 186 124C182 98 118 98 114 124Z"/></clipPath>
+<clipPath id="cbeard"><path id="pbeard" d="M111 150C104 176 102 206 110 236C118 270 136 304 150 334C164 304 182 270 190 236C198 206 196 176 189 150C186 172 178 186 166 190C160 186 155 185 150 185C145 185 140 186 134 190C122 186 114 172 111 150Z"/></clipPath>
+<clipPath id="ccloak"><path d="M10 380C12 320 30 282 62 264L86 238L214 238L238 264C270 282 288 320 290 380Z"/></clipPath>
+<clipPath id="chood"><path d="M52 264C38 170 70 40 150 20C230 40 262 170 248 264L214 238C226 170 210 78 150 62C90 78 74 170 86 238Z"/></clipPath>
+</defs>
+<g transform="rotate(-2.5 150 240)">
+<!-- 망토 -->
+<path d="M10 380C12 320 30 282 62 264L86 238L214 238L238 264C270 282 288 320 290 380Z" fill="#2b1f16" stroke="#120b07" stroke-width="1.6" stroke-linejoin="round"/>
+<g clip-path="url(#ccloak)" fill="none" stroke="#120b07" stroke-width="1.1" opacity=".75">
+<path d="M96 246C84 290 80 340 84 380M112 250C106 300 106 340 110 380M204 246C216 290 220 340 216 380M188 250C194 300 194 340 190 380M240 272C252 304 258 340 258 380M60 272C48 304 42 340 42 380"/>
+</g>
+<g clip-path="url(#ccloak)"><path d="M62 264C40 290 26 330 22 380L70 380C70 330 78 290 96 250Z" fill="#6b4a2c" opacity=".55" filter="url(#b6)"/></g>
+<!-- 두건 -->
+<path d="M52 264C38 170 70 40 150 20C230 40 262 170 248 264L214 238L86 238Z" fill="#33251a" stroke="#120b07" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M86 238C74 170 90 78 150 62C210 78 226 170 214 238Z" fill="#3d2b1d"/><path d="M96 232C86 172 100 92 150 78C200 92 214 172 204 232Z" fill="#5a4129" opacity=".7" filter="url(#b6)"/>
+<g clip-path="url(#chood)" fill="none" stroke="#120b07" stroke-width="1" opacity=".7">
+<path d="M66 250C54 170 80 62 150 40M234 250C246 170 220 62 150 40M76 244C66 170 86 70 150 52M224 244C234 170 214 70 150 52"/>
+</g>
+<g clip-path="url(#chood)"><path d="M52 264C38 170 70 40 150 20L150 62C90 78 74 170 86 238Z" fill="#8a633c" opacity=".5" filter="url(#b6)"/>
+<path d="M150 20C230 40 262 170 248 264L214 238C226 170 210 78 150 62Z" fill="#080403" opacity=".55" filter="url(#b6)"/></g>
+<!-- 얼굴 -->
+<path d="M114 124C110 150 114 180 126 196C136 206 164 206 174 196C186 180 190 150 186 124C182 98 118 98 114 124Z" fill="#e6c89c"/>
+<g clip-path="url(#cface)">
+<ellipse cx="124" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".17" filter="url(#b3)"/><ellipse cx="176" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".13" filter="url(#b3)"/>
+
+<rect x="100" y="90" width="100" height="80" fill="url(#hoodsh)"/>
+<rect x="130" y="90" width="70" height="130" fill="url(#sidesh)"/>
+<!-- 얼룩과 검버섯(11-24 목사님): 과하지 않게. 화상 자국인지 그늘인지 애매하게 -->
+<path d="M172 116C180 123 185 137 185.500 152C186 166 182 178 175 186C171 179 169.500 169 170.500 158C171.500 146 168 131 172 116Z" fill="#7a4628" opacity=".3" filter="url(#b2)"/>
+<path d="M176 132C180 138 181 148 179 157C176 152 174.500 142 176 132Z" fill="#55301c" opacity=".3" filter="url(#b2)"/>
+<path d="M170 168q4 3 3 9q-4 -2 -3 -9z" fill="#6a3a22" opacity=".28"/>
+<g fill="#5c3a20"><ellipse cx="178.500" cy="127" rx="3.300" ry="2.300" transform="rotate(-24 178.500 127)" opacity=".5"/><ellipse cx="181" cy="161" rx="2.600" ry="3.300" transform="rotate(12 181 161)" opacity=".5"/><circle cx="176" cy="172.500" r="1.700" opacity=".48"/><circle cx="183.500" cy="148" r="1.400" opacity=".44"/><circle cx="172.500" cy="140" r="1.100" opacity=".4"/><ellipse cx="123" cy="118.500" rx="2.700" ry="1.900" transform="rotate(18 123 118.500)" opacity=".42"/><circle cx="119.500" cy="152" r="1.700" opacity=".42"/><circle cx="127" cy="165" r="1.500" opacity=".4"/><ellipse cx="124" cy="141" rx="2" ry="1.400" opacity=".32"/><circle cx="160" cy="112.500" r="1.500" opacity=".4"/><circle cx="139" cy="121" r="1.100" opacity=".36"/></g>
+<path d="M128 119Q150 114 172 119M132 126Q150 122 168 126" stroke="#8a6238" stroke-width=".6" fill="none" opacity=".7"/>
+</g>
+<path d="M114 124C110 150 114 180 126 196" fill="none" stroke="#1a110b" stroke-width="1"/>
+<ellipse cx="133.0" cy="150.5" rx="11" ry="5" fill="#8a5a34" opacity=".14" filter="url(#b3)"/><path d="M124.2 152.6Q133.0 145.6 141.8 152.6" stroke="#2a180e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M123.0 147.5Q133.0 141.5 143.5 148" stroke="#9a7246" stroke-width=".6" fill="none"/><path d="M126.0 157Q133.0 160 140.0 157" stroke="#9a7246" stroke-width=".7" fill="none"/><path d="M123.0 151.5q-3.0 -1.4 -6.5 -3.2" stroke="#7a5532" stroke-width=".65" fill="none" stroke-linecap="round"/><path d="M123.0 152.6q-3.0 0.2 -6.5 0.2" stroke="#7a5532" stroke-width=".65" fill="none" stroke-linecap="round"/><path d="M123.0 153.7q-3.0 1.6 -6.5 3.6" stroke="#7a5532" stroke-width=".65" fill="none" stroke-linecap="round"/><ellipse cx="167.0" cy="150.5" rx="11" ry="5" fill="#8a5a34" opacity=".14" filter="url(#b3)"/><path d="M158.2 152.6Q167.0 145.6 175.8 152.6" stroke="#2a180e" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M161.8 152.4Q167.0 150.3 172.2 152.4Q167.0 153.6 161.8Z" fill="#0b0604" opacity=".92"/><circle cx="168.6" cy="151.7" r=".6" fill="#f0d8a0" opacity=".9"/><path d="M157.0 147.5Q167.0 141.5 177.5 148" stroke="#9a7246" stroke-width=".6" fill="none"/><path d="M160.0 157Q167.0 160 174.0 157" stroke="#9a7246" stroke-width=".7" fill="none"/><path d="M177.0 151.5q3.0 -1.4 6.5 -3.2" stroke="#7a5532" stroke-width=".65" fill="none" stroke-linecap="round"/><path d="M177.0 152.6q3.0 0.2 6.5 0.2" stroke="#7a5532" stroke-width=".65" fill="none" stroke-linecap="round"/><path d="M177.0 153.7q3.0 1.6 6.5 3.6" stroke="#7a5532" stroke-width=".65" fill="none" stroke-linecap="round"/>
+<g transform="translate(0 -3)"><path d="M144.0 134.5 C137.0 130.5 129.0 131 123.0 134 C117.0 137 113.0 142 111.0 149 C116.0 144.5 122.0 141 129.0 139.5 C135.0 138.5 140.0 138.5 144.0 139.5 Z" fill="#efe7d4" stroke="#1a110b" stroke-width=".7" stroke-linejoin="round"/><path d="M142.0 138.5l-2.4 -4.6" stroke="#7a6a52" stroke-width=".6"/><path d="M138.7 139.1l-2.4 -4.3" stroke="#7a6a52" stroke-width=".6"/><path d="M135.4 139.6l-2.4 -4.1" stroke="#7a6a52" stroke-width=".6"/><path d="M132.1 140.2l-2.4 -3.8" stroke="#7a6a52" stroke-width=".6"/><path d="M128.8 140.7l-2.4 -3.6" stroke="#7a6a52" stroke-width=".6"/><path d="M125.5 141.2l-2.4 -3.3" stroke="#7a6a52" stroke-width=".6"/><path d="M122.2 141.8l-2.4 -3.1" stroke="#7a6a52" stroke-width=".6"/><path d="M118.9 142.3l-2.4 -2.8" stroke="#7a6a52" stroke-width=".6"/><path d="M115.6 142.9l-2.4 -2.6" stroke="#7a6a52" stroke-width=".6"/><path d="M156.0 134.5 C163.0 130.5 171.0 131 177.0 134 C183.0 137 187.0 142 189.0 149 C184.0 144.5 178.0 141 171.0 139.5 C165.0 138.5 160.0 138.5 156.0 139.5 Z" fill="#efe7d4" stroke="#1a110b" stroke-width=".7" stroke-linejoin="round"/><path d="M158.0 138.5l2.4 -4.6" stroke="#7a6a52" stroke-width=".6"/><path d="M161.3 139.1l2.4 -4.3" stroke="#7a6a52" stroke-width=".6"/><path d="M164.6 139.6l2.4 -4.1" stroke="#7a6a52" stroke-width=".6"/><path d="M167.9 140.2l2.4 -3.8" stroke="#7a6a52" stroke-width=".6"/><path d="M171.2 140.7l2.4 -3.6" stroke="#7a6a52" stroke-width=".6"/><path d="M174.5 141.2l2.4 -3.3" stroke="#7a6a52" stroke-width=".6"/><path d="M177.8 141.8l2.4 -3.1" stroke="#7a6a52" stroke-width=".6"/><path d="M181.1 142.3l2.4 -2.8" stroke="#7a6a52" stroke-width=".6"/><path d="M184.4 142.9l2.4 -2.6" stroke="#7a6a52" stroke-width=".6"/></g>
+<!-- 코 -->
+<path d="M147.500 147C147 158 144.500 167 143 172.500C142 178.500 145.500 183 150 183C154.500 183 158 178.500 157 172.500C155.500 167 153 158 152.500 147Z" fill="#dcbb8e"/>
+<path d="M143 172.500C142 178.500 145.500 183 150 183C154.500 183 158 178.500 157 172.500" fill="none" stroke="#3a2416" stroke-width=".95" stroke-linecap="round"/>
+<path d="M143 173.500q-3.800 0 -4.200 3.600q1 3 4.600 2.400M157 173.500q3.800 0 4.200 3.600q-1 3 -4.600 2.400" fill="none" stroke="#3a2416" stroke-width=".8" stroke-linecap="round"/>
+<ellipse cx="148.500" cy="175.500" rx="2.600" ry="2.100" fill="#fff2d6" opacity=".75"/>
+<!-- 볼 주름 -->
+<path d="M135 180Q128 187 127 196M165 180Q172 187 173 196" stroke="#7a5532" stroke-width=".8" fill="none"/>
+
+<!-- 수염 -->
+<path d="M111 150C104 176 102 206 110 236C118 270 136 304 150 334C164 304 182 270 190 236C198 206 196 176 189 150C186 172 178 186 166 190C160 186 155 185 150 185C145 185 140 186 134 190C122 186 114 172 111 150Z" fill="#ebe2cd" stroke="#120b07" stroke-width="1.2" stroke-linejoin="round"/>
+<g clip-path="url(#cbeard)">
+<rect x="96" y="140" width="110" height="200" fill="url(#beardsh)"/>
+<path d="M104 240C116 280 134 310 150 334L150 250Z" fill="#ffe2a8" opacity=".55" filter="url(#b6)"/>
+<path d="M112.0 196.0Q111.6 249.7 145.9 304.7" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M115.0 197.3Q109.0 252.2 146.6 306.6" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M118.1 198.5Q111.6 250.5 147.6 310.4" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M121.1 199.7Q119.8 246.8 144.7 312.2" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M124.2 200.8Q122.8 260.4 150.3 315.4" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M127.2 201.9Q125.1 245.9 145.7 307.6" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M130.2 202.8Q124.5 256.5 146.2 311.6" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M133.3 203.7Q131.8 264.3 148.0 319.2" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M136.3 204.4Q134.6 257.3 148.6 319.1" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M139.4 205.0Q141.0 268.7 151.9 324.1" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M142.4 205.5Q140.0 253.2 148.1 318.1" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M145.4 205.8Q147.8 261.4 151.1 321.5" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M148.5 206.0Q144.3 261.0 152.6 327.6" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.55"/>
+<path d="M151.5 206.0Q155.5 262.9 152.6 323.9" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M154.6 205.8Q157.2 260.2 147.9 323.8" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M157.6 205.5Q162.1 267.5 148.3 319.1" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M160.6 205.0Q158.5 252.0 148.8 316.6" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M163.7 204.4Q165.5 258.3 153.2 314.3" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M166.7 203.7Q165.4 263.8 149.8 318.1" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M169.8 202.8Q169.4 253.5 149.7 313.3" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M172.8 201.9Q173.5 266.4 155.1 315.5" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M175.8 200.8Q181.3 258.1 150.8 309.7" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M178.9 199.7Q179.5 252.0 150.5 314.0" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M181.9 198.5Q183.5 243.6 154.8 305.7" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M185.0 197.3Q186.4 254.0 151.0 306.6" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+<path d="M188.0 196.0Q195.5 249.5 153.0 303.6" stroke="#6f5d43" stroke-width=".7" fill="none" opacity="0.85"/>
+</g>
+<!-- 콧수염과 웃는 입 -->
+<path d="M142 204.500Q150 212.500 158 204.500" fill="#b8563f" stroke="#4a2114" stroke-width="1" stroke-linejoin="round"/>
+<path d="M150 188.500C145 186 138 187 133 191.500C129.500 195 127 199.500 126 205C131 202.500 136 201 140.500 200.500C144.500 200.200 147.500 201 150 203C152.500 201 155.500 200.200 159.500 200.500C164 201 169 202.500 174 205C173 199.500 170.500 195 167 191.500C162 187 155 186 150 188.500Z" fill="#f7f1e0" stroke="#5a4630" stroke-width=".8" stroke-linejoin="round"/>
+<path d="M150 190.500v11M145.500 191Q139 194 132 200M154.500 191Q161 194 168 200M148 194Q143 196.500 138 199.500M152 194Q157 196.500 162 199.500" stroke="#8a7a5c" stroke-width=".5" fill="none"/>
+<!-- 촛대: 소매 끝에서 -->
+<rect x="60" y="300" width="13" height="42" rx="2" fill="#f3e6c4" stroke="#120b07" stroke-width="1"/>
+<path d="M60 308q-3 6 0 12M73 304q3 8 0 14" stroke="#c9b68c" stroke-width="1.200" fill="none"/>
+<ellipse cx="66.500" cy="343" rx="25" ry="6" fill="#9a7436" stroke="#120b07" stroke-width="1.100"/>
+<path d="M59 349h15v10h-15z" fill="#7d5d2b" stroke="#120b07" stroke-width="1"/>
+<path d="M10 380C12 350 24 330 46 322L96 340C92 346 90 352 90 358C78 352 56 352 44 358C42 366 42 372 42 380Z" fill="#3a2a1d" stroke="#120b07" stroke-width="1.400" stroke-linejoin="round"/>
+<path d="M44 358C56 352 78 352 90 358C90 366 88 374 84 380L48 380C44 374 43 366 44 358Z" fill="#b98f63" stroke="#120b07" stroke-width="1" stroke-linejoin="round"/>
+<path d="M55 357v23M66 355v25M77 357v23" stroke="#120b07" stroke-width=".7"/>
+<path d="M66.500 300v-6" stroke="#120b07" stroke-width="1.200"/>
+<path d="M66.500 268C60 280 59 289 62 294C64 297.500 69 297.500 71 294C74 289 73 280 66.500 268Z" fill="#fff3c4" stroke="#b9792a" stroke-width=".8"/>
+<path d="M66.500 279C64 285 64 290 66.500 293C69 290 69 285 66.500 279Z" fill="#f7a53a"/>
+</g>
+</svg>

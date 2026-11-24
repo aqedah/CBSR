@@ -12,3 +12,5 @@
 - `sian/` — 처음 시안 네 가지.
 
 - 2026-11-24 저녁: 통로를 눈높이에서 본 그림으로 바꿨습니다(`art_tools/engrave.py`의 `hall(…, fp=True)`). 사서 그림은 얼룩과 검버섯을 넣은 `libr9`(`mk_libr.py`), 카드를 드는 그림은 `libr9c`(`mk_libr_c.py`)입니다. 만드는 순서와 정한 것은 `docs/CBSR_성경서고_결정기록_4_1인칭통로와_대사틀_2026-11-24.md`에 있습니다. 화면을 죽 찍는 스크립트는 `desk/check/shoot_walk.py`입니다.
+
+- 2026-11-24 밤: 화살표로 한 걸음씩 걷기. 통로 그림 세 장은 `art_tools/engrave.py`의 `hall(name, seed=7, nine=True, night=True, flames=False, fp=True, cz=-2.6 / 2.9 / 7.6)`으로 그리고 webp(품질 72)로 바꿔 `hall.webp`, `hall_1.webp`, `hall_2.webp`로 둡니다. 촛불 자리는 그릴 때 나오는 `_anchors.json`의 값을 `desk/shelf.src.js`의 `VIEWS`에 적습니다. 사서 그림은 `libr10`(`mk_libr.py`)입니다. 걸음 화면을 죽 찍는 스크립트는 `desk/check/shoot_steps.py`입니다.

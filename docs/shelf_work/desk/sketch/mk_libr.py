@@ -28,7 +28,10 @@ def eye(cx, side, shut=0.0):
     s = side
     o = []
     o.append('<ellipse cx="%.1f" cy="150.5" rx="11" ry="5" fill="#8a5a34" opacity=".14" filter="url(#b3)"/>' % cx)
-    o.append('<path d="M%.1f 153Q%.1f 144.2 %.1f 153" stroke="#2a180e" stroke-width="2" fill="none" stroke-linecap="round"/>' % (cx - 8.6, cx, cx + 8.6))
+    o.append('<path d="M%.1f 152.6Q%.1f 145.6 %.1f 152.6" stroke="#2a180e" stroke-width="2" fill="none" stroke-linecap="round"/>' % (cx - 8.8, cx, cx + 8.8))
+    if shut > 0:
+        o.append('<path d="M%.1f 152.4Q%.1f 150.3 %.1f 152.4Q%.1f 153.6 %.1fZ" fill="#0b0604" opacity=".92"/>' % (cx - 5.2, cx, cx + 5.2, cx, cx - 5.2 + 0.0))
+        o.append('<circle cx="%.1f" cy="151.7" r=".6" fill="#f0d8a0" opacity=".9"/>' % (cx + 1.6))
     o.append('<path d="M%.1f 147.5Q%.1f 141.5 %.1f 148" stroke="#9a7246" stroke-width=".6" fill="none"/>' % (cx - 10, cx, cx + 10.5))
     o.append('<path d="M%.1f 157Q%.1f 160 %.1f 157" stroke="#9a7246" stroke-width=".7" fill="none"/>' % (cx - 7, cx, cx + 7))
     ox = cx + s * 10
@@ -41,7 +44,7 @@ SVG = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
 <filter id="b3" x="-40%%" y="-40%%" width="180%%" height="180%%"><feGaussianBlur stdDeviation="3.2"/></filter>
 <filter id="b6" x="-50%%" y="-50%%" width="200%%" height="200%%"><feGaussianBlur stdDeviation="7"/></filter>
 <radialGradient id="glow" gradientUnits="userSpaceOnUse" cx="66" cy="286" r="230"><stop offset="0" stop-color="#ffd58a" stop-opacity=".95"/><stop offset=".25" stop-color="#ffbe68" stop-opacity=".5"/><stop offset=".6" stop-color="#ff9f45" stop-opacity=".14"/><stop offset="1" stop-color="#ff9f45" stop-opacity="0"/></radialGradient>
-<linearGradient id="hoodsh" gradientUnits="userSpaceOnUse" x1="150" y1="92" x2="150" y2="166"><stop offset="0" stop-color="#3a2415" stop-opacity=".5"/><stop offset=".45" stop-color="#3a2415" stop-opacity=".16"/><stop offset="1" stop-color="#0d0705" stop-opacity="0"/></linearGradient>
+<linearGradient id="hoodsh" gradientUnits="userSpaceOnUse" x1="150" y1="92" x2="150" y2="166"><stop offset="0" stop-color="#2a180e" stop-opacity=".66"/><stop offset=".45" stop-color="#2a180e" stop-opacity=".4"/><stop offset=".8" stop-color="#1c100a" stop-opacity=".24"/><stop offset="1" stop-color="#0d0705" stop-opacity="0"/></linearGradient>
 <linearGradient id="sidesh" gradientUnits="userSpaceOnUse" x1="138" y1="150" x2="192" y2="140"><stop offset="0" stop-color="#0d0705" stop-opacity="0"/><stop offset=".55" stop-color="#3a2415" stop-opacity=".1"/><stop offset="1" stop-color="#3a2415" stop-opacity=".3"/></linearGradient>
 <linearGradient id="beardsh" gradientUnits="userSpaceOnUse" x1="120" y1="230" x2="196" y2="214"><stop offset="0" stop-color="#2a1b10" stop-opacity="0"/><stop offset=".6" stop-color="#2a1b10" stop-opacity=".34"/><stop offset="1" stop-color="#2a1b10" stop-opacity=".72"/></linearGradient>
 <clipPath id="cface"><path d="M114 124C110 150 114 180 126 196C136 206 164 206 174 196C186 180 190 150 186 124C182 98 118 98 114 124Z"/></clipPath>
@@ -67,7 +70,7 @@ SVG = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 12 232 368">
 <!-- 얼굴 -->
 <path d="M114 124C110 150 114 180 126 196C136 206 164 206 174 196C186 180 190 150 186 124C182 98 118 98 114 124Z" fill="#e6c89c"/>
 <g clip-path="url(#cface)">
-<ellipse cx="124" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".34" filter="url(#b3)"/><ellipse cx="176" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".3" filter="url(#b3)"/>
+<ellipse cx="124" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".17" filter="url(#b3)"/><ellipse cx="176" cy="171" rx="11" ry="8" fill="#dd8763" opacity=".13" filter="url(#b3)"/>
 
 <rect x="100" y="90" width="100" height="80" fill="url(#hoodsh)"/>
 <rect x="130" y="90" width="70" height="130" fill="url(#sidesh)"/>

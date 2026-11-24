@@ -126,12 +126,13 @@ EPALS = {
 }
 
 
-def hall(name='hall_e', seed=7, nine=False, night=False, flames=True, fp=False):
+def hall(name='hall_e', seed=7, nine=False, night=False, flames=True, fp=False, cz=-2.6):
+    # cz: 2026-11-24 밤 목사님 — 화살표로 한 걸음씩 걷기. 통로 안쪽에서 본 그림을 그릴 때의 눈 자리(z)
     # fp: 2026-11-24 목사님 — 위에서 내려다보는 그림 대신 1인칭(눈높이)으로 통로에 서서 본 서고
     rnd = random.Random(seed)
-    sc = Scene(1.55, -2.6, 0, 500, cy_css=470) if fp else Scene(9.5, -8.0, 33, 900)
+    sc = Scene(1.55, cz, 0, 500, cy_css=470) if fp else Scene(9.5, -8.0, 33, 900)
     pl = Plate(tone=0.7 if not fp else 0.3, cls=1)
-    HW, Z0, Z1, WH, CHT = 2.45, (-2.2 if fp else -6.0), 12.4, 7.4, 3.1
+    HW, Z0, Z1, WH, CHT = 2.45, (cz + 0.4 if fp else -6.0), 12.4, 7.4, 3.1
     NEAR = sc.cam[2] + 0.25
 
     def fog(zc):
@@ -240,30 +241,38 @@ def hall(name='hall_e', seed=7, nine=False, night=False, flames=True, fp=False):
             q([(-0.42, 1.0, lz - 0.1), (0.42, 1.0, lz - 0.1), (0.42, 1.34, lz + 0.3), (-0.42, 1.34, lz + 0.3)], tone=0.85, cls=4, wash=WOOD_L, lw=0.7)
             q([(-0.36, 1.04, lz - 0.08), (0, 1.03, lz - 0.08), (0, 1.31, lz + 0.26), (-0.36, 1.32, lz + 0.26)], tone=1.0, cls=0, wash=(250, 242, 216), lw=0.5)
             q([(0.36, 1.04, lz - 0.08), (0, 1.03, lz - 0.08), (0, 1.31, lz + 0.26), (0.36, 1.32, lz + 0.26)], tone=0.95, cls=0, wash=(244, 234, 204), lw=0.5)
+        if fp and z < NEAR:   # 눈 뒤에 있는 서가 줄은 그리지 않음(그림자·촛불 자리도)
+            continue
         for (key, xa, xb) in r['cases']:
+            if fp:   # 눈 자리가 달라도 같은 서가에는 같은 책이 꽂히게, 서가마다 난수를 새로 시작
+                rnd = random.Random(seed * 1000 + sum(map(ord, key)))
             inner = xa if abs(xa) < abs(xb) else xb
             zb = z + 0.75
             pal = EPALS.get(key) or EPALS[{'act': 'gos', 'rev': 'gen'}[key]]
+            burnt = fp and night and r.get('both')   # 11-24 밤 목사님: 그을린 곳은 팻말이 아니라 배경으로
+            if burnt:
+                pal = [(58, 46, 36), (46, 36, 28), (70, 54, 40), (38, 30, 24), (84, 62, 44)]
             q([(inner, 0, z), (inner, 0, zb), (inner, CHT, zb), (inner, CHT, z)], tone=0.5, cls=2, wash=WOOD_D, lw=0.8)
             q([(xa - 0.08, CHT, z - 0.08), (xb + 0.08, CHT, z - 0.08), (xb + 0.08, CHT, zb), (xa - 0.08, CHT, zb)], tone=0.93, cls=4, wash=WOOD_L, lw=0.9)
-            q([(xa, 0, z), (xb, 0, z), (xb, CHT, z), (xa, CHT, z)], tone=0.82, cls=1, wash=WOOD, lw=1.0)
+            q([(xa, 0, z), (xb, 0, z), (xb, CHT, z), (xa, CHT, z)], tone=0.5 if burnt else 0.82, cls=1, wash=(92, 74, 56) if burnt else WOOD, lw=1.0)
             base, m = 0.3, 0.12
             sh = (CHT - base - 0.2) / 4
             for i in range(4):
                 y0 = base + i * sh
                 y1 = y0 + sh - 0.08
-                q([(xa + m, y0, z), (xb - m, y0, z), (xb - m, y1, z), (xa + m, y1, z)], tone=0.2, cls=5, wash=(170, 150, 126), lw=0.6)
+                q([(xa + m, y0, z), (xb - m, y0, z), (xb - m, y1, z), (xa + m, y1, z)], tone=0.2, cls=5, wash=(44, 34, 26) if burnt else (170, 150, 126), lw=0.6)
                 x = xa + m + 0.02
                 while x < xb - m - 0.07:
                     wd = rnd.uniform(0.08, 0.16)
                     if x + wd > xb - m - 0.01:
                         break
-                    if rnd.random() < 0.06:
-                        x += wd * 0.7
+                    if rnd.random() < (0.34 if burnt else 0.06):
+                        x += wd * (1.3 if burnt else 0.7)
                         continue
                     hh = (y1 - y0) * rnd.uniform(0.62, 0.94)
-                    q([(x, y0, z), (x + wd, y0, z), (x + wd, y0 + hh, z), (x, y0 + hh, z)], tone=rnd.uniform(0.6, 0.92), cls=6, wash=rnd.choice(pal), lw=0.5)
-                    if sc.css(x, y0, z)[2] > 52 and rnd.random() < 0.8:
+                    q([(x, y0, z), (x + wd, y0, z), (x + wd, y0 + hh, z), (x, y0 + hh, z)], tone=rnd.uniform(0.6, 0.92) * (0.6 if burnt else 1), cls=6, wash=rnd.choice(pal), lw=0.5)
+                    rr_ = rnd.random()
+                    if sc.css(x, y0, z)[2] > 52 and rr_ < 0.8:
                         for by in (0.74, 0.82, 0.2):
                             ln([(x, y0 + hh * by, z), (x + wd, y0 + hh * by, z)], lw=0.3)
                     x += wd + 0.01
@@ -273,7 +282,8 @@ def hall(name='hall_e', seed=7, nine=False, night=False, flames=True, fp=False):
             q([(xa - 0.04, 0, z - 0.04), (xb + 0.04, 0, z - 0.04), (xb + 0.04, 0.24, z - 0.04), (xa - 0.04, 0.24, z - 0.04)], tone=0.7, cls=1, wash=WOOD_D, lw=0.8)
             cs = [sc.css(x_, y_, z) for x_ in (xa, xb) for y_ in (0, CHT)]
             anchors['cases'][key] = [round(min(c[0] for c in cs)), round(min(c[1] for c in cs)), round(max(c[0] for c in cs)), round(max(c[1] for c in cs))]
-            shadows.append([sc.css(xa - 0.1, 0, z - 0.7), sc.css(xb + 0.1, 0, z - 0.7), sc.css(xb + 0.1, 0, z + 0.8), sc.css(xa - 0.1, 0, z + 0.8)])
+            za_, zb_ = (max(z - 0.7, NEAR + 0.05), z + 0.02) if fp else (z - 0.7, z + 0.8)
+            shadows.append([sc.css(xa - 0.1, 0, za_), sc.css(xb + 0.1, 0, za_), sc.css(xb + 0.1, 0, zb_), sc.css(xa - 0.1, 0, zb_)])
             sides = [xa, xb] if r.get('both') else [inner]
             for edge in sides:
                 sgn = (-1 if edge == xa else 1) if r.get('both') else (-1 if edge > 0 else 1)
@@ -294,6 +304,8 @@ def hall(name='hall_e', seed=7, nine=False, night=False, flames=True, fp=False):
                 bx, by, _ = sc.css(lx, 0, lz - 0.5)
                 anchors['lanterns'].append([round(hx), round(hy), round(hs, 1)])
                 lights.append((hx, hy, bx, by, hs))
+    if fp:
+        rnd = random.Random(seed + 99)
     # a ladder against the nearest left stall
     for lx in (-1.95, -1.45):
         q([(lx - 0.035, 0, -1.0), (lx + 0.035, 0, -1.0), (lx + 0.035, 3.0, -0.1), (lx - 0.035, 3.0, -0.1)], tone=0.85, cls=0, wash=WOOD, lw=0.6)
