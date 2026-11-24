@@ -5,7 +5,7 @@
 (function(){
 "use strict";
 var ART={"labels": {"tor": {"창세기": [49, 110, 196, 13.0, 30, 63], "출애굽기": [108, 110, 196, 13.0, 30, 80], "레위기": [167, 128, 178, 13.0, 30, 63], "민수기": [226, 116, 190, 13.0, 30, 63], "신명기": [285, 118, 188, 13.0, 30, 63]}, "his": {"여호수아": [49, 132, 174, 13.0, 30, 80], "사사기": [108, 137, 169, 13.0, 30, 63], "룻기": [167, 160, 146, 13.0, 30, 46], "사무엘상": [226, 123, 183, 13.0, 30, 80], "사무엘하": [285, 132, 174, 13.0, 30, 80], "열왕기상": [49, 369, 171, 13.0, 30, 80], "열왕기하": [108, 365, 175, 13.0, 30, 80], "역대상": [167, 359, 181, 13.0, 30, 63], "역대하": [226, 350, 190, 13.0, 30, 63], "에스라": [74, 620, 154, 13.0, 30, 63], "느헤미야": [133, 616, 158, 13.0, 30, 80], "에스더": [192, 620, 154, 13.0, 30, 63]}, "poe": {"욥기": [49, 110, 196, 13.0, 30, 46], "시편": [108, 110, 196, 13.0, 30, 46], "잠언": [167, 123, 183, 13.0, 30, 46], "전도서": [226, 149, 157, 13.0, 30, 63], "아가": [285, 155, 151, 13.0, 30, 46]}, "pro": {"이사야": [43, 110, 196, 9.0, 30, 63], "예레미야": [94, 110, 196, 9.0, 30, 80], "예레미야애가": [145, 159, 147, 3.0, 42, 97], "에스겔": [196, 110, 196, 9.0, 30, 63], "다니엘": [247, 149, 157, 9.0, 30, 63], "호세아": [298, 146, 160, 9.0, 30, 63], "요엘": [43, 396, 144, 9.0, 30, 46], "아모스": [94, 387, 153, 9.0, 30, 63], "오바댜": [145, 399, 141, 9.0, 30, 63], "요나": [196, 394, 146, 9.0, 30, 46], "미가": [247, 390, 150, 9.0, 30, 46], "나훔": [298, 396, 144, 9.0, 30, 46], "하박국": [69, 630, 144, 9.0, 30, 63], "스바냐": [120, 630, 144, 9.0, 30, 63], "학개": [171, 631, 143, 9.0, 30, 46], "스가랴": [222, 614, 160, 9.0, 30, 63], "말라기": [273, 628, 146, 9.0, 30, 63]}, "gos": {"마태복음": [78, 127, 179, 13.0, 30, 80], "마가복음": [137, 144, 162, 13.0, 30, 80], "누가복음": [196, 132, 174, 13.0, 30, 80], "요한복음": [255, 137, 169, 13.0, 30, 80]}, "pau": {"로마서": [49, 106, 200, 13.0, 30, 63], "고린도전서": [108, 106, 200, 13.0, 30, 97], "고린도후서": [167, 119, 187, 13.0, 30, 97], "갈라디아서": [226, 150, 156, 13.0, 30, 97], "에베소서": [285, 150, 156, 13.0, 30, 80], "빌립보서": [44, 392, 148, 13.0, 30, 80], "골로새서": [103, 392, 148, 13.0, 30, 80], "데살로니가전서": [162, 388, 152, 7.0, 42, 97], "데살로니가후서": [221, 397, 143, 7.0, 42, 97], "디모데전서": [44, 618, 156, 13.0, 30, 97], "디모데후서": [103, 626, 148, 13.0, 30, 97], "디도서": [162, 631, 143, 13.0, 30, 63], "빌레몬서": [221, 640, 134, 13.0, 30, 80]}, "gen": {"히브리서": [78, 148, 158, 13.0, 30, 80], "야고보서": [137, 159, 147, 13.0, 30, 80], "베드로전서": [196, 159, 147, 13.0, 30, 97], "베드로후서": [255, 162, 144, 13.0, 30, 97], "요한일서": [49, 393, 147, 13.0, 30, 80], "요한이서": [108, 399, 141, 13.0, 30, 80], "요한삼서": [167, 399, 141, 13.0, 30, 80], "유다서": [226, 399, 141, 13.0, 30, 63]}}, "hall": {"cases": {"rev": [164, 413, 226, 527], "pau": [89, 399, 167, 541], "gen": [223, 399, 301, 541], "gos": [53, 374, 157, 566], "act": [233, 374, 337, 566], "poe": [-22, 324, 137, 616], "pro": [253, 324, 412, 616], "tor": [-247, 172, 76, 768], "his": [314, 172, 637, 768]}, "lanterns": [[180, 423, 46.3], [210, 423, 46.3], [175, 407, 62.5], [215, 407, 62.5], [164, 373, 96.2], [226, 373, 96.2], [131, 268, 200.0], [259, 268, 200.0]]}};
-var IMG="img/shelf/", VER="?v=9", W=390, H=846;   /* 그림을 바꾸면 VER를 올림(서비스 워커가 img/를 캐시에서 먼저 줌) */
+var IMG="img/shelf/", VER="?v=10", W=390, H=846;   /* 그림을 바꾸면 VER를 올림(서비스 워커가 img/를 캐시에서 먼저 줌) */
 var SEC={ot:{n:"구약",c:"서른아홉 권",g:["모세오경","역사서","시가서","선지서"]},nt:{n:"신약",c:"스물일곱 권",g:["복음서","사도행전","바울서신","일반서신","요한계시록"]}};
 var PRESS={"모세오경":"tor","역사서":"his","시가서":"poe","선지서":"pro","복음서":"gos","바울서신":"pau","일반서신":"gen"};
 var CNT=["","한 권","두 권","세 권","네 권","다섯 권","여섯 권","일곱 권","여덟 권","아홉 권","열 권","열한 권","열두 권","열세 권","열네 권","열다섯 권","열여섯 권","열일곱 권"];
@@ -33,8 +33,24 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .hl img,#cbsrShelf .full{position:absolute;left:0;top:0;width:390px;height:846px;display:block}
 #cbsrShelf .hl.ot{transform:perspective(900px) translateX(150px) scale(1.9) rotateY(9deg)}   /* 몇 걸음 걸어가 왼쪽 서가로 몸을 돌림 */
 #cbsrShelf .hl.nt{transform:perspective(900px) translateX(-150px) scale(1.9) rotateY(-9deg)}
-#cbsrShelf .hl.etc0{transform:scale(2.3)}   /* 통로 끝의 그을린 서가 앞까지 */
-#cbsrShelf .hl.etc{transform:scale(5.2)}
+#cbsrShelf .hl.etc0{transform:scale(1.2)}   /* 통로 끝의 그을린 서가 앞까지 */
+#cbsrShelf .hl.etc{transform:scale(2.7)}
+#cbsrShelf .hl.out{pointer-events:none;transition:none}   /* 한 걸음: 보던 그림은 다가오며 사라지고, 다음 자리 그림이 뒤에서 다가옴 */
+#cbsrShelf .hl.out.gf{animation:cbsrSo 1s cubic-bezier(.45,.05,.3,1) forwards}
+#cbsrShelf .hl.in.gf{animation:cbsrSi 1s cubic-bezier(.45,.05,.3,1)}
+#cbsrShelf .hl.out.gb{animation:cbsrBo 1s cubic-bezier(.45,.05,.3,1) forwards}
+#cbsrShelf .hl.in.gb{animation:cbsrBi 1s cubic-bezier(.45,.05,.3,1)}
+@keyframes cbsrSo{0%{transform:scale(1);opacity:1}45%{opacity:1}100%{transform:scale(2.2);opacity:0}}
+@keyframes cbsrSi{0%{transform:scale(.86)}100%{transform:scale(1)}}
+@keyframes cbsrBo{0%{transform:scale(1);opacity:1}12%{opacity:1}68%{opacity:0}100%{transform:scale(.84);opacity:0}}
+@keyframes cbsrBi{0%{transform:scale(1.7)}100%{transform:scale(1)}}
+#cbsrShelf .pad{position:absolute;left:50%;bottom:16px;width:160px;height:106px;margin-left:-80px;z-index:4}
+#cbsrShelf .pad.wt{opacity:.45}
+#cbsrShelf .pad button{position:absolute;width:48px;height:48px;padding:0;border-radius:50%;border:1.5px solid #d9b56a;background:rgba(24,15,9,.78);color:#f6e7c1;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.55)}
+#cbsrShelf .pad button:disabled{opacity:.32}
+#cbsrShelf .pad button:focus-visible{outline:3px solid #f1cf7a;outline-offset:2px}
+#cbsrShelf .pad .mu{left:56px;top:0}#cbsrShelf .pad .ml{left:0;top:58px}#cbsrShelf .pad .md{left:56px;top:58px}#cbsrShelf .pad .mr{left:112px;top:58px}
+#cbsrShelf .pad svg{width:24px;height:24px;margin:0}#cbsrShelf .pad .mu svg{transform:rotate(90deg)}#cbsrShelf .pad .mr svg{transform:rotate(180deg)}#cbsrShelf .pad .md svg{transform:rotate(-90deg)}
 #cbsrShelf .dimv{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,17,11,.5),rgba(26,17,11,.72));opacity:0;transition:opacity .6s;pointer-events:none}
 #cbsrShelf .dimv.on{opacity:1;transition:opacity .6s .85s}
 #cbsrShelf .hallv.lv .wk{animation:none;transition:transform .43s ease-in;transform:scale(1.28)}
@@ -343,20 +359,35 @@ function push(st){ var fn=function(pop){ var i=levels.indexOf(st); if(i<0) retur
 function back(){ var t=top(); if(busy) return; flush(); if(!t||t.t==="hall"||(t.t==="card"&&O.solo)){ api.close(); return; } t.fn(false); }
 function draw(from){ var t=top(); if(!t||!stage) return; if(t.t==="hall"||t.t==="sec"||t.t==="card"||t.t==="plan") drawHall(t); else if(t.t==="press") drawPress(t,from); else if(t.t==="book") drawBook(t); }
 /* ---- 서고와 구역 ---- */
-function lamps(){ var h='<div class="amb end"></div>',i=0; ART.hall.lanterns.forEach(function(l){ var x=l[0],y=l[1],s=l[2],k=Math.min(1,Math.pow(s/200,1.25)),g=Math.round(Math.min(250,s*(1.3+.6*k))),w=Math.max(5,s*.115),fh=w*2.15;   /* 11-24 목사님: 눈높이 통로에서는 먼 촛불이 한가운데로 모여 빛이 겹침 → 멀수록 빛무리를 옅고 작게, 통로 끝은 어둡게 */
+var VIEWS=[   /* 통로의 세 자리: 입구, 가운데, 끝 앞. 같은 3D 장면을 눈 자리만 옮겨 그림(art_tools/engrave.py hall(fp=True, cz=…)) */
+  {img:"hall.webp",L:null,end:[95,250,200,300,1],soot:[138,206,114,104],alt:"옛 판화처럼 그린 서고의 통로에 서 있다. 양옆으로 높은 서가가 줄지어 서 있고 촛불이 돌바닥을 밝힌다. 덧문을 닫은 창 아래 통로 끝은 어둡다"},
+  {img:"hall_1.webp",L:[[165,375,94.3],[225,375,94.3],[131,268,200],[259,268,200]],end:[122,168,146,300,.34],soot:[104,40,182,150],alt:"서고 통로의 가운데. 양옆에 서가가 서 있고, 앞에는 책을 펼쳐 둔 독서대와 덧문을 닫은 창이 보인다"},
+  {img:"hall_2.webp",L:[],end:null,soot:[70,0,250,246],alt:"통로 끝. 덧문을 닫은 창 아래, 검게 그을린 서가가 어둠 속에 서 있다"}];
+function hpos(){ var h=levels&&levels[0]; return (h&&h.pos)||0; }
+function bx(a){ return 'left:'+a[0]+'px;top:'+a[1]+'px;width:'+a[2]+'px;height:'+a[3]+'px'+(a[4]!=null&&a[4]!==1?';opacity:'+a[4]:''); }
+function lamps(p){ var V=VIEWS[p||0], h=V.end?'<div class="amb end" style="'+bx(V.end)+'"></div>':'',i=0; (V.L||ART.hall.lanterns).forEach(function(l){ var x=l[0],y=l[1],s=l[2],k=Math.min(1,Math.pow(s/200,1.25)),g=Math.round(Math.min(250,s*(1.3+.6*k))),w=Math.max(5,s*.115),fh=w*2.15;   /* 11-24 목사님: 눈높이 통로에서는 먼 촛불이 한가운데로 모여 빛이 겹침 → 멀수록 빛무리를 옅고 작게, 통로 끝은 어둡게 */
     h+='<div class="amb" style="left:'+(x-g/2)+'px;top:'+(y-g*.46).toFixed(1)+'px;width:'+g+'px;height:'+g+'px;border-radius:50%;background:radial-gradient(circle,rgba(255,232,170,'+(.85*k).toFixed(2)+') 0%,rgba(255,214,130,'+(.34*k).toFixed(2)+') 34%,rgba(255,200,110,0) 68%);mix-blend-mode:screen;animation:cbsrGlw '+(2.6+(i%4)*.37)+'s ease-in-out -'+(i*.7)+'s infinite"></div>'+
        '<div class="amb fl" style="left:'+(x-w/2).toFixed(1)+'px;top:'+(y-fh*.56).toFixed(1)+'px;width:'+w.toFixed(1)+'px;height:'+fh.toFixed(1)+'px;animation-duration:'+(1.7+(i%5)*.23)+'s;animation-delay:-'+(i*.43)+'s"></div>'; i++; });
-  return h+'<div class="amb soot"></div>'; }
-function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
-  stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl"><img src="'+IMG+'hall.webp'+VER+'" alt="옛 판화처럼 그린 서고의 통로에 서 있다. 양옆으로 높은 서가가 줄지어 서 있고 촛불이 돌바닥을 밝힌다. 덧문을 닫은 창 아래 통로 끝은 어둡다">'+
-    lamps()+'<div class="zn">'+
+  return h+'<div class="amb soot" style="'+bx(V.soot)+'"></div>'; }
+function zonesHtml(p){ return '<div class="zn">'+
       '<button type="button" class="zone" data-s="ot" style="left:0;top:300px;width:150px;height:330px" aria-label="구약 서른아홉 권, 왼쪽 서가"><span class="tb" style="top:96px"><b>구약</b><small>서른아홉 권</small></span></button>'+
       '<button type="button" class="zone" data-s="nt" style="left:240px;top:300px;width:150px;height:330px" aria-label="신약 스물일곱 권, 오른쪽 서가"><span class="tb" style="top:96px"><b>신약</b><small>스물일곱 권</small></span></button>'+
-      '<button type="button" class="zone e" data-s="etc" style="left:150px;top:292px;width:90px;height:228px" aria-label="통로 끝, 그을린 곳"></button>'+
-    '</div></div></div></div><div class="dimv"></div><div class="ui"></div></div>';
-  el=stage.querySelector(".hallv"); el._fresh=true; return el; }
+      '<button type="button" class="zone e" data-a="fw" tabindex="-1" style="left:150px;top:292px;width:90px;height:228px" aria-label="'+(p>=VIEWS.length-1?"통로 끝으로 한 걸음 더":"앞으로 걷기")+'"></button></div>'; }
+function viewInner(p){ return '<img src="'+IMG+VIEWS[p].img+VER+'" alt="'+VIEWS[p].alt+'">'+lamps(p)+zonesHtml(p); }
+function secGo(s){ var ns={t:"sec",s:s}; if(s==="etc") ns.dg={who:"l",fig:1,late:1,t:"…그쪽은, 성경이 아닙니다.",ch:[{t:"돌아간다",a:"back"},{t:"열람한다",a:"enter"}],esc:"back"};   /* 통로 끝에서 한 걸음 더 가면 사서가 막아선다 */ push(ns); }
+function hallStep(d){ var t=levels[0]; if(busy||!t||top()!==t||t.dg) return;                      /* 한 걸음: 앞으로(+1), 뒤로(-1) */
+  var p=(t.pos||0)+d; if(p<0) return; if(p>=VIEWS.length){ secGo("etc"); return; }
+  var v=stage.querySelector(".hallv"), wk=v.querySelector(".wk"), hl=v.querySelector(".hl"), old=null, rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+  t.pos=p; if(!rm){ old=hl.cloneNode(true); var z=old.querySelector(".zn"); if(z) z.parentNode.removeChild(z); old.removeAttribute("data-p"); old.className="hl out "+(d>0?"gf":"gb"); }
+  hl.innerHTML=viewInner(p); hl.setAttribute("data-p",p); if(rm){ drawHall0(t); return; }
+  hl.className="hl in "+(d>0?"gf":"gb"); wk.appendChild(old); wk.classList.remove("go"); void wk.offsetWidth; wk.classList.add("go"); busy=true;
+  var pd=v.querySelector(".pad"); if(pd) pd.classList.add("wt");
+  setTimeout(function(){ if(old.parentNode) old.parentNode.removeChild(old); busy=false; if(!root) return; hl.className="hl"; if(top()===t){ var f=document.activeElement&&document.activeElement.getAttribute&&document.activeElement.getAttribute("data-a"); drawHall0(t); var nb=f&&stage.querySelector('.pad [data-a="'+f+'"]:not([disabled])')||stage.querySelector('.pad [data-a="fw"]'); if(f&&nb) try{ nb.focus({preventScroll:true}); }catch(er){} } },1000); }
+function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
+  stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl" data-p="'+hpos()+'">'+viewInner(hpos())+'</div></div></div><div class="dimv"></div><div class="ui"></div></div>';
+  el=stage.querySelector(".hallv"); el._fresh=true; VIEWS.forEach(function(V){ try{ (new Image()).src=IMG+V.img+VER; }catch(er){} }); return el; }
 function drawHall(t){ drawHall0(t); dgDraw(); }
-function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec")?" "+((t.s==="etc"&&t.step!=="in")?"etc0":t.s):"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+((t.t==="hall"&&!t.dg)?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
+function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), P=hpos(), _p=(+hl.getAttribute("data-p")!==P)&&(hl.innerHTML=viewInner(P),hl.setAttribute("data-p",P)), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec")?" "+((t.s==="etc"&&t.step!=="in")?"etc0":t.s):"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+((t.t==="hall"&&!t.dg)?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
   if(!fresh&&moved){ wk.classList.remove("go"); void wk.offsetWidth; wk.classList.add("go"); } /* 걸어서 그 앞으로(돌아올 때도) */
   hl.className="hl"+cls; dim.className="dimv"+(t.t==="sec"?" on":"");
   if(t.t==="plan"){ dim.className="dimv on now"; ui.innerHTML='<button type="button" class="bk" data-a="back">'+CL+'서고</button><div class="ttl"><b class="tb">통독표</b></div>'+planHtml(t)+(HS>=710?libr("날짜를 누르면 그날로 갑니다."):""); return; }
@@ -365,7 +396,8 @@ function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySe
     if(t.seen||O.scene==="card"||rm0){ t.seen=1; go(); return; }                                 /* 배너에서 바로 왔거나 다시 그릴 때는 옮겨 오는 움직임 없이 */
     t.seen=1; busy=true; t.dg={who:"l",t:"…"+((O.card&&O.card.year)?O.card.year+"년 ":"")+"말씀 카드를 드리겠습니다."}; cs0.classList.add("from"); void cs0.offsetWidth; requestAnimationFrame(function(){ cs0.classList.add("mv"); cs0.classList.remove("from"); }); /* 말하던 자리(왼쪽 아래)에서 가운데로 */
     setTimeout(function(){ busy=false; go(); },900); return; }
-  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>');
+  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>'+
+      '<div class="pad fade" role="group" aria-label="걸어 다니기"><button type="button" class="mu" data-a="fw" aria-label="'+(P>=VIEWS.length-1?"통로 끝으로 한 걸음 더":"앞으로 걷기")+'">'+CL+'</button><button type="button" class="ml" data-a="tl" aria-label="왼쪽으로 돌기, 구약 서가">'+CL+'</button><button type="button" class="md" data-a="bw" aria-label="뒤로 걷기"'+(P?"":" disabled")+'>'+CL+'</button><button type="button" class="mr" data-a="tr" aria-label="오른쪽으로 돌기, 신약 서가">'+CL+'</button></div>');
     return; }
   if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
     if(t.step!=="in") ui.innerHTML=bkb+'<div class="wn up tb fade'+(t.seen?"":" late")+'" role="alert" aria-label="경고" style="top:'+Math.max(54,Math.min(92,HS-546))+'px"><h2>'+WARN.t+'</h2><p class="w1">'+WARN.a+'</p><p class="w2">'+WARN.q+'</p></div>';
@@ -434,7 +466,9 @@ function drawBook(t){ var b=DATA.by[t.id], P=pages(b); t.n=P.length; t.p=Math.ma
 function turn(d){ var t=top(); if(!t||t.t!=="book") return; flush(); if(t.q!=null){ t.q=null; drawBook(t); return; } var p=t.p+d; if(p<0||p>=t.n) return; t.p=p; t.from=null; drawBook(t); }
 /* ---- 눌림 ---- */
 function approach(cb){ var v=stage.querySelector(".hallv"), rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(!v||rm){ cb(); return; } busy=true; v.classList.add("lv"); setTimeout(function(){ busy=false; if(root) cb(); },440); }
-function act(a){ var t=top(); if(!t) return false;                                              /* 대화의 선택지와 말상자 */
+function act(a){ var t=top(); if(!t) return false;
+  if(a==="fw"||a==="bw"){ if(t.t==="hall"&&!t.dg) hallStep(a==="fw"?1:-1); return true; }          /* 걸음 단추·키보드·통로 가운데를 누름 */
+  if(a==="tl"||a==="tr"){ if(t.t==="hall"&&!t.dg&&!busy) secGo(a==="tl"?"ot":"nt"); return true; }                                              /* 대화의 선택지와 말상자 */
   if(a==="back"){ back(); return true; }
   if(a==="hello1"){ hello("first"); return true; }
   if(a==="plan"){ if(!O.plan||busy) return true; t.dg={who:"l",fig:1,t:"…통독표입니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); push({t:"plan"}); } },1000); return true; }
@@ -476,14 +510,19 @@ function onClick(e){ if(busy||!root) return; var el=e.target.closest("[data-a],[
     if(d.a==="ret"){ if(tc.ret){ tc.p=tc.ret.p; tc.q=tc.ret.q; tc.ret=null; drawBook(tc); } return; }
     var Pz=pages(DATA.by[tc.id]), iz; for(iz=0;iz<Pz.length;iz++){ if(Pz[iz].k===d.pg){ tc.ret={p:tc.p,q:tc.q}; tc.q=null; tc.p=iz; drawBook(tc); break; } } return; }
 
-  if(d.s){ var ns={t:"sec",s:d.s}; if(d.s==="etc") ns.dg={who:"l",fig:1,late:1,t:"…그쪽은, 성경이 아닙니다.",ch:[{t:"돌아간다",a:"back"},{t:"열람한다",a:"enter"}],esc:"back"};   /* 통로 끝까지 걸어간 뒤 사서가 막아선다 */ push(ns); return; }
+  if(d.s){ secGo(d.s); return; }
   if(d.g){ var s=top().s, g=d.g, t1=top(); load().then(function(D){ if(!root||top()!==t1) return; if(!PRESS[g]){ var one=(D.gs[g]||[])[0]; if(one) approach(function(){ push({t:"book",id:one.id,p:0,s:s}); }); return; } approach(function(){ push({t:"press",g:g,s:s}); }); }).catch(function(){ say("책장 원고를 받지 못했습니다. 인터넷 연결을 확인해 주세요."); }); return; }
   if(d.b){ var r=el.getBoundingClientRect(), q=stage.getBoundingClientRect(), k=q.width/W; openBook(d.b,{x:(r.left-q.left)/k,y:(r.top-q.top)/k,w:r.width/k,h:r.height/k}); } }
 function onKey(e){ if(!root) return;
   if(e.key==="Tab"){ var f=[].filter.call(root.querySelectorAll('button:not([disabled]),textarea'),function(x){ var c=getComputedStyle(x); return x.offsetParent!==null&&c.visibility!=="hidden"&&c.pointerEvents!=="none"; }), i=f.indexOf(document.activeElement);
     if(!f.length){ e.preventDefault(); return; } if(e.shiftKey?(i<=0):(i<0||i===f.length-1)){ e.preventDefault(); try{ f[e.shiftKey?f.length-1:0].focus({preventScroll:true}); }catch(er){} } return; }  /* 초점이 서고 밖(가려진 앱)으로 나가지 않게 */
   if(e.key==="Escape"){ e.preventDefault(); e.stopImmediatePropagation(); if(typing()){ document.activeElement.blur(); return; } back(); return; }  /* 앱의 Esc 처리와 겹치지 않게 여기서 끝냄 */
-  if(typing()) return; if(e.key==="ArrowRight") turn(1); else if(e.key==="ArrowLeft") turn(-1); }
+  if(typing()) return;
+  var mk={ArrowUp:"fw",KeyW:"fw",ArrowDown:"bw",KeyS:"bw",ArrowLeft:"tl",KeyA:"tl",ArrowRight:"tr",KeyD:"tr"}[e.code], tk=top();   /* 걸어 다니기: 화살표와 WASD(한글 자판 상태에서도 되게 자리로 봄) */
+  if(mk&&tk&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+    if(tk.t==="hall"&&!tk.dg){ e.preventDefault(); e.stopImmediatePropagation(); if(!busy) act(mk); return; }
+    if(tk.t==="sec"&&tk.s!=="etc"&&!tk.dg&&!tk.gd&&(mk==="bw"||(tk.s==="ot"&&mk==="tr")||(tk.s==="nt"&&mk==="tl"))){ e.preventDefault(); e.stopImmediatePropagation(); if(!busy) back(); return; } }
+  if(e.key==="ArrowRight") turn(1); else if(e.key==="ArrowLeft") turn(-1); }
 var sx=null; function onTs(e){ sx=(e.touches.length===1&&!(e.target.closest&&e.target.closest("textarea")))?e.touches[0].clientX:null; } function onTe(e){ if(sx==null) return; var dx=e.changedTouches[0].clientX-sx; sx=null; if(Math.abs(dx)>56){ var tw=top(); if(tw&&tw.t==="plan") planMonth(tw,dx<0?1:-1); else turn(dx<0?1:-1); } }
 var api={ isOpen:function(){ return !!root; },
   open:function(o){ if(root) return true; O=o||{}; levels=[]; busy=false; try{ var ae=document.activeElement; O.opener=(ae&&ae!==document.body)?ae:(O.from||null); }catch(er){}
