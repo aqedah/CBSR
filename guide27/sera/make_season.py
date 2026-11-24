@@ -18,6 +18,6 @@ def scope(css, pre, keep_global=('.sans',)):
         out.append(','.join(dict.fromkeys(ss)) + '{' + m.group(2) + '}')
     return '\n'.join(out)
 s = open(os.path.join(H, 'season_src.html')).read()
-s = s.replace('/*SHEETCSS*/', scope(build.CSS, '.sheet')).replace('/*A5CSS*/', scope(a5.CSS, '.a5w'))
+s = s.replace('/*SHEETCSS*/', scope(build.CSS, '.sheet')).replace('/*A5CSS*/', scope(a5.CSS, '.a5w')).replace('/*FIT4JS*/', open(os.path.join(H, 'fit4.js')).read())
 open(os.path.join(H, '../../app/site_src/season.html'), 'w').write(s)
 print('ok', len(s))

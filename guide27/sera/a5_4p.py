@@ -24,6 +24,8 @@ async def main(out, mods):
     doc = f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{a5.CSS}{CSS2}</style></head><body>{body}</body></html>'
     async with async_playwright() as p:
         b = await p.chromium.launch(); pg = await b.new_page(); await pg.set_content(doc); await pg.wait_for_timeout(400)
+        fit = await pg.evaluate('()=>{' + open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'fit4.js')).read() + '; const r=[]; document.querySelectorAll(".x2").forEach((x,i)=>{ if(i%2===0) r.push(fit4(x.querySelector(".p5"),null)); else r.push(fit4(null,x.querySelectorAll(".p5")[1])); }); return r; }')
+        print('맞춤:', [f for f in fit if f['dropped'] or f['scale'] < 1])
         bad = await pg.evaluate('''()=>[...document.querySelectorAll('.p5')].map((p,i)=>{const b=p.firstElementChild;return [i, Math.round((b.scrollHeight-b.clientHeight)*25.4/96)]}).filter(x=>x[1]>0)''')
         print('넘침(쪽 순번, mm):', bad or '없음')
         await pg.pdf(path=out, width='297mm', height='210mm', print_background=True)

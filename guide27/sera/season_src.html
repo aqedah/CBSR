@@ -190,11 +190,15 @@ function a5four(out,w,pray){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w
   let p1=J.A.filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x)); const mb=mapBlock(w);
   if(mb){ const i=p1.findIndex(x=>x.includes('오늘의 흐름')); p1.splice(i+1,0,mb.replace('class="map"','class="map mf"')); }
   const qp=pages=>{ let h=pages[0]?pages[0].split('<div class="op">')[0]:''; pages.forEach(pg=>pg.split('<div class="op">').slice(1).forEach(x=>{ h+='<div class="op">'+x.split('<div class="sh')[0].replace('<div class="ln"></div>'.repeat(14),'<div class="ln"></div>'.repeat(8)); })); return h; };
-  const P=[p1.join(''),qp(J.O),qp(J.G),J.D.join('')], bad=[];
+  const dn=J.D.slice(0,-1), no=(J.D[J.D.length-1].match(/<span class="n">(\d)<\/span>오늘의 기도/)||[0,7])[1], yv=L(pray&&pray.y).map(x=>x.replace(/\s*\|\s*/,' ').trim()), cv=L(pray&&pray.c);
+  const pr4=`<div class="pr4"><div class="sh sans"><span class="n">${no}</span>오늘의 기도</div><h4 class="sans">청년부 기도제목</h4>`+Array.from({length:5},(_,i)=>`<div class="pln sans">${esc(yv[i]||'')}</div>`).join('')+'<h4 class="sans">교회 기도제목</h4>'+Array.from({length:3},(_,i)=>`<div class="pln sans">${esc(cv[i]||'')}</div>`).join('')+'</div>';
+  const P=[p1.join(''),qp(J.O),qp(J.G),dn.join('')+pr4], bad=[];
   for(let i=0;i<4;i+=2){ const sh=document.createElement('div'); sh.className='x2';
     sh.innerHTML=[i,i+1].map(k=>`<section class="p5 p4${k%2?' r':''}" style="${st}"><div class="bx5${k===0?' b1':''}">${P[k]}</div><span class="pn sans">${k+1}</span><span class="rn sans">${esc(J.run)}</span></section>`).join(''); out.appendChild(sh); }
-  out.querySelectorAll('.p5').forEach((p,i)=>{ const b=p.firstElementChild; if(b.scrollHeight>b.clientHeight+1) bad.push(String(i+1)); });
-  return bad; }
+  const ps=out.querySelectorAll('.p5'), f=fit4(ps[0],ps[3]);
+  ps.forEach((p,i)=>{ const b=p.firstElementChild; if(b.scrollHeight>b.clientHeight+1) bad.push(String(i+1)); });
+  bad.fit=f; return bad; }
+/*FIT4JS*/
 const FMT={get fmt(){return LS.get('cbsr_season_fmt2','a5x2')}, set fmt(v){LS.set('cbsr_season_fmt2',v)}, get start(){return +LS.get('cbsr_season_a5start',2)||2}, set start(v){LS.set('cbsr_season_a5start',v)}};
 /* 넘침 검사: 1·4쪽 꼬리말 위로 내용이 내려왔는지 */
 function overflow(root){ const out=[]; root.querySelectorAll('.pg').forEach((pg,i)=>{ if(i%4===1||i%4===2) return; const r=pg.getBoundingClientRect(), ft=pg.querySelector('.ft'); const lim=ft?ft.getBoundingClientRect().top-2:r.bottom; let mb=0; pg.querySelectorAll(':scope > *:not(.ft)').forEach(e=>{const b=e.getBoundingClientRect(); if(b.bottom>mb) mb=b.bottom}); const z=(r.width/pg.offsetWidth)||1; const mm=(mb-lim)/z*25.4/96; if(mm>0) out.push(`${i%4+1}쪽 ${mm.toFixed(1)}mm`); }); return out; }
@@ -338,7 +342,7 @@ function drawPrev(){ const p=$('prev'), w=curW(), s=curSet();
   if(!w){ p.innerHTML='<div class="empty">왼쪽에서 회를 고르거나 ＋ 새 회를 누르세요.</div>'; return; }
   if(FMT.fmt==='a5x2'){ p.innerHTML='<div class="a5w x2prev"></div>'; const box=p.firstElementChild; const bad=a5four(box,w,prayOf(s.id,w.key));
     box.style.zoom=Math.min(1,(p.clientWidth-30)/1123);
-    const wn=$('warn'); if(wn){ wn.className=bad.length?'bad':'ok'; wn.textContent=bad.length?`넘치는 쪽: ${bad.join(', ')}쪽 — 글을 줄이세요. 4쪽에 성경 전체로가 있으면 기도 칸이 들어가지 않습니다.`:'A5 4쪽(A4 가로 양면 한 장)에 맞습니다. 글자 크기는 가이드북 본문과 같습니다.'; }
+    const wn=$('warn'); if(wn){ wn.className=bad.length?'bad':'ok'; wn.textContent=bad.length?`넘치는 쪽: ${bad.join(', ')}쪽 — 글을 줄이세요.`:'A5 4쪽(A4 가로 양면 한 장)에 맞습니다. 글자 크기는 가이드북 본문과 같습니다.'+(bad.fit&&bad.fit.scale<1?` 해설 장평 ${Math.round(bad.fit.scale*100)}%.`:'')+(bad.fit&&bad.fit.dropped?` 성경 전체로 뒤의 ${bad.fit.dropped}개는 지면이 모자라 뺐습니다.`:''); }
     return; }
   if(FMT.fmt.startsWith('a5')){ const st=FMT.start; p.innerHTML=`<div class="a5w a5prev">${st%2?'<div class="gap"></div>':''}</div>`; const box=p.firstElementChild;
     const r=a5flow(box,[w],st,x=>prayOf(s.id,x.key)); const z=Math.min(1,(p.clientWidth-30)/(2*559)); box.style.zoom=z;

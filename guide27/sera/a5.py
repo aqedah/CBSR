@@ -40,7 +40,9 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .mcap{font-size:7.4pt;color:#555;line-height:1.4;padding:.8mm 1.6mm;border-top:.3mm solid #ddd}
 .mf{float:right;width:44mm;margin:.6mm 0 1mm 3mm}
 .mf .mcap{font-size:6.8pt;padding:.5mm 1mm}
-.p4 .pr{min-height:48mm}
+.p4 .pr4{margin-top:auto;padding-top:1mm;flex:none}
+.p4 .pr4 h4{font-size:8.6pt;margin:1.6mm 0 .4mm;color:var(--c)}
+.p4 .pr4 .pln{height:7.2mm;line-height:7.2mm;font-size:9pt;padding:0 1.4mm;overflow:hidden;white-space:nowrap}
 .p4 .op{padding:1.2mm 0 .4mm}
 .p4 .bx5{display:flex;flex-direction:column}
 .p4 .sh{margin:1.9mm 0 1mm}
@@ -141,7 +143,9 @@ def four(w):
                 ops.append('<div class="op">' + x.replace('<div class="ln"></div>' * 14, '<div class="ln"></div>' * 8))
         return h + ''.join(ops)
     og, gb = qp(O, ''), qp(G, '')
-    return [''.join(p1), og, gb, ''.join(D)]
+    n = re.search(r'<span class="n">(\d)</span>오늘의 기도', D[-1]).group(1)
+    pr4 = f'<div class="pr4"><div class="sh sans"><span class="n">{n}</span>오늘의 기도</div><h4 class="sans">청년부 기도제목</h4>' + '<div class="pln"></div>' * 5 + '<h4 class="sans">교회 기도제목</h4>' + '<div class="pln"></div>' * 3 + '</div>'
+    return [''.join(p1), og, gb, ''.join(D[:-1]) + pr4]
 
 JS = r'''
 (start)=>{
