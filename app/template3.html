@@ -7036,7 +7036,7 @@ function earthClose(pop){ if(window.CBSR_EARTH&&CBSR_EARTH.isOpen()) CBSR_EARTH.
 let SHELF_LD=null;
 function shelfLoad(){ if(window.CBSR_SHELF) return Promise.resolve(); if(SHELF_LD) return SHELF_LD;
   return SHELF_LD=new Promise((ok,no)=>{ const s=document.createElement("script"); s.src="shelf.js"; s.onload=ok; s.onerror=no; document.head.appendChild(s); }).catch(e=>{ SHELF_LD=null; throw e; }); }
-function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,scene:o.scene,solo:o.solo,mix:o.mix,back:o.back,
+function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) return; const ok=CBSR_SHELF.open({book:o.book,from:document.getElementById("rgShelf"),scene:o.scene,solo:o.solo,mix:o.mix,back:o.back,
         plan:{get:M=>pcData(M),go:(w,d)=>{ const t=view.tab!=="record"?view.tab:"read"; shelfLeave(true); view.bmFrom=null; if(view.recD){ ovDone(recBackOv); view.recD=null; } rgGoDay(w,d,t); }}, /* 11-24 목사님: 사서에게 받는 통독표 = 날짜를 누르면 나오는 통독표(같은 자료 pcData). 서고 안에서 서고의 모습으로 보여 줌 */
         card:yvOpenNow()?{had:()=>!!yvGet(yvYear()),show:()=>{ yvReveal(yvGet(yvYear()),true); shelfLeave(); },pick:()=>yvPick(),reveal:(v,ret)=>{ yvReveal(v,ret); shelfLeave(); }}:null, /* 11-24 목사님: 말씀 카드는 정해진 기간(yvOpenNow, 12월–1월)에만 받음. 오늘 탭 배너와 서고가 같음 */
         today:(()=>{ try{ const tp=posOfToday(), P=dayPlan(tp.w,tp.d); return (P&&P.ch&&P.ch[0]&&P.ch[0][0])||0; }catch(e){ return 0; } })(),nick:(()=>{ try{ return (SYNC.google&&SYNC.google()&&PROF.nick)||""; }catch(e){ return ""; } })(),push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); },
