@@ -144,6 +144,7 @@ data+='const GTOOLS='+J(_GT)+';\n'
 _GQT={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply',''),'note':(v or {}).get('note',''),'pray':(v or {}).get('pray','')} for n,v in _GQ.items() if n.isdigit()}  # 11-23 GPT 출시 검토 P0: 쓴 뒤에 읽기(해설·기도)도 가이드북 원고
 for _n,_v in _GQ.items():  # 11-20 새 틀: 성품 물음도 가이드북과 같게
     if _n.isdigit() and isinstance(_v,dict) and _v.get('v27') and (_v['v27'].get('god') or ['',''])[1]: _GQT[int(_n)]['god']=' '.join(_v['v27']['god'])
+    if _n.isdigit() and isinstance(_v,dict) and (_v.get('v27') or {}).get('obs2'): _GQT[int(_n)]['q2']=_v['v27']['obs2']; _GQT[int(_n)]['god2']=' '.join(_v['v27'].get('god2') or [])  # 11-24 목사님: 범위가 넓은 날 두 갈래
 data+='const GQT='+J(_GQT)+';\n'
 # 11-12 목사님: 2026 체험판 가이드북(317–365일)도 앱에 — 2026년 화면에서만 씀
 try:
@@ -194,6 +195,7 @@ data+='const GBDESC26='+J(_gdesc(_TQ))+';\n'
 _GQT26={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply',''),'note':(v or {}).get('note',''),'pray':(v or {}).get('pray','')} for n,v in _TQ.items() if n.isdigit()}
 for _n,_v in _TQ.items():  # 11-20 체험판도 새 틀로 바꾸는 날부터 성품 물음을 가이드북과 같게
     if _n.isdigit() and isinstance(_v,dict) and _v.get('v27') and (_v['v27'].get('god') or ['',''])[1]: _GQT26[int(_n)]['god']=' '.join(_v['v27']['god'])
+    if _n.isdigit() and isinstance(_v,dict) and (_v.get('v27') or {}).get('obs2'): _GQT26[int(_n)]['q2']=_v['v27']['obs2']; _GQT26[int(_n)]['god2']=' '.join(_v['v27'].get('god2') or [])  # 11-24 목사님: 범위가 넓은 날 두 갈래
 data+='const GQT26='+J(_GQT26)+';\n'
 # 11-22 목사님: 주일 공과(파이디온 공과 순서, 본문 범위는 목사님) — 365 통독과 따로 보는 주일 본문. 원고는 site_src/sunday_qt.json
 data+='const SUNQ='+J(json.load(open('site_src/sunday_qt.json')))+';\n'
