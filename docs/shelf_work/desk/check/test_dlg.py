@@ -58,6 +58,7 @@ try:
             chk('빈 곳 누르면 둘러보기(닫히지 않음)', pg.locator('#cbsrShelf .dg').count() == 0 and pg.locator('#cbsrShelf').count() == 1)
             P = lambda: pg.evaluate('+document.querySelector("#cbsrShelf .hl[data-p]").getAttribute("data-p")')
             chk('걸음 단추 넷, 입구에서는 뒤로가 꺼져 있음', pg.locator('#cbsrShelf .pad button').count() == 4 and pg.locator('#cbsrShelf .pad .md[disabled]').count() == 1 and P() == 0)
+            no_sign0 = pg.locator('#cbsrShelf .bsg').count() == 0
             pg.click('#cbsrShelf .pad .mu'); pg.wait_for_timeout(1250)
             chk('앞으로 한 걸음: 통로 가운데', P() == 1 and pg.locator('#cbsrShelf .pad .md[disabled]').count() == 0 and pg.locator('#cbsrShelf .hl').count() == 1)
             pg.keyboard.press('KeyS'); pg.wait_for_timeout(1250)
@@ -68,6 +69,7 @@ try:
             chk('키보드 ↓: 통로로 돌아옴', pg.locator('#cbsrShelf .pad').count() == 1 and pg.evaluate('window.__ovs()') == 1)
             pg.keyboard.press('KeyW'); pg.wait_for_timeout(1250); pg.mouse.click(vw / 2, vh * 0.5); pg.wait_for_timeout(1250)
             chk('W와 통로 누르기: 통로 끝 앞', P() == 2)
+            chk('다가가면 그을린 팻말이 보임(입구에서는 없었음)', pg.locator('#cbsrShelf .hl[data-p] .bsg').count() == 1 and no_sign0)
             pg.keyboard.press('ArrowUp'); pg.wait_for_timeout(900)
             chk('그을린 끝: 사서의 만류와 경고장', '성경이 아닙니다' in (txt('#cbsrShelf .dg .dgb') or '') and '정말로 열람' in (txt('#cbsrShelf .wn') or '')); shot('11_warn')
             r = pg.evaluate('(()=>{const a=document.querySelector("#cbsrShelf .wn").getBoundingClientRect(),b=document.querySelector("#cbsrShelf .dg .sf").getBoundingClientRect(),c=document.querySelector("#cbsrShelf .dg .dgc").getBoundingClientRect();return [a.bottom,b.top+b.height*.26,b.top+b.height*.53,c.top,Math.abs((b.left+b.right)/2-innerWidth/2)]})()')

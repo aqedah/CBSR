@@ -68,6 +68,12 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .zone span{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;padding:8px 16px 7px}
 #cbsrShelf .zone b{font:700 23px/1.25 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.14em;margin-right:-.14em}
 #cbsrShelf .zone small{font-size:13.5px;font-weight:600;line-height:1.35}
+/* 11-24 밤 목사님: 그늘진 서가에 다가가면(통로 끝 앞) 그을린 팻말이 보임. 입구와 가운데에서는 보이지 않음 */
+#cbsrShelf .bsg b{font-size:11.5px;letter-spacing:0;margin:0;line-height:1.35;text-align:center}
+#cbsrShelf .bsg{position:absolute;left:50%;top:264px;transform:translateX(-50%) scale(1.6);transform-origin:50% 0;opacity:.96;filter:brightness(1.45) contrast(1.08);display:flex;flex-direction:column;align-items:center;white-space:nowrap;pointer-events:none;padding:7px 12px;border-color:#120c08;box-shadow:0 2px 7px rgba(0,0,0,.7);background:radial-gradient(ellipse at 10% 16%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 48%),radial-gradient(ellipse at 92% 84%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 54%),radial-gradient(ellipse at 74% 6%,rgba(34,18,8,.8) 0,rgba(34,18,8,0) 42%),radial-gradient(ellipse at 16% 94%,rgba(34,18,8,.85) 0,rgba(34,18,8,0) 46%),radial-gradient(ellipse at 50% 50%,#7a6344 0,#57432c 100%);clip-path:polygon(3% 9%,13% 0,30% 6%,46% 1%,64% 7%,81% 0,96% 10%,100% 35%,95% 57%,100% 83%,89% 100%,70% 93%,52% 100%,34% 92%,16% 100%,2% 87%,6% 60%,0 36%)}
+#cbsrShelf .bsg b{color:#1c110a;opacity:.5;filter:blur(1.35px);text-shadow:0 0 5px rgba(18,9,4,.9);letter-spacing:-.02em}
+#cbsrShelf .bsg:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 22% 36%,rgba(14,8,5,.8) 0,rgba(14,8,5,0) 30%),radial-gradient(ellipse at 72% 28%,rgba(14,8,5,.7) 0,rgba(14,8,5,0) 26%),radial-gradient(ellipse at 54% 78%,rgba(14,8,5,.8) 0,rgba(14,8,5,0) 32%),radial-gradient(ellipse at 90% 64%,rgba(22,11,5,.7) 0,rgba(22,11,5,0) 24%)}
+#cbsrShelf .bsg b{font:700 11.5px/1.35 "Gowun Batang","Noto Serif KR",serif}
 #cbsrShelf .zone.e:focus-visible{outline:3px solid #9b3324;outline-offset:-6px}   /* 11-24 밤 목사님: 그을린 팻말은 수상해 보임 → 팻말을 없애고 배경(어두운 통로 끝과 그을음)으로 둠. 누르는 자리만 남음 */
 #cbsrShelf .zone:focus-visible span,#cbsrShelf .gl button:focus-visible,#cbsrShelf .sp:focus-visible{outline:3px solid #9b3324;outline-offset:2px}
 #cbsrShelf .gl{position:absolute;left:44px;right:44px;top:120px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(10px);transition:opacity .5s 1.1s,transform .5s 1.1s}
@@ -362,7 +368,7 @@ function draw(from){ var t=top(); if(!t||!stage) return; if(t.t==="hall"||t.t===
 var VIEWS=[   /* 통로의 세 자리: 입구, 가운데, 끝 앞. 같은 3D 장면을 눈 자리만 옮겨 그림(art_tools/engrave.py hall(fp=True, cz=…)) */
   {img:"hall.webp",L:null,end:[95,250,200,300,1],soot:[138,206,114,104],alt:"옛 판화처럼 그린 서고의 통로에 서 있다. 양옆으로 높은 서가가 줄지어 서 있고 촛불이 돌바닥을 밝힌다. 덧문을 닫은 창 아래 통로 끝은 어둡다"},
   {img:"hall_1.webp",L:[[165,375,94.3],[225,375,94.3],[131,268,200],[259,268,200]],end:[122,168,146,300,.34],soot:[104,40,182,150],alt:"서고 통로의 가운데. 양옆에 서가가 서 있고, 앞에는 책을 펼쳐 둔 독서대와 덧문을 닫은 창이 보인다"},
-  {img:"hall_2.webp",L:[],end:null,soot:[70,0,250,246],alt:"통로 끝. 덧문을 닫은 창 아래, 검게 그을린 서가가 어둠 속에 서 있다"}];
+  {img:"hall_2.webp",L:[],end:null,soot:[70,0,250,246],sign:1,alt:"통로 끝. 덧문을 닫은 창 아래, 검게 그을린 서가가 어둠 속에 서 있다. 서가 위쪽에 글자를 알아보기 힘든 그을린 팻말이 걸려 있다"}];
 function hpos(){ var h=levels&&levels[0]; return (h&&h.pos)||0; }
 function bx(a){ return 'left:'+a[0]+'px;top:'+a[1]+'px;width:'+a[2]+'px;height:'+a[3]+'px'+(a[4]!=null&&a[4]!==1?';opacity:'+a[4]:''); }
 function lamps(p){ var V=VIEWS[p||0], h=V.end?'<div class="amb end" style="'+bx(V.end)+'"></div>':'',i=0; (V.L||ART.hall.lanterns).forEach(function(l){ var x=l[0],y=l[1],s=l[2],k=Math.min(1,Math.pow(s/200,1.25)),g=Math.round(Math.min(250,s*(1.3+.6*k))),w=Math.max(5,s*.115),fh=w*2.15;   /* 11-24 목사님: 눈높이 통로에서는 먼 촛불이 한가운데로 모여 빛이 겹침 → 멀수록 빛무리를 옅고 작게, 통로 끝은 어둡게 */
@@ -373,7 +379,7 @@ function zonesHtml(p){ return '<div class="zn">'+
       '<button type="button" class="zone" data-s="ot" style="left:0;top:300px;width:150px;height:330px" aria-label="구약 서른아홉 권, 왼쪽 서가"><span class="tb" style="top:96px"><b>구약</b><small>서른아홉 권</small></span></button>'+
       '<button type="button" class="zone" data-s="nt" style="left:240px;top:300px;width:150px;height:330px" aria-label="신약 스물일곱 권, 오른쪽 서가"><span class="tb" style="top:96px"><b>신약</b><small>스물일곱 권</small></span></button>'+
       '<button type="button" class="zone e" data-a="fw" tabindex="-1" style="left:150px;top:292px;width:90px;height:228px" aria-label="'+(p>=VIEWS.length-1?"통로 끝으로 한 걸음 더":"앞으로 걷기")+'"></button></div>'; }
-function viewInner(p){ return '<img src="'+IMG+VIEWS[p].img+VER+'" alt="'+VIEWS[p].alt+'">'+lamps(p)+zonesHtml(p); }
+function viewInner(p){ return '<img src="'+IMG+VIEWS[p].img+VER+'" alt="'+VIEWS[p].alt+'">'+lamps(p)+(VIEWS[p].sign?'<span class="tb bsg" aria-hidden="true"><b>외경 · 위경<br>교부 문헌</b></span>':'')+zonesHtml(p); }
 function secGo(s){ var ns={t:"sec",s:s}; if(s==="etc") ns.dg={who:"l",fig:1,late:1,t:"…그쪽은, 성경이 아닙니다.",ch:[{t:"돌아간다",a:"back"},{t:"열람한다",a:"enter"}],esc:"back"};   /* 통로 끝에서 한 걸음 더 가면 사서가 막아선다 */ push(ns); }
 function hallStep(d){ var t=levels[0]; if(busy||!t||top()!==t||t.dg) return;                      /* 한 걸음: 앞으로(+1), 뒤로(-1) */
   var p=(t.pos||0)+d; if(p<0) return; if(p>=VIEWS.length){ secGo("etc"); return; }
