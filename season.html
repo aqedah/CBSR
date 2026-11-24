@@ -48,10 +48,15 @@ textarea{min-height:56px;resize:vertical;line-height:1.5}
 dialog{border:1px solid var(--line);border-radius:10px;max-width:520px;width:92%}
 dialog h3{margin:0 0 8px}
 .pv .pg{margin:0 auto 14px;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.18)}
-#printroot{display:none}
+#printroot{position:fixed;left:-10000px;top:0;visibility:hidden}
+.a5prev{display:grid;grid-template-columns:148mm 148mm;gap:0;justify-content:center;row-gap:14px}
+.a5prev .p5{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.18)}
+.a5prev .gap{width:148mm;height:210mm}
+.fmt{display:flex;gap:6px;align-items:center;font-size:12px}
+.fmt input{width:46px}
 @media print{
  body.ws>header,body.ws>main,dialog{display:none!important}
- #printroot{display:block}
+ #printroot{position:static;visibility:visible}
  html,body{background:#fff;height:auto}
  body.ws{display:block}
 }
@@ -66,71 +71,135 @@ body.vw{background:#e9e9e9;margin:0}
 body.vw .wk .pg{margin:14px auto;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.2)}
 .prow span:empty::before{content:"이름";color:#ccc}
 @media print{body.vw{background:#fff}.bar{display:none}body.vw .wk .pg{margin:0;box-shadow:none}[contenteditable]:focus{background:none}.prow span:empty::before{content:none}}
-@page{size:A4;margin:0}
+</style><style id="pgsz">@page{size:A4;margin:0}</style><style>
 /* ── 한 장(A4 앞뒤 4쪽) — guide27/sera/build.py와 같은 모양 ── */
 .sheet{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#222;font-size:10.4pt;line-height:1.62;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .sheet *{box-sizing:border-box;margin:0;padding:0}
-.sans{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
-.pg{width:210mm;height:297mm;padding:13mm 16mm 12mm;position:relative;overflow:hidden;page-break-after:always;display:flex;flex-direction:column}
-.ft{position:absolute;bottom:7mm;left:16mm;right:16mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#999}
-.hd{display:grid;grid-template-columns:26mm 1fr auto;align-items:center;height:20mm;border-bottom:.6mm solid var(--c)}
-.dt{border-right:.3mm solid var(--c);height:100%;display:flex;flex-direction:column;justify-content:center}
-.dt b{font-size:30pt;font-weight:300;line-height:1;color:var(--c)}
-.dt b i{font-style:normal;font-size:15pt;opacity:.75;margin-right:.6mm}
-.dt small{font-size:8.5pt;color:#555;margin-top:1.2mm}
-.tt{padding-left:5mm}
-.tt b{display:block;font-size:19pt;font-weight:700;line-height:1.2}
-.tt span{font-size:10.5pt;color:#555}
-.lb{text-align:right;font-size:8.5pt;color:#555;line-height:1.5}
-.lb b{display:block;color:var(--c);font-size:10pt}
-.st{margin-top:1.6mm;background:var(--l);padding:1.2mm 3mm;font-size:8.5pt;display:flex;justify-content:space-between}
-.sec{margin-top:5mm}
-.sh{display:flex;align-items:center;gap:2.4mm;font-size:12pt;font-weight:700;border-bottom:.3mm solid #bbb;padding-bottom:1.2mm;margin-bottom:2.4mm}
-.sh .n{width:6.4mm;height:6.4mm;border-radius:50%;background:var(--c);color:#fff;font-size:9.5pt;display:inline-flex;align-items:center;justify-content:center}
-.sh small{margin-left:auto;font-size:8pt;font-weight:400;color:#777}
-.flow p{margin-bottom:1.6mm}
-.wd{margin-top:2mm;border-left:1mm solid var(--c);background:var(--l);padding:1.6mm 3mm;font-size:9pt;line-height:1.55}
-.wd .k{font-weight:700;color:var(--c);margin-right:2mm}
-.wd span{margin-right:3.4mm;white-space:nowrap}
-.wd span b{font-weight:700}
-.scn{display:flex;flex-wrap:wrap;gap:1.6mm;margin-bottom:2.6mm}
-.scn span{font-size:8pt;border:.3mm solid var(--c);color:var(--c);border-radius:1mm;padding:.4mm 2mm}
-.mk{padding:1.8mm 2.4mm;margin-bottom:1.4mm;border-radius:1mm}
-.chip{display:inline-block;font-size:7.8pt;font-weight:700;border:.35mm solid var(--c);color:var(--c);border-radius:1mm;padding:0 1.4mm;margin-right:1.6mm;line-height:1.5;vertical-align:.3mm;white-space:nowrap}
-.rp{font-size:7.5pt;color:var(--c);font-weight:700;margin-right:1mm}
-.hl{background:linear-gradient(transparent 35%,var(--hl) 35%)}
-.ci{border:.35mm solid #222;border-radius:50%/60%;padding:0 1.2mm}
-.wv{text-decoration:underline wavy;text-decoration-thickness:.25mm;text-underline-offset:1mm}
-.br{font-weight:700}
-.lk{border:.3mm solid #ccc;border-radius:1.2mm;padding:3mm 3.6mm}
-.lk p{margin-bottom:1.8mm;display:grid;grid-template-columns:5mm auto 1fr;align-items:start}
-.lk p .chip{margin-top:.9mm}
-.lk p:last-child{margin-bottom:0}
-.ck{color:var(--c);font-weight:700}
-.op{display:grid;grid-template-columns:8mm 1fr;gap:0 2mm;padding:2.6mm 0;border-bottom:.25mm dashed #ccc}
-.op .bx{width:5.4mm;height:5.4mm;border:.4mm solid #666;border-radius:1mm;margin-top:1mm;display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:700;color:var(--c)}
-.op .v{font-size:9.6pt;color:#444}
-.guide{font-size:8.6pt;color:#666;margin-bottom:1.6mm}
-.wr{margin-top:4mm;flex:1;overflow:hidden;min-height:0}
-.wr .lab{font-size:8.6pt;color:#666;margin-bottom:1mm}
-.ln{border-bottom:.25mm solid #bbb;height:9.2mm}
-.note{background:var(--l);border-top:.8mm solid var(--c);padding:4mm 5mm;font-size:10.4pt;line-height:1.8;text-align:justify}
-.note .end{font-weight:700}
-.pr h4{font-size:10pt;margin:3mm 0 1mm;color:var(--c)}
-.prow{display:grid;grid-template-columns:24mm 1fr;border-bottom:.25mm solid #bbb;height:8.4mm;align-items:end}
-.prow span,.prow i,.pln{font-style:normal;font-size:9.4pt;line-height:8mm;height:8mm;white-space:nowrap;overflow:hidden;outline:none;padding:0 1.6mm;color:#222}
-.prow span{border-right:.25mm solid #ddd}
-.pln{border-bottom:.25mm solid #bbb;height:8.4mm;display:block}
-[contenteditable]:focus{background:#fffbe6}
-.qs{flex:1;display:flex;flex-direction:column;min-height:0}
-.qs .op{border-bottom:0;padding:2mm 0 1mm}
-.ans{flex:1 1 0;min-height:0;overflow:hidden;border-bottom:.45mm solid #999;margin-bottom:1mm}
-.ans .ln{height:8.4mm}
-.gd{font-size:8.8pt;color:#444;background:#f4f4f4;border-radius:1mm;padding:1.6mm 3mm;margin-bottom:.6mm}
-.gd b{color:var(--c)}
-.whole p{display:grid;grid-template-columns:auto 1fr;gap:0 2mm;font-size:9.3pt;line-height:1.6;margin-bottom:1.6mm;text-align:justify}
-.whole p .chip{margin-top:.8mm;align-self:start;justify-self:start}
-.whole p b{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif;font-size:8.6pt;color:var(--c);margin-right:1.4mm}
+.sans,.sheet .sans{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
+.sheet .pg{width:210mm;height:297mm;padding:13mm 16mm 12mm;position:relative;overflow:hidden;page-break-after:always;display:flex;flex-direction:column}
+.sheet .ft{position:absolute;bottom:7mm;left:16mm;right:16mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#999}
+.sheet .hd{display:grid;grid-template-columns:26mm 1fr auto;align-items:center;height:20mm;border-bottom:.6mm solid var(--c)}
+.sheet .dt{border-right:.3mm solid var(--c);height:100%;display:flex;flex-direction:column;justify-content:center}
+.sheet .dt b{font-size:30pt;font-weight:300;line-height:1;color:var(--c)}
+.sheet .dt b i{font-style:normal;font-size:15pt;opacity:.75;margin-right:.6mm}
+.sheet .dt small{font-size:8.5pt;color:#555;margin-top:1.2mm}
+.sheet .tt{padding-left:5mm}
+.sheet .tt b{display:block;font-size:19pt;font-weight:700;line-height:1.2}
+.sheet .tt span{font-size:10.5pt;color:#555}
+.sheet .lb{text-align:right;font-size:8.5pt;color:#555;line-height:1.5}
+.sheet .lb b{display:block;color:var(--c);font-size:10pt}
+.sheet .st{margin-top:1.6mm;background:var(--l);padding:1.2mm 3mm;font-size:8.5pt;display:flex;justify-content:space-between}
+.sheet .sec{margin-top:5mm}
+.sheet .sh{display:flex;align-items:center;gap:2.4mm;font-size:12pt;font-weight:700;border-bottom:.3mm solid #bbb;padding-bottom:1.2mm;margin-bottom:2.4mm}
+.sheet .sh .n{width:6.4mm;height:6.4mm;border-radius:50%;background:var(--c);color:#fff;font-size:9.5pt;display:inline-flex;align-items:center;justify-content:center}
+.sheet .sh small{margin-left:auto;font-size:8pt;font-weight:400;color:#777}
+.sheet .flow p{margin-bottom:1.6mm}
+.sheet .fm{display:grid;grid-template-columns:1fr 72mm;gap:4mm;align-items:start}
+.sheet .map{border:.3mm solid #bbb;border-radius:1mm;overflow:hidden}
+.sheet .fm .wd span{white-space:normal}
+.sheet .map img,.sheet .map svg{display:block;width:100%}
+.sheet .mcap{font-size:7.6pt;color:#555;line-height:1.4;padding:1mm 1.6mm;background:#fff;border-top:.3mm solid #ddd}
+.sheet .wd{margin-top:2mm;border-left:1mm solid var(--c);background:var(--l);padding:1.6mm 3mm;font-size:9pt;line-height:1.55}
+.sheet .wd .k{font-weight:700;color:var(--c);margin-right:2mm}
+.sheet .wd span{margin-right:3.4mm;white-space:nowrap}
+.sheet .wd span b{font-weight:700}
+.sheet .scn{display:flex;flex-wrap:wrap;gap:1.6mm;margin-bottom:2.6mm}
+.sheet .scn span{font-size:8pt;border:.3mm solid var(--c);color:var(--c);border-radius:1mm;padding:.4mm 2mm}
+.sheet .mk{padding:1.8mm 2.4mm;margin-bottom:1.4mm;border-radius:1mm}
+.sheet .chip{display:inline-block;font-size:7.8pt;font-weight:700;border:.35mm solid var(--c);color:var(--c);border-radius:1mm;padding:0 1.4mm;margin-right:1.6mm;line-height:1.5;vertical-align:.3mm;white-space:nowrap}
+.sheet .rp{font-size:7.5pt;color:var(--c);font-weight:700;margin-right:1mm}
+.sheet .hl{background:linear-gradient(transparent 35%,var(--hl) 35%)}
+.sheet .ci{border:.35mm solid #222;border-radius:50%/60%;padding:0 1.2mm}
+.sheet .wv{text-decoration:underline wavy;text-decoration-thickness:.25mm;text-underline-offset:1mm}
+.sheet .br{font-weight:700}
+.sheet .lk{border:.3mm solid #ccc;border-radius:1.2mm;padding:3mm 3.6mm}
+.sheet .lk p{margin-bottom:1.8mm;display:grid;grid-template-columns:5mm auto 1fr;align-items:start}
+.sheet .lk p .chip{margin-top:.9mm}
+.sheet .lk p:last-child{margin-bottom:0}
+.sheet .ck{color:var(--c);font-weight:700}
+.sheet .op{display:grid;grid-template-columns:8mm 1fr;gap:0 2mm;padding:2.6mm 0;border-bottom:.25mm dashed #ccc}
+.sheet .op .bx{width:5.4mm;height:5.4mm;border:.4mm solid #666;border-radius:1mm;margin-top:1mm;display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:700;color:var(--c)}
+.sheet .op .v{font-size:9.6pt;color:#444}
+.sheet .guide{font-size:8.6pt;color:#666;margin-bottom:1.6mm}
+.sheet .wr{margin-top:4mm;flex:1;overflow:hidden;min-height:0}
+.sheet .wr .lab{font-size:8.6pt;color:#666;margin-bottom:1mm}
+.sheet .ln{border-bottom:.25mm solid #bbb;height:9.2mm}
+.sheet .note{background:var(--l);border-top:.8mm solid var(--c);padding:4mm 5mm;font-size:10.4pt;line-height:1.8;text-align:justify}
+.sheet .note .end{font-weight:700}
+.sheet .pr h4{font-size:10pt;margin:3mm 0 1mm;color:var(--c)}
+.sheet .prow{display:grid;grid-template-columns:24mm 1fr;border-bottom:.25mm solid #bbb;height:8.4mm;align-items:end}
+.sheet .prow span,.sheet .prow i,.sheet .pln{font-style:normal;font-size:9.4pt;line-height:8mm;height:8mm;white-space:nowrap;overflow:hidden;outline:none;padding:0 1.6mm;color:#222}
+.sheet .prow span{border-right:.25mm solid #ddd}
+.sheet .pln{border-bottom:.25mm solid #bbb;height:8.4mm;display:block}
+.sheet [contenteditable]:focus{background:#fffbe6}
+.sheet .qs{flex:1;display:flex;flex-direction:column;min-height:0}
+.sheet .qs .op{border-bottom:0;padding:2mm 0 1mm}
+.sheet .ans{flex:1 1 0;min-height:0;overflow:hidden;border-bottom:.45mm solid #999;margin-bottom:1mm}
+.sheet .ans .ln{height:8.4mm}
+.sheet .gd{font-size:8.8pt;color:#444;background:#f4f4f4;border-radius:1mm;padding:1.6mm 3mm;margin-bottom:.6mm}
+.sheet .gd b{color:var(--c)}
+.sheet .whole p{display:grid;grid-template-columns:auto 1fr;gap:0 2mm;font-size:9.3pt;line-height:1.6;margin-bottom:1.6mm;text-align:justify}
+.sheet .whole p .chip{margin-top:.8mm;align-self:start;justify-self:start}
+.sheet .whole p b{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif;font-size:8.6pt;color:var(--c);margin-right:1.4mm}
+/* ── 가이드북 A5(8쪽) — guide27/sera/a5.py와 같은 모양 ── */
+.a5w{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.a5w *{box-sizing:border-box;margin:0;padding:0}
+.sans,.a5w .sans{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
+.a5w .p5{width:148mm;height:210mm;padding:13mm 18mm 11mm 10mm;position:relative;overflow:hidden;page-break-after:always;font-size:9.6pt;line-height:1.55}
+.a5w .p5.r{padding:13mm 10mm 11mm 18mm}
+.a5w .bx5{height:186mm;display:flex;flex-direction:column;overflow:hidden}
+.a5w .pn{position:absolute;bottom:5.5mm;left:10mm;font-size:8pt;color:#777}
+.a5w .p5.r .pn{left:auto;right:10mm}
+.a5w .rn{position:absolute;bottom:5.5mm;right:18mm;font-size:7.5pt;color:#999}
+.a5w .p5.r .rn{right:auto;left:18mm}
+.a5w .hd{display:grid;grid-template-columns:19mm 1fr;align-items:center;border-bottom:.5mm solid var(--c);padding-bottom:1.6mm}
+.a5w .dt{border-right:.3mm solid var(--c);line-height:1}
+.a5w .dt b{font-size:22pt;font-weight:300;color:var(--c)}
+.a5w .dt b i{font-style:normal;font-size:11pt;opacity:.75;margin-right:.4mm}
+.a5w .dt small{display:block;font-size:7.5pt;color:#555;margin-top:1mm}
+.a5w .tt{padding-left:3.4mm}
+.a5w .tt .lb{font-size:7.8pt;color:var(--c);font-weight:700;line-height:1.4}
+.a5w .tt b{display:block;font-size:14pt;font-weight:700;line-height:1.25}
+.a5w .tt span{font-size:9pt;color:#555}
+.a5w .st{margin-top:1.4mm;background:var(--l);padding:.8mm 2.4mm;font-size:7.8pt}
+.a5w .sh{display:flex;align-items:center;gap:1.6mm;font-size:10pt;font-weight:700;border-bottom:.3mm solid #bbb;padding-bottom:.6mm;margin:3.2mm 0 1.8mm}
+.a5w .sh .n{width:4.8mm;height:4.8mm;border-radius:50%;background:var(--c);color:#fff;font-size:8pt;display:inline-flex;align-items:center;justify-content:center}
+.a5w .sh small{margin-left:auto;font-size:7.4pt;font-weight:400;color:#777}
+.a5w .blk p{margin-bottom:1.4mm;text-align:justify}
+.a5w .wd{border-left:.8mm solid var(--c);background:var(--l);padding:1.2mm 2.4mm;font-size:8.6pt;line-height:1.5;margin-top:1mm}
+.a5w .wd .k{font-weight:700;color:var(--c);margin-right:1.6mm}
+.a5w .wd div{margin:.3mm 0}
+.a5w .map{flex-shrink:0;border:.3mm solid #bbb;border-radius:1mm;overflow:hidden;margin:1mm 0 1.6mm}
+.a5w .map img,.a5w .map svg{display:block;width:100%}
+.a5w .mcap{font-size:7.4pt;color:#555;line-height:1.4;padding:.8mm 1.6mm;border-top:.3mm solid #ddd}
+.a5w .scn{display:flex;flex-wrap:wrap;gap:1.2mm;margin-bottom:2mm}
+.a5w .scn span{font-size:7.6pt;border:.3mm solid var(--c);color:var(--c);border-radius:1mm;padding:.2mm 1.6mm}
+.a5w .mk{margin-bottom:2mm;text-align:justify}
+.a5w .chip{display:inline-block;font-size:7.4pt;font-weight:700;border:.3mm solid var(--c);color:var(--c);border-radius:.8mm;padding:0 1.2mm;margin-right:1.4mm;line-height:1.5;vertical-align:.3mm;white-space:nowrap;font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
+.a5w .rp{font-size:7.2pt;color:var(--c);font-weight:700;margin-right:1mm;font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
+.a5w .hl{background:linear-gradient(transparent 35%,var(--hl) 35%)}
+.a5w .ci{border:.3mm solid #222;border-radius:50%/60%;padding:0 1mm}
+.a5w .wv{text-decoration:underline wavy;text-decoration-thickness:.22mm;text-underline-offset:.9mm}
+.a5w .br{font-weight:700}
+.a5w .lk{display:grid;grid-template-columns:4mm 1fr;gap:0 .8mm;margin-bottom:1.8mm;text-align:justify}
+.a5w .lk .ck{color:var(--c);font-weight:700}
+.a5w .gd{font-size:8.2pt;color:#444;background:#f3f3f3;border-radius:1mm;padding:1.2mm 2.2mm;margin-bottom:.6mm}
+.a5w .gd b{color:var(--c)}
+.a5w .op{display:grid;grid-template-columns:6mm 1fr;gap:0 1.4mm;padding:1.8mm 0 .8mm;text-align:justify}
+.a5w .op .bx{width:4.6mm;height:4.6mm;border:.35mm solid #666;border-radius:.8mm;margin-top:.6mm;display:flex;align-items:center;justify-content:center;font-size:7.5pt;font-weight:700;color:var(--c)}
+.a5w .op .v{font-size:9pt;color:#444;margin-bottom:.4mm}
+.a5w .ans{flex:1 1 0;min-height:0;overflow:hidden;border-bottom:.4mm solid #999;margin-bottom:1mm}
+.a5w .ln{border-bottom:.22mm solid #bbb;height:7.6mm}
+.a5w .note{background:var(--l);border-top:.6mm solid var(--c);padding:2.8mm 3.4mm;line-height:1.75;text-align:justify}
+.a5w .wh{display:grid;grid-template-columns:auto 1fr;gap:0 1.6mm;margin-bottom:1.6mm;text-align:justify}
+.a5w .wh .chip{margin-top:.6mm;align-self:start;justify-self:start}
+.a5w .wh b{font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif;font-size:8.4pt;color:var(--c);margin-right:1.2mm}
+.a5w .pr{flex:1 1 auto;min-height:62mm;display:flex;flex-direction:column;overflow:hidden}
+.a5w .pr h4{font-size:8.6pt;margin:2mm 0 .6mm;color:var(--c)}
+.a5w .pr .ya{flex:3 1 0;min-height:0;overflow:hidden}.pr .ca{flex:2 1 0;min-height:0;overflow:hidden}
+.a5w .prow{display:grid;grid-template-columns:20mm 1fr;border-bottom:.22mm solid #bbb;height:7.6mm}
+.a5w .prow span{border-right:.22mm solid #ddd}
+.a5w .pln{border-bottom:.22mm solid #bbb;height:7.6mm}
 </style>
 </head>
 <body>
@@ -149,6 +218,9 @@ const lines=(n,c='ln')=>Array.from({length:n},()=>`<div class="${c}"></div>`).jo
 const L=s=>String(s||'').split('\n').map(x=>x.trim()).filter(Boolean);
 function dateOf(w){ const d=new Date((w.ymd||'2026-01-01')+'T00:00:00'); return {m:d.getMonth()+1,d:d.getDate(),wd:WD[d.getDay()],str:`${d.getMonth()+1}월 ${d.getDate()}일 (${WD[d.getDay()]})`}; }
 function tl(s){ const m=s.match(/^(★|✓)?\s*([^|]+?)\s*\|\s*(.*)$/); return m?{star:!!m[1],tool:m[2],text:m[3]}:{star:false,tool:'',text:s}; }
+const mapBlock=w=>String(w.map||'').trim()?`<div class="map"><img src="${esc(String(w.map).trim())}" alt="지도"><div class="mcap sans">${inl(w.mapcap||'')}</div></div>`:'';
+const paras=w=>String(w.flow||'').split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);
+const wordsOf=w=>L(w.words).map(x=>{const [a,...b]=x.split(/\s+—\s+|\s+-\s+/);return [a,b.join(' — ')]});
 /* ── 네 쪽 그리기 ── */
 function page1(w){ const D=dateOf(w);
   const hd=`<div class="hd sans"><div class="dt"><b><i>${D.m}/</i>${D.d}</b><small>${D.wd}요일</small></div><div class="tt"><b>${esc(w.title)}</b><span>${esc(w.sub)}</span></div><div class="lb"><b>${esc(w.label)}</b>${esc(w.season||'')}</div></div>
@@ -156,10 +228,12 @@ function page1(w){ const D=dateOf(w);
   const flow=String(w.flow||'').split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean).map(p=>`<p>${inl(p)}</p>`).join('');
   const wds=L(w.words).map(x=>{const [a,...b]=x.split(/\s+—\s+|\s+-\s+/);return `<span><b>${inl(a)}</b> ${inl(b.join(' — '))}</span> `}).join('');
   const scn=L(w.scenes).map(s=>`<span class="sans">${esc(s)}</span>`).join('');
+  const wdb=wds?`<div class="wd sans"><span class="k">말뜻</span>${wds}</div>`:'', mapb=mapBlock(w);
+  const fm=mapb?`<div class="fm"><div>${flow}${wdb}</div>${mapb}</div>`:flow+wdb;
   const marks=L(w.marks).map(x=>{const k=tl(x);return `<div class="mk"><span class="chip sans">${esc(k.tool)}</span>${k.star?'<span class="rp sans">대표</span> ':''}${inl(k.text)}</div>`}).join('');
   const looks=L(w.looks).map(x=>{const k=tl(x);return `<p><span class="ck">${k.star?'✓':''}</span><span class="chip sans">${esc(k.tool)}</span><span>${inl(k.text)}</span></p>`}).join('');
   return `<section class="pg">${hd}
-<div class="sec flow"><div class="sh sans"><span class="n">1</span>오늘의 흐름</div>${flow}${wds?`<div class="wd sans"><span class="k">말뜻</span>${wds}</div>`:''}</div>
+<div class="sec flow"><div class="sh sans"><span class="n">1</span>오늘의 흐름</div>${fm}</div>
 <div class="sec"><div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">${scn}</div>${marks}</div>
 <div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div><div class="lk">${looks}</div></div>
 <div class="ft sans"><span>${esc(w.label)} · ${D.str}</span><span>1</span></div></section>`; }
@@ -184,6 +258,47 @@ function page4(w,edit,pray){ pray=pray||{};
 <div class="sec pr"><div class="sh sans"><span class="n">${n}</span>오늘의 기도</div>
 <h4 class="sans">청년부 지체 기도제목</h4>${yrows}<h4 class="sans">교회 기도제목</h4>${crows}</div><div class="ft sans"><span>${esc(w.title)}</span><span>4</span></div></section>`; }
 function sheet(w,edit,pray){ return `<div class="sheet wk" id="w${esc(w.key)}" style="--c:${w.color};--l:${w.light};--hl:#F3E6A0">${page1(w)}${page2(w)}${page3(w)}${page4(w,edit,pray)}</div>`; }
+/* ── 가이드북 A5: 한 회 8쪽(읽기 2 · 관찰 2 · 성품 2 · 해설과 기도 2), 첫쪽이 짝수(왼쪽)면 관찰과 성품이 마주 봅니다 ── */
+function a5parts(w,pray){ pray=pray||{}; const D=dateOf(w), A=[], Dn=[];
+  A.push(`<div class="hd sans"><div class="dt"><b><i>${D.m}/</i>${D.d}</b><small>${D.wd}요일</small></div><div class="tt"><div class="lb">${esc(w.label)}${w.season?' · '+esc(w.season):''}</div><b>${esc(w.title)}</b><span>${esc(w.sub)}</span></div></div><div class="st sans">성경 읽기 약 <b>${Math.max(1,Math.round((+w.vv||0)/7.5))}분</b></div>`);
+  A.push('<div class="sh sans"><span class="n">1</span>오늘의 흐름</div>');
+  paras(w).forEach(p=>A.push(`<div class="blk"><p>${inl(p)}</p></div>`));
+  const mb=mapBlock(w); if(mb) A.push(mb);
+  const wd=wordsOf(w); if(wd.length) A.push('<div class="wd sans"><span class="k">말뜻</span>'+wd.map(([a,b])=>`<div><b>${inl(a)}</b> ${inl(b)}</div>`).join('')+'</div>');
+  A.push('<div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div>'); if(L(w.scenes).length) A.push('<div class="scn">'+L(w.scenes).map(s=>`<span class="sans">${esc(s)}</span>`).join('')+'</div>');
+  L(w.marks).forEach(x=>{const k=tl(x);A.push(`<div class="mk"><span class="chip">${esc(k.tool)}</span>${k.star?'<span class="rp">대표</span>':''}${inl(k.text)}</div>`)});
+  A.push('<div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div>');
+  L(w.looks).forEach(x=>{const k=tl(x);A.push(`<div class="lk"><span class="ck">${k.star?'✓':''}</span><span><span class="chip">${esc(k.tool)}</span>${inl(k.text)}</span></div>`)});
+  Dn.push('<div class="sh sans" style="margin-top:0"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div>');
+  Dn.push(`<div class="note">${inl(w.note)}</div>`);
+  const wh=L(w.whole).map(x=>{const p=x.split('|').map(s=>s.trim());return {lab:p[0],ref:p[1]||'',text:p.slice(2).join(' | ')}}); let n=7;
+  if(wh.length){ Dn.push(`<div class="sh sans"><span class="n">7</span>성경 전체로<small>${esc(w.whole_title||'')}</small></div>`); wh.forEach(x=>Dn.push(`<div class="wh"><span class="chip">${esc(x.lab)}</span><span><b>${esc(x.ref)}</b>${inl(x.text)}</span></div>`)); n=8; }
+  const yv=L(pray.y), cv=L(pray.c);
+  Dn.push(`<div class="pr"><div class="sh sans"><span class="n">${n}</span>오늘의 기도</div><h4 class="sans">청년부 지체 기도제목</h4><div class="ya">`+Array.from({length:14},(_,i)=>{const [a,...b]=(yv[i]||'').split('|');return `<div class="prow sans"><span>${esc((a||'').trim())}</span><i>${esc(b.join('|').trim())}</i></div>`}).join('')+'</div><h4 class="sans">교회 기도제목</h4><div class="ca">'+Array.from({length:10},(_,i)=>`<div class="pln sans">${esc(cv[i]||'')}</div>`).join('')+'</div></div>');
+  const qpage=(no,title,guide,items,first,i0)=>{ let h=`<div class="sh sans" style="margin-top:0"><span class="n">${no}</span>${title}${i0?'<small>이어서</small>':''}</div>`; if(!i0) h+=`<div class="gd sans">${guide}</div>`;
+    items.forEach((o,i)=>{ h+=`<div class="op"><div class="bx sans">${i0+i+1}</div><div>${first(o)}</div></div><div class="ans">`+'<div class="ln"></div>'.repeat(14)+'</div>'; }); return h; };
+  const ob=(w.obs||[]).filter(x=>String(x||'').trim()), gd=(w.god||[]).filter(g=>String(g.q||'').trim()||String(g.v||'').trim());
+  const cnt=k=>['','','두','세','네','다섯','여섯'][k]||k;
+  const og=(ob.length>1?`${cnt(ob.length)} 물음 가운데 <b>하나만 골라도 되고, 여러 개를 골라도 됩니다.</b> `:'')+'고른 물음 바로 아래 칸에 답을 적습니다.';
+  const gg='본문 관찰에서 고른 번호와 <b>같은 번호를 고르면 관찰이 성품으로 이어집니다.</b> 다른 번호를 골라도 됩니다.';
+  const two=(arr,f)=>{const o=[];for(let i=0;i<arr.length;i+=2)o.push(f(arr.slice(i,i+2),i));return o};
+  const O=two(ob,(a,i)=>qpage('4','본문 관찰',og,a,o=>inl(o),i)), G=two(gd,(a,i)=>qpage('5','하나님의 성품',gg,a,g=>`<div class="v">${inl(g.v)}</div>${inl(g.q)}`,i));
+  return {A,O,G,D:Dn,run:`${w.season||w.label||''} · ${w.title||''}`}; }
+/* out(.a5w) 안에 쪽을 흘려 넣습니다. 화면에 그려진 상태여야 높이를 잴 수 있습니다. */
+function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
+  const mk=(st,run)=>{ const p=document.createElement('section'); p.className='p5'+(pn%2?' r':''); p.style.cssText=st;
+    p.innerHTML=`<div class="bx5"></div><span class="pn sans">${pn}</span><span class="rn sans">${esc(run)}</span>`; out.appendChild(p); pn++; return p.firstElementChild; };
+  const flow=(st,html,run)=>{ const n0=out.querySelectorAll('.p5').length; let box=mk(st,run);
+    for(const h of html){ const t=document.createElement('template'); t.innerHTML=h; const el=t.content.firstElementChild; box.appendChild(el);
+      if(box.scrollHeight>box.clientHeight+1 && box.children.length>1){ box.removeChild(el); const carry=[]; while(box.children.length>1 && /\b(sh|scn)\b/.test(box.lastElementChild.className)) carry.unshift(box.removeChild(box.lastElementChild));
+        box=mk(st,run); carry.forEach(c=>box.appendChild(c)); box.appendChild(el); const f0=box.firstElementChild; if(f0.classList.contains('sh')||f0.classList.contains('note')) f0.style.marginTop='0'; } }
+    if((out.querySelectorAll('.p5').length-n0)%2){ const b=mk(st,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } };
+  const fixed=(st,pages,run)=>pages.forEach(h=>{ mk(st,run).innerHTML=h; });
+  for(const w of weeks){ const J=a5parts(w,prayFn(w)), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`;
+    flow(st,J.A,J.run); fixed(st,J.O,J.run); fixed(st,J.G,J.run); flow(st,J.D,J.run); }
+  out.querySelectorAll('.p5').forEach(p=>{const b=p.firstElementChild; if(b.scrollHeight>b.clientHeight+1 && !b.querySelector('.ans')) bad.push(p.querySelector('.pn').textContent)});
+  return {pages:pn-start,bad}; }
+const FMT={get fmt(){return LS.get('cbsr_season_fmt','a4')}, set fmt(v){LS.set('cbsr_season_fmt',v)}, get start(){return +LS.get('cbsr_season_a5start',2)||2}, set start(v){LS.set('cbsr_season_a5start',v)}};
 /* 넘침 검사: 1·4쪽 꼬리말 위로 내용이 내려왔는지 */
 function overflow(root){ const out=[]; root.querySelectorAll('.pg').forEach((pg,i)=>{ if(i%4===1||i%4===2) return; const r=pg.getBoundingClientRect(), ft=pg.querySelector('.ft'); const lim=ft?ft.getBoundingClientRect().top-2:r.bottom; let mb=0; pg.querySelectorAll(':scope > *:not(.ft)').forEach(e=>{const b=e.getBoundingClientRect(); if(b.bottom>mb) mb=b.bottom}); const z=(r.width/pg.offsetWidth)||1; const mm=(mb-lim)/z*25.4/96; if(mm>0) out.push(`${i%4+1}쪽 ${mm.toFixed(1)}mm`); }); return out; }
 /* ── 기도제목: 이 기기에만 ── */
@@ -247,6 +362,7 @@ function ws(){
   <button id="bCheck">인용 확인</button>
   <button id="bView">나눔 화면 ↗</button>
   <button id="bGit">GitHub</button>
+  <span class="fmt"><select id="selFmt" title="판형"><option value="a4">A4 한 장(4쪽)</option><option value="a5">A5 가이드북(8쪽)</option></select><label id="a5s" title="A5 첫 쪽 번호(짝수 = 왼쪽 쪽)">첫 쪽 <input type="number" id="a5start" min="1" step="1"></label></span>
   <select id="selPrint"><option value="one">이 회</option><option value="all">묶음 전체</option></select><button id="bPrint" class="pri">인쇄 · PDF</button>
   <a href="check.html?admin" target="_blank" rel="noopener" style="font-size:12px;color:var(--mute)">체험판 설문 결과 ↗</a>
 </header>
@@ -258,6 +374,9 @@ function ws(){
   $('selSet').onchange=()=>{SID=$('selSet').value;WI=0;drawAll()};
   $('bNewSet').onclick=()=>{ const n=prompt(KIND==='sera'?'새 묶음 이름 (예: 세라핌 청년 기도회 · 2027 사순절)':'새 묶음 이름 (예: 2027 고난주간)'); if(!n) return; const id=(KIND==='sera'?'sera-':'season-')+Date.now().toString(36); DATA.sets.push({id,kind:KIND,name:n,note:'',weeks:[]}); SID=id; WI=0; persist(); drawAll(); };
   $('bView').onclick=()=>{ if(saveT){clearTimeout(saveT);persist()} window.open('season.html?view='+encodeURIComponent(SID)+(curW()?'&w='+curW().key:''),'_blank') };
+  $('selFmt').value=FMT.fmt; $('a5start').value=FMT.start; $('a5s').style.display=FMT.fmt==='a5'?'':'none';
+  $('selFmt').onchange=()=>{ FMT.fmt=$('selFmt').value; $('a5s').style.display=FMT.fmt==='a5'?'':'none'; drawPrev(); };
+  $('a5start').oninput=()=>{ FMT.start=Math.max(1,+$('a5start').value||2); drawPrev(); };
   $('bPrint').onclick=doPrint; $('bCheck').onclick=checkQuotes;
   wireGit();
   const ss=sets(); SID=(ss.find(s=>s.id===Q.get('set'))||ss[0]||{}).id||null;
@@ -283,6 +402,7 @@ function drawForm(){ const s=curSet(), f=$('form');
   <label class="f"><span class="k"><b>색</b></span><select data-f="colorset">${COLORS.map((c,i)=>`<option value="${i}"${i===ci?' selected':''}>${c[0]}</option>`).join('')}${ci<0?'<option selected value="-1">지금 색 그대로</option>':''}</select></label></fieldset>
   <fieldset><legend>1쪽 · 읽기 전과 읽으며</legend>${F('flow','① 오늘의 흐름',w.flow,{area:1,rows:5,small:'빈 줄로 문단을 나눕니다'})}
   ${F('words','말뜻',w.words,{area:1,rows:3,small:'줄마다 「낱말 — 풀이」'})}
+  <div class="row">${F('map','지도 그림',w.map||'',{small:'비우면 빠집니다',ph:'img/sera_1124_map.webp'})}${F('mapcap','지도 설명',w.mapcap||'',{ph:'**첫 선교여행**(13–14장) 실선은 가는 길, 점선은 돌아오는 길입니다.'})}</div>
   ${F('scenes','② 장면 단추',w.scenes,{area:1,rows:3,small:'줄마다 하나'})}
   ${F('marks','② 성경 읽기 — 표시',w.marks,{area:1,rows:5,small:'줄마다 「★ 도구 | 문장」, ★ = 대표',ph:'★ ◆ 반복 | 네 번 반복되는 말은 무엇입니까? 9:12, 17에서 찾아 {형광펜}으로 칠하세요.'})}${TOK}
   ${F('looks','③ 눈여겨볼 것',w.looks,{area:1,rows:6,small:'줄마다 「✓ 도구 | 문장」, ✓ = 표시 확인'})}</fieldset>
@@ -316,12 +436,21 @@ function drawForm(){ const s=curSet(), f=$('form');
 }
 function drawPrev(){ const p=$('prev'), w=curW(), s=curSet();
   if(!w){ p.innerHTML='<div class="empty">왼쪽에서 회를 고르거나 ＋ 새 회를 누르세요.</div>'; return; }
+  if(FMT.fmt==='a5'){ const st=FMT.start; p.innerHTML=`<div class="a5w a5prev">${st%2?'<div class="gap"></div>':''}</div>`; const box=p.firstElementChild;
+    const r=a5flow(box,[w],st,x=>prayOf(s.id,x.key)); const z=Math.min(1,(p.clientWidth-30)/(2*559)); box.style.zoom=z;
+    const wn=$('warn'); if(wn){ const msg=[]; if(r.bad.length) msg.push('넘치는 쪽: '+r.bad.join(', ')); if(st%2) msg.push('첫 쪽이 홀수라 관찰과 성품이 마주 보지 않습니다'); wn.className=msg.length?'bad':'ok'; wn.textContent=msg.length?msg.join(' · '):`가이드북 A5 ${r.pages}쪽, 글자 크기는 가이드북 본문과 같습니다. 관찰과 성품이 펼침면으로 마주 봅니다.`; }
+    return; }
   p.innerHTML=sheet(w,false,prayOf(s.id,w.key));
   const z=Math.min(1,(p.clientWidth-30)/794); p.firstElementChild.style.zoom=z;
   requestAnimationFrame(()=>{ const o=overflow(p), wn=$('warn'); if(!wn) return; wn.className=o.length?'bad':'ok'; wn.textContent=o.length?'넘칩니다: '+o.join(', ')+' — 줄이거나 기도 줄 수를 줄이세요.':'네 쪽에 맞습니다.'; });
 }
 window.addEventListener('resize',()=>{ if(document.body.className==='ws') drawPrev() });
 function doPrint(){ const s=curSet(); if(!s) return; const all=$('selPrint').value==='all'; const ws=all?s.weeks:[curW()].filter(Boolean);
+  if(FMT.fmt==='a5'){ $('printroot').innerHTML='<div class="a5w"></div>'; const r=a5flow($('printroot').firstElementChild,ws,FMT.start,x=>prayOf(s.id,x.key));
+    $('pgsz').textContent='@page{size:148mm 210mm;margin:0}'; addEventListener('afterprint',()=>{$('pgsz').textContent='@page{size:A4;margin:0}'},{once:true});
+    $('status').textContent=`${ws.length}회 · A5 ${r.pages}쪽${r.bad.length?' · 넘치는 쪽 '+r.bad.join(', '):''} — 용지 크기 A5(148×210mm), 여백 없음, 배경 그래픽 켜기`;
+    (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(()=>print(),200)); return; }
+  $('pgsz').textContent='@page{size:A4;margin:0}';
   $('printroot').innerHTML=ws.map(w=>sheet(w,false,prayOf(s.id,w.key))).join('');
   const bad=[]; ws.forEach((w,i)=>{ const o=overflow($('printroot').children[i]); }); /* 화면에 없는 상태라 크기 검사는 미리보기에서 */
   $('status').textContent=`${ws.length}회 · ${ws.length*4}쪽 — 용지 A4, 여백 없음, 배경 그래픽 켜기, 양면(긴 쪽 넘김)`;
