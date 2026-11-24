@@ -292,6 +292,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .q b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .lab{font-size:9.6pt;font-weight:500;margin:1.6mm 0 0.3mm;color:var(--ink);display:flex;align-items:center;gap:1.2mm} .pg .lab .sm{font-size:9.2pt;color:#444} .pg .hint3{font-size:8.6pt;color:#555;margin:-0.8mm 0 1.2mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif} .pg .amen{font-size:9.2pt;margin:0.6mm 0 0;text-align:right;color:#222}
 .pg .lab .sm{font-weight:400}
+/* 11-24 목사님: 범위가 넓은 날은 관찰·성품을 가·나 두 갈래로 — 쓰는 칸은 하나 */ .pg .lab .gah{font-size:7.6pt;font-weight:400;color:#777;margin-left:auto;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif} .pg .q.gq{padding-left:5.2mm;text-indent:-5.2mm} .pg .q.gq+.q.gq{margin-top:.8mm} .pg .q .ga{display:inline-block;text-indent:0;width:4mm;height:4mm;line-height:3.9mm;text-align:center;border:.25mm solid var(--main);color:var(--main);border-radius:50%;font-size:7.4pt;font-weight:700;margin-right:1.2mm;vertical-align:.3mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .lab .st{display:inline-flex;align-items:center;justify-content:center;min-width:3.6mm;height:3.6mm;border:0.25mm solid var(--main);color:var(--main);border-radius:0.8mm;font-size:7.5pt;line-height:1;flex:0 0 auto}
 .pg .sm{font-size:8.6pt;color:#555}
 .pg .lnw{margin:0 0 0.5mm}
@@ -498,6 +499,10 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       <div class="hint">✓ 항목은 ② 표시 차례대로. ④ 관찰의 답은 먼저 주지 않습니다. 남는 자리는 도구(점층·전형장면·아이러니·침묵…)로 채웁니다.</div>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 인용(장절)</b></span><input type="text" id="g27a" placeholder="&quot;…&quot;(45:5)"></label>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 물음</b></span><textarea id="g27b" rows="2" placeholder="… **생명을 구원하는 길로 쓰신 하나님의 은혜**가 내게는 어떻게 다가옵니까?"></textarea></label>
+      <details id="two27"><summary>범위가 넓은 날 — 관찰·성품 둘째 갈래(나)</summary><div class="hint">시편 여러 편, 잠언, 선지서 신탁 모음, 서신 4장 이상처럼 서로 독립된 단락이 여럿인 날에만 씁니다. 비우면 한 갈래로 나옵니다. 적용·기도·해설은 첫째 갈래(가)를 따릅니다.</div>
+      <label class="f"><span class="k"><b>① 본문 관찰 — 나</b></span><textarea id="q27b" rows="2"></textarea></label>
+      <label class="f"><span class="k"><b>④ 하나님의 성품 — 나, 인용(장절)</b></span><input type="text" id="g27c"></label>
+      <label class="f"><span class="k"><b>④ 하나님의 성품 — 나, 물음</b></span><textarea id="g27d" rows="2"></textarea></label></details>
       <div class="hint">시선·은혜·마음·사랑 가운데 문맥에 맞는 하나를 **굵게**. 적용은 「앞 문장(하나님이 하신 일, 장절) **물음** **→ 이어지는 물음**」. 해설은 "하나님은 ~분입니다."로 맺습니다.</div>
     </fieldset>
     <fieldset><legend>머리</legend><label class="f"><span class="k"><b>소제목</b> <span class="cnt" data-for="sub"></span></span><input type="text" id="sub" data-max="30" placeholder="비우면 통독표 소제목"></label></fieldset>
@@ -869,8 +874,9 @@ function pageR27(p,qt,hw){ const v=qt.v27, q='q'+qOf(p), g=v.god||['',''];
   let hwi=0; const ln=n=>{ const t=hw&&hw[hwi++]; return t?'<div class="lnw hw">'+'<div class="ln"></div>'.repeat(n)+'<div class="hwt">'+esc(t)+'</div></div>':ln0(n) };
   return `<div class="pg r n27 ${q}">
 <p class="sec sans" style="margin-top:0"><span class="n">4</span>나의 묵상</p>
-<p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q" data-f="q">${t27(qt.obs.q)}</p>${ln(3)}
-<p class="lab sans"><span class="st">2</span>하나님의 성품</p><p class="q" data-f="g27b">${t27(g[0])} ${t27(g[1])}</p>${ln(2)}
+${v.obs2?`<p class="lab sans"><span class="st">1</span>본문 관찰<span class="gah">가와 나 가운데 골라 적습니다</span></p><p class="q gq" data-f="q"><span class="ga">가</span>${t27(qt.obs.q)}</p><p class="q gq" data-f="q27b"><span class="ga">나</span>${t27(v.obs2)}</p>${ln(2)}
+<p class="lab sans"><span class="st">2</span>하나님의 성품<span class="gah">관찰에서 고른 쪽과 같은 쪽을 고릅니다</span></p><p class="q gq" data-f="g27b"><span class="ga">가</span>${t27(g[0])} ${t27(g[1])}</p><p class="q gq" data-f="g27d"><span class="ga">나</span>${t27((v.god2||[])[0]||'')} ${t27((v.god2||[])[1]||'')}</p>${ln(2)}`:`<p class="lab sans"><span class="st">1</span>본문 관찰</p><p class="q" data-f="q">${t27(qt.obs.q)}</p>${ln(3)}
+<p class="lab sans"><span class="st">2</span>하나님의 성품</p><p class="q" data-f="g27b">${t27(g[0])} ${t27(g[1])}</p>${ln(2)}`}
 <p class="lab sans"><span class="st">3</span>적용</p><p class="q" data-f="apply">${t27(qt.apply)}</p>${ln(3)}
 <p class="lab sans"><span class="st">4</span>오늘의 기도</p>${ln(2)}
 <div class="after"><p class="h sans"><span class="n">5</span>쓴 뒤에 읽기 — 해설과 기도<span class="stuck">해설은 정답이 아닙니다. 내 묵상과 비교해 보세요</span></p>
@@ -896,10 +902,10 @@ function rd27(){ const L=id=>$(id).value.split('\n').map(x=>x.trim()).filter(Boo
   return { scenes:L('s27'),
     marks:L('k27').map(x=>{ let [t,b]=sp(x); const rep=/^★/.test(t); return {tool:t.replace(/^★\s*/,''),rep,text:b} }),
     looks:L('l27').map(x=>{ let [t,b]=sp(x); const ck=/^✓/.test(t); return {ck,tool:t.replace(/^✓\s*/,''),text:b} }),
-    god:[$('g27a').value.trim(),$('g27b').value.trim()] } }
+    god:[$('g27a').value.trim(),$('g27b').value.trim()], ...( $('q27b').value.trim()?{obs2:$('q27b').value.trim(),god2:[$('g27c').value.trim(),$('g27d').value.trim()]}:{} ) } }
 function fill27(v){ document.body.classList.toggle('m27',!!v); $('b27').textContent=v?'옛 틀로 되돌리기':'새 틀로 쓰기'; v=v||{scenes:[],marks:[],looks:[],god:['','']};
   $('s27').value=(v.scenes||[]).join('\n'); $('k27').value=(v.marks||[]).map(m=>(m.rep?'★ ':'')+m.tool+' | '+m.text).join('\n');
-  $('l27').value=(v.looks||[]).map(m=>(m.ck?'✓ ':'')+m.tool+' | '+m.text).join('\n'); $('g27a').value=(v.god||[])[0]||''; $('g27b').value=(v.god||[])[1]||'' }
+  $('l27').value=(v.looks||[]).map(m=>(m.ck?'✓ ':'')+m.tool+' | '+m.text).join('\n'); $('g27a').value=(v.god||[])[0]||''; $('g27b').value=(v.god||[])[1]||''; $('q27b').value=v.obs2||''; $('g27c').value=(v.god2||[])[0]||''; $('g27d').value=(v.god2||[])[1]||''; if($('two27')) $('two27').open=!!v.obs2 }
 function wire27(){ ['find','pair','stxk','stx','god'].forEach(id=>{ const el=$(id); if(!el) return; const w=el.closest('label')||el; w.classList.add('o27'); let n=w.nextElementSibling; while(n&&n.classList.contains('hint')){ n.classList.add('o27'); n=n.nextElementSibling } });
   document.querySelectorAll('#f27 .tokrow button').forEach(b=>b.onclick=()=>{ const ta=$(b.parentNode.dataset.for); const a=ta.selectionStart??ta.value.length, e=ta.selectionEnd??a; ta.value=ta.value.slice(0,a)+b.textContent+ta.value.slice(e); ta.focus(); ta.selectionStart=ta.selectionEnd=a+b.textContent.length; ta.dispatchEvent(new Event('input',{bubbles:true})) });
   $('b27').onclick=()=>{ const on=document.body.classList.contains('m27'); if(on&&!confirm('이 날의 새 틀 칸(장면·표시·눈여겨볼 것·성품)을 지우고 옛 틀로 되돌릴까요?')) return; fill27(on?null:{scenes:[],marks:[],looks:(readForm().obs.pair||[]).map(x=>({ck:false,tool:x[0],text:x[1]})),god:['','']}); counters(); render(); save(); fillDays(); $('selD').value=cur } }
