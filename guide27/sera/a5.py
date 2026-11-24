@@ -117,7 +117,7 @@ JS = r'''
     for(const h of html){ const t=document.createElement('template'); t.innerHTML=h; const el=t.content.firstElementChild; box.appendChild(el);
       if(box.scrollHeight>box.clientHeight+1 && box.children.length>1){ box.removeChild(el); const carry=[]; while(box.children.length>1 && /\b(sh|scn)\b/.test(box.lastElementChild.className)) carry.unshift(box.removeChild(box.lastElementChild));
         box=mk(w,run); carry.forEach(c=>box.appendChild(c)); box.appendChild(el); const f0=box.firstElementChild; if(f0.classList.contains('sh')||f0.classList.contains('note')) f0.style.marginTop='0'; } }
-    if(even && (out.children.length-n0+1)%2){ const b=mk(w,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } };
+    if(even && (out.children.length-n0+1)%2){ const pr=box.querySelector(':scope > .pr'); if(pr && box.children.length>1){ box.removeChild(pr); const b=mk(w,run); b.appendChild(pr); pr.firstElementChild.style.marginTop='0'; } else { const b=mk(w,run); b.innerHTML='<div class="sh sans" style="margin-top:0">메모</div><div class="ans" style="border-bottom:0">'+'<div class="ln"></div>'.repeat(30)+'</div>'; } } };
   const fixed=(w,pages,run)=>{ for(const h of pages){ const b=mk(w,run); b.innerHTML=h; } };
   for(const w of src){ const J=JSON.parse(w.dataset.j); const run=J.run;
     flow(w,J.A,run,true); fixed(w,J.O,run); fixed(w,J.G,run); flow(w,J.D,run,true); }
