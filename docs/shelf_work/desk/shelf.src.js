@@ -427,7 +427,7 @@ function act(a){ var t=top(); if(!t) return false;                              
   if(a==="plan"){ if(!O.plan||busy) return true; t.dg={who:"l",t:"…통독표입니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); push({t:"plan"}); } },1000); return true; }
   if(a==="pm"||a==="pnow"||a==="pgo"){ return true; }
   if(a==="card"){ if(!O.card||busy) return true;
-    if(O.card.had&&O.card.had()){ t.dg={who:"l",t:"…올해 받으신 말씀이 있습니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); O.card.show(); } },1100); return true; }
+    if(O.card.had&&O.card.had()){ t.dg={who:"l",t:"…이미 받으신 말씀이 있습니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); O.card.show(); } },1100); return true; }
     t.dg=helloDg("back"); push({t:"card"}); return true; }
   if(a==="mix"){ if(t.t==="card"&&!busy) cardMix(t,true); return true; }
   if(a==="pick"){ return true; }
