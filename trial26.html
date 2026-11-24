@@ -19,6 +19,7 @@ header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:-.2px}
 header .sp{flex:1}
 header a.edlink{font-size:13px;font-weight:700;color:#fff;background:#b83232;border-radius:6px;padding:5px 10px;text-decoration:none;white-space:nowrap}
 header a.edlink.back{background:#2f6e45}
+#two27 .twob,#two27 .twon{display:none;font-size:11px;margin-left:4px} #two27.isTwo .twob{display:inline;background:#5B3E8A;color:#fff;border-radius:4px;padding:0 5px} #two27.need .twon{display:inline;color:#b00} #two27.isTwo>summary{font-weight:700}
 header .wtabs{display:flex;gap:2px;background:#eee;border-radius:7px;padding:2px} header .wtabs a{font-size:12.5px;padding:3px 9px;border-radius:5px;color:#444;text-decoration:none;white-space:nowrap} header .wtabs a:hover{background:#fff}
 button,select,input[type=file]{font:inherit}
 button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 11px;cursor:pointer}
@@ -499,7 +500,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       <div class="hint">✓ 항목은 ② 표시 차례대로. ④ 관찰의 답은 먼저 주지 않습니다. 남는 자리는 도구(점층·전형장면·아이러니·침묵…)로 채웁니다.</div>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 인용(장절)</b></span><input type="text" id="g27a" placeholder="&quot;…&quot;(45:5)"></label>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 물음</b></span><textarea id="g27b" rows="2" placeholder="… **생명을 구원하는 길로 쓰신 하나님의 은혜**가 내게는 어떻게 다가옵니까?"></textarea></label>
-      <details id="two27"><summary>범위가 넓은 날 — 관찰·성품 둘째 갈래(나)</summary><div class="hint">시편 여러 편, 잠언, 선지서 신탁 모음, 서신 4장 이상처럼 서로 독립된 단락이 여럿인 날에만 씁니다. 비우면 한 갈래로 나옵니다. 적용·기도·해설은 첫째 갈래(가)를 따릅니다.</div>
+      <details id="two27"><summary>범위가 넓은 날 — 관찰·성품 둘째 갈래(나) <span class="twob">두 갈래 날</span><span class="twon">· 아직 비어 있음</span></summary><div class="hint">시편 여러 편, 잠언, 선지서 신탁 모음, 서신 4장 이상처럼 서로 독립된 단락이 여럿인 날에만 씁니다. 비우면 한 갈래로 나옵니다. 적용·기도·해설은 첫째 갈래(가)를 따릅니다.</div>
       <label class="f"><span class="k"><b>① 본문 관찰 — 나</b></span><textarea id="q27b" rows="2"></textarea></label>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 나, 인용(장절)</b></span><input type="text" id="g27c"></label>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 나, 물음</b></span><textarea id="g27d" rows="2"></textarea></label></details>
@@ -905,7 +906,7 @@ function rd27(){ const L=id=>$(id).value.split('\n').map(x=>x.trim()).filter(Boo
     god:[$('g27a').value.trim(),$('g27b').value.trim()], ...( $('q27b').value.trim()?{obs2:$('q27b').value.trim(),god2:[$('g27c').value.trim(),$('g27d').value.trim()]}:{} ) } }
 function fill27(v){ document.body.classList.toggle('m27',!!v); $('b27').textContent=v?'옛 틀로 되돌리기':'새 틀로 쓰기'; v=v||{scenes:[],marks:[],looks:[],god:['','']};
   $('s27').value=(v.scenes||[]).join('\n'); $('k27').value=(v.marks||[]).map(m=>(m.rep?'★ ':'')+m.tool+' | '+m.text).join('\n');
-  $('l27').value=(v.looks||[]).map(m=>(m.ck?'✓ ':'')+m.tool+' | '+m.text).join('\n'); $('g27a').value=(v.god||[])[0]||''; $('g27b').value=(v.god||[])[1]||''; $('q27b').value=v.obs2||''; $('g27c').value=(v.god2||[])[0]||''; $('g27d').value=(v.god2||[])[1]||''; if($('two27')) $('two27').open=!!v.obs2 }
+  $('l27').value=(v.looks||[]).map(m=>(m.ck?'✓ ':'')+m.tool+' | '+m.text).join('\n'); $('g27a').value=(v.god||[])[0]||''; $('g27b').value=(v.god||[])[1]||''; $('q27b').value=v.obs2||''; $('g27c').value=(v.god2||[])[0]||''; $('g27d').value=(v.god2||[])[1]||''; if($('two27')){ const P2=(typeof PLAN!=='undefined'&&PLAN[cur])||{}; $('two27').open=!!v.obs2||!!P2.two; $('two27').classList.toggle('need',!!P2.two&&!v.obs2); $('two27').classList.toggle('isTwo',!!P2.two); } }
 function wire27(){ ['find','pair','stxk','stx','god'].forEach(id=>{ const el=$(id); if(!el) return; const w=el.closest('label')||el; w.classList.add('o27'); let n=w.nextElementSibling; while(n&&n.classList.contains('hint')){ n.classList.add('o27'); n=n.nextElementSibling } });
   document.querySelectorAll('#f27 .tokrow button').forEach(b=>b.onclick=()=>{ const ta=$(b.parentNode.dataset.for); const a=ta.selectionStart??ta.value.length, e=ta.selectionEnd??a; ta.value=ta.value.slice(0,a)+b.textContent+ta.value.slice(e); ta.focus(); ta.selectionStart=ta.selectionEnd=a+b.textContent.length; ta.dispatchEvent(new Event('input',{bubbles:true})) });
   $('b27').onclick=()=>{ const on=document.body.classList.contains('m27'); if(on&&!confirm('이 날의 새 틀 칸(장면·표시·눈여겨볼 것·성품)을 지우고 옛 틀로 되돌릴까요?')) return; fill27(on?null:{scenes:[],marks:[],looks:(readForm().obs.pair||[]).map(x=>({ck:false,tool:x[0],text:x[1]})),god:['','']}); counters(); render(); save(); fillDays(); $('selD').value=cur } }
