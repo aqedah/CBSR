@@ -4,13 +4,13 @@
    원고는 shelf_66.json(성경책장 작업대의 내보내기 꼴). 그림은 img/shelf/. 앱에서는 필요할 때만 불러옴(template3.html의 shelfOpen). */
 (function(){
 "use strict";
-var ART={"labels":{"tor":{"창세기":[49,110,196,13.0,30,63],"출애굽기":[108,110,196,13.0,30,80],"레위기":[167,128,178,13.0,30,63],"민수기":[226,116,190,13.0,30,63],"신명기":[285,118,188,13.0,30,63]},"his":{"여호수아":[49,132,174,13.0,30,80],"사사기":[108,137,169,13.0,30,63],"룻기":[167,160,146,13.0,30,46],"사무엘상":[226,123,183,13.0,30,80],"사무엘하":[285,132,174,13.0,30,80],"열왕기상":[49,369,171,13.0,30,80],"열왕기하":[108,365,175,13.0,30,80],"역대상":[167,359,181,13.0,30,63],"역대하":[226,350,190,13.0,30,63],"에스라":[74,620,154,13.0,30,63],"느헤미야":[133,616,158,13.0,30,80],"에스더":[192,620,154,13.0,30,63]},"poe":{"욥기":[49,110,196,13.0,30,46],"시편":[108,110,196,13.0,30,46],"잠언":[167,123,183,13.0,30,46],"전도서":[226,149,157,13.0,30,63],"아가":[285,155,151,13.0,30,46]},"pro":{"이사야":[43,110,196,9.0,30,63],"예레미야":[94,110,196,9.0,30,80],"예레미야애가":[145,159,147,3.0,42,97],"에스겔":[196,110,196,9.0,30,63],"다니엘":[247,149,157,9.0,30,63],"호세아":[298,146,160,9.0,30,63],"요엘":[43,396,144,9.0,30,46],"아모스":[94,387,153,9.0,30,63],"오바댜":[145,399,141,9.0,30,63],"요나":[196,394,146,9.0,30,46],"미가":[247,390,150,9.0,30,46],"나훔":[298,396,144,9.0,30,46],"하박국":[69,630,144,9.0,30,63],"스바냐":[120,630,144,9.0,30,63],"학개":[171,631,143,9.0,30,46],"스가랴":[222,614,160,9.0,30,63],"말라기":[273,628,146,9.0,30,63]},"gos":{"마태복음":[78,127,179,13.0,30,80],"마가복음":[137,144,162,13.0,30,80],"누가복음":[196,132,174,13.0,30,80],"요한복음":[255,137,169,13.0,30,80]},"pau":{"로마서":[49,106,200,13.0,30,63],"고린도전서":[108,106,200,13.0,30,97],"고린도후서":[167,119,187,13.0,30,97],"갈라디아서":[226,150,156,13.0,30,97],"에베소서":[285,150,156,13.0,30,80],"빌립보서":[44,392,148,13.0,30,80],"골로새서":[103,392,148,13.0,30,80],"데살로니가전서":[162,388,152,7.0,42,97],"데살로니가후서":[221,397,143,7.0,42,97],"디모데전서":[44,618,156,13.0,30,97],"디모데후서":[103,626,148,13.0,30,97],"디도서":[162,631,143,13.0,30,63],"빌레몬서":[221,640,134,13.0,30,80]},"gen":{"히브리서":[78,148,158,13.0,30,80],"야고보서":[137,159,147,13.0,30,80],"베드로전서":[196,159,147,13.0,30,97],"베드로후서":[255,162,144,13.0,30,97],"요한일서":[49,393,147,13.0,30,80],"요한이서":[108,399,141,13.0,30,80],"요한삼서":[167,399,141,13.0,30,80],"유다서":[226,399,141,13.0,30,63]}},"hall":{"cases":{"rev":[156,192,234,321],"pau":[74,239,165,380],"gen":[225,239,316,380],"gos":[55,302,161,457],"act":[229,302,335,457],"poe":[29,390,156,559],"pro":[234,390,361,559],"tor":[-8,512,148,696],"his":[242,512,398,696]},"lanterns":[[178,267,51.8],[212,267,51.8],[176,334,59.9],[214,334,59.9],[172,426,71.0],[218,426,71.0],[167,554,86.5],[223,554,86.5]]}};
-var IMG="img/shelf/", VER="?v=8", W=390, H=846;   /* 그림을 바꾸면 VER를 올림(서비스 워커가 img/를 캐시에서 먼저 줌) */
+var ART={"labels": {"tor": {"창세기": [49, 110, 196, 13.0, 30, 63], "출애굽기": [108, 110, 196, 13.0, 30, 80], "레위기": [167, 128, 178, 13.0, 30, 63], "민수기": [226, 116, 190, 13.0, 30, 63], "신명기": [285, 118, 188, 13.0, 30, 63]}, "his": {"여호수아": [49, 132, 174, 13.0, 30, 80], "사사기": [108, 137, 169, 13.0, 30, 63], "룻기": [167, 160, 146, 13.0, 30, 46], "사무엘상": [226, 123, 183, 13.0, 30, 80], "사무엘하": [285, 132, 174, 13.0, 30, 80], "열왕기상": [49, 369, 171, 13.0, 30, 80], "열왕기하": [108, 365, 175, 13.0, 30, 80], "역대상": [167, 359, 181, 13.0, 30, 63], "역대하": [226, 350, 190, 13.0, 30, 63], "에스라": [74, 620, 154, 13.0, 30, 63], "느헤미야": [133, 616, 158, 13.0, 30, 80], "에스더": [192, 620, 154, 13.0, 30, 63]}, "poe": {"욥기": [49, 110, 196, 13.0, 30, 46], "시편": [108, 110, 196, 13.0, 30, 46], "잠언": [167, 123, 183, 13.0, 30, 46], "전도서": [226, 149, 157, 13.0, 30, 63], "아가": [285, 155, 151, 13.0, 30, 46]}, "pro": {"이사야": [43, 110, 196, 9.0, 30, 63], "예레미야": [94, 110, 196, 9.0, 30, 80], "예레미야애가": [145, 159, 147, 3.0, 42, 97], "에스겔": [196, 110, 196, 9.0, 30, 63], "다니엘": [247, 149, 157, 9.0, 30, 63], "호세아": [298, 146, 160, 9.0, 30, 63], "요엘": [43, 396, 144, 9.0, 30, 46], "아모스": [94, 387, 153, 9.0, 30, 63], "오바댜": [145, 399, 141, 9.0, 30, 63], "요나": [196, 394, 146, 9.0, 30, 46], "미가": [247, 390, 150, 9.0, 30, 46], "나훔": [298, 396, 144, 9.0, 30, 46], "하박국": [69, 630, 144, 9.0, 30, 63], "스바냐": [120, 630, 144, 9.0, 30, 63], "학개": [171, 631, 143, 9.0, 30, 46], "스가랴": [222, 614, 160, 9.0, 30, 63], "말라기": [273, 628, 146, 9.0, 30, 63]}, "gos": {"마태복음": [78, 127, 179, 13.0, 30, 80], "마가복음": [137, 144, 162, 13.0, 30, 80], "누가복음": [196, 132, 174, 13.0, 30, 80], "요한복음": [255, 137, 169, 13.0, 30, 80]}, "pau": {"로마서": [49, 106, 200, 13.0, 30, 63], "고린도전서": [108, 106, 200, 13.0, 30, 97], "고린도후서": [167, 119, 187, 13.0, 30, 97], "갈라디아서": [226, 150, 156, 13.0, 30, 97], "에베소서": [285, 150, 156, 13.0, 30, 80], "빌립보서": [44, 392, 148, 13.0, 30, 80], "골로새서": [103, 392, 148, 13.0, 30, 80], "데살로니가전서": [162, 388, 152, 7.0, 42, 97], "데살로니가후서": [221, 397, 143, 7.0, 42, 97], "디모데전서": [44, 618, 156, 13.0, 30, 97], "디모데후서": [103, 626, 148, 13.0, 30, 97], "디도서": [162, 631, 143, 13.0, 30, 63], "빌레몬서": [221, 640, 134, 13.0, 30, 80]}, "gen": {"히브리서": [78, 148, 158, 13.0, 30, 80], "야고보서": [137, 159, 147, 13.0, 30, 80], "베드로전서": [196, 159, 147, 13.0, 30, 97], "베드로후서": [255, 162, 144, 13.0, 30, 97], "요한일서": [49, 393, 147, 13.0, 30, 80], "요한이서": [108, 399, 141, 13.0, 30, 80], "요한삼서": [167, 399, 141, 13.0, 30, 80], "유다서": [226, 399, 141, 13.0, 30, 63]}}, "hall": {"cases": {"rev": [164, 413, 226, 527], "pau": [89, 399, 167, 541], "gen": [223, 399, 301, 541], "gos": [53, 374, 157, 566], "act": [233, 374, 337, 566], "poe": [-22, 324, 137, 616], "pro": [253, 324, 412, 616], "tor": [-247, 172, 76, 768], "his": [314, 172, 637, 768]}, "lanterns": [[180, 423, 46.3], [210, 423, 46.3], [175, 407, 62.5], [215, 407, 62.5], [164, 373, 96.2], [226, 373, 96.2], [131, 268, 200.0], [259, 268, 200.0]]}};
+var IMG="img/shelf/", VER="?v=9", W=390, H=846;   /* 그림을 바꾸면 VER를 올림(서비스 워커가 img/를 캐시에서 먼저 줌) */
 var SEC={ot:{n:"구약",c:"서른아홉 권",g:["모세오경","역사서","시가서","선지서"]},nt:{n:"신약",c:"스물일곱 권",g:["복음서","사도행전","바울서신","일반서신","요한계시록"]}};
 var PRESS={"모세오경":"tor","역사서":"his","시가서":"poe","선지서":"pro","복음서":"gos","바울서신":"pau","일반서신":"gen"};
 var CNT=["","한 권","두 권","세 권","네 권","다섯 권","여섯 권","일곱 권","여덟 권","아홉 권","열 권","열한 권","열두 권","열세 권","열네 권","열다섯 권","열여섯 권","열일곱 권"];
 /* 셋째 부분(외경 · 위경 · 교부 문헌): 어둡고, 이름패는 불에 그을려 잘 읽히지 않음. 누르면 경고장부터(11-24 목사님의 글). 책은 아직 없음 */
-var WARN={t:"경고",a:"이 서고의 책은 성경이 아닙니다.",q:"정말로 열람하시겠습니까?",e:"아직 들여놓은 책이 없는 것 같다."};   /* e: 주인공(1인칭)의 혼잣말 */
+var WARN={t:"경고",a:"이 서가의 책은 성경이 아닙니다.",q:"정말로 열람하시겠습니까?",e:"아직 들여놓은 책이 없는 것 같다."};   /* e: 주인공(1인칭)의 혼잣말 */
 var root=null,stage=null,O={},DATA=null,LOAD=null,levels=[],busy=false;
 var CL='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>', CR='<svg class="ch" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
@@ -29,11 +29,12 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .lay{position:absolute;inset:0}
 #cbsrShelf .wk{position:absolute;inset:0}
 #cbsrShelf .wk.go{animation:cbsrWalk 1.5s ease-in-out 1}
-#cbsrShelf .hl{position:absolute;inset:0;transition:transform 1.5s cubic-bezier(.45,.05,.25,1),transform-origin 1.5s cubic-bezier(.45,.05,.25,1);transform-origin:50% 60%}
+#cbsrShelf .hl{position:absolute;inset:0;transition:transform 1.6s cubic-bezier(.45,.05,.25,1);transform-origin:50% 55.56%}   /* 소실점(통로 끝)을 향해 걸어감 */
 #cbsrShelf .hl img,#cbsrShelf .full{position:absolute;left:0;top:0;width:390px;height:846px;display:block}
-#cbsrShelf .hl.ot{transform:scale(1.95);transform-origin:2% 62%}
-#cbsrShelf .hl.nt{transform:scale(1.95);transform-origin:98% 62%}
-#cbsrShelf .hl.etc{transform:scale(2.3);transform-origin:50% 26%}
+#cbsrShelf .hl.ot{transform:perspective(900px) translateX(150px) scale(1.9) rotateY(9deg)}   /* 몇 걸음 걸어가 왼쪽 서가로 몸을 돌림 */
+#cbsrShelf .hl.nt{transform:perspective(900px) translateX(-150px) scale(1.9) rotateY(-9deg)}
+#cbsrShelf .hl.etc0{transform:scale(2.3)}   /* 통로 끝의 그을린 서가 앞까지 */
+#cbsrShelf .hl.etc{transform:scale(5.2)}
 #cbsrShelf .dimv{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,17,11,.5),rgba(26,17,11,.72));opacity:0;transition:opacity .6s;pointer-events:none}
 #cbsrShelf .dimv.on{opacity:1;transition:opacity .6s .85s}
 #cbsrShelf .hallv.lv .wk{animation:none;transition:transform .43s ease-in;transform:scale(1.28)}
@@ -41,17 +42,17 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .zin{animation:cbsrZin .5s ease-out both}
 #cbsrShelf .tb{background:#f1e6c8;border:1px solid #33231a;box-shadow:inset 0 0 0 2px #f1e6c8,inset 0 0 0 3px rgba(51,35,26,.5),0 2px 5px rgba(40,26,16,.35);color:#33231a}
 #cbsrShelf .bk,#cbsrShelf .ttl b,#cbsrShelf .cnt,#cbsrShelf .cdmix{height:38px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:#f1e6c8;border:1px solid #33231a;box-shadow:inset 0 0 0 2px #f1e6c8,inset 0 0 0 3px rgba(51,35,26,.5),0 2px 5px rgba(40,26,16,.35);color:#33231a}
-#cbsrShelf .bk{position:absolute;left:12px;top:10px;min-width:76px;padding:0 12px 0 6px;gap:2px;font-size:15px;font-weight:700;z-index:5}
-#cbsrShelf .ttl{position:absolute;left:0;right:0;top:10px;display:flex;justify-content:center;pointer-events:none;z-index:4}
+#cbsrShelf .bk{position:absolute;left:12px;top:10px;min-width:76px;padding:0 12px 0 6px;gap:2px;font-size:15px;font-weight:700;z-index:10}
+#cbsrShelf .ttl{position:absolute;left:0;right:0;top:10px;display:flex;justify-content:center;pointer-events:none;z-index:9}
 #cbsrShelf .ttl b{padding:0 18px;font:700 19px/1 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.12em;text-indent:.12em}
-#cbsrShelf .cnt{position:absolute;right:12px;top:10px;min-width:76px;padding:0 10px;font-size:15px;font-weight:700;z-index:4}
+#cbsrShelf .cnt{position:absolute;right:12px;top:10px;min-width:76px;padding:0 10px;font-size:15px;font-weight:700;z-index:9}
 #cbsrShelf .zn{position:absolute;inset:0;transition:opacity .45s}
 #cbsrShelf .zn.off{opacity:0;pointer-events:none;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
 #cbsrShelf .zone{position:absolute;padding:0;border:0;background:transparent}
 #cbsrShelf .zone span{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;padding:8px 16px 7px}
 #cbsrShelf .zone b{font:700 23px/1.25 "Gowun Batang","Noto Serif KR",serif;letter-spacing:.14em;margin-right:-.14em}
 #cbsrShelf .zone small{font-size:13.5px;font-weight:600;line-height:1.35}
-#cbsrShelf .zone.e b{font-size:14px;letter-spacing:.02em;margin:0;line-height:1.4;text-align:center}
+#cbsrShelf .zone.e b{font-size:11.5px;letter-spacing:0;margin:0;line-height:1.35;text-align:center}
 #cbsrShelf .zone.e span{padding:7px 12px;border-color:#120c08;box-shadow:0 2px 7px rgba(0,0,0,.7);background:radial-gradient(ellipse at 10% 16%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 48%),radial-gradient(ellipse at 92% 84%,rgba(16,10,6,.95) 0,rgba(16,10,6,0) 54%),radial-gradient(ellipse at 74% 6%,rgba(34,18,8,.8) 0,rgba(34,18,8,0) 42%),radial-gradient(ellipse at 16% 94%,rgba(34,18,8,.85) 0,rgba(34,18,8,0) 46%),radial-gradient(ellipse at 50% 50%,#7a6344 0,#57432c 100%);clip-path:polygon(3% 9%,13% 0,30% 6%,46% 1%,64% 7%,81% 0,96% 10%,100% 35%,95% 57%,100% 83%,89% 100%,70% 93%,52% 100%,34% 92%,16% 100%,2% 87%,6% 60%,0 36%)}
 #cbsrShelf .zone.e b{color:#1c110a;opacity:.5;filter:blur(1.35px);text-shadow:0 0 5px rgba(18,9,4,.9);letter-spacing:-.02em}
 #cbsrShelf .zone.e span:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 22% 36%,rgba(14,8,5,.8) 0,rgba(14,8,5,0) 30%),radial-gradient(ellipse at 72% 28%,rgba(14,8,5,.7) 0,rgba(14,8,5,0) 26%),radial-gradient(ellipse at 54% 78%,rgba(14,8,5,.8) 0,rgba(14,8,5,0) 32%),radial-gradient(ellipse at 90% 64%,rgba(22,11,5,.7) 0,rgba(22,11,5,0) 24%)}
@@ -104,6 +105,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .bv .bb{position:absolute;left:6px;top:4px;height:48px;padding:0 10px;display:flex;align-items:center;gap:4px;font-size:16px;color:#f6e7c1;background:transparent;border:0;text-shadow:0 1px 4px rgba(0,0,0,.6);z-index:6}
 #cbsrShelf .bv .bn{position:absolute;right:16px;top:17px;font:700 16px/1.4 "Gowun Batang","Noto Serif KR",serif;color:#f6e7c1;text-shadow:0 1px 4px rgba(0,0,0,.6);z-index:5}
 #cbsrShelf .bv .pr{position:absolute;left:20px;right:20px;top:58px;display:flex;gap:4px;z-index:5}
+#cbsrShelf .bv .pr.s{right:166px}   /* 오른쪽에 '내 말로 적어 두기' 단추 자리 */
 #cbsrShelf .bv .pr i{flex:1;height:3px;border-radius:2px;background:rgba(246,231,193,.3)}
 #cbsrShelf .bv .pr i.on{background:#e2b24a}
 #cbsrShelf .bv .tap{position:absolute;top:70px;bottom:74px;width:50%;border:0;background:transparent;z-index:3}
@@ -155,32 +157,37 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .bv .fa b{display:block;font:700 13.5px/1.5 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;color:#e6cf9a}
 #cbsrShelf .amb{pointer-events:none;position:absolute}
 #cbsrShelf .fl{border-radius:50% 50% 46% 46%/74% 74% 26% 26%;background:radial-gradient(ellipse at 50% 74%,#fffdf0 0,#ffe89a 38%,#f9bd52 72%,rgba(238,150,50,0) 100%);box-shadow:0 0 5px 1.5px rgba(255,206,110,.75),0 0 0 .5px rgba(120,70,20,.35);transform-origin:50% 100%;animation:cbsrFlm 2s ease-in-out infinite}
-/* 대화(11-24 목사님): 사서의 말 · 나의 혼잣말 · 선택지 */
+/* 대화(11-24 목사님): 사서의 말 · 나의 혼잣말 · 선택지. 대사 틀은 어디서나 하나(17:54) */
 #cbsrShelf .dg{position:absolute;inset:0;z-index:8;pointer-events:none}
 #cbsrShelf .dg.late{animation-delay:1.05s}
 #cbsrShelf .dg .dgs{position:absolute;left:0;right:0;bottom:0;height:400px;background:linear-gradient(to top,rgba(10,7,5,.95) 0,rgba(10,7,5,.8) 34%,rgba(10,7,5,0) 100%)}
-#cbsrShelf .dg.me .dgs{height:230px}
-#cbsrShelf .dg .dgw{position:absolute;left:12px;right:12px;bottom:14px;display:flex;flex-direction:column}
-#cbsrShelf .dg .dgr{display:flex;align-items:flex-end;justify-content:flex-end;gap:6px;min-height:8px}
-#cbsrShelf .dg .dgp{flex:none;width:164px;height:auto;margin:0 auto -30px -18px;pointer-events:none}
-#cbsrShelf .dg .dgc{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;margin-bottom:26px;pointer-events:auto}
-#cbsrShelf .dg.me .dgc{margin-bottom:26px}
+#cbsrShelf .dg.me .dgs,#cbsrShelf .dg.nf .dgs{height:200px}
+#cbsrShelf .dg .sf{position:absolute;left:45px;top:0;width:300px;height:476px;-webkit-mask-image:linear-gradient(to bottom,#000 70%,transparent 96%);mask-image:linear-gradient(to bottom,#000 70%,transparent 96%)}
+#cbsrShelf .dg .dgw{position:absolute;left:12px;right:12px;bottom:14px;display:flex;flex-direction:column;align-items:flex-end}
+#cbsrShelf .dg .dgc{width:226px;display:flex;flex-direction:column;gap:8px;margin-bottom:18px;pointer-events:auto}
 #cbsrShelf .dg .dgc button{height:48px;padding:0 12px 0 14px;display:flex;align-items:center;gap:8px;text-align:left;background:rgba(24,16,10,.94);border:1px solid #d9b56a;color:#f6e7c1;font:700 16px/1.2 "Gowun Batang","Noto Serif KR",serif;letter-spacing:-.01em;box-shadow:0 4px 12px rgba(0,0,0,.5)}
 #cbsrShelf .dg .dgc button:before{content:"";flex:none;border:5px solid transparent;border-left:7px solid #e2b24a;border-right:0}
 #cbsrShelf .dg .dgc button:first-child{background:#e2b24a;color:#2a1d14;border-color:#e2b24a}
 #cbsrShelf .dg .dgc button:first-child:before{border-left-color:#2a1d14}
-#cbsrShelf .dg .dgc button:focus-visible,#cbsrShelf .dg .dgb:focus-visible,#cbsrShelf .lbc:focus-visible{outline:3px solid #f6e7c1;outline-offset:2px}
-#cbsrShelf .dg .dgb{position:relative;z-index:1;display:block;width:100%;min-height:104px;padding:22px 34px 16px 18px;text-align:left;background:#f1e6c8;border:1px solid #33231a;box-shadow:inset 0 0 0 2px #f1e6c8,inset 0 0 0 3px rgba(51,35,26,.5),0 4px 16px rgba(0,0,0,.6);color:#33231a;font:400 18px/1.65 "Gowun Batang","Noto Serif KR",serif;pointer-events:auto}
-#cbsrShelf .dg .dgb b{position:absolute;left:14px;top:-14px;height:27px;padding:0 14px;display:flex;align-items:center;background:#33231a;color:#e6cf9a;border:1px solid #b68d3c;font:700 13px/1 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;letter-spacing:.2em}
-#cbsrShelf .dg .dgb i{position:absolute;right:16px;bottom:13px;width:0;height:0;border:6px solid transparent;border-top:8px solid #9b3324;border-bottom:0;animation:cbsrNx 1.2s ease-in-out infinite}
-#cbsrShelf .dg.me .dgb{min-height:84px;background:rgba(14,10,7,.88);border-color:rgba(230,207,154,.42);box-shadow:0 4px 18px rgba(0,0,0,.6);color:#f1e6c8}
+#cbsrShelf .dg .dgc button:focus-visible,#cbsrShelf .dgb:focus-visible,#cbsrShelf .lbc:focus-visible{outline:3px solid #f6e7c1;outline-offset:2px}
+#cbsrShelf .dgb{position:relative;z-index:1;display:block;width:100%;box-sizing:border-box;min-height:84px;padding:21px 34px 14px 18px;text-align:left;background:#f1e6c8;border:1px solid #33231a;box-shadow:inset 0 0 0 2px #f1e6c8,inset 0 0 0 3px rgba(51,35,26,.5),0 4px 16px rgba(0,0,0,.6);color:#33231a;font:400 18px/1.65 "Gowun Batang","Noto Serif KR",serif;pointer-events:auto}
+#cbsrShelf .dgb.f{padding-left:90px}
+#cbsrShelf .dgb .dgf{position:absolute;left:12px;top:-18px;width:66px;height:66px;border-radius:50%;display:block;box-shadow:0 0 0 2px #33231a,0 0 0 4px #d9b56a,0 3px 8px rgba(0,0,0,.5)}
+#cbsrShelf .dgb b{position:absolute;left:14px;top:-14px;height:27px;padding:0 14px;display:flex;align-items:center;background:#33231a;color:#e6cf9a;border:1px solid #b68d3c;font:700 13px/1 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;letter-spacing:.2em}
+#cbsrShelf .dgb.f b{left:90px}
+#cbsrShelf .dgb i{position:absolute;right:16px;bottom:13px;width:0;height:0;border:6px solid transparent;border-top:8px solid #9b3324;border-bottom:0;animation:cbsrNx 1.2s ease-in-out infinite}
+#cbsrShelf .dg.me .dgb{background:rgba(14,10,7,.88);border-color:rgba(230,207,154,.42);box-shadow:0 4px 18px rgba(0,0,0,.6);color:#f1e6c8}
 #cbsrShelf .dg.me .dgb b{background:#f1e6c8;color:#33231a;border-color:#f1e6c8;letter-spacing:0}
 #cbsrShelf .dg.me .dgb i{border-top-color:#e2b24a}
+#cbsrShelf .lbx{position:absolute;left:12px;right:12px;bottom:14px;z-index:4;pointer-events:none}
+#cbsrShelf .lbx .dgb{pointer-events:none}
+#cbsrShelf .lbx.tmp{animation:cbsrBye .6s ease 3.6s forwards}
+#cbsrShelf .bv .bj{position:absolute;right:12px;top:44px;height:32px;padding:0 10px;display:flex;align-items:center;gap:2px;background:rgba(20,13,8,.55);border:1px solid rgba(230,207,154,.5);color:#f6e7c1;font-size:13.5px;font-weight:700;z-index:6}
 #cbsrShelf .lbc{position:absolute;left:12px;bottom:14px;width:66px;padding:0;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:5px;z-index:4;color:#f6e7c1;font:700 12.5px/1 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;letter-spacing:.15em;text-shadow:0 1px 3px #000}
 #cbsrShelf .lbc img{display:block;width:58px;height:58px;border-radius:50%;box-shadow:0 0 0 2px #d9b56a,0 3px 10px rgba(0,0,0,.6)}
 #cbsrShelf .lib img{display:block;width:46px;height:46px;border-radius:50%;box-shadow:0 0 0 1px #33231a}
 #cbsrShelf .sp.hi{box-shadow:0 0 0 2px #e2b24a,0 0 16px 4px rgba(226,178,74,.6);animation:cbsrGlw 1.6s ease-in-out infinite}
-#cbsrShelf .wn.up{top:92px}
+#cbsrShelf .wn.up{top:92px;z-index:9}
 #cbsrShelf .dg.np .dgs{height:150px}
 /* 말씀 카드(11-24 목사님): 사서가 카드를 패처럼 쥐고 내밈. 고르면 앱의 말씀 뽑기 화면으로 이어짐 */
 #cbsrShelf .cds{position:absolute;inset:0;pointer-events:none}
@@ -245,7 +252,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .pll i.on{border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#cf5a40,#8f2a1c)}
 #cbsrShelf .pll i.me{background:#e2b24a;border:1.5px solid #33231a}
 #cbsrShelf .pll i.miss{background:repeating-linear-gradient(135deg,rgba(51,35,26,.3) 0 1.5px,rgba(51,35,26,0) 1.5px 5px)}
-#cbsrShelf .pll button{margin-left:auto;height:28px;padding:0 8px;background:transparent;border:1px solid #33231a;font-size:12.5px;font-weight:700;color:#33231a}
+#cbsrShelf .pll button{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:2px;white-space:nowrap;height:28px;padding:0 4px 0 8px;background:transparent;border:1px solid #33231a;font-size:12.5px;font-weight:700;color:#33231a}
 #cbsrShelf .fade{animation:cbsrIn .45s ease both}
 @keyframes cbsrIn{from{opacity:0}to{opacity:1}}
 @keyframes cbsrZin{from{opacity:0;transform:scale(1.07)}to{opacity:1;transform:none}}
@@ -257,7 +264,7 @@ html.shelf-on .coach{display:none!important}
 @keyframes cbsrBye{to{opacity:0;transform:translateY(8px)}}
 @keyframes cbsrStamp{0%{opacity:0;transform:scale(2.4) rotate(8deg)}60%{opacity:1;transform:scale(.92) rotate(-10deg)}100%{opacity:1;transform:scale(1) rotate(-8deg)}}
 @keyframes cbsrRay{0%,100%{opacity:.4}50%{opacity:.9}}
-@media (prefers-reduced-motion:reduce){#cbsrShelf .amb,#cbsrShelf .bv .bg,#cbsrShelf .fade{animation:none!important}#cbsrShelf .hl,#cbsrShelf .gl,#cbsrShelf .dimv,#cbsrShelf .wk{transition:none!important;animation:none!important}#cbsrShelf .zin,#cbsrShelf .wn.late,#cbsrShelf .mono.late,#cbsrShelf .mono i,#cbsrShelf .dg,#cbsrShelf .dg .dgb i,#cbsrShelf .sp.hi,#cbsrShelf .cdk,#cbsrShelf .cds .cdp,#cbsrShelf .pln.in,#cbsrShelf .cdl button.stp i{animation:none!important}}
+@media (prefers-reduced-motion:reduce){#cbsrShelf .amb,#cbsrShelf .bv .bg,#cbsrShelf .fade{animation:none!important}#cbsrShelf .hl,#cbsrShelf .gl,#cbsrShelf .dimv,#cbsrShelf .wk{transition:none!important;animation:none!important}#cbsrShelf .zin,#cbsrShelf .wn.late,#cbsrShelf .mono.late,#cbsrShelf .mono i,#cbsrShelf .dg,#cbsrShelf .dgb i,#cbsrShelf .lbx.tmp,#cbsrShelf .sp.hi,#cbsrShelf .cdk,#cbsrShelf .cds .cdp,#cbsrShelf .pln.in,#cbsrShelf .cdl button.stp i{animation:none!important}}
 `;
 var HS=H;
 /* 무대는 너비 390에 맞추고, 높이는 화면 비율대로(HS). 가로가 넓은 화면은 높이 600을 채우고 양옆은 흐린 서고 */
@@ -270,7 +277,8 @@ function load(){ if(DATA) return Promise.resolve(DATA); if(LOAD) return LOAD;
 function say(t){ if(O.toast) O.toast(t); }
 /* ---- 사서(11-24 목사님): 말을 걸고 길을 안내함. 묻지 않음. 책 끝의 다섯 가지는 적고 싶은 사람만 적음(도장) ---- */
 function LIBR(){ return '<img src="'+IMG+'libr_f.webp'+VER+'" alt="" width="46" height="46">'; }
-function libr(t,tmp){ return '<div class="lib tb'+(tmp?" tmp":"")+'" role="status"><span>'+LIBR()+'</span><p><b>사서</b>'+t+'</p></div>'; }   /* tmp: 서가에서는 책을 가리지 않게 잠깐 말하고 물러남 */
+function boxHtml(me,text,tap){ var tag=tap?"button":"div"; return '<'+tag+(tap?' type="button" data-a="'+tap+'"':' role="status"')+' class="dgb'+(me?"":" f")+'">'+(me?"":'<img class="dgf" src="'+IMG+'libr_f.webp'+VER+'" alt="">')+'<b>'+(me?"나":"사서")+'</b><span>'+text+'</span>'+(tap?"<i></i>":"")+'</'+tag+'>'; }   /* 대사 틀은 이것 하나: 이름표, 정면 얼굴, 말 */
+function libr(t,tmp){ return '<div class="lbx'+(tmp?" tmp":"")+'">'+boxHtml(false,t,null)+'</div>'; }   /* tmp: 서가에서는 책을 가리지 않게 잠깐 말하고 물러남 */
 var QS=[{f:"who",s:"누가",q:"누가 누구에게 썼습니까?",pg:"cover"},{f:"when",s:"언제",q:"어느 시기의 책입니까?",pg:"cover"},{f:"why",s:"왜",q:"왜 썼습니까?",pg:"why"},{f:"parts",s:"구조",q:"어떤 흐름으로 짜여 있습니까?",pg:"parts"},{f:"god",s:"하나님",q:"이 책에서 하나님은 어떤 분이십니까?",pg:"god"}], ORD=["첫째","둘째","셋째","넷째","다섯째"];
 function qaAll(){ try{ if(O.store&&O.store.get) return O.store.get()||{}; return JSON.parse(localStorage.getItem("cbsr_shelf_qa")||"{}"); }catch(e){ return {}; } }
 function qaGet(id){ return qaAll()[id]||{}; }
@@ -283,21 +291,26 @@ function onHide(){ if(document.hidden) flush(); } /* 쓰다가 다른 앱으로 
 /* ---- 대화: 단계(level)마다 dg 하나. who l=사서, me=나의 혼잣말. ch=선택지, tap=말상자를 누르면, esc=빈 곳을 누르면 ---- */
 function nick(){ var n=String(O.nick||"").replace(/\s+/g," ").trim(); if(!n) return ""; return /님$/.test(n)?n:(/(목사|전도사|장로|권사|집사|사모|선교사|간사|선생|교수|형제|자매)$/.test(n)?n+"님":n+" 님"); } /* 목사님 11-24: 기본은 부르지 않음. 구글 계정에 닉네임을 정한 분만 그 호칭으로 */
 function dgDraw(){ if(!stage) return; var old=stage.querySelector(".dg"), t=top(), d=t&&t.dg; if(old&&old._d===d) return; if(old) old.remove(); if(!d) return;
-  var me=d.who==="me", tag=d.tap?"button":"div", h='<div class="dgs"></div><div class="dgw"><div class="dgr">'+((me||d.np)?"":'<img class="dgp" src="'+IMG+'libr.webp'+VER+'" alt="두건을 쓰고 촛대를 든 사서">');
-  if(d.ch) h+='<div class="dgc'+(d.ch.length>3?" n4":"")+'">'+d.ch.map(function(c){ return '<button type="button" data-a="'+c.a+'">'+c.t+'</button>'; }).join("")+'</div>';
-  h+='</div><'+tag+(d.tap?' type="button" data-a="'+d.tap+'"':' role="status"')+' class="dgb"><b>'+(me?"나":"사서")+'</b><span>'+d.t+'</span>'+(d.tap?"<i></i>":"")+'</'+tag+'></div>';
-  var el=document.createElement("div"); el.className="dg fade"+(me?" me":"")+(d.np?" np":"")+(d.late?" late":""); el.innerHTML=h; el._d=d; stage.appendChild(el); }
+  var me=d.who==="me", h='<div class="dgs"></div>'+((d.fig&&!me)?'<img class="sf" src="'+IMG+'libr.webp'+VER+'" alt="두건을 쓰고 촛대를 든 사서가 앞에 서 있다">':"")+'<div class="dgw">';   /* fig: 사서가 마주 서서 말할 때는 화면 가운데에 선다 */
+  if(d.ch) h+='<div class="dgc">'+d.ch.map(function(c){ return '<button type="button" data-a="'+c.a+'">'+c.t+'</button>'; }).join("")+'</div>';
+  h+=boxHtml(me,d.t,d.tap)+'</div>';
+  var el=document.createElement("div"); el.className="dg fade"+(me?" me":"")+((d.fig||me)?"":" nf")+(d.late?" late":""); el.innerHTML=h; el._d=d; stage.appendChild(el);
+  if(d.fig&&!me){ var sf=el.querySelector(".sf"), dc=el.querySelector(".dgc"), dw=el.querySelector(".dgw"), wn=stage.querySelector(".wn.up"), tp=FT();   /* 얼굴(그림 높이의 26%~53%)이 경고장 아래, 선택지 위에 보이게 */
+    if(wn) tp=Math.max(tp,wn.offsetTop+wn.offsetHeight+4-FH*.26);
+    if(dc) tp=Math.min(tp,dw.offsetTop+dc.offsetTop-8-FH*.53);
+    sf.style.top=Math.round(tp)+"px"; } }
+var FW=300, FH=476; function FT(){ return HS-603; }   /* 마주 선 사서의 크기와 기본 자리(선택지 넷일 때 얼굴이 바로 위에 보이는 높이) */
 function ch0(){ var c=[{t:"안내를 받아 이동한다",a:"guide"},{t:"자유롭게 둘러본다",a:"free"}]; if(O.plan) c.push({t:"통독표를 받는다",a:"plan"}); if(O.card) c.push({t:"말씀 카드를 받는다",a:"card"}); return c; } /* 목사님 11-24: 통독표와 말씀 카드도 사서에게 받음 */
-function helloDg(how){ var n=nick(); return {who:"l",t:how==="back"?"…더 찾는 것이 있습니까?":(how==="call"?"…부르셨습니까":how==="first"?"…어서 오십시오":"…오셨습니까")+(n?", "+esc(n):"")+".<br>무엇을 찾으십니까?",ch:ch0(),esc:"free"}; }
+function helloDg(how){ var n=nick(); return {who:"l",fig:1,t:how==="back"?"…더 찾는 것이 있습니까?":(how==="call"?"…부르셨습니까":how==="first"?"…어서 오십시오":"…오셨습니까")+(n?", "+esc(n):"")+".<br>무엇을 찾으십니까?",ch:ch0(),esc:"free"}; }
 function hello(how){ var t=levels[0]; if(!t) return; if(!qaVal("_s","met")) qaSet("_s","met","1"); t.dg=helloDg(how); draw(); }
 function greet(){ var t=levels[0]; if(qaVal("_s","met")){ hello(); return; } t.dg={who:"me",t:"오래된 서고다. 촛불 몇 개만 켜져 있다.",tap:"hello1",esc:"hello1"}; draw(); }
 function unit(b){ return b.id==="psa"?"편":"장"; }
 function bookDg(b){ return {who:"l",t:esc(b.name)+", "+b.chapters+unit(b)+"입니다.",ch:[{t:"펼쳐 본다",a:"gopen"},{t:"도로 꽂는다",a:"put"}],esc:"put"}; }
 function cardHtml(t){ var wp=Math.round(Math.min(300,(HS-152)*.6304)), lf=Math.round((W-wp)/2), px=195, py=HS-160, i;   /* 목사님 11-24: 사서가 화면 가운데로 오고, 카드 패는 그 앞에 */
-  var h='<button type="button" class="bk" data-a="back">'+CL+(O.solo?"닫기":"서고")+'</button><div class="ttl"><b class="tb">말씀 카드</b></div><button type="button" class="cdmix tb" data-a="mix">다시 섞기</button><div class="cds" style="--fx:'+(-6-lf)+'px;--fy:8px;--fs:'+(164/wp).toFixed(4)+'"><img class="cdp" src="'+IMG+'libr_c.webp'+VER+'" alt="두건을 쓴 사서가 가운데 서서 카드 일곱 장을 부채꼴로 쥐고 앞으로 내민다" style="left:'+lf+'px;width:'+wp+'px"><div class="cdf stk" style="left:'+px+'px;top:'+py+'px">';
+  var h='<button type="button" class="bk" data-a="back">'+CL+(O.solo?"닫기":"서고")+'</button><div class="ttl"><b class="tb">말씀 카드</b></div><button type="button" class="cdmix tb" data-a="mix">다시 섞기</button><div class="cds" style="--fx:'+(45-lf)+'px;--fy:'+(FT()+FH-(HS-96))+'px;--fs:'+(FW/wp).toFixed(4)+'"><img class="cdp" src="'+IMG+'libr_c.webp'+VER+'" alt="두건을 쓴 사서가 가운데 서서 카드 일곱 장을 부채꼴로 쥐고 앞으로 내민다" style="left:'+lf+'px;width:'+wp+'px"><div class="cdf stk" style="left:'+px+'px;top:'+py+'px">';
   for(i=0;i<7;i++) h+='<button type="button" class="cdk" data-a="pick" data-i="'+i+'" style="--a:'+((i-3)*13)+'deg" aria-label="'+(i+1)+'번째 카드"><span>✝</span></button>';
   return h+'</div><img class="cdh" src="'+IMG+'libr_h.webp'+VER+'" alt="" style="left:'+(px-80)+'px;top:'+(py-90)+'px"></div>'; }
-function cardSay(t,x){ t.dg={who:"l",np:1,t:x}; if(top()===t) dgDraw(); }
+function cardSay(t,x){ t.dg={who:"l",t:x}; if(top()===t) dgDraw(); }
 function cardMix(t,again){ var f=stage&&stage.querySelector(".cdf"); if(!f) return; var cs=[].slice.call(f.querySelectorAll(".cdk")), mb=stage.querySelector(".cdmix"), n=0, N=again?6:3, r=function(a){ return ((Math.random()*2-1)*a).toFixed(0); }, rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
   var done=function(){ busy=false; t.ready=true; if(mb) mb.disabled=false; if(root&&top()===t) cardSay(t,"…한 장 고르십시오."); };
   t.ready=false; if(rm){ f.className="cdf open now"; done(); return; }
@@ -318,8 +331,8 @@ function planHtml(t){ var P=O.plan&&O.plan.get(t.m), i, x, h; if(!P) return '<di
 function planMonth(t,d){ if(!t.ms) return; var i=t.mi+d; if(i<0||i>=t.ms.length) return; t.m=t.ms[i]; drawHall(t); }
 function guide(){ var h=levels[0]; if(busy||top()!==h) return;                                   /* 목사님 11-24: 안내는 오늘 읽는 책으로 */
   load().then(function(D){ if(!root||top()!==h) return; var i=parseInt(O.today,10), b=(i>0&&D.list[i-1])||null;
-    if(!b){ h.dg={who:"l",t:"…오늘 읽을 책을 찾지 못했습니다.<br>천천히 둘러보십시오.",tap:"free",esc:"free"}; draw(); return; }
-    var s=SEC.ot.g.indexOf(b.group)>=0?"ot":"nt"; h.dg={who:"l",t:"오늘 읽으실 책은 "+esc(b.name)+"입니다.<br>따라오십시오."}; draw(); busy=true;
+    if(!b){ h.dg={who:"l",fig:1,t:"…오늘 읽을 책을 찾지 못했습니다.<br>천천히 둘러보십시오.",tap:"free",esc:"free"}; draw(); return; }
+    var s=SEC.ot.g.indexOf(b.group)>=0?"ot":"nt"; h.dg={who:"l",fig:1,t:"오늘 읽으실 책은 "+esc(b.name)+"입니다.<br>따라오십시오."}; draw(); busy=true;
     setTimeout(function(){ if(!root||top()!==h){ busy=false; return; } h.dg=null; var sc={t:"sec",s:s,gd:b.id}; push(sc);
       setTimeout(function(){ busy=false; if(!root||top()!==sc) return;
         if(!PRESS[b.group]){ sc.dg=bookDg(b); draw(); return; }
@@ -336,35 +349,34 @@ function lamps(){ var h="",i=0; ART.hall.lanterns.forEach(function(l){ var x=l[0
        '<div class="amb fl" style="left:'+(x-w/2).toFixed(1)+'px;top:'+(y-fh*.56).toFixed(1)+'px;width:'+w.toFixed(1)+'px;height:'+fh.toFixed(1)+'px;animation-duration:'+(1.7+(i%5)*.23)+'s;animation-delay:-'+(i*.43)+'s"></div>'; i++; });
   return h; }
 function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
-  stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl"><img src="'+IMG+'hall.webp'+VER+'" alt="옛 판화처럼 그린 긴 서고. 촛불이 밝힌 돌바닥 양옆으로 서가가 늘어서 있고, 덧문을 닫은 창 아래 맨 끝은 어둡다">'+
+  stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl"><img src="'+IMG+'hall.webp'+VER+'" alt="옛 판화처럼 그린 서고의 통로에 서 있다. 양옆으로 높은 서가가 줄지어 서 있고 촛불이 돌바닥을 밝힌다. 덧문을 닫은 창 아래 통로 끝은 어둡다">'+
     lamps()+'<div class="zn">'+
-      '<button type="button" class="zone" data-s="ot" style="left:0;top:230px;width:168px;height:480px" aria-label="구약 서른아홉 권"><span class="tb" style="top:150px"><b>구약</b><small>서른아홉 권</small></span></button>'+
-      '<button type="button" class="zone" data-s="nt" style="left:222px;top:230px;width:168px;height:480px" aria-label="신약 스물일곱 권"><span class="tb" style="top:150px"><b>신약</b><small>스물일곱 권</small></span></button>'+
-      '<button type="button" class="zone e" data-s="etc" style="left:140px;top:128px;width:110px;height:196px" aria-label="외경, 위경, 교부 문헌"><span class="tb" style="top:6px"><b>외경 · 위경<br>교부 문헌</b></span></button>'+
+      '<button type="button" class="zone" data-s="ot" style="left:0;top:300px;width:150px;height:330px" aria-label="구약 서른아홉 권, 왼쪽 서가"><span class="tb" style="top:96px"><b>구약</b><small>서른아홉 권</small></span></button>'+
+      '<button type="button" class="zone" data-s="nt" style="left:240px;top:300px;width:150px;height:330px" aria-label="신약 스물일곱 권, 오른쪽 서가"><span class="tb" style="top:96px"><b>신약</b><small>스물일곱 권</small></span></button>'+
+      '<button type="button" class="zone e" data-s="etc" style="left:150px;top:344px;width:90px;height:170px" aria-label="통로 끝의 그을린 서가. 외경, 위경, 교부 문헌"><span class="tb" style="top:0"><b>외경 · 위경<br>교부 문헌</b></span></button>'+
     '</div></div></div></div><div class="dimv"></div><div class="ui"></div></div>';
   el=stage.querySelector(".hallv"); el._fresh=true; return el; }
 function drawHall(t){ drawHall0(t); dgDraw(); }
-function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec"&&!(t.s==="etc"&&t.step!=="in"))?" "+t.s:"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+((t.t==="hall"&&!t.dg)?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
+function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec")?" "+((t.s==="etc"&&t.step!=="in")?"etc0":t.s):"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+((t.t==="hall"&&!t.dg)?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
   if(!fresh&&moved){ wk.classList.remove("go"); void wk.offsetWidth; wk.classList.add("go"); } /* 걸어서 그 앞으로(돌아올 때도) */
   hl.className="hl"+cls; dim.className="dimv"+(t.t==="sec"?" on":"");
-  if(t.t==="plan"){ dim.className="dimv on now"; ui.innerHTML='<button type="button" class="bk" data-a="back">'+CL+'서고</button><div class="ttl"><b class="tb">통독표</b></div>'+planHtml(t)+(HS>=664?libr("날짜를 누르면 그날로 갑니다."):""); return; }
+  if(t.t==="plan"){ dim.className="dimv on now"; ui.innerHTML='<button type="button" class="bk" data-a="back">'+CL+'서고</button><div class="ttl"><b class="tb">통독표</b></div>'+planHtml(t)+(HS>=710?libr("날짜를 누르면 그날로 갑니다."):""); return; }
   if(t.t==="card"){ dim.className="dimv on now"; ui.innerHTML=cardHtml(t); if(t.ready){ ui.querySelector(".cdf").className="cdf open now"; return; }
     var tm=t.mix, cs0=ui.querySelector(".cds"), go=function(){ if(root&&top()===t&&!t.ready) cardMix(t,tm); }, rm0=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; t.mix=false;
     if(t.seen||O.scene==="card"||rm0){ t.seen=1; go(); return; }                                 /* 배너에서 바로 왔거나 다시 그릴 때는 옮겨 오는 움직임 없이 */
-    t.seen=1; busy=true; t.dg={who:"l",np:1,t:"…말씀 카드를 드리겠습니다."}; cs0.classList.add("from"); void cs0.offsetWidth; requestAnimationFrame(function(){ cs0.classList.add("mv"); cs0.classList.remove("from"); }); /* 말하던 자리(왼쪽 아래)에서 가운데로 */
+    t.seen=1; busy=true; t.dg={who:"l",t:"…"+((O.card&&O.card.year)?O.card.year+"년 ":"")+"말씀 카드를 드리겠습니다."}; cs0.classList.add("from"); void cs0.offsetWidth; requestAnimationFrame(function(){ cs0.classList.add("mv"); cs0.classList.remove("from"); }); /* 말하던 자리(왼쪽 아래)에서 가운데로 */
     setTimeout(function(){ busy=false; go(); },900); return; }
   if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>');
     return; }
   if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
-    if(t.step!=="in") ui.innerHTML=bkb+'<div class="wn up tb fade" role="alert" aria-label="경고" style="top:'+Math.max(54,Math.min(92,HS-546))+'px"><h2>'+WARN.t+'</h2><p class="w1">'+WARN.a+'</p><p class="w2">'+WARN.q+'</p></div>';
+    if(t.step!=="in") ui.innerHTML=bkb+'<div class="wn up tb fade'+(t.seen?"":" late")+'" role="alert" aria-label="경고" style="top:'+Math.max(54,Math.min(92,HS-546))+'px"><h2>'+WARN.t+'</h2><p class="w1">'+WARN.a+'</p><p class="w2">'+WARN.q+'</p></div>';
     else ui.innerHTML=bkb;
-    if(t.step!=="in") dim.className="dimv on now";
-    return; }
+    t.seen=1; return; }
   var S=SEC[t.s], h='<button type="button" class="bk" data-a="back">'+CL+'서고</button><div class="ttl"><b class="tb">'+S.n+'</b></div><span class="cnt">'+S.c+'</span><div class="gl">';
   if(t.gd){ ui.innerHTML=h+'</div>'; return; }                                                   /* 안내를 받아 걷는 동안에는 서가 목록을 띄우지 않음 */
   var N={"모세오경":5,"역사서":12,"시가서":5,"선지서":17,"복음서":4,"사도행전":1,"바울서신":13,"일반서신":8,"요한계시록":1};
   S.g.forEach(function(g){ h+='<button type="button" class="tb" data-g="'+g+'"><b>'+g+'</b><small>'+CNT[N[g]]+'</small></button>'; });
-  ui.innerHTML=h+'</div>'+libr(S.n+" "+S.c+"입니다. 서가를 고르십시오."); var gl=ui.querySelector(".gl"); if(fresh){ gl.classList.add("now"); gl.classList.add("on"); return; }
+  ui.innerHTML=h+'</div>'; var gl=ui.querySelector(".gl"); if(fresh){ gl.classList.add("now"); gl.classList.add("on"); return; }
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ gl.classList.add("on"); }); }); }
 /* ---- 서가 ---- */
 function drawPress(t,from){ drawPress0(t,from); dgDraw(); }
@@ -374,7 +386,7 @@ function drawPress0(t,from){ var key=PRESS[t.g], L=ART.labels[key], sw=(key==="p
   var books=(DATA&&DATA.gs[t.g])||[];
   books.forEach(function(b){ var a=L[b.name]; if(!a) return; var two=b.name.length>5, nm=two?esc(b.name.slice(0,b.name.length-2))+"<br>"+esc(b.name.slice(-2)):esc(b.name);
     h+='<button type="button" class="sp'+(t.gd===b.id?" hi":"")+'" data-b="'+b.id+'" aria-label="'+esc(b.name)+' 펼치기" style="left:'+a[0]+'px;top:'+a[1]+'px;width:'+sw+'px;height:'+a[2]+'px"><span style="left:'+a[3]+'px;top:26px;width:'+a[4]+'px;height:'+a[5]+'px"><i style="font-size:'+(16*Math.min(1,k)).toFixed(1)+'px;transform:scaleY('+(1/k).toFixed(4)+')">'+nm+'</i></span></button>'+(qaCount(b.id)===5?'<i class="sl" style="left:'+(a[0]+sw/2-7.5)+'px;top:'+(a[1]+a[2]-34)+'px;transform:scaleY('+(1/k).toFixed(4)+')"></i>':''); });
-  stage.innerHTML=h+'</div><button type="button" class="bk" data-a="back">'+CL+S.n+'</button><div class="ttl"><b class="tb">'+esc(t.g)+'</b></div><span class="cnt">'+CNT[Object.keys(L).length]+'</span>'+(t.dg?"":libr(esc(t.g)+" 서가입니다. "+CNT[Object.keys(L).length]+"이 꽂혀 있습니다. 책을 고르면 펼쳐 드립니다.",1))+'</div>'; }
+  stage.innerHTML=h+'</div><button type="button" class="bk" data-a="back">'+CL+S.n+'</button><div class="ttl"><b class="tb">'+esc(t.g)+'</b></div><span class="cnt">'+CNT[Object.keys(L).length]+'</span>'+(t.dg?"":libr(esc(t.g)+" 서가입니다. "+CNT[Object.keys(L).length]+"이 꽂혀 있습니다.",1))+'</div>'; }
 /* ---- 책 펼침(한 번, 2초쯤) ---- */
 function openBook(id,rect){ var b=DATA&&DATA.by[id]; if(!b||busy) return; var st={t:"book",id:id,p:0};
   var rm=matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(rm||!rect||!stage.animate){ push(st); return; }
@@ -399,7 +411,7 @@ function sz(s){ var n=(s||"").length; return n>190?" s":n>120?" m":""; }
 function drawBook(t){ var b=DATA.by[t.id], P=pages(b); t.n=P.length; t.p=Math.max(0,Math.min(t.p,P.length-1)); var pg=P[t.p], ot=(SEC.ot.g.indexOf(b.group)>=0), m="", bgs=Math.ceil((b.background||[]).length/2)||1;
   var cover=(pg.k==="cover"||pg.k==="verse"), qa=(pg.k==="card"), sheet=false; if(qa) t.ret=null; else t.q=null;
   if(pg.k==="cover"){ m='<p class="k">'+(ot?"구약":"신약")+" · "+esc(b.group)+" · "+b.chapters+unit(b)+'</p><h1>'+esc(b.name)+'</h1><div class="rule"></div><p class="t m">'+esc(b.line)+'</p>'+(b.verse?'<p class="vq">'+esc(b.verse)+(b.mem100?" · 꼭 외울 말씀 100":"")+'</p>':"")+
-      '<dl><dt>저자</dt><dd>'+esc(b.author)+'</dd><dt>수신자</dt><dd>'+esc(b.audience)+'</dd>'+(b.time?'<dt>시기</dt><dd>'+esc(b.time)+'</dd>':"")+'<dt>갈래</dt><dd>'+esc(b.genre)+'</dd></dl>'; }
+      '<dl><dt>저자</dt><dd>'+esc(b.author)+'</dd><dt>수신자</dt><dd>'+esc(b.audience)+'</dd>'+(b.time?'<dt>시기</dt><dd>'+esc(b.time)+'</dd>':"")+'<dt>갈래</dt><dd>'+esc(b.genre)+'</dd></dl>'+(b.footnote?'<p class="fn">* '+esc(b.footnote)+'</p>':""); }   /* 단서는 저자·시기 바로 아래에도(전에는 배경 끝 쪽에만) */
   else if(pg.k==="verse"){ m='<p class="k">대표 구절</p><p class="t'+sz(b.verseText)+'">'+esc(b.verseText)+'</p><span class="rf">'+esc(b.verse)+" · 개역개정"+(b.mem100?" · 꼭 외울 말씀 100":"")+'</span>'; }
   else if(pg.k==="bg"){ var all=pg.a.map(function(x){return x.text;}).join(""); m='<p class="k">배경'+(bgs>1?" "+pg.n+" / "+bgs:"")+'</p>'+pg.a.map(function(x){ return '<p class="t'+sz(all)+'" style="margin-bottom:0">'+esc(x.text)+'</p><span class="rf">'+esc(x.ref||"")+'</span>'; }).join("")+(pg.last&&b.footnote?'<p class="fn">* '+esc(b.footnote)+'</p>':""); }
   else if(pg.k==="why"){ m='<p class="k">목적 · 왜 썼습니까</p><p class="t'+sz(b.purpose)+'">'+esc(b.purpose)+'</p>'; }
@@ -414,22 +426,22 @@ function drawBook(t){ var b=DATA.by[t.id], P=pages(b); t.n=P.length; t.p=Math.ma
         QS.map(function(q,i){ var v=qaVal(b.id,q.f); return '<button type="button" data-a="wr" data-i="'+i+'"'+(t.just===i?' class="stp"':"")+' aria-label="'+q.s+(v?", 적어 둠":", 비어 있음")+'"><i'+(v?' class="on"':"")+'>'+q.s+'</i><span'+(v?"":' class="e"')+'>'+esc(v||q.q)+'</span></button>'; }).join("")+'</div>'; t.just=null; } }
   var pr=""; for(var i=0;i<P.length;i++) pr+='<i'+(i<=t.p?' class="on"':"")+'></i>';
   var last=t.p===P.length-1, bkLab=(PRESS[b.group]?"서가":(ot?"구약":"신약"));
-  stage.innerHTML='<div class="lay bv"><img class="bg" src="'+IMG+(cover?"bg_road":"bg_lamp")+'.webp'+VER+'" alt=""><div class="sh'+(cover?" c":qa?" q":"")+'"></div><button type="button" class="bb" data-a="back">'+CL+''+bkLab+'</button>'+(pg.k==="cover"?"":'<span class="bn">'+esc(b.name)+'</span>')+
-    '<div class="pr" role="img" aria-label="'+(t.p+1)+" / "+P.length+'">'+pr+'</div>'+(qa?"":'<button type="button" class="tap l" data-a="prev" aria-label="앞 장" tabindex="-1"></button><button type="button" class="tap r" data-a="next" aria-label="다음 장" tabindex="-1"></button>')+'<main class="fade'+(qa?" qa":"")+'" aria-live="polite">'+m+'</main>'+
-    '<div class="nv">'+(sheet?'<button type="button" data-a="cardback">'+CL+'다섯 가지</button>':'<button type="button" data-a="prev"'+(t.p?"":" disabled")+'>'+CL+'앞 장</button>')+'<button type="button" class="mid" data-a="back" aria-label="'+bkLab+'로 돌아가기">'+(t.p+1)+" / "+P.length+' · 닫기</button>'+((t.ret!=null&&!qa)?'<button type="button" class="go" data-a="ret">적던 곳으로</button>':sheet?'<button type="button" disabled style="visibility:hidden"></button>':last?'<button type="button" class="go" data-a="back">'+bkLab+'로</button>':'<button type="button" data-a="next">다음'+CR+'</button>')+'</div></div>';
+  stage.innerHTML='<div class="lay bv"><img class="bg" src="'+IMG+(cover?"bg_road":"bg_lamp")+'.webp'+VER+'" alt=""><div class="sh'+(cover?" c":qa?" q":"")+'"></div><button type="button" class="bb" data-a="back">'+CL+''+bkLab+'</button>'+(qa?"":'<button type="button" class="bj" data-a="tocard">내 말로 적어 두기'+CR+'</button>')+(pg.k==="cover"?"":'<span class="bn">'+esc(b.name)+'</span>')+
+    '<div class="pr'+(qa?"":" s")+'" role="img" aria-label="'+(t.p+1)+" / "+P.length+'">'+pr+'</div>'+(qa?"":'<button type="button" class="tap l" data-a="prev" aria-label="앞 장" tabindex="-1"></button><button type="button" class="tap r" data-a="next" aria-label="다음 장" tabindex="-1"></button>')+'<main class="fade'+(qa?" qa":"")+'" aria-live="polite">'+m+'</main>'+
+    '<div class="nv">'+(sheet?'<button type="button" data-a="cardback">'+CL+'다섯 가지</button>':(qa&&t.from!=null)?'<button type="button" data-a="fromcard">'+CL+'읽던 쪽</button>':'<button type="button" data-a="prev"'+(t.p?"":" disabled")+'>'+CL+'앞 장</button>')+'<button type="button" class="mid" data-a="back" aria-label="'+bkLab+'로 돌아가기">'+(t.p+1)+" / "+P.length+' · 닫기</button>'+((t.ret!=null&&!qa)?'<button type="button" class="go" data-a="ret">적던 곳으로</button>':sheet?'<button type="button" disabled style="visibility:hidden"></button>':last?'<button type="button" class="go" data-a="back">'+bkLab+'로</button>':'<button type="button" data-a="next">다음'+CR+'</button>')+'</div></div>';
   var mn=stage.querySelector("main"), sh=stage.querySelector(".sh"), lim=HS-84-80, f=1, i; if(!mn||!sh) return;
   for(i=0;i<4&&mn.offsetHeight*f>lim;i++){ f=Math.max(.66,f*Math.sqrt(lim/(mn.offsetHeight*f))*.985); mn.style.transformOrigin=qa?"0 0":"0 100%"; mn.style.transform="scale("+f.toFixed(3)+")"; mn.style.width=(342/f).toFixed(1)+"px"; mn.style.right="auto"; }
   var vis=mn.offsetHeight*f; if(!qa&&vis>HS*.5) sh.style.background="linear-gradient(to bottom,rgba(12,9,8,.6) 0%,rgba(12,9,8,.86) "+Math.max(8,Math.round((HS-84-vis-60)/HS*100))+"%,rgba(12,9,8,.97) 100%)"; }
-function turn(d){ var t=top(); if(!t||t.t!=="book") return; flush(); if(t.q!=null){ t.q=null; drawBook(t); return; } var p=t.p+d; if(p<0||p>=t.n) return; t.p=p; drawBook(t); }
+function turn(d){ var t=top(); if(!t||t.t!=="book") return; flush(); if(t.q!=null){ t.q=null; drawBook(t); return; } var p=t.p+d; if(p<0||p>=t.n) return; t.p=p; t.from=null; drawBook(t); }
 /* ---- 눌림 ---- */
 function approach(cb){ var v=stage.querySelector(".hallv"), rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(!v||rm){ cb(); return; } busy=true; v.classList.add("lv"); setTimeout(function(){ busy=false; if(root) cb(); },440); }
 function act(a){ var t=top(); if(!t) return false;                                              /* 대화의 선택지와 말상자 */
   if(a==="back"){ back(); return true; }
   if(a==="hello1"){ hello("first"); return true; }
-  if(a==="plan"){ if(!O.plan||busy) return true; t.dg={who:"l",t:"…통독표입니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); push({t:"plan"}); } },1000); return true; }
+  if(a==="plan"){ if(!O.plan||busy) return true; t.dg={who:"l",fig:1,t:"…통독표입니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); push({t:"plan"}); } },1000); return true; }
   if(a==="pm"||a==="pnow"||a==="pgo"){ return true; }
   if(a==="card"){ if(!O.card||busy) return true;
-    if(O.card.had&&O.card.had()){ t.dg={who:"l",t:"…이미 받으신 말씀이 있습니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); O.card.show(); } },1100); return true; }
+    if(O.card.had&&O.card.had()){ t.dg={who:"l",fig:1,t:"…이미 받으신 "+(O.card.year?O.card.year+"년 ":"")+"말씀이 있습니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); O.card.show(); } },1100); return true; }
     t.dg=helloDg("back"); push({t:"card"}); return true; }
   if(a==="mix"){ if(t.t==="card"&&!busy) cardMix(t,true); return true; }
   if(a==="pick"){ return true; }
@@ -457,13 +469,15 @@ function onClick(e){ if(busy||!root) return; var el=e.target.closest("[data-a],[
     var wk=String(d.k||"").split("-"); if(O.plan&&O.plan.go) O.plan.go(+wk[0],+wk[1]); return; }
   if(act(d.a)) return;
   if(d.a==="ans"){ var ta=root.querySelector("#cbsrQa"), tb=top(); if(!ta||!tb||tb.t!=="book") return; var av=ta.value.trim(), was=qaVal(tb.id,ta.dataset.f); if(av!==was) qaSet(tb.id,ta.dataset.f,av); ta.blur(); tb.just=(av&&av!==was)?tb.q:null; tb.q=null; drawBook(tb); return; }
+  if(d.a==="tocard"||d.a==="fromcard"){ var tj=top(); if(!tj||tj.t!=="book"||!DATA.by[tj.id]) return; flush();   /* 어느 쪽에서나 적는 곳으로 갔다가 읽던 쪽으로 돌아옴 */
+    if(d.a==="tocard"){ tj.from=tj.p; tj.ret=null; tj.q=null; tj.p=pages(DATA.by[tj.id]).length-1; } else { tj.p=tj.from; tj.from=null; tj.q=null; } drawBook(tj); return; }
   if(d.a==="wr"||d.a==="cardback"||d.a==="see"||d.a==="ret"){ var tc=top(); if(!tc||tc.t!=="book") return; flush();
     if(d.a==="wr"){ tc.q=+d.i; drawBook(tc); var tx=root.querySelector("#cbsrQa"); if(tx){ try{ tx.focus({preventScroll:true}); tx.setSelectionRange(tx.value.length,tx.value.length); }catch(er){} } return; }
     if(d.a==="cardback"){ tc.q=null; drawBook(tc); return; }
     if(d.a==="ret"){ if(tc.ret){ tc.p=tc.ret.p; tc.q=tc.ret.q; tc.ret=null; drawBook(tc); } return; }
     var Pz=pages(DATA.by[tc.id]), iz; for(iz=0;iz<Pz.length;iz++){ if(Pz[iz].k===d.pg){ tc.ret={p:tc.p,q:tc.q}; tc.q=null; tc.p=iz; drawBook(tc); break; } } return; }
 
-  if(d.s){ var ns={t:"sec",s:d.s}; if(d.s==="etc") ns.dg={who:"l",t:"…그쪽은, 성경이 아닙니다.",ch:[{t:"돌아간다",a:"back"},{t:"열람한다",a:"enter"}],esc:"back"}; push(ns); return; }
+  if(d.s){ var ns={t:"sec",s:d.s}; if(d.s==="etc") ns.dg={who:"l",fig:1,late:1,t:"…그쪽은, 성경이 아닙니다.",ch:[{t:"돌아간다",a:"back"},{t:"열람한다",a:"enter"}],esc:"back"};   /* 통로 끝까지 걸어간 뒤 사서가 막아선다 */ push(ns); return; }
   if(d.g){ var s=top().s, g=d.g, t1=top(); load().then(function(D){ if(!root||top()!==t1) return; if(!PRESS[g]){ var one=(D.gs[g]||[])[0]; if(one) approach(function(){ push({t:"book",id:one.id,p:0,s:s}); }); return; } approach(function(){ push({t:"press",g:g,s:s}); }); }).catch(function(){ say("책장 원고를 받지 못했습니다. 인터넷 연결을 확인해 주세요."); }); return; }
   if(d.b){ var r=el.getBoundingClientRect(), q=stage.getBoundingClientRect(), k=q.width/W; openBook(d.b,{x:(r.left-q.left)/k,y:(r.top-q.top)/k,w:r.width/k,h:r.height/k}); } }
 function onKey(e){ if(!root) return;
