@@ -38,6 +38,21 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .map{flex-shrink:0;border:.3mm solid #bbb;border-radius:1mm;overflow:hidden;margin:1mm 0 1.6mm}
 .map img,.map svg{display:block;width:100%}
 .mcap{font-size:7.4pt;color:#555;line-height:1.4;padding:.8mm 1.6mm;border-top:.3mm solid #ddd}
+.mf{float:right;width:44mm;margin:.6mm 0 1mm 3mm}
+.mf .mcap{font-size:6.8pt;padding:.5mm 1mm}
+.p4 .pr{min-height:48mm}
+.p4 .op{padding:1.2mm 0 .4mm}
+.p4 .bx5{display:flex;flex-direction:column}
+.p4 .sh{margin:1.9mm 0 1mm}
+.p4 .bx5.b1{line-height:1.41}
+.p4 .b1 .mk{margin-bottom:1mm}
+.p4 .b1 .lk{margin-bottom:1mm}
+.p4 .b1 .blk p{margin-bottom:.8mm}
+.p4 .b1 .scn{margin-bottom:1mm;gap:.8mm}
+.p4 .b1 .scn span{font-size:7pt;padding:0 1.2mm}
+.p4 .b1 .st{display:none}
+.p4 .b1 .hd{padding-bottom:1mm}
+.p4 .note{padding:2mm 3mm;line-height:1.6}
 .scn{display:flex;flex-wrap:wrap;gap:1.2mm;margin-bottom:2mm}
 .scn span{font-size:7.6pt;border:.3mm solid var(--c);color:var(--c);border-radius:1mm;padding:.2mm 1.6mm}
 .mk{margin-bottom:2mm;text-align:justify}
@@ -107,6 +122,26 @@ def blocks(w):
     G = [qpage(('5', '하나님의 성품'), gg, w['god'][0:2], lambda g: f'<div class="v">{inl(g["v"])}</div>{inl(g["q"])}', 0),
          qpage(('5', '하나님의 성품'), gg, w['god'][2:4], lambda g: f'<div class="v">{inl(g["v"])}</div>{inl(g["q"])}', 2)]
     return A, O, G, D
+
+def four(w):
+    """한 회 A5 4쪽: ①②③ 한 쪽, ④ 한 쪽, ⑤ 한 쪽, ⑥⑦(⑧) 한 쪽. 말뜻은 뺍니다(11-24 목사님)."""
+    A, O, G, D = blocks(w)
+    p1 = [x for x in A if 'class="wd' not in x and 'class="map' not in x]
+    if w.get('map'):
+        svg = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), w['map'])).read()
+        mp = f'<div class="map mf">{svg}<div class="mcap sans">{inl(w.get("mapcap",""))}</div></div>'
+        i = next(k for k, x in enumerate(p1) if '오늘의 흐름' in x)
+        p1.insert(i + 1, mp)
+    def qp(full, guide):
+        h = full[0].split('<div class="op">')[0]
+        ops = []
+        for part in full:
+            for x in part.split('<div class="op">')[1:]:
+                x = x.split('<div class="sh')[0]
+                ops.append('<div class="op">' + x.replace('<div class="ln"></div>' * 14, '<div class="ln"></div>' * 8))
+        return h + ''.join(ops)
+    og, gb = qp(O, ''), qp(G, '')
+    return [''.join(p1), og, gb, ''.join(D)]
 
 JS = r'''
 (start)=>{
