@@ -17,7 +17,9 @@ try:
             inside = lambda: pg.evaluate('(()=>{const r=document.querySelector("#cbsrShelf");return !!r&&r.contains(document.activeElement)})()')
             print(tag)
             pg.goto('http://localhost:8765/index.html?today=19'); pg.click('#go'); pg.wait_for_timeout(900)
-            if pg.locator('#cbsrShelf .dg.me').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+            for _i in range(4):
+                if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
+                pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
             pg.click('#cbsrShelf .dg .dgc button:nth-child(1)'); pg.wait_for_timeout(5200)
             chk('시편은 150편', '시편, 150편입니다' in (txt('#cbsrShelf .dg .dgb') or ''), txt('#cbsrShelf .dg .dgb'))
             pg.click('#cbsrShelf .dg .dgc button:nth-child(1)'); pg.wait_for_timeout(2800)

@@ -10,7 +10,9 @@ try:
         # 1) 움직임 줄이기
         pg = b.new_context(viewport={'width': 390, 'height': 800}, reduced_motion='reduce', has_touch=True).new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(900)
-        if pg.locator('#cbsrShelf .dg.me').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(500)
+        for _i in range(4):
+            if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
+            pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(500)
         pg.click('#cbsrShelf .dg .dgc button:nth-child(2)'); pg.wait_for_timeout(500)
         P = lambda: pg.evaluate('+document.querySelector("#cbsrShelf .hl[data-p]").getAttribute("data-p")')
         pg.click('#cbsrShelf .pad .mu'); pg.wait_for_timeout(150); res.append(('줄이기: 앞으로 바로 바뀜', P()==1 and pg.locator('#cbsrShelf .hl').count()==1))
@@ -22,7 +24,9 @@ try:
         cx = b.new_context(viewport={'width': 390, 'height': 800}, has_touch=True); pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.route('**/hall_1.webp*', lambda r: r.abort())
         pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(900)
-        if pg.locator('#cbsrShelf .dg.me').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(500)
+        for _i in range(4):
+            if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
+            pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(500)
         pg.click('#cbsrShelf .dg .dgc button:nth-child(2)'); pg.wait_for_timeout(600)
         pg.click('#cbsrShelf .pad .mu'); pg.wait_for_timeout(1300); pg.screenshot(path=OUT+'x_noimg.png')
         res.append(('그림이 안 와도 걸음 단추는 남음', pg.locator('#cbsrShelf .pad button').count()==4))

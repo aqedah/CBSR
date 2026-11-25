@@ -21,7 +21,9 @@ def helpers(pg):
     has = lambda sel: pg.locator(sel).count() > 0
     def shelf():
         pg.evaluate("document.querySelector('#rgShelf').click()"); pg.wait_for_timeout(1800)
-        if has('#cbsrShelf .dg.me'): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+        for _i in range(4):
+            if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
+            pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
     return T, has, shelf
 try:
     with sync_playwright() as p:

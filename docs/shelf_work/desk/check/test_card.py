@@ -16,7 +16,9 @@ try:
             txt = lambda sel: pg.evaluate('(s)=>{const e=document.querySelector(s);return e?e.innerText:null}', sel)
             print(tag)
             pg.goto('http://localhost:8765/index.html?today=45'); pg.click('#go'); pg.wait_for_timeout(900)
-            if pg.locator('#cbsrShelf .dg.me').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+            for _i in range(4):
+                if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
+                pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
             chk('선택지 넷', pg.locator('#cbsrShelf .dg .dgc button').count() == 4 and '통독표를 받는다' in txt('#cbsrShelf .dgc') and '말씀 카드를 받는다' in txt('#cbsrShelf .dgc'))
             r = pg.evaluate('(()=>{const a=document.querySelector("#cbsrShelf .dgc").getBoundingClientRect(),b=document.querySelector("#cbsrShelf .dgb").getBoundingClientRect(),k=document.querySelector("#cbsrShelf .bk").getBoundingClientRect();return [a.top,k.bottom,a.bottom,b.top]})()')
             chk('선택지가 위 단추와 말상자에 겹치지 않음', r[0] > r[1] + 4 and r[2] <= r[3] + 1); shot('c1_hello4')

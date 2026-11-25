@@ -16,7 +16,9 @@ try:
             def start(q):
                 pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
                 pg.goto('http://localhost:8765/index.html?'+q); pg.click('#go'); pg.wait_for_timeout(1000)
-                if pg.locator('#cbsrShelf .dg.me').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(800)
+                for _i in range(4):
+                    if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
+                    pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(800)
                 return pg
             txt = lambda pg, s: pg.locator(s).first.inner_text() if pg.locator(s).count() else ''
             # 두 권 읽는 날(사무엘상·하)

@@ -14,7 +14,9 @@ try:
         pg.wait_for_timeout(1200); pg.evaluate("(()=>{const r=document.getElementById('sheetRoot'); if(r) r.innerHTML='';})()")
         has = lambda sel: pg.locator(sel).count() > 0
         pg.evaluate("document.querySelector('#rgShelf').click()"); pg.wait_for_timeout(1800)
-        if has('#cbsrShelf .dg.me'): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+        for _i in range(4):
+            if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
+            pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
         pg.click('#cbsrShelf .dgc button:nth-child(2)'); pg.wait_for_timeout(500)
         pg.click('#cbsrShelf .zone[data-s=nt]'); pg.wait_for_timeout(1900)
         pg.evaluate("[...document.querySelectorAll('#cbsrShelf .gl button')].find(x=>x.innerText.includes('바울서신')).click()"); pg.wait_for_timeout(2600)
