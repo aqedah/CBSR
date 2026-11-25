@@ -67,6 +67,9 @@ def pages(key):
         p1.insert(i, struct(S['struct'], scn))
     j = next(k for k, x in enumerate(p1) if '성경 읽기<small>' in x)
     p1.insert(j, '<div class="clr"></div>')
+    if S.get('word'):   # 11-25 목사님: 말뜻 한 낱말(원칙: 이 문장에서 뜻을 모르면 막히는 말). 본문 구조 아래, ② 앞
+        wa, _, wb = S['word'].partition(' — ')
+        p1.insert(j + 1, f'<div class="wd sans"><span class="k">말뜻</span><b>{inl(wa)}</b> {inl(wb)}</div>')
     lnl = lambda t, n: ''.join(f'<div class="ln lbl"><span class="sans">{t if k == 0 else ""}</span></div>' for k in range(n))
     p1.append(f'<div class="kp">{lab0("마음에 남은 말씀", "읽고 나서 바로 적습니다")}{lnl("말씀 · 장절", 2)}{lnl("이유", 2)}</div>')
     p2 = ''.join(A[i3:]) + (f'<div class="sh sans"><span class="n">4</span>나의 묵상</div>' + lab(1, '본문 관찰', '오늘 본문을 더 살펴보는 한 길') +

@@ -57,7 +57,7 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .chip{display:inline-block;font-size:7.4pt;font-weight:700;border:.3mm solid var(--c);color:var(--c);border-radius:.8mm;padding:0 1.2mm;margin-right:1.4mm;line-height:1.5;vertical-align:.3mm;white-space:nowrap;font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
 .rp{font-size:7.2pt;color:var(--c);font-weight:700;margin-right:1mm;font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
 .hl{background:linear-gradient(transparent 35%,var(--hl) 35%)}
-.ci{border:.3mm solid #222;border-radius:50%/60%;padding:0 1mm}
+.ci{border:.3mm solid #222;border-radius:50%/60%;padding:0 1mm;display:inline-block;font-size:.9em;line-height:1.22;vertical-align:baseline} /* 11-25: 윗줄에 겹치지 않게 */
 .wv{text-decoration:underline wavy;text-decoration-thickness:.22mm;text-underline-offset:.9mm}
 .br{font-weight:700}
 .lk{display:grid;grid-template-columns:4mm 1fr;gap:0 .8mm;margin-bottom:1.8mm;text-align:justify}

@@ -36,7 +36,7 @@ def week_json(W, old):
     from sera_v3_content import S3
     k = j.get('key'); S = S3.get(k, {})
     for f in ('apply',): j.pop(f, None)
-    j.update(obs_ref=S.get('obs_ref', ''), obs=S.get('obs', ''), obs_find=S.get('obs_find', ''), obs_link=S.get('obs_link', ''), obs_start=S.get('obs_start', ''), god=S.get('god', ''), god_q=S.get('god_q', ''), ap_lead=S.get('ap_lead', ''), ap_fu=S.get('ap_fu', ''),
+    j.update(obs_ref=S.get('obs_ref', ''), obs=S.get('obs', ''), obs_find=S.get('obs_find', ''), obs_link=S.get('obs_link', ''), obs_start=S.get('obs_start', ''), word=S.get('word', ''), god=S.get('god', ''), god_q=S.get('god_q', ''), ap_lead=S.get('ap_lead', ''), ap_fu=S.get('ap_fu', ''),
              struct='\n'.join(f'{a} | {t} | {x}' for a, t, x in S.get('struct', [])))
     return j
 if len(sys.argv) > 1 and sys.argv[1] == 'sync':
