@@ -109,7 +109,7 @@ def page1(w):
     return f'''<section class="pg">{hd}
 <div class="sec flow"><div class="sh sans"><span class="n">1</span>오늘의 흐름</div>{flowmap}</div>
 <div class="sec"><div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">{scn}</div>{marks}</div>
-<div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div><div class="lk">{looks}</div></div>
+<div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ ②에서 표시한 곳의 풀이</small></div><div class="lk">{looks}</div></div>
 <div class="ft sans"><span>{w['label']} · {w['date']}</span><span>1</span></div></section>'''
 def josa(ref): return '를' if ref.strip()[-1] in '2459' else '을'
 def op(lab, body, n=12): return f'<div class="op"><div class="bx sans">{lab}</div><div>{body}</div></div><div class="ans">{lines(n)}</div>'

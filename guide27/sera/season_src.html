@@ -122,7 +122,7 @@ function page1(w){ const D=dateOf(w);
   return `<section class="pg">${hd}
 <div class="sec flow"><div class="sh sans"><span class="n">1</span>오늘의 흐름</div>${fm}</div>
 <div class="sec"><div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div><div class="scn">${scn}</div>${marks}</div>
-<div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div><div class="lk">${looks}</div></div>
+<div class="sec"><div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ ②에서 표시한 곳의 풀이</small></div><div class="lk">${looks}</div></div>
 <div class="ft sans"><span>${esc(w.label)} · ${D.str}</span><span>1</span></div></section>`; }
 /* 관찰 가/나, 성품 가/나(가는 말씀을 옮겨 적음), 적용 — 2027 가이드북 두 갈래와 같은 쓰임(11-24 목사님) */
 const OG='<b>가와 나 가운데 하나를 골라</b> 바로 아래 칸에 적습니다. 시간이 남으면 다른 하나도 적어 봅니다.';
@@ -169,7 +169,7 @@ function a5parts(w,pray){ pray=pray||{}; const D=dateOf(w), A=[], Dn=[];
   const wd=wordsOf(w); if(wd.length) A.push('<div class="wd sans"><span class="k">말뜻</span>'+wd.map(([a,b])=>`<div><b>${inl(a)}</b> ${inl(b)}</div>`).join('')+'</div>');
   A.push('<div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div>'); if(L(w.scenes).length) A.push('<div class="scn">'+L(w.scenes).map(s=>`<span class="sans">${esc(s)}</span>`).join('')+'</div>');
   L(w.marks).forEach(x=>{const k=tl(x);A.push(`<div class="mk"><span class="chip">${esc(k.tool)}</span>${k.star?'<span class="rp">대표</span>':''}${inl(k.text)}</div>`)});
-  A.push('<div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div>');
+  A.push('<div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ ②에서 표시한 곳의 풀이</small></div>');
   L(w.looks).forEach(x=>{const k=tl(x);A.push(`<div class="lk"><span class="ck">${k.star?'✓':''}</span><span><span class="chip">${esc(k.tool)}</span>${inl(k.text)}</span></div>`)});
   Dn.push('<div class="sh sans" style="margin-top:0"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div>');
   Dn.push(`<div class="note">${inl(w.note)}</div>`);

@@ -107,7 +107,7 @@ def blocks(w):
     A.append('<div class="sh sans"><span class="n">2</span>성경 읽기<small>성경책을 펴고 읽으며 표시합니다</small></div>')
     A.append('<div class="scn">' + ''.join(f'<span class="sans">{s}</span>' for s in w['scenes']) + '</div>')
     for k in w['marks']: A.append(f'<div class="mk"><span class="chip">{k["tool"]}</span>{"<span class=rp>대표</span>" if k.get("rep") else ""}{inl(k["text"])}</div>')
-    A.append('<div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ 표시한 것을 확인합니다</small></div>')
+    A.append('<div class="sh sans"><span class="n">3</span>눈여겨볼 것<small>✓ ②에서 표시한 곳의 풀이</small></div>')
     for l in w['looks']: A.append(f'<div class="lk"><span class="ck">{"✓" if l["ck"] else ""}</span><span><span class="chip">{l["tool"]}</span>{inl(l["text"])}</span></div>')
     D = []
     D.append('<div class="sh sans" style="margin-top:0"><span class="n">6</span>해설<small>다 쓴 뒤에 읽고, 내 묵상과 비교해 봅니다</small></div>')
