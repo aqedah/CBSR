@@ -31,4 +31,4 @@ finally:
     srv.terminate()
 for r in res: print(('  통과 ' if r[1] else '  실패 ')+r[0])
 print('오류:', errs or '없음')
-print('실패:', [r[0] for r in res if not r[1]] or '없음', '(%d가지)' % len(res))
+print('실패:', ([r[0] for r in res if not r[1]] + (['페이지 오류 %d건' % len(errs)] if errs else [])) or '없음', '(%d가지)' % len(res))

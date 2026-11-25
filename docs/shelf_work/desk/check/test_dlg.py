@@ -100,4 +100,4 @@ try:
         b.close()
 finally:
     srv.terminate()
-print('오류:', errs or '없음'); bad = [n for n, c in ok if not c]; print('실패:', bad or '없음', '(%d가지)' % len(ok))
+print('오류:', errs or '없음'); bad = [n for n, c in ok if not c] + (['페이지 오류 %d건' % len(errs)] if errs else []); print('실패:', bad or '없음', '(%d가지)' % len(ok))
