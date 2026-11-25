@@ -176,7 +176,7 @@ function a5parts(w,pray){ pray=pray||{}; const D=dateOf(w), A=[], Dn=[];
   const wh=wholeOf(w);
   if(wh.length){ Dn.push(`<div class="sh sans shw">성경 전체로<small>${esc(w.whole_title||'')}</small></div>`); wh.forEach(x=>Dn.push(`<div class="wh"><span class="chip">${esc(x.lab)}</span><span><b>${esc(x.ref)}</b>${inl(x.text)}</span></div>`)); }
   Dn.push(prayer4(pray));
-  const {O,G}=qparts(w,14,3,true);
+  const O=[],G=[];
   return {A,O,G,D:Dn,run:`${w.season||w.label||''} · ${w.title||''}`}; }
 /* out(.a5w) 안에 쪽을 흘려 넣습니다. 화면에 그려진 상태여야 높이를 잴 수 있습니다. */
 function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
@@ -192,18 +192,39 @@ function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
     flow(st,J.A,J.run); fixed(st,J.O,J.run); fixed(st,J.G,J.run); flow(st,J.D,J.run); }
   out.querySelectorAll('.p5').forEach(p=>{const b=p.firstElementChild; if(b.scrollHeight>b.clientHeight+1 && !b.querySelector('.ans')) bad.push(p.querySelector('.pn').textContent)});
   return {pages:pn-start,bad}; }
-/* 한 회 A5 4쪽(A4 가로 양면 한 장): ①②③ | ④ / ⑤ | ⑥⑦. 말뜻은 빼고 지도는 작게 흐름 옆에 */
-function a5four(out,w,pray){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`;
-  let p1=J.A.filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x)); const mb=mapBlock(w);
-  if(mb){ const i=p1.findIndex(x=>x.includes('오늘의 흐름')); p1.splice(i+1,0,mb.replace('class="map"','class="map mf"')); }
-  const Q4=qparts(w,8,2,false), P=[p1.join(''),Q4.O[0],Q4.G[0],J.D.join('')], bad=[];
-  for(let i=0;i<4;i+=2){ const sh=document.createElement('div'); sh.className='x2';
-    sh.innerHTML=[i,i+1].map(k=>`<section class="p5 p4${k%2?' r':''}" style="${st}"><div class="bx5${k===0?' b1':''}">${P[k]}</div><span class="pn sans">${k+1}</span><span class="rn sans">${esc(J.run)}</span></section>`).join(''); out.appendChild(sh); }
-  const ps=out.querySelectorAll('.p5'), f=fit4(ps[0],ps[3]);
-  ps.forEach((p,i)=>{ const b=p.firstElementChild; if(b.scrollHeight>b.clientHeight+1) bad.push(String(i+1)); });
+/* ── 새 틀(11-25): 한 회 A5 4쪽. 체험판 하루 지면과 같은 쓰임 — guide27/sera/sera4.py와 같은 모양 ──
+   1쪽 ① 흐름(지도 또는 본문 구조) ② 성경 읽기 → 마음에 남은 말씀 / 2쪽 ③ 눈여겨볼 것 ④ 1 본문 관찰
+   3쪽 ④ 2 하나님의 성품 3 적용 4 나의 기도 / 4쪽 ⑤ 쓴 뒤에 읽기 · 해설, 성경 전체로 ⑥ 함께 드리는 기도 */
+const structOf=w=>L(w.struct).map(x=>{const p=x.split('|').map(t=>t.trim());return [p[0]||'',p[1]||'',p[2]||'']});
+const lab4=(n,t,sm)=>`<div class="lab4 sans">${n?`<b>${n}</b>`:''}${t}${sm?`<small>${sm}</small>`:''}</div>`;
+function four(w,pray,edit){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`, LN=n=>'<div class="ln"></div>'.repeat(n);
+  const i3=J.A.findIndex(x=>x.includes('눈여겨볼 것')); let p1=J.A.slice(0,i3).filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x));
+  const i1=p1.findIndex(x=>x.includes('오늘의 흐름')), mb=mapBlock(w), sr=structOf(w);
+  if(mb) p1.splice(i1+1,0,mb.replace('class="map"','class="map mf"'));
+  else if(sr.length) p1.splice(i1+1,0,'<div class="stc sans"><div class="sth">본문 구조</div>'+sr.map(([a,t,x])=>`<div class="sr${a==='B'?' b':a==='X'?' x':''}"><i>${esc(a)}.</i><span>${esc(t)}<br><small>${inl(x)}</small></span></div>`).join('')+'</div>');
+  const lnl=(t,n)=>Array.from({length:n},(_,k)=>`<div class="ln lbl"><span class="sans">${k?'':t}</span></div>`).join('');
+  p1.push(`<div class="kp">${lab4('','마음에 남은 말씀','읽고 나서 바로 적습니다')}${lnl('말씀 · 장절',2)}${lnl('이유',2)}</div>`);
+  const p2=J.A.slice(i3).join('')+`<div class="sh sans"><span class="n">4</span>나의 묵상</div>${lab4(1,'본문 관찰','오늘 본문을 더 살펴보는 한 길')}<div class="oq">${String(w.obs_ref||'').trim()?`<span class="ref sans">${esc(w.obs_ref)}</span>`:''}${inl(w.obs||'')}</div><div class="ans">${LN(4)}</div>`;
+  const gm=String(w.god||'').match(/^(\S+(?:, \d+)?(?:절)?)\s+(.*)$/), gref=gm?gm[1]:'', gst=gm?gm[2]:String(w.god||'');
+  const p3=`<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>${lab4(2,'하나님의 성품')}<div class="oq">${gref?`<span class="ref sans">${esc(gref)}</span>`:''}${inl(gst)} <b>${inl(w.god_q||'')}</b></div><div class="ans">${LN(4)}</div>`
+    +lab4(3,'적용')+`<div class="oq">${inl(w.ap_lead||'')}</div>${String(w.ap_fu||'').trim()?`<div class="oq">→ ${inl(w.ap_fu)}</div>`:''}<div class="ans">${LN(3)}</div>`
+    +lab4(4,'나의 기도')+'<div class="oh sans">오늘 마음에 남은 말씀과 내 응답을 하나님께 말씀드립니다.</div><div class="ans">'+LN(3)+'</div>';
+  const yv=L(pray&&pray.y).map(x=>x.replace(/\s*\|\s*/,' ').trim()), cv=L(pray&&pray.c), ce=edit?' contenteditable="true"':'';
+  const pr=`<div class="pr4"><div class="sh sans"><span class="n">6</span>함께 드리는 기도</div><h4 class="sans">청년부 기도제목</h4>`+Array.from({length:5},(_,i)=>`<div class="pln sans"${ce} data-k="y${i}">${esc(yv[i]||'')}</div>`).join('')+'<h4 class="sans">교회 기도제목</h4>'+Array.from({length:3},(_,i)=>`<div class="pln sans"${ce} data-k="c${i}">${esc(cv[i]||'')}</div>`).join('')+'</div>';
+  const D0=J.D[0].replace('<span class="n">6</span>해설','<span class="n">5</span>쓴 뒤에 읽기 · 해설').replace(/<small>.*?<\/small>/,'');
+  const p4=D0+J.D.slice(1,-1).join('')+pr;
+  return {P:[p1.join(''),p2,p3,p4],st,run:J.run}; }
+const sec5=(h,i,num,st,run,right)=>`<section class="p5 p4${right?' r':''}" style="${st}"><div class="bx5${i<2?' b1':''}">${h}</div><span class="pn sans">${num}</span><span class="rn sans">${esc(run)}</span></section>`;
+/* out 안에 한 회를 그림. mode 'x2' = A4 가로 두 쪽씩(1–4쪽), 'one' = A5 낱쪽(start부터 매김) */
+function drawFour(out,w,pray,mode,start,edit){ const F=four(w,pray,edit), bad=[];
+  if(mode==='x2'){ for(let i=0;i<4;i+=2){ const sh=document.createElement('div'); sh.className='x2'; sh.innerHTML=sec5(F.P[i],i,i+1,F.st,F.run,0)+sec5(F.P[i+1],i+1,i+2,F.st,F.run,1); out.appendChild(sh); } }
+  else { const d=document.createElement('div'); d.className='one'; d.innerHTML=F.P.map((h,i)=>sec5(h,i,start+i,F.st,F.run,(start+i)%2)).join(''); out.appendChild(d); }
+  const ps=[...out.querySelectorAll('.p5')].slice(-4); const f=fit4(ps[0],ps[3]); fit4(ps[1],null);
+  ps.forEach((p,i)=>{ const b=p.firstElementChild; if(b.scrollHeight>b.clientHeight+1) bad.push(String(mode==='x2'?i+1:start+i)); });
   bad.fit=f; return bad; }
 /*FIT4JS*/
-const FMT={get fmt(){return LS.get('cbsr_season_fmt2','a5x2')}, set fmt(v){LS.set('cbsr_season_fmt2',v)}, get start(){return +LS.get('cbsr_season_a5start',2)||2}, set start(v){LS.set('cbsr_season_a5start',v)}};
+const fitMsg=b=>(b.fit&&b.fit.lh?` 4쪽 행간 ${b.fit.lh}.`:'')+(b.fit&&b.fit.dropped?` 성경 전체로 뒤의 ${b.fit.dropped}개는 지면이 모자라 뺐습니다.`:'');
+const FMT={get fmt(){const v=LS.get('cbsr_season_fmt3','a5x2');return v==='a5'?'a5':'a5x2'}, set fmt(v){LS.set('cbsr_season_fmt3',v)}, get start(){return +LS.get('cbsr_season_a5start',2)||2}, set start(v){LS.set('cbsr_season_a5start',v)}};
 /* 넘침 검사: 1·4쪽 꼬리말 위로 내용이 내려왔는지 */
 function overflow(root){ const out=[]; root.querySelectorAll('.pg').forEach((pg,i)=>{ if(i%4===1||i%4===2) return; const r=pg.getBoundingClientRect(), ft=pg.querySelector('.ft'); const lim=ft?ft.getBoundingClientRect().top-2:r.bottom; let mb=0; pg.querySelectorAll(':scope > *:not(.ft)').forEach(e=>{const b=e.getBoundingClientRect(); if(b.bottom>mb) mb=b.bottom}); const z=(r.width/pg.offsetWidth)||1; const mm=(mb-lim)/z*25.4/96; if(mm>0) out.push(`${i%4+1}쪽 ${mm.toFixed(1)}mm`); }); return out; }
 /* ── 기도제목: 이 기기에만 ── */
@@ -235,7 +256,9 @@ async function viewer(sid){
   const S=DATA.sets.find(s=>s.id===sid)||DATA.sets[0]; if(!S){document.body.textContent='묶음이 없습니다.';return}
   const btns=S.weeks.map(w=>`<button data-w="${esc(w.key)}">${dateOf(w).m}월 ${dateOf(w).d}일<small>${esc(w.title)}</small></button>`).join('');
   document.body.innerHTML=`<div class="bar"><b style="margin-right:6px">${esc(S.name)}</b>${btns}<button class="pr" onclick="print()">인쇄 / PDF 저장</button>
-<div class="tip">4쪽 오늘의 기도 칸을 눌러 기도제목을 입력하세요. 입력한 내용은 이 기기에만 저장됩니다. 인쇄할 때 용지는 A4, 여백 없음, 배경 그래픽 켜기로 하세요.</div></div>`+S.weeks.map(w=>sheet(w,true,prayOf(S.id,w.key))).join('');
+<div class="tip">4쪽 함께 드리는 기도 칸을 눌러 기도제목을 입력하세요. 입력한 내용은 이 기기에만 저장됩니다. 인쇄할 때 용지는 A4 가로, 여백 없음, 배경 그래픽 켜기, 양면은 짧은 쪽으로 넘기기로 하세요.</div></div>`+S.weeks.map(w=>`<div class="wk a5w" id="w${esc(w.key)}"></div>`).join('');
+  document.querySelectorAll('.wk').forEach(wk=>{ const w=S.weeks.find(x=>'w'+x.key===wk.id); wk.style.display='block'; drawFour(wk,w,prayOf(S.id,w.key),'x2',1,true); wk.style.display=''; });
+  { const st=document.createElement('style'); st.textContent='@page{size:297mm 210mm;margin:0}body.vw .wk .x2{margin:0 auto 12px;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.15)}@media print{body.vw .wk .x2{margin:0;box-shadow:none}}'; document.head.appendChild(st); }
   const style=document.createElement('style'); style.textContent='.wk{display:none}.wk.on{display:block}'; document.head.appendChild(style);
   document.querySelectorAll('.wk').forEach(wk=>{ const key=wk.id.slice(1); const fs=[...wk.querySelectorAll('[contenteditable]')];
     const keep=()=>{ const y=[],c=[]; wk.querySelectorAll('.pln[data-k^="y"]').forEach(r=>y.push(r.textContent.trim())); wk.querySelectorAll('.pln[data-k^="c"]').forEach(r=>c.push(r.textContent.trim())); setPray(S.id,key,{y:y.join('\n'),c:c.join('\n')}); };
@@ -244,7 +267,7 @@ async function viewer(sid){
   document.querySelectorAll('.bar button[data-w]').forEach(b=>b.onclick=()=>show(b.dataset.w));
   const today=new Date().toISOString().slice(0,10); const ks=S.weeks.map(w=>w.key);
   show(ks.includes(Q.get('w'))?Q.get('w'):((S.weeks.find(w=>w.ymd>=today)||S.weeks[S.weeks.length-1]).key));
-  const fit=()=>{const z=Math.min(1,(innerWidth-8)/800);document.querySelectorAll('.wk').forEach(w=>w.style.zoom=z)}; addEventListener('resize',fit); fit();
+  const fit=()=>{const z=Math.min(1,(innerWidth-8)/1123);document.querySelectorAll('.wk').forEach(w=>w.style.zoom=z)}; addEventListener('resize',fit); fit();
   addEventListener('beforeprint',()=>document.querySelectorAll('.wk').forEach(w=>w.style.zoom=1)); addEventListener('afterprint',fit);
 }
 </script>
@@ -258,7 +281,7 @@ function curW(){ const s=curSet(); return s&&s.weeks[WI] }
 function persist(){ const s=curSet(); if(s) s._u=Date.now(); LS.set(DK,DATA); $('status').textContent='이 기기에 저장됨 · GitHub에는 아직'; }
 function blankWeek(prev){ const d=prev?new Date(prev.ymd+'T00:00:00'):new Date(); if(prev) d.setDate(d.getDate()+7); const ymd=d.toISOString().slice(0,10);
   const c=prev?{color:prev.color,light:prev.light}:{color:COLORS[0][1],light:COLORS[0][2]};
-  return Object.assign({key:ymd.slice(5).replace('-',''),ymd,label:prev?prev.label:(KIND==='sera'?'세라핌 청년 기도회':''),season:'',title:'',sub:'',vv:0,flow:'',words:'',scenes:'',marks:'',looks:'',obs:['',''],god:[{copy:'',q:''},{v:'',q:''}],apply:{lead:'',fu:''},note:'',whole_title:'',whole:''},c); }
+  return Object.assign({key:ymd.slice(5).replace('-',''),ymd,label:prev?prev.label:(KIND==='sera'?'세라핌 청년 기도회':''),season:'',title:'',sub:'',vv:0,flow:'',words:'',scenes:'',marks:'',looks:'',obs_ref:'',obs:'',god:'',god_q:'',ap_lead:'',ap_fu:'',struct:'',note:'',whole_title:'',whole:''},c); }
 
 function ws(){
   document.body.className='ws';
@@ -270,7 +293,7 @@ function ws(){
   <button id="bCheck">인용 확인</button>
   <button id="bView">나눔 화면 ↗</button>
   <button id="bGit">GitHub</button>
-  <span class="fmt"><select id="selFmt" title="판형"><option value="a4">A4 한 장(4쪽)</option><option value="a5">A5 가이드북(8쪽)</option><option value="a5x2">A5 4쪽 · A4 가로 양면 한 장</option></select><label id="a5s" title="A5 첫 쪽 번호(짝수 = 왼쪽 쪽)">첫 쪽 <input type="number" id="a5start" min="1" step="1"></label></span>
+  <span class="fmt"><select id="selFmt" title="판형"><option value="a5x2">A5 4쪽 · A4 가로 양면 한 장</option><option value="a5">A5 낱쪽(책 부록, 첫 쪽 번호)</option></select><label id="a5s" title="A5 첫 쪽 번호(짝수 = 왼쪽 쪽)">첫 쪽 <input type="number" id="a5start" min="1" step="1"></label></span>
   <select id="selPrint"><option value="one">이 회</option><option value="all">묶음 전체</option></select><button id="bPrint" class="pri">인쇄 · PDF</button>
   <a href="check.html?admin" target="_blank" rel="noopener" style="font-size:12px;color:var(--mute)">체험판 설문 결과 ↗</a>
 </header>
@@ -314,13 +337,14 @@ function drawForm(){ const s=curSet(), f=$('form');
   ${F('scenes','② 장면 단추',w.scenes,{area:1,rows:3,small:'줄마다 하나'})}
   ${F('marks','② 성경 읽기 — 표시',w.marks,{area:1,rows:5,small:'줄마다 「★ 도구 | 문장」, ★ = 대표',ph:'★ ◆ 반복 | 네 번 반복되는 말은 무엇입니까? 9:12, 17에서 찾아 {형광펜}으로 칠하세요.'})}${TOK}
   ${F('looks','③ 눈여겨볼 것',w.looks,{area:1,rows:6,small:'줄마다 「✓ 도구 | 문장」, ✓ = 표시 확인'})}</fieldset>
-  <fieldset><legend>2쪽 · ④ 본문 관찰</legend><div class="hint">가와 나 두 물음. 가부터 쓰고, 시간이 남으면 나도 씁니다(2027 가이드북 두 갈래와 같은 쓰임). 가는 성품 가와, 나는 성품 나와 짝이 맞게 씁니다.</div>${[0,1].map(i=>F('obs:'+i,'가나'[i],(w.obs||[])[i]||'',{area:1,rows:2})).join('')}</fieldset>
-  <fieldset><legend>3쪽 · ⑤ 하나님의 성품과 적용</legend><div class="hint">말씀 칸에 장절만 쓰면 「장절을 성경에서 찾아 옮겨 적어 보세요」와 쓸 줄이 나옵니다. 인용을 쓰면 인용이 그대로 찍힙니다. 물음은 본문의 사실 → 하나님의 성품(**굵게**) → 내게 묻는 말 차례로, 끝말이 매번 같지 않게 씁니다.</div>${[0,1].map(i=>{const g=(w.god||[])[i]||{};return `<div class="row">${F('gc:'+i,'가나'[i]+' 옮겨 적을 장절',g.copy||'',{ph:'13:47'})}${F('gv:'+i,'가나'[i]+' 인용(장절을 안 쓸 때)',g.v||'',{ph:'"…"(14:23)'})}</div>`+F('gq:'+i,'가나'[i]+' 물음',g.q||'',{area:1,rows:3,ph:'사실 → **하나님의 성품** → 나에게 묻는 말'})}).join('')}
-  ${F('al','적용 — 이끄는 말과 물음',(w.apply||{}).lead||'',{area:1,rows:3,small:'본문의 사실 다음에 **굵은 물음**',ph:'사도들은 일을 마치고 떠나며 금식 기도로 교회를 주께 맡겼습니다(14:23). **내가 주께 맡겨야 할 일은 무엇입니까?**'})}
-  ${F('af','적용 — 이어 묻기(→)',(w.apply||{}).fu||'',{ph:'그 일을 위해 이번 주에 어떻게 기도하겠습니까?'})}</fieldset>
-  <fieldset><legend>4쪽 · 해설과 성경 전체로</legend>${F('note','⑥ 해설',w.note,{area:1,rows:8,small:'"하나님은 ~분입니다."로 맺습니다'})}
+  ${F('struct','본문 구조(지도가 없을 때)',w.struct||'',{area:1,rows:5,small:'줄마다 「A | 이사야 7–8장 | 임마누엘의 징조」, 가운데는 X',ph:'A | 이사야 7–8장 | 임마누엘의 징조'})}
+  <fieldset><legend>2–3쪽 · ④ 나의 묵상</legend><div class="hint">'마음에 남은 말씀'은 읽고 나서 바로 쓰는 칸이라 원고가 없습니다. 관찰은 본문의 사실을 끊어 쓰고 이유를 묻는 한 물음, 성품은 「장절 하나님은 ~분이십니다.」와 그 앞의 나를 묻는 물음, 적용은 "앞에서 떠올린 …"으로 이어받습니다.</div>
+  <div class="row">${F('obs_ref','1 본문 관찰 · 장절',w.obs_ref||'',{ph:'14:22–23'})}</div>${F('obs','1 본문 관찰 · 물음',w.obs||'',{area:1,rows:3,small:'물음은 **굵게**',ph:'… 사도들은 제자들을 격려하고 장로들을 세웁니다. **왜 금식 기도 하며 그들을 주께 맡겼다고 생각합니까?**'})}
+  ${F('god','2 하나님의 성품 · 장절과 성품',w.god||'',{area:1,rows:2,ph:'14:23, 27 하나님은 … 돌보시는 분이십니다.'})}${F('god_q','2 하나님의 성품 · 그 앞의 나(굵게 찍힘)',w.god_q||'',{area:1,rows:2,ph:'그 하나님 앞에서, …은 무엇입니까?'})}
+  ${F('ap_lead','3 적용 · 이끄는 말과 물음',w.ap_lead||'',{area:1,rows:3,small:'물음은 **굵게**'})}${F('ap_fu','3 적용 · 이어 묻기(→)',w.ap_fu||'')}</fieldset>
+  <fieldset><legend>4쪽 · ⑤ 쓴 뒤에 읽기</legend>${F('note','해설',w.note,{area:1,rows:8,small:'"하나님은 ~분입니다."로 맺습니다'})}
   ${F('whole_title','성경 전체로 — 머리글',w.whole_title,{ph:'오늘 본문이 성경의 다른 자리와 이어집니다'})}
-  ${F('whole','성경 전체로',w.whole,{area:1,rows:6,small:'줄마다 「인용·약속·성취·주제·모형 | 참조 | 문장」, 번호 없이 찍힙니다. A5 4쪽에서 넘치면 행간을 줄이고, 그래도 넘치면 뒤에서부터 빠지니 중요한 것을 앞에 둡니다',ph:'성취 | 사 7:14 → 마 1:22–23 | …'})}</fieldset>
+  ${F('whole','성경 전체로',w.whole,{area:1,rows:6,small:'줄마다 「인용·약속·성취·주제·모형 | 참조 | 문장」, 번호 없이 찍힙니다. 4쪽에서 넘치면 행간을 줄이고, 그래도 넘치면 뒤에서부터 빠지니 중요한 것을 앞에 둡니다',ph:'성취 | 사 7:14 → 마 1:22–23 | …'})}</fieldset>
   <fieldset><legend>기도제목 — 이 기기에만 저장</legend><div class="hint">공개 원고(season.json)에는 올라가지 않습니다. 나눔 화면에서도 칸을 눌러 바로 쓸 수 있습니다.</div>
   <label class="f"><span class="k"><b>청년부</b> <small>줄마다 하나, 다섯 줄까지</small></span><textarea id="py" rows="4">${esc(prayOf(s.id,w.key).y)}</textarea></label>
   <label class="f"><span class="k"><b>교회</b> <small>줄마다 하나</small></span><textarea id="pc" rows="3">${esc(prayOf(s.id,w.key).c)}</textarea></label></fieldset>`; }
@@ -346,33 +370,21 @@ function drawForm(){ const s=curSet(), f=$('form');
 }
 function drawPrev(){ const p=$('prev'), w=curW(), s=curSet();
   if(!w){ p.innerHTML='<div class="empty">왼쪽에서 회를 고르거나 ＋ 새 회를 누르세요.</div>'; return; }
-  if(FMT.fmt==='a5x2'){ p.innerHTML='<div class="a5w x2prev"></div>'; const box=p.firstElementChild; const bad=a5four(box,w,prayOf(s.id,w.key));
-    box.style.zoom=Math.min(1,(p.clientWidth-30)/1123);
-    const wn=$('warn'); if(wn){ wn.className=bad.length?'bad':'ok'; wn.textContent=bad.length?`넘치는 쪽: ${bad.join(', ')}쪽 — 글을 줄이세요.`:'A5 4쪽(A4 가로 양면 한 장)에 맞습니다. 글자 크기는 가이드북 본문과 같습니다.'+(bad.fit&&bad.fit.scale<1?` 해설 장평 ${Math.round(bad.fit.scale*100)}%.`:'')+(bad.fit&&bad.fit.dropped?` 성경 전체로 뒤의 ${bad.fit.dropped}개는 지면이 모자라 뺐습니다.`:''); }
+  if(FMT.fmt==='a5'){ const st=FMT.start; p.innerHTML=`<div class="a5w a5prev">${st%2?'<div class="gap"></div>':''}</div>`; const box=p.firstElementChild;
+    const bad=drawFour(box,w,prayOf(s.id,w.key),'one',st); box.querySelectorAll('.one').forEach(o=>{ while(o.firstChild) box.insertBefore(o.firstChild,o); o.remove(); }); box.style.zoom=Math.min(1,(p.clientWidth-30)/(2*559));
+    const wn=$('warn'); if(wn){ wn.className=bad.length?'bad':'ok'; wn.textContent=bad.length?`넘치는 쪽: ${bad.join(', ')}쪽 — 글을 줄이세요.`:`A5 ${st}–${st+3}쪽에 맞습니다.`+fitMsg(bad)+(st%2?' 첫 쪽이 홀수라 1·2쪽이 마주 보지 않습니다.':''); }
     return; }
-  if(FMT.fmt.startsWith('a5')){ const st=FMT.start; p.innerHTML=`<div class="a5w a5prev">${st%2?'<div class="gap"></div>':''}</div>`; const box=p.firstElementChild;
-    const r=a5flow(box,[w],st,x=>prayOf(s.id,x.key)); const z=Math.min(1,(p.clientWidth-30)/(2*559)); box.style.zoom=z;
-    const wn=$('warn'); if(wn){ const msg=[]; if(r.bad.length) msg.push('넘치는 쪽: '+r.bad.join(', ')); if(st%2&&FMT.fmt==='a5') msg.push('첫 쪽이 홀수라 관찰과 성품이 마주 보지 않습니다'); wn.className=msg.length?'bad':'ok'; wn.textContent=msg.length?msg.join(' · '):`가이드북 A5 ${r.pages}쪽, 글자 크기는 가이드북 본문과 같습니다. 관찰과 성품이 펼침면으로 마주 봅니다.`; }
-    return; }
-  p.innerHTML=sheet(w,false,prayOf(s.id,w.key));
-  const z=Math.min(1,(p.clientWidth-30)/794); p.firstElementChild.style.zoom=z;
-  requestAnimationFrame(()=>{ const o=overflow(p), wn=$('warn'); if(!wn) return; wn.className=o.length?'bad':'ok'; wn.textContent=o.length?'넘칩니다: '+o.join(', ')+' — 글을 줄이세요.':'네 쪽에 맞습니다.'; });
+  p.innerHTML='<div class="a5w x2prev"></div>'; const box=p.firstElementChild; const bad=drawFour(box,w,prayOf(s.id,w.key),'x2',1);
+  box.style.zoom=Math.min(1,(p.clientWidth-30)/1123);
+  const wn=$('warn'); if(wn){ wn.className=bad.length?'bad':'ok'; wn.textContent=bad.length?`넘치는 쪽: ${bad.join(', ')}쪽 — 글을 줄이세요.`:'A5 4쪽(A4 가로 양면 한 장)에 맞습니다. 글자 크기는 가이드북 본문과 같습니다.'+fitMsg(bad); }
 }
 window.addEventListener('resize',()=>{ if(document.body.className==='ws') drawPrev() });
 function doPrint(){ const s=curSet(); if(!s) return; const all=$('selPrint').value==='all'; const ws=all?s.weeks:[curW()].filter(Boolean);
-  if(FMT.fmt==='a5x2'){ $('printroot').innerHTML='<div class="a5w"></div>'; const root=$('printroot').firstElementChild; let bad=[];
-    ws.forEach(w=>{ const tmp=document.createElement('div'); root.appendChild(tmp); const b=a5four(tmp,w,prayOf(s.id,w.key)); if(b.length) bad.push(dateOf(w).m+'/'+dateOf(w).d+' '+b.join(',')+'쪽'); });
-    $('pgsz').textContent='@page{size:297mm 210mm;margin:0}'; addEventListener('afterprint',()=>{$('pgsz').textContent='@page{size:A4;margin:0}'},{once:true});
-    $('status').textContent=`${ws.length}회 · A4 가로 양면 ${ws.length}장${bad.length?' · 넘침 '+bad.join(' / '):''} — 용지 A4 가로, 여백 없음, 배경 그래픽 켜기, 양면은 짧은 쪽으로 넘기기`;
-    (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(()=>print(),200)); return; }
-  if(FMT.fmt==='a5'){ $('printroot').innerHTML='<div class="a5w"></div>'; const r=a5flow($('printroot').firstElementChild,ws,FMT.start,x=>prayOf(s.id,x.key));
-    $('pgsz').textContent='@page{size:148mm 210mm;margin:0}'; addEventListener('afterprint',()=>{$('pgsz').textContent='@page{size:A4;margin:0}'},{once:true});
-    $('status').textContent=`${ws.length}회 · A5 ${r.pages}쪽${r.bad.length?' · 넘치는 쪽 '+r.bad.join(', '):''} — 용지 크기 A5(148×210mm), 여백 없음, 배경 그래픽 켜기`;
-    (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(()=>print(),200)); return; }
-  $('pgsz').textContent='@page{size:A4;margin:0}';
-  $('printroot').innerHTML=ws.map(w=>sheet(w,false,prayOf(s.id,w.key))).join('');
-  const bad=[]; ws.forEach((w,i)=>{ const o=overflow($('printroot').children[i]); }); /* 화면에 없는 상태라 크기 검사는 미리보기에서 */
-  $('status').textContent=`${ws.length}회 · ${ws.length*4}쪽 — 용지 A4, 여백 없음, 배경 그래픽 켜기, 양면(긴 쪽 넘김)`;
+  $('printroot').innerHTML='<div class="a5w"></div>'; const root=$('printroot').firstElementChild; const bad=[];
+  ws.forEach((w,k)=>{ const b=drawFour(root,w,prayOf(s.id,w.key),FMT.fmt==='a5'?'one':'x2',FMT.start+4*k); if(b.length) bad.push(dateOf(w).m+'/'+dateOf(w).d+' '+b.join(',')+'쪽'); });
+  if(FMT.fmt==='a5'){ $('pgsz').textContent='@page{size:148mm 210mm;margin:0}'; $('status').textContent=`${ws.length}회 · A5 ${ws.length*4}쪽(${FMT.start}쪽부터)${bad.length?' · 넘침 '+bad.join(' / '):''} — 용지 A5, 여백 없음, 배경 그래픽 켜기`; }
+  else { $('pgsz').textContent='@page{size:297mm 210mm;margin:0}'; $('status').textContent=`${ws.length}회 · A4 가로 양면 ${ws.length}장${bad.length?' · 넘침 '+bad.join(' / '):''} — 용지 A4 가로, 여백 없음, 배경 그래픽 켜기, 양면은 짧은 쪽으로 넘기기`; }
+  addEventListener('afterprint',()=>{$('pgsz').textContent='@page{size:A4;margin:0}'},{once:true});
   (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>setTimeout(()=>print(),200)); }
 /* ── 인용 확인: 큰따옴표 속 말이 개역개정 어딘가에 그대로 있는지 ── */
 let BIB=null;
