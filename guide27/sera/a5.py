@@ -49,7 +49,6 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .p4 .b1 .blk p{margin-bottom:.8mm}
 .p4 .b1 .scn{margin-bottom:1mm;gap:.8mm}
 .p4 .b1 .scn span{font-size:7pt;padding:0 1.2mm}
-.p4 .b1 .st{display:none}
 .p4 .b1 .hd{padding-bottom:1mm}
 .p4 .note{padding:2mm 3mm;line-height:1.6}
 .scn{display:flex;flex-wrap:wrap;gap:1.2mm;margin-bottom:2mm}
