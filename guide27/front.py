@@ -71,7 +71,7 @@ D={
 MK={'circle':'<span class="o">동그라미</span>','wave':'<span class="w">물결 밑줄</span>','hl':'<span class="hy">형광펜</span>','hatch':'<span class="ht">빗금 형광펜</span>','box':'<span class="bx">네모</span>','br':'<b>[ ]</b>'}
 def banner(t): return ''.join(f'<span class="bn">{x}</span>' for x in t.split())
 NARR=[ # id, chip, name, desc, mark, example
-('lead','●','이끎말','**한 낱말이 본문 전체를 이끕니다.** 다른 말로 옮겨진 곳은 〈 〉에 원래 낱말을 적었습니다.',f'{MK["circle"]}을 치고, 〈 〉의 낱말은 그 옆에 작게 적습니다.','창 29–31장의 ‘섬기다’. 야곱의 스무 해 내내 이 말이 나옵니다.'),
+('lead','●','열쇠말','**한 낱말이 본문 전체를 이끕니다.** 다른 말로 옮겨진 곳은 〈 〉에 원래 낱말을 적었습니다.',f'{MK["circle"]}을 치고, 〈 〉의 낱말은 그 옆에 작게 적습니다.','창 29–31장의 ‘섬기다’. 야곱의 스무 해 내내 이 말이 나옵니다.'),
 ('rep','◆','반복','같은 말이나 장면이 거듭됩니다. 거듭될 때마다 **무엇이 달라지는지**가 핵심입니다.',f'{MK["circle"]}, 긴 말은 {MK["wave"]}을 긋고 ¹²³을 붙입니다.','창 5장의 "죽었더라" 여덟 번. 그 사이에서 에녹만 "하나님이 그를 데려가시므로 세상에 있지 아니하였더라"(5:24).'),
 ('grad','↗','점층','내용이 되풀이되면서 점점 깊어집니다. **마지막이 가장 무겁습니다.**',f'절 앞에 {banner("1 2 3")}을 적습니다.','창 22:2 "네 아들 네 사랑하는 독자 이삭". 부를수록 좁혀지며 명령이 무거워집니다.'),
 ('contrast','⇔','대조','두 대상을 나란히 놓고 비교합니다. **무엇과 무엇을 나란히 놓았는지** 먼저 찾습니다.',f'짝을 이루는 절 앞에 {banner("A A")}를 적습니다.','출 1:12 바로가 학대할수록 "더욱 번성하여 퍼져나가니". 계획과 결과가 나란히 놓입니다.'),
@@ -105,7 +105,7 @@ def tool(t):
 def tpage(head,lead,items,pn,right,extra=''):
     return f'<div class="pg fm{" r" if right else ""} q1 tp"><p class="fh">{head}</p>{f"<p class=\"fp sm\">{b(lead)}</p>" if lead else ""}<div class="tls">{"".join(tool(t) for t in items)}</div>{extra}<div class="pn">{pn}</div></div>'
 irx='<div class="irb"><p class="irh">?! 아이러니의 세 가지</p>'+''.join(f'<div class="irr"><b>{a}</b><span class="ire">생활 속: {x}</span><span class="irs">{vs(y)}</span></div>' for a,x,y in IRONY)+'</div>'
-pairs='<div class="irb"><p class="irh">하는 일은 같고 이름이 다른 짝</p><div class="pr2"><div><b>같은 것이 거듭 나옵니다</b><span>이야기에서는 ◆ 반복, 노래와 예언에서는 ♪ 후렴</span></div><div><b>둘을 나란히 놓습니다</b><span>이야기에서는 ⇔ 대조, 노래와 지혜에서는 ∥ 평행</span></div></div><p class="prn">● 이끎말, [ ] 틀, ▲ 전환, ?! 아이러니는 이야기와 말 모두에서 씁니다.</p></div>'
+pairs='<div class="irb"><p class="irh">하는 일은 같고 이름이 다른 짝</p><div class="pr2"><div><b>같은 것이 거듭 나옵니다</b><span>이야기에서는 ◆ 반복, 노래와 예언에서는 ♪ 후렴</span></div><div><b>둘을 나란히 놓습니다</b><span>이야기에서는 ⇔ 대조, 노래와 지혜에서는 ∥ 평행</span></div></div><p class="prn">● 열쇠말, [ ] 틀, ▲ 전환, ?! 아이러니는 이야기와 말 모두에서 씁니다.</p></div>'
 P10=tpage('이야기를 읽는 열한 가지 도구','**서술 도구**입니다. 성경 저자가 들려주는 이야기에서 씁니다. 하루에 몇 개가 나오든 **도구보다 본문이 먼저입니다.**',NARR[:6],10,False)
 P11=tpage('&nbsp;','',NARR[6:],11,True,irx)
 P12=tpage('말을 읽는 열한 가지 도구','**담화 도구**입니다. 하나님, 선지자, 시인, 사도가 직접 전하는 말에서 씁니다. 모세의 설교나 한나의 노래처럼 이야기 안에 담긴 말에서도 씁니다.',DISC[:6],12,False)

@@ -20,10 +20,10 @@ for w in range(1, 8):
         ch = True
         for m in D['marks']: m['rep'] = False
         if not any('10:14' in m['text'] for m in D['marks']):
-            D['marks'].append({'tool': '● 이끎말', 'rep': True, 'text': '하나님이 내시는 것과 우리가 할 일은 무엇입니까? 10:13의 "피할 길"과 10:14의 "피하라"를 찾아 <span class="hy">형광펜</span>으로 칠하세요.'})
+            D['marks'].append({'tool': '● 열쇠말', 'rep': True, 'text': '하나님이 내시는 것과 우리가 할 일은 무엇입니까? 10:13의 "피할 길"과 10:14의 "피하라"를 찾아 <span class="hy">형광펜</span>으로 칠하세요.'})
         D['looks'] = [l for l in D['looks'] if l['tool'] != '≒ 비유']
         if not any('10:14' in l['text'] for l in D['looks']):
-            D['looks'].append({'ck': True, 'tool': '● 이끎말', 'text': '"시험 당할 즈음에 또한 피할 길을 내사"(10:13) 바로 다음 절에서 바울은 "우상 숭배하는 일을 피하라"고 합니다(10:14).'})
+            D['looks'].append({'ck': True, 'tool': '● 열쇠말', 'text': '"시험 당할 즈음에 또한 피할 길을 내사"(10:13) 바로 다음 절에서 바울은 "우상 숭배하는 일을 피하라"고 합니다(10:14).'})
         D['marks'], D['looks'] = order(D['marks'], D['looks'])
         D['q'] = '바울은 광야에서 넘어진 조상들을 본보기로 듭니다(10:1–11). 선 줄로 생각하는 사람에게 무엇을 조심하라고 합니까(10:12)? 하나님은 시험 당하는 사람에게 무엇을 하시며(10:13), 바울은 곧이어 무엇을 피하라고 합니까(10:14)?'
         D['pray'] = '피할 길을 내시는 하나님, 시험 앞에서 선 줄로 여기며 제 힘을 믿지 않게 하소서. 주께서 내신 길을 보고 그 길로 피하게 하소서. 예수님의 이름으로 기도합니다. 아멘.'
