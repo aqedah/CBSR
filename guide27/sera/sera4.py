@@ -33,6 +33,7 @@ CSS = '''
 .stc .scn{margin:1.4mm 0 0;padding-top:1.2mm;border-top:.2mm solid #ddd;gap:.8mm}.p4 .b1 .stc .scn span{font-size:6.8pt;padding:0 1mm}
 .p4 .b1 .stc .scn span.sth2,.stc .scn .sth2{font-size:7pt;color:#777;font-weight:700;width:100%;border:0;padding:0}
 .clr{clear:both;height:0}
+.lar{display:inline-block;width:4.2mm;height:3.2mm;vertical-align:-.1mm;margin:0 .8mm 0 .2mm;color:var(--c)}
 .stp{margin-top:2.2mm}.stp .sn{display:inline-block;font-size:7.6pt;color:var(--c);border-bottom:.35mm solid var(--c);margin-right:1.8mm;line-height:1.2}
 .p4 .ln.fl{border-bottom:0;display:flex;align-items:flex-end;gap:1.4mm;font-size:8.8pt;color:#555;padding-bottom:.4mm}
 .ln.fl i{flex:1;border-bottom:.22mm dotted #888;height:5mm}.ln.fl span{white-space:nowrap}
@@ -49,7 +50,7 @@ def obs_steps(S):
     st = S.get('obs_start', '')
     first = f'<div class="ln fl sans"><span>{inl(st)}</span><i></i></div>' if st else '<div class="ln"></div>'
     return (f'<div class="oq stp"><b class="sn sans">찾기</b><b>{inl(S["obs_find"])}</b></div><div class="ans">{L(1)}</div>'
-            f'<div class="oq stp"><b class="sn sans">잇기</b><b>{inl(S["obs_link"])}</b></div><div class="ans">{first}{L(2)}</div>')
+            f'<div class="oq stp"><svg class="lar" viewBox="0 0 12 9" aria-hidden="true"><path d="M2 0V4.5Q2 7 4.5 7H10.5M8.3 4.8L10.6 7L8.3 9.2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg><b class="sn sans">잇기</b><b>{inl(S["obs_link"])}</b></div><div class="ans">{first}{L(2)}</div>')
 def pages(key):
     W = importlib.import_module('w' + key).W; S = S3[key]
     A, O, G, D = a5.blocks(W)

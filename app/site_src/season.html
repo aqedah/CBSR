@@ -260,6 +260,7 @@ body.vw .wk .pg{margin:14px auto;background:#fff;box-shadow:0 1px 6px rgba(0,0,0
 .a5w .stc .scn{margin:1.4mm 0 0;padding-top:1.2mm;border-top:.2mm solid #ddd;gap:.8mm}.p4 .b1 .stc .scn span{font-size:6.8pt;padding:0 1mm}
 .a5w .p4 .b1 .stc .scn span.sth2,.a5w .stc .scn .sth2{font-size:7pt;color:#777;font-weight:700;width:100%;border:0;padding:0}
 .a5w .clr{clear:both;height:0}
+.a5w .lar{display:inline-block;width:4.2mm;height:3.2mm;vertical-align:-.1mm;margin:0 .8mm 0 .2mm;color:var(--c)}
 .a5w .stp{margin-top:2.2mm}.stp .sn{display:inline-block;font-size:7.6pt;color:var(--c);border-bottom:.35mm solid var(--c);margin-right:1.8mm;line-height:1.2}
 .a5w .p4 .ln.fl{border-bottom:0;display:flex;align-items:flex-end;gap:1.4mm;font-size:8.8pt;color:#555;padding-bottom:.4mm}
 .a5w .ln.fl i{flex:1;border-bottom:.22mm dotted #888;height:5mm}.ln.fl span{white-space:nowrap}
@@ -376,7 +377,7 @@ const lab4=(n,t,sm)=>`<div class="lab4 sans">${n?`<b>${n}</b>`:''}${t}${sm?`<sma
 /* 본문 관찰 '찾기 → 잇기'(11-25 견본): 찾기 물음이 있으면 찾기 한 줄, 잇기 물음 아래 (문장 앞머리 줄)+두 줄 */
 const obsSteps=(w,LN)=>{ if(!String(w.obs_find||'').trim()) return `<div class="ans">${LN(4)}</div>`;
   const st=String(w.obs_start||'').trim(), first=st?`<div class="ln fl sans"><span>${inl(st)}</span><i></i></div>`:LN(1);
-  return `<div class="oq stp"><b class="sn sans">찾기</b><b>${inl(w.obs_find)}</b></div><div class="ans">${LN(1)}</div><div class="oq stp"><b class="sn sans">잇기</b><b>${inl(w.obs_link||'')}</b></div><div class="ans">${first}${LN(2)}</div>`; };
+  return `<div class="oq stp"><b class="sn sans">찾기</b><b>${inl(w.obs_find)}</b></div><div class="ans">${LN(1)}</div><div class="oq stp"><svg class="lar" viewBox="0 0 12 9" aria-hidden="true"><path d="M2 0V4.5Q2 7 4.5 7H10.5M8.3 4.8L10.6 7L8.3 9.2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg><b class="sn sans">잇기</b><b>${inl(w.obs_link||'')}</b></div><div class="ans">${first}${LN(2)}</div>`; };
 function four(w,pray,edit){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`, LN=n=>'<div class="ln"></div>'.repeat(n);
   const i3=J.A.findIndex(x=>x.includes('눈여겨볼 것')); let p1=J.A.slice(0,i3).filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x));
   const i1=p1.findIndex(x=>x.includes('오늘의 흐름')), mb=mapBlock(w), sr=structOf(w);
