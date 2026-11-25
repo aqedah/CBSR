@@ -17,25 +17,29 @@ CSS = '''
 .b1{display:block!important}
 .one .p5{page-break-after:always}
 .kp{margin-top:2.6mm}
-.ref{display:inline-block;font-size:8pt;font-weight:700;color:var(--c);border:.3mm solid var(--c);border-radius:.8mm;padding:0 1.4mm;margin-right:1.6mm}
+.ref{display:inline-block;white-space:nowrap;font-size:7.8pt;font-weight:700;color:var(--c);background:var(--l);border-radius:2.4mm;padding:0 1.8mm;margin-right:1.6mm}
 .oq{margin:1mm 0 .6mm;text-align:justify}.oh{font-size:8.4pt;color:#666;margin-bottom:.4mm}
 .lab4{display:flex;align-items:center;gap:1.8mm;font-size:10pt;font-weight:700;margin:4.4mm 0 .8mm;color:#222}
-.lab4 b{display:inline-flex;width:4.6mm;height:4.6mm;border:.35mm solid var(--c);color:var(--c);border-radius:.8mm;align-items:center;justify-content:center;font-size:8pt}
+.lab4 b{display:inline-flex;width:4.4mm;height:4.4mm;background:#333;color:#fff;border-radius:.6mm;align-items:center;justify-content:center;font-size:7.8pt}
 .lab4 small{font-weight:400;font-size:7.8pt;color:#777;margin-left:auto}
 .p4 .ans{flex:none;border-bottom:0}
 .p4 .ln{border-bottom:.22mm dotted #888;height:7.2mm}
 .ln.lbl{position:relative}.ln.lbl span{position:absolute;left:0;bottom:.6mm;font-size:7pt;color:#999}
 .p4 .pr4{margin-top:8mm}
-.stc{float:right;width:50mm;margin:.6mm 0 1mm 3mm;border:.3mm solid #ccc;border-radius:1mm;padding:1.6mm 2.2mm;font-size:8.2pt;line-height:1.45;background:#fff}
+.stc{float:right;width:50mm;margin:0 0 1mm 3mm;border:.3mm solid #ccc;border-radius:1mm;padding:1.6mm 2.2mm;font-size:8.2pt;line-height:1.45;background:#fff}
 .stc .sth{font-size:7.6pt;color:#777;margin-bottom:.8mm;font-weight:700}
-.stc .sr{display:flex;gap:1.4mm;margin:.5mm 0}.stc .sr i{font-style:normal;font-weight:700;color:var(--c);width:3mm;flex:none}
+.stc .sr{display:flex;gap:1.2mm;margin:.4mm 0;line-height:1.35}.stc .sr b{font-weight:700;color:#333}.stc .sr i{font-style:normal;font-weight:700;color:var(--c);width:3mm;flex:none}
 .stc .sr.x{margin-left:2.4mm}.stc .sr.b{margin-left:1.2mm}.stc .sr small{color:#666}
+.stc .scn{margin:1.4mm 0 0;padding-top:1.2mm;border-top:.2mm solid #ddd;gap:.8mm}.p4 .b1 .stc .scn span{font-size:6.8pt;padding:0 1mm}
+.p4 .b1 .stc .scn span.sth2,.stc .scn .sth2{font-size:7pt;color:#777;font-weight:700;width:100%;border:0;padding:0}
+.clr{clear:both;height:0}
 '''
 def lab(n, t, sm=''): return f'<div class="lab4 sans"><b>{n}</b>{t}{"<small>"+sm+"</small>" if sm else ""}</div>'
 def lab0(t, sm=''): return f'<div class="lab4 sans">{t}{"<small>"+sm+"</small>" if sm else ""}</div>'
-def struct(rows):
+def struct(rows, scn=''):
     ind = {'A': '', 'B': ' b', 'X': ' x'}
-    return '<div class="stc sans"><div class="sth">본문 구조</div>' + ''.join(f'<div class="sr{ind.get(a, "")}"><i>{a}.</i><span>{t}<br><small>{s}</small></span></div>' for a, t, s in rows) + '</div>'
+    if scn: scn = scn.replace('<div class="scn">', '<div class="scn"><span class="sth2">장면</span>', 1).replace('<span class="sans sth2">', '<span class="sth2">')
+    return '<div class="stc sans"><div class="sth">본문 구조</div>' + ''.join(f'<div class="sr{ind.get(a, "")}"><i>{a}.</i><span><b>{re.sub(r"^[가-힣]+ (?=\d)", "", t)}</b> <small>{s}</small></span></div>' for a, t, s in rows) + scn + '</div>'
 def pages(key):
     W = importlib.import_module('w' + key).W; S = S3[key]
     A, O, G, D = a5.blocks(W)
@@ -46,12 +50,17 @@ def pages(key):
         svg = open(os.path.join(H, W['map'])).read()
         p1.insert(i + 1, f'<div class="map mf">{svg}<div class="mcap sans">{inl(W["mapcap"])}</div></div>')
     elif S.get('struct'):
-        p1.insert(i + 1, struct(S['struct']))
+        # 본문 구조는 ① 머리 높이에서 시작하고, ② 성경 읽기의 장면 단추를 상자 안으로 옮김(11-25)
+        k = next((k for k, x in enumerate(p1) if 'class="scn"' in x), None)
+        scn = p1.pop(k) if k is not None else ''
+        p1.insert(i, struct(S['struct'], scn))
+    j = next(k for k, x in enumerate(p1) if '성경 읽기<small>' in x)
+    p1.insert(j, '<div class="clr"></div>')
     lnl = lambda t, n: ''.join(f'<div class="ln lbl"><span class="sans">{t if k == 0 else ""}</span></div>' for k in range(n))
     p1.append(f'<div class="kp">{lab0("마음에 남은 말씀", "읽고 나서 바로 적습니다")}{lnl("말씀 · 장절", 2)}{lnl("이유", 2)}</div>')
     p2 = ''.join(A[i3:]) + (f'<div class="sh sans"><span class="n">4</span>나의 묵상</div>' + lab(1, '본문 관찰', '오늘 본문을 더 살펴보는 한 길') +
           f'<div class="oq"><span class="ref sans">{S["obs_ref"]}</span>{inl(S["obs"])}</div><div class="ans">{L(4)}</div>')
-    m = re.match(r'^(\S+(?:, \d+)?(?:절)?)\s+(.*)$', S['god'])
+    m = re.match(r'^([^\s,]+(?:, ?\d+(?:[–-]\d+)?)*)\s+(.*)$', S['god'])
     ref, gst = (m.group(1), m.group(2)) if m else ('', S['god'])
     p3 = (f'<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>' + lab(2, '하나님의 성품') +
           f'<div class="oq"><span class="ref sans">{ref}</span>{inl(gst)} <b>{inl(S["god_q"])}</b></div><div class="ans">{L(4)}</div>'

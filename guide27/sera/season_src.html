@@ -201,11 +201,15 @@ function four(w,pray,edit){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.
   const i3=J.A.findIndex(x=>x.includes('눈여겨볼 것')); let p1=J.A.slice(0,i3).filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x));
   const i1=p1.findIndex(x=>x.includes('오늘의 흐름')), mb=mapBlock(w), sr=structOf(w);
   if(mb) p1.splice(i1+1,0,mb.replace('class="map"','class="map mf"'));
-  else if(sr.length) p1.splice(i1+1,0,'<div class="stc sans"><div class="sth">본문 구조</div>'+sr.map(([a,t,x])=>`<div class="sr${a==='B'?' b':a==='X'?' x':''}"><i>${esc(a)}.</i><span>${esc(t)}<br><small>${inl(x)}</small></span></div>`).join('')+'</div>');
+  else if(sr.length){ /* 본문 구조는 ① 머리 높이에서, ② 장면 단추는 상자 안으로(11-25) */
+    const ks=p1.findIndex(x=>x.includes('class="scn"')); let scn=ks>=0?p1.splice(ks,1)[0]:'';
+    if(scn) scn=scn.replace('<div class="scn">','<div class="scn"><span class="sth2">장면</span>');
+    p1.splice(i1,0,'<div class="stc sans"><div class="sth">본문 구조</div>'+sr.map(([a,t,x])=>`<div class="sr${a==='B'?' b':a==='X'?' x':''}"><i>${esc(a)}.</i><span><b>${esc(t.replace(/^[가-힣]+ (?=\d)/,''))}</b> <small>${inl(x)}</small></span></div>`).join('')+scn+'</div>'); }
+  { const j=p1.findIndex(x=>x.includes('성경 읽기<small>')); if(j>=0) p1.splice(j,0,'<div class="clr"></div>'); }
   const lnl=(t,n)=>Array.from({length:n},(_,k)=>`<div class="ln lbl"><span class="sans">${k?'':t}</span></div>`).join('');
   p1.push(`<div class="kp">${lab4('','마음에 남은 말씀','읽고 나서 바로 적습니다')}${lnl('말씀 · 장절',2)}${lnl('이유',2)}</div>`);
   const p2=J.A.slice(i3).join('')+`<div class="sh sans"><span class="n">4</span>나의 묵상</div>${lab4(1,'본문 관찰','오늘 본문을 더 살펴보는 한 길')}<div class="oq">${String(w.obs_ref||'').trim()?`<span class="ref sans">${esc(w.obs_ref)}</span>`:''}${inl(w.obs||'')}</div><div class="ans">${LN(4)}</div>`;
-  const gm=String(w.god||'').match(/^(\S+(?:, \d+)?(?:절)?)\s+(.*)$/), gref=gm?gm[1]:'', gst=gm?gm[2]:String(w.god||'');
+  const gm=String(w.god||'').match(/^([^\s,]+(?:, ?\d+(?:[–-]\d+)?)*)\s+(.*)$/), gref=gm?gm[1]:'', gst=gm?gm[2]:String(w.god||'');
   const p3=`<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>${lab4(2,'하나님의 성품')}<div class="oq">${gref?`<span class="ref sans">${esc(gref)}</span>`:''}${inl(gst)} <b>${inl(w.god_q||'')}</b></div><div class="ans">${LN(4)}</div>`
     +lab4(3,'적용')+`<div class="oq">${inl(w.ap_lead||'')}</div>${String(w.ap_fu||'').trim()?`<div class="oq">→ ${inl(w.ap_fu)}</div>`:''}<div class="ans">${LN(3)}</div>`
     +lab4(4,'나의 기도')+'<div class="oh sans">오늘 마음에 남은 말씀과 내 응답을 하나님께 말씀드립니다.</div><div class="ans">'+LN(3)+'</div>';

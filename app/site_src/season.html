@@ -244,19 +244,22 @@ body.vw .wk .pg{margin:14px auto;background:#fff;box-shadow:0 1px 6px rgba(0,0,0
 .a5w .b1{display:block!important}
 .a5w .one .p5{page-break-after:always}
 .a5w .kp{margin-top:2.6mm}
-.a5w .ref{display:inline-block;font-size:8pt;font-weight:700;color:var(--c);border:.3mm solid var(--c);border-radius:.8mm;padding:0 1.4mm;margin-right:1.6mm}
+.a5w .ref{display:inline-block;white-space:nowrap;font-size:7.8pt;font-weight:700;color:var(--c);background:var(--l);border-radius:2.4mm;padding:0 1.8mm;margin-right:1.6mm}
 .a5w .oq{margin:1mm 0 .6mm;text-align:justify}.oh{font-size:8.4pt;color:#666;margin-bottom:.4mm}
 .a5w .lab4{display:flex;align-items:center;gap:1.8mm;font-size:10pt;font-weight:700;margin:4.4mm 0 .8mm;color:#222}
-.a5w .lab4 b{display:inline-flex;width:4.6mm;height:4.6mm;border:.35mm solid var(--c);color:var(--c);border-radius:.8mm;align-items:center;justify-content:center;font-size:8pt}
+.a5w .lab4 b{display:inline-flex;width:4.4mm;height:4.4mm;background:#333;color:#fff;border-radius:.6mm;align-items:center;justify-content:center;font-size:7.8pt}
 .a5w .lab4 small{font-weight:400;font-size:7.8pt;color:#777;margin-left:auto}
 .a5w .p4 .ans{flex:none;border-bottom:0}
 .a5w .p4 .ln{border-bottom:.22mm dotted #888;height:7.2mm}
 .a5w .ln.lbl{position:relative}.ln.lbl span{position:absolute;left:0;bottom:.6mm;font-size:7pt;color:#999}
 .a5w .p4 .pr4{margin-top:8mm}
-.a5w .stc{float:right;width:50mm;margin:.6mm 0 1mm 3mm;border:.3mm solid #ccc;border-radius:1mm;padding:1.6mm 2.2mm;font-size:8.2pt;line-height:1.45;background:#fff}
+.a5w .stc{float:right;width:50mm;margin:0 0 1mm 3mm;border:.3mm solid #ccc;border-radius:1mm;padding:1.6mm 2.2mm;font-size:8.2pt;line-height:1.45;background:#fff}
 .a5w .stc .sth{font-size:7.6pt;color:#777;margin-bottom:.8mm;font-weight:700}
-.a5w .stc .sr{display:flex;gap:1.4mm;margin:.5mm 0}.stc .sr i{font-style:normal;font-weight:700;color:var(--c);width:3mm;flex:none}
+.a5w .stc .sr{display:flex;gap:1.2mm;margin:.4mm 0;line-height:1.35}.stc .sr b{font-weight:700;color:#333}.stc .sr i{font-style:normal;font-weight:700;color:var(--c);width:3mm;flex:none}
 .a5w .stc .sr.x{margin-left:2.4mm}.stc .sr.b{margin-left:1.2mm}.stc .sr small{color:#666}
+.a5w .stc .scn{margin:1.4mm 0 0;padding-top:1.2mm;border-top:.2mm solid #ddd;gap:.8mm}.p4 .b1 .stc .scn span{font-size:6.8pt;padding:0 1mm}
+.a5w .p4 .b1 .stc .scn span.sth2,.a5w .stc .scn .sth2{font-size:7pt;color:#777;font-weight:700;width:100%;border:0;padding:0}
+.a5w .clr{clear:both;height:0}
 </style>
 </head>
 <body>
@@ -371,11 +374,15 @@ function four(w,pray,edit){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.
   const i3=J.A.findIndex(x=>x.includes('눈여겨볼 것')); let p1=J.A.slice(0,i3).filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x));
   const i1=p1.findIndex(x=>x.includes('오늘의 흐름')), mb=mapBlock(w), sr=structOf(w);
   if(mb) p1.splice(i1+1,0,mb.replace('class="map"','class="map mf"'));
-  else if(sr.length) p1.splice(i1+1,0,'<div class="stc sans"><div class="sth">본문 구조</div>'+sr.map(([a,t,x])=>`<div class="sr${a==='B'?' b':a==='X'?' x':''}"><i>${esc(a)}.</i><span>${esc(t)}<br><small>${inl(x)}</small></span></div>`).join('')+'</div>');
+  else if(sr.length){ /* 본문 구조는 ① 머리 높이에서, ② 장면 단추는 상자 안으로(11-25) */
+    const ks=p1.findIndex(x=>x.includes('class="scn"')); let scn=ks>=0?p1.splice(ks,1)[0]:'';
+    if(scn) scn=scn.replace('<div class="scn">','<div class="scn"><span class="sth2">장면</span>');
+    p1.splice(i1,0,'<div class="stc sans"><div class="sth">본문 구조</div>'+sr.map(([a,t,x])=>`<div class="sr${a==='B'?' b':a==='X'?' x':''}"><i>${esc(a)}.</i><span><b>${esc(t.replace(/^[가-힣]+ (?=\d)/,''))}</b> <small>${inl(x)}</small></span></div>`).join('')+scn+'</div>'); }
+  { const j=p1.findIndex(x=>x.includes('성경 읽기<small>')); if(j>=0) p1.splice(j,0,'<div class="clr"></div>'); }
   const lnl=(t,n)=>Array.from({length:n},(_,k)=>`<div class="ln lbl"><span class="sans">${k?'':t}</span></div>`).join('');
   p1.push(`<div class="kp">${lab4('','마음에 남은 말씀','읽고 나서 바로 적습니다')}${lnl('말씀 · 장절',2)}${lnl('이유',2)}</div>`);
   const p2=J.A.slice(i3).join('')+`<div class="sh sans"><span class="n">4</span>나의 묵상</div>${lab4(1,'본문 관찰','오늘 본문을 더 살펴보는 한 길')}<div class="oq">${String(w.obs_ref||'').trim()?`<span class="ref sans">${esc(w.obs_ref)}</span>`:''}${inl(w.obs||'')}</div><div class="ans">${LN(4)}</div>`;
-  const gm=String(w.god||'').match(/^(\S+(?:, \d+)?(?:절)?)\s+(.*)$/), gref=gm?gm[1]:'', gst=gm?gm[2]:String(w.god||'');
+  const gm=String(w.god||'').match(/^([^\s,]+(?:, ?\d+(?:[–-]\d+)?)*)\s+(.*)$/), gref=gm?gm[1]:'', gst=gm?gm[2]:String(w.god||'');
   const p3=`<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>${lab4(2,'하나님의 성품')}<div class="oq">${gref?`<span class="ref sans">${esc(gref)}</span>`:''}${inl(gst)} <b>${inl(w.god_q||'')}</b></div><div class="ans">${LN(4)}</div>`
     +lab4(3,'적용')+`<div class="oq">${inl(w.ap_lead||'')}</div>${String(w.ap_fu||'').trim()?`<div class="oq">→ ${inl(w.ap_fu)}</div>`:''}<div class="ans">${LN(3)}</div>`
     +lab4(4,'나의 기도')+'<div class="oh sans">오늘 마음에 남은 말씀과 내 응답을 하나님께 말씀드립니다.</div><div class="ans">'+LN(3)+'</div>';
@@ -405,6 +412,11 @@ function fit4(p1, p4){
     bump([...bx.querySelectorAll(':scope > .blk p')],1.6,'marginBottom');
     bump([...bx.querySelectorAll(':scope > .sh')],3,'marginTop');
     if(bx.lastElementChild) bx.lastElementChild.style.marginBottom='0';
+    /* 본문 구조 상자는 ① 머리와 같은 높이에서 시작(11-25) */
+    const stc=bx.querySelector(':scope > .stc');
+    if(stc&&stc.nextElementSibling){ stc.style.marginTop=getComputedStyle(stc.nextElementSibling).marginTop;
+      const s=slack()+1.5, sh2=[...bx.querySelectorAll(':scope > .sh')][1];
+      if(s<0&&sh2) sh2.style.marginTop=Math.max(1,parseFloat(getComputedStyle(sh2).marginTop)/MM+s)+'mm'; }
   }
   if(p4){ const bx=p4.querySelector('.bx5'); const over=()=>bx.scrollHeight>bx.clientHeight+1; const note=bx.querySelector('.note');
     const whs=[...bx.querySelectorAll(':scope > .wh')], tx=[note,...whs].filter(Boolean);

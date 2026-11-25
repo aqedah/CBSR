@@ -11,6 +11,11 @@ function fit4(p1, p4){
     bump([...bx.querySelectorAll(':scope > .blk p')],1.6,'marginBottom');
     bump([...bx.querySelectorAll(':scope > .sh')],3,'marginTop');
     if(bx.lastElementChild) bx.lastElementChild.style.marginBottom='0';
+    /* 본문 구조 상자는 ① 머리와 같은 높이에서 시작(11-25) */
+    const stc=bx.querySelector(':scope > .stc');
+    if(stc&&stc.nextElementSibling){ stc.style.marginTop=getComputedStyle(stc.nextElementSibling).marginTop;
+      const s=slack()+1.5, sh2=[...bx.querySelectorAll(':scope > .sh')][1];
+      if(s<0&&sh2) sh2.style.marginTop=Math.max(1,parseFloat(getComputedStyle(sh2).marginTop)/MM+s)+'mm'; }
   }
   if(p4){ const bx=p4.querySelector('.bx5'); const over=()=>bx.scrollHeight>bx.clientHeight+1; const note=bx.querySelector('.note');
     const whs=[...bx.querySelectorAll(':scope > .wh')], tx=[note,...whs].filter(Boolean);
