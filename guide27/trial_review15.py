@@ -121,7 +121,7 @@ for n in range(1,8):
     for x in d:
         k=x['no']
         if k in F: x['q'],x['find'],x['link']=F[k]; x.pop('start',None); ch+=1
-        if k in W: x['word']=W[k]; ch+=1
+        if k in W: x['word']=W[k].split(' — ',1); ch+=1   # 원고 칸은 [낱말, 풀이]
         if k in T: x['today']=T[k]; ch+=1
         if k==333: x['looks'][1]['text']='"권리"가 9장에 거듭 나옵니다(9:4, 5, 6, 12, 18). 바울은 복음에 장애가 없게 하려고 그 권리를 쓰지 않았습니다(9:12).'
         if k==333: x['looks'][0]['text']='8:1 "지식은 교만하게 하며 사랑은 덕을 세우나니"로 열고, 10:23 "모든 것이 가하나 모든 것이 덕을 세우는 것은 아니니"로 닫습니다.'

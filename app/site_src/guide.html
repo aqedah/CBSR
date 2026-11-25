@@ -447,6 +447,9 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .pg.n27 .two .c2 .im{flex:1 1 auto;height:auto!important;min-height:0}
 .pg.n27 .mk .mi .o,.pg.n27 .mk .mi .hy,.pg.n27 .mk .mi .w{white-space:nowrap}
 .pg.n27 .mk .mi .o{border:0.25mm solid #111;border-radius:50%/55%;padding:0 0.7mm}
+/* 11-25 목사님: 형광펜·동그라미가 윗줄에 겹치지 않게 — 형광펜은 글자 아래쪽만 칠하고, 동그라미는 글자 높이에 맞춤 */
+.pg.n27 .mk .mi .hy{background:linear-gradient(transparent 28%,color-mix(in srgb,var(--main) 28%,#fff) 28%,color-mix(in srgb,var(--main) 28%,#fff) 92%,transparent 92%)}
+.pg.n27 .mk .mi .o{display:inline-block;font-size:.9em;line-height:1.22;padding:0 0.8mm;vertical-align:baseline}
 .pg.n27 .mk .mi .hy{background:color-mix(in srgb,var(--main) 28%,#fff);padding:0 0.4mm}
 .pg.n27 .mk .mi .w{text-decoration:underline wavy;text-decoration-thickness:0.2mm;text-underline-offset:1mm}
 .pg.n27 .mk .mi b{font-family:"Noto Sans KR",sans-serif}
