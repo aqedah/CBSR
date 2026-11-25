@@ -297,6 +297,9 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .lab .st{display:inline-flex;align-items:center;justify-content:center;min-width:3.6mm;height:3.6mm;border:0.25mm solid var(--main);color:var(--main);border-radius:0.8mm;font-size:7.5pt;line-height:1;flex:0 0 auto}
 .pg .sm{font-size:8.6pt;color:#555}
 .pg .lnw{margin:0 0 0.5mm}
+/* 11-25: ② 성경 읽기 끝 '마음에 남은 말씀' — 번호 없는 소제목, 이름 붙은 점선 */
+.pg .keep{margin:2.4mm 0 0}.pg .keep .kh{display:flex;justify-content:space-between;align-items:baseline;font-size:9.4pt;font-weight:700;margin:0;color:var(--ink)}
+.pg .keep .kh span{font-size:7.8pt;font-weight:400;color:#888}.pg .keep .lnw{margin:0}.pg .ln.lb{position:relative}.pg .ln.lb span{position:absolute;left:0;bottom:.5mm;font-size:6.6pt;color:#999}
 .pg .ln{border-bottom:0.15mm dotted #999;height:5.9mm}
 .pg .lnw.hw{position:relative}
 .pg .hwt{position:absolute;left:1mm;right:0;top:0;font-family:'Nanum Pen Script',cursive;font-size:16pt;line-height:6mm;color:#27468a;padding-top:.3mm}
@@ -865,6 +868,7 @@ ${hd5(p,qt)}
 ${word}
 <p class="sec sans go"><span class="n">2</span>성경 읽기<span class="scn" data-f="s27">${(v.scenes||[]).map(x=>`<i>${esc(x)}</i>`).join('')}</span></p>
 <div class="mk" data-f="k27">${marks}</div>
+<div class="keep"><p class="kh sans">마음에 남은 말씀<span>읽고 나서 바로 적습니다</span></p><div class="lnw"><div class="ln lb"><span class="sans">말씀 · 장절</span></div><div class="ln"></div><div class="ln lb"><span class="sans">이유</span></div></div></div>
 <p class="sec sans"><span class="n">3</span>눈여겨볼 것</p>
 ${sec3}
 ${qt.obs.christ?`<p class="lab sans" style="margin-top:1.6mm">성경 전체로</p><p class="rd" data-f="christ">${chip(qt.obs.christ)}</p>`:''}
@@ -892,7 +896,12 @@ function dist27(root,s){ s=s||1; root.querySelectorAll('.pg.n27').forEach(pg=>{
   if(pg.classList.contains('r')){ const lnw=[...pg.querySelectorAll(':scope > .lnw')]; const order=[0,2,3,1].filter(i=>lnw[i]); let k=0,guard=0;
     while(slackOf()>5.9+RES+2&&guard++<12){ const l=document.createElement('div'); l.className='ln'; lnw[order[k%order.length]].appendChild(l); k++ }
     bump([...pg.querySelectorAll(':scope > .lab')],3,'marginTop');
-  } else { bump([...pg.querySelectorAll(':scope > .sec')].slice(1).concat([...pg.querySelectorAll(':scope > .lab')]),6,'marginTop');
+  } else { /* 11-25 목사님: 왼쪽이 넘치면 말뜻을 빼고, 그래도 넘치면 ✓ 없는 눈여겨볼 것을 빼며 남은 ✓도 뺀다 */
+    if(slackOf()<0){ const wd=pg.querySelector(':scope > .wd'); if(wd) wd.remove(); }
+    if(slackOf()<0&&pg.querySelector('.lk .i:not(:has(.ck))')){ pg.querySelectorAll('.lk .i').forEach(i=>{ if(!i.querySelector('.ck')) i.remove(); }); pg.querySelectorAll('.lk .ck').forEach(c=>c.remove()); matchMedia(pg.parentNode||root,s,pg); }
+    if(slackOf()<0){ const k=pg.querySelector('.keep .ln:not(.lb)'); if(k) k.remove(); }
+    if(slackOf()<0){ pg.querySelectorAll(':scope > .sec').forEach((e,i)=>{ if(i) e.style.marginTop='2mm'; }); const kp=pg.querySelector('.keep'); if(kp) kp.style.marginTop='1.4mm'; }
+    bump([...pg.querySelectorAll(':scope > .sec')].slice(1).concat([...pg.querySelectorAll(':scope > .lab')]),6,'marginTop');
     bump([...pg.querySelectorAll('.mk .mi, .lk .i')],2.6,'marginBottom'); bump([pg.querySelector(':scope > .sec'),pg.querySelector(':scope > .wd')],2,'marginTop');
     matchMedia(pg.parentNode||root,s,pg); }
 }) }
