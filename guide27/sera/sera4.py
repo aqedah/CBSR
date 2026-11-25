@@ -20,7 +20,7 @@ CSS = '''
 .ref{white-space:nowrap;font-size:8pt;font-weight:700;color:var(--c);border-left:.7mm solid var(--c);padding-left:1.2mm;margin-right:1.6mm}
 .oq{margin:1mm 0 .6mm;text-align:justify}.oh{font-size:8.4pt;color:#666;margin-bottom:.4mm}
 .lab4{display:flex;align-items:center;gap:1.8mm;font-size:10pt;font-weight:700;margin:4.4mm 0 .8mm;color:#222}
-.lab4 b{display:inline-flex;width:4.4mm;height:4.4mm;background:#333;color:#fff;border-radius:.6mm;align-items:center;justify-content:center;font-size:7.8pt}
+.lab4 b{display:inline-flex;width:4.6mm;height:4.6mm;background:color-mix(in srgb,var(--c) 16%,#fff);color:var(--c);border-radius:.8mm;align-items:center;justify-content:center;font-size:8pt;font-weight:800}
 .lab4 small{font-weight:400;font-size:7.8pt;color:#777;margin-left:auto}
 .p4 .ans{flex:none;border-bottom:0}
 .p4 .ln{border-bottom:.22mm dotted #888;height:7.2mm}
