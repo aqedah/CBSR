@@ -86,7 +86,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .hallv.morn .mrn{opacity:1}
 #cbsrShelf .hallv.morn .hl>img{filter:brightness(1.18) saturate(.92);transition:filter 2.4s ease}
 #cbsrShelf .hallv.morn .amb.end{opacity:.25}
-#cbsrShelf .fin{position:absolute;width:10px;height:15px;border-radius:50% 50% 45% 45%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 70%,#fff6d6 0,#ffd27a 38%,#e0862e 70%,rgba(224,134,46,0) 72%);box-shadow:0 0 10px 3px rgba(255,190,90,.45);pointer-events:none;z-index:2}   /* 다 읽은 책: 덤으로 켜지는 작은 촛불 */
+#cbsrShelf .fin{position:absolute;width:10px;height:15px;border-radius:50% 50% 45% 45%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 70%,#fff6d6 0,#ffd27a 38%,#e0862e 70%,rgba(224,134,46,0) 72%);box-shadow:0 0 10px 3px rgba(255,190,90,.45);padding:0;border:0;z-index:3}   /* 다 읽은 책: 덤으로 켜지는 작은 촛불 */
 #cbsrShelf .zone.e:focus-visible{outline:3px solid #9b3324;outline-offset:-6px}   /* 11-24 밤 목사님: 그을린 팻말은 수상해 보임 → 팻말을 없애고 배경(어두운 통로 끝과 그을음)으로 둠. 누르는 자리만 남음 */
 #cbsrShelf .zone:focus-visible span,#cbsrShelf .gl button:focus-visible,#cbsrShelf .sp:focus-visible{outline:3px solid #9b3324;outline-offset:2px}
 #cbsrShelf .gl{position:absolute;left:44px;right:44px;top:120px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(10px);transition:opacity .5s 1.1s,transform .5s 1.1s}
@@ -342,20 +342,26 @@ var FW=300, FH=476; function FT(){ return HS-603; }   /* 마주 선 사서의 �
    막은 앱이 열어 줌(O.prog.acts: 서고에 처음 들어간 날부터 읽은 날 수 40·120·220일, 5막은 66권을 다 읽은 날). 본 막은 qa _s.a2…a5에 적음.
    w: me(나의 혼잣말) | l(사서). clue: 그 줄에 크게 보여 줄 물건. morn: 그 줄부터 서고에 아침 */
 var STORY={
-  1:[{w:"me",t:"오래된 서고다. 촛불 몇 개만 켜져 있다."},{w:"me",t:"문 위 돌에 글이 새겨져 있었다.<br>“주의 말씀은 내 발에 등이요 내 길에 빛이니이다.”"},{w:"l",t:"…밤에 오셨군요.<br>이 서고는 늘 밤입니다."}],
-  2:[{w:"me",t:"사서가 보이지 않는다."},{w:"me",t:"책상에 열쇠 꾸러미가 놓여 있다.<br>하나만 까맣게 탔다.",clue:"key"},{w:"l",t:"…거기 계셨습니까."}],
-  3:[{w:"me",t:"서가 틈에 종이 한 장이 끼어 있다.<br>반쯤 탄 출입 장부다.",clue:"ledger"},{w:"me",t:"마지막 줄은 불이 난 밤이다.<br>이름 하나가 그을음에 지워져 있다.",clue:"ledger"},{w:"l",t:"…그 밤의 장부입니다.<br>제자리에 두십시오."}],
-  4:[{w:"me",t:"그을린 서가에 책이 한 권 꽂혀 있다.",clue:"book"},{w:"l",t:"…한 권씩,<br>다시 들여놓고 있습니다."}],
-  5:[{w:"me",t:"덧문 틈으로 빛이 든다."},{w:"l",t:"…아침입니다.",morn:1},{w:"me",t:"독서대에 펼쳐 둔 책은 성경이었다.<br>모서리가 그을려 있다.",morn:1},{w:"l",t:"…그날 밤에도,<br>이 책부터 들고 나왔습니다.",morn:1}]};
-var ITEMS={key:{a:2,p:0,x:52,y:250,w:46,say:"…끝 서가의 열쇠일까.",alt:"열쇠 꾸러미"},ledger:{a:3,p:1,x:226,y:604,w:46,say:"…불이 난 밤의 장부.<br>지워진 이름은 누구였을까.",alt:"반쯤 탄 장부 쪽지"},book:{a:4,p:2,x:184,y:322,w:22,say:"…그을린 서가에 책이 들어오기 시작했다.",alt:"그을린 서가에 꽂힌 책 한 권"}};
-var LINES={ot:"…구약을 다 지나오셨습니다.",nb:"…오늘부터 {b}입니다.",long:"…다시 오셨군요.",etc:"…돌아오셨군요."};
+  1:[{w:"me",t:"오래된 서고다. 촛불 몇 개만 켜져 있다."},{w:"me",t:"문 위 돌에 글이 새겨져 있다.<br>“주의 말씀은 내 발에 등이요 내 길에 빛이니이다.”"},{w:"l",t:"{when}<br>이 서고는 늘 밤입니다."}],
+  2:[{w:"me",t:"사서가 보이지 않는다.<br>열쇠 꾸러미를 두고 간 것 같다."},{w:"me",t:"하나만 검다. 불에 그슬렸지만,<br>손이 닿는 곳은 반들반들하다.",clue:"key"},{w:"me",t:"지금도 쓰는 열쇠인 것 같다.",clue:"key"},{w:"l",t:"…끝 서가의 열쇠입니다."},{w:"l",t:"…오래 썼습니다.<br>아직 잘 맞습니다."}],
+  3:[{w:"me",t:"책 사이에 종이가 끼어 있었다.<br>가장자리가 불에 오그라들었다.",clue:"ledger"},{w:"me",t:"‘서고 출입 장부’. 화재 때 옮긴 책.<br>구약, 신약 — 반출 확인. 끝 서가 — …",clue:"ledger"},{w:"me",t:"맨 아래 이름 하나가<br>그을음에 지워져 있다.",clue:"ledger"},{w:"l",t:"…가장자리가 약합니다.<br>천천히 펴십시오."},{w:"l",t:"…그날 밤의 장부입니다."},{w:"me",t:"이 종이가 탄 밤에,<br>통로 끝 서가도 탔던 것 같다."}],
+  4:[{w:"me",t:"그을린 서가에 책이 한 권 들어왔다.<br>책등만 밝고 깨끗하다.",clue:"book"},{w:"l",t:"…한 권씩,<br>다시 들여놓고 있습니다."},{w:"me",t:"사서가 검은 열쇠로<br>서가 아래 작은 문을 연다."},{w:"l",t:"…그날은 이쪽 책들을<br>꺼내지 못했습니다."},{w:"l",t:"…성경 밖의 문헌입니다.<br>성경 시대와 그 뒤의 교회를 살필 때 읽으십시오."},{w:"l",t:"…읽으실 때 꺼내 드리겠습니다."}],
+  5:[{w:"me",t:"덧문 틈으로 빛이 든다.<br>불꽃처럼 흔들리지 않는 빛이다."},{w:"l",t:"…오셨습니까."},{w:"me",t:"독서대에 펼쳐 있던 책은 성경전서였다.<br>아래쪽이 검게 탔다.",clue:"bible"},{w:"l",t:"…그날 밤에도,<br>이 책부터 들고 나왔습니다.",clue:"bible"},{w:"l",t:"…끝 서가까지는<br>들어가지 못했습니다."},{w:"l",t:"…여기에 제 이름을 적었습니다.<br>지금은 사서라고 부르시면 됩니다.",clue:"ledger"},{w:"l",t:"…아침입니다.",morn:1},{w:"me",t:"얼룩처럼 보이던 자리는,<br>오래 아문 화상 자국이었다.",morn:1},{w:"l",t:"…이것도 그날 생겼습니다.",morn:1}]};
+/* 1막 사서의 첫마디: 기기의 시각에 맞춤(11-25 목사님: 아침이나 낮에 온 사람에게 '밤에 오셨군요'는 어울리지 않음) */
+function whenLine(){ var h=(new Date()).getHours(); return h<5||h>=19?"…밤에 오셨군요.":h<11?"…이른 아침에 오셨군요.<br>밖은 밝아도,":h<17?"…한낮에 오셨군요.<br>밖은 밝아도,":"…해 질 녘에 오셨군요."; }
+var ITEMS={key:{a:2,p:0,x:52,y:250,w:46,say:"…끝 서가의 열쇠다.<br>검게 탔지만 지금도 쓰고 있다.",say5:"…그날 밤을 지나온 열쇠다.",alt:"열쇠 꾸러미"},
+  ledger:{a:3,p:1,x:226,y:604,w:46,say:"…구약과 신약을 옮긴 기록이다.<br>맨 아래 이름은 지워져 있다.",say5:"…여기에 사서의 이름이 적혀 있었다.",alt:"반쯤 탄 장부 쪽지"},
+  book:{a:4,p:2,x:184,y:322,w:22,say:"…다시 들여온 첫 책이다.<br>아직 손때가 없다.",say5:"…아침빛 아래에서 책등의 색이 선명하다.",alt:"그을린 서가에 꽂힌 책 한 권"}};
+var CLUEALT={bible:"아래쪽이 검게 탄 성경전서"};
+var LECT={p:1,x:146,y:462,w:98,h:62,say:"…펼쳐 둔 책이 있다.<br>읽던 그대로 두는 모양이다.",say5:"…그날 밤을 지나온 성경이다."};   /* 통로 가운데 독서대(그림 속), 누를 수 있음 */
+var LINES={ot:"…구약을 다 지나오셨습니다.",nb:"…오늘부터 {b}입니다.",long:"…다시 오셨군요.",etc:"…돌아오셨군요.",fin:"…읽은 책 위에 촛불이 켜져 있다.",plan:"…읽으실 순서를 적었습니다.<br>가져가십시오."};
 function sv(f){ return qaVal("_s",f); }
 function seenAct(n){ return !!sv("a"+n); }
 function pendAct(){ var A=(O.prog&&O.prog.acts)||[], i; for(i=0;i<A.length;i++) if(!seenAct(A[i])) return A[i]; return 0; }
 function morn(){ return seenAct(5); }
-function itemsHtml(p){ var h="",k,I; for(k in ITEMS){ I=ITEMS[k]; if(I.p===p&&seenAct(I.a)) h+='<button type="button" class="itm" data-a="itm:'+k+'" style="left:'+I.x+'px;top:'+I.y+'px;width:'+I.w+'px" aria-label="'+I.alt+'"><img src="'+IMG+'clue_'+k+'.webp'+VER+'" alt=""></button>'; } return h; }
+function itemsHtml(p){ var h=(LECT.p===p&&sv("met"))?'<button type="button" class="itm lect" data-a="lect" style="left:'+LECT.x+'px;top:'+LECT.y+'px;width:'+LECT.w+'px;height:'+LECT.h+'px" aria-label="독서대에 펼쳐 둔 책"></button>':"",k,I; for(k in ITEMS){ I=ITEMS[k]; if(I.p===p&&seenAct(I.a)) h+='<button type="button" class="itm" data-a="itm:'+k+'" style="left:'+I.x+'px;top:'+I.y+'px;width:'+I.w+'px" aria-label="'+I.alt+'"><img src="'+IMG+'clue_'+k+'.webp'+VER+'" alt=""></button>'; } return h; }
 function scene(n){ var t=levels[0]; if(!t||!STORY[n]) return false; t.sc={n:n,i:0}; sceneLine(); return true; }
-function sceneLine(){ var t=levels[0], S=STORY[t.sc.n], L=S[t.sc.i]; if(L.morn) t.morn=1; t.clue=L.clue||null; t.dg={who:L.w,fig:L.w==="l"?1:0,t:L.t,tap:"scn",esc:"scn"}; draw(); }
+function sceneLine(){ var t=levels[0], S=STORY[t.sc.n], L=S[t.sc.i]; if(L.morn) t.morn=1; t.clue=L.clue||null; t.dg={who:L.w,fig:L.w==="l"?1:0,t:L.t.replace("{when}",whenLine()),tap:"scn",esc:"scn"}; draw(); }
 function sceneNext(){ var t=levels[0]; if(!t||!t.sc) return; t.sc.i++; if(t.sc.i<STORY[t.sc.n].length){ sceneLine(); return; } var n=t.sc.n; t.sc=null; t.clue=null; if(n>1) qaSet("_s","a"+n,(O.prog&&O.prog.today)||"1"); if(n===1&&!sv("met")) qaSet("_s","met","1"); hello(n===1?"first":"back"); }
 function ch0(){ var c=[{t:"안내를 받아 이동한다",a:"guide"},{t:"자유롭게 둘러본다",a:"free"}]; if(O.plan) c.push({t:"통독표를 받는다",a:"plan"}); if(O.card) c.push({t:"말씀 카드를 받는다",a:"card"}); return c; } /* 목사님 11-24: 통독표와 말씀 카드도 사서에게 받음 */
 function helloDg(how,line){ var n=nick(); return {who:"l",fig:1,t:line?line+"<br>무엇을 찾으십니까?":how==="first"?"…무엇을 찾으십니까"+(n?", "+esc(n):"")+"?":(how==="back"?"…더 찾는 것이 있습니까?":(how==="call"?"…부르셨습니까":"…오셨습니까")+(n?", "+esc(n):"")+".<br>무엇을 찾으십니까?"),ch:ch0(),esc:"free"}; }
@@ -450,7 +456,7 @@ function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), P=hpos(), _g
     if(t.seen||O.scene==="card"||rm0){ t.seen=1; go(); return; }                                 /* 배너에서 바로 왔거나 다시 그릴 때는 옮겨 오는 움직임 없이 */
     t.seen=1; busy=true; t.dg={who:"l",t:"…"+((O.card&&O.card.year)?O.card.year+"년 ":"")+"말씀 카드를 드리겠습니다."}; cs0.classList.add("from"); void cs0.offsetWidth; requestAnimationFrame(function(){ cs0.classList.add("mv"); cs0.classList.remove("from"); }); /* 말하던 자리(왼쪽 아래)에서 가운데로 */
     setTimeout(function(){ busy=false; go(); },900); return; }
-  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.clue?'<div class="clue fade"><img src="'+IMG+'clue_'+t.clue+'.webp'+VER+'" alt="'+ITEMS[t.clue].alt+'"></div>':"")+(t.say&&!t.dg?(function(x,l){ t.say=null; t.sayL=0; return '<div class="lbx tmp up">'+boxHtml(!l,x,null)+'</div>'; })(t.say,t.sayL):"")+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>'+
+  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.clue?'<div class="clue fade"><img src="'+IMG+'clue_'+t.clue+'.webp'+VER+'" alt="'+((ITEMS[t.clue]&&ITEMS[t.clue].alt)||CLUEALT[t.clue]||"")+'"></div>':"")+(t.say&&!t.dg?(function(x,l){ t.say=null; t.sayL=0; return '<div class="lbx tmp up">'+boxHtml(!l,x,null)+'</div>'; })(t.say,t.sayL):"")+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>'+
       '<div class="pad fade" role="group" aria-label="걸어 다니기"><button type="button" class="mu" data-a="fw" aria-label="'+(P>=VIEWS.length-1?"통로 끝으로 한 걸음 더":"앞으로 걷기")+'">'+CL+'</button><button type="button" class="ml" data-a="tl" aria-label="왼쪽으로 돌기, 구약 서가">'+CL+'</button><button type="button" class="md" data-a="bw" aria-label="뒤로 걷기"'+(P?"":" disabled")+'>'+CL+'</button><button type="button" class="mr" data-a="tr" aria-label="오른쪽으로 돌기, 신약 서가">'+CL+'</button></div>');
     return; }
   if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
@@ -470,8 +476,8 @@ function drawPress0(t,from){ var key=PRESS[t.g], L=ART.labels[key], sw=(key==="p
   var h='<div class="lay zin"><div class="bdp"></div><div class="scn pr" style="transform:translateY('+ty.toFixed(1)+'px) scale(1,'+k.toFixed(4)+')"><img class="full" src="'+IMG+'press_'+key+'.webp'+VER+'" alt="'+esc(t.g)+' 서가">';
   var books=(DATA&&DATA.gs[t.g])||[];
   books.forEach(function(b){ var a=L[b.name]; if(!a) return; var two=b.name.length>5, nm=two?esc(b.name.slice(0,b.name.length-2))+"<br>"+esc(b.name.slice(-2)):esc(b.name);
-    h+='<button type="button" class="sp'+(t.gd===b.id?" hi":"")+'" data-b="'+b.id+'" aria-label="'+esc(b.name)+' 펼치기" style="left:'+a[0]+'px;top:'+a[1]+'px;width:'+sw+'px;height:'+a[2]+'px"><span style="left:'+a[3]+'px;top:26px;width:'+a[4]+'px;height:'+a[5]+'px"><i style="font-size:'+(16*Math.min(1,k)).toFixed(1)+'px;transform:scaleY('+(1/k).toFixed(4)+')">'+nm+'</i></span></button>'+((O.prog&&O.prog.fin&&DATA&&O.prog.fin.indexOf(DATA.list.indexOf(b)+1)>=0)?'<i class="fin" style="left:'+(a[0]+sw/2-5)+'px;top:'+(a[1]-15)+'px;transform:scaleY('+(1/k).toFixed(4)+')" title="다 읽은 책"></i>':'')+(qaCount(b.id)===5?'<i class="sl" style="left:'+(a[0]+sw/2-7.5)+'px;top:'+(a[1]+a[2]-34)+'px;transform:scaleY('+(1/k).toFixed(4)+')"></i>':''); });
-  stage.innerHTML=h+'</div><button type="button" class="bk" data-a="back">'+CL+S.n+'</button><div class="ttl"><b class="tb">'+esc(t.g)+'</b></div><span class="cnt">'+CNT[Object.keys(L).length]+'</span>'+(t.dg?"":libr(esc(t.g)+" 서가입니다. "+CNT[Object.keys(L).length]+"이 꽂혀 있습니다.",1))+'</div>'; }
+    h+='<button type="button" class="sp'+(t.gd===b.id?" hi":"")+'" data-b="'+b.id+'" aria-label="'+esc(b.name)+' 펼치기" style="left:'+a[0]+'px;top:'+a[1]+'px;width:'+sw+'px;height:'+a[2]+'px"><span style="left:'+a[3]+'px;top:26px;width:'+a[4]+'px;height:'+a[5]+'px"><i style="font-size:'+(16*Math.min(1,k)).toFixed(1)+'px;transform:scaleY('+(1/k).toFixed(4)+')">'+nm+'</i></span></button>'+((O.prog&&O.prog.fin&&DATA&&O.prog.fin.indexOf(DATA.list.indexOf(b)+1)>=0)?'<button type="button" class="fin" data-a="fin" aria-label="다 읽은 책의 촛불" style="left:'+(a[0]+sw/2-5)+'px;top:'+(a[1]-15)+'px;transform:scaleY('+(1/k).toFixed(4)+')" ></button>':'')+(qaCount(b.id)===5?'<i class="sl" style="left:'+(a[0]+sw/2-7.5)+'px;top:'+(a[1]+a[2]-34)+'px;transform:scaleY('+(1/k).toFixed(4)+')"></i>':''); });
+  stage.innerHTML=h+'</div><button type="button" class="bk" data-a="back">'+CL+S.n+'</button><div class="ttl"><b class="tb">'+esc(t.g)+'</b></div><span class="cnt">'+CNT[Object.keys(L).length]+'</span>'+(t.dg?"":t.say?(function(x){ t.say=null; return '<div class="lbx tmp">'+boxHtml(true,x,null)+'</div>'; })(t.say):libr(esc(t.g)+" 서가입니다. "+CNT[Object.keys(L).length]+"이 꽂혀 있습니다.",1))+'</div>'; }
 /* ---- 책 펼침(한 번, 2초쯤) ---- */
 function openBook(id,rect){ var b=DATA&&DATA.by[id]; if(!b||busy) return; var st={t:"book",id:id,p:0};
   var rm=matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(rm||!rect||!stage.animate){ push(st); return; }
@@ -529,8 +535,10 @@ function act(a){ var t=top(); if(!t) return false;
   if(a==="back"){ back(); return true; }
   if(a==="hello1"){ hello("first"); return true; }
   if(a==="scn"){ sceneNext(); return true; }
-  if(a&&a.indexOf("itm:")===0){ var I=ITEMS[a.slice(4)]; if(I&&t.t==="hall"&&!t.dg){ t.say=I.say; draw(); } return true; }
-  if(a==="plan"){ if(!O.plan||busy) return true; t.dg={who:"l",fig:1,t:"…통독표입니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); push({t:"plan"}); } },1000); return true; }
+  if(a&&a.indexOf("itm:")===0){ var I=ITEMS[a.slice(4)]; if(I&&t.t==="hall"&&!t.dg){ t.say=(morn()&&I.say5)||I.say; draw(); } return true; }
+  if(a==="fin"){ if(t.t==="press"){ if(!sv("fin")){ qaSet("_s","fin","1"); t.say=LINES.fin; } draw(); } return true; }
+  if(a==="lect"){ if(t.t==="hall"&&!t.dg){ t.say=(morn()&&LECT.say5)||LECT.say; draw(); } return true; }
+  if(a==="plan"){ if(!O.plan||busy) return true; t.dg={who:"l",fig:1,t:LINES.plan}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); push({t:"plan"}); } },1000); return true; }
   if(a==="pm"||a==="pnow"||a==="pgo"){ return true; }
   if(a==="card"){ if(!O.card||busy) return true;
     if(O.card.had&&O.card.had()){ t.dg={who:"l",fig:1,t:"…이미 받으신 "+(O.card.year?O.card.year+"년 ":"")+"말씀이 있습니다.<br>여기 있습니다."}; draw(); busy=true; setTimeout(function(){ busy=false; if(root&&top()===t){ t.dg=helloDg("back"); O.card.show(); } },1100); return true; }

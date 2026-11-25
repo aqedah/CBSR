@@ -16,9 +16,13 @@ try:
         def start(q, sh=None):
             pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
             pg.goto('http://localhost:8765/index.html?'+q); pg.click('#go'); pg.wait_for_timeout(1000); return pg
-        T = lambda pg: (pg.locator('#cbsrShelf .dg .dgb span').first.inner_text() if pg.locator('#cbsrShelf .dg .dgb span').count() else '').replace('\n',' ')
+        T = lambda pg: (pg.locator('#cbsrShelf .dg .dgb span').last.inner_text() if pg.locator('#cbsrShelf .dg .dgb span').count() else '').replace('\n',' ')
         who = lambda pg: pg.locator('#cbsrShelf .dg .dgb b').first.inner_text() if pg.locator('#cbsrShelf .dg .dgb b').count() else ''
         def tap(pg): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+        def until_choice(pg):
+            for _ in range(12):
+                if pg.locator('#cbsrShelf .dgc').count(): return
+                tap(pg)
         # 1막
         pg = start('today=40'); lines=[]
         for i in range(3): lines.append((who(pg),T(pg))); pg.screenshot(path=OUT+'st_1_%d.png'%i); tap(pg)
@@ -28,8 +32,8 @@ try:
         # 다시 들어오면 보통 인사, 막 없음 → 물건 없음
         pg = start('today=40'); chk('두 번째: 보통 인사', '오셨습니까' in T(pg) and pg.locator('#cbsrShelf .itm').count()==0); pg.close()
         # 2막 열림
-        pg = start('today=40&acts=2'); t1=T(pg); tap(pg); pg.screenshot(path=OUT+'st_2_key.png'); clue=pg.locator('#cbsrShelf .clue img').count(); t2=T(pg); tap(pg); t3=T(pg); tap(pg)
-        chk('2막: 열쇠 장면(물건을 크게) %s' % [t1[:10],t2[:12],t3[:10]], '보이지 않는다' in t1 and clue==1 and '탔다' in t2 and who(pg)=='사서')
+        pg = start('today=40&acts=2'); t1=T(pg); tap(pg); pg.screenshot(path=OUT+'st_2_key.png'); clue=pg.locator('#cbsrShelf .clue img').count(); t2=T(pg); tap(pg); tap(pg); t4=T(pg); w4=who(pg); until_choice(pg)
+        chk('2막: 열쇠 장면(물건을 크게) %s' % [t1[:10],t2[:12],t4[:10]], '보이지 않는다' in t1 and clue==1 and '하나만 검다' in t2 and '끝 서가의 열쇠' in t4 and w4=='사서')
         pg.click('#cbsrShelf .dgc button:nth-child(2)'); pg.wait_for_timeout(800)
         chk('2막 뒤 통로에 열쇠가 놓임', pg.locator('#cbsrShelf .itm[data-a="itm:key"]').count()==1)
         pg.click('#cbsrShelf .itm[data-a="itm:key"]'); pg.wait_for_timeout(400); pg.screenshot(path=OUT+'st_2_item.png')
@@ -37,21 +41,31 @@ try:
         pg.close()
         pg = start('today=40&acts=2'); chk('2막은 한 번만', '오셨습니까' in T(pg)); pg.close()
         # 3·4막 차례로(둘 다 열려 있으면 앞의 것 먼저)
-        pg = start('today=40&acts=2,3,4'); pg.screenshot(path=OUT+'st_3_ledger.png'); s3='장부' in T(pg); tap(pg); tap(pg); tap(pg); pg.close()
-        pg = start('today=40&acts=2,3,4'); s4='그을린 서가' in T(pg); pg.screenshot(path=OUT+'st_4_book.png'); tap(pg); tap(pg); pg.close()
+        pg = start('today=40&acts=2,3,4'); tap(pg); pg.screenshot(path=OUT+'st_3_ledger.png'); s3='출입 장부' in T(pg); until_choice(pg); pg.close()
+        pg = start('today=40&acts=2,3,4'); s4='그을린 서가' in T(pg); pg.screenshot(path=OUT+'st_4_book.png'); until_choice(pg); pg.close()
         chk('3막 다음 들어올 때 4막', s3 and s4)
         pg = start('today=40&acts=2,3,4'); pg.click('#cbsrShelf .dgc button:nth-child(2)'); pg.wait_for_timeout(700)
         pg.click('#cbsrShelf .pad .mu'); pg.wait_for_timeout(1300); a=pg.locator('#cbsrShelf .itm[data-a="itm:ledger"]').count(); pg.screenshot(path=OUT+'st_p1.png')
         pg.click('#cbsrShelf .pad .mu'); pg.wait_for_timeout(1300); c=pg.locator('#cbsrShelf .itm[data-a="itm:book"]').count(); pg.screenshot(path=OUT+'st_p2.png')
-        chk('장부는 통로 가운데, 책은 그을린 서가', a==1 and c==1); pg.close()
+        chk('장부는 통로 가운데, 책은 그을린 서가', a==1 and c==1)
+        pg.click('#cbsrShelf .pad .md'); pg.wait_for_timeout(1300); pg.click('#cbsrShelf .itm.lect'); pg.wait_for_timeout(400)
+        chk('독서대를 누르면 혼잣말', '읽던 그대로' in pg.locator('#cbsrShelf .lbx').first.inner_text()); pg.close()
         # 5막 아침
-        pg = start('today=40&acts=2,3,4,5'); pg.wait_for_timeout(200); tap(pg); m0=pg.evaluate('document.querySelector("#cbsrShelf .hallv").classList.contains("morn")'); tap(pg); tap(pg); pg.wait_for_timeout(2400); pg.screenshot(path=OUT+'st_5_morn.png'); tap(pg)
-        chk('5막: "아침입니다"부터 서고가 밝아짐', m0 and pg.evaluate('document.querySelector("#cbsrShelf .hallv").classList.contains("morn")'))
+        pg = start('today=40&acts=2,3,4,5'); M=lambda: pg.evaluate('document.querySelector("#cbsrShelf .hallv").classList.contains("morn")'); seq=[]
+        for _ in range(9):
+            seq.append((T(pg)[:8], M(), pg.locator('#cbsrShelf .dg').count()))
+            if '성경전서' in T(pg): pg.screenshot(path=OUT+'st_5_bible.png')
+            if '아침입니다' in T(pg): pg.wait_for_timeout(2400); pg.screenshot(path=OUT+'st_5_morn.png')
+            tap(pg)
+        ia=[i for i,x in enumerate(seq) if '아침입니다' in x[0]]
+        chk('5막: 아홉 줄, "아침입니다"부터 서고가 밝아짐 %s' % seq, len(ia)==1 and not seq[ia[0]-1][1] and seq[ia[0]][1] and pg.locator('#cbsrShelf .dgc').count()>0)
         pg.close(); pg = start('today=40&acts=2,3,4,5'); chk('5막 뒤로는 늘 아침', pg.evaluate('document.querySelector("#cbsrShelf .hallv").classList.contains("morn")') and '오셨습니까' in T(pg)); pg.close()
         # 촛불 덤
         pg = start('today=40&fin=1,2,3'); pg.click('#cbsrShelf .dgc button:nth-child(2)'); pg.wait_for_timeout(700); pg.click('#cbsrShelf .zone[data-s=ot]'); pg.wait_for_timeout(1900)
         pg.click('#cbsrShelf .gl button >> nth=0'); pg.wait_for_timeout(1800); pg.screenshot(path=OUT+'st_fin.png')
-        chk('다 읽은 책(창·출·레)에 작은 촛불 셋', pg.locator('#cbsrShelf .fin').count()==3); pg.close()
+        chk('다 읽은 책(창·출·레)에 작은 촛불 셋', pg.locator('#cbsrShelf .fin').count()==3)
+        pg.click('#cbsrShelf .fin >> nth=0'); pg.wait_for_timeout(400); pg.screenshot(path=OUT+'st_fin.png')
+        chk('촛불을 처음 누르면 혼잣말', '촛불이 켜져' in pg.locator('#cbsrShelf .lbx').first.inner_text()); pg.close()
         cx.close()
         # 고비의 한마디: 새 기기에서(1막을 이미 본 것으로)
         for q, word, name in (('ot=1','구약을 다 지나','구약 마침'),('nb=5','신명기입니다','새 책'),):
@@ -65,6 +79,11 @@ try:
         pg.goto('http://localhost:8765/index.html'); pg.evaluate('localStorage.setItem("cbsr_shelf_qa",JSON.stringify({_s:{met:{v:"1",t:1},last:{v:"2027-01-10",t:1}}}))')
         pg.goto('http://localhost:8765/index.html?today=40&td=2027-02-01'); pg.click('#go'); pg.wait_for_timeout(1300)
         chk('오랜만에: '+T(pg), '다시 오셨군요' in T(pg)); pg.close(); cx.close()
+        for hh, word in ((9,'이른 아침에'),(14,'한낮에'),(18,'해 질 녘에'),(23,'밤에 오셨군요')):
+            cx = b.new_context(viewport={'width': 390, 'height': 800}, has_touch=True); pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
+            pg.add_init_script("(()=>{const D=Date,t0=new D(2027,2,1,%d,10,0).getTime()-D.now();class F extends D{constructor(...a){ if(a.length) super(...a); else super(D.now()+t0);} static now(){return D.now()+t0;}} window.Date=F;})()" % hh)
+            pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(1000); tap(pg); tap(pg)
+            chk('1막 첫마디, %d시: %s' % (hh, T(pg)), word in T(pg) and '늘 밤' in T(pg)); pg.close(); cx.close()
         b.close()
 finally:
     srv.terminate()
@@ -73,5 +92,5 @@ def sheet(names, out, h=640):
     S=Image.new('RGB',(sum(i.width for i in ims)+8*(len(ims)-1),h),(60,60,60)); x=0
     for im in ims: S.paste(im,(x,0)); x+=im.width+8
     S.save(OUT+out)
-sheet(['st_1_1','st_1_2','st_2_key','st_2_item','st_3_ledger','st_4_book'],'st_a.png'); sheet(['st_p1','st_p2','st_5_morn','st_fin'],'st_b.png')
+sheet(['st_1_2','st_2_key','st_3_ledger','st_4_book','st_5_bible','st_5_morn'],'st_a.png'); sheet(['st_2_item','st_p1','st_p2','st_fin'],'st_b.png')
 print('오류:', errs or '없음'); print('실패:', (fails+(['페이지 오류 %d건'%len(errs)] if errs else [])) or '없음', '(%d가지)' % n)

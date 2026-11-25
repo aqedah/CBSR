@@ -48,7 +48,9 @@ try:
         pg.screenshot(path=S+'ap_banner.png')
         pg.click('.sbnr.shst'); pg.wait_for_timeout(1800)
         chk('배너를 누르면 서고에서 2막', '보이지 않는다' in (T('#cbsrShelf .dg .dgb span') or ''), T('#cbsrShelf .dg .dgb span') or '')
-        for i in range(3): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
+        for i in range(8):
+            if pg.locator('#cbsrShelf .dgc').count(): break
+            pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
         pg.evaluate("document.querySelector('#cbsrShelf .bk').click()"); pg.wait_for_timeout(1200)
         chk('2막을 본 뒤에는 배너가 사라짐', not has('.sbnr.shst'))
         cx.close(); b.close()

@@ -27,7 +27,23 @@ for i in range(9):
     w=random.randint(50,92) if i<8 else 70
     L+='<path d="M44 %d q6 -5 12 0 t12 0 t12 0 t12 0 t12 0 t12 0" fill="none" stroke="#3a2614" stroke-width="1.6" transform="scale(%.2f 1) translate(%d 0)"/>'%(y,w/90,0)
 L+='<rect x="74" y="148" width="58" height="12" fill="#2b1a0e" opacity=".8" rx="3"/><ellipse cx="128" cy="150" rx="26" ry="18" fill="url(#ch)" opacity=".8"/></g></svg>'
+
+T='font-family="Noto Serif CJK KR,serif" fill="#3a2614"'
+L=H+D+'<g filter="url(#r)"><path d="%s" fill="#e8d6ad" stroke="#5a4226" stroke-width="1.5"/>'%pts
+L+='<path d="%s" fill="none" stroke="#1a0f08" stroke-width="9" opacity=".75"/>'%('M'+' L'.join('%.1f %.1f'%e for e in edge))
+L+='<text x="40" y="38" font-size="15" font-weight="700" %s>서고 출입 장부</text><line x1="40" y1="45" x2="138" y2="45" stroke="#8a6c44"/>'%T
+L+='<text x="40" y="64" font-size="12.5" %s>화재 때 옮긴 책</text>'%T
+L+='<text x="44" y="88" font-size="15" font-weight="700" %s>구약</text><text x="96" y="88" font-size="17" font-weight="700" fill="#7a2f22">✓</text>'%T
+L+='<text x="44" y="110" font-size="15" font-weight="700" %s>신약</text><text x="96" y="110" font-size="17" font-weight="700" fill="#7a2f22">✓</text>'%T
+L+='<text x="44" y="132" font-size="15" font-weight="700" %s>끝 서가 …</text>'%T
+L+='<text x="40" y="160" font-size="10" %s>기록한 사람</text><rect x="94" y="149" width="44" height="15" fill="#1e120a" opacity=".85" rx="3"/><ellipse cx="128" cy="152" rx="26" ry="16" fill="url(#ch)" opacity=".7"/></g></svg>'%T
 open('clue_ledger.svg','w').write(L)
 B=H+D+'<g filter="url(#r)"><rect x="70" y="28" width="60" height="150" rx="5" fill="#7a2f22" stroke="#2a120c" stroke-width="2"/><rect x="70" y="28" width="12" height="150" fill="#5e2219"/><rect x="76" y="50" width="48" height="5" fill="#d9b56a"/><rect x="76" y="150" width="48" height="5" fill="#d9b56a"/><rect x="88" y="80" width="30" height="44" rx="3" fill="#e8d6ad" stroke="#5a4226"/><path d="M95 94h16M95 102h16M95 110h12" stroke="#5a4226" stroke-width="2"/></g></svg>'
 open('clue_book.svg','w').write(B)
+G=H+D+'<g filter="url(#r)"><path d="M28 50 L100 40 L172 50 L172 160 L100 150 L28 160 Z" fill="#3a2214" stroke="#1a0c06" stroke-width="2"/>'
+G+='<path d="M36 56 L98 47 L98 146 L36 154 Z" fill="#efe1bd"/><path d="M102 47 L164 56 L164 154 L102 146 Z" fill="#efe1bd"/>'
+for i in range(8 if False else 6): G+='<line x1="44" y1="%d" x2="92" y2="%d" stroke="#6a5234" stroke-width="1.1"/><line x1="108" y1="%d" x2="156" y2="%d" stroke="#6a5234" stroke-width="1.1"/>'%(84+i*9,78+i*9,78+i*9,84+i*9)
+G+='<text x="52" y="72" font-size="11" font-weight="700" font-family="Noto Serif CJK KR,serif" fill="#7a2f22">성경전서</text>'
+G+='<path d="M28 160 Q60 150 100 150 Q140 150 172 160 L172 132 Q150 142 128 136 Q110 146 92 138 Q66 148 48 134 Q38 140 28 132 Z" fill="#140a05" opacity=".88"/><path d="M36 154 Q50 146 60 150 Q72 140 84 148 Q92 142 98 146 L98 128 Q90 134 82 126 Q70 136 58 128 Q48 136 36 130 Z" fill="#2a160a" opacity=".75"/></g></svg>'
+open('clue_bible.svg','w').write(G)
 print('ok')

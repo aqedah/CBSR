@@ -23,7 +23,7 @@ try:
             r = pg.evaluate('(()=>{const a=document.querySelector("#cbsrShelf .dgc").getBoundingClientRect(),b=document.querySelector("#cbsrShelf .dgb").getBoundingClientRect(),k=document.querySelector("#cbsrShelf .bk").getBoundingClientRect();return [a.top,k.bottom,a.bottom,b.top]})()')
             chk('선택지가 위 단추와 말상자에 겹치지 않음', r[0] > r[1] + 4 and r[2] <= r[3] + 1); shot('c1_hello4')
             pg.click('#cbsrShelf .dg .dgc button:nth-child(3)'); pg.wait_for_timeout(500)
-            chk('통독표: 사서의 말', '통독표입니다' in (txt('#cbsrShelf .dg .dgb') or '')); pg.wait_for_timeout(1700)
+            chk('통독표: 사서의 말', '읽으실 순서를 적었습니다' in (txt('#cbsrShelf .dg .dgb') or '')); pg.wait_for_timeout(1700)
             chk('통독표가 서고 안에서 열림(달력 42칸, 이번 달)', pg.locator('#cbsrShelf .pln .plg > *').count() == 42 and '2026년 11월' in (txt('#cbsrShelf .plh') or '') and pg.locator('#cbsrShelf').count() == 1); shot('p1_plan')
             r = pg.evaluate('(()=>{const s=document.querySelector("#cbsrShelf .st").getBoundingClientRect(),p=document.querySelector("#cbsrShelf .pln").getBoundingClientRect(),t=document.querySelector("#cbsrShelf .ttl b").getBoundingClientRect(),c=[...document.querySelectorAll("#cbsrShelf .plc small")].map(e=>e.scrollHeight>e.parentElement.clientHeight);return [p.top-t.bottom,innerHeight-p.bottom,p.left-s.left,s.right-p.right,c.filter(Boolean).length]})()')
             chk('통독표가 화면 안에 들어오고 제목과 겹치지 않음 %s' % [round(x) for x in r], r[0] > 2 and r[1] > 2 and r[2] > 2 and r[3] > 2)
