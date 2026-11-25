@@ -38,14 +38,17 @@ try:
             chk(tag+' 세 권: 세 책, 사서 얼굴이 선택지 위', c.count()==3 and '세 권' in txt(pg, '#cbsrShelf .dg .dgb span') and r[0] <= r[1])
             pg.mouse.click(vw/2, vh*0.12); pg.wait_for_timeout(700)
             chk(tag+' 세 권: 빈 곳을 누르면 둘러보기', pg.locator('#cbsrShelf .pad').count()==1)
-            # 걸음 단추 첫 안내: 기기마다 한 번
-            chk(tag+' 걸음 단추 첫 안내가 위쪽에 나옴', '화살표' in txt(pg, '#cbsrShelf .lbx.tmp.up'))
-            pg.screenshot(path=OUT+'m_%s_hint.png'%tag)
-            pg.click('#cbsrShelf .pad .mu'); pg.wait_for_timeout(1300)
-            chk(tag+' 한 걸음 뒤에는 안내가 없음', pg.locator('#cbsrShelf .lbx.tmp.up').count()==0)
+            # 걸음 단추 안내 말은 넣지 않음(11-25 목사님)
+            chk(tag+' 둘러볼 때 사서의 안내 말이 따로 나오지 않음', pg.locator('#cbsrShelf .lbx').count()==0 and pg.locator('#cbsrShelf .pad').count()==1)
             pg.close()
-            pg = start('today=40'); pg.click('#cbsrShelf .dg .dgc button:nth-child(2)'); pg.wait_for_timeout(800)
-            chk(tag+' 다시 열면 안내가 나오지 않음', pg.locator('#cbsrShelf .lbx.tmp.up').count()==0 and pg.locator('#cbsrShelf .pad').count()==1)
+            # 통독표: 달이 바뀌어도 틀이 같고, 긴 범위도 한 줄
+            pg = start('today=40'); pg.click('#cbsrShelf .dg .dgc button:nth-child(3)'); pg.wait_for_timeout(2600)
+            if pg.locator('#cbsrShelf .dg .dgb[data-a]').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(900)
+            M = "(()=>{const k=document.querySelector('#cbsrShelf .st').getBoundingClientRect().width/390,p=document.querySelector('#cbsrShelf .pln').getBoundingClientRect(),l=document.querySelector('#cbsrShelf .pll').getBoundingClientRect(),g=document.querySelector('#cbsrShelf .plg').getBoundingClientRect();const bad=[...document.querySelectorAll('#cbsrShelf .plc')].filter(c=>{const s=c.querySelector('small');return s&&(s.getBoundingClientRect().height/k>parseFloat(getComputedStyle(s).fontSize)*1.6||s.scrollWidth>c.clientWidth+1)}).map(c=>c.innerText.replace(/\\n/g,' '));return [Math.round(p.height),Math.round(l.top-p.top),Math.round(g.height),bad,document.querySelector('#cbsrShelf .plh').innerText.replace(/\\n/g,' ').slice(0,12),document.querySelectorAll('#cbsrShelf .pll button').length]})()"
+            a = pg.evaluate(M); pg.screenshot(path=OUT+'p_%s_now.png'%tag)
+            pg.click('#cbsrShelf .plh [data-a=pm][data-d="-1"]'); pg.wait_for_timeout(900); b2 = pg.evaluate(M); pg.screenshot(path=OUT+'p_%s_prev.png'%tag)
+            chk(tag+' 통독표: 이번 달과 지난달의 틀이 같음 %s / %s' % (a[:3]+a[4:], b2[:3]+b2[4:]), a[:3]==b2[:3] and a[5]!=b2[5])
+            chk(tag+' 통독표: 범위 글자가 한 줄이고 칸을 넘지 않음 %s' % (a[3]+b2[3]), not a[3] and not b2[3])
             pg.close(); cx.close()
         b.close()
 finally:

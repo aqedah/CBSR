@@ -205,7 +205,6 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .dg.me .dgb i{border-top-color:#e2b24a}
 #cbsrShelf .lbx{position:absolute;left:12px;right:12px;bottom:14px;z-index:4;pointer-events:none}
 #cbsrShelf .lbx .dgb{pointer-events:none}
-#cbsrShelf .lbx.tmp.up{top:78px;bottom:auto}   /* 걸음 단추 첫 안내는 위쪽에(아래에는 걸음 단추와 팻말이 있음) */
 #cbsrShelf .lbx.tmp{animation:cbsrBye .6s ease 3.6s forwards}
 #cbsrShelf .bv .bj{position:absolute;right:12px;top:44px;height:32px;padding:0 10px;display:flex;align-items:center;gap:2px;background:rgba(20,13,8,.55);border:1px solid rgba(230,207,154,.5);color:#f6e7c1;font-size:13.5px;font-weight:700;z-index:6}
 #cbsrShelf .lbc{position:absolute;left:12px;bottom:14px;width:66px;padding:0;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:5px;z-index:4;color:#f6e7c1;font:700 12.5px/1 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;letter-spacing:.15em;text-shadow:0 1px 3px #000}
@@ -264,6 +263,9 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf span.plc.n b{opacity:.35}
 #cbsrShelf .plc b{font:700 15px/1 "Gowun Batang","Noto Serif KR",serif}
 #cbsrShelf .plc small{font-size:10.5px;line-height:1.15;font-weight:600;text-align:center;color:#5c4838;word-break:keep-all;overflow-wrap:anywhere;max-width:100%}
+#cbsrShelf .plc small.n,#cbsrShelf .plc small.s,#cbsrShelf .plc small.xs{white-space:nowrap;overflow-wrap:normal}   /* 11-25 목사님: 10월과 11월의 틀이 다름 → '고전8–10'처럼 긴 범위도 한 줄에 */
+#cbsrShelf .plc small.s{font-size:9.8px;letter-spacing:-.02em}
+#cbsrShelf .plc small.xs,#cbsrShelf .plc small.w{font-size:9.2px;letter-spacing:-.045em}
 #cbsrShelf .plc.on{background:rgba(155,51,36,.1);border-color:rgba(155,51,36,.5)}
 #cbsrShelf .plc.on:after{content:"";position:absolute;right:2px;top:2px;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#cf5a40,#8f2a1c);box-shadow:0 1px 2px rgba(0,0,0,.4)}
 #cbsrShelf .plc.miss{background:repeating-linear-gradient(135deg,rgba(51,35,26,.2) 0 1.5px,rgba(51,35,26,0) 1.5px 6px)}
@@ -271,7 +273,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .plc.today small{color:#33231a}
 #cbsrShelf button.plc:active{background:#d9c59a}
 #cbsrShelf button.plc:focus-visible,#cbsrShelf .plh button:focus-visible{outline:3px solid #9b3324;outline-offset:1px}
-#cbsrShelf .pll{display:flex;align-items:center;gap:5px;margin:8px 0 0;font-size:12.5px;font-weight:600;color:#5c4838}
+#cbsrShelf .pll{display:flex;align-items:center;gap:5px;min-height:28px;margin:8px 0 0;font-size:12.5px;font-weight:600;color:#5c4838}
 #cbsrShelf .pll i{display:inline-block;width:13px;height:13px;margin-left:8px;border:1px solid rgba(51,35,26,.4)}
 #cbsrShelf .pll i:first-child{margin-left:0}
 #cbsrShelf .pll i.on{border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#cf5a40,#8f2a1c)}
@@ -345,12 +347,13 @@ function cardMix(t,again){ var f=stage&&stage.querySelector(".cdf"); if(!f) retu
     cs.forEach(function(c){ c.style.setProperty("--sx","0px"); c.style.setProperty("--sy","0px"); c.style.setProperty("--sr","0deg"); c.style.zIndex=""; });
     setTimeout(function(){ if(!root||top()!==t){ busy=false; return; } f.className="cdf open"; setTimeout(done,480); },300); };
   step(); }
+function labCls(l){ var w=0,i,c; l=String(l||""); for(i=0;i<l.length;i++){ c=l.charCodeAt(i); w+=(c>=0x1100?1:.56); } return w<=4.1?"n":w<=4.75?"s":w<=5.4?"xs":"w"; }   /* 칸에 들어갈 글자의 너비(한글 1, 숫자·줄표 0.56)에 따라 글자 크기를 정함. 아주 긴 것만 줄을 바꿈 */
 function planHtml(t){ var P=O.plan&&O.plan.get(t.m), i, x, h; if(!P) return '<div class="pln tb"><p class="pll">통독표가 없습니다.</p></div>'; t.m=P.M; t.ms=P.months; t.mi=P.mi;
   var ch=Math.max(46,Math.min(62,Math.floor((HS-60-14-150)/6)-3));
   h='<div class="pln tb'+(t.seen?"":" in")+'"><div class="plh"><button type="button" data-a="pm" data-d="-1"'+(P.mi>0?"":" disabled")+' aria-label="이전 달">'+CL+'</button><b>'+P.Y+'년 '+(P.Mo+1)+'월</b><span>'+P.r+' / '+P.n+'일 읽음</span><button type="button" data-a="pm" data-d="1"'+(P.mi<P.months.length-1?"":" disabled")+' aria-label="다음 달">'+CR+'</button></div><div class="plw">'+["주일","월","화","수","목","금","토"].map(function(w){ return "<span>"+w+"</span>"; }).join("")+'</div><div class="plg" style="grid-auto-rows:'+ch+'px">';
   for(i=0;i<P.lead;i++) h+='<span class="plc"></span>';
   for(i=1;i<=P.nd;i++){ x=P.days[i-1]; if(!x){ h+='<span class="plc n"><b>'+i+'</b></span>'; continue; }
-    h+='<button type="button" class="plc '+x.st+(x.me?" today":"")+'" data-a="pgo" data-k="'+x.w+"-"+x.d+'" aria-label="'+(P.Mo+1)+"월 "+i+"일 "+esc(x.full)+(x.st==="on"?", 읽음":x.st==="miss"?", 안 읽음":x.me?", 오늘":"")+'"><b>'+i+'</b><small>'+esc(x.lab)+'</small></button>'; }
+    h+='<button type="button" class="plc '+x.st+(x.me?" today":"")+'" data-a="pgo" data-k="'+x.w+"-"+x.d+'" aria-label="'+(P.Mo+1)+"월 "+i+"일 "+esc(x.full)+(x.st==="on"?", 읽음":x.st==="miss"?", 안 읽음":x.me?", 오늘":"")+'"><b>'+i+'</b><small class="'+labCls(x.lab)+'">'+esc(x.lab)+'</small></button>'; }
   for(i=P.lead+P.nd;i<42;i++) h+='<span class="plc"></span>';
   t.seen=1; return h+'</div><p class="pll"><i class="on"></i>읽음<i class="me"></i>오늘<i class="miss"></i>안 읽은 지난 날'+((P.M!==P.nowK&&P.hasNow)?'<button type="button" data-a="pnow">이번 달'+CR+'</button>':"")+'</p></div>'; }
 function planMonth(t,d){ if(!t.ms) return; var i=t.mi+d; if(i<0||i>=t.ms.length) return; t.m=t.ms[i]; drawHall(t); }
@@ -376,7 +379,6 @@ var VIEWS=[   /* 통로의 세 자리: 입구, 가운데, 끝 앞. 같은 3D 장
   {img:"hall.webp",L:null,end:[95,250,200,300,1],soot:[138,206,114,104],alt:"옛 판화처럼 그린 서고의 통로에 서 있다. 양옆으로 높은 서가가 줄지어 서 있고 촛불이 돌바닥을 밝힌다. 덧문을 닫은 창 아래 통로 끝은 어둡다"},
   {img:"hall_1.webp",L:[[165,375,94.3],[225,375,94.3],[131,268,200],[259,268,200]],end:[122,168,146,300,.34],soot:[104,40,182,150],alt:"서고 통로의 가운데. 양옆에 서가가 서 있고, 앞에는 책을 펼쳐 둔 독서대와 덧문을 닫은 창이 보인다"},
   {img:"hall_2.webp",L:[],end:null,soot:[70,0,250,246],sign:1,alt:"통로 끝. 덧문을 닫은 창 아래, 검게 그을린 서가가 어둠 속에 서 있다. 서가 위쪽에 글자를 알아보기 힘든 그을린 팻말이 걸려 있다"}];
-function walkHint(){ try{ if(localStorage.getItem("cbsr:shelf:wh")) return false; localStorage.setItem("cbsr:shelf:wh","1"); return true; }catch(e){ if(walkHint.d) return false; walkHint.d=1; return true; } }   /* 처음 둘러보는 분께 한 번만 */
 function hpos(){ var h=levels&&levels[0]; return (h&&h.pos)||0; }
 function bx(a){ return 'left:'+a[0]+'px;top:'+a[1]+'px;width:'+a[2]+'px;height:'+a[3]+'px'+(a[4]!=null&&a[4]!==1?';opacity:'+a[4]:''); }
 function lamps(p){ var V=VIEWS[p||0], h=V.end?'<div class="amb end" style="'+bx(V.end)+'"></div>':'',i=0; (V.L||ART.hall.lanterns).forEach(function(l){ var x=l[0],y=l[1],s=l[2],k=Math.min(1,Math.pow(s/200,1.25)),g=Math.round(Math.min(250,s*(1.3+.6*k))),w=Math.max(5,s*.115),fh=w*2.15;   /* 11-24 목사님: 눈높이 통로에서는 먼 촛불이 한가운데로 모여 빛이 겹침 → 멀수록 빛무리를 옅고 작게, 통로 끝은 어둡게 */
@@ -410,7 +412,7 @@ function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), P=hpos(), _p
     if(t.seen||O.scene==="card"||rm0){ t.seen=1; go(); return; }                                 /* 배너에서 바로 왔거나 다시 그릴 때는 옮겨 오는 움직임 없이 */
     t.seen=1; busy=true; t.dg={who:"l",t:"…"+((O.card&&O.card.year)?O.card.year+"년 ":"")+"말씀 카드를 드리겠습니다."}; cs0.classList.add("from"); void cs0.offsetWidth; requestAnimationFrame(function(){ cs0.classList.add("mv"); cs0.classList.remove("from"); }); /* 말하던 자리(왼쪽 아래)에서 가운데로 */
     setTimeout(function(){ busy=false; go(); },900); return; }
-  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":(walkHint()?libr("…화살표를 누르면 걸어갑니다.",1).replace('class="lbx tmp"','class="lbx tmp up"'):"")+'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>'+
+  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>'+
       '<div class="pad fade" role="group" aria-label="걸어 다니기"><button type="button" class="mu" data-a="fw" aria-label="'+(P>=VIEWS.length-1?"통로 끝으로 한 걸음 더":"앞으로 걷기")+'">'+CL+'</button><button type="button" class="ml" data-a="tl" aria-label="왼쪽으로 돌기, 구약 서가">'+CL+'</button><button type="button" class="md" data-a="bw" aria-label="뒤로 걷기"'+(P?"":" disabled")+'>'+CL+'</button><button type="button" class="mr" data-a="tr" aria-label="오른쪽으로 돌기, 신약 서가">'+CL+'</button></div>');
     return; }
   if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
