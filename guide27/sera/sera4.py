@@ -17,7 +17,7 @@ CSS = '''
 .b1{display:block!important}
 .one .p5{page-break-after:always}
 .kp{margin-top:2.6mm}
-.ref{display:inline-block;white-space:nowrap;font-size:7.8pt;font-weight:700;color:var(--c);background:var(--l);border-radius:2.4mm;padding:0 1.8mm;margin-right:1.6mm}
+.ref{white-space:nowrap;font-size:8pt;font-weight:700;color:var(--c);border-left:.7mm solid var(--c);padding-left:1.2mm;margin-right:1.6mm}
 .oq{margin:1mm 0 .6mm;text-align:justify}.oh{font-size:8.4pt;color:#666;margin-bottom:.4mm}
 .lab4{display:flex;align-items:center;gap:1.8mm;font-size:10pt;font-weight:700;margin:4.4mm 0 .8mm;color:#222}
 .lab4 b{display:inline-flex;width:4.4mm;height:4.4mm;background:#333;color:#fff;border-radius:.6mm;align-items:center;justify-content:center;font-size:7.8pt}
@@ -34,7 +34,7 @@ CSS = '''
 .p4 .b1 .stc .scn span.sth2,.stc .scn .sth2{font-size:7pt;color:#777;font-weight:700;width:100%;border:0;padding:0}
 .clr{clear:both;height:0}
 .lar{display:inline-block;width:4.2mm;height:3.2mm;vertical-align:-.1mm;margin:0 .8mm 0 .2mm;color:var(--c)}
-.stp{margin-top:2.2mm}.stp .sn{display:inline-block;font-size:7.6pt;color:var(--c);border-bottom:.35mm solid var(--c);margin-right:1.8mm;line-height:1.2}
+.stp{margin-top:2.2mm}.stp .sn{display:inline-block;font-size:7.4pt;font-weight:700;color:#fff;background:var(--c);border-radius:2.4mm;padding:0 1.9mm;margin-right:1.6mm;line-height:1.55;vertical-align:.2mm}
 .p4 .ln.fl{border-bottom:0;display:flex;align-items:flex-end;gap:1.4mm;font-size:8.8pt;color:#555;padding-bottom:.4mm}
 .ln.fl i{flex:1;border-bottom:.22mm dotted #888;height:5mm}.ln.fl span{white-space:nowrap}
 '''
