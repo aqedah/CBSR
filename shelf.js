@@ -205,6 +205,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .dg.me .dgb i{border-top-color:#e2b24a}
 #cbsrShelf .lbx{position:absolute;left:12px;right:12px;bottom:14px;z-index:4;pointer-events:none}
 #cbsrShelf .lbx .dgb{pointer-events:none}
+#cbsrShelf .lbx.tmp.up{top:78px;bottom:auto}   /* 걸음 단추 첫 안내는 위쪽에(아래에는 걸음 단추와 팻말이 있음) */
 #cbsrShelf .lbx.tmp{animation:cbsrBye .6s ease 3.6s forwards}
 #cbsrShelf .bv .bj{position:absolute;right:12px;top:44px;height:32px;padding:0 10px;display:flex;align-items:center;gap:2px;background:rgba(20,13,8,.55);border:1px solid rgba(230,207,154,.5);color:#f6e7c1;font-size:13.5px;font-weight:700;z-index:6}
 #cbsrShelf .lbc{position:absolute;left:12px;bottom:14px;width:66px;padding:0;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:5px;z-index:4;color:#f6e7c1;font:700 12.5px/1 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;letter-spacing:.15em;text-shadow:0 1px 3px #000}
@@ -353,8 +354,11 @@ function planHtml(t){ var P=O.plan&&O.plan.get(t.m), i, x, h; if(!P) return '<di
   for(i=P.lead+P.nd;i<42;i++) h+='<span class="plc"></span>';
   t.seen=1; return h+'</div><p class="pll"><i class="on"></i>읽음<i class="me"></i>오늘<i class="miss"></i>안 읽은 지난 날'+((P.M!==P.nowK&&P.hasNow)?'<button type="button" data-a="pnow">이번 달'+CR+'</button>':"")+'</p></div>'; }
 function planMonth(t,d){ if(!t.ms) return; var i=t.mi+d; if(i<0||i>=t.ms.length) return; t.m=t.ms[i]; drawHall(t); }
-function guide(){ var h=levels[0]; if(busy||top()!==h) return;                                   /* 목사님 11-24: 안내는 오늘 읽는 책으로 */
-  load().then(function(D){ if(!root||top()!==h) return; var i=parseInt(O.today,10), b=(i>0&&D.list[i-1])||null;
+function guide(pick){ var h=levels[0]; if(busy||top()!==h) return;                               /* 목사님 11-24: 안내는 오늘 읽는 책으로 */
+  load().then(function(D){ if(!root||top()!==h) return; var ids=[], b=null;
+    (pick?[pick]:(O.todays&&O.todays.length?O.todays:[O.today])).forEach(function(n){ n=parseInt(n,10); if(n>0&&D.list[n-1]&&ids.indexOf(n)<0) ids.push(n); });
+    if(ids.length>1){ h.dg={who:"l",fig:1,t:"…오늘은 "+(["","한","두","세","네"][ids.length]||ids.length)+" 권입니다.<br>어느 책부터 보시겠습니까?",ch:ids.map(function(n){ return {t:D.list[n-1].name,a:"gd:"+n}; }),esc:"free"}; draw(); return; }   /* 11-25: 하루에 여러 권을 읽는 날(한 해에 사흘)은 그날의 책을 보여 주고 고르게 함 */
+    b=ids.length?D.list[ids[0]-1]:null;
     if(!b){ h.dg={who:"l",fig:1,t:"…오늘 읽을 책을 찾지 못했습니다.<br>천천히 둘러보십시오.",tap:"free",esc:"free"}; draw(); return; }
     var s=SEC.ot.g.indexOf(b.group)>=0?"ot":"nt"; h.dg={who:"l",fig:1,t:"오늘 읽으실 책은 "+esc(b.name)+"입니다.<br>따라오십시오."}; draw(); busy=true;
     setTimeout(function(){ if(!root||top()!==h){ busy=false; return; } h.dg=null; var sc={t:"sec",s:s,gd:b.id}; push(sc);
@@ -372,6 +376,7 @@ var VIEWS=[   /* 통로의 세 자리: 입구, 가운데, 끝 앞. 같은 3D 장
   {img:"hall.webp",L:null,end:[95,250,200,300,1],soot:[138,206,114,104],alt:"옛 판화처럼 그린 서고의 통로에 서 있다. 양옆으로 높은 서가가 줄지어 서 있고 촛불이 돌바닥을 밝힌다. 덧문을 닫은 창 아래 통로 끝은 어둡다"},
   {img:"hall_1.webp",L:[[165,375,94.3],[225,375,94.3],[131,268,200],[259,268,200]],end:[122,168,146,300,.34],soot:[104,40,182,150],alt:"서고 통로의 가운데. 양옆에 서가가 서 있고, 앞에는 책을 펼쳐 둔 독서대와 덧문을 닫은 창이 보인다"},
   {img:"hall_2.webp",L:[],end:null,soot:[70,0,250,246],sign:1,alt:"통로 끝. 덧문을 닫은 창 아래, 검게 그을린 서가가 어둠 속에 서 있다. 서가 위쪽에 글자를 알아보기 힘든 그을린 팻말이 걸려 있다"}];
+function walkHint(){ try{ if(localStorage.getItem("cbsr:shelf:wh")) return false; localStorage.setItem("cbsr:shelf:wh","1"); return true; }catch(e){ if(walkHint.d) return false; walkHint.d=1; return true; } }   /* 처음 둘러보는 분께 한 번만 */
 function hpos(){ var h=levels&&levels[0]; return (h&&h.pos)||0; }
 function bx(a){ return 'left:'+a[0]+'px;top:'+a[1]+'px;width:'+a[2]+'px;height:'+a[3]+'px'+(a[4]!=null&&a[4]!==1?';opacity:'+a[4]:''); }
 function lamps(p){ var V=VIEWS[p||0], h=V.end?'<div class="amb end" style="'+bx(V.end)+'"></div>':'',i=0; (V.L||ART.hall.lanterns).forEach(function(l){ var x=l[0],y=l[1],s=l[2],k=Math.min(1,Math.pow(s/200,1.25)),g=Math.round(Math.min(250,s*(1.3+.6*k))),w=Math.max(5,s*.115),fh=w*2.15;   /* 11-24 목사님: 눈높이 통로에서는 먼 촛불이 한가운데로 모여 빛이 겹침 → 멀수록 빛무리를 옅고 작게, 통로 끝은 어둡게 */
@@ -405,7 +410,7 @@ function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), P=hpos(), _p
     if(t.seen||O.scene==="card"||rm0){ t.seen=1; go(); return; }                                 /* 배너에서 바로 왔거나 다시 그릴 때는 옮겨 오는 움직임 없이 */
     t.seen=1; busy=true; t.dg={who:"l",t:"…"+((O.card&&O.card.year)?O.card.year+"년 ":"")+"말씀 카드를 드리겠습니다."}; cs0.classList.add("from"); void cs0.offsetWidth; requestAnimationFrame(function(){ cs0.classList.add("mv"); cs0.classList.remove("from"); }); /* 말하던 자리(왼쪽 아래)에서 가운데로 */
     setTimeout(function(){ busy=false; go(); },900); return; }
-  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>'+
+  if(t.t==="hall"){ ui.innerHTML='<button type="button" class="bk" data-a="back" aria-label="성경 서고 닫기">'+CL+'닫기</button><div class="ttl"><b class="tb">성경 서고</b></div>'+(t.dg?"":(walkHint()?libr("…화살표를 누르면 걸어갑니다.",1).replace('class="lbx tmp"','class="lbx tmp up"'):"")+'<button type="button" class="lbc fade" data-a="call" aria-label="사서 부르기"><img src="'+IMG+'libr_f.webp'+VER+'" alt=""><span>사서</span></button>'+
       '<div class="pad fade" role="group" aria-label="걸어 다니기"><button type="button" class="mu" data-a="fw" aria-label="'+(P>=VIEWS.length-1?"통로 끝으로 한 걸음 더":"앞으로 걷기")+'">'+CL+'</button><button type="button" class="ml" data-a="tl" aria-label="왼쪽으로 돌기, 구약 서가">'+CL+'</button><button type="button" class="md" data-a="bw" aria-label="뒤로 걷기"'+(P?"":" disabled")+'>'+CL+'</button><button type="button" class="mr" data-a="tr" aria-label="오른쪽으로 돌기, 신약 서가">'+CL+'</button></div>');
     return; }
   if(t.s==="etc"){ var bkb='<button type="button" class="bk" data-a="back">'+CL+'서고</button>';
@@ -493,6 +498,7 @@ function act(a){ var t=top(); if(!t) return false;
   if(a==="call"){ hello("call"); return true; }
   if(a==="free"){ t.dg=null; draw(); return true; }
   if(a==="guide"){ guide(); return true; }
+  if(a&&a.indexOf("gd:")===0){ guide(parseInt(a.slice(3),10)); return true; }
   if(a==="put"){ t.dg=null; t.gd=null; draw(); return true; }
   if(a==="gopen"){ var id=t.gd; t.dg=null; t.gd=null; draw(); if(!id) return true;
     if(t.t==="press"){ var sp=stage.querySelector('.sp[data-b="'+id+'"]'); if(sp){ var r=sp.getBoundingClientRect(), q=stage.getBoundingClientRect(), k=q.width/W; openBook(id,{x:(r.left-q.left)/k,y:(r.top-q.top)/k,w:r.width/k,h:r.height/k}); return true; } }
