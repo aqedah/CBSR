@@ -55,6 +55,7 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .scn span{font-size:7.6pt;border:.3mm solid var(--c);color:var(--c);border-radius:1mm;padding:.2mm 1.6mm}
 .mk{margin-bottom:2mm;text-align:justify}
 .chip{display:inline-block;font-size:7.4pt;font-weight:700;border:.3mm solid var(--c);color:var(--c);border-radius:.8mm;padding:0 1.2mm;margin-right:1.4mm;line-height:1.5;vertical-align:.3mm;white-space:nowrap;font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
+.mk:has(.rp){background:color-mix(in srgb,var(--c) 10%,#fff);border-left:.8mm solid var(--c);padding:0 1.2mm;border-radius:.6mm} /* 11-26: 대표 표시를 나머지와 구별 */
 .rp{font-size:7.2pt;color:var(--c);font-weight:700;margin-right:1mm;font-family:"Noto Sans CJK KR","Noto Sans KR",sans-serif}
 .hl{background:linear-gradient(transparent 35%,var(--hl) 35%)}
 .ci{border:.3mm solid #222;border-radius:50%/60%;padding:0 1mm;display:inline-block;font-size:.9em;line-height:1.22;vertical-align:baseline} /* 11-25: 윗줄에 겹치지 않게 */
