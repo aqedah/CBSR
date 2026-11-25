@@ -1,31 +1,25 @@
+// 체험판 12월·부록 책(A5) 본문 찍기 — 작업대(trial26.html)의 책 차례 그대로: 앞표지 → 책머리 → 11/29–12/31 → 부록 머리. (11-25)
+// 쓰는 법: app/site_src에서 python3 -m http.server 8765를 띄우고, 빈 폴더에서 node trial_dec_body.js → python3 trial_dec_merge.py
 const {chromium}=require('playwright');
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1400,height:1000}});
 await p.goto('http://localhost:8765/trial26.html');await p.waitForTimeout(3000);
-const r=await p.evaluate(async()=>{
-  const i0=PLAN.findIndex(x=>x.no===333);
-  pageNo=function(pp){return 2+2*(PLAN.findIndex(x=>x.no===pp.no)-i0)};
-  const q=qOf(PLAN[i0]); const ds=qDays(q); const sd=ds.find(x=>get(x.no))||ds[0];
-  const fs=frontSpreads(q,spread(sd,get(sd.no)||blank()));
-  const cv=document.createElement('div'); cv.innerHTML=fs[0];
-  const pgs=[...cv.querySelectorAll('.pg')]; const back=pgs.find(x=>x.classList.contains('back')), front=pgs.find(x=>!x.classList.contains('back'));
-  front.querySelector('.cvs').innerHTML='체험판 · 2026년 12월 · 대림절';
-  front.querySelector('.cvs').insertAdjacentHTML('afterend','<p class="cvs" style="font-size:.78em;opacity:.85;margin-top:.6em">부록 · 대림절과 송구영신 묵상</p>');
-  back.querySelector('.cvbox2').innerHTML='<p class="bkt">2027년을 앞두고 미리 써 보는 책입니다</p><p class="bkp">2026년 11월 29일부터 12월 31일까지입니다.<br>고린도전서에서 시작해 여러 편지를 지나 요한계시록으로 한 해를 닫습니다.</p><p class="bkp">맨 뒤 부록에는 대림절 네 주와 성탄절, 송구영신을 위한 묵상지를 실었습니다.</p><p class="bkp">하나님의 은혜가 말씀과 함께 피어오르길 소망합니다.</p>';
-  const parts=[front.outerHTML];
-  const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe); const bad=[];
-  PLAN.slice(i0).forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); matchMedia(probe,1); post27(probe,1); parts.push(probe.innerHTML); if(!get(x.no)) bad.push('원고없음 '+x.m+'/'+x.d)});
+const r=await p.evaluate(()=>{
+  cur=PLAN.findIndex(x=>x.no===ED.from); buildViews();
+  const parts=[]; let back=''; const bad=[];
+  const probe=document.createElement('div'); probe.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(probe);
+  VIEWS.forEach((v,i)=>{
+    if(v.t==='d'){ const x=PLAN[v.i], qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); matchMedia(probe,1); post27(probe,1); parts.push(probe.innerHTML); if(!get(x.no)) bad.push('원고없음 '+x.m+'/'+x.d); return }
+    const d=document.createElement('div'); d.innerHTML=v.h; const pgs=[...d.querySelectorAll('.spread > .pg')];
+    pgs.forEach(pg=>{ if(pg.classList.contains('back')){ back=pg.outerHTML; return } if(pg.classList.contains('axim')) return; parts.push(pg.outerHTML) });
+  });
   probe.remove();
-  document.getElementById('printroot').innerHTML=parts.join('');
-  window.__back=back.outerHTML;
-  return {n:document.querySelectorAll('#printroot > .pg').length,bad};
+  document.getElementById('printroot').innerHTML=parts.join(''); window.__back=back;
+  return {n:document.querySelectorAll('#printroot > .pg').length,bad,ax:ED.ax26.n};
 });
 console.log(JSON.stringify(r));
-await p.emulateMedia({media:'print'});
-if(await p.evaluate(()=>document.fonts.ready.then(()=>1)));
-await p.waitForTimeout(1500);
+await p.emulateMedia({media:'print'}); await p.evaluate(()=>document.fonts.ready); await p.waitForTimeout(1500);
 await p.pdf({path:'body.pdf',format:'A5',printBackground:true,preferCSSPageSize:true});
-await p.evaluate(()=>{document.getElementById('printroot').innerHTML=window.__back});
-await p.waitForTimeout(500);
+await p.evaluate(()=>{document.getElementById('printroot').innerHTML=window.__back}); await p.waitForTimeout(500);
 await p.pdf({path:'back.pdf',format:'A5',printBackground:true,preferCSSPageSize:true});
 await p.evaluate(()=>{document.getElementById('printroot').innerHTML=blankPage(4)});
 await p.pdf({path:'blank.pdf',format:'A5',printBackground:true,preferCSSPageSize:true});

@@ -2,6 +2,9 @@
 # 두 작업대는 같은 코드이고, 체험판은 ED(판 설정·책머리 기본값)와 PLAN(317–365일 통독표) 두 줄만 다릅니다.
 # guide.html을 고친 뒤: python3 tools/make_trial26.py
 import json,os,sys
+# ⚠ 11-25: 체험판 작업대에는 guide.html에 없는 것(찾기·잇기 칸, 마음에 남은 말씀, 12월·부록 책)이 들어 있어, 그냥 돌리면 지워집니다. --force일 때만 돌립니다.
+if '--force' not in sys.argv: sys.exit('trial26.html이 guide.html보다 앞서 있습니다. 덮어쓰려면 --force')
+sys.argv=[a for a in sys.argv if a!='--force']
 R=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','site_src')
 g=open(os.path.join(R,'guide.html'),encoding='utf8').read(); t=open(os.path.join(R,'trial26.html'),encoding='utf8').read()
 pick=lambda s,p:[l for l in s.split('\n') if l.startswith(p)][0]
