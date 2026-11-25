@@ -420,6 +420,7 @@ details.where p.c{color:var(--muted);font-size:14.5px}
 .toolbox{margin-top:14px;padding:9px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}.toolbox .tline{margin:0}.toolbox .tline>span{font-size:12px;font-weight:700;color:var(--muted);margin-right:2px}.toolbox .tooldef2{margin:6px 0 0}
 .tline{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:14px 0 0;font-size:13px;color:var(--muted)}.tline .tool{margin:0}.tline small{flex-basis:100%;font-size:12px}
 .oneline.obs{margin-top:10px}
+.keepsec .stage span{font-weight:700}.keepsec .stage small{margin-left:auto;color:var(--muted);font-size:12px}.keepsec .oneline+.oneline{margin-top:8px}
 .obsgrp{border-top:1px solid var(--line);padding:8px 0}.obshd{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.obshd small{color:var(--muted);font-size:12.5px}.obsitem{margin:6px 0 0 4px}.obsitem small{color:var(--muted);font-size:12px}.obsitem p{margin:2px 0 0;white-space:pre-wrap}
 .stage>span{white-space:nowrap}
 
@@ -3245,7 +3246,7 @@ function qtApplyBasis(t,w,d){ const R=qtRefs(t,w,d); if(R.length) return R[0]; c
   const kw=(String(t).match(/[가-힣]{2,}/g)||[]).map(x=>x.slice(0,2)); let best=null;
   for(const [b,c] of p.ch){ const C=(BIBLE[b-1]||[])[c-1]||[]; C.forEach((tx,i)=>{ if(!tx||!nm.some(n=>tx.includes(n))) return; const sc=kw.filter(k=>tx.includes(k)).length; if(!best||sc>best[0]) best=[sc,[b,c,i+1,i+1]]; }); }
   return best?best[1]:null; }
-function qtPrayMine(q,key){ const L=[]; if(q.obs) L.push(["본문에서 본 것",q.obs]); if(q.god) L.push(["내가 본 하나님",q.god]); if(q.med) L.push(["적용",q.med]); ["l0","l1","l2","gap"].forEach(f=>{ if(q[f]) L.push(["생각",q[f]]); });
+function qtPrayMine(q,key){ const L=[]; if(q.kv) L.push(["마음에 남은 말씀",q.kv]); if(q.obs) L.push(["본문에서 본 것",q.obs]); if(q.god) L.push(["내가 본 하나님",q.god]); if(q.med) L.push(["적용",q.med]); ["l0","l1","l2","gap"].forEach(f=>{ if(q[f]) L.push(["생각",q[f]]); });
   lnAll().filter(x=>x.k===key).forEach(x=>L.push([lnRef(x.v).lab,x.t])); if(!L.length) return "";
   return `<div class="prmine"><small>오늘 내가 남긴 글</small>${L.map(([a,b])=>`<p><b>${esc(a)}</b>${esc(b)}</p>`).join("")}</div>`; }
 /* 묵상 노트 '성경 전체로'(v2, 2026-11-02 목사님 "비교만 있고 뜻 풀이가 없다"):
@@ -3334,7 +3335,7 @@ function qtSteps(m){ document.body.classList.remove("qtsp"); const key=keyOf(vie
    휴대폰·세로 태블릿은 지금 그대로(배치는 CSS로만 바뀌어 회전해도 같은 기록) */
 const QD_MQ=matchMedia("(min-width:1100px) and (min-height:560px)");
 /* ===== 11-23 목사님 "묵상 탭 층위가 밋밋하다" → 새 모양(qtv4): 그날 스토리 표지 머리 + 단계 이름 + 세 층(물음·말씀·나의 글) ===== */
-function qtShort(t){ t=String(t||""); if(/관찰/.test(t)) return "관찰"; if(/성품/.test(t)) return "성품"; if(/성경 전체/.test(t)) return "성경"; if(/적용/.test(t)) return "적용"; if(/쓴 뒤|해설/.test(t)) return "해설"; if(/기도/.test(t)) return "기도"; return t.trim().slice(0,4); }
+function qtShort(t){ t=String(t||""); if(/마음에 남은/.test(t)) return "말씀"; if(/관찰/.test(t)) return "관찰"; if(/성품/.test(t)) return "성품"; if(/성경 전체/.test(t)) return "성경"; if(/적용/.test(t)) return "적용"; if(/쓴 뒤|해설/.test(t)) return "해설"; if(/기도/.test(t)) return "기도"; return t.trim().slice(0,4); }
 function qtHeadHTML(p,ph){ const u=ph&&ph.u?esc(ph.u):"";
   return `<div class="qph qph4${u?"":" noimg"}">${u?`<img alt="" src="${u}" referrerpolicy="no-referrer">`:""}<div class="qphin">${u?`<button class="qring" data-qring="1" aria-label="오늘 스토리 다시 보기"><img alt="" src="${u}" referrerpolicy="no-referrer"><i>▶</i></button>`:""}<div class="qpht"><span class="qk">${esc(dayK(view.w,view.d))}</span><h2>${esc(p.label)}</h2>${dayChSub(p)}</div></div><div class="qphbtn"></div></div>`; }
 function qtV4(card,ph){ if(ph&&ph.u) card.style.setProperty("--qcov",`url("${String(ph.u).replace(/"/g,"%22")}")`);
@@ -4290,7 +4291,7 @@ function qtDoneCard(w,d,kv,q){
   const stamps=Array.from({length:nd(w)},(_,i)=>i).map(i=>{const on=(mem.qt[keyOf(w,i)]||{}).done; return `<span class="stamp${on?" on":""}${i===d?" me":""}" title="${i+1}일째">${on?"✓":i+1}</span>`;}).join("");
   /* 말씀과 내가 남긴 글을 먼저, 도장·기록은 그 아래 */
   return `<div class="qtdone${view.qtJust?" pop":""}" id="qtDoneCard"><div class="qtd-seal" aria-hidden="true">✓</div><div class="qtd-title">오늘 QT를 마쳤습니다</div>
-  ${q.obs?`<p class="mine"><b>오늘 내가 본문에서 본 것</b>${esc(q.obs)}</p>`:""}${q.god?`<p class="mine"><b>내가 본 하나님</b>${esc(q.god)}</p>`:""}
+  ${q.kv?`<p class="mine"><b>마음에 남은 말씀</b>${esc(q.kv)}${q.kw?`<br><small>${esc(q.kw)}</small>`:""}</p>`:""}${q.obs?`<p class="mine"><b>오늘 내가 본문에서 본 것</b>${esc(q.obs)}</p>`:""}${q.god?`<p class="mine"><b>내가 본 하나님</b>${esc(q.god)}</p>`:""}
   ${kv?`<div class="keyv"><small>오늘 붙잡은 말씀 · ${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small>${esc(kv.t)}</div>`:""}
   ${q.med?`<p class="mine"><b>나의 묵상</b>${esc(q.med)}</p>`:""}
   ${q.pray?`<p class="mine"><b>나의 기도</b>${esc(q.pray)}</p>`:""}
@@ -4563,6 +4564,8 @@ function renderQT(){
   const V2Q=true;
   let h=V2Q?`<section class="sec qthd"><div class="qthl"><span class="label">묵상 노트 · ${dayName(w,d)}</span><button class="qthelp" id="qtHelp" aria-label="묵상 노트 안내">?</button></div><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">묵상 노트의 말씀은 개역개정입니다.</p>`:""}</section>`
     :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`}</section>`;
+  /* 11-25 목사님: 가이드북·세라핌과 같은 순서 — 읽고 나서 바로 '마음에 남은 말씀'(번호 없음), 그다음 본문 관찰 */
+  if(V2Q) h+=`<section class="sec keepsec"><div class="stage"><span>마음에 남은 말씀</span><small>읽고 나서 바로 적습니다</small></div><div class="oneline"><label for="qt-kv">말씀 · 장절</label><textarea id="qt-kv" data-qt="kv" rows="2" placeholder="말씀과 장절을 적어 보세요">${esc(q.kv||"")}</textarea></div><div class="oneline"><label for="qt-kw">이유</label><textarea id="qt-kw" data-qt="kw" rows="2" placeholder="궁금하거나 걸리는 말씀도 좋습니다">${esc(q.kw||"")}</textarea></div></section>`;
   // 1 본문 관찰
   h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye">${(()=>{ const G2=gqOf(w,d); /* 11-24 목사님: 범위가 넓은 날은 관찰·성품 가·나 두 갈래, 쓰는 칸은 하나 */ return G2&&G2.q2?`<p class="gah2">가와 나 가운데 골라 씁니다</p><p><b class="ga2">가</b>${esc(eye.q)}</p><p><b class="ga2">나</b>${esc(G2.q2)}</p>`:`<p>${esc(eye.q)}</p>`; })()}${V2Q?(()=>{ const r=qtRefs(eye.q,w,d)[0]; return r?qEvi(r,"",3):""; })():""}${V2Q?(R?`<div class="qtscope"><span class="qtscl">본문 열기</span>${R.map((r,i)=>`<button class="qsr" data-scr="${i}">${esc(sceneLabel([r]))}</button>`).join("")}</div>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
   if(V2Q) h+=lnQtHTML(key);
@@ -7893,7 +7896,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
   let h=topBanners("record")+`<section class="ryprof rprof">${av?av.outerHTML:""}<div class="rpname"><b>${esc(PROF.nick||"내 통독 기록")}</b><small>${st} · ${esc(PI.name)}</small></div><button class="rygear" data-recgo="more" aria-label="설정 · 더 보기">${ic("gear")}</button></section>`;
   const row=(go,k,t)=>`<button class="ryrow" data-recgo="${go}"><span class="ryico ${k}">${ic(k)}</span><b>${t}</b><svg class="ych" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
   /* 첫 방문(기록 없음, 2026-11-02): 0이 늘어선 숫자판 대신 할 일 하나 */
-  if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!recMine().n&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen||x.obs||x.god||x.med||x.pray||x.ink))){ const tp=dayPlan(here.w,here.d);
+  if(!Object.keys(mem.done).length&&!CD.length&&!lnAll().length&&!recMine().n&&!Object.values(mem.qt||{}).some(x=>x&&(x.done||x.amen||x.kv||x.obs||x.god||x.med||x.pray||x.ink))){ const tp=dayPlan(here.w,here.d);
     h+=`<section class="rybox"><p class="ryfirst">오늘 본문을 읽고 묵상 노트를 마치면, 읽은 날과 붙잡은 말씀, 아멘이 여기에 모입니다.</p>${tp?`<button class="ryfirstb" data-tab-go="read" data-today="1"><b>오늘 본문 열기</b><small>${esc(fmt(dateOf(here.w,here.d),{month:"long",day:"numeric"}))} · ${esc(tp.label)}</small></button>`:""}</section>`;
     h+=`<section class="rybox rymenu">${row("more","hist","지난 회차 · 설정")}</section>`; return h; }
   /* 2) 통독 요약: 큰 숫자 + 막대 + 이번 주 */
@@ -7912,7 +7915,7 @@ function renderRecordV2(){ const tmp=document.createElement("div"); const ba=vie
     if(it) h+=`<section class="rybox">${hd("내 노트","notes","모두 보기")}<div class="mynotes">${it}</div></section>`; }
   if(0){ const NL=[];
     const it=NL.map(([k,q])=>{ const [w,d]=k.split("-").map(Number), p=dayPlan(w,d); if(!p) return ""; let kv=null; try{ const v=(q.kv||"").split(":"); if(v.length===3){ kv={b:+v[0],c:+v[1],v:+v[2]}; kv.t=vtxt([kv.b,kv.c,kv.v]); } }catch(e){}
-      const mine=q.obs||q.god||q.med||q.pray||(q.ink?"손글씨로 쓴 기록":"")||"";
+      const mine=q.kv||q.obs||q.god||q.med||q.pray||(q.ink?"손글씨로 쓴 기록":"")||"";
       return `<button class="mynote" data-myn="${k}"><small>${esc(q.doneAt?fmt(parseD(q.doneAt),{month:"long",day:"numeric"}):dayName(w,d))} · ${esc(p.label)}</small>${kv&&kv.t?`<q>${esc(kv.t)}</q><cite>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</cite>`:""}${mine?`<p>${esc(mine)}</p>`:""}</button>`; }).join("");
     if(it) h+=`<section class="rybox">${hd("내 노트","records","모두 보기")}<div class="mynotes">${it}</div></section>`; }
   /* 그 밖의 것은 접어서 한 줄씩 */
@@ -9210,6 +9213,7 @@ function tbkPageA(D){ const {qt,p,n}=D, g=qt.guide||{}, o=qt.obs||{}, dt=dateOf(
   ${g.find?`<p class="tbkk">오늘의 읽기 도구</p><p>${tbkChip(g.find,p)}</p>`:""}
   ${g.word?`<p class="tbkk">말뜻</p><p>${tbkT(g.word,p)}</p>`:""}
   <div class="tbksec"><i>2</i>성경 읽기 <span class="tbkgo">— 성경책에서 ${esc(p.label)}을 읽습니다</span></div>
+  ${(()=>{ const q=mem.qt[D.key||keyOf(view.w,view.d)]||{}; const tb=(f,lab,nl)=>`<div class="tbklines" data-f="${f}" style="height:${nl*34}px">${"<i></i>".repeat(nl)}<textarea class="tbkta" data-f="${f}" aria-label="${lab}" spellcheck="false" autocomplete="off">${esc(q[f]||"")}</textarea></div>`; /* 11-25 목사님: 읽고 나서 바로 '마음에 남은 말씀' */ return `<div class="tbkb" data-f="kv"><p class="tbkk">마음에 남은 말씀 <span class="tbkgo">읽고 나서 바로 적습니다</span></p><p class="tbkq" style="font-size:.85em;color:#777">말씀 · 장절</p>${tb("kv","마음에 남은 말씀",2)}<p class="tbkq" style="font-size:.85em;color:#777">이유</p>${tb("kw","마음에 남은 이유",1)}</div>`; })()}
   <div class="tbksec"><i>3</i>읽은 뒤</div>
   ${(o.look||[]).filter(x=>x[0]).length?`<p class="tbkk">다시 읽을 곳</p><div class="tbklook">${o.look.filter(x=>x[0]).map(([r,t])=>`<div><b>${tbkRefs(esc(r),p)}</b><span>${tbkT(t,p)}</span></div>`).join("")}</div>`:""}
   ${(o.pair||[]).length?`<div class="tbkbox"><p class="tbkk">눈여겨볼 것</p>${o.pair.map(([s,t])=>`<div><span class="tbkchip">${esc(s)}</span>${tbkT(t,p)}</div>`).join("")}</div>`:""}
