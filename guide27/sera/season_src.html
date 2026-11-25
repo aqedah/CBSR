@@ -197,6 +197,10 @@ function a5flow(out,weeks,start,prayFn){ let pn=start; const bad=[];
    3쪽 ④ 2 하나님의 성품 3 적용 4 나의 기도 / 4쪽 ⑤ 쓴 뒤에 읽기 · 해설, 성경 전체로 ⑥ 함께 드리는 기도 */
 const structOf=w=>L(w.struct).map(x=>{const p=x.split('|').map(t=>t.trim());return [p[0]||'',p[1]||'',p[2]||'']});
 const lab4=(n,t,sm)=>`<div class="lab4 sans">${n?`<b>${n}</b>`:''}${t}${sm?`<small>${sm}</small>`:''}</div>`;
+/* 본문 관찰 '찾기 → 잇기'(11-25 견본): 찾기 물음이 있으면 찾기 한 줄, 잇기 물음 아래 (문장 앞머리 줄)+두 줄 */
+const obsSteps=(w,LN)=>{ if(!String(w.obs_find||'').trim()) return `<div class="ans">${LN(4)}</div>`;
+  const st=String(w.obs_start||'').trim(), first=st?`<div class="ln fl sans"><span>${inl(st)}</span><i></i></div>`:LN(1);
+  return `<div class="oq stp"><b class="sn sans">찾기</b><b>${inl(w.obs_find)}</b></div><div class="ans">${LN(1)}</div><div class="oq stp"><b class="sn sans">잇기</b><b>${inl(w.obs_link||'')}</b></div><div class="ans">${first}${LN(2)}</div>`; };
 function four(w,pray,edit){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.light};--hl:#F3E6A0`, LN=n=>'<div class="ln"></div>'.repeat(n);
   const i3=J.A.findIndex(x=>x.includes('눈여겨볼 것')); let p1=J.A.slice(0,i3).filter(x=>!/class="wd/.test(x)&&!/class="map/.test(x));
   const i1=p1.findIndex(x=>x.includes('오늘의 흐름')), mb=mapBlock(w), sr=structOf(w);
@@ -208,10 +212,10 @@ function four(w,pray,edit){ const J=a5parts(w,pray), st=`--c:${w.color};--l:${w.
   { const j=p1.findIndex(x=>x.includes('성경 읽기<small>')); if(j>=0) p1.splice(j,0,'<div class="clr"></div>'); }
   const lnl=(t,n)=>Array.from({length:n},(_,k)=>`<div class="ln lbl"><span class="sans">${k?'':t}</span></div>`).join('');
   p1.push(`<div class="kp">${lab4('','마음에 남은 말씀','읽고 나서 바로 적습니다')}${lnl('말씀 · 장절',2)}${lnl('이유',2)}</div>`);
-  const p2=J.A.slice(i3).join('')+`<div class="sh sans"><span class="n">4</span>나의 묵상</div>${lab4(1,'본문 관찰','오늘 본문을 더 살펴보는 한 길')}<div class="oq">${String(w.obs_ref||'').trim()?`<span class="ref sans">${esc(w.obs_ref)}</span>`:''}${inl(w.obs||'')}</div><div class="ans">${LN(4)}</div>`;
+  const p2=J.A.slice(i3).join('')+`<div class="sh sans"><span class="n">4</span>나의 묵상</div>${lab4(1,'본문 관찰','오늘 본문을 더 살펴보는 한 길')}<div class="oq">${String(w.obs_ref||'').trim()?`<span class="ref sans">${esc(w.obs_ref)}</span>`:''}${inl(w.obs||'')}</div>${obsSteps(w,LN)}`;
   const gm=String(w.god||'').match(/^([^\s,]+(?:, ?\d+(?:[–-]\d+)?)*)\s+(.*)$/), gref=gm?gm[1]:'', gst=gm?gm[2]:String(w.god||'');
   const p3=`<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>${lab4(2,'하나님의 성품')}<div class="oq">${gref?`<span class="ref sans">${esc(gref)}</span>`:''}${inl(gst)} <b>${inl(w.god_q||'')}</b></div><div class="ans">${LN(4)}</div>`
-    +lab4(3,'적용')+`<div class="oq">${inl(w.ap_lead||'')}</div>${String(w.ap_fu||'').trim()?`<div class="oq">→ ${inl(w.ap_fu)}</div>`:''}<div class="ans">${LN(3)}</div>`
+    +lab4(3,'적용')+`<div class="oq">${inl(w.ap_lead||'')}${String(w.ap_fu||'').trim()?` <b>→ ${inl(w.ap_fu)}</b>`:''}</div><div class="ans">${LN(3)}</div>`
     +lab4(4,'나의 기도')+'<div class="oh sans">오늘 마음에 남은 말씀과 내 응답을 하나님께 말씀드립니다.</div><div class="ans">'+LN(3)+'</div>';
   const yv=L(pray&&pray.y).map(x=>x.replace(/\s*\|\s*/,' ').trim()), cv=L(pray&&pray.c), ce=edit?' contenteditable="true"':'';
   const pr=`<div class="pr4"><div class="sh sans"><span class="n">6</span>함께 드리는 기도</div><h4 class="sans">청년부 기도제목</h4>`+Array.from({length:5},(_,i)=>`<div class="pln sans"${ce} data-k="y${i}">${esc(yv[i]||'')}</div>`).join('')+'<h4 class="sans">교회 기도제목</h4>'+Array.from({length:3},(_,i)=>`<div class="pln sans"${ce} data-k="c${i}">${esc(cv[i]||'')}</div>`).join('')+'</div>';
@@ -285,7 +289,7 @@ function curW(){ const s=curSet(); return s&&s.weeks[WI] }
 function persist(){ const s=curSet(); if(s) s._u=Date.now(); LS.set(DK,DATA); $('status').textContent='이 기기에 저장됨 · GitHub에는 아직'; }
 function blankWeek(prev){ const d=prev?new Date(prev.ymd+'T00:00:00'):new Date(); if(prev) d.setDate(d.getDate()+7); const ymd=d.toISOString().slice(0,10);
   const c=prev?{color:prev.color,light:prev.light}:{color:COLORS[0][1],light:COLORS[0][2]};
-  return Object.assign({key:ymd.slice(5).replace('-',''),ymd,label:prev?prev.label:(KIND==='sera'?'세라핌 청년 기도회':''),season:'',title:'',sub:'',vv:0,flow:'',words:'',scenes:'',marks:'',looks:'',obs_ref:'',obs:'',god:'',god_q:'',ap_lead:'',ap_fu:'',struct:'',note:'',whole_title:'',whole:''},c); }
+  return Object.assign({key:ymd.slice(5).replace('-',''),ymd,label:prev?prev.label:(KIND==='sera'?'세라핌 청년 기도회':''),season:'',title:'',sub:'',vv:0,flow:'',words:'',scenes:'',marks:'',looks:'',obs_ref:'',obs:'',obs_find:'',obs_link:'',obs_start:'',god:'',god_q:'',ap_lead:'',ap_fu:'',struct:'',note:'',whole_title:'',whole:''},c); }
 
 function ws(){
   document.body.className='ws';
@@ -343,7 +347,10 @@ function drawForm(){ const s=curSet(), f=$('form');
   ${F('looks','③ 눈여겨볼 것',w.looks,{area:1,rows:6,small:'줄마다 「✓ 도구 | 문장」, ✓ = 표시 확인'})}</fieldset>
   ${F('struct','본문 구조(지도가 없을 때)',w.struct||'',{area:1,rows:5,small:'줄마다 「A | 이사야 7–8장 | 임마누엘의 징조」, 가운데는 X',ph:'A | 이사야 7–8장 | 임마누엘의 징조'})}
   <fieldset><legend>2–3쪽 · ④ 나의 묵상</legend><div class="hint">'마음에 남은 말씀'은 읽고 나서 바로 쓰는 칸이라 원고가 없습니다. 관찰은 본문의 사실을 끊어 쓰고 이유를 묻는 한 물음, 성품은 「장절 하나님은 ~분이십니다.」와 그 앞의 나를 묻는 물음, 적용은 "앞에서 떠올린 …"으로 이어받습니다.</div>
-  <div class="row">${F('obs_ref','1 본문 관찰 · 장절',w.obs_ref||'',{ph:'14:22–23'})}</div>${F('obs','1 본문 관찰 · 물음',w.obs||'',{area:1,rows:3,small:'물음은 **굵게**',ph:'… 사도들은 제자들을 격려하고 장로들을 세웁니다. **왜 금식 기도 하며 그들을 주께 맡겼다고 생각합니까?**'})}
+  <div class="row">${F('obs_ref','1 본문 관찰 · 장절',w.obs_ref||'',{ph:'14:22–23'})}</div>${F('obs','1 본문 관찰 · 물음',w.obs||'',{area:1,rows:3,small:'찾기·잇기를 쓰면 여기는 본문 정리만, 물음은 아래에. 안 쓰면 물음을 **굵게** 끝에',ph:'… 사도들은 제자들을 격려하고 장로들을 세웁니다. **사도들이 왜 금식 기도 하며 그들을 주께 맡겼는지 생각해 보세요.**'})}
+  ${F('obs_find','1 본문 관찰 · 찾기(본문에 답이 있는 물음, 비우면 찾기·잇기 없이 줄 넷)',w.obs_find||'',{area:1,rows:2,ph:'6:4–5에서 하나님이 이스라엘에게 먼저 해 주신 일을 하나 찾아 적어 보세요.'})}
+  ${F('obs_link','1 본문 관찰 · 잇기(찾은 것의 뜻을 묻는 물음)',w.obs_link||'',{area:1,rows:2,ph:'위에서 찾은 일을 기억하며 6:8을 다시 읽어 보세요. 하나님은 왜 …을 구하실까요?'})}
+  <div class="row">${F('obs_start','1 본문 관찰 · 문장 앞머리(있을 때만, 끝맺음은 쓰지 않음)',w.obs_start||'',{ph:'하나님이 이런 삶을 구하시는 까닭은'})}</div>
   ${F('god','2 하나님의 성품 · 장절과 성품',w.god||'',{area:1,rows:2,ph:'14:23, 27 하나님은 … 돌보시는 분이십니다.'})}${F('god_q','2 하나님의 성품 · 그 앞의 나(굵게 찍힘)',w.god_q||'',{area:1,rows:2,ph:'그 하나님 앞에서, …은 무엇입니까?'})}
   ${F('ap_lead','3 적용 · 이끄는 말과 물음',w.ap_lead||'',{area:1,rows:3,small:'물음은 **굵게**'})}${F('ap_fu','3 적용 · 이어 묻기(→)',w.ap_fu||'')}</fieldset>
   <fieldset><legend>4쪽 · ⑤ 쓴 뒤에 읽기</legend>${F('note','해설',w.note,{area:1,rows:8,small:'"하나님은 ~분입니다."로 맺습니다'})}

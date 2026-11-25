@@ -44,14 +44,12 @@ def struct(rows, scn=''):
     if scn: scn = scn.replace('<div class="scn">', '<div class="scn"><span class="sth2">장면</span>', 1).replace('<span class="sans sth2">', '<span class="sth2">')
     return '<div class="stc sans"><div class="sth">본문 구조</div>' + ''.join(f'<div class="sr{ind.get(a, "")}"><i>{a}.</i><span><b>{re.sub(r"^[가-힣]+ (?=\d)", "", t)}</b> <small>{s}</small></span></div>' for a, t, s in rows) + scn + '</div>'
 def obs_steps(S):
-    """본문 관찰을 '찾기 → 잇기' 두 걸음으로(11-25 견본). obs_find·obs_link가 없으면 예전처럼 줄 넷."""
+    """본문 관찰을 '찾기 → 잇기' 두 걸음으로(11-25 견본). obs_find(찾기 물음)·obs_link(잇기 물음)·obs_start(문장 앞머리, 있을 때만). 없으면 줄 넷."""
     if not S.get('obs_find'): return f'<div class="ans">{L(4)}</div>'
-    def fl(t):
-        parts = [inl(x.strip()) for x in t.split('___')]
-        return '<div class="ln fl sans">' + '<i></i>'.join(f'<span>{x}</span>' if x else '' for x in parts) + '</div>'
+    st = S.get('obs_start', '')
+    first = f'<div class="ln fl sans"><span>{inl(st)}</span><i></i></div>' if st else '<div class="ln"></div>'
     return (f'<div class="oq stp"><b class="sn sans">찾기</b><b>{inl(S["obs_find"])}</b></div><div class="ans">{L(1)}</div>'
-            f'<div class="oq stp"><b class="sn sans">잇기</b><b>빈칸을 채워 이어 써 보세요.</b></div><div class="ans">'
-            + ''.join(fl(t) for t in S['obs_link'].split('/')) + L(1) + '</div>')
+            f'<div class="oq stp"><b class="sn sans">잇기</b><b>{inl(S["obs_link"])}</b></div><div class="ans">{first}{L(2)}</div>')
 def pages(key):
     W = importlib.import_module('w' + key).W; S = S3[key]
     A, O, G, D = a5.blocks(W)
@@ -76,7 +74,7 @@ def pages(key):
     ref, gst = (m.group(1), m.group(2)) if m else ('', S['god'])
     p3 = (f'<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>' + lab(2, '하나님의 성품') +
           f'<div class="oq"><span class="ref sans">{ref}</span>{inl(gst)} <b>{inl(S["god_q"])}</b></div><div class="ans">{L(4)}</div>'
-          + lab(3, '적용') + f'<div class="oq">{inl(S["ap_lead"])}</div><div class="oq">→ {inl(S["ap_fu"])}</div><div class="ans">{L(3)}</div>'
+          + lab(3, '적용') + f'<div class="oq">{inl(S["ap_lead"])} <b>→ {inl(S["ap_fu"])}</b></div><div class="ans">{L(3)}</div>'
           + lab(4, '나의 기도') + f'<div class="oh sans">오늘 마음에 남은 말씀과 내 응답을 하나님께 말씀드립니다.</div><div class="ans">{L(3)}</div>')
     pr = ('<div class="pr4"><div class="sh sans"><span class="n">6</span>함께 드리는 기도</div><h4 class="sans">청년부 기도제목</h4>' + '<div class="pln"></div>' * 5
           + '<h4 class="sans">교회 기도제목</h4>' + '<div class="pln"></div>' * 3 + '</div>')
