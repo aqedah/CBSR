@@ -7057,7 +7057,7 @@ function shelfOpen(o){ o=o||{}; shelfLoad().then(()=>{ if(CBSR_SHELF.isOpen()) r
         today:(()=>{ try{ const tp=posOfToday(), P=dayPlan(tp.w,tp.d); return (P&&P.ch&&P.ch[0]&&P.ch[0][0])||0; }catch(e){ return 0; } })(),todays:(()=>{ try{ const tp=posOfToday(), P=dayPlan(tp.w,tp.d); return [...new Set(((P&&P.ch)||[]).map(c=>c[0]).filter(Boolean))]; }catch(e){ return []; } })(),   /* 하루에 여러 권을 읽는 날: 그날의 책 모두 */
         nick:(()=>{ try{ return (SYNC.google&&SYNC.google()&&PROF.nick)||""; }catch(e){ return ""; } })(),
         prog:(()=>{ try{ shEnter(); const P=shProg()||{since:0,acts:[],all:false}; return {acts:P.acts,fin:Array.from({length:66},(_,i)=>i+1).filter(b=>bookDone(b)),ot:Array.from({length:39},(_,i)=>i+1).every(b=>bookDone(b)),nb:shNew(),today:todayStr()}; }catch(e){ return null; } })(),
-        push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); if(view.tab==="today") render(); },
+        push:ovOpen,done:ovDone,toast,onClose:()=>{ ovDone(shelfClose); const bn=document.querySelector(".sbnr.shst"); if(bn&&!shPending()) bn.remove(); },   /* 막을 보고 나오면 배너만 지움(다시 그리면 초점이 사라짐) */
     /* 사서의 다섯 물음에 적은 답: mem.shq[책][물음]={v:글,t:적은 때}. 다른 기록처럼 기기에 저장하고 클라우드와 맞춤 */
     store:{get:()=>mem.shq||{},set:(id,f,v)=>{ mem.shq=mem.shq||{}; mem.shq[id]=mem.shq[id]||{}; mem.shq[id][f]={v:String(v).slice(0,400),t:Date.now()}; save(); }}}); if(ok) ovOpen(shelfClose); }).catch(()=>{ if(o.fail) o.fail(); else toast("성경 서고를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요."); }); }
 function shelfLeave(anim){ if(window.CBSR_SHELF&&CBSR_SHELF.isOpen()){ CBSR_SHELF.close(true,!!anim); ovDone(shelfClose); } }
