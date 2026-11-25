@@ -33,6 +33,9 @@ CSS = '''
 .stc .scn{margin:1.4mm 0 0;padding-top:1.2mm;border-top:.2mm solid #ddd;gap:.8mm}.p4 .b1 .stc .scn span{font-size:6.8pt;padding:0 1mm}
 .p4 .b1 .stc .scn span.sth2,.stc .scn .sth2{font-size:7pt;color:#777;font-weight:700;width:100%;border:0;padding:0}
 .clr{clear:both;height:0}
+.stp{margin-top:2.2mm}.stp .sn{display:inline-block;font-size:7.6pt;color:var(--c);border-bottom:.35mm solid var(--c);margin-right:1.8mm;line-height:1.2}
+.p4 .ln.fl{border-bottom:0;display:flex;align-items:flex-end;gap:1.4mm;font-size:8.8pt;color:#555;padding-bottom:.4mm}
+.ln.fl i{flex:1;border-bottom:.22mm dotted #888;height:5mm}.ln.fl span{white-space:nowrap}
 '''
 def lab(n, t, sm=''): return f'<div class="lab4 sans"><b>{n}</b>{t}{"<small>"+sm+"</small>" if sm else ""}</div>'
 def lab0(t, sm=''): return f'<div class="lab4 sans">{t}{"<small>"+sm+"</small>" if sm else ""}</div>'
@@ -40,6 +43,15 @@ def struct(rows, scn=''):
     ind = {'A': '', 'B': ' b', 'X': ' x'}
     if scn: scn = scn.replace('<div class="scn">', '<div class="scn"><span class="sth2">장면</span>', 1).replace('<span class="sans sth2">', '<span class="sth2">')
     return '<div class="stc sans"><div class="sth">본문 구조</div>' + ''.join(f'<div class="sr{ind.get(a, "")}"><i>{a}.</i><span><b>{re.sub(r"^[가-힣]+ (?=\d)", "", t)}</b> <small>{s}</small></span></div>' for a, t, s in rows) + scn + '</div>'
+def obs_steps(S):
+    """본문 관찰을 '찾기 → 잇기' 두 걸음으로(11-25 견본). obs_find·obs_link가 없으면 예전처럼 줄 넷."""
+    if not S.get('obs_find'): return f'<div class="ans">{L(4)}</div>'
+    def fl(t):
+        parts = [inl(x.strip()) for x in t.split('___')]
+        return '<div class="ln fl sans">' + '<i></i>'.join(f'<span>{x}</span>' if x else '' for x in parts) + '</div>'
+    return (f'<div class="oq stp"><b class="sn sans">찾기</b><b>{inl(S["obs_find"])}</b></div><div class="ans">{L(1)}</div>'
+            f'<div class="oq stp"><b class="sn sans">잇기</b><b>빈칸을 채워 이어 써 보세요.</b></div><div class="ans">'
+            + ''.join(fl(t) for t in S['obs_link'].split('/')) + L(1) + '</div>')
 def pages(key):
     W = importlib.import_module('w' + key).W; S = S3[key]
     A, O, G, D = a5.blocks(W)
@@ -59,7 +71,7 @@ def pages(key):
     lnl = lambda t, n: ''.join(f'<div class="ln lbl"><span class="sans">{t if k == 0 else ""}</span></div>' for k in range(n))
     p1.append(f'<div class="kp">{lab0("마음에 남은 말씀", "읽고 나서 바로 적습니다")}{lnl("말씀 · 장절", 2)}{lnl("이유", 2)}</div>')
     p2 = ''.join(A[i3:]) + (f'<div class="sh sans"><span class="n">4</span>나의 묵상</div>' + lab(1, '본문 관찰', '오늘 본문을 더 살펴보는 한 길') +
-          f'<div class="oq"><span class="ref sans">{S["obs_ref"]}</span>{inl(S["obs"])}</div><div class="ans">{L(4)}</div>')
+          f'<div class="oq"><span class="ref sans">{S["obs_ref"]}</span>{inl(S["obs"])}</div>' + obs_steps(S))
     m = re.match(r'^([^\s,]+(?:, ?\d+(?:[–-]\d+)?)*)\s+(.*)$', S['god'])
     ref, gst = (m.group(1), m.group(2)) if m else ('', S['god'])
     p3 = (f'<div class="sh sans" style="margin-top:0"><span class="n">4</span>나의 묵상<small>이어서</small></div>' + lab(2, '하나님의 성품') +
