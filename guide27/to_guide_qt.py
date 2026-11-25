@@ -19,7 +19,7 @@ for D in json.load(open(B)):
     if 'sub' in D: x['sub']=D['sub']
     g=x.setdefault('guide',{})
     if 'today' in D: g['today']=D['today']
-    if 'word' in D: g['word']=D['word'][0]+' — '+D['word'][1]
+    if 'word' in D: g['word']=(D['word'][0]+' — '+D['word'][1]) if D['word'] else ''   # 11-25: 빈 목록이면 말뜻 비움
     g['find']=' '.join(dict.fromkeys(m['tool'] for m in D['marks']))
     o=x.setdefault('obs',{}); o['q']=D['q']
     if 'christ' in D: o['christ']=D['christ'][0]+' '+D['christ'][1]
