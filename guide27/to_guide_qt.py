@@ -42,9 +42,8 @@ for D in json.load(open(B)):
     x['v27']={'scenes':D['scenes'],'marks':[{'tool':m['tool'],'rep':bool(m['rep']),'text':tok(m['text'])} for m in D['marks']],
               'looks':[{'ck':bool(l['ck']),'tool':l['tool'],'text':tok(l['text'])} for l in D['looks']],
               'god':[tok(D['god'][0]),tok(D['god'][1])]}
-    if D.get('find'):   # 11-25 견본: 본문 관찰 '찾기 → 잇기'. 앱은 obs.q 하나만 읽으므로 물음을 굵게 붙여 둠
-        x['v27'].update(obs0=tok(D['q']), find=tok(D['find']), link=tok(D['link']), start=tok(D.get('start','')))
-        o['q']=D['q']+' **'+D['find']+'** **'+D['link']+'**'
+    if D.get('find'):   # 11-25: 본문 관찰 '찾기 → 잇기'(obs.q는 본문 정리만, 앱에는 빌드가 두 물음을 붙여 줌)
+        x['v27'].update(find=tok(D['find']), link=tok(D['link']), start=tok(D.get('start','')))
     if D.get('q2'): x['v27']['obs2']=tok(D['q2']); x['v27']['god2']=[tok(D['god2'][0]),tok(D['god2'][1])]  # 11-24: 범위가 넓은 날의 둘째 갈래
     x['u']=now
 j['updated']=time.strftime('%Y-%m-%dT%H:%M:%S')

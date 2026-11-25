@@ -192,7 +192,7 @@ for _fk in ('syms','dsyms'):
 data+='const GBSYMS='+J(_GBS)+';\n'
 data+='const GBDESC='+J(_gdesc(_GQ))+';\n'
 data+='const GBDESC26='+J(_gdesc(_TQ))+';\n'
-_GQT26={int(n):{'q':((v or {}).get('obs') or {}).get('q',''),'apply':(v or {}).get('apply',''),'note':(v or {}).get('note',''),'pray':(v or {}).get('pray','')} for n,v in _TQ.items() if n.isdigit()}
+_GQT26={int(n):{'q':(((v or {}).get('obs') or {}).get('q','')+''.join(' **'+t+'**' for t in [((v or {}).get('v27') or {}).get('find',''),((v or {}).get('v27') or {}).get('link','')] if t)),'apply':(v or {}).get('apply',''),'note':(v or {}).get('note',''),'pray':(v or {}).get('pray','')} for n,v in _TQ.items() if n.isdigit()}
 for _n,_v in _TQ.items():  # 11-20 체험판도 새 틀로 바꾸는 날부터 성품 물음을 가이드북과 같게
     if _n.isdigit() and isinstance(_v,dict) and _v.get('v27') and (_v['v27'].get('god') or ['',''])[1]: _GQT26[int(_n)]['god']=' '.join(_v['v27']['god'])
     if _n.isdigit() and isinstance(_v,dict) and (_v.get('v27') or {}).get('obs2'): _GQT26[int(_n)]['q2']=_v['v27']['obs2']; _GQT26[int(_n)]['god2']=' '.join(_v['v27'].get('god2') or [])  # 11-24 목사님: 범위가 넓은 날 두 갈래

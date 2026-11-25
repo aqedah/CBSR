@@ -759,7 +759,7 @@ function svgMap(m,wmm,hTarget){
     const [x,y]=px(PLACES[n][1],PLACES[n][0]); const e=emph.includes(n);
     const pa=` data-pl="${esc(n)}"`;
     o.push(e?`<circle${pa} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${q(2.1)}" fill="var(--main)"/>`:`<circle${pa} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${q(1.5)}" fill="#fff" stroke="#777" stroke-width="${(0.7*KS).toFixed(2)}"/>`);
-    const lab=n.replace(/\(.*\)$/,''); const fs=(e?5.2:4.4)*K, w=lab.length*fs*0.95;
+    const lab=n.replace(/\(.*\)$/,''); const fs=(e?6.2:5.4)*K, w=lab.length*fs*0.95;
     const cands=[[3,1.6,'start'],[-3,1.6,'end'],[0,-3,'middle'],[0,6.2,'middle'],[3,-2.5,'start'],[-3,-2.5,'end'],[3,5.5,'start'],[-3,5.5,'end'],[0,-7,'middle'],[0,10,'middle']].map(c=>[x+c[0]*K,y+c[1]*K,c[2]]);
     let pick=cands[0], best=1e9, bestBox=null;
     for(const c of cands){const bx=c[2]==='start'?c[0]:c[2]==='end'?c[0]-w:c[0]-w/2;const box=[bx,c[1]-fs,bx+w,c[1]];
