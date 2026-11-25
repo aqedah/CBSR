@@ -290,7 +290,7 @@ dialog .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
 .pg .after p b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .q{font-size:9.8pt;line-height:1.4;margin:0 0 0.6mm;color:#222;text-align:justify}
 .pg .rd{font-size:9.2pt;line-height:1.36;margin:0 0 0.6mm;color:#222;text-align:justify}
-.pg .q.stp{margin-top:.3mm}.lar{display:inline-block;width:4.2mm;height:3.2mm;vertical-align:-.1mm;margin:0 .8mm 0 .2mm;color:var(--main)}.pg .q .sn{display:inline-block;font-size:7.2pt;font-weight:700;color:#fff;background:var(--main);border-radius:2.4mm;padding:0 1.8mm;margin-right:1.4mm;line-height:1.5;vertical-align:.2mm}.pg .q .rf{white-space:nowrap;font-size:7.6pt;font-weight:700;color:var(--main);border-left:.6mm solid var(--main);padding-left:.9mm;margin-right:.9mm}.pg .lab .st{background:color-mix(in srgb,var(--main) 16%,#fff);color:var(--main)!important;border:0!important;border-radius:.7mm;font-weight:800}
+.pg .q.stp{margin:0}.lar{display:inline-block;width:4.2mm;height:3.2mm;vertical-align:-.1mm;margin:0 .8mm 0 .2mm;color:var(--main)}.pg .q .sn{display:inline-block;font-size:7.2pt;font-weight:700;color:#fff;background:var(--main);border-radius:2.4mm;padding:0 1.8mm;margin-right:1.4mm;line-height:1.5;vertical-align:.2mm}.pg .q .rf{white-space:nowrap;font-size:7.6pt;font-weight:700;color:var(--main);border-left:.6mm solid var(--main);padding-left:.9mm;margin-right:.9mm}.pg .lab .st{background:color-mix(in srgb,var(--main) 16%,#fff);color:var(--main)!important;border:0!important;border-radius:.7mm;font-weight:800}
 .pg .ln.fl{position:relative}.pg .ln.fl span{position:absolute;left:0;bottom:.4mm;font-size:8.4pt;color:#555;background:#fff;padding-right:1.4mm}
 .pg .q b{font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif}
 .pg .lab{font-size:9.6pt;font-weight:500;margin:1.6mm 0 0.3mm;color:var(--ink);display:flex;align-items:center;gap:1.2mm} .pg .lab .sm{font-size:9.2pt;color:#444} .pg .hint3{font-size:8.6pt;color:#555;margin:-0.8mm 0 1.2mm;font-family:"Noto Sans KR","Noto Sans CJK KR",sans-serif} .pg .amen{font-size:9.2pt;margin:0.6mm 0 0;text-align:right;color:#222}
@@ -503,13 +503,17 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       <div class="hint">꼴: 물음 먼저 → "(장절)에서 찾아 (표시)하세요." 표시 낱말은 단추로 넣으면 그 모양대로 인쇄됩니다.</div>
       <label class="f"><span class="k"><b>③ 눈여겨볼 것</b> (줄마다 하나: <code>✓ 도구 | 문장</code>, ✓ = 표시 확인)</span><textarea id="l27" rows="6" placeholder="✓ ◆ 반복 | &quot;…&quot;(45:5, 7) …&#10;⇔ 대조 | …"></textarea></label>
       <div class="hint">✓ 항목은 ② 표시 차례대로. ④ 관찰의 답은 먼저 주지 않습니다. 남는 자리는 도구(점층·전형장면·아이러니·침묵…)로 채웁니다.</div>
-      <label class="f"><span class="k"><b>④ 하나님의 성품 — 인용(장절)</b></span><input type="text" id="g27a" placeholder="&quot;…&quot;(45:5)"></label>
-      <label class="f"><span class="k"><b>④ 하나님의 성품 — 물음</b></span><textarea id="g27b" rows="2" placeholder="… **생명을 구원하는 길로 쓰신 하나님의 은혜**가 내게는 어떻게 다가옵니까?"></textarea></label>
+      <label class="f"><span class="k"><b>④ 하나님의 성품 — 장절과 성품</b></span><input type="text" id="g27a" placeholder="3:6–7 하나님은 … 분이십니다."></label>
+      <label class="f"><span class="k"><b>④ 하나님의 성품 — 그 앞의 나</b> (굵게 찍힘, 다짐까지 가지 않음)</span><textarea id="g27b" rows="2" placeholder="**그 하나님 앞에서, … 무엇입니까?**"></textarea></label>
+      <details id="fl27"><summary>본문 관찰을 찾기 → 잇기 두 걸음으로 (찾기를 비우면 물음 하나)</summary><div class="hint">찾기를 쓰면 아래 [1] 본문 관찰 칸에는 본문 정리 문장만 둡니다. 찾기 = 지정한 절에 답이 있는 물음, 잇기 = 찾은 것의 뜻을 묻는 물음. 문장 앞머리는 처음 막히는 날에만(끝맺음은 쓰지 않음).</div>
+      <label class="f"><span class="k"><b>찾기</b></span><textarea id="fd27" rows="2" placeholder="3:5–6에서 바울은 자기와 아볼로를 무엇이라 부르고, 두 사람이 한 일은 무엇입니까?"></textarea></label>
+      <label class="f"><span class="k"><b>잇기</b></span><textarea id="lk27" rows="2" placeholder="이것을 기억하며 3:7을 읽어 보세요. 바울은 왜 …할까요?"></textarea></label>
+      <label class="f"><span class="k"><b>문장 앞머리</b> (있을 때만)</span><input type="text" id="st27" placeholder="바울이 자기를 낮추어 말하는 까닭은"></label></details>
       <details id="two27"><summary>범위가 넓은 날 — 관찰·성품 둘째 갈래(나) <span class="twob">두 갈래 날</span><span class="twon">· 아직 비어 있음</span></summary><div class="hint">시편 여러 편, 잠언, 선지서 신탁 모음, 서신 4장 이상처럼 서로 독립된 단락이 여럿인 날에만 씁니다. 비우면 한 갈래로 나옵니다. 적용·기도·해설은 첫째 갈래(가)를 따릅니다.</div>
       <label class="f"><span class="k"><b>① 본문 관찰 — 나</b></span><textarea id="q27b" rows="2"></textarea></label>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 나, 인용(장절)</b></span><input type="text" id="g27c"></label>
       <label class="f"><span class="k"><b>④ 하나님의 성품 — 나, 물음</b></span><textarea id="g27d" rows="2"></textarea></label></details>
-      <div class="hint">시선·은혜·마음·사랑 가운데 문맥에 맞는 하나를 **굵게**. 적용은 「앞 문장(하나님이 하신 일, 장절) **물음** **→ 이어지는 물음**」. 해설은 "하나님은 ~분입니다."로 맺습니다.</div>
+      <div class="hint">성품은 한 문단: 장절 → "하나님은 ~분이십니다." → 그 하나님 앞에서 지금의 나를 살피는 물음(본문이 위로하면 위로를, 책망하면 돌이킬 것을). 적용은 「앞 문장(본문, 장절) **앞에서 떠올린 … 물음?** **→ 이어지는 물음**」, 기도 칸과 겹치지 않게. 해설은 그날 묵상을 넓히고 "하나님은 ~분입니다."로 맺습니다.</div>
     </fieldset>
     <fieldset><legend>머리</legend><label class="f"><span class="k"><b>소제목</b> <span class="cnt" data-for="sub"></span></span><input type="text" id="sub" data-max="30" placeholder="비우면 통독표 소제목"></label></fieldset>
     <fieldset><legend><span class="n">1</span>읽기 전</legend>
@@ -540,7 +544,7 @@ A′|26장|언덕에서. &quot;여호와의 기름 부음 받은 자&quot;(26:9)
     </fieldset>
     <fieldset><legend><span class="n">4</span>나의 묵상 (오른쪽 물음)</legend>
       <label class="f"><span class="k"><b>[1] 본문 관찰 — 질문</b> <span class="cnt" data-for="q"></span></span><textarea id="q" data-max="85"></textarea></label>
-      <div class="hint">본문의 말로 답할 수 있는 것. 절 주소 포함.</div>
+      <div class="hint">사실 문장과 물음을 나눕니다. 물음은 하나, 이유를 묻되 "왜 ~지 생각해 보세요."로. 지정한 절에 답할 근거가 있는지 먼저 답해 봅니다. 큰따옴표는 개역개정 그대로일 때만(중간에서 자르지 않음). 찾기·잇기를 쓰면 여기는 본문 정리만.</div>
       <div class="hint">[2] 하나님의 성품은 매일 같은 물음("하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까? 규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요.")이라 칸이 없습니다. 답 문장은 아래 ⑤에.</div>
       <label class="f"><span class="k"><b>[3] 적용 — 질문</b> <span class="cnt" data-for="apply"></span></span><textarea id="apply" data-max="105"></textarea></label>
       <div class="hint">앞 문장 = 본문의 사실(절 주소), 뒤 문장 = 나에게 묻는 질문 하나. 질문은 **별표 둘**로 감싸면 굵게.</div>
@@ -764,7 +768,7 @@ function svgMap(m,wmm,hTarget){
     const [x,y]=px(PLACES[n][1],PLACES[n][0]); const e=emph.includes(n);
     const pa=` data-pl="${esc(n)}"`;
     o.push(e?`<circle${pa} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${q(2.1)}" fill="var(--main)"/>`:`<circle${pa} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${q(1.5)}" fill="#fff" stroke="#777" stroke-width="${(0.7*KS).toFixed(2)}"/>`);
-    const lab=n.replace(/\(.*\)$/,''); const fs=(e?5.2:4.4)*K, w=lab.length*fs*0.95;
+    const lab=n.replace(/\(.*\)$/,''); const fs=(e?6.2:5.4)*K, w=lab.length*fs*0.95;
     const cands=[[3,1.6,'start'],[-3,1.6,'end'],[0,-3,'middle'],[0,6.2,'middle'],[3,-2.5,'start'],[-3,-2.5,'end'],[3,5.5,'start'],[-3,5.5,'end'],[0,-7,'middle'],[0,10,'middle']].map(c=>[x+c[0]*K,y+c[1]*K,c[2]]);
     let pick=cands[0], best=1e9, bestBox=null;
     for(const c of cands){const bx=c[2]==='start'?c[0]:c[2]==='end'?c[0]-w:c[0]-w/2;const box=[bx,c[1]-fs,bx+w,c[1]];
@@ -882,7 +886,7 @@ function pageR27(p,qt,hw){ const v=qt.v27, q='q'+qOf(p), g=v.god||['',''];
   return `<div class="pg r n27 ${q}">
 <p class="sec sans" style="margin-top:0"><span class="n">4</span>나의 묵상</p>
 ${v.obs2?`<p class="lab sans"><span class="st">1</span>본문 관찰<span class="gah">가와 나 가운데 골라 적습니다</span></p><p class="q gq" data-f="q"><span class="ga">가</span>${t27(qt.obs.q)}</p><p class="q gq" data-f="q27b"><span class="ga">나</span>${t27(v.obs2)}</p>${ln(2)}
-<p class="lab sans"><span class="st">2</span>하나님의 성품<span class="gah">관찰에서 고른 쪽과 같은 쪽을 고릅니다</span></p><p class="q gq" data-f="g27b"><span class="ga">가</span>${t27(g[0])} ${t27(g[1])}</p><p class="q gq" data-f="g27d"><span class="ga">나</span>${t27((v.god2||[])[0]||'')} ${t27((v.god2||[])[1]||'')}</p>${ln(2)}`:`<p class="lab sans"><span class="st">1</span>본문 관찰</p>${v.find?`<p class="q" data-f="q">${t27(v.obs0)} <span class="sn sans">찾기</span><b>${t27(v.find)}</b></p>${ln(1)}<p class="q stp"><svg class="lar" viewBox="0 0 12 9" aria-hidden="true"><path d="M2 0V4.5Q2 7 4.5 7H10.5M8.3 4.8L10.6 7L8.3 9.2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sn sans">잇기</span><b>${t27(v.link)}</b></p>${v.start?`<div class="lnw"><div class="ln fl"><span class="sans">${t27(v.start)}</span></div><div class="ln"></div></div>`:ln(2)}`:`<p class="q" data-f="q">${t27(qt.obs.q)}</p>${ln(3)}`}
+<p class="lab sans"><span class="st">2</span>하나님의 성품<span class="gah">관찰에서 고른 쪽과 같은 쪽을 고릅니다</span></p><p class="q gq" data-f="g27b"><span class="ga">가</span>${t27(g[0])} ${t27(g[1])}</p><p class="q gq" data-f="g27d"><span class="ga">나</span>${t27((v.god2||[])[0]||'')} ${t27((v.god2||[])[1]||'')}</p>${ln(2)}`:`<p class="lab sans"><span class="st">1</span>본문 관찰</p>${v.find?`<p class="q" data-f="q">${t27(qt.obs.q)} <span class="sn sans">찾기</span><b>${t27(v.find)}</b></p>${ln(1)}<p class="q stp"><svg class="lar" viewBox="0 0 12 9" aria-hidden="true"><path d="M2 0V4.5Q2 7 4.5 7H10.5M8.3 4.8L10.6 7L8.3 9.2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sn sans">잇기</span><b>${t27(v.link)}</b></p>${v.start?`<div class="lnw"><div class="ln fl"><span class="sans">${t27(v.start)}</span></div><div class="ln"></div></div>`:ln(2)}`:`<p class="q" data-f="q">${t27(qt.obs.q)}</p>${ln(3)}`}
 <p class="lab sans"><span class="st">2</span>하나님의 성품</p><p class="q" data-f="g27b">${t27(g[0]).replace(/^<span class="vs">([^<]*)<\/span>\s*/,'<span class="rf sans">$1</span>')} ${t27(g[1])}</p>${ln(2)}`}
 <p class="lab sans"><span class="st">3</span>적용</p><p class="q" data-f="apply">${t27(qt.apply)}</p>${ln(3)}
 <p class="lab sans"><span class="st">4</span>오늘의 기도</p>${ln(2)}
@@ -916,12 +920,13 @@ function rd27(){ const L=id=>$(id).value.split('\n').map(x=>x.trim()).filter(Boo
   return { scenes:L('s27'),
     marks:L('k27').map(x=>{ let [t,b]=sp(x); const rep=/^★/.test(t); return {tool:t.replace(/^★\s*/,''),rep,text:b} }),
     looks:L('l27').map(x=>{ let [t,b]=sp(x); const ck=/^✓/.test(t); return {ck,tool:t.replace(/^✓\s*/,''),text:b} }),
-    god:[$('g27a').value.trim(),$('g27b').value.trim()], ...( $('q27b').value.trim()?{obs2:$('q27b').value.trim(),god2:[$('g27c').value.trim(),$('g27d').value.trim()]}:{} ), ...keep27() } }
-/* 11-25 견본: 찾기·잇기(obs0·find·link·start)는 양식 칸이 아직 없어 원고 값을 그대로 지님 */
-function keep27(){ const o=((typeof DATA!=='undefined'&&DATA[String(PLAN[cur].no)])||{}).v27||{}, e={}; ['obs0','find','link','start'].forEach(k=>{ if(o[k]) e[k]=o[k] }); return e }
+    god:[$('g27a').value.trim(),$('g27b').value.trim()], ...( $('q27b').value.trim()?{obs2:$('q27b').value.trim(),god2:[$('g27c').value.trim(),$('g27d').value.trim()]}:{} ), ...rdFind27() } }
+/* 11-25: 본문 관찰 '찾기 → 잇기' — 찾기 칸을 비우면 예전처럼 물음 하나 */
+function rdFind27(){ const f=$('fd27').value.trim(); return f?{find:f,link:$('lk27').value.trim(),start:$('st27').value.trim()}:{} }
+
 function fill27(v){ document.body.classList.toggle('m27',!!v); $('b27').textContent=v?'옛 틀로 되돌리기':'새 틀로 쓰기'; v=v||{scenes:[],marks:[],looks:[],god:['','']};
   $('s27').value=(v.scenes||[]).join('\n'); $('k27').value=(v.marks||[]).map(m=>(m.rep?'★ ':'')+m.tool+' | '+m.text).join('\n');
-  $('l27').value=(v.looks||[]).map(m=>(m.ck?'✓ ':'')+m.tool+' | '+m.text).join('\n'); $('g27a').value=(v.god||[])[0]||''; $('g27b').value=(v.god||[])[1]||''; $('q27b').value=v.obs2||''; $('g27c').value=(v.god2||[])[0]||''; $('g27d').value=(v.god2||[])[1]||''; if($('two27')){ const P2=(typeof PLAN!=='undefined'&&PLAN[cur])||{}; $('two27').open=!!v.obs2||!!P2.two; $('two27').classList.toggle('need',!!P2.two&&!v.obs2); $('two27').classList.toggle('isTwo',!!P2.two); } }
+  $('l27').value=(v.looks||[]).map(m=>(m.ck?'✓ ':'')+m.tool+' | '+m.text).join('\n'); $('g27a').value=(v.god||[])[0]||''; $('g27b').value=(v.god||[])[1]||''; $('q27b').value=v.obs2||''; $('g27c').value=(v.god2||[])[0]||''; $('g27d').value=(v.god2||[])[1]||''; $('fd27').value=v.find||''; $('lk27').value=v.link||''; $('st27').value=v.start||''; if($('fl27')) $('fl27').open=!!v.find; if($('two27')){ const P2=(typeof PLAN!=='undefined'&&PLAN[cur])||{}; $('two27').open=!!v.obs2||!!P2.two; $('two27').classList.toggle('need',!!P2.two&&!v.obs2); $('two27').classList.toggle('isTwo',!!P2.two); } }
 function wire27(){ ['find','pair','stxk','stx','god'].forEach(id=>{ const el=$(id); if(!el) return; const w=el.closest('label')||el; w.classList.add('o27'); let n=w.nextElementSibling; while(n&&n.classList.contains('hint')){ n.classList.add('o27'); n=n.nextElementSibling } });
   document.querySelectorAll('#f27 .tokrow button').forEach(b=>b.onclick=()=>{ const ta=$(b.parentNode.dataset.for); const a=ta.selectionStart??ta.value.length, e=ta.selectionEnd??a; ta.value=ta.value.slice(0,a)+b.textContent+ta.value.slice(e); ta.focus(); ta.selectionStart=ta.selectionEnd=a+b.textContent.length; ta.dispatchEvent(new Event('input',{bubbles:true})) });
   $('b27').onclick=()=>{ const on=document.body.classList.contains('m27'); if(on&&!confirm('이 날의 새 틀 칸(장면·표시·눈여겨볼 것·성품)을 지우고 옛 틀로 되돌릴까요?')) return; fill27(on?null:{scenes:[],marks:[],looks:(readForm().obs.pair||[]).map(x=>({ck:false,tool:x[0],text:x[1]})),god:['','']}); counters(); render(); save(); fillDays(); $('selD').value=cur } }
