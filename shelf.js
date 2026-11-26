@@ -34,10 +34,23 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .lay{position:absolute;inset:0}
 #cbsrShelf .wk{position:absolute;inset:0}
 #cbsrShelf .wk.go{animation:cbsrWalk 1.5s ease-in-out 1}
+#cbsrShelf .door{display:none;position:absolute;inset:0;pointer-events:none;transform-origin:50% 55.56%}   /* 11-26 목사님: 서고를 열면 문을 지나 걸어 들어가는 움직임(1인칭) */
+#cbsrShelf .door i{position:absolute;left:66px;top:160px;width:258px;height:560px;border-radius:129px 129px 0 0;box-shadow:0 0 0 7px #2b1d13,0 0 0 9px rgba(214,178,106,.28),0 0 0 1400px #0d0805,inset 0 0 60px rgba(0,0,0,.55)}
+#cbsrShelf.ent .door{display:block;animation:cbsrDoor 2.3s cubic-bezier(.42,0,.3,1) both}
+#cbsrShelf.ent .wk{animation:cbsrEnter 2.3s cubic-bezier(.42,0,.3,1) both;transform-origin:50% 55.56%}
+#cbsrShelf.ent .hallv:after{content:"";position:absolute;inset:0;background:#0d0805;pointer-events:none;animation:cbsrBye .7s ease .1s forwards;z-index:30}
+#cbsrShelf.ent .ui{animation:cbsrIn .5s ease 2.05s both}
+#cbsrShelf.ent .dg{animation-delay:2.25s!important}
+@keyframes cbsrEnter{0%{transform:scale(.6)}100%{transform:scale(1)}}
+@keyframes cbsrDoor{0%{transform:scale(1);opacity:1}70%{transform:scale(1.5);opacity:1}100%{transform:scale(1.95);opacity:0}}
 #cbsrShelf .hl{position:absolute;inset:0;transition:transform 1.6s cubic-bezier(.45,.05,.25,1);transform-origin:50% 55.56%}   /* 소실점(통로 끝)을 향해 걸어감 */
 #cbsrShelf .hl img,#cbsrShelf .full{position:absolute;left:0;top:0;width:390px;height:846px;display:block}
 #cbsrShelf .hl.ot{transform:perspective(900px) translateX(150px) scale(1.9) rotateY(9deg)}   /* 몇 걸음 걸어가 왼쪽 서가로 몸을 돌림 */
 #cbsrShelf .hl.nt{transform:perspective(900px) translateX(-150px) scale(1.9) rotateY(-9deg)}
+#cbsrShelf .hl.ot.mv{animation:cbsrTurnL 1.7s cubic-bezier(.45,.05,.3,1) both}   /* 11-26 목사님: 옆 서가는 줌만 되어 들어가는 느낌이 없음 → 먼저 몸을 돌리고, 그다음 걸어 들어감 */
+#cbsrShelf .hl.nt.mv{animation:cbsrTurnR 1.7s cubic-bezier(.45,.05,.3,1) both}
+@keyframes cbsrTurnL{0%{transform:perspective(900px) translateX(0) scale(1) rotateY(0)}42%{transform:perspective(900px) translateX(55px) scale(1.42) rotateY(18deg)}100%{transform:perspective(900px) translateX(150px) scale(1.9) rotateY(9deg)}}
+@keyframes cbsrTurnR{0%{transform:perspective(900px) translateX(0) scale(1) rotateY(0)}42%{transform:perspective(900px) translateX(-55px) scale(1.42) rotateY(-18deg)}100%{transform:perspective(900px) translateX(-150px) scale(1.9) rotateY(-9deg)}}
 #cbsrShelf .hl.etc0{transform:scale(1.2)}   /* 통로 끝의 그을린 서가 앞까지 */
 #cbsrShelf .hl.etc{transform:scale(2.7)}
 #cbsrShelf .hl.out{pointer-events:none;transition:none}   /* 한 걸음: 보던 그림은 다가오며 사라지고, 다음 자리 그림이 뒤에서 다가옴 */
@@ -192,7 +205,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .bv .fa{margin:0 0 10px;font:400 16.5px/1.6 "Gowun Batang","Noto Serif KR",serif;color:#fbf3df}
 #cbsrShelf .bv .fa b{display:block;font:700 13.5px/1.5 "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif;color:#e6cf9a}
 #cbsrShelf .amb{pointer-events:none;position:absolute}
-#cbsrShelf .amb.soot{left:138px;top:206px;width:114px;height:104px;mix-blend-mode:multiply;background:radial-gradient(ellipse 40% 84% at 50% 100%,rgba(52,35,20,.6) 0,rgba(52,35,20,.34) 44%,rgba(52,35,20,0) 100%),radial-gradient(ellipse 11% 54% at 28% 78%,rgba(46,30,17,.4) 0,rgba(46,30,17,0) 100%),radial-gradient(ellipse 10% 60% at 70% 70%,rgba(46,30,17,.36) 0,rgba(46,30,17,0) 100%),radial-gradient(ellipse 52% 18% at 50% 16%,rgba(52,35,20,.2) 0,rgba(52,35,20,0) 100%)}
+#cbsrShelf .amb.soot{left:138px;top:206px;width:114px;height:104px;mix-blend-mode:multiply;background:radial-gradient(ellipse 46% 44% at 50% 58%,rgba(52,35,20,.3) 0,rgba(52,35,20,.16) 50%,rgba(52,35,20,0) 100%),radial-gradient(ellipse 9% 30% at 32% 62%,rgba(46,30,17,.18) 0,rgba(46,30,17,0) 100%),radial-gradient(ellipse 9% 32% at 68% 58%,rgba(46,30,17,.16) 0,rgba(46,30,17,0) 100%)}   /* 11-26 목사님: 위 가운데 검은 자리가 튐(아래 끝이 칼로 자른 듯) → 옅게, 가장자리 안에서 사라지게 */
 #cbsrShelf .amb.end{left:95px;top:250px;width:200px;height:300px;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(16,10,6,.8) 0,rgba(16,10,6,.62) 38%,rgba(16,10,6,.3) 68%,rgba(16,10,6,0) 100%)}   /* 통로 끝의 어둠(촛불 빛무리보다 아래) */
 #cbsrShelf .fl{border-radius:50% 50% 46% 46%/74% 74% 26% 26%;background:radial-gradient(ellipse at 50% 74%,#fffdf0 0,#ffe89a 38%,#f9bd52 72%,rgba(238,150,50,0) 100%);box-shadow:0 0 5px 1.5px rgba(255,206,110,.75),0 0 0 .5px rgba(120,70,20,.35);transform-origin:50% 100%;animation:cbsrFlm 2s ease-in-out infinite}
 /* 대화(11-24 목사님): 사서의 말 · 나의 혼잣말 · 선택지. 대사 틀은 어디서나 하나(17:54) */
@@ -306,7 +319,7 @@ html.shelf-on .coach{display:none!important}
 #cbsrShelf .fade{animation:cbsrIn .45s ease both}
 @keyframes cbsrIn{from{opacity:0}to{opacity:1}}
 @keyframes cbsrZin{from{opacity:0;transform:scale(1.07)}to{opacity:1;transform:none}}
-@keyframes cbsrWalk{0%,100%{transform:translateY(0)}12%{transform:translateY(-5px)}25%{transform:translateY(0)}37%{transform:translateY(-5px)}50%{transform:translateY(0)}62%{transform:translateY(-4px)}75%{transform:translateY(0)}87%{transform:translateY(-3px)}}
+@keyframes cbsrWalk{0%,100%{transform:translateY(0)}35%{transform:translateY(-1.5px)}70%{transform:translateY(-.8px)}}   /* 11-26 목사님: 흔들림이 커서 멀미 → 아주 얕게 */
 @keyframes cbsrKb{from{transform:scale(1)}to{transform:scale(1.08) translate(-1.2%,-1%)}}
 @keyframes cbsrGlw{0%,100%{opacity:.55;transform:scale(1)}23%{opacity:.95;transform:scale(1.05)}41%{opacity:.7;transform:scale(.98)}64%{opacity:1;transform:scale(1.04)}82%{opacity:.62;transform:scale(1)}}
 @keyframes cbsrFlm{0%,100%{transform:rotate(-4deg) scale(1,1)}14%{transform:rotate(5deg) scale(.9,1.1)}29%{transform:rotate(-7deg) scale(1.05,.93)}43%{transform:rotate(3deg) scale(.86,1.16)}57%{transform:rotate(8deg) scale(1,.96)}71%{transform:rotate(-3deg) scale(.92,1.12)}86%{transform:rotate(6deg) scale(1.04,.98)}}
@@ -457,12 +470,12 @@ function hallStep(d){ var t=levels[0]; if(busy||!t||top()!==t||t.dg) return;    
   var pd=v.querySelector(".pad"); if(pd) pd.classList.add("wt");
   setTimeout(function(){ if(old.parentNode) old.parentNode.removeChild(old); busy=false; if(!root) return; hl.className="hl"; if(top()===t){ var f=document.activeElement&&document.activeElement.getAttribute&&document.activeElement.getAttribute("data-a"); drawHall0(t); var nb=f&&stage.querySelector('.pad [data-a="'+f+'"]:not([disabled])')||stage.querySelector('.pad [data-a="fw"]'); if(f&&nb) try{ nb.focus({preventScroll:true}); }catch(er){} } },1000); }
 function hallBase(){ var el=stage.querySelector(".hallv"); if(el) return el;
-  stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl" data-p="'+hpos()+'">'+viewInner(hpos())+'</div></div></div><div class="dimv"></div><div class="ui"></div></div>';
+  stage.innerHTML='<div class="lay hallv"><div class="scn"><div class="wk"><div class="hl" data-p="'+hpos()+'">'+viewInner(hpos())+'</div></div><div class="door" aria-hidden="true"><i></i></div></div><div class="dimv"></div><div class="ui"></div></div>';
   el=stage.querySelector(".hallv"); el._fresh=true; VIEWS.forEach(function(V){ try{ (new Image()).src=IMG+V.img+VER; }catch(er){} }); return el; }
 function drawHall(t){ drawHall0(t); dgDraw(); }
-function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), P=hpos(), _g=P+"|"+[2,3,4].map(seenAct).join(""), _p=(hl.getAttribute("data-sig")!==_g)&&(hl.innerHTML=viewInner(P),hl.setAttribute("data-p",P),hl.setAttribute("data-sig",_g)), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec")?" "+((t.s==="etc"&&t.step!=="in")?"etc0":t.s):"", moved=(hl.className!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+((t.t==="hall"&&!t.dg)?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
+function drawHall0(t){ var v=hallBase(), hl=v.querySelector(".hl"), P=hpos(), _g=P+"|"+[2,3,4].map(seenAct).join(""), _p=(hl.getAttribute("data-sig")!==_g)&&(hl.innerHTML=viewInner(P),hl.setAttribute("data-p",P),hl.setAttribute("data-sig",_g)), ui=v.querySelector(".ui"), dim=v.querySelector(".dimv"), zn=v.querySelector(".zn"), wk=v.querySelector(".wk"), fresh=v._fresh, cls=(t.t==="sec")?" "+((t.s==="etc"&&t.step!=="in")?"etc0":t.s):"", moved=(hl.className.replace(" mv","")!=="hl"+cls); v._fresh=false; v.classList.remove("lv"); v.querySelector(".scn").style.cssText=scn(); zn.className="zn"+((t.t==="hall"&&!t.dg)?"":" off"); /* 11-24 목사님: 나올 때 팻말이 따로 움직여 보임 → 팻말을 그림 층에 두고 흐리게 나타나고 사라지게 */
   if(!fresh&&moved){ wk.classList.remove("go"); void wk.offsetWidth; wk.classList.add("go"); } /* 걸어서 그 앞으로(돌아올 때도) */
-  hl.className="hl"+cls; dim.className="dimv"+(t.t==="sec"?" on":""); v.classList.toggle("morn",morn()||!!levels[0].morn);
+  hl.className="hl"+cls+((moved&&!fresh&&(cls===" ot"||cls===" nt")&&!t.gd)?" mv":""); dim.className="dimv"+(t.t==="sec"?" on":""); v.classList.toggle("morn",morn()||!!levels[0].morn);
   if(t.t==="plan"){ dim.className="dimv on now"; ui.innerHTML='<button type="button" class="bk" data-a="back">'+CL+'서고</button><div class="ttl"><b class="tb">통독표</b></div>'+planHtml(t)+(HS>=760?libr("…날짜를 고르시면 그날 읽을 곳으로 보내 드리겠습니다."):""); return; }
   if(t.t==="card"){ dim.className="dimv on now"; ui.innerHTML=cardHtml(t); if(t.ready){ ui.querySelector(".cdf").className="cdf open now"; return; }
     var tm=t.mix, cs0=ui.querySelector(".cds"), go=function(){ if(root&&top()===t&&!t.ready) cardMix(t,tm); }, rm0=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; t.mix=false;
@@ -570,7 +583,9 @@ function act(a){ var t=top(); if(!t) return false;
     approach(function(){ push({t:"book",id:id,p:0,s:t.s}); }); return true; }
   if(a==="enter"){ if(t.t==="sec"&&t.s==="etc"){ t.step="in"; t.dg={who:"me",t:WARN.e,tap:"back",esc:"back",late:1}; drawHall(t); } return true; }
   return false; }
-function onClick(e){ if(busy||!root) return; var el=e.target.closest("[data-a],[data-s],[data-g],[data-b]");
+function entStart(){ var rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; if(rm||!root) return; root.classList.add("ent"); var r=root; setTimeout(function(){ if(root===r) entEnd(); },2750); }
+function entEnd(){ if(root) root.classList.remove("ent"); }   /* 누르면 건너뜀 */
+function onClick(e){ if(root&&root.classList.contains("ent")){ e.preventDefault(); entEnd(); return; } if(busy||!root) return; var el=e.target.closest("[data-a],[data-s],[data-g],[data-b]");
   if(!el||!root.contains(el)){ var t0=top(); if(!t0||t0.t==="book"||e.target.closest(".ttl,.cnt,.wn,.gl,.bk,.lib,.dgb,.dgc,.pln")) return;
     if(t0.dg){ if(t0.dg.esc) act(t0.dg.esc); return; }
     if(t0.t==="hall"||t0.t==="card"||t0.t==="plan") return;                                      /* 11-24 목사님: 자유롭게 둘러볼 때는 닫기를 눌러야만 서고에서 나감 */                                           /* 말이 떠 있을 때 빈 곳을 누르면 그 말의 기본 길로 */ /* 11-24 목사님: 빈 곳(배경)을 눌러도 나올 수 있게 */
@@ -613,7 +628,7 @@ var api={ isOpen:function(){ return !!root; },
     if(!document.getElementById("cbsrShelfCss")){ var st=document.createElement("style"); st.id="cbsrShelfCss"; st.textContent=CSS; document.head.appendChild(st); }
     root=document.createElement("div"); root.id="cbsrShelf"; root.setAttribute("role","dialog"); root.setAttribute("aria-modal","true"); root.setAttribute("aria-label","성경 서고"); root.innerHTML='<div class="st"></div>';
     document.body.appendChild(root); stage=root.firstChild; fit(); lastHS=HS; addEventListener("resize",onRs); root.addEventListener("click",onClick); root.addEventListener("contextmenu",onCtx); root.addEventListener("dragstart",onCtx); document.addEventListener("keydown",onKey,true); document.addEventListener("visibilitychange",onHide); addEventListener("pagehide",flush); root.addEventListener("touchstart",onTs,{passive:true}); root.addEventListener("touchend",onTe,{passive:true}); root.addEventListener("touchmove",function(e){ if(e.target.closest&&e.target.closest("textarea")) return; e.preventDefault(); },{passive:false}); [root,stage].forEach(function(sc){ sc.addEventListener("scroll",function(){ if(sc.scrollTop||sc.scrollLeft){ sc.scrollTop=0; sc.scrollLeft=0; } }); }); /* 낮은 화면(태블릿)에서 아래로 걸친 단추를 누르면 서고가 위로 밀려 위쪽 단추가 잘리던 것을 막음 */ root.addEventListener("focusout",function(){ setTimeout(function(){ if(root&&!typing()) onRs(); },350); });
-    document.documentElement.classList.add("shelf-on"); levels.push({t:"hall"}); if(O.scene==="card"&&O.card){ levels[0].dg=helloDg("back"); draw(); push({t:"card",mix:!!O.mix}); } else if(O.back){ hello("back"); } else if(O.book) draw(); else greet(); load().then(function(){ if(O.book&&DATA.by[O.book]) push({t:"book",id:O.book,p:O.page||0,s:(SEC.ot.g.indexOf(DATA.by[O.book].group)>=0?"ot":"nt")}); }).catch(function(){});
+    document.documentElement.classList.add("shelf-on"); levels.push({t:"hall"}); if(O.scene==="card"&&O.card){ levels[0].dg=helloDg("back"); draw(); push({t:"card",mix:!!O.mix}); } else if(O.back){ hello("back"); } else if(O.book) draw(); else { entStart(); greet(); } load().then(function(){ if(O.book&&DATA.by[O.book]) push({t:"book",id:O.book,p:O.page||0,s:(SEC.ot.g.indexOf(DATA.by[O.book].group)>=0?"ot":"nt")}); }).catch(function(){});
     root.tabIndex=-1; try{ root.focus({preventScroll:true}); }catch(e){}
     return true; },
   close:function(silent,anim){ if(!root) return; flush(); var deep=levels.slice(1), el=root, rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches; levels=[]; removeEventListener("resize",onRs); document.removeEventListener("keydown",onKey,true); document.removeEventListener("visibilitychange",onHide); removeEventListener("pagehide",flush); root=null; stage=null; busy=false; document.documentElement.classList.remove("shelf-on");
