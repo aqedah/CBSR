@@ -45,12 +45,11 @@ html.shelf-on .coach{display:none!important}
 @keyframes cbsrDoor{0%{transform:scale(1);opacity:1}70%{transform:scale(1.5);opacity:1}100%{transform:scale(1.95);opacity:0}}
 #cbsrShelf .hl{position:absolute;inset:0;transition:transform 1.6s cubic-bezier(.45,.05,.25,1);transform-origin:50% 55.56%}   /* 소실점(통로 끝)을 향해 걸어감 */
 #cbsrShelf .hl img,#cbsrShelf .full{position:absolute;left:0;top:0;width:390px;height:846px;display:block}
-#cbsrShelf .hl.ot{transform:perspective(900px) translateX(150px) scale(1.9) rotateY(9deg)}   /* 몇 걸음 걸어가 왼쪽 서가로 몸을 돌림 */
-#cbsrShelf .hl.nt{transform:perspective(900px) translateX(-150px) scale(1.9) rotateY(-9deg)}
-#cbsrShelf .hl.ot.mv{animation:cbsrTurnL 1.7s cubic-bezier(.45,.05,.3,1) both}   /* 11-26 목사님: 옆 서가는 줌만 되어 들어가는 느낌이 없음 → 먼저 몸을 돌리고, 그다음 걸어 들어감 */
-#cbsrShelf .hl.nt.mv{animation:cbsrTurnR 1.7s cubic-bezier(.45,.05,.3,1) both}
-@keyframes cbsrTurnL{0%{transform:perspective(900px) translateX(0) scale(1) rotateY(0)}42%{transform:perspective(900px) translateX(55px) scale(1.42) rotateY(18deg)}100%{transform:perspective(900px) translateX(150px) scale(1.9) rotateY(9deg)}}
-@keyframes cbsrTurnR{0%{transform:perspective(900px) translateX(0) scale(1) rotateY(0)}42%{transform:perspective(900px) translateX(-55px) scale(1.42) rotateY(-18deg)}100%{transform:perspective(900px) translateX(-150px) scale(1.9) rotateY(-9deg)}}
+#cbsrShelf .hl.ot{transform:translateX(390px);transition-duration:1s}   /* 11-26 목사님: 왼쪽을 누르면 왼쪽으로 → 고개를 돌리듯 화면이 옆으로 흘러, 왼쪽 벽의 서가가 정면으로 들어옴 */
+#cbsrShelf .hl.nt{transform:translateX(-390px);transition-duration:1s}
+#cbsrShelf .hl img.sd{top:0;width:390px;height:846px}
+#cbsrShelf .hl img.sd.l{left:-390px}
+#cbsrShelf .hl img.sd.r{left:390px}
 #cbsrShelf .hl.etc0{transform:scale(1.2)}   /* 통로 끝의 그을린 서가 앞까지 */
 #cbsrShelf .hl.etc{transform:scale(2.7)}
 #cbsrShelf .hl.out{pointer-events:none;transition:none}   /* 한 걸음: 보던 그림은 다가오며 사라지고, 다음 자리 그림이 뒤에서 다가옴 */
@@ -459,7 +458,7 @@ function zonesHtml(p){ return '<div class="zn">'+
       '<button type="button" class="zone" data-s="ot" style="left:0;top:300px;width:150px;height:330px" aria-label="구약 서른아홉 권, 왼쪽 서가"><span class="tb" style="top:96px"><b>구약</b><small>서른아홉 권</small></span></button>'+
       '<button type="button" class="zone" data-s="nt" style="left:240px;top:300px;width:150px;height:330px" aria-label="신약 스물일곱 권, 오른쪽 서가"><span class="tb" style="top:96px"><b>신약</b><small>스물일곱 권</small></span></button>'+
       '<button type="button" class="zone e" data-a="fw" tabindex="-1" style="left:150px;top:292px;width:90px;height:228px" aria-label="'+(p>=VIEWS.length-1?"통로 끝으로 한 걸음 더":"앞으로 걷기")+'"></button></div>'; }
-function viewInner(p){ return '<img src="'+IMG+VIEWS[p].img+VER+'" alt="'+VIEWS[p].alt+'">'+lamps(p)+(VIEWS[p].sign?'<span class="tb bsg" aria-hidden="true"><b>외경 · 위경<br>교부 문헌</b></span>':'')+zonesHtml(p)+itemsHtml(p)+'<div class="mrn"></div>'; }
+function viewInner(p){ return '<img src="'+IMG+VIEWS[p].img+VER+'" alt="'+VIEWS[p].alt+'"><img class="sd l" src="'+IMG+'press_tor.webp'+VER+'" alt=""><img class="sd r" src="'+IMG+'press_gos.webp'+VER+'" alt="">'+lamps(p)+(VIEWS[p].sign?'<span class="tb bsg" aria-hidden="true"><b>외경 · 위경<br>교부 문헌</b></span>':'')+zonesHtml(p)+itemsHtml(p)+'<div class="mrn"></div>'; }
 function secGo(s){ var ns={t:"sec",s:s}; if(s==="etc") ns.dg={who:"l",fig:1,late:1,t:"…그쪽은, 성경이 아닙니다.",ch:[{t:"돌아간다",a:"back"},{t:"열람한다",a:"enter"}],esc:"back"};   /* 통로 끝에서 한 걸음 더 가면 사서가 막아선다 */ push(ns); }
 function hallStep(d){ var t=levels[0]; if(busy||!t||top()!==t||t.dg) return;                      /* 한 걸음: 앞으로(+1), 뒤로(-1) */
   var p=(t.pos||0)+d; if(p<0) return; if(p>=VIEWS.length){ secGo("etc"); return; }
