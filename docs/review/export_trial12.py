@@ -1,5 +1,5 @@
 # 12월 체험판 원고(app/site_src/trial26_qt.json)를 검수용 CSV 세 묶음으로 뽑습니다.
-# 저장소 맨 위에서: python docs/교정/export_trial_csv.py
+# 저장소 맨 위에서: python docs/review/export_trial12.py
 import json,csv,re,os
 R=os.path.dirname(os.path.abspath(__file__))
 T=json.load(open(os.path.join(R,'..','..','app','site_src','trial26_qt.json'),encoding='utf-8'))['qt']
@@ -34,6 +34,6 @@ for d in days:
 def dn(r):
     x=str(r['날']).replace('일',''); return int(x) if x.isdigit() else 0
 for k,f in {1:lambda d:d<=333,2:lambda d:334<=d<=350,3:lambda d:d>=351}.items():
-    with open(os.path.join(R,f'12월체험판_원고_{k}.csv'),'w',encoding='utf-8-sig',newline='') as o:
+    with open(os.path.join(R,f'trial12_part{k}.csv'),'w',encoding='utf-8-sig',newline='') as o:
         w=csv.DictWriter(o,fieldnames=['번호','날','칸','칸 경로','원문','표시']); w.writeheader(); w.writerows([r for r in rows if f(dn(r))])
 print(len(rows))
