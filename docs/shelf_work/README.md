@@ -14,3 +14,6 @@
 - 2026-11-24 저녁: 통로를 눈높이에서 본 그림으로 바꿨습니다(`art_tools/engrave.py`의 `hall(…, fp=True)`). 사서 그림은 얼룩과 검버섯을 넣은 `libr9`(`mk_libr.py`), 카드를 드는 그림은 `libr9c`(`mk_libr_c.py`)입니다. 만드는 순서와 정한 것은 `docs/CBSR_성경서고_결정기록_4_1인칭통로와_대사틀_2026-11-24.md`에 있습니다. 화면을 죽 찍는 스크립트는 `desk/check/shoot_walk.py`입니다.
 
 - 2026-11-24 밤: 화살표로 한 걸음씩 걷기. 통로 그림 세 장은 `art_tools/engrave.py`의 `hall(name, seed=7, nine=True, night=True, flames=False, fp=True, cz=-2.6 / 2.9 / 7.6)`으로 그리고 webp(품질 72)로 바꿔 `hall.webp`, `hall_1.webp`, `hall_2.webp`로 둡니다. 촛불 자리는 그릴 때 나오는 `_anchors.json`의 값을 `desk/shelf.src.js`의 `VIEWS`에 적습니다. 사서 그림은 `libr10`(`mk_libr.py`)입니다. 걸음 화면을 죽 찍는 스크립트는 `desk/check/shoot_steps.py`입니다.
+- 2026-11-26: 작업대에 '앱 화면 미리보기'를 넣었습니다(목사님: 스토리 작업대처럼). 오른쪽(좁은 화면에서는 아래)에 앱의 서고 화면이 뜨고, 칸을 고치면 0.6초 뒤 바뀝니다. 미리보기 페이지는 `app/site_src/shelf_prev.html`, 작업대가 고치는 중인 원고 전체를 postMessage로 넘기면 `shelf.js`가 `open({book, page, data})`로 그 책을 엽니다. 앱 주소에서만 열립니다(내려받은 작업대 파일에서는 열리지 않음).
+- 2026-11-26: 작업대 목록 끝에 '그을린 서가' 칸 19개(제2경전 9, 위경 4, 교부 문헌 6)를 넣었습니다. 원고는 `desk/data_etc/그을린서가.md`. 이름·갈래·장 수만 있고 나머지는 목사님이 채우십니다(장 수 0 = 미정, 장 수도 확인 필요). 앱 원고(`shelf_66.json`)와 작업대의 '전체 내보내기·올리기'에는 들어가지 않고, 작업대의 기기 저장과 클라우드 저장에만 남습니다.
+

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>성경 서고 미리보기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>html,body{margin:0;height:100%;background:#1a120c;color:#e8d9b8;font:14px "IBM Plex Sans KR",sans-serif}#w{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;opacity:.7}</style>
+</head><body><div id="w">성경책장 작업대에서 책을 고르면<br>앱에서 보이는 모습이 여기 나옵니다.</div>
+<script src="shelf.js"></script>
+<script>
+/* 성경책장 작업대의 미리보기(11-26 목사님): 작업대가 고치는 중인 원고를 받아, 앱의 서고와 같은 화면으로 그 책을 엽니다. 저장은 하지 않습니다. */
+var cur=null;
+function open1(m,p){ CBSR_SHELF.open({book:m.book,page:p||0,data:m.data,push:function(){},done:function(){},toast:function(){},
+  onClose:function(){ setTimeout(function(){ if(cur) open1(cur,0); },60); },     /* 닫아도 미리보기는 그 책 표지로 다시 엶 */
+  store:{get:function(){ return {}; },set:function(){}}}); }
+addEventListener('message',function(e){ var m=e.data; if(!m||m.type!=='shelf-preview'||!m.book||!m.data) return;
+  var st=CBSR_SHELF.isOpen()&&CBSR_SHELF.state&&CBSR_SHELF.state(), p=(m.page!=null)?m.page:((st&&st.id===m.book)?st.p:0);
+  cur=m; if(CBSR_SHELF.isOpen()) CBSR_SHELF.close(true); document.getElementById('w').style.display='none'; open1(m,p); });
+try{ parent.postMessage({type:'shelf-preview-ready'},'*'); }catch(e){}
+</script></body></html>
