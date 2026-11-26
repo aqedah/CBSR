@@ -16,7 +16,7 @@ try:
             store = lambda: json.loads(pg.evaluate('localStorage.getItem("cbsr_shelf_qa")||"{}"'))
             inside = lambda: pg.evaluate('(()=>{const r=document.querySelector("#cbsrShelf");return !!r&&r.contains(document.activeElement)})()')
             print(tag)
-            pg.goto('http://localhost:8765/index.html?today=19'); pg.click('#go'); pg.wait_for_timeout(900)
+            pg.goto('http://localhost:8765/index.html?today=19'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
             for _i in range(4):
                 if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
                 pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)

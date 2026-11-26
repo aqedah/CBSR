@@ -5,7 +5,7 @@ with sync_playwright() as p:
     b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])
     cx=b.new_context(viewport={'width':412,'height':699},device_scale_factor=2,has_touch=True)
     pg=cx.new_page(); pg.on('pageerror',lambda e: errs.append('PAGEERROR '+str(e)[:200]))
-    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(1000); pg.screenshot(path=S+'e1.png')
+    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(1000); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')"); pg.screenshot(path=S+'e1.png')
     pg.click('.zone[data-s="etc"]'); pg.wait_for_timeout(700); pg.screenshot(path=S+'e2.png'); print('경고장:',pg.inner_text('.wn').replace('\n',' / '),'| ovs',pg.evaluate('__ovs()'))
     pg.click('.wn button[data-a="enter"]'); pg.wait_for_timeout(2600); pg.screenshot(path=S+'e3.png'); print('열람 뒤 혼잣말:',pg.inner_text('.mono'),'| ovs',pg.evaluate('__ovs()'))
     pg.click('.mono'); pg.wait_for_timeout(500)

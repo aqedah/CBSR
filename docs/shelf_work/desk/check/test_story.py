@@ -15,7 +15,7 @@ try:
         cx = b.new_context(viewport={'width': 390, 'height': 800}, has_touch=True)
         def start(q, sh=None):
             pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
-            pg.goto('http://localhost:8765/index.html?'+q); pg.click('#go'); pg.wait_for_timeout(1000); return pg
+            pg.goto('http://localhost:8765/index.html?'+q); pg.click('#go'); pg.wait_for_timeout(1000); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')"); return pg
         T = lambda pg: (pg.locator('#cbsrShelf .dg .dgb span').last.inner_text() if pg.locator('#cbsrShelf .dg .dgb span').count() else '').replace('\n',' ')
         who = lambda pg: pg.locator('#cbsrShelf .dg .dgb b').first.inner_text() if pg.locator('#cbsrShelf .dg .dgb b').count() else ''
         def tap(pg): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
@@ -71,18 +71,18 @@ try:
         for q, word, name in (('ot=1','구약을 다 지나','구약 마침'),('nb=5','신명기입니다','새 책'),):
             cx = b.new_context(viewport={'width': 390, 'height': 800}, has_touch=True); pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
             pg.goto('http://localhost:8765/index.html'); pg.evaluate('localStorage.setItem("cbsr_shelf_qa",JSON.stringify({_s:{met:{v:"1",t:1}}}))')
-            pg.goto('http://localhost:8765/index.html?today=40&'+q); pg.click('#go'); pg.wait_for_timeout(1300)
+            pg.goto('http://localhost:8765/index.html?today=40&'+q); pg.click('#go'); pg.wait_for_timeout(1300); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
             chk('한마디(%s): %s' % (name, T(pg)), word in T(pg))
-            pg.close(); pg = cx.new_page(); pg.goto('http://localhost:8765/index.html?today=40&'+q); pg.click('#go'); pg.wait_for_timeout(1300)
+            pg.close(); pg = cx.new_page(); pg.goto('http://localhost:8765/index.html?today=40&'+q); pg.click('#go'); pg.wait_for_timeout(1300); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
             chk('한마디(%s)는 한 번' % name, word not in T(pg)); pg.close(); cx.close()
         cx = b.new_context(viewport={'width': 390, 'height': 800}, has_touch=True); pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.goto('http://localhost:8765/index.html'); pg.evaluate('localStorage.setItem("cbsr_shelf_qa",JSON.stringify({_s:{met:{v:"1",t:1},last:{v:"2027-01-10",t:1}}}))')
-        pg.goto('http://localhost:8765/index.html?today=40&td=2027-02-01'); pg.click('#go'); pg.wait_for_timeout(1300)
+        pg.goto('http://localhost:8765/index.html?today=40&td=2027-02-01'); pg.click('#go'); pg.wait_for_timeout(1300); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
         chk('오랜만에: '+T(pg), '다시 오셨군요' in T(pg)); pg.close(); cx.close()
         for hh, word in ((9,'이른 아침에'),(14,'한낮에'),(18,'해 질 녘에'),(23,'밤에 오셨군요')):
             cx = b.new_context(viewport={'width': 390, 'height': 800}, has_touch=True); pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
             pg.add_init_script("(()=>{const D=Date,t0=new D(2027,2,1,%d,10,0).getTime()-D.now();class F extends D{constructor(...a){ if(a.length) super(...a); else super(D.now()+t0);} static now(){return D.now()+t0;}} window.Date=F;})()" % hh)
-            pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(1000); tap(pg); tap(pg)
+            pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(1000); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')"); tap(pg); tap(pg)
             chk('1막 첫마디, %d시: %s' % (hh, T(pg)), word in T(pg) and '늘 밤' in T(pg)); pg.close(); cx.close()
         b.close()
 finally:

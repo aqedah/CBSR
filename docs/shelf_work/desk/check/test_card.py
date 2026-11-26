@@ -15,7 +15,7 @@ try:
             shot = lambda n: pg.screenshot(path='%s/%s_%s.png' % (OUT, tag, n))
             txt = lambda sel: pg.evaluate('(s)=>{const e=document.querySelector(s);return e?e.innerText:null}', sel)
             print(tag)
-            pg.goto('http://localhost:8765/index.html?today=45'); pg.click('#go'); pg.wait_for_timeout(900)
+            pg.goto('http://localhost:8765/index.html?today=45'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
             for _i in range(4):
                 if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
                 pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)

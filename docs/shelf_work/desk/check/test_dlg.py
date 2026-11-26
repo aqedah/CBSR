@@ -15,7 +15,7 @@ try:
             shot = lambda n: pg.screenshot(path='%s/%s_%s.png' % (OUT, tag, n))
             txt = lambda sel: pg.evaluate('(s)=>{const e=document.querySelector(s);return e?e.innerText:null}', sel)
             print(tag)
-            pg.goto('http://localhost:8765/index.html?today=45'); pg.click('#go'); pg.wait_for_timeout(900)
+            pg.goto('http://localhost:8765/index.html?today=45'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
             chk('처음: 나의 혼잣말', '오래된 서고다' in (txt('#cbsrShelf .dg.me .dgb') or '')); shot('1_mono')
             chk('혼잣말 동안 팻말 숨김', pg.evaluate('document.querySelector("#cbsrShelf .zn").classList.contains("off")'))
             pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700); pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(700)
@@ -92,7 +92,7 @@ try:
             chk('닫기를 누르면 나가는 움직임이 시작됨', pg.locator('#cbsrShelf.bye').count() == 1); shot('15_bye'); pg.wait_for_timeout(700)
             chk('움직임이 끝나면 서고가 사라짐', pg.locator('#cbsrShelf').count() == 0 and pg.evaluate('window.__ovs()') == 0)
             # 다시 들어옴: 닉네임
-            pg.goto('http://localhost:8765/index.html?today=44&nick=' + '이삭 목사'); pg.click('#go'); pg.wait_for_timeout(900)
+            pg.goto('http://localhost:8765/index.html?today=44&nick=' + '이삭 목사'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
             chk('다시 오면 혼잣말 없이 한 줄, 호칭', '오셨습니까, 이삭 목사님.' in (txt('#cbsrShelf .dg .dgb') or '')); shot('13_again')
             pg.click('#cbsrShelf .dg .dgc button:nth-child(1)'); pg.wait_for_timeout(4200)
             chk('사도행전(서가 없음): 구역에서 책을 내밈', '사도행전, 28장' in (txt('#cbsrShelf .dg .dgb') or '')); shot('14_acts')

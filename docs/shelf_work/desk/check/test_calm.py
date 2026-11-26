@@ -9,7 +9,7 @@ try:
         b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
         # 1) 움직임 줄이기
         pg = b.new_context(viewport={'width': 390, 'height': 800}, reduced_motion='reduce', has_touch=True).new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(900)
+        pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
         for _i in range(4):
             if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
             pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(500)
@@ -23,7 +23,7 @@ try:
         # 2) 다음 자리 그림이 안 올 때
         cx = b.new_context(viewport={'width': 390, 'height': 800}, has_touch=True); pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.route('**/hall_1.webp*', lambda r: r.abort())
-        pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(900)
+        pg.goto('http://localhost:8765/index.html?today=40'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
         for _i in range(4):
             if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
             pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(500)

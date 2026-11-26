@@ -7,7 +7,7 @@ def run(p,w,h,tag,shots=True):
     pg=cx.new_page()
     pg.on('console',lambda m: errs.append(tag+' '+m.text[:120]) if (m.type=='error' and '404' not in m.text) or m.text.startswith('TOAST') else None)
     pg.on('pageerror',lambda e: errs.append(tag+' PAGEERROR '+str(e)[:200]))
-    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(900)
+    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
     st=pg.evaluate("(()=>{const r=document.querySelector('#cbsrShelf .st').getBoundingClientRect();return [Math.round(r.left),Math.round(r.top),Math.round(r.width),Math.round(r.height)]})()")
     print(tag,'무대(왼쪽,위,너비,높이)',st,'화면',w,h)
     out=[]

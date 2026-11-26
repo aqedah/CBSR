@@ -15,7 +15,7 @@ try:
             cx = b.new_context(viewport={'width': vw, 'height': vh}, has_touch=True)
             def start(q):
                 pg = cx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
-                pg.goto('http://localhost:8765/index.html?'+q); pg.click('#go'); pg.wait_for_timeout(1000)
+                pg.goto('http://localhost:8765/index.html?'+q); pg.click('#go'); pg.wait_for_timeout(1000); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
                 for _i in range(4):
                     if not (pg.locator('#cbsrShelf .dg button.dgb').count() and not pg.locator('#cbsrShelf .dgc').count()): break
                     pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(800)

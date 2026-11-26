@@ -5,7 +5,7 @@ with sync_playwright() as p:
     b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])
     cx=b.new_context(viewport={'width':412,'height':699},device_scale_factor=2,has_touch=True)
     pg=cx.new_page(); pg.on('pageerror',lambda e: errs.append('PAGEERROR '+str(e)[:200])); pg.on('console',lambda m: errs.append(m.text[:100]) if m.text.startswith('TOAST') else None)
-    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(1200); pg.screenshot(path=S+'q1.png'); print('사서(서고):',pg.inner_text('.lib').replace('\n',' '))
+    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(1200); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')"); pg.screenshot(path=S+'q1.png'); print('사서(서고):',pg.inner_text('.lib').replace('\n',' '))
     pg.click('.zone[data-s="nt"]'); pg.wait_for_timeout(2200); print('사서(신약):',pg.inner_text('.lib').replace('\n',' '))
     pg.click('.gl button[data-g="바울서신"]'); pg.wait_for_timeout(1200); print('사서(서가):',pg.inner_text('.lib').replace('\n',' ')); pg.screenshot(path=S+'q2.png')
     pg.click('.sp[data-b="gal"]'); pg.wait_for_timeout(2700)

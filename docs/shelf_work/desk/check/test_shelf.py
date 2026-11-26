@@ -8,7 +8,7 @@ with sync_playwright() as p:
     pg=cx.new_page()
     pg.on('console',lambda m: errs.append(m.text) if m.type in('error',) or m.text.startswith('TOAST') else None)
     pg.on('pageerror',lambda e: errs.append('PAGEERROR '+str(e)))
-    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(900)
+    pg.goto('http://127.0.0.1:8765/index.html'); pg.click('#go'); pg.wait_for_timeout(900); pg.wait_for_function("!document.querySelector('#cbsrShelf.ent')")
     pg.screenshot(path=S+'1_hall.png'); print('hall zones',pg.locator('#cbsrShelf .zone').count(),'ovs',pg.evaluate('__ovs()'))
     pg.click('.zone[data-s="etc"]'); pg.wait_for_timeout(900); pg.screenshot(path=S+'2_etc.png'); print('warn:',pg.inner_text('.wn').replace('\n',' / ')[:120])
     pg.click('.wn button'); pg.wait_for_timeout(500); print('back to hall zones',pg.locator('.zone').count(),'ovs',pg.evaluate('__ovs()'))
