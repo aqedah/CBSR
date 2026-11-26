@@ -763,7 +763,7 @@ _u("rome","밤에 가이사랴로 호송",n="바울을 죽이려는 맹세를 �
 _tour("rome")["end"]="'로마에서도 증언하여야 하리라' 하신 말씀대로, 바울은 로마에서도 증언합니다. 사도행전은 바울이 셋집에서 담대히 하나님 나라를 전했다는 말로 열린 채 끝납니다(행 28:30–31)."
 
 # ===== 데이터 검사(3차 검토 9장, 2026-11-03): 빌드 때 경고만 출력 =====
-_SK={'id','add','as_','burn','chase','dash','drop','dropAt','exit','focus','from','fx','gap','grp','land0','lead','line','mood','n','p','pin','pre','quake','quiet','r','ride','s','sea','side','slow','stay','storm','t','tent','then','tpl','tplN','unpin','untent','war','who','z'}
+_SK={'id','add','dress','dress0','as_','burn','chase','dash','drop','dropAt','exit','focus','from','fx','gap','grp','land0','lead','line','mood','n','p','pin','pre','quake','quiet','r','ride','s','sea','side','slow','stay','storm','t','tent','then','tpl','tplN','unpin','untent','war','who','z'}
 _DK={'as_','e','from','k','line','n','p','war'}
 _FX={'fire','light','pillar','part','jordan','mantle','siege','ascend','parch','sun','baptism','dark','sleep','fish','meetcart','spirit'}
 _W=[]
@@ -785,6 +785,13 @@ for _t in T:
     _comp=[c for c in _comp if c not in _d]
 # 사사 시대 큰 여정(2026-11-10): 따로 둔 파일을 읽어 T에 붙임. 장면 ID 부여보다 앞에 둠(2차 검수 P1-1)
 import os as _osj; exec(open(_osj.path.join(_osj.path.dirname(_osj.path.abspath(__file__)),'big_tours_judges.py'),encoding='utf-8').read())
+# 11-27 GPT 감사 22번: 사사기 파일은 위의 fr→from 바꾸기 뒤에 붙어서, 사사기 8장면의 '다른 곳에서 새로 시작'이 빠지고 앞사람 자리에서 이어 걸었음 → 붙인 뒤 한 번 더 바꿈
+for _t in T:
+  for _s in _t["steps"]:
+    if "fr" in _s: _s["from"]=_s.pop("fr")
+    for _sd in ([_s["side"]] if isinstance(_s.get("side"),dict) else _s.get("side") or []):
+      if "from_" in _sd: _sd["from"]=_sd.pop("from_")
+    if "fr" in _s or "from_" in _s: print("경고: fr/from_가 남음", _t["id"], _s.get("t"))
 # 장면 고유 ID(원칙 C04·9.6, 2026-11-03): 순서·제목과 따로 유지. scene_ids.json에 한 번 정한 ID를 보관하고, 새 장면만 새 번호.
 #  제목을 바꾸면 scene_ids.json의 그 제목 키도 함께 바꿀 것(안 바꾸면 새 ID가 생기고 옛 ID는 '대응 없음' 경고)
 import json, os as _os

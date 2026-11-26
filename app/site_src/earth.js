@@ -54,7 +54,7 @@ const CSS=`
 #eov .ecard .dots{display:flex;gap:3px;margin:2px 0 8px}#eov .ecard .dots i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.2)}#eov .ecard .dots i.on{background:#e9c38a}
 #eov .ecard .k{font-size:12px;color:#e9c38a;font-weight:700}
 #eov .ecard h2{font:700 20px/1.35 "Noto Serif KR";margin:2px 0 6px}
-#eov .ecard .n{font-size:14px;line-height:1.65;color:#efe6d8;margin:0 0 8px}
+#eov .ecard .n{font-size:14px;line-height:1.65;color:#efe6d8;margin:0 0 8px}.ecard .es{font-size:12.5px;line-height:1.5;color:#cfc3b1;margin:-4px 0 8px}
 #eov .ecard .v{font:15px/1.75 "Noto Serif KR";margin:0 0 2px;color:#fff}
 #eov .ecard .r{font-size:12px;color:#cfc3b1;margin:0 0 10px}
 #eov .ecard .row{display:flex;gap:8px}#eov .ecard .row button{flex:1;height:44px;border-radius:11px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f1e6;font:700 14px "Noto Sans KR";cursor:pointer}
@@ -101,7 +101,9 @@ let M=null, O=null, root=null, pins=[], spinOn=false, TER=false, cur=null, step=
 const RM=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* 11-21 목사님(카메라가 느림): 처음 선명도 휴대폰 1.5배·PC 2배까지 → 들어간 뒤 그리는 속도를 재서 느리면 1배로 */
 const TOUCH=matchMedia("(pointer:coarse)").matches; const PR0=()=>Math.min(devicePixelRatio||1,(TOUCH||innerWidth<900)?1.5:2); /* 11-22: 태블릿 큰 화면을 2배로 그리면 버벅이며 깜빡임 → 손가락 기기는 1.5배까지 */
-function perfWatch(){ let n=0, t0=performance.now(); const f=()=>{ if(!M) return; n++; const dt=performance.now()-t0; if(dt<4000) requestAnimationFrame(f); else { const fps=n*1000/dt; if(fps<28&&M.getPixelRatio()>1) M.setPixelRatio(1); } }; requestAnimationFrame(f); }
+let GEN=0; /* 지도를 열 때마다 하나씩 올라감 — 닫은 지도의 일이 새 지도를 건드리지 않게 */
+/* 11-27 GPT 감사 7번: 앱을 뒤로 보낸 동안(화면이 그려지지 않은 시간)을 '느린 기기'로 잘못 세어 선명도를 낮추던 것 → 0.25초 넘게 끊긴 틈은 세지 않음 */
+function perfWatch(){ const g=GEN; let n=0, acc=0, last=null; const f=ts=>{ if(!M||g!==GEN) return; if(last!=null){ const d=ts-last; if(d<250&&!document.hidden){ acc+=d; n++; } } last=ts; if(acc<4000) requestAnimationFrame(f); else { const fps=n*1000/acc; if(fps<28&&M.getPixelRatio()>1) M.setPixelRatio(1); } }; requestAnimationFrame(f); }
 const wide=()=>innerWidth>=900;
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const $=s=>root.querySelector(s);
@@ -128,12 +130,18 @@ function style(key){
     {id:"esri",type:"raster",source:"esri",minzoom:11.8,paint:{"raster-opacity":["interpolate",["linear"],["zoom"],11.8,0,12.6,1],"raster-hue-rotate":-16,"raster-saturation":0.35,"raster-brightness-min":0.1,"raster-contrast":-0.05}},
     {id:"shade",type:"hillshade",source:"dem",minzoom:5.5,paint:{"hillshade-exaggeration":["interpolate",["linear"],["zoom"],5.5,0.12,7.5,0.42],"hillshade-shadow-color":"rgba(30,18,6,.75)","hillshade-highlight-color":"rgba(255,248,232,.12)","hillshade-accent-color":"rgba(40,26,12,.6)","hillshade-illumination-direction":315}}]};
 }
-function terr(){ if(!M) return; const on=M.getZoom()>4.2; if(on!==TER){ TER=on; M.setTerrain(on?{source:"dem",exaggeration:1.7}:null); } }
+/* 11-27 GPT 감사 5번: 4.2 한 줄 경계에서 오가면 입체 지형을 켰다 껐다 반복 → 켤 때 4.4, 끌 때 4.0(여유 두기) */
+function terr(){ if(!M) return; const z=M.getZoom(), on=TER?z>4.0:z>4.4; if(on!==TER){ TER=on; M.setTerrain(on?{source:"dem",exaggeration:1.7}:null); } }
 function spin(){ if(!spinOn||RM()||!M) return; const c=M.getCenter(); c.lng-=0.06; M.easeTo({center:c,duration:60,easing:t=>t}); }
 /* 미리 받기 */
 const PRE=new Set();
 function lx(l,z){ return Math.floor((l+180)/360*2**z); } function ly(a,z){ const r=a*Math.PI/180; return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*2**z); }
-function prefetch(c,z){ const zz=Math.round(z); [[Math.min(zz,11),"e"],[Math.min(zz-1,10),"e"],[Math.min(zz-1,12),"d"]].forEach(([q,k])=>{ if(q<1) return; const x0=lx(c[0],q), y0=ly(c[1],q); for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=1;dy++){ const x=x0+dx, y=y0+dy; const u=k==="e"?`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${q}/${y}/${x}?token=${O.esriKey}`:k==="s"?`https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/${q}/${y}/${x}.jpg`:`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${q}/${x}/${y}.png`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
+/* 11-27 GPT 감사 6번: 미리 받기를 한꺼번에(75장) 쏘지 않고 4장씩 줄 세움. 실패한 조각은 기억에서 지워 다음에 다시 받음. 닫으면 남은 줄은 버림 */
+const PQ=[]; let PQN=0;
+function pq(u,front){ if(PRE.has(u)) return; PRE.add(u); front?PQ.unshift(u):PQ.push(u); pump(); }
+function pump(){ const g=GEN; while(PQN<4&&PQ.length){ const u=PQ.shift(); PQN++; const im=new Image(); im.crossOrigin="anonymous";
+  const end=ok=>{ PQN--; if(!ok) PRE.delete(u); if(g===GEN) pump(); }; im.onload=()=>end(true); im.onerror=()=>end(false); im.src=u; } }
+function prefetch(c,z){ const zz=Math.round(z); [[Math.min(zz,11),"e"],[Math.min(zz-1,10),"e"],[Math.min(zz-1,12),"d"]].forEach(([q,k])=>{ if(q<1) return; const x0=lx(c[0],q), y0=ly(c[1],q); for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=1;dy++){ const x=x0+dx, y=y0+dy; const u=k==="e"?`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${q}/${y}/${x}?token=${O.esriKey}`:k==="s"?`https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/${q}/${y}/${x}.jpg`:`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${q}/${x}/${y}.png`; pq(u,true); } }); }
 /* 11-22: 가까운 곳으로 옮길 때 멀어졌다 다가오면(flyTo) 지나는 배율마다 새 사진 조각을 받느라 깜빡임 → 화면 2.5개 거리 안이면 같은 높이로 미끄러지듯(easeTo) */
 function move(o){ if(RM()) return M.jumpTo(o); const c=M.getCenter(), t=maplibregl.LngLat.convert(o.center), z=Math.min(o.zoom!=null?o.zoom:M.getZoom(),M.getZoom()), dpp=360/(512*2**z),
   px=Math.hypot((t.lng-c.lng)*Math.cos(t.lat*Math.PI/180),t.lat-c.lat)/dpp, q=Object.assign({},o); delete q.curve;
@@ -154,8 +162,13 @@ function inSafe(pts){ if(!M) return false; const P=visPad(), W=M.getContainer().
   return pts.every(c=>{ const q=M.project(c); return q.x>=l+mx&&q.x<=r-mx&&q.y>=t+my&&q.y<=b-my; }); }
 function settled(){ return Math.abs(M.getPitch()-PITCH)<1; }
 /* 카메라를 한 번 옮기고, 다 옮긴 뒤 then() — 옮길 일이 없으면 바로 */
+let CAMK=0;
 function camTo(o,then){ const c=M.getCenter(), t=maplibregl.LngLat.convert(o.center||c), same=Math.abs(c.lng-t.lng)<1e-4&&Math.abs(c.lat-t.lat)<1e-4&&Math.abs(M.getZoom()-(o.zoom!=null?o.zoom:M.getZoom()))<.01&&Math.abs(M.getBearing()-(o.bearing!=null?o.bearing:M.getBearing()))<.5&&Math.abs(M.getPitch()-(o.pitch!=null?o.pitch:M.getPitch()))<.5;
-  if(same||RM()){ if(!same) M.jumpTo(o); then&&then(); return; } let done=false; const fin=()=>{ if(done) return; done=true; then&&then(); }; M.once("moveend",fin); setTimeout(fin,4200); move(o); }
+  const k=++CAMK; if(same||RM()){ if(!same) M.jumpTo(o); then&&then(); return; }
+  /* 11-27 GPT 감사 12번: 먼저 '도착'을 기다리고 옮기면, 앞 카메라를 멈출 때 나는 도착 신호를 새 카메라 도착으로 잘못 알아 걷기가 먼저 시작됨
+     → 앞 카메라를 멈춘 뒤 옮기고, 그다음 도착을 기다림. 4.2초가 지나도 아직 움직이면 더 기다림(최대 세 번) */
+  M.stop(); let done=false; const fin=()=>{ if(done||k!==CAMK||!M) return; done=true; M.off("moveend",fin); then&&then(); };
+  move(o); M.on("moveend",fin); const chk=n=>setTimeout(()=>{ if(done||k!==CAMK||!M) return; if(M.isMoving()&&n<2) chk(n+1); else fin(); },4200); chk(0); }
 function showSeg(seg,bb,mz,then){ const P=visPad(), z0=M.getZoom(), aligned=settled()&&Math.abs(M.getBearing()-bb)<1;
   if(seg.length<2){ const zt=Math.min(mz,Math.max(z0,mz-1.5)); if(aligned&&inSafe(seg)&&z0>=zt-1) { then&&then(); return; } camTo({center:seg[0],zoom:zt,bearing:bb,pitch:PITCH,padding:P},then); return; }
   const b=new maplibregl.LngLatBounds(); seg.forEach(c=>b.extend(c)); const cam=fitCam(b,{padding:P,bearing:bb,maxZoom:mz});
@@ -175,20 +188,25 @@ function addPins(list){ clearPins(); list.forEach((p,i)=>{ const el=document.cre
 function setLine(id,coords){ const s=M&&M.getSource(id); if(!s) return; /* 11-22: 장면이 다른 곳에서 새로 시작하면(from) 끊긴 여러 토막으로 그림 */
   if(coords&&coords.length&&Array.isArray(coords[0][0])){ const L=coords.filter(c=>c&&c.length>1); s.setData(L.length?{type:"Feature",geometry:{type:"MultiLineString",coordinates:L}}:{type:"FeatureCollection",features:[]}); return; }
   s.setData(coords&&coords.length>1?{type:"Feature",geometry:{type:"LineString",coordinates:coords}}:{type:"FeatureCollection",features:[]}); }
+/* 11-27 GPT 감사 23번: 종류가 있는 길 토막(est 추정 점선 · army 군대 붉은 선 · captive 포로 점선) — 옛 지도의 선 모양(LST)과 같은 뜻 */
+function setLineK(D){ const s=M&&M.getSource("eroutd"); if(!s) return; const F=(D||[]).filter(d=>d&&d.c&&d.c.length>1).map(d=>({type:"Feature",properties:{k:d.k||"est"},geometry:{type:"LineString",coordinates:d.c}})); s.setData({type:"FeatureCollection",features:F}); }
+const lnK=x=>x.line==="army"?"army":x.line==="captive"?"captive":(x.dash||x.line==="approx")?"est":"";
 /* 11-21 목사님: 위성지도 위로 캐릭터·배. 장면의 주인공(as_)이 길을 따라 걷고, 바다 장면(sea)은 배 */
-function walker(id,at,name){ if(!O.figure||!at||!M) return; if(W&&WID===id&&(W._nm||"")!==(name||"")){ W.remove(); W=null; } /* 11-22: 같은 그림이라도 이름이 바뀌면(스룹바벨→느헤미야) 새로 */ if(!W||WID!==id){ if(W) W.remove(); const el=document.createElement("div"); el.className="ewalk"; el.innerHTML=O.figure(id)+(name?`<span class="enm">${esc(name)}</span>`:""); W=new maplibregl.Marker({element:el,anchor:"top-left"}).setLngLat(at).addTo(M); W._nm=name||""; WID=id; } else W.setLngLat(at); CW.forEach(m=>m.setLngLat(at)); }
+function walker(id,at,name){ if(!O||!O.figure||!at||!M) return; if(W&&WID===id&&(W._nm||"")!==(name||"")){ W.remove(); W=null; } /* 11-22: 같은 그림이라도 이름이 바뀌면(스룹바벨→느헤미야) 새로 */ if(!W||WID!==id){ if(W) W.remove(); const el=document.createElement("div"); el.className="ewalk"; el.innerHTML=O.figure(id)+(name?`<span class="enm">${esc(name)}</span>`:""); W=new maplibregl.Marker({element:el,anchor:"top-left"}).setLngLat(at).addTo(M); W._nm=name||""; WID=id; } else W.setLngLat(at); CW.forEach(m=>m.setLngLat(at)); }
 /* 동행: 주인공 뒤로 조금씩 비켜 서서 같이 움직임(바다에서는 배에 탄 것으로 보고 숨김) */
 /* 장면 끝 옷 바꿈: 반짝이며 그 사람의 그림만 바뀜 */
 function dressNow(D,cs,at,gone,key){ setTimeout(()=>{ if(!M||(key!=null&&key!==FXK)) return; /* 장면을 넘기면 옛 장면의 동행을 다시 그리지 않음 */ const co=cs.co.filter(x=>!(gone||[]).includes(x[0])).map(x=>{ const d=D.find(q=>q[0]===x[0]); return d?[x[0],d[1]]:x; }); crew(co,at);
   CW.forEach((m,j)=>{ if(D.some(q=>q[0]===co[j][0])){ const e=m.getElement(); e.classList.add("edress"); setTimeout(()=>e.classList.remove("edress"),1600); } }); },RM()?0:1400); }
 function crew(list,at){ CW.forEach(m=>m.remove()); CW=[]; if(!O.figure||!at) return; list.slice(0,4).forEach(([nm,as],j)=>{ const el=document.createElement("div"); el.className="ewalk co"; el.innerHTML=O.figure(as||"man")+`<span class="enm">${esc(nm)}</span>`; const m=new maplibregl.Marker({element:el,anchor:"top-left",offset:[-(j+1)*30,6+(j%2)*6]}).setLngLat(at).addTo(M); m._n=nm; CW.push(m); }); }
-function mood(txt){ if(!W||!txt) return; const el=W.getElement(); el.querySelector(".emood")?.remove(); const b=document.createElement("span"); b.className="emood"; b.textContent=txt; el.appendChild(b); setTimeout(()=>b.remove(),3300); }
+function mood(txt,key){ if(!W||!txt||(key!=null&&key!==FXK)) return; const el=W.getElement(); el.querySelector(".emood")?.remove(); const b=document.createElement("span"); b.className="emood"; b.textContent=txt; el.appendChild(b); setTimeout(()=>b.remove(),3300); }
 /* 일행에서 떨어져 따로 가는 사람(룻 1:14 오르바 등): 그 사람만 자기 길로 걸어가다 사라짐 */
-let SW=null; function sideWalk(sd,at){ if(SW){ SW.remove(); SW=null; } if(!O.figure) return; const pts=[at,...sd.p.map(p=>[p[2],p[1]])], el=document.createElement("div"); el.className="ewalk co";
-  el.innerHTML=O.figure(sd.as_||"man")+`<span class="enm">${esc(sd.n||"")}</span>`; SW=new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat(at).addTo(M); const mk=SW;
-  if(RM()){ mk.setLngLat(pts[pts.length-1]); return; } let t0=null; const dur=3200, f=ts=>{ if(SW!==mk) return; t0=t0||ts; const u=Math.min(1,(ts-t0)/dur), x=u*(pts.length-1), i=Math.min(pts.length-2,Math.floor(x)), r=x-i;
-    mk.setLngLat([pts[i][0]+(pts[i+1][0]-pts[i][0])*r,pts[i][1]+(pts[i+1][1]-pts[i][1])*r]); el.style.opacity=u>.8?String((1-u)/.2):"1"; if(u<1) requestAnimationFrame(f); else { mk.remove(); if(SW===mk) SW=null; } }; setTimeout(()=>requestAnimationFrame(f),900); }
-function noWalker(){ if(LD){ LD.remove(); LD=null; } if(SW){ SW.remove(); SW=null; }  if(W){ W.remove(); W=null; WID=""; } CW.forEach(m=>m.remove()); CW=[]; }
+/* 11-27 GPT 감사 21번: 갈래가 여럿인 장면(앗수르 군대가 여러 곳으로 등)과, 갈래가 따로 출발하는 곳(sd.from: 예루살렘의 베드로·요한)을 살림 */
+let SW=null, SWS=[]; function sideWalk(sd,at){ if(!O||!O.figure) return; const key=FXK; const st=sd.from?[sd.from[2],sd.from[1]]:at, pts=[st,...sd.p.map(p=>[p[2],p[1]])], el=document.createElement("div"); el.className="ewalk co"; at=st;
+  el.innerHTML=O.figure(sd.as_||"man")+`<span class="enm">${esc(sd.n||"")}</span>`; const mk=new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat(at).addTo(M); SWS.push(mk); SW=mk;
+  if(RM()){ mk.setLngLat(pts[pts.length-1]); return; } let t0=null; const dur=3200, f=ts=>{ if(!SWS.includes(mk)||key!==FXK||!M){ try{ mk.remove(); }catch(e){} return; } t0=t0||ts; const u=Math.min(1,(ts-t0)/dur), x=u*(pts.length-1), i=Math.min(pts.length-2,Math.floor(x)), r=x-i;
+    mk.setLngLat([pts[i][0]+(pts[i+1][0]-pts[i][0])*r,pts[i][1]+(pts[i+1][1]-pts[i][1])*r]); el.style.opacity=u>.8?String((1-u)/.2):"1"; if(u<1) requestAnimationFrame(f); else { mk.remove(); SWS=SWS.filter(x=>x!==mk); } }; setTimeout(()=>requestAnimationFrame(f),900); }
+function noSide(){ SWS.forEach(m=>{ try{ m.remove(); }catch(e){} }); SWS=[]; SW=null; }
+function noWalker(){ if(LD){ LD.remove(); LD=null; } noSide();  if(W){ W.remove(); W=null; WID=""; } CW.forEach(m=>m.remove()); CW=[]; }
 /* 장면 k에서의 주인공·동행: 처음 동행(wth)에서 장면마다 합류(add)·이탈(drop) — 이탈은 그 장면이 끝난 뒤(dropAt:start면 처음부터) */
 function cast(t,k){ let lead=t.as_||"man", nm=t.who||"", co=(t.wth||[]).map(x=>[x[0],x[1]]);
   for(let i=0;i<=k;i++){ const s=t.steps[i]; if(s.as_) lead=s.as_; if(s.who) nm=s.who; /* 11-22: add·drop은 한 사람일 수도, 여러 사람일 수도 있음(룻 1장: 오르바와 룻이 함께, 말론과 기룐이 함께) */
@@ -197,14 +215,14 @@ function cast(t,k){ let lead=t.as_||"man", nm=t.who||"", co=(t.wth||[]).map(x=>[
     /* 11-23 목사님(민 20:28 엘르아살): 옷 바꿈 — dress0은 장면 처음, dress는 장면 끝(그 뒤 장면부터는 바뀐 옷) */
     const dr=d=>(d||[]).forEach(([n,a])=>{ co=co.map(x=>x[0]===n?[x[0],a]:x); if(n===nm) lead=a; }); dr(s.dress0); if(i<k) dr(s.dress); }
   return {lead,nm,co}; }
-function animLine(base,seg,done,onPt,minMs,o){ o=o||{}; const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
+function animLine(base,seg,done,onPt,minMs,o){ o=o||{}; const key=FXK, M0=M; /* 11-27 GPT 감사 11번: 장면을 넘기거나 닫으면 그리던 길·걷던 사람을 그 자리에서 멈춤 */ const segs=Array.isArray(base[0]&&base[0][0])?base:(base.length?[base]:[]), head=segs.slice(0,-1), last=segs[segs.length-1]||[], same=last.length&&seg.length&&last[last.length-1][0]===seg[0][0]&&last[last.length-1][1]===seg[0][1];
   const draw0=pts=>same?[...head,last.concat(pts.slice(1))]:[...segs,pts], DS=o.ds||[]; /* 11-24 dash: 성경이 길을 말하지 않는 장면의 길은 점선 층(eroutd)에 */
-  const draw=pts=>{ if(o.dash){ setLine("eroutd",[...DS,pts]); return segs; } setLine("eroutd",DS.length?DS:null); return draw0(pts); };
-  if(RM()||seg.length<2){ setLine("eroute",draw(seg)); onPt&&onPt(seg[seg.length-1]); done&&done(); return; }
+  const draw=pts=>{ if(o.kind){ setLineK([...DS,{k:o.kind,c:pts}]); return segs; } setLineK(DS); return draw0(pts); };
+  if(RM()||seg.length<2){ setLine("eroute",draw(seg)); onPt&&onPt(seg[seg.length-1],seg.length-1); done&&done(); return; }
   let L=0; const d=[0]; for(let i=1;i<seg.length;i++){ L+=Math.hypot(seg[i][0]-seg[i-1][0],seg[i][1]-seg[i-1][1]); d.push(L); }
   let t0=null; const dur=Math.max(minMs||0,Math.min(4200,1400+L*260)*(o.mul||1)); /* slow: 마을마다 들르며 천천히(눅 8:1) */
-  const f=ts=>{ t0=t0||ts; const t=Math.min(1,(ts-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, at=e*L; const pts=[seg[0]]; for(let i=1;i<seg.length;i++){ if(d[i]<=at) pts.push(seg[i]); else { const k=(at-d[i-1])/(d[i]-d[i-1]||1); pts.push([seg[i-1][0]+(seg[i][0]-seg[i-1][0])*k,seg[i-1][1]+(seg[i][1]-seg[i-1][1])*k]); break; } }
-    setLine("eroute",draw(pts)); onPt&&onPt(pts[pts.length-1]); if(t<1) requestAnimationFrame(f); else done&&done(); }; requestAnimationFrame(f); }
+  const f=ts=>{ if(key!==FXK||M!==M0||!M){ done&&done(); return; } t0=t0||ts; const t=Math.min(1,(ts-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, at=e*L; const pts=[seg[0]]; let j=seg.length-1; for(let i=1;i<seg.length;i++){ if(d[i]<at) pts.push(seg[i]); else { const k=(at-d[i-1])/(d[i]-d[i-1]||1); pts.push([seg[i-1][0]+(seg[i][0]-seg[i-1][0])*k,seg[i-1][1]+(seg[i][1]-seg[i-1][1])*k]); j=i; break; } }
+    setLine("eroute",draw(pts)); onPt&&onPt(pts[pts.length-1],j); /* j: 지금 걷는 토막(seg[j-1]→seg[j]) */ if(t<1) requestAnimationFrame(f); else done&&done(); }; requestAnimationFrame(f); }
 
 /* 칸 내용 */
 function fold(on){ const p=$(".epan"); p.classList.toggle("fold",on); root.classList.toggle("pfold",on&&wide()); }
@@ -226,13 +244,29 @@ function eraOf(b,c){ if(!b) return null; c=c||1;
   if(b>=40&&b<=43) return "jesus"; if(b>=44) return "rome"; return null; }
 let BON=false; try{ BON=localStorage.getItem("cbsr_bord")==="1"; }catch(e){} let BERA=null, BDRAWN=null, BDATA=null, BLAB=[];
 function bLoad(){ return BDATA||(BDATA=fetch("borders.json").then(r=>r.json()).catch(()=>({eras:[]}))); }
-let BCV=null, BPRO=false;
+let BCV=null, BPRO=false; const BTC=new Map();
+/* 11-27 GPT 감사 1번(엔진 코드로 확인함): MapLibre 5.6.0은 입체 지형을 켜면, 아직 안 온 조각 자리에 '더 자세한 조각 네 장이 만들어졌는지'만 보고
+   이미 받아 둔 덜 자세한 조각을 숨김 → 네 장이 아직 오는 중이면 그 자리가 비거나 맨 아래 6배율 사진이 드러남(움직일 때 깨짐·흐린 네모).
+   네 장이 '다 받아졌을 때'만 바꿔 쓰도록 엔진 함수 하나를 고쳐 끼움. 5.6.0일 때만(다른 판이면 손대지 않음) */
+function scPatch(){ try{ if(!maplibregl.getVersion||maplibregl.getVersion()!=="5.6.0") return; const sc=M.style&&M.style.sourceCaches&&M.style.sourceCaches.e11, P=sc&&Object.getPrototypeOf(sc); if(!P||P.__cbsr||typeof P._updateCoveredAndRetainedTiles!=="function") return; P.__cbsr=1;
+  P._updateCoveredAndRetainedTiles=function(retain,minCZ,maxCZ,zoom,idealTileIDs,terrain){ const forFade={}, fading={}, now=performance.now();
+    for(const id of Object.keys(retain)){ const tid=retain[id], tile=this._tiles[id]; if(!tile||(tile.fadeEndTime!==0&&tile.fadeEndTime<=now)) continue; const ref=this.findLoadedParent(tid,minCZ)||this.findLoadedSibling(tid)||null; if(ref){ this._addTile(ref.tileID); forFade[ref.tileID.key]=ref.tileID; } fading[id]=tid; }
+    this._retainLoadedChildren(fading,zoom,maxCZ,retain);
+    for(const id in forFade){ if(!retain[id]){ this._coveredTiles[id]=true; retain[id]=forFade[id]; } }
+    if(terrain){ const ideal={}, miss={}; for(const t of idealTileIDs){ const tl=this._tiles[t.key]; if(tl&&tl.hasData()) ideal[t.key]=t; else miss[t.key]=t; }
+      for(const key in miss){ const ch=miss[key].children(this._source.maxzoom); if(ch.length===4&&ch.every(c=>this._tiles[c.key]&&this._tiles[c.key].hasData())){ ch.forEach(c=>{ ideal[c.key]=retain[c.key]=c; }); delete miss[key]; } } /* ← 고친 곳: 있기만 하면 → 다 받아졌으면 */
+      for(const key in miss){ const ref=this.findLoadedParent(miss[key],this._source.minzoom)||this.findLoadedSibling(miss[key])||null; if(ref){ ideal[ref.tileID.key]=retain[ref.tileID.key]=ref.tileID; for(const k in ideal){ if(ideal[k].isChildOf(ref.tileID)) delete ideal[k]; } } }
+      for(const key in this._tiles){ if(!ideal[key]) this._coveredTiles[key]=true; } } }; }catch(e){} }
+/* 11-27 GPT 감사 16번: 화면을 돌리거나 크기가 바뀐 뒤, 걷던 사람이 정보판 뒤나 화면 밖으로 가면 한 번만 바로잡음(카메라 원칙: 크기가 바뀌면 한 번 보정) */
+let RFT=null; function reFit(){ clearTimeout(RFT); RFT=setTimeout(()=>{ if(!M||!W||!cur||step<0||M.isMoving()) return; const at=W.getLngLat(); if(!inSafe([[at.lng,at.lat]])) M.easeTo({center:at,padding:visPad(),duration:RM()?0:900,essential:true}); },450); }
 function bProto(){ if(BPRO||!window.maplibregl||!maplibregl.addProtocol) return; BPRO=true;
-  maplibregl.addProtocol("bord",(params)=>new Promise((res)=>{ const m=params.url.match(/bord:\/\/[^/]+\/(\d+)\/(\d+)\/(\d+)/), t=document.createElement("canvas"); t.width=t.height=256;
+  /* 11-27 GPT 감사 10번: 같은 조각은 다시 그리지 않고(최근 160장 보관), 지도가 버린 요청은 그리지 않음 */
+  maplibregl.addProtocol("bord",(params,ac)=>new Promise((res,rej)=>{ const hit=BTC.get(params.url); if(hit){ BTC.delete(params.url); BTC.set(params.url,hit); return res({data:hit.slice(0)}); }
+    if(ac&&ac.signal&&ac.signal.aborted) return rej(new Error("abort")); const m=params.url.match(/bord:\/\/[^/]+\/(\d+)\/(\d+)\/(\d+)/), t=document.createElement("canvas"); t.width=t.height=256;
     if(m&&BCV){ const z=+m[1], x=+m[2], y=+m[3], n=2**z, lon=k=>k/n*360-180, R=Math.PI/180, Ym=k=>Math.PI*(1-2*k/n); /* 조각의 메르카토르 y */
       const C=BCV, W=C.cv.width, H=C.cv.height, X=lo=>(lo-C.w)/(C.e-C.w)*W, YY=ym=>(C.Y0-ym)/(C.Y0-C.Y1)*H, sx=X(lon(x)), ex=X(lon(x+1)), sy=YY(Ym(y)), ey=YY(Ym(y+1));
       if(ex>0&&sx<W&&ey>0&&sy<H) t.getContext("2d").drawImage(C.cv,sx,sy,ex-sx,ey-sy,0,0,256,256); }
-    t.toBlob(b=>b.arrayBuffer().then(buf=>res({data:buf})),"image/png"); })); }
+    t.toBlob(b=>b.arrayBuffer().then(buf=>{ BTC.set(params.url,buf); if(BTC.size>160) BTC.delete(BTC.keys().next().value); res({data:buf.slice(0)}); }),"image/png"); })); }
 function setEra(id){ BERA=id||null; bDraw(); }
 function bClear(){ BLAB.forEach(m=>m.remove()); BLAB=[]; if(M&&M.getLayer("bord")) M.removeLayer("bord"); if(M&&M.getSource("bord")) M.removeSource("bord"); BDRAWN=null; }
 function bChip(t){ const c=root&&root.querySelector(".ebchip"); if(!c) return; c.textContent=t||""; c.hidden=!t; }
@@ -244,7 +278,8 @@ function bDraw(){ const btn=root&&root.querySelector(".ebord"); if(btn) btn.setA
     const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const g=cv.getContext("2d"), kmpx=(e-w)*111*Math.cos((sN+sS)/2*Math.PI/180)/W, X=lo=>(lo-w)/(e-w)*W, Y=la=>(Y0-my(la))/(Y0-Y1)*H;
     E.items.forEach(it=>{ g.filter=`blur(${Math.max(2,Math.round((it.k?Math.min(6,E.blur):E.blur)/kmpx))}px)`; g.globalAlpha=.5; g.fillStyle=it.c; g.beginPath(); it.p.forEach(([lo,la],i)=>i?g.lineTo(X(lo),Y(la)):g.moveTo(X(lo),Y(la))); g.closePath(); g.fill(); });
     /* 땅 높이(3D)를 켠 지구에서는 그림 한 장(image) 층이 그려지지 않음 → 지도 조각(타일)처럼 잘라 주는 길(bord://)로 넣음 */
-    BCV={cv,w,e,Y0,Y1,my}; bProto(); M.addSource("bord",{type:"raster",tiles:[`bord://${want}/{z}/{x}/{y}`],tileSize:256,minzoom:2,maxzoom:12}); const before=["efull","eroute"].find(id=>M.getLayer(id)); M.addLayer({id:"bord",type:"raster",source:"bord",paint:{"raster-opacity":.95,"raster-fade-duration":0}},before);
+    BCV={cv,w,e,Y0,Y1,my}; bProto(); const bz=Math.max(4,Math.min(10,Math.ceil(Math.log2(W*360/((e-w)*256)))+1)); /* 그림 한 장의 실제 자세함까지만 자르고 그 위는 늘려 씀(경계는 일부러 번진 그림) */
+    M.addSource("bord",{type:"raster",tiles:[`bord://${want}/{z}/{x}/{y}`],tileSize:256,minzoom:2,maxzoom:bz,bounds:[w,sS,e,sN]}); const before=["efull","eroute"].find(id=>M.getLayer(id)); M.addLayer({id:"bord",type:"raster",source:"bord",paint:{"raster-opacity":.95,"raster-fade-duration":0}},before);
     E.items.forEach(it=>{ const ll=it.l||[it.p.reduce((a,q)=>a+q[0],0)/it.p.length,it.p.reduce((a,q)=>a+q[1],0)/it.p.length], el=document.createElement("div"); el.className="ebl"+(it.k?" sm":""); el.style.background=it.c; el.textContent=it.n+(it.k?` (${it.k})`:"");
       BLAB.push(new maplibregl.Marker({element:el}).setLngLat(ll).addTo(M)); });
     BDRAWN=want; bChip(`나라 경계 · ${E.n} · 대략`); }); }
@@ -255,7 +290,7 @@ function home(keepView){ stack=[]; cur=null; step=-1; fxClear(); tplSet(""); { c
   if(TAB==="era"){ h+=(O.eras||[]).map((e,i)=>`<button class="erow" data-era="${i}"><span class="ic">${i+1}</span><span><b>${esc(e.n)}</b><small>${esc(e.y||"")}</small></span></button>`).join(""); panel(O.title||"성경 지도",h); return; }
   if(TAB==="war"){ h+=(O.wars||[]).map((e,i)=>`<button class="erow" data-war="${i}"><span class="ic">${i+1}</span><span><b>${esc(e.n)}</b><small>${esc(e.d||"")}</small></span></button>`).join(""); panel(O.title||"성경 지도",h); return; }
   if(TAB==="place"){ h+=`<input class="eq" type="search" placeholder="지명 찾기 (예: 가버나움)" aria-label="지명 찾기"><div class="eres"></div>`; panel(O.title||"성경 지도",h); const q=$(".eq"), res=$(".eres");
-    const run=()=>{ const v=q.value.trim(); const L=(O.places||[]).map((p,i)=>[p,i]).filter(([p])=>!v||p.n.includes(v)).slice(0,60); res.innerHTML=L.map(([p,i])=>`<button class="erow" data-place="${i}"><span class="ic">●</span><span><b>${esc(p.n)}</b><small>${esc(p.k||"")}</small></span></button>`).join("")||`<p class="ed">찾는 곳이 없습니다.</p>`; };
+    const run=()=>{ const v=q.value.trim(); const L=(O.places||[]).map((p,i)=>[p,i]).filter(([p])=>!v||p.n.includes(v)).slice(0,60); res.innerHTML=L.map(([p,i])=>`<button class="erow" data-place="${i}"><span class="ic">●</span><span><b>${esc(p.n)}</b><small>${esc([p.k,p.est?"위치 추정":""].filter(Boolean).join(" · "))}</small></span></button>`).join("")||`<p class="ed">찾는 곳이 없습니다.</p>`; };
     q.addEventListener("input",run); run(); return; }
   if(T.length) h+=`<p class="esec">오늘 본문이 들어 있는 큰 여정</p>`+T.map(x=>`<button class="erow" data-tour="${esc(x.id)}" data-from="${x.from||0}"><span class="ic">▶</span><span><b>${esc(x.n)}</b><small>${esc(x.note||x.sub||"")}</small></span></button>`).join("");
   if(pl.length) h+=`<p class="esec">오늘 나오는 곳 ${pl.length}곳</p><div class="ed">${pl.map(p=>esc(p.n)).join(" · ")}</div>`;
@@ -273,8 +308,13 @@ function route(i){ const r=O.routes[i]; if(!r) return; cur=null; step=-1; fxClea
   addPins(r.p.filter(p=>p[0]).map((p,k,a)=>({n:p[0],lat:p[1],lng:p[2],big:k===0||k===a.length-1})));
   const bb=jbear(c);
   try{ M.setPaintProperty("eroute","line-dasharray",r.est?[2,1.6]:[1,0]); }catch(e){} /* 성경이 길을 말하지 않는 추정 길은 점선 */
-  const fig=r.sea?"boat":"man"; walker(fig,c[0]); showSeg(c,bb,11,()=>animLine([],c,null,pt=>walker(fig,pt)));
-  panel(r.n,`<p class="ed">${esc(r.ref||"")}</p><p class="ed">${esc(r.p.map(p=>p[0]).filter(Boolean).join(" → "))}</p><button class="ebig" data-route="${i}">↻ 다시 걸어 보기</button>`,{card:true});
+  /* 11-27 GPT 감사 20번: 누가(r.who)·무엇으로(구간마다 걷기/배/사라졌다 나타남)·편지 받는 곳(차례로 두루마리)을 옛 지도와 같은 뜻으로 */
+  const L=r.legs||[], man=r.fig||"man", nm=r.who||"", figAt=j=>r.sea||L[j-1]==="sea"?"boat":man, rk=FXK;
+  if(r.kind==="수신지"){ setLine("eroute",null); try{ M.setPaintProperty("eroute","line-dasharray",[2,1.6]); }catch(e){} const P=r.p.filter((p,k)=>p[0]&&!(k===0&&r.order));
+    showSeg(c,bb,9,()=>{ if(rk!==FXK) return; setLine("eroute",c); P.forEach((p,k)=>setTimeout(()=>{ if(rk!==FXK||!M) return; const el=document.createElement("div"); el.className="ewalk co"; el.innerHTML=O.figure("letter")+(r.order?`<span class="enm">${k+1}</span>`:""); FXL.push(new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat([p[2],p[1]]).addTo(M)); },RM()?0:300+k*350)); }); }
+  else { let cf=figAt(1); walker(cf,c[0],cf==="boat"?"":nm);
+    showSeg(c,bb,11,()=>{ if(rk===FXK) animLine([],c,null,(pt,j)=>{ const f2=figAt(j); if(f2!==cf){ cf=f2; walker(cf,pt,cf==="boat"?"":nm); } walker(cf,pt,cf==="boat"?"":nm); const h=chmOf(W); if(h) h.style.opacity=L[j-1]==="jump"?"0":""; }); }); } /* jump: 걸어간 길이 아니라 사라졌다 나타남(행 8:39–40) */
+  panel(r.n,`<p class="ed">${esc(r.ref||"")}${nm?` · ${esc(nm)}`:""}</p><p class="ed">${esc(r.p.map(p=>p[0]).filter(Boolean).join(" → "))}</p><button class="ebig" data-route="${i}">↻ 다시 걸어 보기</button>`,{card:true});
 }
 /* 높낮이 그래프(길을 따라 잰 땅 높이). 바다 아래(사해 등)도 그대로 */
 function elevSVG(E){ const e=E.e, W=320, H=96, top=14, bot=20, mn=Math.min(0,...e), mx=Math.max(...e), sp=Math.max(50,mx-mn);
@@ -282,21 +322,21 @@ function elevSVG(E){ const e=E.e, W=320, H=96, top=14, bot=20, mn=Math.min(0,...
   const im=e.indexOf(mx), sea=mn<0?`<line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" stroke="#7fb3d5" stroke-dasharray="3 3" stroke-width="1"/>`:"";
   let lastX=-99; const marks=(E.m||[]).filter(([n,f])=>{ const x=f*W; if(x-lastX<34) return false; lastX=x; return true; }).map(([n,f])=>`<line x1="${(f*W).toFixed(1)}" x2="${(f*W).toFixed(1)}" y1="${H-bot}" y2="${H-bot+4}" stroke="#cfc3b1"/><text x="${Math.min(W-2,Math.max(2,f*W)).toFixed(1)}" y="${H-4}" fill="#cfc3b1" font-size="9.5" text-anchor="${f<.08?"start":f>.92?"end":"middle"}">${esc(n)}</text>`).join("");
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="길의 높낮이"><path d="${d} L${W} ${H-bot} L0 ${H-bot} Z" fill="rgba(233,195,138,.22)"/><path d="${d}" fill="none" stroke="#e9c38a" stroke-width="1.8"/>${sea}<circle cx="${X(im)}" cy="${Y(mx)}" r="3" fill="#fff"/><text x="${Math.min(W-4,Math.max(4,X(im)))}" y="${Y(mx)-5}" fill="#fff" font-size="10" text-anchor="middle">${Math.round(mx)}m</text>${marks}</svg><small>길이 약 ${E.km}km · 가장 높은 곳 ${Math.round(mx)}m${mn<0?` · 가장 낮은 곳 해수면 아래 ${Math.round(-mn)}m`:""}</small>`; }
-function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n,lat:p.lat,lng:p.lng,big:true}]); move({center:[p.lng,p.lat],zoom:p.z||10.5,pitch:PITCH,bearing:M.getBearing(),duration:RM()?0:3200,curve:1.42,essential:true,padding:wide()?{right:390}:{bottom:Math.round(innerHeight*0.48)}}); if(!wide()) fold(true); }
+function place(i){ const p=O.places[i]; if(!p) return; addPins([{n:p.n+(p.est&&!/\?$/.test(p.n)?" (위치 추정)":""),lat:p.lat,lng:p.lng,big:true}]); /* 11-27 GPT 감사 23번: 지명 사전의 추정 표시 */ move({center:[p.lng,p.lat],zoom:p.z||10.5,pitch:PITCH,bearing:M.getBearing(),duration:RM()?0:3200,curve:1.42,essential:true,padding:wide()?{right:390}:{bottom:Math.round(innerHeight*0.48)}}); if(!wide()) fold(true); }
 function tourSegs(t){ const S=[]; let c=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.forEach(s=>{ if(s.from){ if(c.length) S.push(c); c=[[s.from[2],s.from[1]]]; } (s.p||[]).forEach(p=>c.push([p[2],p[1]])); }); if(c.length) S.push(c); return S; }
 function tourAll(t){ const c=[t.start?[t.start[2],t.start[1]]:null]; t.steps.forEach(s=>(s.p||[]).forEach(p=>c.push([p[2],p[1]]))); return c.filter(Boolean); }
 function tourPlaces(t){ const L=[]; if(t.start&&t.start[0]) L.push({n:t.start[0],lat:t.start[1],lng:t.start[2],big:true}); t.steps.forEach(s=>{ if(s.from&&s.from[0]&&!L.some(x=>x.n===s.from[0])) L.push({n:s.from[0],lat:s.from[1],lng:s.from[2],sm:true}); const e=(s.p||[])[(s.p||[]).length-1]; if(e&&e[0]&&!L.some(x=>x.n===e[0])) L.push({n:e[0],lat:e[1],lng:e[2],sm:true}); }); return L; }
 function tour(id,from){ const t=O.tours.find(x=>x.id===id); if(!t) return; cur=t; step=-1; fxClear(); { const [tp,tn]=tplAt(t,0,true); tplSet(tp,tn); } { const r0=(t.steps.find(x=>x.r)||{}).r; setEra(r0?eraOf(r0[0],r0[1]):null); } const all=tourAll(t);
   addPins(tourPlaces(t)); setLine("eroute",null); setLine("efull",tourSegs(t)); noWalker(); const c0=cast(t,0); walker(c0.lead,all[0],c0.nm); crew(c0.co,all[0]);
   t._b=jbear(all); const b=new maplibregl.LngLatBounds(); all.forEach(c=>b.extend(c)); M.fitBounds(b,{padding:pad(),pitch:PITCH,bearing:t._b,duration:RM()?0:4200,curve:1.5,essential:true});
-  panel(t.n,`<p class="ed">${esc(t.d||t.sub||"")}</p><button class="ebig" data-follow="${from||0}">▶ ${from?`${from+1}번째 장면부터 `:""}따라가기 · ${t.steps.length}장면</button>`+t.steps.map((s,k)=>`<button class="erow" data-follow="${k}"><span class="ic">${k+1}</span><span><b>${esc(s.t)}</b><small>${esc(s.ref||s.s||"")}</small></span></button>`).join(""));
+  panel(t.n,`<p class="ed">${esc(t.d||t.sub||"")}</p><button class="ebig" data-follow="${from||0}">▶ ${from?`${from+1}번째 장면부터 `:""}따라가기 · ${t.steps.length}장면</button>`+t.steps.map((s,k)=>`<button class="erow" data-follow="${k}"><span class="ic">${k+1}</span><span><b>${esc(s.t)}</b><small>${esc([s.ref,s.s].filter(Boolean).join(" · "))}</small></span></button>`).join(""));
   const e0=tourAll(t)[0]; if(e0) prefetch(e0,(t.steps[0]&&t.steps[0].z)||8); }
 /* 11-21: 휴대폰에서 짧은 길은 "맞출 수 없다"며 오류가 나 다음 장면으로 안 넘어가던 문제 → 실패하면 여백을 줄여 다시, 그래도 안 되면 null(도착지로 날아감) */
 function fitCam(b,o){ for(const sc of [1,.5,0]){ try{ const P=o.padding, q=Object.assign({},o,{padding:{top:P.top*sc,bottom:P.bottom*sc,left:P.left*sc,right:P.right*sc}}); const c=M.cameraForBounds(b,q); if(c&&c.center) return c; }catch(e){} } return null; }
 /* ── 장면 효과: 옛 여정 지도(Leaflet)의 효과를 지구 지도로 옮김(11-23 목사님). 모양(CSS)은 앱의 것을 그대로 씀 ── */
 const FXL=[]; let FXK=0, NIGHT=null;
 function fxClear(){ FXK++; FXL.forEach(m=>{ try{ m.remove(); }catch(e){} }); FXL.length=0; const c=M&&M.getContainer(); if(c){ c.classList.remove("mvburn","mvquake","mvstorm","mvnight","mvdark","mvsplash"); }
-  root&&root.querySelectorAll(".bmtgap,.mvcycle,.egrp,.parch").forEach(e=>e.remove()); try{ M&&M.getSource("eroutd")&&setLine("eroutd",null); }catch(e){}
+  root&&root.querySelectorAll(".bmtgap,.mvcycle,.egrp,.parch").forEach(e=>e.remove()); try{ setLineK(null); }catch(e){}
   /* 앞 장면 효과가 남긴 인물 상태(오름·사라짐·엎드림·숨김)를 되돌림 */ [W,...CW].forEach(m=>{ if(!m) return; m.getElement().classList.remove("mvhide"); const h=chmOf(m); if(h){ h.classList.remove("rise","vanish","slow","dip","fall","stretch"); h.style.opacity=""; } }); }
 const chmOf=m=>m&&m.getElement&&m.getElement().querySelector(".chm");
 const tween=(ms,key,fn)=>new Promise(r=>{ if(RM()){ fn(1); return r(key===FXK); } const t0=performance.now(), f=ts=>{ if(key!==FXK) return r(false); const q=Math.min(1,(ts-t0)/ms); fn(q); q<1?requestAnimationFrame(f):r(true); }; requestAnimationFrame(f); });
@@ -411,24 +451,27 @@ function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute"
   /* 11-22 목사님("에스라가 예루살렘에서 페르시아로 이동하는 장면은 왜?"): 장면에 from(다른 곳에서 새 인물로 시작)이 있으면 앞 장면 끝에서 걸어가지 않고 그곳에서 시작 */
   /* 11-24 dash: 성경이 길을 말하지 않는 장면(민 33 광야 38년 등)의 길은 점선 토막(DS)으로 따로 */
   const base=[], DS=[]; let c0=t.start?[[t.start[2],t.start[1]]]:[]; t.steps.slice(0,k).forEach(x=>{ if(x.from){ if(c0.length) base.push(c0); c0=[[x.from[2],x.from[1]]]; } const P=(x.p||[]).map(p=>[p[2],p[1]]);
-    if(x.dash&&P.length){ const a=c0.length?c0[c0.length-1]:P[0]; DS.push([a,...P]); if(c0.length) base.push(c0); c0=[P[P.length-1]]; } else P.forEach(p=>c0.push(p)); });
+    const kk=lnK(x); if(kk&&P.length){ const a=c0.length?c0[c0.length-1]:P[0]; DS.push({k:kk,c:[a,...P]}); if(c0.length) base.push(c0); c0=[P[P.length-1]]; } else P.forEach(p=>c0.push(p)); });
   if(s.from){ if(c0.length) base.push(c0); c0=[[s.from[2],s.from[1]]]; } if(c0.length) base.push(c0);
-  const sp=(s.p||[]).map(p=>[p[2],p[1]]), lastSeg=base[base.length-1]||[]; const here=lastSeg.length?lastSeg[lastSeg.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
-  setLine("eroute",base); const cs=cast(t,k), fig=s.sea?"boat":cs.lead; let co=cs.co.slice();
+  const sp=(s.p||[]).map(p=>[p[2],p[1]]), sp_len=x=>(x.p||[]).length-(x.l0||0)-(x.th||0), lastSeg=base[base.length-1]||[]; const here=lastSeg.length?lastSeg[lastSeg.length-1]:(sp[0]||tourAll(t)[0]); const seg=[here,...sp]; /* 머무는 장면은 seg가 한 점 */
+  setLine("eroute",base); const cs=cast(t,k); let co=cs.co.slice();
+  /* 11-27 GPT 감사 19번: 배에 오르기 전 뭍길(l0)·배에서 내린 뒤 뭍길(th)까지 배로 가던 것 → 토막마다 사람/배를 바꿈(카메라는 장면에 한 번) */
+  const mixed=s.sea&&(s.l0||s.th), pN=sp_len(s), legSea=j=>!s.sea?false:!mixed?true:(j>s.l0&&j<=s.l0+pN), fig=legSea(1)?"boat":cs.lead;
   if(s.drop&&s.dropAt==="start"&&k>0){ const pv=cast(t,k-1).co; [].concat(s.drop).forEach(n=>{ const q=pv.find(x=>x[0]===n); if(q&&!co.some(x=>x[0]===n)) co.push(q); }); } /* 처음에 떠나는 사람도 장면이 열릴 때는 보이고, 손 흔들고 떠남 */
-  walker(fig,here,s.sea?"":cs.nm); crew(s.sea?[]:co.filter(x=>!(s.side&&x[0]===s.side.n)),here); setTimeout(()=>mood(s.mood),RM()?0:600); fxClear(); const key=FXK; setLine("eroutd",DS.length?DS:null); fxStatic(t,k,here); if(s.cycle||s.fx==="cycle") fxCycle(s);
+  const sides=[].concat(s.side||[]).filter(sd=>sd&&sd.p&&sd.p.length), sideN=sides.map(sd=>sd.n), coL=co.filter(x=>!sideN.includes(x[0]));
+  walker(fig,here,fig==="boat"?"":cs.nm); crew(fig==="boat"?[]:coL,here); setTimeout(()=>mood(s.mood,key),RM()?0:600); fxClear(); const key=FXK; setLineK(DS); fxStatic(t,k,here); if(s.cycle||s.fx==="cycle") fxCycle(s);
   { const [tp,tn]=tplAt(t,k,true); tplSet(tp,tn); } leadSet(s,here);
   const burned=at=>{ fxBurn(at); if(s.tpl) setTimeout(()=>{ if(key===FXK){ const [a,b]=tplAt(t,k,false); tplSet(a,b); } },RM()?0:1600); }; /* 성전이 불탐(왕하 25:9) → 무너진 성전 */
   let CART=null; if(s.ride&&!s.sea){ CART=cartMk(here); const h=chmOf(W); if(h) h.style.opacity="0"; } /* 행 8:31 수레에 함께 탐 */
   const go=async()=>{ if(cur!==t||step!==k||key!==FXK) return; const c=M.getContainer();
     if(s.gap){ const g=document.createElement("div"); g.className="bmtgap"; g.textContent=s.gap; root.appendChild(g); setTimeout(()=>g.remove(),2700); if(!(await fxWait(2200,key))) return; }
     if(s.drop&&s.dropAt==="start"){ if(!(await fxDrop(s,key))) return; }
-    if(s.side&&s.side.p&&s.side.p.length) sideWalk(s.side,here);
+    sides.forEach(sd=>sideWalk(sd,here));
     if(s.quake){ c.classList.add("mvquake"); setTimeout(()=>c.classList.remove("mvquake"),RM()?0:1500); }
     if(s.storm) c.classList.add("mvstorm"); if(s.fx==="dark"){ fxNight(); c.classList.add("mvdark"); } if(s.fx==="sun") fxSun(here);
     let pil=null; if(s.fx==="pillar"){ pil=fxMk(here,"mvpil","<i></i><b></b>",2); fxNight(); setTimeout(()=>{ if(key!==FXK) return; pil._in.classList.add("fire"); c.classList.add("mvnight"); },RM()?0:2600); }
     const hist=[]; let CH=[]; if(s.chase){ const [cn,ca,cc]=s.chase; CH=Array.from({length:cc||3},(_,j)=>fxFig(here,ca||"soldier",j?"":cn)); CH.forEach(m=>m.getElement().querySelector(".chm")?.classList.add("walk")); }
-    const walkP=(mn)=>new Promise(res=>{ cartRun(CART,true); animLine(base,seg,()=>{ cartRun(CART,false); res(); },pt=>{ walker(fig,pt,s.sea?"":cs.nm); if(pil) pil.setLngLat(pt); if(CART) CART.setLngLat(pt); hist.push(pt); leadAhead(hist,pt); CH.forEach((m,j)=>{ const q=hist[Math.max(0,hist.length-1-18-j*6)]; if(q) m.setLngLat(q); }); },mn,{mul:s.slow,dash:!!s.dash,ds:DS}); });
+    let curFig=fig; const walkP=(mn)=>new Promise(res=>{ cartRun(CART,true); animLine(base,seg,()=>{ cartRun(CART,false); res(); },(pt,j)=>{ const f2=legSea(j)?"boat":cs.lead; if(f2!==curFig){ curFig=f2; walker(f2,pt,f2==="boat"?"":cs.nm); crew(f2==="boat"?[]:coL,pt); } walker(curFig,pt,curFig==="boat"?"":cs.nm); if(pil) pil.setLngLat(pt); if(CART) CART.setLngLat(pt); hist.push(pt); leadAhead(hist,pt); CH.forEach((m,j)=>{ const q=hist[Math.max(0,hist.length-1-18-j*6)]; if(q) m.setLngLat(q); }); },mn,{mul:s.slow,kind:lnK(s),ds:DS}); });
     if(s.fx==="jordan"&&seg.length>1){ if(!(await fxJordan(key))) return; }
     if(s.fx==="siege"){ if(!(await fxSiege(here,t,s,key,burned))) return; }
     else if(s.war&&s.stay){ if(!(await fxBattle(here,s.war,key))) return; if(s.burn) burned(here); }
@@ -447,9 +490,9 @@ function follow(k){ const t=cur; if(!t) return; try{ M.setPaintProperty("eroute"
     if(pil) setTimeout(()=>{ if(key!==FXK) return; c.classList.remove("mvnight"); pil._in.style.opacity="0"; },RM()?0:3500); };
   pins.forEach((m,i)=>m.getElement().classList.toggle("seen",i<=k+1));
   if(t._b==null) t._b=jbear(tourAll(t)); const z=s.z||8, mz=Math.min(11.5,z+1.5);
-  showSeg(seg,t._b,mz,go);
+  showSeg(s.focus?[[s.focus[2],s.focus[1]]]:seg,t._b,mz,go); /* 11-27 GPT 감사 26번: focus — 무리는 그 자리에 두고 이야기의 눈만 그곳으로(왕하 19:14 성전의 히스기야) */
   const nx=t.steps[k+1]; if(nx&&nx.p&&nx.p.length){ const e=nx.p[nx.p.length-1]; setTimeout(()=>prefetch([e[2],e[1]],nx.z||8),1500); }
-  panel(t.n,`<div class="dots">${t.steps.map((_,i)=>`<i class="${i<=k?"on":""}"></i>`).join("")}</div><div class="k">${k+1} / ${t.steps.length}${s.mood?` · ${esc(s.mood)}`:""}</div><h2>${esc(s.t)}</h2><p class="n">${esc(s.n||"")}</p>${s.verse?`<p class="v">${esc(s.verse)}</p><p class="r">${esc(s.ref||"")}</p>`:s.ref?`<p class="r">${esc(s.ref)}</p>`:""}${s.r&&O.passage?`<button class="elink" data-pas="1">본문 앞뒤 더 보기 ›</button><div class="epas" hidden></div>`:""}<div class="row"><button data-follow="${Math.max(0,k-1)}"${k?"":" disabled"}>‹ 앞</button><button class="p" data-follow="${k+1}">${k===t.steps.length-1?"여정 처음으로":"다음 ›"}</button></div>`,{card:true}); }
+  panel(t.n,`<div class="dots">${t.steps.map((_,i)=>`<i class="${i<=k?"on":""}"></i>`).join("")}</div><div class="k">${k+1} / ${t.steps.length}${s.mood?` · ${esc(s.mood)}`:""}</div><h2>${esc(s.t)}</h2>${s.s?`<p class="es">${esc(s.s)}</p>`:""}<p class="n">${esc(s.n||"")}</p>${s.verse?`<p class="v">${esc(s.verse)}</p><p class="r">${esc(s.ref||"")}</p>`:s.ref?`<p class="r">${esc(s.ref)}</p>`:""}${s.r&&O.passage?`<button class="elink" data-pas="1">본문 앞뒤 더 보기 ›</button><div class="epas" hidden></div>`:""}<div class="row"><button data-follow="${Math.max(0,k-1)}"${k?"":" disabled"}>‹ 앞</button><button class="p" data-follow="${k+1}">${k===t.steps.length-1?"여정 처음으로":"다음 ›"}</button></div>`,{card:true}); }
 
 function onClick(e){ const t=e.target.closest("button"); if(!t||!root.contains(t)) return;
   if(t.dataset.grp!=null){ push(()=>home(true)); group(+t.dataset.grp); return; }
@@ -468,14 +511,14 @@ function onClick(e){ const t=e.target.closest("button"); if(!t||!root.contains(t
   if(t.classList.contains("ebord")){ BON=!BON; try{ localStorage.setItem("cbsr_bord",BON?"1":"0"); }catch(e){} BDRAWN=null; bDraw(); return; }
   if(t.classList.contains("ex")){ close(); return; }
   if(t.classList.contains("ego")){ enter(); return; } }
-/* 11-22: 맨 아래 깔리는 6배율 사진을 성경 땅 전체(이탈리아~메소보다미아, 약 65장)만큼 들어갈 때 미리 받아 둠 */
-function preBase(){ [[3,4,5,2,3],[4,8,10,5,6],[5,16,20,11,13],[6,32,41,23,27]].forEach(([z,x0,x1,y0,y1])=>{ for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++){ const u=`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${O.esriKey}`; if(PRE.has(u)) continue; PRE.add(u); const im=new Image(); im.crossOrigin="anonymous"; im.src=u; } }); }
+/* 11-22: 맨 아래 깔리는 6배율 사진을 성경 땅 전체(이탈리아~메소보다미아, 75장)만큼 — 작은 배율부터 줄 세워 들어갈 때 미리 받아 둠 */
+function preBase(){ [[3,4,5,2,3],[4,8,10,5,6],[5,16,20,11,13],[6,32,41,23,27]].forEach(([z,x0,x1,y0,y1])=>{ for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++){ pq(`https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}?token=${O.esriKey}`); } }); }
 function enter(){ spinOn=false; preBase(); $(".eintro").classList.add("off"); setTimeout(perfWatch,1500); if(O.startTour) { push(()=>home(true)); tour(O.startTour,O.startFrom||0); } else if(O.startRoute!=null){ push(()=>home(true)); route(O.startRoute); } else home(); }
 function toEarth(){ clearPins(); noWalker(); fxClear(); tplSet(""); setLine("eroute",null); setLine("efull",null); fold(true); M.flyTo({center:[38,24],zoom:1.3,pitch:0,bearing:0,duration:RM()?0:5500,essential:true}); }
 function key(e){ if(!root) return; const tg=e.target; if(tg&&/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)) return;
   /* Esc는 앱이 처리(뒤로 가기와 같은 길) */ if(cur&&step>=0&&e.key==="ArrowRight") follow(step+1); else if(cur&&step>0&&e.key==="ArrowLeft") follow(step-1); }
 
-function open(opts){ if(root) close(true); O=opts||{}; stack=[]; cur=null; step=-1;
+function open(opts){ if(root) close(true); GEN++; O=opts||{}; stack=[]; cur=null; step=-1;
   if(!document.getElementById("eovcss")){ const s=document.createElement("style"); s.id="eovcss"; s.textContent=CSS; document.head.appendChild(s); }
   root=document.createElement("div"); root.id="eov"; root.setAttribute("role","dialog"); root.setAttribute("aria-label","성경 지구 지도");
   root.innerHTML=`<div class="estars"></div><div class="emap"></div>
@@ -485,18 +528,19 @@ function open(opts){ if(root) close(true); O=opts||{}; stack=[]; cur=null; step=
   document.body.appendChild(root); root.addEventListener("click",onClick); addEventListener("keydown",key);
   try{
     M=new maplibregl.Map({container:root.querySelector(".emap"),center:O.center||[38,24],zoom:O.skipIntro?4:1.3,pitch:0,maxPitch:75,attributionControl:{compact:true},pixelRatio:PR0(),maxTileCacheSize:800,fadeDuration:280,cancelPendingTileRequestsWhileZooming:false,style:style(O.esriKey)});
-  }catch(e){ close(true); if(O.onFail) O.onFail(e); return false; }
+  }catch(e){ const fail=O&&O.onFail; close(true); if(fail) fail(e); return false; } /* 11-27 GPT 감사 17번: close가 O를 비운 뒤 읽던 것 */
   M.addControl(new maplibregl.NavigationControl({visualizePitch:true}),"bottom-left"); /* 오른쪽은 칸이 가림 */
-  M.on("zoomend",terr); M.on("moveend",declutter);
-  M.on("load",()=>{ M.addSource("efull",{type:"geojson",data:{type:"FeatureCollection",features:[]}}); M.addSource("eroute",{type:"geojson",data:{type:"FeatureCollection",features:[]}});
+  M.on("zoomend",terr); M.on("moveend",declutter); addEventListener("resize",reFit);
+  M.on("load",()=>{ scPatch(); M.addSource("efull",{type:"geojson",data:{type:"FeatureCollection",features:[]}}); M.addSource("eroute",{type:"geojson",data:{type:"FeatureCollection",features:[]}});
     M.addLayer({id:"efull",type:"line",source:"efull",paint:{"line-color":"#fff2d6","line-width":2,"line-opacity":.35,"line-dasharray":[2,2]},layout:{"line-cap":"round","line-join":"round"}});
     M.addLayer({id:"eroute-glow",type:"line",source:"eroute",paint:{"line-color":"#ffd08a","line-width":12,"line-blur":10,"line-opacity":.55},layout:{"line-cap":"round","line-join":"round"}});
     M.addLayer({id:"eroute",type:"line",source:"eroute",paint:{"line-color":"#fff2d6","line-width":3},layout:{"line-cap":"round","line-join":"round"}});
-    M.addSource("eroutd",{type:"geojson",data:{type:"FeatureCollection",features:[]}}); M.addLayer({id:"eroutd",type:"line",source:"eroutd",paint:{"line-color":"#fff2d6","line-width":3,"line-dasharray":[2,1.6]},layout:{"line-join":"round"}});
+    M.addSource("eroutd",{type:"geojson",data:{type:"FeatureCollection",features:[]}}); M.addLayer({id:"eroutd",type:"line",source:"eroutd",filter:["==",["get","k"],"est"],paint:{"line-color":"#fff2d6","line-width":3,"line-dasharray":[2,1.6]},layout:{"line-join":"round"}});
+    M.addLayer({id:"erouta",type:"line",source:"eroutd",filter:["==",["get","k"],"army"],paint:{"line-color":"#c4473a","line-width":4},layout:{"line-cap":"round","line-join":"round"}}); M.addLayer({id:"eroutc",type:"line",source:"eroutd",filter:["==",["get","k"],"captive"],paint:{"line-color":"#d8d2c4","line-width":3.5,"line-dasharray":[0.2,2.2]},layout:{"line-cap":"round","line-join":"round"}});
     if(O.skipIntro) enter(); else { spinOn=true; M.on("moveend",()=>{ if(spinOn) spin(); }); spin(); } });
   ["mousedown","touchstart","wheel"].forEach(ev=>M.on(ev,()=>{ if(spinOn&&$(".eintro").classList.contains("off")) spinOn=false; }));
   M.on("error",e=>{ if(O.onTileError) O.onTileError(e); });
   return true; }
-function close(silent){ removeEventListener("keydown",key); try{ fxClear(); TPLM=null; clearPins(); noWalker(); M&&M.remove(); }catch(e){} M=null; if(root){ root.remove(); root=null; } spinOn=false; TER=false; const f=O&&O.onClose; O=null; if(!silent&&f) f(); }
+function close(silent){ removeEventListener("keydown",key); removeEventListener("resize",reFit); GEN++; CAMK++; PQ.length=0; try{ fxClear(); TPLM=null; clearPins(); noWalker(); bClear(); M&&M.remove(); }catch(e){} M=null; BCV=null; BERA=null; BDRAWN=null; BLAB=[]; /* 11-27 GPT 감사 15번: 경계를 켠 채 닫고 같은 시대를 다시 열면 경계가 빠지던 것 */ if(root){ root.remove(); root=null; } spinOn=false; TER=false; const f=O&&O.onClose; O=null; if(!silent&&f) f(); }
 window.CBSR_EARTH={open,close,isOpen:()=>!!root,_map:()=>M};
 })();
