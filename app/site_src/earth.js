@@ -337,7 +337,7 @@ function fitCam(b,o){ for(const sc of [1,.5,0]){ try{ const P=o.padding, q=Objec
 const FXL=[]; let FXK=0, NIGHT=null;
 function fxClear(){ FXK++; FXL.forEach(m=>{ try{ m.remove(); }catch(e){} }); FXL.length=0; const c=M&&M.getContainer(); if(c){ c.classList.remove("mvburn","mvquake","mvstorm","mvnight","mvdark","mvsplash"); }
   root&&root.querySelectorAll(".bmtgap,.mvcycle,.egrp,.parch").forEach(e=>e.remove()); try{ setLineK(null); }catch(e){}
-  /* 앞 장면 효과가 남긴 인물 상태(오름·사라짐·엎드림·숨김)를 되돌림 */ [W,...CW].forEach(m=>{ if(!m) return; m.getElement().classList.remove("mvhide"); const h=chmOf(m); if(h){ h.classList.remove("rise","vanish","slow","dip","fall","stretch"); h.style.opacity=""; } }); }
+  /* 앞 장면 효과가 남긴 인물 상태(오름·사라짐·엎드림·숨김)를 되돌림 */ [W,...CW].forEach(m=>{ if(!m) return; m.getElement().classList.remove("mvhide"); m.getElement().querySelector(".enm")?.style.removeProperty("opacity"); const h=chmOf(m); if(h){ h.classList.remove("rise","vanish","slow","dip","fall","stretch"); h.style.opacity=""; } }); }
 const chmOf=m=>m&&m.getElement&&m.getElement().querySelector(".chm");
 const tween=(ms,key,fn)=>new Promise(r=>{ if(RM()){ fn(1); return r(key===FXK); } const t0=performance.now(), f=ts=>{ if(key!==FXK) return r(false); const q=Math.min(1,(ts-t0)/ms); fn(q); q<1?requestAnimationFrame(f):r(true); }; requestAnimationFrame(f); });
 const fxSky=(ll,html,z)=>fxMk(ll,"efx0",html,z||5);
@@ -387,9 +387,9 @@ function leadSet(s,at){ if(!s.lead||!O.figure||s.sea){ if(LD){ LD.remove(); LD=n
   LD.setLngLat(at); LD.setOffset([36,-2]); } /* 화면 칸(px)으로 비켜 둠 — 카메라가 옮겨 가도 곁에 있게 */
 function leadAhead(hist,pt){ if(!LD) return; LD.setLngLat(pt); if(hist.length<5) return; const a=scr(hist[hist.length-5]), b=scr(pt), dx=b.x-a.x, dy=b.y-a.y, L=Math.hypot(dx,dy); if(L>1.5) LD.setOffset([dx/L*36,dy/L*36-2]); }
 /* 떠남: 손 흔들고(👋) 사라짐 · 죽음은 손 흔들지 않고 천천히 · quiet는 조용히 */
-async function fxDrop(s,key){ const dead=s.exit==="death"; for(const n of [].concat(s.drop||[])){ const m=CW.find(x=>x._n===n); if(!m) continue;
+async function fxDrop(s,key){ const dead=s.exit==="death"; for(const n of [].concat(s.drop||[])){ const isW=!CW.some(x=>x._n===n)&&W&&W._nm===n, m=isW?W:CW.find(x=>x._n===n); if(!m) continue; /* 11-27: 주인공이 죽는 장면(삿 16:30 삼손)은 주인공이 그 자리에서 천천히 사라짐 */
     if(!s.quiet&&!dead){ fxEmo(m,"👋"); if(!(await fxWait(700,key))) return false; } const h=chmOf(m); if(h){ h.classList.add("vanish"); if(dead) h.classList.add("slow"); } m.getElement().querySelector(".enm")?.style.setProperty("opacity","0");
-    if(!(await fxWait(dead?1500:900,key))) return false; m.remove(); const i=CW.indexOf(m); if(i>=0) CW.splice(i,1); } return true; }
+    if(!(await fxWait(dead?1500:900,key))) return false; if(isW) continue; m.remove(); const i=CW.indexOf(m); if(i>=0) CW.splice(i,1); } return true; }
 /* 포위(왕하 18, 25 · 렘 39): 북쪽 화면 밖에서 군대가 내려와 성을 에워쌈 → 불(burn이 있을 때만) */
 async function fxSiege(at,t,s,key,burned){ const P0=scr(at), n=14, R=Math.random, A=[];
   for(let k=0;k<n;k++){ const th=k/n*Math.PI*2, fx=(R()-.5)*230, fy=-210-R()*90, tx=48*Math.sin(th), ty=38*Math.cos(th), m=fxFig(unscr(P0.x+fx,P0.y+fy),"foe",k?"":(t.siegeBy||"바벨론 군대")), h=chmOf(m); if(h){ h.classList.add("walk"); h.classList.toggle("flip",tx<fx); } A.push({m,fx,fy,tx,ty,d:R()*.25}); }
