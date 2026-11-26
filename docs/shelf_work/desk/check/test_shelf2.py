@@ -21,7 +21,7 @@ def run(p,w,h,tag,shots=True):
     r=pg.evaluate("(()=>{const a=document.querySelector('.sp[data-b=\"isa\"]').getBoundingClientRect(),q=document.querySelector('.scn.pr img').getBoundingClientRect();return [Math.round(a.left-q.left),Math.round(q.right-document.querySelector('.sp[data-b=\"hos\"]').getBoundingClientRect().right),Math.round(q.left),Math.round(q.width)]})()"); print(tag,' 첫 책 왼쪽 틈·끝 책 오른쪽 틈·그림 왼쪽·그림 너비',r)
     q=pg.evaluate("(()=>{const q=document.querySelector('.scn.pr img').getBoundingClientRect();return [q.left,q.top,q.width,q.height]})()"); pg.mouse.click(q[0]+q[2]*50/390, q[1]+q[3]*700/846); pg.wait_for_timeout(300); print(tag,' 서가 안 빈 곳 → 그대로?',pg.locator('.sp').count()==17)
     pg.click('.sp[data-b="isa"]'); pg.wait_for_timeout(2700); shot('5cover')
-    n=int(pg.inner_text('.nv .mid').split('/')[1].split('·')[0]); over=[]
+    n=int(pg.inner_text('.nv .mid').split('/')[1].replace('쪽','').split('·')[0]); over=[]
     for i in range(1,n):
         pg.click('.nv button[data-a="next"]'); pg.wait_for_timeout(110)
         m=pg.evaluate("(()=>{const m=document.querySelector('#cbsrShelf main').getBoundingClientRect(),p=document.querySelector('#cbsrShelf .pr').getBoundingClientRect(),q=document.querySelector('#cbsrShelf .st').getBoundingClientRect();return [Math.round(m.top-p.bottom),Math.round(q.right-m.right)]})()")

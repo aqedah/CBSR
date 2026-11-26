@@ -52,7 +52,7 @@ try:
             pg.fill('#cbsrQa', '복음이 무엇인지 로마 교회에 알리려고 썼다.'); pg.click('#cbsrShelf [data-a=ans]'); pg.wait_for_timeout(900)
             chk('적으면 도장 하나', pg.locator('#cbsrShelf .cdl i.on').count() == 1 and '복음이 무엇인지' in (txt('#cbsrShelf .cdl') or '')); shot('9_stamped')
             chk('저장됨', '복음이 무엇인지' in (pg.evaluate('localStorage.getItem("cbsr_shelf_qa")') or ''))
-            pg.click('#cbsrShelf .nv .mid'); pg.wait_for_timeout(600)       # 닫기 → 서가
+            pg.click('#cbsrShelf .bb'); pg.wait_for_timeout(600)       # ‹ 서가 → 서가
             chk('서가로 돌아옴(말 없음)', pg.locator('#cbsrShelf .dg').count() == 0 and pg.locator('#cbsrShelf .sp').count() > 5)
             pg.go_back(); pg.wait_for_timeout(1900); pg.go_back(); pg.wait_for_timeout(1900)
             chk('서고로 돌아옴: 팻말과 사서 단추', pg.locator('#cbsrShelf .lbc').count() == 1 and not pg.evaluate('document.querySelector("#cbsrShelf .zn").classList.contains("off")')); shot('10_free')

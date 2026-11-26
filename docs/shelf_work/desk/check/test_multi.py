@@ -46,11 +46,11 @@ try:
             # 통독표: 달이 바뀌어도 틀이 같고, 긴 범위도 한 줄
             pg = start('today=40'); pg.click('#cbsrShelf .dg .dgc button:nth-child(3)'); pg.wait_for_timeout(2600)
             if pg.locator('#cbsrShelf .dg .dgb[data-a]').count(): pg.click('#cbsrShelf .dg .dgb'); pg.wait_for_timeout(900)
-            M = "(()=>{const k=document.querySelector('#cbsrShelf .st').getBoundingClientRect().width/390,p=document.querySelector('#cbsrShelf .pln').getBoundingClientRect(),l=document.querySelector('#cbsrShelf .pll').getBoundingClientRect(),g=document.querySelector('#cbsrShelf .plg').getBoundingClientRect();const bad=[...document.querySelectorAll('#cbsrShelf .plc')].filter(c=>{const s=c.querySelector('small');return s&&(s.getBoundingClientRect().height/k>parseFloat(getComputedStyle(s).fontSize)*1.6||s.scrollWidth>c.clientWidth+1)}).map(c=>c.innerText.replace(/\\n/g,' '));return [Math.round(p.height),Math.round(l.top-p.top),Math.round(g.height),bad,document.querySelector('#cbsrShelf .plh').innerText.replace(/\\n/g,' ').slice(0,12),document.querySelectorAll('#cbsrShelf .pll button').length]})()"
+            M = "(()=>{const k=document.querySelector('#cbsrShelf .st').getBoundingClientRect().width/390,p=document.querySelector('#cbsrShelf .pln').getBoundingClientRect(),l=document.querySelector('#cbsrShelf .pll').getBoundingClientRect(),g=document.querySelector('#cbsrShelf .plg').getBoundingClientRect();const bad=[...document.querySelectorAll('#cbsrShelf .plc')].filter(c=>{const s=c.querySelector('small');return s&&(s.getBoundingClientRect().height/k>parseFloat(getComputedStyle(s).fontSize)*(s.classList.contains('two')?2.7:1.6)||s.scrollWidth>c.clientWidth+1||s.getBoundingClientRect().bottom>c.getBoundingClientRect().bottom+1)}).map(c=>c.innerText.replace(/\\n/g,' '));return [Math.round(p.height),Math.round(l.top-p.top),Math.round(g.height),bad,document.querySelector('#cbsrShelf .plh').innerText.replace(/\\n/g,' ').slice(0,12),document.querySelectorAll('#cbsrShelf .pll button').length]})()"
             a = pg.evaluate(M); pg.screenshot(path=OUT+'p_%s_now.png'%tag)
             pg.click('#cbsrShelf .plh [data-a=pm][data-d="-1"]'); pg.wait_for_timeout(900); b2 = pg.evaluate(M); pg.screenshot(path=OUT+'p_%s_prev.png'%tag)
             chk(tag+' 통독표: 이번 달과 지난달의 틀이 같음 %s / %s' % (a[:3]+a[4:], b2[:3]+b2[4:]), a[:3]==b2[:3] and a[5]!=b2[5])
-            chk(tag+' 통독표: 범위 글자가 한 줄이고 칸을 넘지 않음 %s' % (a[3]+b2[3]), not a[3] and not b2[3])
+            chk(tag+' 통독표: 범위 글자가 두 줄(책·장)을 넘지 않고 칸 안에 듦 %s' % (a[3]+b2[3]), not a[3] and not b2[3])
             pg.close(); cx.close()
         b.close()
 finally:

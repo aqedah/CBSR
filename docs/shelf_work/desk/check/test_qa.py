@@ -9,7 +9,7 @@ with sync_playwright() as p:
     pg.click('.zone[data-s="nt"]'); pg.wait_for_timeout(2200); print('사서(신약):',pg.inner_text('.lib').replace('\n',' '))
     pg.click('.gl button[data-g="바울서신"]'); pg.wait_for_timeout(1200); print('사서(서가):',pg.inner_text('.lib').replace('\n',' ')); pg.screenshot(path=S+'q2.png')
     pg.click('.sp[data-b="gal"]'); pg.wait_for_timeout(2700)
-    n=int(pg.inner_text('.nv .mid').split('/')[1].split('·')[0]); print('쪽수',n)
+    n=int(pg.inner_text('.nv .mid').split('/')[1].replace('쪽','').split('·')[0]); print('쪽수',n)
     while not pg.locator('#cbsrQa').count(): pg.click('.nv button[data-a="next"]'); pg.wait_for_timeout(90)
     print('첫 물음:',pg.inner_text('main .qq'),'|',pg.inner_text('.nv .mid')); pg.screenshot(path=S+'q3.png')
     pg.click('.qb .ans'); pg.wait_for_timeout(200); print('빈 채로 답하기 →',errs[-1] if errs else None)
