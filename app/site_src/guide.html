@@ -890,7 +890,9 @@ ${v.obs2?`<p class="lab sans"><span class="st">1</span>본문 관찰<span class=
 <div class="pn">${pageNo(p)+1}</div>
 </div>` }
 /* 새 틀 지면 맞춤: 남는 자리를 쪽 아래에 몰지 않고 나눔(왼쪽: 칸 머리 앞 → 항목 사이, 오른쪽: 쓸 줄 → 칸 머리 앞). 지도·그림은 눈여겨볼 것 상자 높이에 맞춤 */
-function dist27(root,s){ s=s||1; root.querySelectorAll('.pg.n27').forEach(pg=>{
+/* 11-26: 쓰는 법 견본(.howmini) 속 하루 지면은 견본을 만들 때 이미 맞췄으므로, 화면 전체를 다시 맞출 때는 건드리지 않음(말뜻이 1초 뒤 사라지던 원인) */
+const inMini=(el,root)=>!!el.closest('.howmini')&&!(root.closest&&root.closest('.howmini'));
+function dist27(root,s){ s=s||1; root.querySelectorAll('.pg.n27').forEach(pg=>{ if(inMini(pg,root)) return;
   const slackOf=()=>{ const pr=pg.getBoundingClientRect(); const ab=pg.querySelector('.after'); const lim=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM*s; let mb=0; pg.querySelectorAll(':scope > *:not(.after):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom}); return (lim-mb)/s/MM };
   const RES=1.5; const bump=(els,cap,prop)=>{ els=els.filter(Boolean); if(!els.length) return; const sl=slackOf()-RES; if(sl<=0) return; const add=Math.min(sl/els.length,cap); els.forEach(g=>{ const cs=getComputedStyle(g); g.style[prop]=(parseFloat(cs[prop])/MM+add)+'mm' }) };
   if(pg.classList.contains('r')){ const lnw=[...pg.querySelectorAll(':scope > .lnw')]; const order=[0,2,3,1].filter(i=>lnw[i]); let k=0,guard=0;
@@ -1285,7 +1287,7 @@ function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</
 /* 한두 글자만 다음 줄로 내려오는 줄은 자간·글자 크기를 조금 줄여 한 줄에 넣는다(최대 7%) */
 /* 지도: 왼쪽 단(절·눈여겨볼 것)의 높이만큼 지도를 키워 빈 칸이 남지 않게 */
 /* 지도·그림의 높이를 왼쪽 글(눈여겨볼 것)에 맞춘다. 쪽의 남는 높이가 아니라 글 높이가 기준이고, 32–70mm 안에서만 따라간다 */
-function matchMedia(root,s,only){ (only?only.querySelectorAll('.two'):root.querySelectorAll('.pg .two')).forEach(two=>{ try{
+function matchMedia(root,s,only){ (only?only.querySelectorAll('.two'):root.querySelectorAll('.pg .two')).forEach(two=>{ try{ if(!only&&inMini(two,root)) return;
   const c1=two.querySelector('.c1'), c2=two.querySelector('.c2'); if(!c1||!c2) return;
   const h1=c1.getBoundingClientRect().height/s/MM;
   const cap=c2.querySelector('.cap'); const capH=cap?cap.getBoundingClientRect().height/s/MM:0;
@@ -1294,7 +1296,7 @@ function matchMedia(root,s,only){ (only?only.querySelectorAll('.two'):root.query
   if(m){ const svg=c2.querySelector('svg'); const tmp=document.createElement('div'); tmp.innerHTML=svgMap(JSON.parse(m),n27?c2.getBoundingClientRect().width/s/MM:45,target); const ns=tmp.querySelector('svg'); if(svg&&ns) svg.replaceWith(ns); }
   else { const im=c2.querySelector('.pic .im'); if(im) im.style.height=target.toFixed(1)+'mm'; }
 }catch(e){} }) }
-function tighten(root){ root.querySelectorAll('.pg .ref, .pg .box .i').forEach(el=>{
+function tighten(root){ root.querySelectorAll('.pg .ref, .pg .box .i').forEach(el=>{ if(inMini(el,root)) return;
   const lh=parseFloat(getComputedStyle(el).lineHeight); if(!(el.getBoundingClientRect().height>lh*1.5)) return;
   const probe=document.createElement('span'); probe.style.cssText='position:absolute;white-space:nowrap;visibility:hidden;left:-9999px'; probe.className=el.className; probe.innerHTML=el.innerHTML; probe.style.font=getComputedStyle(el).font; el.parentNode.appendChild(probe);
   const need=probe.getBoundingClientRect().width, have=el.getBoundingClientRect().width+ (parseFloat(getComputedStyle(el).textIndent)||0)*-1*0; probe.remove();
