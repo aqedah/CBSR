@@ -45,6 +45,7 @@ for D in json.load(open(B)):
     if D.get('find'):   # 11-25: 본문 관찰 '찾기 → 잇기'(obs.q는 본문 정리만, 앱에는 빌드가 두 물음을 붙여 줌)
         x['v27'].update(find=tok(D['find']), link=tok(D['link']), start=tok(D.get('start','')))
     if D.get('q2'): x['v27']['obs2']=tok(D['q2']); x['v27']['god2']=[tok(D['god2'][0]),tok(D['god2'][1])]  # 11-24: 범위가 넓은 날의 둘째 갈래
+    if D.get('find2'): x['v27'].update(find2=tok(D['find2']), link2=tok(D.get('link2','')))  # 11-27: 두 갈래 날의 나도 찾기 → 잇기
     x['u']=now
 j['updated']=time.strftime('%Y-%m-%dT%H:%M:%S')
 json.dump(j,open(GQ,'w'),ensure_ascii=False,indent=1)
