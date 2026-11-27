@@ -9907,6 +9907,9 @@ window.addEventListener("message",e=>{ try{ if(e.origin!==location.origin||!e.da
 /* 11-20: 가이드북 주일 지면의 QR(?ldr=날 번호) → 그날 소그룹 인도자용 한 장을 바로 엶 */
 /* 11-21: 체험판 가이드북 주일 QR(?ldr26=날) — 2026판 인도자 화면. 2027년에 열면 그냥 앱으로 */
 { const l6=+(new URLSearchParams(location.search).get("ldr26")||0); if(l6>=1&&l6<=365&&!Y27){ try{ const [w,d]=dayWD(l6); view.w=w; view.d=d; }catch(e){} view.tab="today"; setTimeout(()=>whenBible(()=>{ render(); leaderOpen(view.w,view.d,{exact:true}); }),300); } }
+/* 11-27 목사님: 체험판 부록 세라핌 묵상지 머리의 '스토리 보기' QR(?sera=회 키: 1201 1208 1215 1222 1225 1229).
+   그 회 스토리(STORY_SERA["sera-키"])와 여는 함수(seraStoryOpen)가 있으면 스토리를, 아직 없으면 그 회 묵상지(season.html)를 엽니다. 스토리 세션이 채울 자리 */
+{ const sk=(new URLSearchParams(location.search).get("sera")||"").replace(/[^0-9a-z-]/gi,""); if(sk){ const has=typeof STORY_SERA!=="undefined"&&STORY_SERA&&STORY_SERA["sera-"+sk]; if(has&&typeof seraStoryOpen==="function") setTimeout(()=>whenBible(()=>seraStoryOpen(sk)),300); else location.replace("season.html?view=sera-2026-advent&w="+encodeURIComponent(sk)); } }
 /* 시험 입구(11-21): ?earth=1 이면 성경 지구를 바로 엶. 앱의 지도 단추 연결은 다음 단계 */
 if(new URLSearchParams(location.search).get("earth")) setTimeout(()=>earthOpen(),600);
 if(new URLSearchParams(location.search).get("shelf")) setTimeout(()=>shelfOpen(),600);

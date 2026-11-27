@@ -19,6 +19,9 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .rn{position:absolute;bottom:5.5mm;right:18mm;font-size:7.5pt;color:#999}
 .p5.r .rn{right:auto;left:18mm}
 .hd{display:grid;grid-template-columns:19mm 1fr;align-items:center;border-bottom:.5mm solid var(--c);padding-bottom:1.6mm}
+.hd.q3{grid-template-columns:19mm 1fr 13mm}
+.hd .sq{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:4.8pt;line-height:1;color:#555}
+.hd .sq svg{width:10mm;height:10mm;display:block}.hd .sq span{margin-top:.7mm;white-space:nowrap}
 .dt{border-right:.3mm solid var(--c);line-height:1}
 .dt b{font-size:22pt;font-weight:300;color:var(--c)}
 .dt b i{font-style:normal;font-size:11pt;opacity:.75;margin-right:.4mm}
@@ -93,11 +96,23 @@ body{font-family:"Noto Serif CJK KR","Noto Serif KR",serif;color:#111;-webkit-pr
 .pln{border-bottom:.22mm solid #bbb;height:7.6mm}
 '''
 
+# 11-27 목사님: 세라핌 묵상지 머리에 스토리 QR. 주소는 https://aqedah.github.io/CBSR/?sera=회 키(1201 …).
+# 앱은 그 회 스토리가 있으면 스토리를, 없으면 그 회 묵상지(season.html)를 엽니다.
+SERA_QR = {'1201', '1208', '1215', '1222', '1225', '1229'}
+def seraQR(w):
+    k = w.get('key', '')
+    if k not in SERA_QR: return ''
+    import segno
+    q = segno.make(f'https://aqedah.github.io/CBSR/?sera={k}', error='m', micro=False)
+    m = list(q.matrix); n = len(m)
+    rects = ''.join(f'<rect x="{x}" y="{y}" width="1" height="1"/>' for y, r in enumerate(m) for x, c in enumerate(r) if c)
+    return f'<div class="sq"><svg viewBox="0 0 {n} {n}" shape-rendering="crispEdges"><g fill="#000">{rects}</g></svg><span>스토리 보기</span></div>'
 def blocks(w):
     m, d = re.match(r'(\d+)월 (\d+)일', w['date']).groups()
     wd = re.search(r'\((.)\)', w['date']).group(1)
     A = []
-    A.append(f'''<div class="hd sans"><div class="dt"><b><i>{m}/</i>{d}</b><small>{wd}요일</small></div><div class="tt"><div class="lb">{w['label']} · {w.get('season','')}</div><b>{w['title']}</b><span>{w['sub']}</span></div></div>
+    sq = seraQR(w)
+    A.append(f'''<div class="hd sans{' q3' if sq else ''}"><div class="dt"><b><i>{m}/</i>{d}</b><small>{wd}요일</small></div><div class="tt"><div class="lb">{w['label']} · {w.get('season','')}</div><b>{w['title']}</b><span>{w['sub']}</span></div>{sq}</div>
 <div class="st sans">성경 읽기 약 <b>{round(w['vv']/7.5)}분</b></div>''')
     A.append('<div class="sh sans"><span class="n">1</span>오늘의 흐름</div>')
     for p in w['flow']: A.append(f'<div class="blk"><p>{inl(p)}</p></div>')
