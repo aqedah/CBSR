@@ -5,7 +5,9 @@ R = os.path.dirname(os.path.abspath(__file__))
 O='<span class="o">동그라미</span>'; H='<span class="hy">형광펜</span>'; W='<span class="w">물결 밑줄</span>'
 HT='<span class="ht">빗금 형광펜</span>'; BX='<span class="bx">네모</span>'; BR='<b>[괄호]</b>'
 B = lambda s: '<b>' + s + '</b>'
-Q = json.load(open(os.path.join(R, '..', 'app', 'site_src', 'guide_qt.json'), encoding='utf8'))['qt']
+import subprocess
+# 다시 돌려도 같은 결과가 나오게, 고쳐 쓰기 전 원고(11-27 아침 c6a8fe29)를 재료로 씀
+Q = json.loads(subprocess.run(['git', '-C', R, 'show', 'c6a8fe29:app/site_src/guide_qt.json'], capture_output=True, text=True, check=True).stdout)['qt']
 def end(g):
     s = g[g.find('하나님은'):]; assert s.endswith('분이십니다.'), g
     return s[:-len('분이십니다.')] + '분입니다.'
