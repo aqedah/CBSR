@@ -2794,6 +2794,7 @@ html.v2 body :is(.qtv4,details.qtj) .q3>.label .stn{display:block;width:auto;hei
 html.v2 body :is(.qtv4,details.qtj) .eye{border:0!important;background:none!important;padding:0!important;border-radius:0!important;gap:12px}
 html.v2 body :is(.qtv4,details.qtj) .eye>p:first-child,html.v2 body :is(.qtv4,details.qtj) .oneline>label,html.v2 body :is(.qtv4,details.qtj) .oneline.godw>label{font:700 19.5px/1.62 var(--f-ui);color:var(--ink);letter-spacing:-.01em;word-break:keep-all;margin:0}
 html.v2 body :is(.qtv4,details.qtj) .oneline.prw>label{font-size:17px}
+html.v2 body .gqm{font-weight:400}html.v2 body .gqm b{font-weight:800} /* 11-27: 가이드북 원고의 ** 굵게 — 앞 문장 보통, 물음만 굵게 */
 html.v2 body :is(.qtcard.qtv4,details.qtj) .qev{background:var(--hi-soft)!important;border:0!important;border-top:1px solid color-mix(in srgb,var(--hi) 40%,transparent)!important;border-bottom:1px solid color-mix(in srgb,var(--hi) 40%,transparent)!important;border-radius:0!important;margin:14px -16px 0;padding:14px 16px 12px!important;display:grid;grid-template-columns:46px minmax(0,1fr);column-gap:10px;row-gap:4px}
 html.v2 body :is(.qtv4,details.qtj) .qev small{grid-column:1/-1;grid-row:1;color:var(--gold)}
 html.v2 body :is(.qtv4,details.qtj) .qev q{grid-column:2;grid-row:2;font:500 17px/1.85 "Noto Serif KR",serif;color:var(--ink)}
@@ -4187,6 +4188,8 @@ function renderRead(){
   /* 11-23 목사님: 본문 탭 퀴즈는 뺌(퀴즈는 도전 탭에) */ if(false&&!chFuture(w,d)) h+=`<section class="sec" id="quizSec"><span class="label">오늘 본문 퀴즈</span>${renderQuiz(key,null,"day")}<button class="linkbtn" id="toChal">본문에서 찾기 · 도전에서 더 풀기 ›</button></section>`; /* 도전 탭과 같은 퀴즈(기록도 같음) */
   }
   if(sm2) h+=`<button class="foldbtn" data-fold="simpleMore">더 알아보기 접기 ▲</button></details>`;
+  /* 11-27 목사님: 가이드북처럼 읽고 나서 바로 '마음에 남은 말씀'(묵상 탭에서 옮김, 같은 기록 kv·kw) */
+  { const q=qtOf(key); h+=`<section class="sec keepsec"><div class="stage"><span>마음에 남은 말씀</span><small>읽고 나서 바로 적습니다</small></div><div class="oneline"><label for="qt-kv">말씀 · 장절</label><textarea id="qt-kv" data-qt="kv" rows="2" placeholder="말씀과 장절을 적어 보세요">${esc(q.kv||"")}</textarea></div><div class="oneline"><label for="qt-kw">이유</label><textarea id="qt-kw" data-qt="kw" rows="2" placeholder="궁금하거나 걸리는 말씀도 좋습니다">${esc(q.kw||"")}</textarea></div></section>`;; }
   // 완료
   const n=chDone(), after=n+(done?0:p.ch.length);
   h+=`<section class="sec" id="doneSec"><span class="label">통독 완료</span>`;
@@ -4408,6 +4411,8 @@ const CLUE_LAB={turn:"▲ 전환",echo:"구약 인용",pair:"⇔ 대조",scene:"
 /* 11-12: 가이드북이 있는 날은 묵상 탭의 관찰·적용 질문을 가이드북과 같게(같은 칸에 저장되므로 질문도 같아야 함) */
 function gqOf(w,d){ const Q=GBQ(); return Q?Q[dayNo(w,d)]||null:null; }
 const gqPlain=t=>String(t||"").replace(/\*\*(.+?)\*\*/g,"$1");
+/* 11-27 목사님: 가이드북 원고의 **굵게**가 그대로 보이던 것 — 앞 문장은 보통, ** 안의 물음만 굵게(가이드북과 같게) */
+const gqH=t=>{ const x=String(t||""); return /\*\*(.+?)\*\*/.test(x)?`<span class="gqm">${esc(x).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")}</span>`:esc(x); };
 function eyeFor(w,d,L){ const r=eyeFor0(w,d,L), G=gqOf(w,d); if(G&&G.q&&r) r.q=G.q; return r; }
 function eyeFor0(w,d,L){
   const k=keyOf(w,d), e=EYE[k];
@@ -4565,9 +4570,9 @@ function renderQT(){
   let h=V2Q?`<section class="sec qthd"><div class="qthl"><span class="label">묵상 노트 · ${dayName(w,d)}</span><button class="qthelp" id="qtHelp" aria-label="묵상 노트 안내">?</button></div><h2>${esc(p.label)}</h2>${TR!=="krv"?`<p class="trnote">묵상 노트의 말씀은 개역개정입니다.</p>`:""}</section>`
     :`<section class="sec"><span class="label">QT · ${dayName(w,d)}</span><h2>${esc(p.label)}</h2>${`<button class="linkbtn" id="qtStory">‹ 카드로 보기</button>`}</section>`;
   /* 11-25 목사님: 가이드북·세라핌과 같은 순서 — 읽고 나서 바로 '마음에 남은 말씀'(번호 없음), 그다음 본문 관찰 */
-  if(V2Q) h+=`<section class="sec keepsec"><div class="stage"><span>마음에 남은 말씀</span><small>읽고 나서 바로 적습니다</small></div><div class="oneline"><label for="qt-kv">말씀 · 장절</label><textarea id="qt-kv" data-qt="kv" rows="2" placeholder="말씀과 장절을 적어 보세요">${esc(q.kv||"")}</textarea></div><div class="oneline"><label for="qt-kw">이유</label><textarea id="qt-kw" data-qt="kw" rows="2" placeholder="궁금하거나 걸리는 말씀도 좋습니다">${esc(q.kw||"")}</textarea></div></section>`;
+  /* 11-27 목사님: 마음에 남은 말씀은 본문 탭 본문 아래로 옮김(가이드북과 같은 자리) */
   // 1 본문 관찰
-  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye">${(()=>{ const G2=gqOf(w,d); /* 11-24 목사님: 범위가 넓은 날은 관찰·성품 가·나 두 갈래, 쓰는 칸은 하나 */ return G2&&G2.q2?`<p class="gah2">가와 나 가운데 골라 씁니다</p><p><b class="ga2">가</b>${esc(eye.q)}</p><p><b class="ga2">나</b>${esc(G2.q2)}</p>`:`<p>${esc(eye.q)}</p>`; })()}${V2Q?(()=>{ const r=qtRefs(eye.q,w,d)[0]; return r?qEvi(r,"",3):""; })():""}${V2Q?(R?`<div class="qtscope"><span class="qtscl">본문 열기</span>${R.map((r,i)=>`<button class="qsr" data-scr="${i}">${esc(sceneLabel([r]))}</button>`).join("")}</div>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
+  h+=`<section class="sec"><div class="stage"><b>1</b><span>본문 관찰</span></div><div class="eye">${(()=>{ const G2=gqOf(w,d); /* 11-24 목사님: 범위가 넓은 날은 관찰·성품 가·나 두 갈래, 쓰는 칸은 하나 */ return G2&&G2.q2?`<p class="gah2">가와 나 가운데 골라 씁니다</p><p><b class="ga2">가</b>${gqH(eye.q)}</p><p><b class="ga2">나</b>${gqH(G2.q2)}</p>`:`<p>${gqH(eye.q)}</p>`; })()}${V2Q?(()=>{ const r=qtRefs(eye.q,w,d)[0]; return r?qEvi(r,"",3):""; })():""}${V2Q?(R?`<div class="qtscope"><span class="qtscl">본문 열기</span>${R.map((r,i)=>`<button class="qsr" data-scr="${i}">${esc(sceneLabel([r]))}</button>`).join("")}</div>`:""):R?`<button class="scope scopebtn" id="scopeRead">이 질문의 본문 · ${esc(sceneLabel(R))} <b>이어 읽기 ›</b></button>`:""}${V2Q?`<div class="oneline obs"><textarea id="qt-obs" data-qt="obs" rows="2" aria-label="위 질문에 대한 나의 답" placeholder="한 줄로 적어 보세요">${esc(q.obs||"")}</textarea></div>${eye.looks.length?`<details class="lookmore"${view.lookOpen?" open":""} id="lookMore"><summary>다른 부분도 살펴보기 (${eye.looks.length})</summary><div class="looks v2l">${eye.looks.join("")}</div></details>`:""}`:eye.looks.length?`<div class="looks">${eye.looks.join("")}</div>`:`<p class="lead">본문을 다시 훑어보며 찾아보세요.</p>`}</div>${!V2Q&&eye.tools&&eye.tools.length?toolLine(eye.tools,MODE+key):""}${V2Q?"":`<div class="oneline obs"><label for="qt-obs">내가 본문에서 본 것</label><textarea id="qt-obs" data-qt="obs" rows="3" placeholder="본문을 다시 보며 찾은 것을 짧게 적어 보세요">${esc(q.obs||"")}</textarea></div>`}</section>`;
   if(V2Q) h+=lnQtHTML(key);
   // 더 깊이
   const gap=GAPS[w+"-"+(d+1)];
@@ -4582,7 +4587,7 @@ function renderQT(){
   // 2 하나님은 어떤 분
   h+=`<section class="sec"><div class="stage"><b>2</b><span>하나님의 성품</span>${V2Q?"":"<small>이 본문에서 하나님은 어떤 분인가</small>"}</div>`;
   /* 11-10 목사님: 가이드북과 같게 — 성품도 내가 먼저 쓰고(god), 해설은 맨 끝 '쓴 뒤에 읽기'에서 */
-  if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">${ /* 11-20: 2027 새 틀 날은 가이드북 성품 물음 그대로 */ (gqOf(w,d)&&gqOf(w,d).god2?`<span class="gah2">관찰에서 고른 쪽과 같은 쪽을 고릅니다</span><b class="ga2">가</b>${esc(gqPlain(gqOf(w,d).god))}<br><b class="ga2">나</b>${esc(gqPlain(gqOf(w,d).god2))}`:"")||esc(gqOf(w,d)&&gqOf(w,d).god?gqPlain(gqOf(w,d).god):"하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까? 규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요.") }</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
+  if(V2Q) h+=`<div class="oneline godw"><label for="qt-god">${ /* 11-20: 2027 새 틀 날은 가이드북 성품 물음 그대로 */ (gqOf(w,d)&&gqOf(w,d).god2?`<span class="gah2">관찰에서 고른 쪽과 같은 쪽을 고릅니다</span><b class="ga2">가</b>${gqH(gqOf(w,d).god)}<br><b class="ga2">나</b>${gqH(gqOf(w,d).god2)}`:"")||(gqOf(w,d)&&gqOf(w,d).god?gqH(gqOf(w,d).god):esc("하나님이 하신 말씀이나 일, 하나님에 대해 말하는 구절을 찾아보세요. 그 말씀을 하시는 하나님은 어떤 분이십니까? 규례만 나오는 날에는 그 규례를 주신 까닭을 생각해 보세요.")) }</label><textarea id="qt-god" data-qt="god" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.god||"")}</textarea></div>`+(det&&det.god?(()=>{ const RR=qtRefs(det.god,w,d).slice(0,3); return RR.length?`<div class="qevs"><span class="label">다시 볼 구절</span>${RR.map(r=>qEvi(r,"",1)).join("")}</div>`:""; })():"");
   else if(det&&det.god) h+=`<div class="qcard"><p>${esc(det.god)}</p></div>`;
   let tH=""; /* 성품 이름+아멘: v2에서는 쓴 뒤에 읽기로 */
   if(traits.length) traits.slice(0,det&&det.god?1:2).forEach((t,i)=>{const v=t.verse, on=!!((q.amen||{})[t.at.n]); tH+=`<div class="trait"><b>${esc(t.at.n)}</b>${i===0&&ST.why?`<p class="why">${esc(ST.why)}</p>`:""}<q>${esc(v.t)}</q><div class="trait-foot"><span class="lead">${esc(PLAN.abbr[v.b-1])} ${v.c}:${v.v}</span><button class="amen${on?" on":""}" data-amen="${esc(t.at.n)}" aria-pressed="${on}">${on?"아멘 ✓":"아멘"}</button></div>${`<button class="tgam lt" data-tga="${esc(t.at.n)}" hidden></button>`}</div>`;});
@@ -4600,9 +4605,9 @@ function renderQT(){
   const vs=qtCands(A,traits,R,w+"-"+(d+1));
   const kv=qtKV(q,A,vs,w+"-"+(d+1));
   const opts=kv&&!vs.includes(kv)?[kv,...vs]:vs; view.kvShown=vId(kv);
-  const GQd=gqOf(w,d), medQ=GQd&&GQd.apply?gqPlain(GQd.apply):PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q);
+  const GQd=gqOf(w,d), medQ=GQd&&GQd.apply?GQd.apply:PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q);
   if(V2Q){
-    h+=`<section class="sec"><div class="stage"><b>3</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${kv?`<div class="kvsel"><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small><q>${esc(kv.t)}</q></div>`:""}<button class="qtlnk" id="qtSwapV">구절 바꾸기 ›</button>${(()=>{ const r=qtApplyBasis(medQ,w,d); return r&&!(kv&&kv.b===r[0]&&kv.c===r[1]&&kv.v===r[2])?qEvi(r,"이 질문이 나온 자리",1):""; })()}<div class="oneline med"><label for="qt-med">${esc(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.med||"")}</textarea></div></section>`;
+    h+=`<section class="sec"><div class="stage"><b>3</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${kv?`<div class="kvsel"><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small><q>${esc(kv.t)}</q></div>`:""}<button class="qtlnk" id="qtSwapV">구절 바꾸기 ›</button>${(()=>{ const r=qtApplyBasis(medQ,w,d); return r&&!(kv&&kv.b===r[0]&&kv.c===r[1]&&kv.v===r[2])?qEvi(r,"이 질문이 나온 자리",1):""; })()}<div class="oneline med"><label for="qt-med">${gqH(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="한 줄로 적어 보세요">${esc(q.med||"")}</textarea></div></section>`;
     view.kvOpts=opts; view.kvCur=kv;
   } else {
   h+=`<section class="sec"><div class="stage"><b>${PVK&&!(det&&det.christ)?3:4}</b><span>적용</span></div><span class="label">오늘 붙잡을 한 구절</span>${V2Q?`<p class="fieldhint">하나를 고르세요. 고른 구절은 오늘의 말씀 카드에 들어갑니다.</p>`:""}`;
@@ -4613,7 +4618,7 @@ function renderQT(){
   /* 나의 자리: 예전 '더 깊이'의 '내 자리' 질문을 적용 단계로(저장 칸은 그대로 l0~l2) */
   { const li=L.findIndex(l=>l.k==="내 자리"); if(li>=0&&!PVQ.has(key)) h+=`<section class="sec"><details class="mine"${q["l"+li]?" open":""}><summary>나의 자리</summary><p class="lead" style="margin:6px 0">${esc(L[li].q)}</p><textarea data-qt="l${li}" rows="2" placeholder="떠오른 생각을 짧게 적어 보세요">${esc(q["l"+li]||"")}</textarea></details></section>`; }
   // 5 한 줄 묵상
-  if(!V2Q) h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${esc(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
+  if(!V2Q) h+=`<section class="sec"><span class="label">한 줄 묵상</span><div class="oneline"><label for="qt-med">${gqH(medQ)}</label><textarea id="qt-med" data-qt="med" rows="2" placeholder="오늘 말씀 앞에서 내가 기억할 한 가지">${esc(q.med||"")}</textarea></div></section>`;
   // 6 기도
   const pray=prayEnd((det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits));
   if(V2Q){
@@ -5724,7 +5729,7 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
   if(s.k==="fin"||s.k==="next"||s.k==="ask") return storyEndHTML(s,w,d);
   if(!s.qt) return storyCardHTML(s);
   let c="";
-  if(s.k==="obs"){ c+=`<p class="sq">${esc(eye.q)}</p>`;
+  if(s.k==="obs"){ c+=`<p class="sq">${gqH(eye.q)}</p>`;
     if(e&&e.look&&e.look.length){ if(!view.sRev) c+=`<button class="btn sfindb" id="sReveal">본문에서 찾아보기</button><p class="shint">먼저 떠올려 보고, 누르면 본문이 보여 주는 곳이 열립니다.</p>`;
       else c+=`<div class="sfinds">${e.look.map(l=>`<div class="sfind"><b>${esc(l.t)}</b><q>${esc(vtxt(l.r))}</q><small>${esc(rlab(l.r))}</small>${l.n?`<p>${esc(l.n)}</p>`:""}</div>`).join("")}</div>${R?`<button class="linkbtn" id="scopeRead">이 질문의 본문 이어 읽기 ›</button>`:""}`; }
     else c+=`<p class="shint">본문을 다시 훑어보며 찾아보세요.</p>`;
@@ -5736,7 +5741,7 @@ function storySlideHTML(s,w,d){ const X=storyQT(w,d), {p,key,det,q,traits,R,eye,
     if(pr&&vtxt(pr[0])&&vtxt(pr[1])) c+=`<div class="spair"><div><small>${esc(rlab(pr[0]))}</small><q>${esc(vtxt(pr[0]))}</q></div><i aria-hidden="true">↕</i><div class="ot"><small>${esc(rlab(pr[1]))}</small><q>${esc(vtxt(pr[1]))}</q></div></div>`;
     const s1=txt.split(/(?<=\.)\s+/); c+=`<p class="sline">${esc(s1[0]||"")}</p>${s1.length>1?`<details class="smore"><summary>더 읽기</summary><p>${esc(s1.slice(1).join(" "))}</p></details>`:""}`; }
   else if(s.k==="my"){ const K=(storyDay(dayNo(w,d))||{}).kwq||((typeof KWQ!=="undefined"&&true)?KWQ[dayNo(w,d)]:null);
-    c+=`<p class="sq">${esc(gqOf(w,d)&&gqOf(w,d).apply?gqPlain(gqOf(w,d).apply):K?K.q:(PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q)))}</p>${!(gqOf(w,d)&&gqOf(w,d).apply)&&K&&K.r?`<p class="shint">${esc(rlab(K.r))} · ${esc(vtxt(K.r))}</p>`:""}<textarea data-qt="med" rows="3" placeholder="한 줄로 적어 보세요 (적지 않아도 됩니다)">${esc(q.med||"")}</textarea>`; }
+    c+=`<p class="sq">${gqOf(w,d)&&gqOf(w,d).apply?gqH(gqOf(w,d).apply):esc(K?K.q:(PVQ.has(key)&&det&&det.apply?det.apply:kv?verseQuestion(kv):(det&&det.apply?det.apply:APPLY_Q)))}</p>${!(gqOf(w,d)&&gqOf(w,d).apply)&&K&&K.r?`<p class="shint">${esc(rlab(K.r))} · ${esc(vtxt(K.r))}</p>`:""}<textarea data-qt="med" rows="3" placeholder="한 줄로 적어 보세요 (적지 않아도 됩니다)">${esc(q.med||"")}</textarea>`; }
   else { if(q.done) c+=`<div class="sdonenote"><b>✓ 오늘 QT를 마쳤습니다</b>${kv?`<p>${esc(kv.t)} <small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></p>`:""}<button class="btn" data-sgo="1">오늘의 말씀 카드 ›</button><button class="linkbtn" id="qtDone">완료 취소</button></div>`;
     else { const pray=(det&&det.pray)||makePrayer(key,vId(kv),q.pv,p.label,kv,traits);
       c+=`${kv?`<div class="skcard"><span>오늘 붙잡을 말씀</span><q>${esc(kv.t)}</q><small>${esc(PLAN.abbr[kv.b-1])} ${kv.c}:${kv.v}</small></div>`:""}`;
@@ -5889,7 +5894,7 @@ function bindStoryRoot(r,s,auto){ const key=keyOf(view.w,view.d), cur=()=>qtOf(k
   const sp=r.querySelector("#sPause"); if(sp) sp.onclick=()=>storyPause(!SV.paused);
   
   /* 이어 보기 알림: 보던 카드부터 열렸을 때 한 번 */
-  if(SV.resumeAt&&SV.i===SV.resumeAt){ const nf=r.querySelector(".sfr:last-of-type")||r; const t=document.createElement("div"); t.className="sresume"; t.innerHTML=`<span>보던 <b>${SV.i+1}번째 카드</b>부터 이어 봅니다</span><button>처음부터</button>`; r.appendChild(t); t.querySelector("button").onclick=e=>{ e.stopPropagation(); SV.resumeAt=0; t.remove(); storyGo(0); }; setTimeout(()=>{ if(t.isConnected) t.remove(); },4500); SV.resumeAt=0; }
+  if(SV.resumeAt&&SV.i===SV.resumeAt){ const nfs=r.querySelectorAll(".sfr"), nf=nfs[nfs.length-1]||r; const t=document.createElement("div"); t.className="sresume"; t.innerHTML=`<span>보던 <b>${SV.i+1}번째 카드</b>부터 이어 봅니다</span><button>처음부터</button>`; r.appendChild(t); /* 11-27: 화면이 카드보다 넓으면(태블릿 분할 등) 알림을 카드 폭 안에 */ if(nf!==r){ const fb=nf.getBoundingClientRect(), rb=r.getBoundingClientRect(); if(fb.width&&fb.width<rb.width-40){ t.style.left=Math.round(fb.left-rb.left+14)+"px"; t.style.right=Math.round(rb.right-fb.right+14)+"px"; } } t.querySelector("button").onclick=e=>{ e.stopPropagation(); SV.resumeAt=0; t.remove(); storyGo(0); }; setTimeout(()=>{ if(t.isConnected) t.remove(); },4500); SV.resumeAt=0; }
   const sa=r.querySelector("#sAuto"); if(sa) sa.onclick=()=>{ const off=!sAutoOff(); try{ localStorage.setItem("cbsr-sauto",off?"0":"1"); }catch(e){} toast(off?"자동 넘김을 껐습니다. 오른쪽을 누르면 다음 카드로 갑니다.":"자동 넘김을 켰습니다."); storyShow(); };
   r.querySelectorAll("[data-sv]").forEach(a=>a.onclick=e=>{ e.preventDefault(); e.stopPropagation(); sVerseSheet(a.dataset.sv); });
   const pv=r.querySelector("#sPrev2"), nx=r.querySelector("#sNext2"), en=r.querySelector("#sEnd"); if(pv) pv.onclick=()=>storyGo(SV.i-1); if(nx) nx.onclick=()=>storyGo(SV.i+1); if(en) en.onclick=sBookClose;
@@ -9599,6 +9604,7 @@ function bind(){
   document.querySelectorAll(".helpzone .chsec [data-chv], .rd3 [data-chv]").forEach(b=>b.onclick=()=>sVerseSheet(b.dataset.chv,()=>{}));
   bindBanners(m);
   if(view.tab==="challenge"){ bindChallenge(); document.querySelectorAll("[data-gplay]").forEach(x=>x.onclick=()=>{ const k=x.dataset.gplay; CARD_KEYS=k==="cardw"?weekCardKeys():null; gpOpen(k==="cardw"?"card":k); }); document.querySelectorAll("[data-gbopen]").forEach(x=>x.onclick=()=>gbOpen()); document.querySelectorAll("[data-rgm]").forEach(x=>x.onclick=()=>rgmOpen(view.w,view.d,0)); document.querySelectorAll("[data-gfday]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.gfday.split("-").map(Number); view.w=w; view.d=d; view.game=null; render(); scrollTo({top:0}); gpOpen("find"); }); const chh=document.getElementById("chHelp"); if(chh) chh.onclick=()=>sheet("도전은 이렇게",`<p>오늘 읽은 본문으로 네 가지를 해 봅니다. 하나를 마칠 때마다 위의 막대가 한 칸씩 찹니다.</p><p><b>본문에서 찾기</b> · 질문을 읽고 본문에서 답이 되는 절을 누릅니다.</p><p><b>이동 경로 맞추기</b> · 오늘 이야기의 인물이 지나간 곳을 순서대로 놓습니다.</p><p><b>본문 퀴즈</b> · O/X와 4지선다로 읽은 내용을 확인합니다.</p><p><b>빈칸 채우기</b> · 묵상 노트에서 붙잡은 구절의 빈칸을 채웁니다.</p><p>성경 골든벨은 매일 하는 것이 아니라 언제든 풀 수 있습니다.</p>`); const gq=document.getElementById("gQuizGo"); if(gq) gq.onclick=()=>{ view.quizOpen=!view.quizOpen; render(); if(view.quizOpen){ const qs=document.querySelector("#quizSec [data-qstart]"); if(qs) qs.click(); } if(view.quizOpen) requestAnimationFrame(()=>document.getElementById("quizSec")?.scrollIntoView({block:"start",behavior:"smooth"})); }; document.querySelectorAll("[data-cwd]").forEach(x=>x.onclick=()=>{ const [w,d]=x.dataset.cwd.split("-").map(Number); view.w=w; view.d=d; view.game=null; view.quizOpen=false; render(); }); } if(view.tab==="today") bindToday(); if(view.tab==="record") bindRecordCards(); if(view.tab==="read"||view.tab==="challenge"||view.tab==="qt"||view.tab==="today") bindDayRing(); flipStart();
+  if(view.tab==="read"){ const kq=()=>qtOf(keyOf(view.w,view.d)); let kT=0; m.querySelectorAll(".keepsec [data-qt]").forEach(t=>t.oninput=()=>{ const q=kq(); q[t.dataset.qt]=t.value; touchQ(q,t.dataset.qt); clearTimeout(kT); kT=setTimeout(save,400); }); }
   bindQT(m);
   const fp=document.getElementById("fp"); if(fp){fp.onclick=()=>{mem.size=Math.min(24,(mem.size||17)+1);applySize();save();}; document.getElementById("fm").onclick=()=>{mem.size=Math.max(14,(mem.size||17)-1);applySize();save();};}
 }
