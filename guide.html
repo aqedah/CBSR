@@ -946,10 +946,12 @@ function dist27(root,s){ s=s||1; root.querySelectorAll('.pg.n27').forEach(pg=>{ 
     const narrow=w=>{ if(slackOf()>=0) return; const c1=pg.querySelector('.two .c1'); if(!c1) return; c1.style.flex='0 0 '+w+'mm'; matchMedia(pg.parentNode||root,s,pg); };
     narrow(82);
     if(slackOf()<0){ pg.querySelectorAll(':scope > .sec').forEach((e,i)=>{ if(i) e.style.marginTop='2mm'; }); const kp=pg.querySelector('.keep'); if(kp) kp.style.marginTop='1.4mm'; }
-    if(slackOf()<0){ const wd=pg.querySelector(':scope > .wd'); if(wd) wd.remove(); }
+    let wd0=null,wdN=null; if(slackOf()<0){ const wd=pg.querySelector(':scope > .wd'); if(wd){ wd0=wd; wdN=wd.nextSibling; wd.remove(); } }
     narrow(90); /* 지도를 아주 좁히는 것은 말뜻을 뺀 뒤에 */
     if(slackOf()<0&&pg.querySelector('.lk .i:not(:has(.ck))')){ pg.querySelectorAll('.lk .i').forEach(i=>{ if(!i.querySelector('.ck')) i.remove(); }); pg.querySelectorAll('.lk .ck').forEach(c=>c.remove()); matchMedia(pg.parentNode||root,s,pg); }
     if(slackOf()<0){ const k=pg.querySelector('.keep .ln:not(.lb)'); if(k) k.remove(); }
+    /* 11-27: 뒤에서 ✓ 없는 눈여겨볼 것을 빼고 자리가 나면 말뜻을 되살림(말뜻이 괜히 지워지지 않게) */
+    if(wd0&&wdN&&wdN.parentNode===pg){ pg.insertBefore(wd0,wdN); if(slackOf()<0) wd0.remove(); }
     bump([...pg.querySelectorAll(':scope > .sec')].slice(1).concat([...pg.querySelectorAll(':scope > .lab')]),6,'marginTop');
     bump([...pg.querySelectorAll('.mk .mi, .lk .i')],2.6,'marginBottom'); bump([pg.querySelector(':scope > .sec'),pg.querySelector(':scope > .wd')],2,'marginTop');
     matchMedia(pg.parentNode||root,s,pg); }
