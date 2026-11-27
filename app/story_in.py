@@ -1,5 +1,6 @@
 # 스토리 작업실(story_edit.html)이 GitHub에 저장한 날별 원고(ux/story_in/날번호.json)를 ux/story_cards.json에 합칩니다.
 # 파일 하나가 하루 원고: {"n":305,"plan":"2026-365","label":"…","at":시각,"A":{type,spine,cards,kwq,qt}}
+# 열쇠는 날 번호(305)나 세라핌 회(sera-1201, 2026-11-27)입니다.
 # 같은 날의 옛 원고는 _backup["305A_날짜"]에 보관한 뒤 덮어씁니다. 합친 파일은 지웁니다(빌드가 원본 보관 단계에서 커밋).
 import json,os,glob,time
 R=os.path.dirname(os.path.abspath(__file__)); os.chdir(R)
@@ -15,7 +16,7 @@ for f in IN:
     if n in d and not n.startswith('_'):
         old=d[n].get('A',d[n]) if isinstance(d[n],dict) else d[n]
         bk[f'{n}A_{time.strftime("%Y-%m-%d")}']=old
-        os.makedirs('ux/story_prev',exist_ok=True); json.dump({'n':int(n),'at':time.strftime('%Y-%m-%d %H:%M'),'A':old},open(f'ux/story_prev/{n}.json','w',encoding='utf-8'),ensure_ascii=False,indent=1)  # 작업실 '이전 원고로 되돌리기'
+        os.makedirs('ux/story_prev',exist_ok=True); json.dump({'n':int(n) if n.isdigit() else n,'at':time.strftime('%Y-%m-%d %H:%M'),'A':old},open(f'ux/story_prev/{n}.json','w',encoding='utf-8'),ensure_ascii=False,indent=1)  # 작업실 '이전 원고로 되돌리기'
     if e.get('delete'):
         d.pop(n,None); os.remove(f); print('story_in 삭제:',n); continue
     if not isinstance(A,dict) or not isinstance(A.get('cards'),list): print('story_in 형식 아님',f); continue
