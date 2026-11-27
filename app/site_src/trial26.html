@@ -1387,11 +1387,11 @@ function spread(p,qt){return `<div class="spread">${pageL(p,qt)}${pageR(p,qt)}</
 /* 지도·그림의 높이를 왼쪽 글(눈여겨볼 것)에 맞춘다. 쪽의 남는 높이가 아니라 글 높이가 기준이고, 32–70mm 안에서만 따라간다 */
 function matchMedia(root,s,only){ (only?only.querySelectorAll('.two'):root.querySelectorAll('.pg .two')).forEach(two=>{ try{ if(!only&&inMini(two,root)) return;
   const c1=two.querySelector('.c1'), c2=two.querySelector('.c2'); if(!c1||!c2) return;
-  const h1=c1.getBoundingClientRect().height/s/MM;
+  const bx=two.closest('.n27')&&c1.querySelector('.box'); const h1=(bx||c1).getBoundingClientRect().height/s/MM; /* 11-27: 늘어난 c1이 아니라 글 상자 높이가 기준(지도가 c1을 늘리고 그 높이를 다시 따라가던 것) */
   const cap=c2.querySelector('.cap'); const capH=cap?cap.getBoundingClientRect().height/s/MM:0;
   const n27=!!two.closest('.n27'); const target=n27?Math.max(26,h1-capH):Math.max(26,Math.min(70,h1)-capH);
   const m=c2.getAttribute('data-m');
-  if(m){ const svg=c2.querySelector('svg'); const tmp=document.createElement('div'); tmp.innerHTML=svgMap(JSON.parse(m),n27?c2.getBoundingClientRect().width/s/MM:45,target); const ns=tmp.querySelector('svg'); if(svg&&ns) svg.replaceWith(ns); }
+  if(m){ const svg=c2.querySelector('svg'); const tmp=document.createElement('div'); tmp.innerHTML=svgMap(JSON.parse(m),n27?c2.getBoundingClientRect().width/s/MM:45,target); const ns=tmp.querySelector('svg'); if(svg&&ns){ svg.replaceWith(ns); /* 11-27: 남북으로 긴 경로 지도가 글보다 훨씬 길어져 왼쪽 면을 밀어내지 않게 글 높이에 맞춰 줄임 */ if(n27){ const hh=ns.getBoundingClientRect().height/s/MM; if(hh>target+2){ ns.style.height=target.toFixed(1)+'mm'; ns.style.width='auto'; ns.style.maxWidth='100%'; ns.style.display='block'; ns.style.margin='0 auto'; } } } }
   else { const im=c2.querySelector('.pic .im'); if(im) im.style.height=target.toFixed(1)+'mm'; }
 }catch(e){} }) }
 function tighten(root){ root.querySelectorAll('.pg .ref, .pg .box .i').forEach(el=>{ if(inMini(el,root)) return;
