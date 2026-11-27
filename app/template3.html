@@ -1213,7 +1213,8 @@ html:has(body>.ldr),body:has(>.ldr){overflow:hidden!important;overscroll-behavio
 .ldr .lsay small{color:var(--accent)}
 .ldr .lfol{font:14.5px/1.7 var(--f-text);margin:8px 0;padding:8px 12px;border:1px dashed var(--line);border-radius:8px}
 .ldr .lfol small,.ldr .lnx small{color:var(--muted)}
-.ldr .lnx{font:14.5px/1.7 var(--f-text);margin:14px 0 8px;padding:8px 0 0;border-top:1px dotted var(--line)} /* 11-20 GPT 디자인: 넘어가는 말은 상자 없이 */
+.ldr .lnx{font:14.5px/1.7 var(--f-text);margin:14px 0 8px;padding:8px 0 0;border-top:1px dotted var(--line)}
+.ldr .lnx.lnxo{border-top:0;margin:16px 4px 4px;padding:0 16px;border-left:3px solid var(--line);color:var(--ink)} /* 11-27: 카드 밖, 다음 순서로 잇는 말 */ /* 11-20 GPT 디자인: 넘어가는 말은 상자 없이 */
 .ldr .lsay{font-size:17.5px!important;line-height:1.7!important}@media(min-width:768px){.ldr .lsay{font-size:20px!important}} /* 소리 내어 읽을 질문을 가장 크게 */
 .ldr .lfrom{font-size:11.5px;color:var(--accent);font-weight:700;margin:10px 0 2px}
 .ldr .lq{font:15.5px/1.7 var(--f-text);margin:0 0 8px}
@@ -6948,7 +6949,7 @@ function leaderOpen(w,d,opt){ document.querySelector(".ldr")?.remove(); opt=opt|
     /* 11-22 목사님("급하게 추가된 느낌, 통일성이 없다"): 앱의 다른 화면과 같은 부품으로 — 제목줄(‹ 소그룹 인도)은 스토리 모음·주일 공과와 같은 꼴, 칸 바꾸기는 내 노트와 같은 둥근 칸, 날짜 머리는 묵상 카드와 같은 꼴 */
     el.innerHTML=`<div class="ldrtop"><div class="libtop lbar2"><button class="libx" data-lx aria-label="닫기">‹</button><b>소그룹 인도</b><span class="lwk2"><button data-lk="-7" aria-label="지난 주일" ${pv?"":"disabled"}>‹</button><span>${esc(M.md)} ${esc(wd)}</span><button data-lk="7" aria-label="다음 주일" ${nxk?"":"disabled"}>›</button></span></div>
       <div class="lnseg ldrseg" role="tablist">${[["prep","모임 전 준비"],["run","모임 진행"],["rec","기록"]].map(([k,t])=>`<button role="tab" data-ltab="${k}" aria-selected="${ui.mode===k}">${t}</button>`).join("")}</div></div>
-      <div class="ldrbody">${ui.mode==="run"||ui.mode==="prep"?`<div class="ldrgrid"><div class="ldrin">${ui.mode==="prep"?prep():ui.done?run():`<div class="lcard">${run()}</div>`}</div>${side()}</div>`:`<div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div>`}</div>
+      <div class="ldrbody">${ui.mode==="run"||ui.mode==="prep"?`<div class="ldrgrid"><div class="ldrin">${ui.mode==="prep"?prep():ui.done?run():(()=>{ /* 11-27 목사님: 다음 순서로 넘어가는 말은 카드 밖으로 따로 */ const rh=run(), m=rh.match(/<div class="lnx">[\s\S]*?<\/div>/); return m?`<div class="lcard">${rh.replace(m[0],"")}</div>${m[0].replace('class="lnx"','class="lnx lnxo"')}`:`<div class="lcard">${rh}</div>`; })()}</div>${side()}</div>`:`<div class="ldrin">${ui.mode==="prep"?prep():ui.mode==="rec"?rec():run()}</div>`}</div>
       ${ui.mode==="run"&&!ui.done?`<div class="ldrnav"><button data-lgo="prev" ${ui.i===0?"disabled":""} aria-label="앞 순서">‹ 이전</button><button class="help" data-lgo="help">막힐 때</button><button class="nx" data-lgo="next">${ui.i===S.length-1?"모임 마침":`${esc(S[ui.i+1].sh||"다음")} ›`}</button></div>`:""}`;
     shOff&&(shOff(),0);
     { const b=$(".ldrbody"); if(b) b.scrollTop=keep?sy:0; } keepUI(); }
