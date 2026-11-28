@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>/* 11-16 목사님: 앱 안에서 열 때 작업실 화면이 잠깐 비치지 않게 — 그리기 전까지 숨김 */if(/[?&]embed=/.test(location.search))document.documentElement.className+=" embed";</script><style>html.embed:not(.embok) body{visibility:hidden}</style>
+<script>/* 11-16 목사님: 앱 안에서 열 때 작업실 화면이 잠깐 비치지 않게 — 그리기 전까지 숨김 */if(/[?&]embed=/.test(location.search))document.documentElement.className+=" embed";</script><style>html.embed:not(.embok) body{visibility:hidden}.tp27 .exb .irr{grid-template-columns:24mm 1fr}.tp27 .exb .exl{margin:0 0 1mm!important}</style>
 <title>통독 가이드북 작업실</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Noto+Serif+KR:wght@400;700&family=Nanum+Pen+Script&display=swap">
 <style>
@@ -464,7 +464,7 @@ html,body,.pg,.pg *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .tp27 .irr{display:grid;grid-template-columns:38mm 1fr;column-gap:2mm;font-size:8.4pt;line-height:1.45;padding:0.8mm 0;border-bottom:0.15mm dotted #ccc}
 .tp27 .irr b{font-family:"Noto Sans KR",sans-serif;font-size:8.4pt;grid-row:span 2}
 .tp27 .irr .ire{color:#666;font-size:7.8pt}
-.tp27 .irr .irs{font-size:8.2pt}
+.tp27 .exb .exl{margin:0 0 1mm!important}.irr .irs{font-size:8.2pt}
 .tp27 .pr2{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
 .tp27 .pr2 div{background:color-mix(in srgb,var(--main) 7%,#fff);border-radius:1mm;padding:1.4mm 2mm;font-size:8.2pt;line-height:1.45}
 .tp27 .pr2 b{display:block;font-family:"Noto Sans KR",sans-serif;font-size:8.6pt;color:var(--main);margin-bottom:0.4mm}
@@ -1013,6 +1013,9 @@ const FDEF=q=>Object.assign({
  irhead:'?! 아이러니의 세 가지',
  irlead:'기호는 **?! 하나**입니다. 어느 쪽인지는 그날 ③ 눈여겨볼 것의 설명 첫머리로 알 수 있습니다.',
  irony:'뜻과 반대로 말합니다|소풍 가는 날 비가 오는데 "날씨 참 좋다"|삼상 26:15 다윗이 아브넬에게 "네가 용사가 아니냐".\n뜻한 것과 정반대의 결과가 옵니다|늦지 않으려고 지름길로 갔는데 더 늦었다|출 1:22 나일 강에 던지라던 명령이 모세를 왕궁에 들여놓습니다.\n읽는 사람은 아는데 인물은 모릅니다|깜짝 생일잔치가 준비된 줄 모르고 친구가 서운해한다|창 22:1 "하나님이 아브라함을 시험하시려고".',
+ exhead:"한 본문에 여러 도구: 사 1:2–3",
+ exlead:"도구는 한 구절 안에서도 겹칩니다. 두 절에서 다섯 가지가 보입니다.",
+ exlines:"☞ 호명|\"하늘이여 들으라 땅이여 귀를 기울이라\"(1:2). 하늘과 땅을 증인으로 부릅니다.\n“” 말씀 공식|\"여호와께서 말씀하시기를\"(1:2)\n≒ 비유|\"소는 그 임자를 알고 나귀는 그 주인의 구유를 알건마는\"(1:3)\n∥ 평행|\"이스라엘은 알지 못하고 // 나의 백성은 깨닫지 못하는도다\"(1:3)\n∞ 언약 공식|\"나의 백성\"(1:3). 거역한 백성을 여전히 내 백성이라 부르십니다.",
  dshead:"대화를 읽는 열 가지 도구",
  dslead:'**담화 도구**입니다. 하나님, 선지자, 시인, 사도가 직접 하는 말에서 씁니다. 이야기 안의 긴 말(모세의 설교, 한나의 노래)에서도 씁니다.',
  dsyms:"“” 말씀 공식|말하는 사람이 그 말의 권위와 신뢰성을 알리는 정해진 표현입니다. 말을 열거나, 앞서 한 말을 확인하며 맺습니다.|사 1:20 \"여호와의 입의 말씀이니라\" · 레 19:3 \"나는 너희의 하나님 여호와이니라\".\n♪ 후렴|단락 끝마다 같은 말이 돌아옵니다. 노래의 마디가 나뉘고, 반복해서 부를수록 여운과 감정이 쌓입니다.|시 42:5, 11; 43:5 \"내 영혼아 네가 어찌하여 낙심하며\" · 암 4:6, 8 \"너희가 내게로 돌아오지 아니하였느니라\".\n∥ 평행|두 줄이 서로 호응하거나 반대 뜻으로 나타납니다. 히브리 시의 특징이며, **둘째 줄이 첫째 줄에서 무엇을 더 쌓는지 봅니다.**|사 1:3 \"소는 그 임자를 알고 나귀는 그 주인의 구유를 알건마는 ⫽ // 이스라엘은 알지 못하고 나의 백성은 깨닫지 못하는도다\".\nif 가정|만일 …하면 …하리라 하는 꼴입니다. 두 길과 그 끝이 나란히 놓입니다.|사 1:19–20 \"너희가 즐겨 순종하면 … 거절하여 배반하면\".\n∴ 이음말|앞뒤 말을 잇는 \"그러므로\", \"이제는\", \"이는 … 함이라\" 같은 말입니다. **앞의 말과 뒤의 말이 어떻게 이어지는지**, 명령에 어떤 까닭이 붙었는지 봅니다.|롬 12:1 \"그러므로 형제들아\" · 레 19:2 \"너희는 거룩하라 이는 나 여호와 너희 하나님이 거룩함이니라\".\n¿ 수사적 질문|대답을 구하지 않는 물음입니다. 듣는 사람이 스스로 답하게 합니다.|롬 8:31 \"누가 우리를 대적하리요\" · 욥 38:4 \"네가 어디 있었느냐\".\n≒ 비유|하나님이나 사람을 다른 것에 빗댑니다. **무엇을 무엇에 빗댔는지, 어디까지 닮았는지** 봅니다.|시 23:1 \"여호와는 나의 목자시니\".\n☞ 호명|듣는 사람을 이름이나 호칭으로 부릅니다. 누구에게 하는 말인지 정해집니다.|신 6:4 \"이스라엘아 들으라\" · 잠 3:1 \"내 아들아\".\n∞ 언약 공식|\"나는 너희 하나님, 너희는 내 백성\". 하나님과 백성의 관계를 정하는 말입니다. 백성이 언약을 어기면 하나님은 **그 언약을 근거로 변론하십니다.**|레 26:12 \"너희의 하나님이 되고 너희는 내 백성이 될 것이니라\" · 미 6:2 \"여호와께서 자기 백성과 변론하시며\".\n※ 상징|숫자, 짐승, 색, 이름이 다른 것을 가리킵니다. **본문이 무어라고 풀어 주는지부터** 봅니다.|계 1:20 \"일곱 별은 일곱 교회의 사자요 일곱 촛대는 일곱 교회니라\".",
@@ -1356,7 +1359,7 @@ function pTl27(q,k){ const f=F(q), ds=k>=2, L=lines(ds?f.dsyms:f.syms), cut=ds?5
   const items=part.map(t=>{ const [s0,d,e]=t.split('|'); const [sy,nm]=tlSplit(s0); const chipT=(sy==='□'?'[ ]':sy)+' '+nm; const dd=nm==='아이러니'?String(d||'').replace(/\s*\(\d+쪽\)/,''):(d||'');
     return `<div class="tl"><div class="tdg">${TDG27[nm]||''}</div><div class="ttx"><p class="tn"><span class="chip">${esc(chipT)}</span></p><p class="td">${boldv(dd)}</p>${MKS[nm]?`<p class="tm"><span class="k">표시</span>${t27(MKS[nm])}</p>`:''}${e?`<p class="te"><span class="k">보기</span>${exHtml(e)}</p>`:''}</div></div>` }).join('');
   const IRB=`<div class="irb"><p class="irh">${esc(f.irhead)}</p>${lines(f.irony).map(t=>{const [a,b,c]=t.split('|');return `<div class="irr"><b>${esc(a||'')}</b><span class="irs">${boldv(c||'')}</span></div>`}).join('')}</div>`;
-  const extra=k===1?IRB:k===3&&f.dspnote?`<p class="prn">${esc(f.dspnote)}</p>`:'';  /* 11-28 목사님: 아이러니 세 가지는 이야기 도구 밑(11쪽), 생활 속 보기 뺌 */  /* 11-28 목사님: 하는 일이 닮은 짝 상자 뺌 */
+  const extra=k===1?IRB:k===3?(lines(f.exlines).length?`<div class="irb exb"><p class="irh">${esc(f.exhead||'')}</p>${f.exlead?`<p class="prn exl">${esc(f.exlead)}</p>`:''}${lines(f.exlines).map(t=>{const [a,c]=t.split('|');return `<div class="irr"><b>${esc(a||'')}</b><span class="irs">${boldv(c||'')}</span></div>`}).join('')}</div>`:'')+(f.dspnote?`<p class="prn">${esc(f.dspnote)}</p>`:''):'';  /* 11-28 목사님: 13쪽 빈칸에 한 본문에 여러 도구(사 1:2–3) */  /* 11-28 목사님: 아이러니 세 가지는 이야기 도구 밑(11쪽), 생활 속 보기 뺌 */  /* 11-28 목사님: 하는 일이 닮은 짝 상자 뺌 */
   const head=k%2===0?`<p class="fh">${esc(ds?f.dshead:f.symhead)}</p><p class="fp sm">${bold(ds?f.dslead:f.symlead)}</p>`:'';  /* 11-28 목사님: 오른쪽 도구 쪽의 빈 제목 줄 뺌 */
   return `<div class="pg fm${k%2?' r':''} q${q} tp27">${head}<div class="tls">${items}</div>${extra}<div class="pn">${10+k}</div></div>` }
 /* 도구 쪽: 남는 자리를 도구 사이에 고르게 */
@@ -1540,7 +1543,7 @@ const FSPEC=[
  ['syms','이야기 도구 — 한 줄에 「기호 이름|설명|예」 (앞 여섯은 10쪽, 나머지는 11쪽)',11],['symmarks','이야기 도구의 표시 — 「이름|표시」 ({동그라미} {형광펜} {물결 밑줄} {빗금 형광펜} {네모} {번호 1 2 3})',11],
  ['irhead','아이러니 제목',1],['irlead','아이러니 머리글',2],
  ['irony','아이러니 — 한 줄에 「설명 첫머리|보기|예」',4],
- ['dshead','담화 도구 제목',1],['dslead','담화 도구 머리글',2],['dsyms','말 도구 — 한 줄에 「기호 이름|설명|보기」 (앞 다섯은 12쪽, 나머지는 13쪽)',11],['dsmarks','말 도구의 표시 — 「이름|표시」',11],['dspnote','13쪽 아이러니 상자 아랫줄',1],
+ ['dshead','담화 도구 제목',1],['dslead','담화 도구 머리글',2],['dsyms','말 도구 — 한 줄에 「기호 이름|설명|보기」 (앞 다섯은 12쪽, 나머지는 13쪽)',11],['dsmarks','말 도구의 표시 — 「이름|표시」',11],['exhead','13쪽 한 본문에 여러 도구 제목',1],['exlead','그 머리글',1],['exlines','그 줄 — 「기호 이름|본문과 풀이」',6],['dspnote','13쪽 맨 아랫줄',1],
  ['gnhead','장르 제목',1],['gnlead','장르 머리글',3],['genres','장르 — 「장르|설명|책|도구」',8],
  ['whhead','성경 전체로 제목',1],['whlead','성경 전체로 머리글',2],['whdiff','도구와 다른 점 — 「물음|도구|갈래」',4],['whfoot','성경 전체로 맺음말',2],
  ['whole','다섯 갈래 — 한 줄에 「갈래|설명|보기」',6],
