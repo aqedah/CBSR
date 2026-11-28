@@ -100,6 +100,7 @@ async def main(mode, out, start, mods):
             n0 = start + 4 * k
             body += '<div class="one wk">' + ''.join(sec(h, i, n0 + i, st, run, (n0 + i) % 2) for i, h in enumerate(P)) + '</div>'
     page = '@page{size:297mm 210mm;margin:0}' if mode == '2up' else '@page{size:148mm 210mm;margin:0}'
+    if mode == 'a5': page += '.p5.p4{padding:9mm 18mm 10mm 10mm}.p5.p4.r{padding:9mm 10mm 10mm 18mm}'  # 11-28: 종이 책 제본 여백(짝수 쪽은 오른쪽, 홀수 쪽은 왼쪽 18mm), 본문 하루 지면과 같게
     doc = f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{a5.CSS}{CSS}{page}</style></head><body>{body}</body></html>'
     async with async_playwright() as p:
         b = await p.chromium.launch(); g = await b.new_page(); await g.set_content(doc); await g.wait_for_timeout(500)
