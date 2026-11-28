@@ -2337,7 +2337,7 @@ html.v2 body .lookbtn.on{outline:2px solid var(--accent);outline-offset:1px}
 }
 html.v2 .vtext,html.v2 .vtext .para,html.v2 .eye p,html.v2 .qcard p{word-break:keep-all;overflow-wrap:anywhere}
 /* 11-28 목사님: 성경 본문은 낱말째 내리지 않고 줄이 꽉 차면 글자에서 바꿈(빈 공간이 덜 생기게) */
-html.v2 .vtext,html.v2 .vtext .para{word-break:normal;line-break:normal}
+html.v2 .vtext,html.v2 .vtext .para{word-break:normal;line-break:normal;text-align:justify;text-align-last:auto} /* 11-28 목사님: 좌우 맞춤, 문단 끝 줄은 그대로 */
 .lnov{position:fixed;inset:0;z-index:9700;display:flex;flex-direction:column;justify-content:flex-end}.lnbg{position:absolute;inset:0;background:rgba(10,16,13,.35)}
 .lnp{position:relative;background:var(--card);border-radius:20px 20px 0 0;padding:14px max(18px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:grid;gap:10px;max-width:640px;width:100%;margin:0 auto;box-shadow:0 -8px 30px rgba(0,0,0,.15)}
 .lnhd{display:flex;align-items:center;justify-content:space-between}.lnhd b{font-size:16px}.lnx{border:0;background:transparent;padding:6px;display:grid;color:var(--muted);cursor:pointer}.lnx svg{width:20px;height:20px}
