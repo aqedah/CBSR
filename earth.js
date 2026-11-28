@@ -371,7 +371,13 @@ async function fxBattle(at,w,key){ const nm=Array.isArray(w)?w[0]:typeof w==="st
   E.forEach(e=>e.m.getElement().querySelector(".chm")?.classList.add("flip")); const all=[...E,...Aa]; all.forEach(x=>{ const q=scr(x.m.getLngLat()); x.f=[q.x-P0.x,q.y-P0.y]; });
   let t0=performance.now(); await new Promise(r=>{ const f=ts=>{ if(key!==FXK) return r(); const k=Math.min(1,(ts-t0)/1500), e=k*k*(3-2*k); all.forEach(x=>x.m.setLngLat(unscr(P0.x+x.f[0]+(x.to[0]-x.f[0])*e,P0.y+x.f[1]+(x.to[1]-x.f[1])*e))); k<1?requestAnimationFrame(f):r(); }; requestAnimationFrame(f); });
   t0=performance.now(); let nx=0; await new Promise(r=>{ const f=ts=>{ if(key!==FXK) return r(); all.forEach(x=>x.m.setLngLat(unscr(P0.x+x.to[0]+(R()-.5)*7,P0.y+x.to[1]+(R()-.5)*5))); if(ts>nx){ nx=ts+180; fxEmo(all[Math.floor(R()*all.length)].m,R()<.6?"⚔️":"💥"); } ts-t0<2400?requestAnimationFrame(f):r(); }; requestAnimationFrame(f); });
-  (lose?Aa:E).forEach(x=>{ x.m._in.style.cssText+=";transition:opacity 1s;opacity:0"; }); if(W) fxEmo(W,lose?"😢":"🙌"); return fxWait(800,key); }
+  (lose?Aa:E).forEach(x=>{ x.m._in.style.cssText+=";transition:opacity 1s;opacity:0"; });
+  /* 11-28 목사님("언약궤 여정에서 이스라엘이 이기네요?"): 진 싸움은 우리 편만 사라지고 끝나 누가 이겼는지 흐렸음
+     → 이긴 쪽이 달려와 이쪽 자리를 차지하고(언약궤는 빼앗김, 삼상 4:11) 환호 · 지면 이쪽 사람에게 😭 */
+  if(lose){ if(!(await fxWait(700,key))) return false; const F=E.map(x=>{ const q=scr(x.m.getLngLat()); return [q.x-P0.x,q.y-P0.y]; }), T2=E.map((x,k)=>[Math.cos(k/E.length*6.283)*30,Math.sin(k/E.length*6.283)*22]);
+    E.forEach(x=>x.m.getElement().querySelector(".chm")?.classList.add("walk")); if(!(await tween(1300,key,q=>{ const e=q*q*(3-2*q); E.forEach((x,k)=>x.m.setLngLat(unscr(P0.x+F[k][0]+(T2[k][0]-F[k][0])*e,P0.y+F[k][1]+(T2[k][1]-F[k][1])*e))); }))) return false;
+    E.forEach(x=>x.m.getElement().querySelector(".chm")?.classList.remove("walk")); fxEmo(E[0].m,"🙌"); const isObj=W&&W.getElement().querySelector(".chm.ark,.chm.coffin"); if(W&&!isObj) fxEmo(W,"😭"); CW.forEach(m=>fxEmo(m,"😭")); }
+  else if(W) fxEmo(W,"🙌"); return fxWait(1200,key); }
 function fxBurn(at){ M.getContainer().classList.add("mvburn"); const P=scr(at); [[0,0],[18,-14],[-16,12],[22,16],[-20,-10]].forEach(([dx,dy],j)=>{ const m=fxMk(unscr(P.x+dx,P.y+dy),"eburn","🔥",2); m._in.style.animationDelay=(j*.15)+"s"; }); }
 function fxSun(at){ const P=scr(at); fxMk(unscr(P.x-70,P.y-90),"mvsky","☀️",2); fxMk(unscr(P.x+80,P.y-70),"mvsky moon","🌙",2); }
 function fxCycle(s){ const C=s.cycle||[1,1,1,1,1], N=["악을 행함","넘기심","부르짖음","구원자","평안"], d=document.createElement("div"); d.className="mvcycle";
