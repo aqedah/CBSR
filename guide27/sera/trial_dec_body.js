@@ -18,8 +18,9 @@ const r=await p.evaluate(()=>{
 });
 console.log(JSON.stringify(r));
 await p.emulateMedia({media:'print'}); await p.evaluate(()=>document.fonts.ready); await p.waitForTimeout(1500);
+console.log('끝 글자 살핀 문단',await p.evaluate(()=>{widow(document.getElementById('printroot'));return document.querySelectorAll('#printroot [data-w]').length}));
 await p.pdf({path:'body.pdf',format:'A5',printBackground:true,preferCSSPageSize:true});
-await p.evaluate(()=>{document.getElementById('printroot').innerHTML=window.__back}); await p.waitForTimeout(500);
+await p.evaluate(()=>{const r=document.getElementById('printroot');r.innerHTML=window.__back;widow(r)}); await p.waitForTimeout(500);
 await p.pdf({path:'back.pdf',format:'A5',printBackground:true,preferCSSPageSize:true});
 await p.evaluate(()=>{document.getElementById('printroot').innerHTML=blankPage(4)});
 await p.pdf({path:'blank.pdf',format:'A5',printBackground:true,preferCSSPageSize:true});

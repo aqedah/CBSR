@@ -1405,7 +1405,21 @@ function tighten(root){ root.querySelectorAll('.pg .ref, .pg .box .i').forEach(e
   const steps=[[-0.01,1],[-0.02,1],[-0.03,1],[-0.03,0.97],[-0.035,0.95],[-0.04,0.93]];
   const fs=parseFloat(getComputedStyle(el).fontSize);
   for(const [ls,f] of steps){ el.style.letterSpacing=ls+'em'; el.style.fontSize=(fs*f)+'px'; if(el.getBoundingClientRect().height<lh*1.5) return; }
-  el.style.letterSpacing=''; el.style.fontSize=''; }) }
+  el.style.letterSpacing=''; el.style.fontSize=''; }); widow(root) }
+/* 11-28 목사님: 문단 마지막 줄에 두세 글자('다.', '니까?', '멘.')만 남으면 그 문단만 자간을 조금씩(최대 -0.04em) 줄여 윗줄로 끌어올림. 그래도 안 올라가면 그대로 둠. */
+function wLines(el){ const r=document.createRange(); r.selectNodeContents(el); const rs=[...r.getClientRects()].filter(x=>x.width>0.3&&x.height>0.3); if(!rs.length) return {n:0,last:0};
+  const fs=parseFloat(getComputedStyle(el).fontSize)*(el.getBoundingClientRect().width/(el.offsetWidth||1)||1); const L=[];
+  rs.forEach(x=>{ const c=(x.top+x.bottom)/2; let g=L.find(l=>Math.abs(l.c-c)<fs*0.55); if(!g){ g={c,l:x.left,r:x.right}; L.push(g) } else { g.l=Math.min(g.l,x.left); g.r=Math.max(g.r,x.right) } });
+  L.sort((a,b)=>a.c-b.c); const z=L[L.length-1]; return {n:L.length,last:z.r-z.l,fs} }
+function widow(root){ root.querySelectorAll('.pg *, .p5 *').forEach(el=>{
+  if(el.dataset.w||el.closest('svg')) return;
+  if(![...el.childNodes].some(n=>n.nodeType===3&&/[가-힣]/.test(n.textContent))) return;
+  if(el.querySelector(':scope > div, :scope > p, :scope > ul, :scope > ol, :scope > table, :scope > section')) return;
+  const cs=getComputedStyle(el); if(!/^(block|list-item|flow-root)$/.test(cs.display)||/nowrap|pre/.test(cs.whiteSpace)) return;
+  const a=wLines(el); if(a.n<2||a.last>a.fs*3.3) return; el.dataset.w='1';
+  const fs=parseFloat(cs.fontSize), base=(parseFloat(cs.letterSpacing)||0)/fs, keep=el.style.letterSpacing;
+  for(const d of [0.01,0.02,0.03,0.04]){ el.style.letterSpacing=(base-d).toFixed(3)+'em'; if(wLines(el).n<a.n) return; }
+  el.style.letterSpacing=keep; }) }
 /* 빈 자리가 메모 한 줄보다 좁으면 메모(이름표+줄)를 뺀다 — 함께 읽을 말씀만 남음 */
 /* 오른쪽: 해설 위에 남는 자리만큼 쓰기 줄을 더 준다(본문 관찰 → 적용 → 성품 차례, 최대 6줄) */
 function fillLines(root,s){ root.querySelectorAll('.pg.r').forEach(pg=>{ const ab=pg.querySelector('.after'); if(!ab) return; const ws=pg.querySelectorAll('.lnw'); if(ws.length<3) return; const order=[ws[0],ws[2],ws[1]]; for(let n=0;n<6;n++){ let mb=0; pg.querySelectorAll(':scope > *:not(.after):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom}); const slack=(ab.getBoundingClientRect().top-mb)/s/MM; if(slack<5.6+1.5) break; const d=document.createElement('div'); d.className='ln'; order[n%3].appendChild(d); } }) }
@@ -1826,7 +1840,7 @@ if(EMBQ.get('embed')){ const embStart=(function(){
     list.forEach(x=>{const qt=get(x.no)||blank(); probe.innerHTML=pageL(x,qt)+pageR(x,qt); tighten(probe); matchMedia(probe,1); post27(probe,1); parts.push(probe.innerHTML); probe.querySelectorAll('.pg').forEach((pg,i)=>{const pr=pg.getBoundingClientRect();const ab=pg.querySelector('.after,.heard');const abt=ab?ab.getBoundingClientRect().top:pr.bottom-11*MM;let mb=0;pg.querySelectorAll(':scope > *:not(.after):not(.heard):not(.pn)').forEach(e=>{const r=e.getBoundingClientRect();if(r.bottom>mb)mb=r.bottom});if(abt-mb<0)bad.push(`${x.m}/${x.d}${i?'오른쪽':'왼쪽'} ${((mb-abt)/MM).toFixed(1)}mm`);if(pg.querySelector('.heard'))heardN.push(Math.max(0,Math.min(7,Math.floor(((abt-mb)/MM-2)/6.3))))})});
     if(mode==='book'||mode==='spring'){ const q=qOf(p); appendixSpreads(q).concat(backSpreads(q)).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
     if(mode==='ax'){ const q=qOf(p); appendixSpreads(q).concat(backSpreads(q)).forEach(h=>parts.push(h.replace(/^<div class="spread">/,'').replace(/<\/div>$/,''))); }
-    probe.remove(); $('printroot').innerHTML=parts.join('');
+    probe.remove(); $('printroot').innerHTML=parts.join(''); { const p0=$('printroot'); p0.style.cssText='display:block;position:absolute;left:-99999px;top:0'; widow(p0); p0.style.cssText=''; } /* 11-28: 표지·책머리·부록 머리도 끝 글자 끌어올림 */
     /* 11-12 목사님: 책 순서 — 앞표지 1쪽, 뒤표지 끝쪽, 전체 쪽수는 4의 배수(모자라면 뒤 면지 앞에 빈 쪽) */
     const pr=$('printroot'); let sheets=0;
     if(mode==='book'||mode==='spring'){ let P=[...pr.querySelectorAll(':scope > .pg')]; if(P.length>4&&P[0].classList.contains('back')){ pr.appendChild(P[0]); P=[...pr.querySelectorAll(':scope > .pg')];
